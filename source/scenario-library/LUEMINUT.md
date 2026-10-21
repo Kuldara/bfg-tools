@@ -188,7 +188,7 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
   battle -arvontaan tulee toinen valikko "vs …" (`f.sug2`, `p.sug2`). Kumpikin on vapaaehtoinen. Kun molemmat on valittu,
   suosituksen pitää sisältää kumpikin laivasto, ja "any fleets" -skenaariot pysyvät mukana kuten ennenkin.
   Orks vs Imperial Navy: arvontapooli 70 (52 any fleets + 18 suositeltua), etusivu 72 (osittainen osuma, esim. Orks-alaryhmät).
-- **0.10.7 (21.10.2026 ilta): ei oletuksia kartalle eikä maastoa ilman nappia.** Käyttäjä: *"älä näytä esim
+- **0.10.7 (21.10.2026 ilta): ei oletuksia kartalle eikä maastoa ilman nappia** (julkaistu yhdessä kahden laivaston suodattimen kanssa: GitHub 977e549; ennen julkaisua selaintesti leveä + kapea 0 virhettä, karttatesti 4 020 karttaa 0 + 0, sisältötesti 0 + 0, mittatesti 0, maastotesti 0, kuvakierros 1 850 sivua 0; live tarkistettu: Fleet Engagement "Set-up to be decided", maastonappi ilman laatikkoa, psug2/lsug2 julkaistussa index.html:ssä). Käyttäjä: *"älä näytä esim
   fleet engagment deployment karttaa avatessa kun sitä ei ole vielä päätetty. pitäisi varmaan olla tyhjä ja lukea
   jotain että to be desided jne. ja kaikkiin vastaaviin sama"* ja *"ei kannata laittaa terrainia defaulttina. vasta
   jos painetaan sitä nappia. monet ei edes halua arpia sitä mun sivulla"*.
