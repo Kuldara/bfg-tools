@@ -183,7 +183,20 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
   RB s. 138 (v1.10 ja v1.11); horizon muisti 30 cm, mutta se on etäisyys reunoista. Muutos koskee myös
   Ahriman's Arrivalia, joka lainaa kartan (`cl-mag-a.js`: P1/P2-nimeäminen poistettu). Karttatesti 0 + 0,
   maastotesti 0. Script-tagit `?v=0.9.2`.
-- **0.11 (21.10.2026 ilta): skenaarion oma ilmiögeneraattori Set-up-työkaluun.** Käyttäjä Battles in the Warpista:
+- **Play-välilehden osiot voi piilottaa (21.10. ilta).** Käyttäjä: *"voi tietty olla hide ominaisuuksia play
+  osuudessa. eri ihmisiä kiinnostaa eri jutut ja sillä vältyttäisiin scrollaukselta"*.
+  - **Piilotettavat osiot:** vuoron opas (vuororata ja "Turn N" -lista; vuoronumero ja +/− pysyvät aina), kartta "On the
+    table", "Scenario rules in play" ja "Tools". Hide- ja Show-nappi on otsikossa, ja piilotetusta osiosta jää vain otsikko.
+  - **Tallennus:** valinta on pelaajan eikä skenaarion, joten se tallentuu kerran (`DB.ph`) ja pätee kaikkiin skenaarioihin.
+    Mikään ei sulkeudu itsestään (UI-linja).
+  - **Vaikutus:** puhelimella Escalating Engagementin Play-sivu lyheni 2 916 → 1 953 px, kun kartta ja säännöt piilotettiin.
+- **0.11.2 (21.10. ilta): kartta Play-välilehdellä kaikissa.** Käyttäjä: *"itseasissa laita aina kartta tuohon play
+  välilehteen kaikissa"*. Kumoaa 0.10:n `PLAYMAP_OFF`-rajauksen (30 asettelukarttaa). Mukaan tulivat myös kampanjat ja
+  skenaariot, joissa ei ole kiinteää karttaa mutta maasto on arvottu (esim. Battles in the Warp). Kartta näkyy 200
+  skenaariossa 204:stä. Ilman jäävät neljä kampanjaa, joilla ei ole omaa karttaa ja joiden taistelut pelataan muina
+  skenaarioina: Phillipa, Pirates Campaign, Stygies-kampanjapuu ja Hive Ship Base. Niissäkin kartta näkyy, jos maasto
+  arvotaan. Fleet Engagementin Play-kartta noudattaa samaa "Set-up to be decided" -sääntöä kuin Set-up.
+- **0.11 (21.10.2026 ilta): skenaarion oma ilmiögeneraattori Set-up-työkaluun** (julkaistu: GitHub 432d071. Ennen julkaisua maastotesti 0, mittatesti 0, karttatesti 4 020 karttaa 0 + 0, selaintesti leveä ja kapea 15 184 näkymää 0 virhettä, sisältötesti 0 + 0, kuvakierros 1 850 sivua 0. Live tarkistettu: Battles in the Warpissa ei ole kartan yläpuolista ohjainta, ja työkalun nappi arpoo warp-ilmiöt). Käyttäjä Battles in the Warpista:
   *"tässähän voisi integroida tuon terrain generaattorin kustomina tuohon setup tolls missä arvotaan varp ilmiöitä.
   toteuta ja toteuta vastaaviin"* ja *"normimaastoa tuskin tähän kyseiseen generoidaan ollenkaan"*.
   - **`TERRAIN[id].tool`:** skenaarion oma heittotyökalu on nyt maastogeneraattori, jossa ovat napit Generate on the

@@ -4,23 +4,15 @@
    välilehdessä. ainakin pienempänä (ja siinä on sit vähän eri kartta piirto kuin vuoro 0) ja mieti muut
    scenaariot myös missä tämä parannus relevantti".
 
-   - Oletus: Play-välilehdellä näkyy Set-upin kartta (sama arvottu maasto) jokaisessa skenaariossa, jolla on
-     kartta, paitsi PLAYMAP_OFF-listan skenaarioissa. Niissä kartta kertoo vain asettelun eikä pelissä
-     tarvita mitään sen tietoa (ei saapumisia, poistumisreunoja, kohteita tai vyöhykkeitä).
+   - Oletus: Play-välilehdellä näkyy Set-upin kartta (sama arvottu maasto) jokaisessa skenaariossa; ilman
+     kiinteää karttaa arvottu maasto, jos sellainen on.
    - PLAYMAP[id].draw(v, W, H, st, sc, base) piirtää pelinaikaisen kuvan vuorolle st.turn, kun se eroaa
      asettelusta: asettelualueet pois, tilalle mitä tällä vuorolla tapahtuu (saapumiskaista, komeetan paikka,
      shokkiaalto). base = Set-upin kartan esineet. note(v, st) = kartan alle tuleva lause.
    - Arvottu maasto pysyy samana kuin Set-upissa (mapOf laskee sen Set-upin esineistä). */
 
-/* kartta ei auta pelin aikana: asettelu ratkaisee, ja peli on "fight it out" ilman paikkasidonnaisia sääntöjä */
-const PLAYMAP_OFF = new Set([
-  "cruiser-clash", "surprise-attack", "fleet-engagement", "assassination", "unknown-weapons", "bc-macharias-end",
-  "cl-corribra-1", "cl-corribra-2", "cl-raths-last-stand", "cl-cerberus-2", "cl-inv-snake", "cl-inv-boarding",
-  "wr-minor-engagement", "wr-sw-death-and-glory", "wr-cat-and-mouse", "wr-convoy-battle",
-  "fan-n-flanks", "fan-n-titan", "fan-n-ambush", "fan-p-hunter-cadre", "fan-p-comes-back", "fan-p-lost-tale",
-  "fan-p-art-command-1", "fan-p-art-command-2", "fan-p-nightmares", "fan-p-claw", "fan-p-supply",
-  "fan-s-veil", "fan-s-tragedy", "fan-s-starblade"
-]);
+/* 21.10. ilta: aiempi rajaus (30 asettelukarttaa ilman Play-karttaa) kumottiin käyttäjän pyynnöstä:
+   "itseasissa laita aina kartta tuohon play välilehteen kaikissa". Kartta näkyy nyt kaikissa (index.html: playMapOn). */
 
 (function () {
   const BAND = 4; /* saapumiskaistan paksuus kartalla (symboli, ei mittaa) */

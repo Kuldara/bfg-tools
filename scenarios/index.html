@@ -439,6 +439,11 @@ html.short .mapwrap svg { max-height: 78vh; }
 /* celestial phenomena (0.9): paneeli kartan alla */
 .bzbox { margin-top: 8px; background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: 12px; padding: 10px 12px; }
 .bzhead { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 0 0 10px; }
+/* Play-välilehden piilotettavat osiot (21.10.) */
+h2.hsec { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+h2.hsec.off { color: var(--ink-3); }
+.hidebtn { font: 600 12px/1 var(--font); letter-spacing: 0; text-transform: none; padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line); background: none; color: var(--ink-2); cursor: pointer; }
+.turnbar .hidebtn { margin-left: auto; }
 .bzoff .btn { padding: 6px 12px; font-size: 13px; }
 .bzhint { font-size: 12.5px; color: var(--ink-3); }
 .bzbox > .bzwhy:first-child { margin-top: 0; }
@@ -532,7 +537,7 @@ html.wide:not(.short) .mapstick > .col:last-child { max-height: calc(100vh - var
   <p class="kbd">Keyboard: <b>1</b>–<b>4</b> switch a scenario’s tabs · <b>←</b> <b>→</b> change the turn on Play.</p>
 </footer>
 
-<script src="battlezone-core.js?v=0.11.1"></script>
+<script src="battlezone-core.js?v=0.11.2"></script>
 <script>
 "use strict";
 /* ---------------------------------------------------------------- data */
@@ -1662,14 +1667,23 @@ function mapOf(sc, v, playT) {
   if (pm && pm.draw) items = pm.draw(v, W, H, Object.assign({}, st, { turn: playT }), sc, items).filter(Boolean);
   return { w: W, h: H, items, bz, sel: st.bz && st.bz.sel };
 }
-/* Play-välilehden kartta: kaikissa kartallisissa paitsi PLAYMAP_OFF (kartta kertoo vain asettelun) ja kampanjat */
-function playMapOn(sc) { return !!mapFn(sc) && sc.type !== "Campaign" && !(typeof PLAYMAP_OFF !== "undefined" && PLAYMAP_OFF.has(sc.id)); }
+/* käyttäjä 21.10.: kartta aina Play-välilehdellä, kaikissa skenaarioissa (myös kampanjat). Ilman kiinteää karttaa
+   näytetään arvottu maasto, jos sellainen on (esim. Battles in the Warpin warp-ilmiöt); muuten ei ole mitä näyttää. */
+/* Play-välilehden osiot voi piilottaa (käyttäjä 21.10.): valinta on pelaajan, ei skenaarion, joten se tallentuu
+   kerran (DB.ph) ja pätee kaikkiin skenaarioihin. Mikään ei sulkeudu itsestään: vain Hide/Show-nappi. */
+function phHidden(k) { return !!(DB.ph && DB.ph[k]); }
+function hideBtn(k, show, hide) { const h = phHidden(k); return "<button class='hidebtn' data-a='psec' data-k='" + k + "' aria-expanded='" + !h + "'>" + (h ? show || "Show" : hide || "Hide") + "</button>"; }
+function hsec(k, title, body) { return "<h2 class='hsec" + (phHidden(k) ? " off" : "") + "'><span>" + title + "</span>" + hideBtn(k) + "</h2>" + (phHidden(k) ? "" : body); }
+function playMapOn(sc, st) { return !!mapFn(sc) || !!(st && st.bz && st.bz.seed); }
 function playMapBlock(sc, st, v) {
-  if (!playMapOn(sc)) return "";
-  const [W, H] = tableWH(), pm = typeof PLAYMAP !== "undefined" && PLAYMAP[sc.id], m = mapOf(sc, v, st.turn), note = pm && pm.note ? pm.note(st, v, sc) : "";
-  return "<h2>On the table" + (pm && pm.draw ? " · turn " + st.turn : "") + "</h2><div class='mapwrap playmap'>" + mapSVG(m) + "<div class='legend'>" +
+  if (!playMapOn(sc, st)) return "";
+  const [W, H] = tableWH(), pm = typeof PLAYMAP !== "undefined" && PLAYMAP[sc.id], note = pm && pm.note ? pm.note(st, v, sc) : "";
+  let m = mapOf(sc, v, st.turn);
+  /* asettelu päätetään pöydässä (Fleet Engagement): sama "to be decided" kuin Set-upissa */
+  if (varPending(sc, st)) m = Object.assign({}, m, { items: [{ z: "text", x: W / 2, y: H / 2, l: "Set-up to be decided\n" + PENDING_VAR[sc.id] }] });
+  return hsec("map", "On the table" + (pm && pm.draw ? " · turn " + st.turn : ""), "<div class='mapwrap playmap'>" + mapSVG(m) + "<div class='legend'>" +
     (sc.legend || Object.keys(sc.sides).map(k => [k, sc.sides[k].n])).map(([k, n]) => "<span><i style='background:var(--" + k + ")'></i>" + esc(n) + "</span>").join("") + bzLegend(m) + "<span class='msize'>" + mapSize(W, H) + "</span></div>" +
-    (note ? "<div class='mapnote'>" + esc(tpl(note, sc, st)) + "</div>" : "") + "</div>";
+    (note ? "<div class='mapnote'>" + esc(tpl(note, sc, st)) + "</div>" : "") + "</div>");
 }
 
 /* ---------------------------------------------------------------- turn track
@@ -2970,20 +2984,20 @@ function setupView(sc, st, v, steps, nd) {
 function playView(sc, st, v) {
   const max = sc.turnMax ? sc.turnMax(v) : 0;
   const camp = sc.type === "Campaign";
-  const turnH = camp ? "" : "<div class='turnpanel'><div class='turnbar'><span class='lbl'>Turn</span><button class='sq' data-a='turn' data-d='-1' aria-label='Previous turn'" + (st.turn <= 1 ? " disabled" : "") + ">−</button><span class='val'>" + st.turn + "</span><button class='sq' data-a='turn' data-d='1' aria-label='Next turn'>+</button>" + (max ? "<span class='of'>of " + max + "</span>" : "") + "</div>" + turnTrack(sc, st, v) + "</div>";
+  const turnH = camp ? "" : "<div class='turnpanel'><div class='turnbar'><span class='lbl'>Turn</span><button class='sq' data-a='turn' data-d='-1' aria-label='Previous turn'" + (st.turn <= 1 ? " disabled" : "") + ">−</button><span class='val'>" + st.turn + "</span><button class='sq' data-a='turn' data-d='1' aria-label='Next turn'>+</button>" + (max ? "<span class='of'>of " + max + "</span>" : "") + hideBtn("turn", "Show turn guide", "Hide guide") + "</div>" + (phHidden("turn") ? "" : turnTrack(sc, st, v)) + "</div>";
   const campH = camp ? sc.tools.filter(x => vis(x, v)).map(t => widget(sc, st, v, t)).join("") : "";
   const rem = sc.play.filter(x => vis(x, v)).concat(spPlay(sc, st), bzPlay(sc, st));
-  const rulesH = "<h2>Scenario rules in play</h2>" + agreeList(sc, st) + "<ul class='rem'>" + rem.map(x => "<li><div class='when'>" + (x.s ? "<span class='" + SIDECLS[x.s] + "'>" + esc(sc.sides[x.s].n) + "</span> · " : "") + esc(x.w) + "</div>" + fmt(tpl(x.t, sc, st)) + "</li>").join("") + "</ul>";
+  const rulesH = hsec("rules", "Scenario rules in play", agreeList(sc, st) + "<ul class='rem'>" + rem.map(x => "<li><div class='when'>" + (x.s ? "<span class='" + SIDECLS[x.s] + "'>" + esc(sc.sides[x.s].n) + "</span> · " : "") + esc(x.w) + "</div>" + fmt(tpl(x.t, sc, st)) + "</li>").join("") + "</ul>");
   const tools = camp ? [] : sc.tools.filter(x => vis(x, v)), bzT = camp ? "" : bzEvTool(sc, st);
-  const toolsH = tools.length || bzT ? "<h2>Tools</h2>" + bzT + tools.map(t => widget(sc, st, v, t)).join("") : "";
+  const toolsH = tools.length || bzT ? hsec("tools", "Tools", bzT + tools.map(t => widget(sc, st, v, t)).join("")) : "";
   const reset = "<div class='reset'>Finished, or starting over? <button class='btn' data-a='reset'>New game: clear this scenario’s progress</button></div>";
   /* kartta pelin aikana (0.10): vuoron alle, pienempänä kuin Set-upissa */
-  const pmapH = camp ? "" : playMapBlock(sc, st, v);
+  const pmapH = playMapBlock(sc, st, v);
   const L = layout();
   if (L === "narrow") return turnH + pmapH + campH + rulesH + toolsH + reset;
   /* leveällä: vuoro (tarttuu) ja työkalut vasemmalla, kartta ja säännöt oikealla — kartta ei jää tarttuvan
      vuoropaneelin alle; xwide: työkalut omaan palstaan */
-  if (camp) return cols([[campH], [rulesH, reset]], "c-play");
+  if (camp) return cols([[campH], [pmapH, rulesH, reset]], "c-play");
   if (L === "wide" || !toolsH) return cols([[turnH, toolsH], [pmapH, rulesH, reset]], "c-play" + (toolsH ? "" : " even"));
   return cols([[turnH, reset], [pmapH, rulesH], [toolsH]], "c-play");
 }
@@ -3362,6 +3376,7 @@ document.addEventListener("click", e => {
   else if (a === "secclr") { st.w[id] = -1; st.w[id + "_s"] = false; }
   else if (a === "bset") { const k = el.dataset.k, val = +el.dataset.val; st.w[k] = (k === "f1" || k === "f2") && get(st, k, -1) === val ? -1 : val; }
   else if (a === "reset") { const keepV = st.v; DB.s[sc.id] = { turn: 1, v: keepV, done: {}, w: {} }; }
+  else if (a === "psec") { if (!DB.ph) DB.ph = {}; DB.ph[el.dataset.k] = !DB.ph[el.dataset.k]; }
   else if (a === "bzgo") { if (!st.bz) st.bz = {}; let s; do s = dn(999999); while (s === st.bz.seed); st.bz.seed = s; st.bz.ev = {}; if (st.bz.sel && st.bz.sel !== "zone" && st.bz.sel !== "sun") st.bz.sel = ""; }
   else if (a === "bzclr") { if (st.bz) { delete st.bz.seed; st.bz.sel = ""; st.bz.ev = {}; } }
   else if (a === "bzsel") { if (!st.bz) st.bz = {}; st.bz.sel = st.bz.sel === id ? "" : id; }
@@ -3477,31 +3492,31 @@ let lastMapNarrow = null;
 window.addEventListener("resize", () => { const n = mapNarrow(); if (lastMapNarrow !== null && n !== lastMapNarrow) render(true); lastMapNarrow = n; });
 </script>
 <!-- scenario files: each adds its scenarios with addScenarios([...]) -->
-<script src="scenarios/blackcrusade.js?v=0.11.1"></script>
-<script src="scenarios/fleets.js?v=0.11.1"></script>
-<script src="scenarios/cl-early.js?v=0.11.1"></script>
-<script src="scenarios/cl-mag-a.js?v=0.11.1"></script>
-<script src="scenarios/cl-mag-b.js?v=0.11.1"></script>
-<script src="scenarios/cl-mag-c.js?v=0.11.1"></script>
-<script src="scenarios/cl-mag-d.js?v=0.11.1"></script>
-<script src="scenarios/cl-fanatic.js?v=0.11.1"></script>
-<script src="scenarios/cl-invasion.js?v=0.11.1"></script>
-<script src="scenarios/_wr.js?v=0.11.1"></script>
-<script src="scenarios/wr-committee.js?v=0.11.1"></script>
-<script src="scenarios/wr-community-a.js?v=0.11.1"></script>
-<script src="scenarios/wr-spreading-war.js?v=0.11.1"></script>
-<script src="scenarios/wr-community-l4a.js?v=0.11.1"></script>
-<script src="scenarios/wr-community-l4b.js?v=0.11.1"></script>
-<script src="scenarios/wr-community-l4c.js?v=0.11.1"></script>
-<script src="scenarios/wr-community-l4d.js?v=0.11.1"></script>
-<script src="scenarios/fan-tournament.js?v=0.11.1"></script>
-<script src="scenarios/fan-nemesis.js?v=0.11.1"></script>
-<script src="scenarios/fan-pdd.js?v=0.11.1"></script>
-<script src="scenarios/fan-starblade.js?v=0.11.1"></script>
-<script src="scenarios/terrain-map.js?v=0.11.1"></script>
-<script src="scenarios/open-points.js?v=0.11.1"></script>
-<script src="scenarios/wr-rating.js?v=0.11.1"></script>
-<script src="scenarios/play-maps.js?v=0.11.1"></script>
+<script src="scenarios/blackcrusade.js?v=0.11.2"></script>
+<script src="scenarios/fleets.js?v=0.11.2"></script>
+<script src="scenarios/cl-early.js?v=0.11.2"></script>
+<script src="scenarios/cl-mag-a.js?v=0.11.2"></script>
+<script src="scenarios/cl-mag-b.js?v=0.11.2"></script>
+<script src="scenarios/cl-mag-c.js?v=0.11.2"></script>
+<script src="scenarios/cl-mag-d.js?v=0.11.2"></script>
+<script src="scenarios/cl-fanatic.js?v=0.11.2"></script>
+<script src="scenarios/cl-invasion.js?v=0.11.2"></script>
+<script src="scenarios/_wr.js?v=0.11.2"></script>
+<script src="scenarios/wr-committee.js?v=0.11.2"></script>
+<script src="scenarios/wr-community-a.js?v=0.11.2"></script>
+<script src="scenarios/wr-spreading-war.js?v=0.11.2"></script>
+<script src="scenarios/wr-community-l4a.js?v=0.11.2"></script>
+<script src="scenarios/wr-community-l4b.js?v=0.11.2"></script>
+<script src="scenarios/wr-community-l4c.js?v=0.11.2"></script>
+<script src="scenarios/wr-community-l4d.js?v=0.11.2"></script>
+<script src="scenarios/fan-tournament.js?v=0.11.2"></script>
+<script src="scenarios/fan-nemesis.js?v=0.11.2"></script>
+<script src="scenarios/fan-pdd.js?v=0.11.2"></script>
+<script src="scenarios/fan-starblade.js?v=0.11.2"></script>
+<script src="scenarios/terrain-map.js?v=0.11.2"></script>
+<script src="scenarios/open-points.js?v=0.11.2"></script>
+<script src="scenarios/wr-rating.js?v=0.11.2"></script>
+<script src="scenarios/play-maps.js?v=0.11.2"></script>
 <!--SCENARIO-FILES-->
 <script>wrInit(); document.getElementById("scn").textContent = SC.length; render(false);</script>
 </body>
