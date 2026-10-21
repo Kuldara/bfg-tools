@@ -58,7 +58,9 @@
           const sr = svg.getBoundingClientRect(), k = vb[2] / sr.width, tol = 0.006 * W;
           const where = (v ? v + " · " : "") + W + "×" + H + (nf ? " · phone" : "");
           counts.maps++;
-          const texts = [...svg.querySelectorAll("text")].map(t => {
+          /* arvotun maaston (0.9) tunnukset A1, C2 … piirretään tarkoituksella skenaarion tekstien alle
+             (.bzl-kerros): ne eivät kuulu sijoittelutarkistukseen; maastotesti.js tarkistaa maaston */
+          const texts = [...svg.querySelectorAll("text")].filter(t => !t.closest(".bzl")).map(t => {
             const r = t.getBoundingClientRect();
             return { el: t, s: t.textContent.trim(), ax: +t.getAttribute("x"), ay: +t.getAttribute("y"),
               x0: vb[0] + (r.left - sr.left) * k, x1: vb[0] + (r.right - sr.left) * k, y0: vb[1] + (r.top - sr.top) * k, y1: vb[1] + (r.bottom - sr.top) * k };

@@ -175,7 +175,19 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
     Siinä on kolme asettelualuetta (Rearguard, Convoy ja Convoy Leaders, 30 × 15 cm), pienten
     pöytien sääntö (kartta kutistaa alueet) ja pisteytys kuljetuskapasiteetin mukaan, jossa
     parannukset eivät tuota pisteitä saattueelle.
-- **0.8.x (21.10.2026): Project Distant Darkness Chapter I (EI vielä julkaistu).** Käyttäjä toi
+- **Rules writer myös fanilisäosiin ja Event Horizon -nimi (21.10. iltapäivä, EI vielä julkaistu):**
+  horizon kysyi Discordissa, miten Rules writer -tagi on jaettu lisäosille, ja toivoi skenaariolleen
+  nimeä "Just Event Horizon". Muutokset:
+  - Tagi kertoo kirjoittajan roolista, ei lähteestä (käyttäjän päätös). Siksi `FAN_TAG` antaa sen myös
+    Project Distant Darknessille (28 skenaariota) ja Starbladelle (9), koska horizon on niiden (toinen)
+    kirjoittaja. Luokka pysyy Fan supplements. Tagi on nyt 50 skenaariolla, ja haku "rules writer"
+    löytää ne.
+  - Sources-sivun tagirivi ja Fan supplements -osio kertovat tämän.
+  - `event-horizon`: nimi "Event Horizon" (ennen "The Eisner Incident", lehden kartan kuvateksti),
+    series "Warp Rift 43 · 20th anniversary issue".
+  Muutokset ovat `index.html`:ssä. Ne menevät livenä terrain-ominaisuuden julkaisun mukana, koska
+  terrain-istunto muokkasi samaa tiedostoa samaan aikaan.
+- **0.8.x (21.10.2026): Project Distant Darkness Chapter I (julkaistu 21.10. versiona 0.8.5).** Käyttäjä toi
   zipin ("lisää scenario sourceja"): siinä oli puuttunut Chapter I *The Art of Command*; Main ja Chapter II
   olivat tavulleen samat kuin kansiossa jo olleet. 12 skenaariota (kymmenen tehtävää ja kaksi pientä
   sukkula-alatehtävää) Revivalin ja Distant Sunin väliin, 192 → **204 skenaariota**. Tulkinnat: luku
@@ -192,6 +204,14 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
     ne. Skenaariotiedostojen `?v=0.8.0`.
   - Testit: selaintesti leveä 1440 ja kapea 375, karttatesti (myös arvottu maasto ja numerokentät
     maksimissa), sisältötesti, sivuviiteauditointi ja kuvakierros: kaikista 0 löydöstä (ks. Testaus).
+- **0.9 (21.10.2026): maasto skenaarion kartalle (EI julkaistu, odottaa käyttäjän lupaa).** Käyttäjä: *"saisiko
+  tuon mun terrain generaattorin tuonne skenaario sivun sisään? eli joku nappi että generate terrain ja reroll
+  nappi. se sitten olisi automaattisesti scenaarioon sopivalla terrainilla jos sellainen määritetty tai itsestään
+  selvää"* ja kesken työn: *"ei aleta tässä mitenkään digitaalisesti toteuttamaan mitän custom vuorottelevaa
+  asettelua … mutta jos voidaan generoida skenaarion pyytämän tyylistä maastoa niin tietty. kaikkiin kyl voidaan
+  laittaa optio että generoi maasto. (maininta sit jos tarvii että ei ole skenaarion ajatuksen mukainene)"*.
+  Set-upin kartan alla on nyt **Celestial phenomena** -paneeli: Generate terrain / Reroll / Clear, battlezone
+  skenaarion mukaan, palat ja niiden säännöt. Ks. luku "Maasto (0.9)".
 - **Leveät näytöt (20.10. yö, julkaistu):** käyttäjän pyyntö parantaa käyttöä PC:llä,
   tabletilla ja käännetyllä puhelimella ("paljon tyhjää sivuille ja silti paljon
   vieritettävää"). Esittelyn jälkeen käyttäjä: "ihan ok näyttää", lisää optimointia, sitten
@@ -227,7 +247,13 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
 | `tee_kuvakkeet.py` | `apple-touch-icon.png` ja `favicon.png` (sama kuvio kuin SVG-favicon). |
 | `testit/selaintesti.js` | Regressiotesti selaimessa (ks. Testaus). |
 | `testit/karttatesti.js` | Karttojen tekstien sijoittelu kaikilla pöydillä ja fonttikoilla (ks. Testaus). |
-| `testit/kuvakierros.js` | Kuvakaappaus jokaisesta sivusta ja asettelun tarkistus, Node + headless Chrome (ks. Testaus). |
+| `testit/kuvakierros.js` | Kuvakaappaus jokaisesta sivusta ja asettelun tarkistus, Node + headless Chrome (ks. Testaus). `--maasto` arpoo maaston jokaiseen skenaarioon ennen kuvausta (0.9). |
+| `battlezone-core.js` | **GENEROITU, älä muokkaa** (0.9): Battlezone Generatorin arvontaydin, kopio `../terrain generator/index.html`:n BZCORE-lohkosta nimiavaruutena `BZ`. Ks. "Maasto (0.9)". |
+| `tee_maastoydin.py` | Kirjoittaa `battlezone-core.js`:n generaattorista (`--tarkista` = vain tarkistus). |
+| `scenarios/terrain-map.js` | `TERRAIN`: jokaisen 204 skenaarion maasto (battlezone ja peruste, skenaarion planeetat ja palat, maininta). |
+| `testit/maastotesti.js` | Maastotesti Nodessa: ydinkopio, generaattorin sormenjäljet, jokainen skenaario × versio × 5 pöytää × 12 siementä. |
+| `testit/_lataa.js` | Lataa kirjaston Nodeen ilman selainta (DOM tyhjinä olioina); maastotestin apuri. |
+| `testit/maasto_sormenjaljet.json` | Battlezone Generatorin omien karttojen sormenjäljet (7 560 tapausta, ennen ytimen laajennusta). |
 | `julkaisu/discord-2026-10/` | Esittelydia ja postausteksti Discordiin (20.10.), ei julkaistava osa sovellusta. |
 | `julkaisu/discord-2026-10-v07/` | 0.7:n iso dia (2560 × 1440) ja postausteksti (20.10.). Ei julkaistava osa sovellusta. |
 
@@ -413,7 +439,7 @@ alkuun.
 |---|---|---|
 | **Core 10** (oletus) | Cruiser Clash, The Bait, The Raiders, Surprise Attack, Blockade Run, Convoy, Planetary Assault, Escalating Engagement, Exterminatus, Fleet Engagement | RB s. 128–143 |
 | **Campaigns** | The Gauntlet, Parol's Bait, Defence of Pelucidar | RB s. 178–181 (+ WR48:n Armada Indomitus -versio) |
-| **Warp Rift** | Siege of Fularis, Assassination, Eliarenath's Gift, The Hammer Needs an Anvil, The Eisner Incident (komitea); Fall of Ar'Cianr, Unknown Weapons (lore) | WR5, 10, 11, 34, 43, 20 |
+| **Warp Rift** | Siege of Fularis, Assassination, Eliarenath's Gift, The Hammer Needs an Anvil, Event Horizon (komitea; nimi ennen "The Eisner Incident", tekijä toivoi 21.10. pelkkää Event Horizonia); Fall of Ar'Cianr, Unknown Weapons (lore) | WR5, 10, 11, 34, 43, 20 |
 | **Campaigns** (0.6) | Black Crusade: Chance Encounter, Rearguard Attack, Alien Intervention, Above Belis Corona, Daemon Blockade, Navigate the Storm, Macharia's End | RB s. 191–199 |
 | **Warp Rift · komitea** (0.6) | Depth of Space (7 versiota), Diasporex Diversions, Solblade 1–6 | WR40–43 ym. |
 | **Warp Rift · L3** (0.6) | 8 yhteisön pelattua + The Spreading War (11) | WR14–49 |
@@ -500,7 +526,8 @@ ensimmäisen näytöllisen. Nyt asettelu valitaan JS:llä, ja kapea näkymä pys
   Play-välilehdellä. Ei toimi kenttien sisällä, muokkausnäppäinten kanssa eikä toistona.
   Vihje näkyy alatunnisteessa vain leveällä.
 - **Kartta** leveällä korkeintaan 60 vh (käännetyllä puhelimella 78 vh). Set-upin tarttuvassa
-  karttapalstassa korkeus on `100vh − yläpalkki − 250 px`, jotta pöytävalinta, kartta, selite
+  karttapalstassa korkeus on `100vh − yläpalkki − 250 px` (0.9:stä 300 px, koska maaston ohjausrivi on kartan
+  yläpuolella, ks. "Maasto (0.9)"), jotta pöytävalinta, kartta, selite
   ja huomautus mahtuvat näyttöön. Mitattu kaikista 137 skenaariosta 1366 × 768:ssa ja
   1280 × 620:ssa: palsta mahtuu näyttöön jokaisessa. Fonttikoko riippuu nyt kartan palstan leveydestä (`mapColWidth()`,
   alle 560 px = puhelimen fontti), ei näytön leveydestä. `karttatesti.js` pakottaa fontin
@@ -837,14 +864,143 @@ oletus ratkaisee voiton, `v: 1`).
 **Kuvakierros:** `node "scenario library/testit/kuvakierros.js" <ulos> --vain=fan-`; uudet sivut
 ja kaikki versiot, puhelin 390 ja työpöytä 1200. Kuvat käytiin läpi arkkeina (ks. Testaus).
 
+## Maasto (0.9, 21.10.2026)
+
+Battlezone Generator (`../terrain generator/`, terrain-generator.kuldare.com) on nyt jokaisen skenaarion
+Set-upissa. Kartan **yläpuolella**, pöydän koon alla, on ohjausrivi **Celestial phenomena**: battlezone (valinta,
+jos lähde jättää sen auki), Surprise Attackissa planeetan koko, **Generate terrain** ja sen jälkeen **Reroll** ja
+**Clear**. Maasto piirtyy skenaarion omaan karttaan. Kartan **alla** ovat peruste, mahdollinen maininta,
+yhteenveto, palat sirupainikkeina, valitun palan tai battlezonen säännöt ja koko heittoloki.
+
+- **Miksi ohjausrivi on kartan yläpuolella:** ensimmäisessä versiossa koko paneeli oli kartan alla, ja 1366 × 768
+  -näytöllä Generate-nappi jäi 199 skenaariossa näkymän alle. Nyt se näkyy kaikissa 204 skenaariossa sekä sivun
+  alussa että tarttuvassa tilassa, myös 1280 × 620:ssa (mitattu). Tarttuvan kartan korkeus on siksi
+  `100vh − yläpalkki − 300 px` (ennen 250 px), jotta ohjausrivi, kartta ja selite mahtuvat. Tiedot kartan alla
+  vierittyvät karttapalstan sisällä (palstan `max-height` + `overflow-y: auto`), ja sen vieritys säilyy
+  uudelleenpiirrossa.
+- **Sirut lajeittain:** kun paloja on yli 10 (esim. nebula 28 pilveä), kentät, pilvet ja riftit näytetään yhtenä
+  siruna lajia kohden ("Gas & dust clouds × 28"). Lajin napautus näyttää kaikki sen palat paikkoineen ja lajin
+  säännöt ja korostaa palat kartalla. Planeetat ja kuut näkyvät aina yksitellen. Kartan palan napautus valitsee
+  yksittäisen palan.
+
+### Arkkitehtuuri: yksi totuuden lähde
+
+- **Ydin on generaattorissa.** `../terrain generator/index.html`:n BZCORE-lohko sisältää nopat, battlezone-taulukot,
+  geometrian, `generate()`:n ja sääntötekstit (RULES, EVENT_RULES). Se on ainoa lähde. `tee_maastoydin.py` kirjoittaa
+  siitä `battlezone-core.js`:n, jossa teksti on tavulleen sama IIFE:n sisällä nimiavaruutena `BZ`. Kirjaston omat
+  globaalit (`d6`, `R`, `ANY` …) eivät siksi törmää ytimen nimiin.
+- **Miksi kopio eikä jaettu tiedosto:** sovellukset ovat erillisiä Workereita eri domaineilla, eikä kumpikaan hae mitään
+  verkosta. Generaattori pysyy yhtenä tiedostona ja julkaistaan kuten ennen (`kokoa.py`:n tiedostolista ei muuttunut).
+  Erkaantuminen estetään kolmella tavalla: `testit/maastotesti.js` kaatuu, `kokoa.py` ei kokoa eikä julkaise
+  Scenario Librarya vanhalla kopiolla (`core_stale`), ja `python kokoa.py` (synkkaus) kirjoittaa kopion itse.
+  Mallina oli lapun markkerimenettely.
+- **Generaattorin omat kartat eivät muuttuneet.** Ytimen `generate()` sai valinnaisia asetuksia (ks. generaattorin
+  LUEMINUT). Ilman niitä se heittää täsmälleen samat nopat: 7 560 siementä × asetusta vertailtiin ennen ja jälkeen,
+  ja ero oli 0. Sormenjäljet ovat tiedostossa `testit/maasto_sormenjaljet.json`, ja maastotesti tarkistaa ne joka ajolla.
+- **Kirjaston moottori** (`index.html`, lohko "celestial phenomena (0.9)"): `bzSpec` (taulukon rivi + versio),
+  `bzChoices`/`bzZone` (battlezonen valinta), `bzFixed` (kartan esteet), `bzRun` (asetukset ytimelle ja arvonta),
+  `bzSVG` (piirto), `bzBox` (paneeli), `bzRules` (säännöt), `bzPlay` ja `bzEvTool` (Play). `mapOf` liittää tuloksen
+  karttaan, joten karttatesti, kuvakierros ja `#mapzone`:n päivitys (pöydän koko) näkevät saman maaston.
+- **Tila:** `st.bz = { seed, z, p, sel, log, ev }`, eli siemen, battlezonen valinta, planeetan koko (Surprise Attack),
+  valittu pala, onko loki auki ja vuorojen flare/burst-heitot. Kartta lasketaan aina uudelleen siemenestä, pöydästä,
+  versiosta ja valinnoista, joten tallennettua karttaa ei ole eikä se voi vanhentua. Pöydän koon vaihto arpoo samalla
+  siemenellä uudelle pöydälle. Reroll vaihtaa siemenen. "New game" tyhjentää maaston muun tilan mukana.
+
+### Battlezone-taulukko (`scenarios/terrain-map.js`)
+
+Jokaisella 204 skenaariolla on rivi. Kentät ja periaatteet:
+
+- **`z` battlezone.** Joko lähteen nimeämä (`5`), lähteen vaihtoehdot (`[4, 3]`: valinta, ensimmäinen oletuksena),
+  lähteen oma heitto (`{ die, rows }`, esim. The Bait 1–3 outer, 4–6 deep), skenaarion oma battlezone-työkalu
+  (Craftworld Assault, The Siege: työkalun tulos, jos heitetty, muuten sama taulukko arvotaan), `"any"` (lähde jättää
+  auki: oletus on kirjan D6, RB s. 105, tai valitaan mikä tahansa) tai `"none"` (lähde luettelee palat itse, eikä
+  battlezonea ole).
+- **`by` peruste**, joka näkyy paneelissa. `src` = lähde sanoo (sivu skenaarion lähteestä), `obv` = ilmeinen
+  (esim. "As The Gauntlet"), `book` = lähde jättää auki, kirjan oletus, `ours` = oma luenta, ja `why` kertoo miksi.
+- **Skenaarion omat piirteet säilyvät.** Kartan planeetat, asteroidikentät (`hatch`), asteroidi- ja kaasurenkaat,
+  merkit (asemat, hulkit, tavoitteet) ja pienet ympyrät (r ≤ 10 cm: riftit, pesät, portit) ovat esteitä. Arvottu maasto
+  ei mene niiden päälle (KEEP_CLEAR 2 cm kuten generaattorissa). `keep` lisää lähteen vaatimat tyhjät alueet:
+  "none within 15 cm of the station", "45 cm from the belt", Naravonan 60 cm käytävä, Shepardin renkaat. Vyöhykkeet
+  (deployment) eivät ole esteitä, koska kirja ei kiellä maastoa niissä.
+- **Skenaarion planeetat:** `hosts` = "generate rings, moons etc. as normal" (Surprise Attack, Planetary Assault,
+  Exterminatus, Treasure Fleet, Port Maw (kaksi kuuta), WR Planetary Defence). Paikka tulee kartalta ja halkaisija
+  kaistalta, ja kuut ja renkaat arvotaan kuten generaattorissa. Koko tulee lähteestä, skenaarion Planet size
+  -työkalusta tai Surprise Attackin pistevalinnasta (paneelin toinen valinta).
+- **Luetellut palat (`pieces`)**, kun lähde antaa määrät eikä battlezone-generaattoria. Esimerkkejä: Eliarenath's Gift
+  D3+3 ja D6+4 kenttää kaistoille, Hunter and the Prey D3 per neljännes, Navigate the Storm 16 riftiä 10 cm:n välein,
+  turnaustehtävien listat, Starblade-finaali ilman aurinkoreunaa ja nebulat 40 cm:n ruuduittain. Koot tulevat kirjan
+  nopista (s. 110–113), ellei lähde anna kokoa (`set`, esim. Planet Fall 10 cm, Rising Shadow 20 × 35 cm).
+- **`warn`:** käyttäjän linjan mukaan nappi on kaikissa skenaarioissa. Kun arvottu maasto ei ole skenaarion
+  ajatuksen mukainen, paneelissa on yhden rivin maininta. Tapaukset: lähde asettaa phenomenat vuorotellen tai yksi
+  pelaaja asettaa ne (Method 1), lähde sanoo "nothing else" (kiinteä kartta), "no phenomena" (ensimmäinen peli,
+  Gunnery Practice, Kotol 1–2), skenaariolla on oma ruutuheittotyökalunsa (Warp Space, Minor Engagement,
+  Hunter-Prey, Dark Crescent Moon, Prophecy: "use one or the other") tai kampanja/ympäristö, jonka taistelut
+  pelataan omina skenaarioinaan. Vuorottelevaa asettelua ei toteuteta (käyttäjä 21.10.).
+- **Aurinkoreuna:** kartan `sun`-esine on kiinteä. Jos sitä ei ole, käytetään taulukon `sun`-kenttää (esim. "one long
+  edge sunward" → pitkän reunan heitto), ja muuten kirjan D6 (RB s. 109). Arvottu reuna piirretään kartalle, ja selite
+  sanoo "Sunward (rolled)".
+- **Play-välilehti:** Flare Regionissa, Mercurial Zonessa ja Inner Biospheressa on muistutus "fighting sunward"
+  (RB s. 114). Jos maasto tuotti solar flareja tai radiation bursteja (tai skenaario antaa ne, Tears in Motion), Toolsissa
+  on nopat vuoron alkuun: kerran per vuoro ja flare kerran pelissä (RB s. 115).
+
+### Tulkinnat ja rajaukset (maasto)
+
+Nämä näkyvät paneelin perusteluissa, maininnoissa ja lokissa. Mitään ei ole valittu hiljaa:
+
+- **Yksi planeetta "in all cases"** (RB s. 108): kun skenaario asettaa oman planeettansa, arvottu planeetta
+  heitetään uudelleen. Tämä koskee myös Pelucidaria, joka asetetaan arvonnan jälkeen, ja Reconnaissance Runia
+  ("at least one planet"). Lähteen luettelemat palat (turnauslistat) eivät ole arvontaa, joten niissä voi olla
+  kaksi planeettaa.
+- **Kartan planeetat ovat symboleja** (säde 7–15 cm). Esteenä käytetään todellista kokoa: nimiöstä (large/giant),
+  taulukon `fixedSize`-kentästä tai oletuksena mediumin ylärajaa (12,5 cm).
+- **Skenaarion planeetta pöydän reunalla:** jos arvottu halkaisija ei mahdu kartan paikalle (pieni pöytä), planeetta
+  siirtyy pöydälle, ja loki kertoo, kuinka paljon.
+- **Kartan aurinkoreuna on sopimus:** Hunter and the Prey heittää sen, mutta kartta näyttää vasemman, ja maasto noudattaa
+  karttaa ("mirror the table").
+- **Arvotun suuren planeetan renkaat** eivät estä mitään ja voivat mennä merkin tai pöydän reunan yli, kuten
+  generaattorissa (renkaat saavat sulautua, RB s. 113).
+- **Omat luennat** (`ours`, maininnalla): Damocles 3:n flare/mercurial-heitto 1–3/4–6, Hunter Cadren "outer biosphere"
+  → primary (oletus) tai outer, Kotol 3–5 deep space kuten Kotol 1, Rear Guard Outer Reaches kuten Death and Glory.
+- **Muut:** Minor Engagementin planeetta 1–5 small, 6 medium (kirjan sisävyöhykkeiden alitaulukko). Cerberus 1:n
+  nebula on 35 cm:n kaistalla blokadireunalla (nauhat mahtuvat myös pystyyn). Into the Claw'n "small" asteroidikentät
+  saavat kirjan D3×5 cm. Capture the Stationin (AdeptiCon) "a moon or a medium planet" on medium planet. Port Maw'n
+  kuu suunnataan uudelleen, jos se ei mahdu (lähteessä se jää pois). Rising Shadow'n riftin paikka laatikossa arvotaan
+  scatter-nopan sijaan. Above Belis Coronan "30 cm from the planet" mitataan piirretyn planeetan reunasta.
+- **Tunnukset A1, C2 …** piirretään skenaarion tekstien alle (`.bzl`-kerros), joten skenaarion teksti pysyy luettavana.
+  Karttatesti ohittaa ne, ja maastotesti tarkistaa maaston.
+
+### Testit (0.9)
+
+- `node testit/maastotesti.js`: ydin = generaattorin BZCORE, generaattorin 7 560 karttaa ennallaan, 204/204 riviä,
+  15 180 karttaa (skenaario × versio × 5 pöytää × 12 siementä) ja 73 723 palaa: deterministinen, pöydällä, ei
+  päällekkäin, ei kiinteiden piirteiden tai keep-alueiden päällä, battlezone taulukon mukainen, ignore-tuloksia ei ole,
+  planeettaraja pitää ja tekstit (paneeli, säännöt jokaiselle palalle, Play, loki) ovat ehjiä. **0 virhettä.**
+  Ensimmäinen ajo löysi yhden vian: suuri skenaarioplaneetta ulottui 91 × 91 -pöydän yli. Korjattu ytimessä
+  (planeetta siirtyy pöydälle).
+- Selaintesti puhtaalla tilalla (1024) ja jokainen skenaario maasto arvottuna, sääntöpaneeli ja loki auki, leveänä
+  (1440) ja kapeana (375): kukin 15 184 näkymää, 204 otsikkoa, 0 virhettä. Karttatesti maasto arvottuna:
+  3 120 karttaa, 14 964 tekstiä, 0 + 0. Sisältötesti 0 + 0. Sivuviiteauditointi 310 viitettä, 0 tarkistamatta; tiukka 0.
+- Kuvakierros: `--maasto` (jokaisessa skenaariossa maasto arvottuna, battlezonen säännöt ja loki auki) ja ilman
+  maastoa, kumpikin 1 850 sivua, 0 löydöstä (lopullisella asettelulla ajettu uudelleen: sama tulos).
+- Leveät näytöt: Generate-nappi ja kartta selitteineen mahtuvat näkyviin kaikissa 204 skenaariossa 1366 × 768:ssa
+  ja 1280 × 620:ssa, sekä sivun alussa että tarttuvassa tilassa.
+- Skriptitagit `?v=0.9.1` (myös `battlezone-core.js`), alatunniste "version 0.9".
+- Esittelykuvat ennen ja jälkeen (puhelin 390 ja PC 1440): `julkaisu/maasto-esittely/`.
+- Käsin: kaksi yhdeksän kartan arkkia eri tyypeistä (planeetta keskellä, kaistat, neljännekset, riftimyrsky,
+  käytävä, 45 cm:n esteet, renkaat, ei aurinkoreunaa, oma taulukko, nebula, kaksi kuuta, renkaallinen jättiläinen,
+  laatikkoheitto, valmiit bursts ja nebulakaista). Lisäksi Play-välilehden flare-noppa vuoroittain: flare vuorolla 2,
+  ja vuorolla 3 "went off on turn 2 … stop rolling". Battlezone Generator selaimessa ytimen siirron jälkeen:
+  arpoo, piirtää, säännöt ja Start of turn toimivat, ja konsolissa ei virheitä.
+- Komento: `node testit/kuvakierros.js <ulos> --maasto` kuvaa sivut maasto arvottuna.
+
 ## Julkaisu (20.10.2026)
 
 - Osoite **https://scenario-library.kuldare.com**, Cloudflare Worker
   **`still-resonance-55fc`**. Nimi on dashboardin automaattinen: käyttäjä latasi
   ensimmäisen version (pelkkä `index.html`) käsin 20.10. klo 14.02 ja liitti
   domainin. Käyttäjä vahvisti, että tämä on Scenario Library.
-- `julkaisu/kokoa.py`: tunnus `scenarios`, tiedostot `index.html`, kuvakkeet ja
-  `scenarios/*.js` (glob). Lappu (`tools_badge.html`) linkittää tänne kaikista
+- `julkaisu/kokoa.py`: tunnus `scenarios`, tiedostot `index.html`, kuvakkeet, `battlezone-core.js` (0.9) ja
+  `scenarios/*.js` (glob). Koonti kieltäytyy, jos `battlezone-core.js` ei vastaa generaattorin BZCORE-lohkoa. Lappu (`tools_badge.html`) linkittää tänne kaikista
   BFG Toolsin sovelluksista, ja builderin `build.py` hyväksyy isännän.
 - Julkaisu: `cd ../julkaisu && python kokoa.py --kokoa --julkaise scenarios`.
 - 0.7 julkaistu 20.10. myöhään (versio dfb678aa): live-sivulla 137 skenaariota ja kaikki kategoriat tarkistettu selaimella.
@@ -853,6 +1009,16 @@ ja kaikki versiot, puhelin 390 ja työpöytä 1200. Kuvat käytiin läpi arkkein
 - Warp Riftin sanamuotokorjaus julkaistu 20.10. illalla (versio d37cd2e4, 0.7.55, GitHub 47f1d40) käyttäjän hyväksynnällä ("julkaiset sit samalla kun on oikeat sanamuodot").
 - Warp Riftin laatuluokitus julkaistu 21.10. (versio 0341316c, 0.7.56, GitHub 0c13f8b). Live-sivu tarkistettu: 58/58 luokiteltu, Rules writer -tagi näkyy.
 - Kirjoituskentät kaikkiin skenaarioihin, Warp Rift yhdeksi kategoriaksi ja tutkimuksen suositukset julkaistu 21.10. (versio a07a4db8, 0.7.68, GitHub Kuldara/bfg-tools 9eaed6b) käyttäjän luvalla ("julkaise"). Samalla lapun GitHub-linkki Kuldara-käyttäjänimeen.
+- 0.8.5 julkaistu 21.10. klo 12.40 (Worker-versio 383f6eca, GitHub Kuldara/bfg-tools 6cca6f4) käyttäjän
+  pyynnöstä ("testataan vielä uusi kokonaisuus ja uudet skenaariot ja julkaisu"): 204 skenaariota, eli
+  Chapter I:n 12 skenaariota ja pistokokeiden 26 korjausta. Ennen julkaisua koko kokonaisuus testattiin
+  uudelleen, eikä yksikään tiedosto muuttunut testien aikana (md5-tilannekuva):
+  - selaintesti leveänä ja kapeana: 15 184 näkymää, 0 virhettä
+  - karttatesti 3 120 karttaa, 0 + 0, ja sisältötesti 0 + 0
+  - kuvakierros: 1 850 sivua, 0 löydöstä
+  - sivuaudit: 310 viitettä, 0 tarkistamatta
+  Käsin luettiin lähdettä vasten Mission One, Five ja Ten, ja For the Greater Goodin Result pelattiin
+  läpi sovitulla tasapelillä. Live-sivu tarkistettiin: 204 skenaariota ja `fan-pdd.js?v=0.8.5`.
 - Lähdeteksteistä ja tekijänoikeudesta ks. "Sisältö ja tekijänoikeus": horizonille
   (Warp Riftin toimittaja) kannattaa yhä kertoa sovelluksesta.
 

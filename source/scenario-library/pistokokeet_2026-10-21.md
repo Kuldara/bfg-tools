@@ -160,6 +160,7 @@ Testit korjausten jälkeen (204 skenaariota, `?v=0.8.5`):
 | kuvakierros (tarkistus) | 1 850 sivua, 0 löydöstä |
 | kuvakierros (kuvat, muutetut sivut) | 78 sivua, 0 löydöstä; Result-sivut katsottu silmin |
 
+**Julkaistu 21.10. klo 12.40 versiona 0.8.5** (Worker 383f6eca, GitHub 6cca6f4), kun koko 204 skenaarion kokonaisuus oli testattu uudelleen. Alkuperäinen huomautus:
 **Ei julkaistu.** Julkaisu tarvitsee käyttäjän luvan:
 `cd "Battlefleet Gothic/julkaisu" && PYTHONIOENCODING=utf-8 python kokoa.py --kokoa --julkaise scenarios`.
 Julkaisu peilaa myös GitHubiin, ja mukaan tulisi samalla rinnakkaisen istunnon Chapter I.

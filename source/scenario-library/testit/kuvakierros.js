@@ -27,6 +27,7 @@ const ROOT = path.resolve(__dirname, "..");
 const CHROME = "C:/Program Files/Google/Chrome/Application/chrome.exe";
 const OUT = process.argv[2];
 const ONLY_CHECK = process.argv.includes("--vain-tarkistus");
+const TERRAIN_ON = process.argv.includes("--maasto");
 /* --vain=<alku>: vain skenaariot, joiden id alkaa näin (pilkuin useita), etusivut silti mukana */
 const ONLY_IDS = (process.argv.find(a => a.startsWith("--vain=")) || "").slice(7).split(",").filter(Boolean);
 if (!OUT) { console.error("anna ulos-kansio"); process.exit(2); }
@@ -114,6 +115,8 @@ const CHECK = `(() => {
       const loaded = cd.once("Page.loadEventFired");
       await cd.send("Page.navigate", { url: base + "?k=" + Date.now() });
       await loaded; await sleep(400);
+      /* --maasto (0.9): jokaiseen skenaarioon arvottu maasto, battlezonen säännöt ja loki auki */
+      if (TERRAIN_ON) await cd.evaluate(`(() => { let k = 0; for (const sc of SC) { const st = stOf(sc); st.bz = { seed: 9000 + (k++) * 31, sel: "zone", log: true }; } save(); return 1; })()`);
       const routes = await cd.evaluate(`(() => {
         window.__R = null; const o = parseHash; parseHash = () => window.__R || o();
         const r = CATS.map(c => ["home-" + c[0], {view: "list"}, {cat: c[0]}]).concat([["home-filters", {view: "list"}, {cat: "all", fopen: true}], ["prep", {view: "prep"}, {lib: false}], ["prep-lib", {view: "prep"}, {lib: true}], ["subplots", {view: "subplots"}], ["sources", {view: "sources"}]]);
