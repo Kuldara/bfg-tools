@@ -200,7 +200,7 @@
       a: ["Admiral (Ld 9, two extra re-rolls).", "Overlord battlecruiser Triumph; Dictator Vanguard; Dominator First Strike; Tyrant Implacable; Gothic Furious; Lunar Challenger.", "Dauntless light cruisers Nevsky, Hunter and Rapier.", "Three Firestorms, three Swords, three Cobras."],
       b: ["Ahriman; a Chaos Lord (Ld 8, Mark of Tzeentch).", "Despoiler battleship Severed Dreams; Repulsive grand cruiser Treacherous; Hades Vengeance; Devastation Scourge; Carnage Eliminator; Murder Malicious; Slaughter Eradicator.", "Iconoclasts Black Asps (3), Idolators Avengers (2).", "Historically the Slaughter and the Iconoclasts were the bait, and the Dauntless Nevsky found them."]
     },
-    draw: (v, W, H) => MAPS["escalating-engagement"](v, W, H).map(it => it.z === "mark" && it.l === "P1" ? Object.assign({}, it, { l: "Imperial" }) : it.z === "mark" && it.l === "P2" ? Object.assign({}, it, { l: "Chaos" }) : it),
+    draw: (v, W, H) => MAPS["escalating-engagement"](v, W, H),
     fit: () => [120, 90],
     mapNote: "Starting divisions as in Escalating Engagement. Edge numbers are for the Imperial reinforcements; Ahriman’s fleet marker goes on any edge he chooses.",
     steps: [

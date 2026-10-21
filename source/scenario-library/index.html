@@ -527,7 +527,7 @@ html.wide:not(.short) .mapstick > .col:last-child { max-height: calc(100vh - var
   <p class="kbd">Keyboard: <b>1</b>–<b>4</b> switch a scenario’s tabs · <b>←</b> <b>→</b> change the turn on Play.</p>
 </footer>
 
-<script src="battlezone-core.js?v=0.9.1"></script>
+<script src="battlezone-core.js?v=0.9.2"></script>
 <script>
 "use strict";
 /* ---------------------------------------------------------------- data */
@@ -1487,10 +1487,10 @@ const MAPS = {
     R(0, 0, 15, H, "a", "Attacker: 15 cm", { rot: -90 })
   ],
   "escalating-engagement": (v, W, H) => [
-    R(30, 30, W - 60, H - 60, "n", "", { dash: 1 }),
-    { z: "text", x: W / 2, y: H - 42, l: "starting markers: 30 cm+ from edges,\n60 cm+ from the enemy marker", s: "n" },
-    { z: "mark", x: W / 2 - 35, y: H / 2 - 8, s: "a", l: "P1" }, { z: "mark", x: W / 2 + 35, y: H / 2 - 8, s: "b", l: "P2" },
-    { z: "dim", x1: W / 2 - 32, y1: H / 2, x2: W / 2 + 32, y2: H / 2, l: "" },
+    /* ei kiinteitä P1/P2-merkkejä: aloitusmerkit saa sijoittaa minne tahansa katkoviivan sisälle (horizon 21.10.) */
+    R(30, 30, W - 60, H - 60, "n", ""),
+    /* teksti alueen yläreunaan: keskellä arvottu maasto (esim. planeetta) peitti sen */
+    { z: "text", x: W / 2, y: 42, l: "Starting markers: anywhere in here,\n60 cm+ from the enemy marker", s: "n" },
     { z: "edge", e: "l", s: "n", l: "1" }, { z: "edge", e: "t", s: "n", l: "2–3" }, { z: "edge", e: "b", s: "n", l: "4–5" }, { z: "edge", e: "r", s: "n", l: "6" }
   ],
   "exterminatus": (v, W, H) => [
@@ -3185,30 +3185,30 @@ let lastMapNarrow = null;
 window.addEventListener("resize", () => { const n = mapNarrow(); if (lastMapNarrow !== null && n !== lastMapNarrow) render(true); lastMapNarrow = n; });
 </script>
 <!-- scenario files: each adds its scenarios with addScenarios([...]) -->
-<script src="scenarios/blackcrusade.js?v=0.9.1"></script>
-<script src="scenarios/fleets.js?v=0.9.1"></script>
-<script src="scenarios/cl-early.js?v=0.9.1"></script>
-<script src="scenarios/cl-mag-a.js?v=0.9.1"></script>
-<script src="scenarios/cl-mag-b.js?v=0.9.1"></script>
-<script src="scenarios/cl-mag-c.js?v=0.9.1"></script>
-<script src="scenarios/cl-mag-d.js?v=0.9.1"></script>
-<script src="scenarios/cl-fanatic.js?v=0.9.1"></script>
-<script src="scenarios/cl-invasion.js?v=0.9.1"></script>
-<script src="scenarios/_wr.js?v=0.9.1"></script>
-<script src="scenarios/wr-committee.js?v=0.9.1"></script>
-<script src="scenarios/wr-community-a.js?v=0.9.1"></script>
-<script src="scenarios/wr-spreading-war.js?v=0.9.1"></script>
-<script src="scenarios/wr-community-l4a.js?v=0.9.1"></script>
-<script src="scenarios/wr-community-l4b.js?v=0.9.1"></script>
-<script src="scenarios/wr-community-l4c.js?v=0.9.1"></script>
-<script src="scenarios/wr-community-l4d.js?v=0.9.1"></script>
-<script src="scenarios/fan-tournament.js?v=0.9.1"></script>
-<script src="scenarios/fan-nemesis.js?v=0.9.1"></script>
-<script src="scenarios/fan-pdd.js?v=0.9.1"></script>
-<script src="scenarios/fan-starblade.js?v=0.9.1"></script>
-<script src="scenarios/terrain-map.js?v=0.9.1"></script>
-<script src="scenarios/open-points.js?v=0.9.1"></script>
-<script src="scenarios/wr-rating.js?v=0.9.1"></script>
+<script src="scenarios/blackcrusade.js?v=0.9.2"></script>
+<script src="scenarios/fleets.js?v=0.9.2"></script>
+<script src="scenarios/cl-early.js?v=0.9.2"></script>
+<script src="scenarios/cl-mag-a.js?v=0.9.2"></script>
+<script src="scenarios/cl-mag-b.js?v=0.9.2"></script>
+<script src="scenarios/cl-mag-c.js?v=0.9.2"></script>
+<script src="scenarios/cl-mag-d.js?v=0.9.2"></script>
+<script src="scenarios/cl-fanatic.js?v=0.9.2"></script>
+<script src="scenarios/cl-invasion.js?v=0.9.2"></script>
+<script src="scenarios/_wr.js?v=0.9.2"></script>
+<script src="scenarios/wr-committee.js?v=0.9.2"></script>
+<script src="scenarios/wr-community-a.js?v=0.9.2"></script>
+<script src="scenarios/wr-spreading-war.js?v=0.9.2"></script>
+<script src="scenarios/wr-community-l4a.js?v=0.9.2"></script>
+<script src="scenarios/wr-community-l4b.js?v=0.9.2"></script>
+<script src="scenarios/wr-community-l4c.js?v=0.9.2"></script>
+<script src="scenarios/wr-community-l4d.js?v=0.9.2"></script>
+<script src="scenarios/fan-tournament.js?v=0.9.2"></script>
+<script src="scenarios/fan-nemesis.js?v=0.9.2"></script>
+<script src="scenarios/fan-pdd.js?v=0.9.2"></script>
+<script src="scenarios/fan-starblade.js?v=0.9.2"></script>
+<script src="scenarios/terrain-map.js?v=0.9.2"></script>
+<script src="scenarios/open-points.js?v=0.9.2"></script>
+<script src="scenarios/wr-rating.js?v=0.9.2"></script>
 <!--SCENARIO-FILES-->
 <script>wrInit(); document.getElementById("scn").textContent = SC.length; render(false);</script>
 </body>

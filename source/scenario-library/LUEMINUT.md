@@ -175,7 +175,15 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
     Siinä on kolme asettelualuetta (Rearguard, Convoy ja Convoy Leaders, 30 × 15 cm), pienten
     pöytien sääntö (kartta kutistaa alueet) ja pisteytys kuljetuskapasiteetin mukaan, jossa
     parannukset eivät tuota pisteitä saattueelle.
-- **Rules writer myös fanilisäosiin ja Event Horizon -nimi (21.10. iltapäivä, EI vielä julkaistu):**
+- **Escalating Engagementin aloitusmerkit alueena (21.10. iltapäivä, 0.9.2, EI vielä julkaistu):**
+  horizon huomautti, että kartan P1- ja P2-merkit näyttivät kiinteiltä paikoilta. Käyttäjä: "turha olla
+  tarkka piste vaan ennemmin deployment alue maalaus". Nyt kartalla on maalattu neutraali alue
+  (30 cm reunoista) ja sen yläreunassa teksti "Starting markers: anywhere in here, 60 cm+ from the enemy
+  marker". Teksti on yläreunassa, koska keskellä arvottu maasto peitti sen. Etäisyys on 60 cm kuten
+  RB s. 138 (v1.10 ja v1.11); horizon muisti 30 cm, mutta se on etäisyys reunoista. Muutos koskee myös
+  Ahriman's Arrivalia, joka lainaa kartan (`cl-mag-a.js`: P1/P2-nimeäminen poistettu). Karttatesti 0 + 0,
+  maastotesti 0. Script-tagit `?v=0.9.2`.
+- **Rules writer myös fanilisäosiin ja Event Horizon -nimi (21.10. iltapäivä, julkaistu 0.9.1:n mukana):**
   horizon kysyi Discordissa, miten Rules writer -tagi on jaettu lisäosille, ja toivoi skenaariolleen
   nimeä "Just Event Horizon". Muutokset:
   - Tagi kertoo kirjoittajan roolista, ei lähteestä (käyttäjän päätös). Siksi `FAN_TAG` antaa sen myös
@@ -204,7 +212,7 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
     ne. Skenaariotiedostojen `?v=0.8.0`.
   - Testit: selaintesti leveä 1440 ja kapea 375, karttatesti (myös arvottu maasto ja numerokentät
     maksimissa), sisältötesti, sivuviiteauditointi ja kuvakierros: kaikista 0 löydöstä (ks. Testaus).
-- **0.9 (21.10.2026): maasto skenaarion kartalle (EI julkaistu, odottaa käyttäjän lupaa).** Käyttäjä: *"saisiko
+- **0.9 (21.10.2026): maasto skenaarion kartalle (julkaistu 21.10. klo 14 käyttäjän luvalla, 0.9.1).** Käyttäjä: *"saisiko
   tuon mun terrain generaattorin tuonne skenaario sivun sisään? eli joku nappi että generate terrain ja reroll
   nappi. se sitten olisi automaattisesti scenaarioon sopivalla terrainilla jos sellainen määritetty tai itsestään
   selvää"* ja kesken työn: *"ei aleta tässä mitenkään digitaalisesti toteuttamaan mitän custom vuorottelevaa
@@ -1019,6 +1027,16 @@ Nämä näkyvät paneelin perusteluissa, maininnoissa ja lokissa. Mitään ei ol
   - sivuaudit: 310 viitettä, 0 tarkistamatta
   Käsin luettiin lähdettä vasten Mission One, Five ja Ten, ja For the Greater Goodin Result pelattiin
   läpi sovitulla tasapelillä. Live-sivu tarkistettiin: 204 skenaariota ja `fan-pdd.js?v=0.8.5`.
+- 0.9.1 julkaistu 21.10. klo 14 käyttäjän luvalla ("julkaise") yhdessä Battlezone Generatorin kanssa (`--julkaise
+  scenarios terrain`). Worker-versiot: Scenario Library 6ad5d1bb, Battlezone Generator 65b9e358. GitHub
+  Kuldara/bfg-tools f6e2975. Mukana ovat maasto skenaarion kartalle, Event Horizon -nimi ja Rules writer
+  -tagi PDD:lle ja Starbladelle. Tarkistukset ennen julkaisua:
+  - md5-tilannekuva: mikään ei muuttunut testien aikana
+  - maastotesti 0 virhettä (ydin = BZCORE, generaattorin 7 560 karttaa ennallaan, 15 180 skenaariokarttaa)
+  - selaintesti leveänä: 15 184 näkymää, 0 virhettä
+  Live-sivulla nimi on Event Horizon, Rules writer -tagi on 50 skenaariolla, ja Generate terrain →
+  Reroll / Clear toimii (Deep Space, asteroidikentät). Battlezone Generator latautuu, ja index.html on
+  molemmissa tavu tavulta sama kuin paikallinen.
 - Lähdeteksteistä ja tekijänoikeudesta ks. "Sisältö ja tekijänoikeus": horizonille
   (Warp Riftin toimittaja) kannattaa yhä kertoa sovelluksesta.
 
