@@ -223,7 +223,8 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
   battle -arvontaan tulee toinen valikko "vs …" (`f.sug2`, `p.sug2`). Kumpikin on vapaaehtoinen. Kun molemmat on valittu,
   suosituksen pitää sisältää kumpikin laivasto, ja "any fleets" -skenaariot pysyvät mukana kuten ennenkin.
   Orks vs Imperial Navy: arvontapooli 70 (52 any fleets + 18 suositeltua), etusivu 72 (osittainen osuma, esim. Orks-alaryhmät).
-- **0.12 (21.10.2026 ilta): skenaarion koon suodatin** (EI vielä julkaistu). Käyttäjä: *"voisi myös lisätä yhdeksi
+- **0.12 (21.10.2026 ilta): skenaarion koon suodatin** (julkaistu käyttäjän luvalla ("joo"): Worker-versio ec842632,
+  GitHub Kuldara/bfg-tools 9f947de; index.html tavuvertailussa TARKISTETTU, live 204 skenaariota, S/M/L 131/109/119). Käyttäjä: *"voisi myös lisätä yhdeksi
   suodattimeksi skenaarion koon. esim kolme. about 750 1250 ja 1500 tai isommat"*. Etusivun Filtersiin rivi **Size** ja
   Before the battle -arvontaan sama nappirivi: Small (up to 1000) / Medium (1000–1500) / Large (1500+). Valinta on
   vapaaehtoinen, ja toinen napautus poistaa sen. Käsin tehty luokitus kaikille 204 skenaariolle on `scenarios/sizes.js`:ssä.
@@ -1361,6 +1362,12 @@ Orks vs Imperial Navy (etusivu 72) + Small 49, + Medium 54, + Large 50.
   - maastotesti 0 virhettä
   Live tarkistettu puhelimella: Solar Collectorsin 10 cm:n kaista, mitat 20 / 10 / 20 cm ja "grid 30 cm"
   selitteessä; `?v=0.9.8`; index.html on tavu tavulta sama kuin paikallinen.
+- 0.12 julkaistu 21.10. illalla käyttäjän luvalla ("joo"). Worker-versio ec842632, GitHub Kuldara/bfg-tools 9f947de.
+  Mukana ovat kokosuodatin (`scenarios/sizes.js`) ja Filters-valikon reunakorjaus. Tarkistukset ennen julkaisua:
+  - md5-tilannekuva: mikään ei muuttunut julkaisun aikana
+  - kokotesti 0, selaintesti leveänä ja kapeana 15 184 näkymää 0 virhettä, sisältötesti 0 + 0, mittatesti 0
+  - kuvakierros 1 854 sivua 0 löydöstä, korjauksen jälkeen yleissivut 26 sivua 0 löydöstä
+  Live: `sizes.js` on tavulleen sama kuin paikallinen, "version 0.12", 204 skenaariota, Small/Medium/Large 131/109/119.
 - Lähdeteksteistä ja tekijänoikeudesta ks. "Sisältö ja tekijänoikeus": horizonille
   (Warp Riftin toimittaja) kannattaa yhä kertoa sovelluksesta.
 
