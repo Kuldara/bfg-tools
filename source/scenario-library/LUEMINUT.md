@@ -183,7 +183,32 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
   RB s. 138 (v1.10 ja v1.11); horizon muisti 30 cm, mutta se on etäisyys reunoista. Muutos koskee myös
   Ahriman's Arrivalia, joka lainaa kartan (`cl-mag-a.js`: P1/P2-nimeäminen poistettu). Karttatesti 0 + 0,
   maastotesti 0. Script-tagit `?v=0.9.2`.
-- **Tekniset mitat kaikkiin karttoihin (0.9.3, 21.10.2026 ilta, EI julkaistu):** käyttäjä: *"ainakin kaikessa saisi
+- **0.10 (21.10.2026 ilta): kartta Play-välilehdelle.** Käyttäjä: *"esim tuossa escalating engagement
+  scenaariossa olisi hyötyä että kartta edelleen näkyvissä play välilehdessä. ainakin pienempänä (ja siinä on
+  sit vähän eri kartta piirto kuin vuoro 0) ja mieti muut scenaariot myös missä tämä parannus relevantti ja
+  toteuta ja julkaise"*.
+  - **Moottori:** `mapOf(sc, v, playT)` ja `playMapBlock`. Play-välilehdellä on "On the table" -kartta, joka
+    on pienempi kuin Set-upissa (34 vh puhelimella, 44 vh leveällä). Kapealla se on vuoropaneelin alla.
+    Leveällä se on oikeassa palstassa sääntöjen yläpuolella, jotta se ei jää tarttuvan vuoropaneelin alle.
+    Arvottu maasto on sama kuin Set-upissa, ja vuoron vaihto piirtää kartan uudelleen.
+  - **Missä:** kaikissa kartallisissa skenaarioissa paitsi `PLAYMAP_OFF` (30 kpl) ja kampanjat.
+    `scenarios/play-maps.js` perustelee rajauksen: niissä kartta kertoo vain asettelun eikä pelissä ole
+    paikkasidonnaisia sääntöjä. Esimerkkejä: Cruiser Clash, Fleet Engagement ja "no special rules" -taistelut.
+    Valinta tehtiin lukemalla jokaisen skenaarion Play-säännöt: 155:ssä on reuna-, saapumis-, poistumis- tai
+    etäisyyssääntö, ja 44:stä ilman sellaista 14 jäi silti mukaan, koska niiden kohteet ovat kartalla
+    (asemat, hylyt, pelastusmerkit).
+  - **Oma pelinaikainen piirto (`PLAYMAP[id].draw`) 11 skenaariossa**, joissa pelin kuva eroaa asettelusta:
+    - Escalating Engagement ja Ahriman's Arrival: aloitusalue pois, reunat "D6: 2–3" jne. ja reservimerkkien
+      sääntö.
+    - Vuoron mukaan kasvava saapumiskaista pitkillä reunoilla: The Bait, Parol's Bait, Rearguard Attack,
+      Rising Shadow, Live Another Day, The Trap (lyhyemmällä pöydällä myöhässä kuten Set-upin tiksit) ja
+      Commerce Raiders (30 cm × vuoro käytäväreunasta).
+    - Shadow of the Comet: komeetan paikka vuorolla N (10 cm / vuoro, lähtöpää Set-upin heitosta).
+    - Solblade 2: shokkiaalto 15 + 30 (T − 2) cm Tyranidien ja 30 + 30 (T − 2) cm Solbladen siirron jälkeen.
+  - **Testit:** `karttatesti.js` tarkistaa myös pelikartat vuoroilla 1, 2, 3, 4, 6 ja 8 (4 020 karttaa, 0 + 0).
+    Testi löysi 26 tekstien päällekkäisyyttä, ja ne korjattiin: tekstit kolmelle riville, The Trapin teksti
+    aseman sivuun ja komeetan teksti mittaviivan vastakkaiselle puolelle.
+- **Tekniset mitat kaikkiin karttoihin (0.9.3, 21.10.2026 ilta; julkaistu klo 16 versiona 0.9.8):** käyttäjä: *"ainakin kaikessa saisi
   olla tekniseen piirrustuksen tyyliset mitat että tuon kuvan saa aina replikoitua omalla pöydällä"*, ja pisteistä:
   *"turha olla tarkka piste vaan ennemmin deployment alue maalaus minne laittaa se yksikkö"*. Moottori mittaa jokaisen
   kiinteän kohteen pöydän reunoista pöydän ulkopuolelle, ja kartat, joissa piste näytti kiinteältä paikalta vaikka sääntö
@@ -1148,6 +1173,15 @@ se yksikkö"* (Escalating Engagement, 0.9.2).
   Live-sivulla nimi on Event Horizon, Rules writer -tagi on 50 skenaariolla, ja Generate terrain →
   Reroll / Clear toimii (Deep Space, asteroidikentät). Battlezone Generator latautuu, ja index.html on
   molemmissa tavu tavulta sama kuin paikallinen.
+- 0.9.8 julkaistu 21.10. klo 16 käyttäjän luvalla ("julkaise"). Worker-versio 301c6b56, GitHub Kuldara/bfg-tools
+  1614a98. Mukana ovat tekniset mitat kaikkiin karttoihin ja epäselvät pisteet alueiksi. Tarkistukset ennen
+  julkaisua:
+  - md5-tilannekuva: mikään ei muuttunut testien aikana
+  - kaikki skenaariotiedostot `node --check`, inline-skriptit ok
+  - mittatesti 0 virhettä (4 680 karttaa, 20 115 mittaa, 27 384 kohdetta)
+  - maastotesti 0 virhettä
+  Live tarkistettu puhelimella: Solar Collectorsin 10 cm:n kaista, mitat 20 / 10 / 20 cm ja "grid 30 cm"
+  selitteessä; `?v=0.9.8`; index.html on tavu tavulta sama kuin paikallinen.
 - Lähdeteksteistä ja tekijänoikeudesta ks. "Sisältö ja tekijänoikeus": horizonille
   (Warp Riftin toimittaja) kannattaa yhä kertoa sovelluksesta.
 

@@ -50,13 +50,15 @@
         DB.table = { p: "custom", w: W, h: H };
         const fit = fitOf(sc, v || v0(sc));
         if (W < fit[0] || H < fit[1]) { counts.skippedSmall++; continue; }
-        for (const nf of [false, true]) {
+        /* 0.10: pelinaikaiset kartat (scenarios/play-maps.js) samoilla tarkistuksilla, pt = vuoro (0 = Set-up) */
+        const pts = [0].concat(typeof PLAYMAP !== "undefined" && PLAYMAP[sc.id] && PLAYMAP[sc.id].draw ? [1, 2, 3, 4, 6, 8] : []);
+        for (const [nf, pt] of [false, true].flatMap(nf => pts.map(pt => [nf, pt]))) {
           narrowFlag = nf; window.__mapNarrow = nf; /* mapNarrow() lukee tämän ennen asettelua (0.7: kartan palstaleveys) */
-          const vv = v || v0(sc), m = mapOf(sc, vv);
+          const vv = v || v0(sc), m = mapOf(sc, vv, pt);
           host.innerHTML = mapSVG(m);
           const svg = host.querySelector("svg"), vb = svg.getAttribute("viewBox").split(/\s+/).map(Number);
           const sr = svg.getBoundingClientRect(), k = vb[2] / sr.width, tol = 0.006 * W;
-          const where = (v ? v + " · " : "") + W + "×" + H + (nf ? " · phone" : "");
+          const where = (v ? v + " · " : "") + W + "×" + H + (nf ? " · phone" : "") + (pt ? " · play T" + pt : "");
           counts.maps++;
           /* arvotun maaston (0.9) tunnukset A1, C2 … piirretään tarkoituksella skenaarion tekstien alle
              (.bzl-kerros): ne eivät kuulu sijoittelutarkistukseen; maastotesti.js tarkistaa maaston */

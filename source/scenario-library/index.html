@@ -428,6 +428,9 @@ html.short .shead > .src { grid-column: 2; grid-row: 1; text-align: right; }
 html.short .shead > .infobtn { grid-column: 2; grid-row: 2; justify-self: end; margin: 0; }
 /* leveällä kartta korkeintaan 60 % näytöstä; tarttuvassa karttapalstassa niin, että palsta mahtuu näyttöön */
 html.wide .mapwrap svg { max-height: 60vh; }
+/* Play-välilehden kartta (0.10): pienempi kuin Set-upissa */
+.playmap svg { max-height: 34vh; }
+html.wide .playmap svg { max-height: 44vh; }
 html.wide:not(.short) .cols.mapstick { grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr); }
 html.wide:not(.short) .mapstick > .col:last-child { position: sticky; top: calc(var(--topH, 49px) + 4px); }
 html.wide:not(.short) .mapstick .mapwrap svg { max-height: calc(100vh - var(--topH, 49px) - 300px); }
@@ -521,13 +524,13 @@ html.wide:not(.short) .mapstick > .col:last-child { max-height: calc(100vh - var
 </header>
 <main id="app"></main>
 <footer>
-  <p><b>Scenario Library</b> · version 0.9 · <span id="scn">204</span> scenarios. Unofficial fan-made tool, not affiliated with Games Workshop.</p>
+  <p><b>Scenario Library</b> · version 0.10 · <span id="scn">204</span> scenarios. Unofficial fan-made tool, not affiliated with Games Workshop.</p>
   <p>Every scenario here is summarised in our own words for play at the table; “Playing with other fleets” notes marked as suggestions are ours, not the source’s. Credit belongs to the original authors; the page references point to the sources: the BFG Remastered <i>Rulebook v1.10</i> and <i>Fleets v0.36</i>, the classic Games Workshop and Fanatic publications (<i>Warp Storm</i>, <i>Planet Killer</i>, <i>Battlefleet Gothic Magazine</i>, <i>Invasion</i>, <i>Fanatic Magazine</i>, <i>Fanatic Online</i>) the fan magazine <a href="https://specialist-arms.com/bfg/warprift/" target="_blank" rel="noopener">Warp Rift</a>, and the fan supplements <i>Book of Nemesis</i>, <i>Project Distant Darkness</i>, <i>Starblade</i>, the <i>BFG Tournament Mission Pack</i> and <i>BFG Advanced Scenarios</i>.</p>
   <p>RB = Rulebook v1.10, FL = Fleets v0.36. Progress is saved in this browser only.</p>
   <p class="kbd">Keyboard: <b>1</b>–<b>4</b> switch a scenario’s tabs · <b>←</b> <b>→</b> change the turn on Play.</p>
 </footer>
 
-<script src="battlezone-core.js?v=0.9.8"></script>
+<script src="battlezone-core.js?v=0.10.5"></script>
 <script>
 "use strict";
 /* ---------------------------------------------------------------- data */
@@ -1646,13 +1649,25 @@ const FITS = {
 const SRC_TABLE = { "assassination": [180, 120], "eliarenaths-gift": [180, 120], "diasporex-gambit": [180, 120], "unknown-weapons": [200, 200] };
 function mapFn(sc) { return sc.draw || MAPS[sc.id] || null; }
 function fitOf(sc, v) { return sc.fit ? sc.fit(v) : FITS[sc.id] ? FITS[sc.id](v) : [0, 0]; }
-function mapOf(sc, v) {
+function mapOf(sc, v, playT) {
   const [W, H] = tableWH(), fn = mapFn(sc), st = DB.s && DB.s[sc.id] ? DB.s[sc.id] : { w: {}, turn: 1 };
   let items = fn ? fn(v, W, H, st, sc).filter(Boolean) : [];
   /* arvottu maasto (0.9): korvatut esineet (drop) pois vasta arvonnan jälkeen */
   const bz = bzRun(sc, v, st, W, H, items);
   if (bz && bz.spec.drop) items = items.filter(i => !bz.spec.drop.includes(i.z));
+  /* pelinaikainen kartta (0.10, scenarios/play-maps.js): oma piirto vuorolle playT; maasto pysyy Set-upin mukaisena */
+  const pm = playT && typeof PLAYMAP !== "undefined" && PLAYMAP[sc.id];
+  if (pm && pm.draw) items = pm.draw(v, W, H, Object.assign({}, st, { turn: playT }), sc, items).filter(Boolean);
   return { w: W, h: H, items, bz, sel: st.bz && st.bz.sel };
+}
+/* Play-välilehden kartta: kaikissa kartallisissa paitsi PLAYMAP_OFF (kartta kertoo vain asettelun) ja kampanjat */
+function playMapOn(sc) { return !!mapFn(sc) && sc.type !== "Campaign" && !(typeof PLAYMAP_OFF !== "undefined" && PLAYMAP_OFF.has(sc.id)); }
+function playMapBlock(sc, st, v) {
+  if (!playMapOn(sc)) return "";
+  const [W, H] = tableWH(), pm = typeof PLAYMAP !== "undefined" && PLAYMAP[sc.id], m = mapOf(sc, v, st.turn), note = pm && pm.note ? pm.note(st, v, sc) : "";
+  return "<h2>On the table" + (pm && pm.draw ? " · turn " + st.turn : "") + "</h2><div class='mapwrap playmap'>" + mapSVG(m) + "<div class='legend'>" +
+    (sc.legend || Object.keys(sc.sides).map(k => [k, sc.sides[k].n])).map(([k, n]) => "<span><i style='background:var(--" + k + ")'></i>" + esc(n) + "</span>").join("") + bzLegend(m) + "<span class='msize'>" + mapSize(W, H) + "</span></div>" +
+    (note ? "<div class='mapnote'>" + esc(tpl(note, sc, st)) + "</div>" : "") + "</div>";
 }
 
 /* ---------------------------------------------------------------- turn track
@@ -2885,12 +2900,15 @@ function playView(sc, st, v) {
   const tools = camp ? [] : sc.tools.filter(x => vis(x, v)), bzT = camp ? "" : bzEvTool(sc, st);
   const toolsH = tools.length || bzT ? "<h2>Tools</h2>" + bzT + tools.map(t => widget(sc, st, v, t)).join("") : "";
   const reset = "<div class='reset'>Finished, or starting over? <button class='btn' data-a='reset'>New game: clear this scenario’s progress</button></div>";
+  /* kartta pelin aikana (0.10): vuoron alle, pienempänä kuin Set-upissa */
+  const pmapH = camp ? "" : playMapBlock(sc, st, v);
   const L = layout();
-  if (L === "narrow") return turnH + campH + rulesH + toolsH + reset;
-  /* leveällä: vuoro ja työkalut vasemmalla (vuoro tarttuu), säännöt oikealla; xwide: työkalut omaan palstaan */
+  if (L === "narrow") return turnH + pmapH + campH + rulesH + toolsH + reset;
+  /* leveällä: vuoro (tarttuu) ja työkalut vasemmalla, kartta ja säännöt oikealla — kartta ei jää tarttuvan
+     vuoropaneelin alle; xwide: työkalut omaan palstaan */
   if (camp) return cols([[campH], [rulesH, reset]], "c-play");
-  if (L === "wide" || !toolsH) return cols([[turnH, toolsH], [rulesH, reset]], "c-play" + (toolsH ? "" : " even"));
-  return cols([[turnH, reset], [rulesH], [toolsH]], "c-play");
+  if (L === "wide" || !toolsH) return cols([[turnH, toolsH], [pmapH, rulesH, reset]], "c-play" + (toolsH ? "" : " even"));
+  return cols([[turnH, reset], [pmapH, rulesH], [toolsH]], "c-play");
 }
 
 /* Tuomio näkyviin: koskematon peli ei saa valmista voittajaa, ja sc.provisional(st, v) merkitsee
@@ -3378,30 +3396,31 @@ let lastMapNarrow = null;
 window.addEventListener("resize", () => { const n = mapNarrow(); if (lastMapNarrow !== null && n !== lastMapNarrow) render(true); lastMapNarrow = n; });
 </script>
 <!-- scenario files: each adds its scenarios with addScenarios([...]) -->
-<script src="scenarios/blackcrusade.js?v=0.9.8"></script>
-<script src="scenarios/fleets.js?v=0.9.8"></script>
-<script src="scenarios/cl-early.js?v=0.9.8"></script>
-<script src="scenarios/cl-mag-a.js?v=0.9.8"></script>
-<script src="scenarios/cl-mag-b.js?v=0.9.8"></script>
-<script src="scenarios/cl-mag-c.js?v=0.9.8"></script>
-<script src="scenarios/cl-mag-d.js?v=0.9.8"></script>
-<script src="scenarios/cl-fanatic.js?v=0.9.8"></script>
-<script src="scenarios/cl-invasion.js?v=0.9.8"></script>
-<script src="scenarios/_wr.js?v=0.9.8"></script>
-<script src="scenarios/wr-committee.js?v=0.9.8"></script>
-<script src="scenarios/wr-community-a.js?v=0.9.8"></script>
-<script src="scenarios/wr-spreading-war.js?v=0.9.8"></script>
-<script src="scenarios/wr-community-l4a.js?v=0.9.8"></script>
-<script src="scenarios/wr-community-l4b.js?v=0.9.8"></script>
-<script src="scenarios/wr-community-l4c.js?v=0.9.8"></script>
-<script src="scenarios/wr-community-l4d.js?v=0.9.8"></script>
-<script src="scenarios/fan-tournament.js?v=0.9.8"></script>
-<script src="scenarios/fan-nemesis.js?v=0.9.8"></script>
-<script src="scenarios/fan-pdd.js?v=0.9.8"></script>
-<script src="scenarios/fan-starblade.js?v=0.9.8"></script>
-<script src="scenarios/terrain-map.js?v=0.9.8"></script>
-<script src="scenarios/open-points.js?v=0.9.8"></script>
-<script src="scenarios/wr-rating.js?v=0.9.8"></script>
+<script src="scenarios/blackcrusade.js?v=0.10.5"></script>
+<script src="scenarios/fleets.js?v=0.10.5"></script>
+<script src="scenarios/cl-early.js?v=0.10.5"></script>
+<script src="scenarios/cl-mag-a.js?v=0.10.5"></script>
+<script src="scenarios/cl-mag-b.js?v=0.10.5"></script>
+<script src="scenarios/cl-mag-c.js?v=0.10.5"></script>
+<script src="scenarios/cl-mag-d.js?v=0.10.5"></script>
+<script src="scenarios/cl-fanatic.js?v=0.10.5"></script>
+<script src="scenarios/cl-invasion.js?v=0.10.5"></script>
+<script src="scenarios/_wr.js?v=0.10.5"></script>
+<script src="scenarios/wr-committee.js?v=0.10.5"></script>
+<script src="scenarios/wr-community-a.js?v=0.10.5"></script>
+<script src="scenarios/wr-spreading-war.js?v=0.10.5"></script>
+<script src="scenarios/wr-community-l4a.js?v=0.10.5"></script>
+<script src="scenarios/wr-community-l4b.js?v=0.10.5"></script>
+<script src="scenarios/wr-community-l4c.js?v=0.10.5"></script>
+<script src="scenarios/wr-community-l4d.js?v=0.10.5"></script>
+<script src="scenarios/fan-tournament.js?v=0.10.5"></script>
+<script src="scenarios/fan-nemesis.js?v=0.10.5"></script>
+<script src="scenarios/fan-pdd.js?v=0.10.5"></script>
+<script src="scenarios/fan-starblade.js?v=0.10.5"></script>
+<script src="scenarios/terrain-map.js?v=0.10.5"></script>
+<script src="scenarios/open-points.js?v=0.10.5"></script>
+<script src="scenarios/wr-rating.js?v=0.10.5"></script>
+<script src="scenarios/play-maps.js?v=0.10.5"></script>
 <!--SCENARIO-FILES-->
 <script>wrInit(); document.getElementById("scn").textContent = SC.length; render(false);</script>
 </body>
