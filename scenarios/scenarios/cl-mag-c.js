@@ -244,7 +244,8 @@
       b: ["Warmaster Potonos Kataban (Ld 8, Mark of Nurgle) aboard the Repulsive Pestilence.", "Carnage Festerous; Murders Putrid and Contagious; Slaughter Malignant."]
     },
     draw: (v, W, H, st) => {
-      const g = gridOf(W, H, 60), t0 = get(st, "terr", null), terr = t0 && t0.length === g.c * g.r ? t0 : null, o = [];
+      const g = gridOf(W, H, 60), t0 = null, /* työkalu on generaattori (terrain-map.js tool): vanhaa ruutuheittoa ei enää piirretä */
+        terr = t0 && t0.length === g.c * g.r ? t0 : null, o = [];
       for (let i = 1; i < g.c; i++) o.push({ z: "line", x1: i * g.sw, y1: 0, x2: i * g.sw, y2: H });
       for (let j = 1; j < g.r; j++) o.push({ z: "line", x1: 0, y1: j * g.sh, x2: W, y2: j * g.sh });
       o.push(R(15, 0, Math.max(5, W - 30), 15, "a", "Fleet A"), R(15, H - 15, Math.max(5, W - 30), 15, "b", "Fleet B"));

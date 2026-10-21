@@ -66,7 +66,7 @@
     glance: [["Points", "Fixed: one ship each"], ["Table", "120 × 120 cm"], ["Battlezone", "A dense nebula: D3+1 gas clouds per 40 cm square"], ["First turn", "L’ikei"], ["Game ends", "A ship is destroyed or leaves the table"]],
     bring: ["A Tau light cruiser for the Mantis", "A Space Marine strike cruiser (FL p. 105)", "Lots of gas and dust clouds", "A scatter dice"],
     forces: { a: ["Mantis class Emissary, commanded by Kor’vre L’ikei (profile in the tools)."], b: ["Strike cruiser Daedalus, Captain Veliaz: Ld 9, 1 re-roll."] },
-    draw: (v, W, H, st) => { const g = gridOf(W, H, 40), r = st && st.w && st.w.neb, out = [];
+    draw: (v, W, H, st) => { const g = gridOf(W, H, 40), r = null /* työkalu on generaattori (terrain-map.js tool) */, out = [];
       for (let i = 1; i < g.c; i++) out.push({ z: "line", x1: i * g.sw, y1: 0, x2: i * g.sw, y2: H }); for (let j = 1; j < g.r; j++) out.push({ z: "line", x1: 0, y1: j * g.sh, x2: W, y2: j * g.sh });
       if (r && r.length === g.c * g.r) r.forEach((x, i) => out.push({ z: "text", x: (i % g.c + .5) * g.sw, y: (Math.floor(i / g.c) + .5) * g.sh, l: x, s: "n" }));
       return out.concat([R(W - 20, 0, 20, 20, "a", "escape"), { z: "mark", x: 40, y: H - 40, s: "a", l: "Mantis" }, { z: "mark", x: W - 40, y: H - 20, s: "b", l: "Daedalus" }]); },

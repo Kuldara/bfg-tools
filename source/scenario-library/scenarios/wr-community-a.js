@@ -164,7 +164,7 @@
     bring: ["Gas clouds, asteroid fields and one planet, as rolled"],
     forces: { a: ["Equal points, up to 1500. No other restrictions."], b: ["Equal points, up to 1500. No other restrictions."] },
     draw: (v, W, H, st) => {
-      const g = gridOf(W, H, 60), t0 = get(st, "terr", null), terr = t0 && t0.length === g.c * g.r ? t0 : null, o = [];
+      const g = gridOf(W, H, 60), t0 = null, /* työkalu on generaattori (terrain-map.js tool) */ terr = t0 && t0.length === g.c * g.r ? t0 : null, o = [];
       for (let i = 1; i < g.c; i++) o.push({ z: "line", x1: i * g.sw, y1: 0, x2: i * g.sw, y2: H });
       for (let j = 1; j < g.r; j++) o.push({ z: "line", x1: 0, y1: j * g.sh, x2: W, y2: j * g.sh });
       for (let j = 0; j < g.r; j++) for (let i = 0; i < g.c; i++) {
@@ -172,7 +172,7 @@
         if (t === "Asteroids") o.push({ z: "hatch", x: cx - 12, y: cy - 8, w: 24, h: 16, l: "" });
         if (t === "Gas cloud") o.push({ z: "ring", cx, cy, r: 6, sw: 12, gas: 1 });
         if (t === "Planet") o.push({ z: "planet", cx, cy, r: 7, l: "" });
-        o.push({ z: "text", x: cx, y: cy + 14, l: terr ? (k + 1) + ": " + t : "?", s: "n" });
+        if (terr) o.push({ z: "text", x: cx, y: cy + 14, l: (k + 1) + ": " + t, s: "n" });
       }
       if (v === "edge") o.push(R(W / 2 - 22.5, 0, 45, 15, "a", ""), { z: "text", x: W / 2 - 17, y: 6, l: "A", s: "a" }, R(W / 2 - 22.5, H - 15, 45, 15, "b", ""), { z: "text", x: W / 2 - 17, y: H - 6, l: "B", s: "b" });
       else o.push(R(W - 30, 0, 30, 30, "a", ""), { z: "text", x: W - 6, y: 6, l: "A", s: "a" }, R(0, H - 30, 30, 30, "b", ""), { z: "text", x: 6, y: H - 6, l: "B", s: "b" });

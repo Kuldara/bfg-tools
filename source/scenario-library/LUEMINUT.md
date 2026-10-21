@@ -183,6 +183,28 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
   RB s. 138 (v1.10 ja v1.11); horizon muisti 30 cm, mutta se on etäisyys reunoista. Muutos koskee myös
   Ahriman's Arrivalia, joka lainaa kartan (`cl-mag-a.js`: P1/P2-nimeäminen poistettu). Karttatesti 0 + 0,
   maastotesti 0. Script-tagit `?v=0.9.2`.
+- **0.11 (21.10.2026 ilta): skenaarion oma ilmiögeneraattori Set-up-työkaluun.** Käyttäjä Battles in the Warpista:
+  *"tässähän voisi integroida tuon terrain generaattorin kustomina tuohon setup tolls missä arvotaan varp ilmiöitä.
+  toteuta ja toteuta vastaaviin"* ja *"normimaastoa tuskin tähän kyseiseen generoidaan ollenkaan"*.
+  - **`TERRAIN[id].tool`:** skenaarion oma heittotyökalu on nyt maastogeneraattori, jossa ovat napit Generate on the
+    map / Reroll / Clear, tuloksen yhteenveto ja lähteen taulukko viitteeksi. Kartan yläpuolella ei ole erillistä
+    maasto-ohjainta, joten kahta rinnakkaista heittoa (ent. varoitus "use one or the other") ei enää ole. Koskee seitsemää
+    skenaariota: Battles in the Warp, Cerberus 2, Minor Engagement, Hunter and Prey, Dark Crescent Moon, Prophecy ja
+    Spirit. Niiden vanhat ruutukohtaiset piirrot (`st.w.terr/neb/ast`) on poistettu käytöstä, joten mitään ei piirretä kahdesti.
+  - **`TERRAIN[id].skin`:** skenaarion omat ilmiöt ytimen palatyypeillä. Ydin pysyy tavulleen samana kuin Battlezone
+    Generatorissa. Skin antaa nimen, tunnuksen, värin, säännön, mittatekstin ja lokin samat nimet, ja `arrow` piirtää
+    nuolen. `bzSkin` tekee muunnoksen generoinnin jälkeen.
+    - **Battles in the Warp:** ei kirjan battlezonea eikä aurinkoreunaa. Jokaiselle 60 cm alueelle D6, ja 4+ heittää
+      warp-taulukkoa (lähde: WR30 s. 16; määrä "as the base scenario’s battlezone would give"). Palat:
+      - warp-virta = rift (D3×10 cm pitkä) nuolena scatter-suuntaan; jos nuoli osoittaisi pöydän yli, suunta
+        heitetään uudelleen ja keskikohta pysyy ytimen paikassa
+      - saalistajaparvi = asteroidin koko D3×5 × D3×5
+      - haamuplaneetta = pieni planeetta ilman kirjan gravity welliä (D3×5 joka vuoro)
+      - warp tsunami = tapahtuma, jonka vuorosääntö on kartan alla.
+    - **Cerberus 2:** warp-avaruuden nimet (dense warp current, warp current, gateway to realspace, space hulk) kirjan
+      säännöillä.
+  - **Testi:** `maastotesti.js` tarkistaa lisäksi, että nuolet ovat kokonaan pöydällä. Testi löysi ensimmäisestä
+    versiosta päällekkäisyyden (nuolen keskikohdan siirto), ja se korjattiin uudelleenheitolla.
 - **Kahden laivaston suodatin (21.10. ilta):** käyttäjä: *"tuohon voi tietty laittaa kahden eri fleetin suosituksen. esim jos
   haluaa ork vs imperium niin suoraan suodattaa"* ja *"ettei ole pakko valita kahta"*. Etusivun Filtersiin ja Before the
   battle -arvontaan tulee toinen valikko "vs …" (`f.sug2`, `p.sug2`). Kumpikin on vapaaehtoinen. Kun molemmat on valittu,
@@ -195,7 +217,7 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
   - **Asettelu, joka päätetään pöydässä** (`PENDING_VAR`, `varPending`): Fleet Engagement ja The Art of Command 1
     (asettelu A–D muodostelmista ja heitosta). Kun asettelua ei ole valittu, kartta on tyhjä pöytä tekstillä "Set-up
     to be decided", rivin otsikko on "Set-up: to be decided" eikä yksikään A–D-nappi ole valittuna. Valinta
-    (`st.vSet`) tulee versionapista tai Formations-työkalun "Show set-up X" -napista. New game nollaa valinnan,
+    (`st.vSet`) tulee versionapista tai Formations-työkalun "Show set-up X" -napista. Vanha tallennettu `st.v` ei riitä päätökseksi: käyttäjällä näkyi aiemmin valittu Set-up B, vaikka tämän pelin muodostelmia ei ollut valittu. Korjattu ja julkaistu 21.10. (GitHub 6a5caa4). New game nollaa valinnan,
     koska asettelu päätetään joka peliin erikseen. Testit (`mapOf`) piirtävät yhä kaikki A–D.
   - **Heitosta riippuvat kartan osat piirretään vasta heiton jälkeen** (ennen heittoa näkyi oletus):
     - Lachlonin kuut ja asema: "Moons and station: roll them below".

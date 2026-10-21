@@ -34,6 +34,10 @@ const OUTER_DEEP = { die: 6, rows: [[1, 3, 5], [4, 6, 6]], text: "the scenario: 
 const PSIZE = { rows: [[1, 1, "small"], [2, 5, "medium"], [6, 6, "large"]], text: "the scenario’s D6: 1 small, 2–5 medium, 6 large" };
 const LONG_EDGE = { rows: [[1, 3, "top"], [4, 6, "bottom"]], text: "a long edge the players name; rolled here: 1–3 top, 4–6 bottom" };
 const NOPLANET = { ignore: ["planet"] };
+/* skin (21.10.): skenaarion oma ilmiö ytimen palatyypillä. AS = kirjan sääntö skenaarion nimellä ja selityksellä,
+   OWNRULE = skenaarion oma sääntöteksti. tool = Set-up-työkalu, jonka generaattori korvaa (napit siellä). */
+const AS = (kind, lede) => Object.assign({}, BZ.RULES[kind], { page: "RB " + BZ.RULES[kind].page, lede });
+const OWNRULE = (src, text) => ({ page: src, groups: [{ head: "In play", cite: src, items: [text] }] });
 
 /* skenaarion planeetta kartalta (ensimmäinen planeettaesine), kuut ja renkaat "as normal" */
 const MAPPLANET = (size, o) => (v, W, H, st, items) => {
@@ -130,7 +134,11 @@ TM("cl-come-only-to-murder", { z: [4, 3], by: "src" });
 TM("cl-cerberus-1", { z: 6, by: "src", drop: ["ring"],
   pieces: (v, W, H) => [{ kind: "gas", count: "2d3", area: { x0: 0, y0: 0, w: W, h: Math.min(35, H), name: "a 35 cm band along the blockade’s edge" }, text: "the Shroud Nebula" }] });
 TM("cl-cerberus-2", { z: 6, by: "src", table: BZ.ZONES[5], everyArea: true, everyText: "warp space: one roll on the deep space table for every 60 cm square",
-  warn: OWN("Warp space, square by square"), note: "Clouds and asteroids are warp currents, the small planet an inert space hulk, a warp rift a gateway to realspace." });
+  tool: "terr", note: "Clouds and asteroids are warp currents, the small planet an inert space hulk, a warp rift a gateway to realspace.",
+  skin: { asteroid: { name: "Dense warp current", plural: "Dense warp currents", tag: "D", rule: AS("asteroid", "In warp space an asteroid field is a dense warp current. It works as an asteroid field.") },
+    gas: { name: "Warp current", plural: "Warp currents", tag: "W", rule: AS("gas", "In warp space a gas or dust cloud is a warp current. It works as a gas and dust cloud.") },
+    rift: { name: "Gateway to realspace", plural: "Gateways to realspace", tag: "G", rule: AS("rift", "In warp space a warp rift is a gateway to realspace. It works as a warp rift.") },
+    planet: { name: "Space hulk", plural: "Space hulks", tag: "H", noWell: 1, dims: t => t.dia + " cm across", rule: OWNRULE("BFG Magazine 11", "The small planet is an inert space hulk: a terrain piece ships cannot pass through. Only one on the table."), drop: [/Gravity well/] } } });
 TM("cl-cerberus-3", { z: 6, by: "src", pieces: [{ kind: "asteroid", count: "d3", text: "the rearguard’s extra fields" }],
   note: "A rolled planet is a huge asteroid (planet rules). The rearguard places its D3 extra asteroid fields; here they are rolled." });
 TM("cl-cerberus-4", { z: 2, by: "src", rolls: 4, rollsText: "four D6, each 4+ one roll on the mercurial zone generator", reroll: ["planet"], rerollText: "the scenario re-rolls planets",
@@ -199,7 +207,7 @@ TM("wr-planet-killer-defence", { z: [4, 3], by: "src", hosts: MAPPLANET(PSZ, { n
 TM("wr-minor-engagement", { z: "none", by: "src", zoneText: "the scenario rolls its own table", everyArea: true, everyText: "a D6 on the scenario’s own table for every 60 × 60 cm square",
   table: { name: "the scenario’s table", rows: [{ text: "Nothing", out: { kind: "none" } }, { text: "Gas or dust cloud", out: { kind: "gas", count: 1 } }, { text: "Gas or dust cloud", out: { kind: "gas", count: 1 } },
     { text: "Asteroid field", out: { kind: "asteroid", count: 1 } }, { text: "Asteroid field", out: { kind: "asteroid", count: 1 } }, { text: "Planet (only one allowed)", out: { kind: "planet", sub: "small5" } }] },
-  warn: OWN("Terrain per square"), note: "The source does not size the planet: the rulebook’s inner zones roll 1–5 small, 6 medium, and so does this (RB p. 107)." });
+  tool: "terr", note: "The source does not size the planet: the rulebook’s inner zones roll 1–5 small, 6 medium, and so does this (RB p. 107)." });
 TM("wr-commerce-raiders", { z: OUTER_DEEP, by: "src" });
 TM("wr-nest-raid", { z: "any", by: "src", why: "The source: roll the battlezone and phenomena as standard (Warp Rift 49)." });
 TM("wr-planetary-disease", { z: "any", by: "src", fixedSize: "large", why: "The source: by the rulebook or by agreement, plus a large planet (Warp Rift 49)." });
@@ -232,7 +240,24 @@ TM("wr-darkening-raid", { z: "any", by: "book", warn: "The source says nothing e
 TM("wr-stygies-tree", { z: "any", by: "book", warn: BASE });
 TM("wr-looting-the-hulk", { z: "any", by: "src", why: "The source: any phenomena you agree (Warp Rift 28)." });
 TM("wr-pirate-bases", { z: "any", by: "book", warn: "The source needs no celestial phenomena for this one. Rolled terrain changes the scenario — use it only if you both agree." });
-TM("wr-battles-in-the-warp", { z: "any", by: "book", warn: "This environment rolls its own warp phenomena (tool on this page), and the rulebook’s battlezones do not apply in the warp. Use this only if you both agree." });
+/* Battles in the Warp: vain skenaarion warp-ilmiöt, ei kirjan battlezonea (käyttäjä 21.10.). Määrä: jokaiselle 60 cm
+   alueelle D6, 4+ heittää warp-taulukkoa = "as the base scenario's battlezone would give" (sovittava kohta). Palat ytimen
+   tyypeillä: virta = rift (D3×10 cm pitkä), parvi = asteroid (D3×5 × D3×5 cm), haamuplaneetta = pieni planeetta, tsunami = tapahtuma. */
+TM("wr-battles-in-the-warp", { z: "none", by: "src", zoneText: "the warp: the scenario’s own phenomena table, no rulebook battlezone", sun: "none", sunText: "the warp has no sunward edge",
+  tool: "ph", why: "The warp has no battlezone: the scenario rolls its own phenomena (Warp Rift 30, p. 16). One D6 for every 60 cm area; on a 4+ roll the warp table — as many phenomena as the base scenario’s battlezone would give.",
+  table: { name: "the warp phenomena table", rows: [{ text: "Warp tsunami", out: { kind: "flare" } }, { text: "Warp current", out: { kind: "rift", count: 1 } },
+    { text: "D3 warp currents", out: { kind: "rift", count: "d3" } }, { text: "A shoal of warp predators", out: { kind: "asteroid", count: 1 } },
+    { text: "D3 shoals of warp predators", out: { kind: "asteroid", count: "d3" } }, { text: "A ghost planet (small)", out: { kind: "planet", fixed: "small" } }] },
+  skin: {
+    rift: { name: "Warp current", plural: "Warp currents", tag: "W", arrow: 1, dims: t => Math.round(t.rx * 2) + " cm long, direction by scatter die",
+      rule: OWNRULE("Warp Rift 30, p. 16", "An arrow D3×10 cm long, pointing the way the scatter die gave. A ship crossing the arrow is pushed 2D6 cm along it at once, keeping its facing. Crossing two currents applies both.") },
+    asteroid: { name: "Predator shoal", plural: "Predator shoals", tag: "S", col: "var(--warn)",
+      rule: OWNRULE("Warp Rift 30, p. 16", "A shoal of warp predators, D3×5 by D3×5 cm. A ship touching a shoal during movement suffers D6 hit-and-run attacks at the end of the movement phase. Each end phase every shoal moves D6 cm towards the nearest ship.") },
+    planet: { name: "Ghost planet", plural: "Ghost planets", tag: "G", col: "var(--ink-3)", noWell: 1, dims: t => "small, " + t.dia + " cm across; gravity well D3 × 5 cm, rolled each turn",
+      rule: OWNRULE("Warp Rift 30, p. 16", "A small ghost planet. At the start of each player turn roll a D3 × 5 cm for the size of its gravity well."), drop: [/Gravity well/] },
+    flare: { name: "Warp tsunami", plural: "Warp tsunamis", turn: "at the start of each player turn roll one D6, however many tsunamis: on a 6 one arrives. Every ship or squadron tests Leadership; each failure takes a 2D6-strength lance attack. Shields and Brace work.",
+      fix: [["a battlefield-wide event, not a template (p. 114)", "a table-wide event, not a template (Warp Rift 30)"]] }
+  } });
 TM("wr-fe-variant", { z: "any", by: "src", why: "The source: phenomena by agreement (Warp Rift 32)." });
 TM("wr-solitaire-campaign", { z: 5, by: "src" });
 TM("wr-the-trap", { z: { die: 6, rows: [[1, 2, 4], [3, 6, 5]], text: "the scenario: 1–2 primary biosphere, 3–6 outer reaches" }, by: "src" });
@@ -304,7 +329,7 @@ TM("fan-n-gunnery", { z: "any", by: "book", warn: NONE });
 
 /* ---------------------------------------------------------------- fan supplements: Project Distant Darkness */
 TM("fan-p-hunter-prey", { z: "none", by: "src", zoneText: "a dense nebula", areas: false, sun: "none", sunText: "the nebula has no sunward edge",
-  pieces: (v, W, H) => PER(SQUARES(W, H, 40), "gas", "d3+1"), warn: OWN("Gas and dust clouds per square") });
+  pieces: (v, W, H) => PER(SQUARES(W, H, 40), "gas", "d3+1"), tool: "neb" });
 TM("fan-p-light-dark", { z: 5, by: "src" });
 TM("fan-p-stolen-goods", { z: 3, by: "src" });
 TM("fan-p-barrage", { z: 1, by: "src", fixedSize: "small" });
@@ -330,7 +355,7 @@ TM("fan-p-claw", { z: 6, by: "src", areas: false, pieces: [{ kind: "rift", count
   note: "“Two small asteroid fields” are sized by the rulebook’s D3×5 cm (Distant Sun p. 9)." });
 TM("fan-p-supply", { z: 5, by: "src", areas: false, pieces: [{ kind: "gas", count: 2 }] });
 TM("fan-p-nightmares", { z: 2, by: "src", ignore: ["planet"], ignoreText: "the scenario ignores planets (Distant Sun p. 21)" });
-TM("fan-p-spirit", { z: 3, by: "src", areas: false, pieces: (v, W, H) => PER(QUARTERS(W, H), "asteroid", "d3+2") });
+TM("fan-p-spirit", { z: 3, by: "src", areas: false, pieces: (v, W, H) => PER(QUARTERS(W, H), "asteroid", "d3+2"), tool: "q" });
 TM("fan-p-rising-shadow", { z: 6, by: "src", areas: false,
   pieces: (v, W, H) => [{ kind: "rift", count: 1, set: { l: 35, w: 20, text: "about 20 × 35 cm, the source" },
     pick: { rows: [[1, 3, 0], [4, 6, 1]], text: "1–3 left, 4–6 right", areas: [{ x0: 0, y0: 0, w: Math.min(45, W), h: H, name: "the box up to 45 cm from the left edge" }, { x0: Math.max(0, W - 45), y0: 0, w: Math.min(45, W), h: H, name: "the box up to 45 cm from the right edge" }] } }]
@@ -341,7 +366,7 @@ TM("fan-p-ever-dream", { z: 4, by: "obv", why: "As Abandon All Hope: primary bio
 
 /* ---------------------------------------------------------------- fan supplements: Starblade */
 TM("fan-s-crescent", { z: "none", by: "src", zoneText: "the scenario rolls asteroid fields per square", areas: false,
-  pieces: (v, W, H) => PER(SQUARES(W, H, 60), "asteroid", "d3"), warn: OWN("Asteroid fields per square") });
+  pieces: (v, W, H) => PER(SQUARES(W, H, 60), "asteroid", "d3"), tool: "ast" });
 TM("fan-s-veil", { z: "any", by: "src", why: "The source: phenomena in an agreed way, one short edge sunward (Starblade p. 23)." });
 TM("fan-s-path", { z: "none", by: "src", zoneText: "the scenario lists its own phenomena", areas: false, fixedSize: "small",
   pieces: [{ kind: "asteroid", count: "d3" }, { kind: "gas", count: "d3" }] });
@@ -349,7 +374,7 @@ TM("fan-s-grace", { z: "any", by: "book", warn: "The source fills a 30 cm band a
 TM("fan-s-tragedy", { z: 6, by: "src" });
 TM("fan-s-visions", { z: "any", by: "src", why: "The source: phenomena as usual, with an asteroid field shielding the Eldar (Starblade p. 27). Roll the battlezone, or pick one." });
 TM("fan-s-prophecy", { z: "none", by: "src", zoneText: "the scenario rolls asteroid fields per square", areas: false,
-  pieces: (v, W, H) => PER(SQUARES(W, H, 60), "asteroid", "d3"), warn: OWN("Asteroid fields per square") });
+  pieces: (v, W, H) => PER(SQUARES(W, H, 60), "asteroid", "d3"), tool: "ast" });
 TM("fan-s-tears", { z: "none", by: "src", zoneText: "the scenario lists its own phenomena", areas: false, events: { radiation: 2 },
   pieces: (v, W, H) => [{ kind: "planet", size: "small", what: "small rogue planet", area: { x0: 30, y0: 30, w: Math.max(10, W - 60), h: Math.max(10, H - 60), name: "at least 30 cm from every edge" } },
     { kind: "gas", count: "d3" }, { kind: "asteroid", count: "d3" }, { kind: "rift", count: "d3" }] });

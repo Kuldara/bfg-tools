@@ -92,6 +92,9 @@ for (const sc of L.SC) {
     pieces += ps.length;
     for (const t of ps) {
       if (offTable(t, W, H)) fail(key, t.id + " ulottuu pöydän yli");
+      /* skin-nuoli (esim. warp-virta, 21.10.): käännetty nuoli kokonaan pöydällä */
+      if (t.sk && t.sk.arrow) { const hx = Math.abs(Math.cos(t.dir)) * t.rx, hy = Math.abs(Math.sin(t.dir)) * t.rx;
+        if (t.x - hx < -0.01 || t.x + hx > W + 0.01 || t.y - hy < -0.01 || t.y + hy > H + 0.01) fail(key, t.id + " (nuoli) ulottuu pöydän yli"); }
       if (!t.host) for (const f of fixed) if (onShape(t, f)) { fail(key, t.id + " kiinteän piirteen päällä " + JSON.stringify(f)); break; }
     }
     for (let i = 0; i < ps.length; i++) for (let j = i + 1; j < ps.length; j++) if (touches(ps[i], ps[j])) fail(key, ps[i].id + " ja " + ps[j].id + " päällekkäin");

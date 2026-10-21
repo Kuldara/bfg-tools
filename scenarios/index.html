@@ -526,13 +526,13 @@ html.wide:not(.short) .mapstick > .col:last-child { max-height: calc(100vh - var
 </header>
 <main id="app"></main>
 <footer>
-  <p><b>Scenario Library</b> · version 0.10 · <span id="scn">204</span> scenarios. Unofficial fan-made tool, not affiliated with Games Workshop.</p>
+  <p><b>Scenario Library</b> · version 0.11 · <span id="scn">204</span> scenarios. Unofficial fan-made tool, not affiliated with Games Workshop.</p>
   <p>Every scenario here is summarised in our own words for play at the table; “Playing with other fleets” notes marked as suggestions are ours, not the source’s. Credit belongs to the original authors; the page references point to the sources: the BFG Remastered <i>Rulebook v1.10</i> and <i>Fleets v0.36</i>, the classic Games Workshop and Fanatic publications (<i>Warp Storm</i>, <i>Planet Killer</i>, <i>Battlefleet Gothic Magazine</i>, <i>Invasion</i>, <i>Fanatic Magazine</i>, <i>Fanatic Online</i>) the fan magazine <a href="https://specialist-arms.com/bfg/warprift/" target="_blank" rel="noopener">Warp Rift</a>, and the fan supplements <i>Book of Nemesis</i>, <i>Project Distant Darkness</i>, <i>Starblade</i>, the <i>BFG Tournament Mission Pack</i> and <i>BFG Advanced Scenarios</i>.</p>
   <p>RB = Rulebook v1.10, FL = Fleets v0.36. Progress is saved in this browser only.</p>
   <p class="kbd">Keyboard: <b>1</b>–<b>4</b> switch a scenario’s tabs · <b>←</b> <b>→</b> change the turn on Play.</p>
 </footer>
 
-<script src="battlezone-core.js?v=0.10.7"></script>
+<script src="battlezone-core.js?v=0.11.1"></script>
 <script>
 "use strict";
 /* ---------------------------------------------------------------- data */
@@ -2502,12 +2502,63 @@ function bzRun(sc, v, st, W, H, items) {
     ignore: sp.ignore, ignoreText: sp.ignoreText, reroll: sp.reroll, rerollText: sp.rerollText,
     cap: sp.cap, capText: sp.capText, rolls: sp.rolls, rollsText: sp.rollsText
   };
-  try { return Object.assign(BZ.generate(st.bz.seed, opts), { spec: sp, z, sunMap: !!sunIt && sp.sun === undefined }); }
+  try { return bzSkin(Object.assign(BZ.generate(st.bz.seed, opts), { spec: sp, z, sunMap: !!sunIt && sp.sun === undefined }), sp, W, H); }
   catch (e) { console.error("terrain", sc.id, e); return null; }
+}
+/* skenaarion oma ilmiötaulukko ytimen palatyypeillä (TERRAIN[id].skin, 21.10.): nimet, tunnukset, värit, säännöt ja
+   piirto skenaarion termein, esim. Battles in the Warpin warp-virrat (rift: D3×10 cm pitkä) nuolina scatter-suuntaan.
+   Ydin pysyy tavulleen samana kuin Battlezone Generatorissa; loki puhuu samoilla nimillä kuin kartta. */
+function bzSkin(res, sp, W, H) {
+  const sk = sp.skin;
+  if (!res || !sk) return res;
+  const ren = {}, cnt = {};
+  for (const t of res.terrain) {
+    const k = t.kind === "ring" ? null : sk[t.kind];
+    if (!k) continue;
+    cnt[t.kind] = (cnt[t.kind] || 0) + 1;
+    const id = k.tag + cnt[t.kind];
+    ren[t.id] = id; t.id = id; t.sk = k;
+    if (k.arrow) {
+      /* scatter-suunta; jos nuoli osoittaisi pöydän yli, suunta heitetään uudelleen (keskikohta pysyy ytimen paikassa,
+         jottei se osu muihin paloihin); 24 yrityksen jälkeen ytimen oma suunta, joka mahtuu aina */
+      const r = BZ.makeRng(((res.meta.seed || 1) * 7919 + cnt[t.kind] * 104729) >>> 0), fits = a => {
+        const hx = Math.abs(Math.cos(a)) * t.rx, hy = Math.abs(Math.sin(a)) * t.rx;
+        return !W || (t.x - hx >= 0 && t.x + hx <= W && t.y - hy >= 0 && t.y + hy <= H); };
+      t.dir = t.angle || 0;
+      for (let i = 0; i < 24; i++) { const a = r() * 2 * Math.PI; if (fits(a)) { t.dir = a; break; } }
+    }
+    if (k.dims) t.dims = k.dims(t);
+    if (k.noWell) t.gravity = 0;
+  }
+  const ev = res.meta.events;
+  res.meta.custom = {};
+  for (const e of ["flare", "radiation"]) if (sk[e] && ev[e]) { res.meta.custom[e] = { n: ev[e], sk: sk[e] }; ev[e] = 0; }
+  const names = Object.keys(sk).map(k => [k === "flare" ? "Solar flare" : k === "radiation" ? "Radiation burst" : BZ.KIND[k] && BZ.KIND[k].name, sk[k].name]).filter(x => x[0]);
+  const fix = [].concat(...Object.values(sk).map(k => k.fix || [])), drop = [].concat(...Object.values(sk).map(k => k.drop || []));
+  res.log = res.log.filter(l => !drop.some(rx => rx.test(l.text))).map(l => {
+    let x = l.text;
+    for (const [a, b] of fix) x = x.split(a).join(b);
+    for (const [a, b] of Object.entries(ren)) x = x.split("<b>" + a + "</b>").join("<b>" + b + "</b>");
+    for (const [a, b] of names) x = x.split(a).join(b).split(a.toLowerCase()).join(b.toLowerCase());
+    return Object.assign({}, l, { text: x });
+  });
+  return res;
+}
+const bzCol = t => (t.sk && t.sk.col) || BZ_COL[t.kind];
+/* skenaarion oma heittotyökalu, jonka generaattori korvaa (TERRAIN[id].tool): ohjaimet ovat työkalussa, ei kartan yllä */
+function bzToolId(sc) { const s = typeof TERRAIN !== "undefined" && TERRAIN[sc.id]; return s && s.tool; }
+function bzToolWg(sc, st, v, t) {
+  const res = bzOf(sc, st, v), rows = typeof t.rows === "function" ? t.rows(v, st) : t.rows || [];
+  const ps = bzPieces(res), cu = res && res.meta.custom ? Object.values(res.meta.custom) : [];
+  const sum = res ? ps.length + " piece" + (ps.length === 1 ? "" : "s") + cu.map(c => " · " + c.n + " " + (c.n > 1 ? c.sk.plural : c.sk.name).toLowerCase()).join("") : "";
+  return "<div class='wg'><h3>" + esc(t.l) + "</h3><div class='sub'>" + esc(t.sub || "") + "</div><div class='rollrow'>" +
+    (res ? "<button class='btn primary' data-a='bzgo'>Reroll</button><button class='btn' data-a='bzclr'>Clear</button><span class='calc'>On the map: <b>" + esc(sum) + "</b></span>"
+      : "<button class='btn primary' data-a='bzgo'>Generate on the map</button>") + "</div>" +
+    (rows.length ? "<table class='ltab' style='margin-top:8px'>" + rows.map(r => "<tr><td>" + (r[0] === r[1] ? r[0] : r[0] + "–" + r[1]) + "</td><td>" + fmt(r[2]) + "</td></tr>").join("") + "</table>" : "") + "</div>";
 }
 function bzOf(sc, st, v) { const [W, H] = tableWH(), items = bzItems(sc, v, st); return bzRun(sc, v, st, W, H, items); }
 function bzPieces(res) { return res ? res.terrain.filter(t => t.kind !== "ring") : []; }
-function bzName(t) { return t.kind === "planet" ? (t.host ? t.name : t.size.charAt(0).toUpperCase() + t.size.slice(1) + " planet") : t.kind === "moon" ? "Moon" + (t.of ? " of " + t.of : "") : BZ.KIND[t.kind].name; }
+function bzName(t) { return t.sk ? t.sk.name : t.kind === "planet" ? (t.host ? t.name : t.size.charAt(0).toUpperCase() + t.size.slice(1) + " planet") : t.kind === "moon" ? "Moon" + (t.of ? " of " + t.of : "") : BZ.KIND[t.kind].name; }
 const BZ_PLURAL = { asteroid: "Asteroid fields", gas: "Gas & dust clouds", rift: "Warp rifts", planet: "Planets", moon: "Moons" };
 const BZ_COL = { asteroid: "var(--ast)", gas: "var(--gas)", planet: "var(--pln)", moon: "var(--moon)", rift: "var(--rift)" };
 
@@ -2526,12 +2577,16 @@ function bzSVG(res, W, H, sel, fs) {
       [t.inner, t.outer].map(q => "<circle cx='" + t.x + "' cy='" + t.y + "' r='" + q + "' fill='none' stroke='" + (t.ringKind === "gas" ? "var(--gas)" : "var(--ast)") + "' stroke-width='.4' stroke-dasharray='1.6 1.2'/>").join("");
   }
   for (const t of bzPieces(res)) {
-    const c = BZ_COL[t.kind], on = sel === t.id || sel === "k:" + t.kind, deg = (t.angle || 0) * 180 / Math.PI;
+    const c = bzCol(t), on = sel === t.id || sel === "k:" + t.kind, deg = ((t.sk && t.sk.arrow ? t.dir : t.angle) || 0) * 180 / Math.PI;
     s += "<g data-a='bzsel' data-id='" + t.id + "' style='cursor:pointer'><g transform='translate(" + t.x + " " + t.y + ") rotate(" + deg + ")'>";
-    if (t.kind === "planet" || t.kind === "moon") {
-      s += "<circle r='" + (t.rx + t.gravity) + "' fill='none' stroke='" + c + "' stroke-width='.45' stroke-dasharray='2 1.6' opacity='.75'/>" +
+    if (t.sk && t.sk.arrow) {
+      /* nuoli (esim. warp-virta): pituus = kaksi kertaa rx, suunta scatter-nopasta (t.dir) */
+      const L = t.rx;
+      s += "<line x1='" + (-L) + "' y1='0' x2='" + (L - 3) + "' y2='0' stroke='" + c + "' stroke-width='1.3'/><path d='M" + L + " 0 l -5 -3 v 6 z' fill='" + c + "'/>";
+    } else if (t.kind === "planet" || t.kind === "moon") {
+      s += (t.gravity ? "<circle r='" + (t.rx + t.gravity) + "' fill='none' stroke='" + c + "' stroke-width='.45' stroke-dasharray='2 1.6' opacity='.75'/>" : "") +
         "<circle r='" + t.rx + "' fill='" + c + "' fill-opacity='.3' stroke='" + c + "' stroke-width='.7' stroke-dasharray='1.6 1'/>";
-    } else if (t.kind === "asteroid") s += ell(t, " fill='url(#hat)' stroke='" + c + "' stroke-width='.7' stroke-dasharray='1.6 1'") + ell(t, " fill='" + c + "' fill-opacity='.12'");
+    } else if (t.kind === "asteroid" && !t.sk) s += ell(t, " fill='url(#hat)' stroke='" + c + "' stroke-width='.7' stroke-dasharray='1.6 1'") + ell(t, " fill='" + c + "' fill-opacity='.12'");
     else s += ell(t, " fill='" + c + "' fill-opacity='.22' stroke='" + c + "' stroke-width='.7' stroke-dasharray='2.2 1.2'");
     s += ell({ rx: t.rx + 2, ry: t.ry + 2 }, " fill='transparent' pointer-events='all'") + "</g>";
     if (on) { const e = BZ.extents(t); s += "<ellipse cx='" + t.x + "' cy='" + t.y + "' rx='" + (e.hw + 3) + "' ry='" + (e.hh + 3) + "' fill='none' stroke='var(--sun)' stroke-width='.9' stroke-dasharray='3 2'/>"; }
@@ -2565,15 +2620,15 @@ function bzRules(res, sel) {
         : "<li>In the Primary Biosphere, Outer Reaches and Deep Space the distant star has no effect on combat. The sunward edge still decides how the bands lie.</li>") + "</ul>";
   }
   if (/^k:/.test(sel)) {
-    const k = sel.slice(2), all = bzPieces(res).filter(x => x.kind === k), rule = BZ.RULES[k];
+    const k = sel.slice(2), all = bzPieces(res).filter(x => x.kind === k), ks = res.spec.skin && res.spec.skin[k], rule = ks ? ks.rule : BZ.RULES[k];
     if (!all.length || !rule) return "";
-    return "<h4>" + all.length + " × " + esc(BZ_PLURAL[k]) + " <span class='bzcite'>RB " + esc(rule.page) + "</span></h4><ul class='bzwhere'>" +
+    return "<h4>" + all.length + " × " + esc(ks ? ks.plural : BZ_PLURAL[k]) + " <span class='bzcite'>" + (ks ? "" : "RB ") + esc(rule.page) + "</span></h4><ul class='bzwhere'>" +
       all.map(x => "<li><b>" + x.id + "</b> " + esc(x.dims) + " · centre " + Math.round(x.x) + " cm from the left, " + Math.round(x.y) + " cm from the top</li>").join("") + "</ul>" + bzRuleHtml(rule);
   }
   const t = res.terrain.find(x => x.id === sel && x.kind !== "ring");
   if (!t) return "";
-  const rule = BZ.RULES[t.kind], rings = t.rings ? " Rings: " + t.rings.map((r, i) => (i + 1) + ") " + (r.kind === "gas" ? "gas and dust" : "asteroids") + ", " + r.wide + " cm wide, " + r.gap + " cm out").join("; ") + "." : "";
-  return "<h4>" + t.id + " · " + esc(bzName(t)) + " <span class='bzcite'>RB " + esc(rule.page) + "</span></h4><p class='bzpos'>" + esc(t.dims) +
+  const rule = t.sk ? t.sk.rule : BZ.RULES[t.kind], rings = t.rings ? " Rings: " + t.rings.map((r, i) => (i + 1) + ") " + (r.kind === "gas" ? "gas and dust" : "asteroids") + ", " + r.wide + " cm wide, " + r.gap + " cm out").join("; ") + "." : "";
+  return "<h4>" + t.id + " · " + esc(bzName(t)) + " <span class='bzcite'>" + (t.sk ? "" : "RB ") + esc(rule.page) + "</span></h4><p class='bzpos'>" + esc(t.dims) +
     (t.gravity ? ", gravity well " + t.gravity + " cm" : "") + ". Centre " + Math.round(t.x) + " cm from the left edge, " + Math.round(t.y) + " cm from the top edge" + (t.host ? " — the scenario’s planet" : "") + "." + esc(rings) + "</p>" +
     bzRuleHtml(rule) + (t.rings ? bzRuleHtml(BZ.RULES.ring) : "");
 }
@@ -2583,6 +2638,7 @@ function bzCtl(sc, st, v, m) {
   const zc = (ch.length > 1 ? "<select data-a='bzz' aria-label='Battlezone'>" + ch.map(c => "<option value='" + c + "'" + (String(c) === String(z) ? " selected" : "") + ">" + esc(bzZoneLabel(c)) + "</option>").join("") + "</select>"
     : "<b>" + esc(bzZoneLabel(z)) + "</b>") +
     (pk ? "<select data-a='bzp' aria-label='" + esc(pk.label) + "'>" + pk.opts.map(([k, l]) => "<option value='" + k + "'" + ((b.p || pk.def) === k ? " selected" : "") + ">" + esc(l) + "</option>").join("") + "</select>" : "");
+  if (bzToolId(sc)) return ""; /* skenaarion oma heittotyökalu on generaattori: napit siellä (21.10.) */
   /* ennen arvontaa vain nappi (käyttäjä 21.10.: "vasta jos painetaan sitä nappia. monet ei edes halua arpia sitä") */
   if (!res) return "<div class='bzhead bzoff'><button class='btn' data-a='bzgo'>Generate terrain</button><span class='bzhint'>Optional: rolls the celestial phenomena onto this map.</span></div>";
   return "<div class='bzhead'><span class='bzt'>Celestial phenomena</span><span class='bzbtn'>" +
@@ -2598,14 +2654,16 @@ function bzBox(sc, st, v, m) {
   const zs = me.zone ? me.zone.name + (me.zoneDie ? " (D" + (z && z.die === 3 ? 3 : 6) + " = " + me.zoneDie + ")" : "") : "No battlezone";
   const ss = me.sunEdge === "none" ? "no sunward edge" : "sunward: " + me.sunEdge + (me.sunDie ? " (D6 = " + me.sunDie + ")" : "");
   h += "<p class='bzsum'><b>" + esc(zs) + "</b> · " + esc(ss) + " · " + n + " piece" + (n === 1 ? "" : "s") +
-    (ev.flare ? " · " + ev.flare + " solar flare" + (ev.flare > 1 ? "s" : "") : "") + (ev.radiation ? " · " + ev.radiation + " radiation burst" + (ev.radiation > 1 ? "s" : "") : "") + " <span class='bzseed'>seed " + me.seed + "</span></p>";
+    (ev.flare ? " · " + ev.flare + " solar flare" + (ev.flare > 1 ? "s" : "") : "") + (ev.radiation ? " · " + ev.radiation + " radiation burst" + (ev.radiation > 1 ? "s" : "") : "") +
+    Object.values(me.custom || {}).map(c => " · " + c.n + " " + (c.n > 1 ? c.sk.plural : c.sk.name).toLowerCase()).join("") + " <span class='bzseed'>seed " + me.seed + "</span></p>";
   if (sp.note) h += "<p class='bzwhy'>" + esc(sp.note) + "</p>";
-  const chip = (id, label, k, sub) => "<button class='bzpc' data-a='bzsel' data-id='" + id + "' aria-pressed='" + (b.sel === id) + "'>" + (k ? "<i style='background:" + BZ_COL[k] + "'></i>" : "") + "<span>" + esc(label) + "</span>" + (sub ? "<small>" + esc(sub) + "</small>" : "") + "</button>";
+  const chip = (id, label, k, sub) => "<button class='bzpc' data-a='bzsel' data-id='" + id + "' aria-pressed='" + (b.sel === id) + "'>" + (k ? "<i style='background:" + (BZ_COL[k] || k) + "'></i>" : "") + "<span>" + esc(label) + "</span>" + (sub ? "<small>" + esc(sub) + "</small>" : "") + "</button>";
   h += "<div class='bzchips'>" + chip("zone", me.zone ? me.zone.name : "Battlezone", null, "rules") + chip("sun", "Sunward edge", null, me.sunEdge === "none" ? "none" : me.sunEdge) +
-    (n > 10 ? ps.filter(t => t.kind === "planet" || t.kind === "moon").map(t => chip(t.id, t.id + " " + bzName(t), t.kind, t.dia + " cm")).concat(
-      ["asteroid", "gas", "rift"].map(k => { const c = ps.filter(t => t.kind === k).length; return c ? chip("k:" + k, BZ_PLURAL[k], k, "× " + c) : ""; }))
-      : ps.map(t => chip(t.id, t.id + " " + bzName(t), t.kind, t.kind === "planet" || t.kind === "moon" ? t.dia + " cm" : t.dims.replace(" cm", "")))).join("") + "</div>";
-  if (!n && !ev.flare && !ev.radiation) h += "<p class='bzwhy'>Nothing rolled onto the table: every roll came up empty. Legal, and rarer than it feels.</p>";
+    (n > 10 ? ps.filter(t => t.kind === "planet" || t.kind === "moon").map(t => chip(t.id, t.id + " " + bzName(t), bzCol(t), t.dia + " cm")).concat(
+      ["asteroid", "gas", "rift"].map(k => { const c = ps.filter(t => t.kind === k).length, ks = sp.skin && sp.skin[k]; return c ? chip("k:" + k, ks ? ks.plural : BZ_PLURAL[k], ks && ks.col || k, "× " + c) : ""; }))
+      : ps.map(t => chip(t.id, t.id + " " + bzName(t), bzCol(t), (t.kind === "planet" || t.kind === "moon") && !t.sk ? t.dia + " cm" : t.dims.replace(" cm", "")))).join("") + "</div>";
+  for (const c of Object.values(me.custom || {})) if (c.sk.turn) h += "<p class='bzwhy'><b>" + esc(c.n > 1 ? c.n + " " + c.sk.plural.toLowerCase() : c.sk.name) + ":</b> " + esc(c.sk.turn) + "</p>";
+  if (!n && !ev.flare && !ev.radiation && !Object.keys(me.custom || {}).length) h += "<p class='bzwhy'>Nothing rolled onto the table: every roll came up empty. Legal, and rarer than it feels.</p>";
   if (ev.flare || ev.radiation) h += "<p class='bzwhy'><b>Start of every turn:</b> " + [ev.flare ? "roll " + ev.flare + "D6 for the solar flare (a 6 sets it off, once per game)" : "", ev.radiation ? "roll " + ev.radiation + "D6 for radiation bursts (a 5 or 6, at most one a turn)" : ""].filter(Boolean).join("; ") + " — RB p. 115. The dice are on the Play tab.</p>";
   if (b.sel) { const r = bzRules(res, b.sel); if (r) h += "<div class='bzrules'>" + r + "</div>"; }
   h += "<details class='bzlog' data-k='bzlog'" + (b.log ? " open" : "") + "><summary>Every die rolled</summary><div class='bzlines'>" + res.log.map(l => "<div class='" + l.cls + "'>" + l.text + "</div>").join("") + "</div></details>";
@@ -3049,6 +3107,7 @@ function renderPrep() {
 
 /* ---------------------------------------------------------------- widgets */
 function widget(sc, st, v, t) {
+  if (t.id && bzToolId(sc) === t.id) return bzToolWg(sc, st, v, t);
   const sTag = t.s ? " " + SIDECLS[t.s] : "";
   if (t.k === "counter") {
     const val = get(st, t.id, t.start || 0), w = t.warn ? t.warn(val) : "";
@@ -3418,31 +3477,31 @@ let lastMapNarrow = null;
 window.addEventListener("resize", () => { const n = mapNarrow(); if (lastMapNarrow !== null && n !== lastMapNarrow) render(true); lastMapNarrow = n; });
 </script>
 <!-- scenario files: each adds its scenarios with addScenarios([...]) -->
-<script src="scenarios/blackcrusade.js?v=0.10.7"></script>
-<script src="scenarios/fleets.js?v=0.10.7"></script>
-<script src="scenarios/cl-early.js?v=0.10.7"></script>
-<script src="scenarios/cl-mag-a.js?v=0.10.7"></script>
-<script src="scenarios/cl-mag-b.js?v=0.10.7"></script>
-<script src="scenarios/cl-mag-c.js?v=0.10.7"></script>
-<script src="scenarios/cl-mag-d.js?v=0.10.7"></script>
-<script src="scenarios/cl-fanatic.js?v=0.10.7"></script>
-<script src="scenarios/cl-invasion.js?v=0.10.7"></script>
-<script src="scenarios/_wr.js?v=0.10.7"></script>
-<script src="scenarios/wr-committee.js?v=0.10.7"></script>
-<script src="scenarios/wr-community-a.js?v=0.10.7"></script>
-<script src="scenarios/wr-spreading-war.js?v=0.10.7"></script>
-<script src="scenarios/wr-community-l4a.js?v=0.10.7"></script>
-<script src="scenarios/wr-community-l4b.js?v=0.10.7"></script>
-<script src="scenarios/wr-community-l4c.js?v=0.10.7"></script>
-<script src="scenarios/wr-community-l4d.js?v=0.10.7"></script>
-<script src="scenarios/fan-tournament.js?v=0.10.7"></script>
-<script src="scenarios/fan-nemesis.js?v=0.10.7"></script>
-<script src="scenarios/fan-pdd.js?v=0.10.7"></script>
-<script src="scenarios/fan-starblade.js?v=0.10.7"></script>
-<script src="scenarios/terrain-map.js?v=0.10.7"></script>
-<script src="scenarios/open-points.js?v=0.10.7"></script>
-<script src="scenarios/wr-rating.js?v=0.10.7"></script>
-<script src="scenarios/play-maps.js?v=0.10.7"></script>
+<script src="scenarios/blackcrusade.js?v=0.11.1"></script>
+<script src="scenarios/fleets.js?v=0.11.1"></script>
+<script src="scenarios/cl-early.js?v=0.11.1"></script>
+<script src="scenarios/cl-mag-a.js?v=0.11.1"></script>
+<script src="scenarios/cl-mag-b.js?v=0.11.1"></script>
+<script src="scenarios/cl-mag-c.js?v=0.11.1"></script>
+<script src="scenarios/cl-mag-d.js?v=0.11.1"></script>
+<script src="scenarios/cl-fanatic.js?v=0.11.1"></script>
+<script src="scenarios/cl-invasion.js?v=0.11.1"></script>
+<script src="scenarios/_wr.js?v=0.11.1"></script>
+<script src="scenarios/wr-committee.js?v=0.11.1"></script>
+<script src="scenarios/wr-community-a.js?v=0.11.1"></script>
+<script src="scenarios/wr-spreading-war.js?v=0.11.1"></script>
+<script src="scenarios/wr-community-l4a.js?v=0.11.1"></script>
+<script src="scenarios/wr-community-l4b.js?v=0.11.1"></script>
+<script src="scenarios/wr-community-l4c.js?v=0.11.1"></script>
+<script src="scenarios/wr-community-l4d.js?v=0.11.1"></script>
+<script src="scenarios/fan-tournament.js?v=0.11.1"></script>
+<script src="scenarios/fan-nemesis.js?v=0.11.1"></script>
+<script src="scenarios/fan-pdd.js?v=0.11.1"></script>
+<script src="scenarios/fan-starblade.js?v=0.11.1"></script>
+<script src="scenarios/terrain-map.js?v=0.11.1"></script>
+<script src="scenarios/open-points.js?v=0.11.1"></script>
+<script src="scenarios/wr-rating.js?v=0.11.1"></script>
+<script src="scenarios/play-maps.js?v=0.11.1"></script>
 <!--SCENARIO-FILES-->
 <script>wrInit(); document.getElementById("scn").textContent = SC.length; render(false);</script>
 </body>

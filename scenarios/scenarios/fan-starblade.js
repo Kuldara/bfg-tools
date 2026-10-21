@@ -15,7 +15,7 @@
   const vpTools = (a, b) => [{ k: "num", id: "va", s: "a", l: a + ": victory points", after: v => v + " VP" }, { k: "num", id: "vb", s: "b", l: b + ": victory points", after: v => v + " VP" }];
   const swap = items => items.map(it => it && (it.s === "a" || it.s === "b") ? Object.assign({}, it, { s: it.s === "a" ? "b" : "a" }) : it);
   /* asteroid squares rolled with the terrain tool, drawn on the map */
-  const squares = (W, H, st, id) => { const g = gridOf(W, H, 60), r = st && st.w && st.w[id], out = [];
+  const squares = (W, H, st, id) => { const g = gridOf(W, H, 60), r = null /* työkalu on generaattori (terrain-map.js tool) */, out = [];
     for (let i = 1; i < g.c; i++) out.push({ z: "line", x1: i * g.sw, y1: 0, x2: i * g.sw, y2: H }); for (let j = 1; j < g.r; j++) out.push({ z: "line", x1: 0, y1: j * g.sh, x2: W, y2: j * g.sh });
     if (r && r.length === g.c * g.r) r.forEach((x, i) => out.push({ z: "text", x: (i % g.c + .5) * g.sw, y: (Math.floor(i / g.c) + .5) * g.sh, l: x, s: "n" }));
     return out; };
