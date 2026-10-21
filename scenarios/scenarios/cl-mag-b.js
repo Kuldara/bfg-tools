@@ -36,10 +36,10 @@
       const cx = W - 40, cy = H / 2;
       return [
         R(W / 2, 0, W / 2, H, "a", "", { dash: 1 }), { z: "text", x: W * .62, y: 14, l: "Bakka: up to halfway", s: "a" },
-        { z: "ring", cx, cy, r: 31, s: "a" },
+        { z: "ring", cx, cy, r: 40, s: "a" },
         { z: "ring", cx, cy, r: 20, sw: 4, gas: 1 }, { z: "ring", cx, cy, r: 24, sw: 3, ast: 1 },
         { z: "planet", cx, cy, r: 10, l: "" },
-        { z: "planet", cx: cx - 22, cy: cy - 22, r: 2.5, l: "" }, { z: "planet", cx: cx - 27, cy: cy + 14, r: 2.5, l: "" }, { z: "planet", cx: cx + 4, cy: cy - 28, r: 2.5, l: "" },
+        { z: "planet", cx: cx - 22, cy: cy - 22, r: 2.5, l: "", free: 1 }, { z: "planet", cx: cx - 27, cy: cy + 14, r: 2.5, l: "", free: 1 }, { z: "planet", cx: cx + 4, cy: cy - 28, r: 2.5, l: "", free: 1 },
         { z: "edge", e: "l", s: "b", l: "Tyranids move on, turn 1" }, { z: "edge", e: "r", s: "a", l: "Imperial edge" },
         { z: "dim", x1: cx, y1: H - 8, x2: W, y2: H - 8, l: "40 cm" }
       ];
@@ -312,11 +312,12 @@
       b: ["The agreed points."]
     },
     draw: (v, W, H) => [
-      { z: "circ", cx: W / 2, cy: H / 2, r: Math.min(60, W / 2 - 15, H / 2 - 15), s: "a", l: "" },
+      { z: "circ", cx: W / 2, cy: H / 2, r: 60, s: "a", l: "" },
+      { z: "line", x1: 15, y1: 15, x2: W - 15, y2: 15 }, { z: "line", x1: 15, y1: H - 15, x2: W - 15, y2: H - 15 }, { z: "line", x1: 15, y1: 15, x2: 15, y2: H - 15 }, { z: "line", x1: W - 15, y1: 15, x2: W - 15, y2: H - 15 },
       { z: "circ", cx: W / 2, cy: H / 2, r: 20, s: "a", l: "" },
       { z: "mark", x: W / 2, y: H / 2, s: "a", l: "primary defence" },
       { z: "text", x: W / 2, y: H / 2 + 26, l: "starting group: 20 cm", s: "a" },
-      { z: "text", x: W / 2, y: H / 2 - Math.min(60, W / 2 - 15, H / 2 - 15) + 7, l: "defences: within 60 cm, 15 cm+ from edges", s: "a" },
+      { z: "text", x: W / 2, y: Math.max(22, H / 2 - 50), l: "defences: within 60 cm, 15 cm+ from edges", s: "a" },
       ...EDGES4("b", "Attacker: within 15 cm of any one edge")
     ],
     fit: () => [90, 90],

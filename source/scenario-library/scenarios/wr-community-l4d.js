@@ -87,7 +87,7 @@
       b: ["Force A: Warmaster (Ld 9, 1 re-roll) on a Desolator with Improved Sensor Array; an Endurance (no 6+ prow option); " + (v === "vanq" ? 4 : 3) + " Infidels.", "Force B: an Inferno; 2 torpedo Dauntless in a squadron; " + (v === "vanq" ? 4 : 3) + " Iconoclasts.", "Convoy: 12 transports in one squadron."]
     }),
     draw: (v, W, H) => [R(30, 0, 30, 15, "b", "Convoy →"), R(W - 60, 0, 60, 15, "b", "Chaos B ↙"), R(0, H - 45, 30, 45, "b", "Chaos A ↗"), R(W - 60, H - 45, 60, 45, "a", "Imperials ↖"),
-      { z: "corner", c: "tr", r: 8, s: "b", l: "" }, { z: "text", x: W - 12, y: 22, l: "warp gate", s: "b" }],
+      { z: "corner", c: "tr", r: 8, s: "b", l: "", free: 1 }, { z: "text", x: W - 12, y: 22, l: "warp gate", s: "b" }],
     fit: () => [150, 90], srcTable: [180, 120],
     mapNote: "From the article’s map; the arrows give each group’s facing. The warp gate sits on the right short edge near the convoy’s corner.",
     steps: [
@@ -128,7 +128,7 @@
     },
     draw: (v, W, H) => [R(0, 0, W - 10, 25, "b", "Secessionists: 25 cm"), R(0, H - 25, W - 10, 25, "a", "Loyalists: 25 cm"), R(W - 10, 0, 10, H, "b", "escape zone", { dash: 1, rot: 90 }),
        { z: "planet", cx: W / 2, cy: H / 2, r: 9, l: "Hyra" }, { z: "ring", cx: W / 2, cy: H / 2, r: 29, s: "n" },
-      { z: "hatch", x: W / 2 - 50, y: H / 2 - 22, w: 12, h: 9, l: "" }, { z: "hatch", x: W / 2 + 30, y: H / 2 - 30, w: 12, h: 9, l: "" }, { z: "hatch", x: W / 2 + 45, y: H / 2 + 12, w: 12, h: 9, l: "" }, { z: "hatch", x: W / 2 - 55, y: H / 2 + 14, w: 12, h: 9, l: "" }],
+      { z: "hatch", x: W / 2 - 50, y: H / 2 - 22, w: 12, h: 9, l: "", free: 1 }, { z: "hatch", x: W / 2 + 30, y: H / 2 - 30, w: 12, h: 9, l: "", free: 1 }, { z: "hatch", x: W / 2 + 45, y: H / 2 + 12, w: 12, h: 9, l: "", free: 1 }, { z: "hatch", x: W / 2 - 55, y: H / 2 + 14, w: 12, h: 9, l: "", free: 1 }],
     fit: () => [150, 90], srcTable: [180, 120],
     mapNote: "From the article’s picture: zones 25 cm deep stopping 10 cm short of one short edge, Hyra in the centre with its 20 cm gravity well (dashed), debris fields around it. The 10 cm strip is read here as the escape zone.",
     steps: [
@@ -199,7 +199,7 @@
       a: ["2000 pts, with the Saint Aster as flagship and Group Mistress Athagey as fleet commander.", "Include the Cantatum Bellum."],
       b: ["2000 pts, with the Dominant Will and Kor Phaeron as fleet commander."]
     },
-    draw: (v, W, H) => [{ z: "sun" }, { z: "edge", e: "t", s: "n", dash: 1, l: "second sunward edge" }, { z: "planet", cx: W / 2, cy: H / 2, r: 7.5, l: "Srinagar" }, { z: "planet", cx: W / 2 + 7.5 + 15, cy: H / 2 - 8, r: 3, l: "moon" },
+    draw: (v, W, H) => [{ z: "sun" }, { z: "edge", e: "t", s: "n", dash: 1, l: "second sunward edge" }, { z: "planet", cx: W / 2, cy: H / 2, r: 7.5, l: "Srinagar" }, { z: "planet", cx: W / 2 + 7.5 + 15, cy: H / 2 - 8, r: 3, l: "moon", free: 1 },
       R(30, 30, Math.max(0, W - 60), Math.max(0, H - 60), "a", "", { dash: 1 }), { z: "text", x: W / 2, y: 36, l: "defenders: over 30 cm from every edge", s: "a" },
       R(W - 15, 0, 15, H, "b", "1–3", { dash: 1 }), R(0, H - 15, W - 15, 15, "b", "4–6", { dash: 1 })],
     fit: () => [100, 80],

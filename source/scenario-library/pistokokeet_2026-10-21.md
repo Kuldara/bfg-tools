@@ -160,22 +160,20 @@ Testit korjausten jälkeen (204 skenaariota, `?v=0.8.5`):
 | kuvakierros (tarkistus) | 1 850 sivua, 0 löydöstä |
 | kuvakierros (kuvat, muutetut sivut) | 78 sivua, 0 löydöstä; Result-sivut katsottu silmin |
 
-**Julkaistu 21.10. klo 12.40 versiona 0.8.5** (Worker 383f6eca, GitHub 6cca6f4), kun koko 204 skenaarion kokonaisuus oli testattu uudelleen. Alkuperäinen huomautus:
-**Ei julkaistu.** Julkaisu tarvitsee käyttäjän luvan:
-`cd "Battlefleet Gothic/julkaisu" && PYTHONIOENCODING=utf-8 python kokoa.py --kokoa --julkaise scenarios`.
-Julkaisu peilaa myös GitHubiin, ja mukaan tulisi samalla rinnakkaisen istunnon Chapter I.
+**Julkaistu 21.10. klo 12.40 versiona 0.8.5** (Worker 383f6eca, GitHub 6cca6f4), kun koko 204 skenaarion kokonaisuus oli testattu uudelleen. Korjaukset ovat mukana myös myöhemmissä 0.9.x-julkaisuissa; klo 15.07 tarkistettu,
+että kaikki korjaukset ovat yhä tiedostoissa.
 
-## 5. Avoimet kysymykset käyttäjälle
+## 5. Kysymykset ja käyttäjän päätökset (21.10. iltapäivä)
 
-1. **Book of Nemesiksen turnausskenaariot (L26):** "Use an Attack Rating roll to determine who starts
-   the battle". Muutin muotoon "voittaja aloittaa" (kirjaimellinen luenta). Aiempi muoto oli "voittaja
-   valitsee", mikä on kirjan tavallinen käytäntö (RB s. 128, 133 ja 143 sanovat sen erikseen). Kumpi halutaan?
-2. **Cerberus 3:n Inquisition-alukset (L24):** pelataanko lehden hinnoilla (270 ja 175 pts) vai Fleets-kirjan
-   profiileilla ja hinnoilla (Blackship 300 pts, strike cruiser 145 + refitit)? Nyt asia on Source notessa
-   ("Agree which costs you use"). Sen voisi tehdä myös sovittavaksi kentäksi `open-points.js`:ään, kun
-   rinnakkainen istunto on valmis.
-3. **Result-välilehden "Agreed before the game" -laatikko (L23):** näkyy noin 30 skenaariossa, joissa sovittu
-   kohta koskee voittoa, tasapeliä tai pituutta. Riittääkö tämä vai halutaanko kaikki sovitut kohdat
-   (kuten Play-välilehdellä)?
-4. Into the Claw (L20) ja fan-pdd:n kuljetusalusviitteet (L18) korjasi rinnakkainen Chapter I -istunto
-   (tarkistettu tiedostosta). Kysymys ei ole enää avoin.
+1. **Book of Nemesiksen turnausskenaariot (L26):** käyttäjä: *"aloittaa", lähteen sanamuodon mukaan.*
+   Attack rating -heiton voittaja aloittaa. Muoto pysyy.
+2. **Cerberus 3:n Inquisition-alukset (L24):** käyttäjä: *pelataan lehden hinnoilla (maininta).* Source note
+   kertoo nyt, että hinnat ovat lehden (Black Ship 270 pts, Deathwatch-iskuristeilijä 175 pts), ja mainitsee
+   vertailuksi Fleets-kirjan Blackshipin (300 pts, FL s. 148). Script-tagit nostettiin `?v=0.9.3`:een.
+   Selaintesti ja sisältötesti 0 virhettä.
+3. **Result-välilehden "Agreed before the game" -laatikko (L23):** käyttäjä ei ymmärtänyt kysymystä. Se oli
+   tarpeeton, joten ratkaisu jää ennalleen. Selitys: Set-upin "Agree before you start" -kentät näkyvät
+   Play-välilehdellä kaikki. Result-välilehdellä tuomion alla näkyvät vain ne sovitut kohdat, jotka
+   vaikuttavat voittajaan, tasapeliin tai pelin pituuteen (esim. Kotolin tasapeli), eivät esimerkiksi
+   asettelusyvyydet.
+4. Into the Claw (L20) ja fan-pdd:n kuljetusalusviitteet (L18) korjasi rinnakkainen Chapter I -istunto.

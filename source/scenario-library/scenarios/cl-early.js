@@ -55,11 +55,11 @@
     },
     draw: (v, W, H) => [
       { z: "line", x1: W / 2, y1: 0, x2: W / 2, y2: H }, { z: "line", x1: 0, y1: H / 2, x2: W, y2: H / 2 },
-      { z: "planet", cx: W * .36, cy: H * .22, r: 10, l: "Callavell" }, { z: "planet", cx: W * .13, cy: H * .42, r: 4, l: "moon" },
+      { z: "planet", cx: W * 65 / 180, cy: H * 25 / 120, r: 10, l: "Callavell" }, { z: "planet", cx: W * 25 / 180, cy: H * 50 / 120, r: 4, l: "moon" },
       { z: "ring", cx: W * .75, cy: H * .2, r: 6, sw: 12, gas: 1 }, { z: "text", x: W * .75, y: H * .2 + 17, l: "gas cloud", s: "n" },
-      { z: "ring", cx: W * .58, cy: H * .56, r: 4, sw: 8, ast: 1 },
+      { z: "ring", cx: W * 105 / 180, cy: H * 65 / 120, r: 4, sw: 8, ast: 1 },
       { z: "ring", cx: W * .75, cy: H * .8, r: 7, sw: 14, ast: 1 }, { z: "text", x: W * .75, y: H * .8 - 20, l: "asteroid fields", s: "n" },
-      { z: "ring", cx: W * .18, cy: H * .8, r: 6, sw: 12, gas: 1 }, { z: "text", x: W * .18, y: H * .8 - 17, l: "gas cloud", s: "n" },
+      { z: "ring", cx: W * 30 / 180, cy: H * .8, r: 6, sw: 12, gas: 1 }, { z: "text", x: W * 30 / 180, y: H * .8 - 17, l: "gas cloud", s: "n" },
       ...EDGES4("n", "Line-of-battle stacks: any edge, 60 cm+ from the enemy")
     ],
     fit: () => [120, 90],
@@ -105,7 +105,7 @@
     },
     draw: (v, W, H) => [
       R(0, 0, W, 45, "b", "Hunters’ markers"), R(0, H - 45, W, 45, "b", "Hunters’ markers"),
-      H > 90 ? R(W - 8, 45, 8, H - 90, "a", "") : null,
+      H > 90 ? R(W - 8, 45, 8, H - 90, "a", "", { free: "x" }) : null,
       { z: "arrow", x1: W - 10, y1: H / 2, x2: W - 28, y2: H / 2, s: "a" },
       { z: "edge", e: "r", s: "a", l: "Lone ship starts here" }, { z: "edge", e: "l", s: "a", dash: 1, l: "Lone ship must exit here" },
       { z: "dim", x1: 22, y1: 0, x2: 22, y2: 45, l: "45 cm" }
@@ -310,7 +310,7 @@
     forces: { a: ["250 pts of escorts.", LEIGH, "The Thebes: a Siluria class light cruiser (or a Dauntless) with 1 hit of damage and three criticals: thrusters damaged, port armament damaged, starboard armament damaged."], b: ["250 pts of escorts.", "No warlord."] },
     draw: (v, W, H) => {
       const cx = W / 2, pz = Math.max(0, cx - 60);
-      return [R(cx - 10, H / 2 - 12, 20, 24, "a", "Thebes"), { z: "arrow", x1: cx + 12, y1: H / 2, x2: cx + 28, y2: H / 2, s: "a" },
+      return [R(cx - 10, H / 2 - 12, 20, 24, "a", "", { free: 1 }), { z: "cm", x: cx, y: H / 2, s: "a", l: "Thebes" }, { z: "arrow", x1: cx + 12, y1: H / 2, x2: cx + 28, y2: H / 2, s: "a" },
         pz > 0 ? R(0, 0, pz, H, "b", pz >= 25 ? "Orks: 60 cm+\nbehind" : "") : null,
         { z: "dim", x1: cx - 60, y1: H - 16, x2: cx, y2: H - 16, l: "60 cm+" },
         { z: "edge", e: "r", s: "a", l: "Leigh’s escorts move on here, turn 1" }];
@@ -352,8 +352,8 @@
       b: ["The Gork’s Pay: a kill kroozer (FL p. 382) with Warlord Gutztoof, who gives it two extra re-rolls; Maniac Gunners and Mad Meks aboard (FL p. 365)."]
     },
     draw: (v, W, H) => [
-      { z: "hatch", x: W / 2 - 15, y: H / 2 - 7.5, w: 30, h: 15, l: "30 × 15 cm+" },
-      R(W / 2 - 30, H / 2 - 22.5, 60, 45, "b", "", { dash: 1 }),
+      { z: "hatch", x: W / 2 - 15, y: H / 2 - 7.5, w: 30, h: 15, l: "", free: 1 }, { z: "cm", x: W / 2, y: H / 2 }, { z: "text", x: W / 2, y: H / 2 + 14, l: "field 30 × 15 cm+" },
+      R(W / 2 - 30, H / 2 - 22.5, 60, 45, "b", "", { dash: 1, free: 1 }),
       { z: "text", x: W / 2, y: H / 2 - 28, l: "15 cm: the kroozer may appear", s: "b" },
       R(0, H - 30, W, 30, "a", "Imperium: within 30 cm of your edge")
     ],

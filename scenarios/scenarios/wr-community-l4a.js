@@ -22,12 +22,12 @@
     },
     draw: (v, W, H) => { const yb = Math.min(H * .5, H - 15 - 20 - 8), gx = W / 2;
       return [R(0, H - 15, W, 15, "a", "Imperial deployment and reinforcements: 15 cm"),
-        { z: "hatch", x: 0, y: yb - 9, w: gx - 30, h: 18, l: "" }, { z: "hatch", x: gx + 30, y: yb - 9, w: W - gx - 30, h: 18, l: "" },
+        { z: "hatch", x: 0, y: yb - 9, w: gx - 30, h: 18, l: "", free: "y" }, { z: "hatch", x: gx + 30, y: yb - 9, w: W - gx - 30, h: 18, l: "", free: "y" },
         { z: "text", x: (gx - 30) / 2, y: yb + 17, l: "impassable\nasteroids" }, { z: "text", x: gx + 30 + (W - gx - 30) / 2, y: yb + 17, l: "impassable\nasteroids" },
         { z: "mark", x: gx - 30, y: yb, s: "b", l: "Fort Gaines" }, { z: "mark", x: gx + 30, y: yb, s: "b", l: "Fort Morgan" },
-        R(gx - 22, yb - 5, 44, 10, "b", "3 minefields", { dash: 1 }), { z: "mark", x: gx, y: yb - 20, s: "b", l: "torpedo launcher" },
+        R(gx - 22, yb - 5, 44, 10, "b", "3 minefields", { dash: 1, free: 1 }), { z: "mark", x: gx, y: yb - 20, s: "b", l: "torpedo launcher", free: 1 },
         { z: "dim", x1: gx - 30, y1: yb + 18, x2: gx + 30, y2: yb + 18, l: "60 cm gap" },
-        R(W - 50, 0, 50, Math.min(28, yb - 22), "b", "Chaos zone\n(size not given)", { dash: 1 })]; },
+        R(W - 50, 0, 50, Math.min(28, yb - 22), "b", "Chaos zone\n(size not given)", { dash: 1, free: 1 })]; },
     fit: () => [100, 80],
     mapNote: "Drawn from the article’s sketch, which gives only the 15 cm Imperial zone and the 60 cm gap. The Chaos zone is an oval in one corner behind the barrier.",
     steps: [
@@ -72,9 +72,9 @@
       a: ["The Black Ship: a heavy transport with the Super-Heavy Transport option (FL p. 182).", "Two cruisers and one squadron of five escorts. At most one cruiser with launch bays, and fighters only — no bombers."],
       b: ["Four cruisers; at most one with launch bays."]
     },
-    draw: (v, W, H) => [{ z: "circ", cx: 5, cy: H / 2, r: 15, s: "a", l: "" }, { z: "mark", x: 5, y: H / 2, s: "a", l: "" }, { z: "text", x: 44, y: H / 2 - 22, l: "Black Ship + escort\nwithin 15 cm", s: "a" },
+    draw: (v, W, H) => [{ z: "circ", cx: 5, cy: H / 2, r: 15, s: "a", l: "", free: 1 }, { z: "mark", x: 5, y: H / 2, s: "a", l: "", free: 1 }, { z: "text", x: 44, y: H / 2 - 22, l: "Black Ship + escort\nwithin 15 cm", s: "a" },
       { z: "edge", e: "t", s: "b", dash: 1, l: "Chaos markers: anywhere along the long edges, 45 cm+ from Imperial ships" }, { z: "edge", e: "b", s: "b", dash: 1, l: "" },
-      { z: "ring", cx: 5, cy: H / 2, r: 45 + 15, s: "b" },
+      { z: "ring", cx: 5, cy: H / 2, r: 45 + 15, s: "b", free: 1 },
       { z: "edge", e: "r", s: "a", l: "Black Ship exit (Imperial)" }, { z: "edge", e: "l", s: "b", l: "Black Ship exit (if desecrated)" }],
     fit: () => [120, 60],
     mapNote: "The Black Ship may start anywhere on its short edge; drawn here at the middle. The outer circle shows roughly where no Chaos marker may go.",
@@ -117,7 +117,7 @@
     },
     draw: (v, W, H) => [R(0, 0, W, 45, "b", "A — Wolves: 45 cm"), R(0, H - 45, W, 45, "b", "B — Wolves: 45 cm"),
       { z: "text", x: W - 18, y: H / 2, l: "convoy zone", s: "a" },
-      { z: "hatch", x: 45, y: H / 2 - 10, w: 8, h: 20, l: "" }, { z: "text", x: 70, y: H / 2, l: "asteroids\nD6×5 cm" },
+      { z: "hatch", x: 45, y: H / 2 - 10, w: 8, h: 20, l: "", free: 1 }, { z: "text", x: 70, y: H / 2, l: "asteroids\nD6×5 cm" },
       { z: "dim", x1: 0, y1: H / 2 - 14, x2: 45, y2: H / 2 - 14, l: "45 cm" },
       { z: "edge", e: "l", s: "a", l: "Jump point — the convoy’s exit" }, { z: "edge", e: "r", s: "a", l: "Convoy enters (not within 45 cm of a long edge)" }],
     fit: () => [120, 100],
@@ -161,7 +161,7 @@
       b: ["Up to 1000 pts plus the captured cruiser (a Lunar is suggested).", "May buy up to 3 minefields.", "The prize: Ld 6, half its starting hits, no All Ahead Full. Everything else works."]
     },
     draw: (v, W, H) => [R(0, 0, 20, H / 2, "a", "1–3"), R(0, H / 2, 20, H / 2, "a", "4–6"), R(W - 10, 0, 10, H, "b", "Wolves: 10 cm", { rot: 90 }),
-      { z: "hatch", x: W / 2 - 6, y: H / 2 - 6, w: 12, h: 12, l: "" }, { z: "text", x: W / 2, y: H / 2 + 14, l: "asteroids D3×5 by D3×5 cm" },
+      { z: "hatch", x: W / 2 - 6, y: H / 2 - 6, w: 12, h: 12, l: "", free: 1 }, { z: "cm", x: W / 2, y: H / 2 }, { z: "text", x: W / 2, y: H / 2 + 14, l: "asteroids D3×5 by D3×5 cm" },
       { z: "arrow", x1: W - 25, y1: H / 2 - 25, x2: 40, y2: H / 2 - 25, s: "b", l: "the prize runs this way" }],
     fit: () => [90, 60],
     steps: [
@@ -194,7 +194,7 @@
     glance: [["Points", "Cat 4 : mouse 1 (e.g. 1000 : 250)"], ["Table", "Any; dense terrain"], ["Battlezone", "Any but Mercurial"], ["First turn", "The mouse"], ["Victory", "Mouse survives to turn 11"]],
     bring: ["Plenty of phenomena to hide among"],
     forces: { a: ["A quarter of the agreed limit (250 pts against 1000)."], b: ["The full agreed limit."] },
-    draw: (v, W, H, st, sc) => { const d = agN(sc, st, "dep"); return [{ z: "circ", cx: W / 2, cy: H / 2, r: 10, s: "a", l: "" }, { z: "text", x: W / 2, y: H / 2 - 16, l: "mouse: within 10 cm of each other", s: "a" },
+    draw: (v, W, H, st, sc) => { const d = agN(sc, st, "dep"); return [{ z: "circ", cx: W / 2, cy: H / 2, r: 10, s: "a", l: "", free: 1 }, { z: "text", x: W / 2, y: H / 2 - 16, l: "mouse: within 10 cm of each other", s: "a" },
       R(0, 0, d, H, "b", ""), { z: "text", x: d / 2 + 1.5, y: H / 2, l: "Cat " + d + " cm", s: "b", rot: -90 }, { z: "dim", x1: d, y1: H / 2 + 18, x2: W / 2 - 10, y2: H / 2 + 18, l: "60 cm +" }]; },
     fit: () => [140, 60],
     mapNote: "The mouse must be over 60 cm from the cat’s edge, so the centre only works on tables at least about 140 cm long — otherwise set it further from the cat.",
@@ -225,7 +225,7 @@
     bring: ["One solar collector marker per 250 pts of the defender"],
     forces: { a: ["The agreed points limit.", "One solar collector per full 250 pts (free)."], b: ["The agreed points limit."] },
     draw: (v, W, H) => [{ z: "sun" }, R(0, 0, 20, H, "a", ""), { z: "text", x: 16.5, y: H / 2, l: "Defender: 20 cm", s: "a", rot: -90 }, R(W - 20, 0, 20, H, "b", "Attacker: 20 cm", { rot: 90 }),
-      { z: "mark", x: 5, y: H * .2, s: "a", l: "" }, { z: "mark", x: 5, y: H * .5, s: "a", l: "" }, { z: "mark", x: 5, y: H * .8, s: "a", l: "" }, { z: "text", x: 13 + textLen("collectors ≤ 10 cm", W) / 2, y: H * .2, l: "collectors ≤ 10 cm", s: "a" }],
+      R(0, 0, 10, H, "a", "", { dash: 1 }), { z: "text", x: 23 + textLen("the table, as far apart as you like", W) / 2, y: 16, l: "collectors: up to 10 cm onto\nthe table, as far apart as you like", s: "a" }],
     fit: () => [80, 50],
     steps: [
       { t: "Generate flare-region phenomena by the rulebook. Choose the sunward edge." },

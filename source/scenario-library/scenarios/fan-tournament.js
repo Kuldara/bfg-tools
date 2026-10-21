@@ -77,7 +77,7 @@
   const CLOCK = { k: "timer", id: "clk", l: "Game clock", min: 120 };
   const LAST8 = T => T === 8 ? [[null, "Last turn"]] : [];
   const zones = (W, H, d) => [R(0, 0, W, d, "a", "Fleet A: " + d + " cm"), R(0, H - d, W, d, "b", "Fleet B: " + d + " cm")];
-  const rift = (cx, cy, l) => [{ z: "circ", cx, cy, r: 5, s: "c", l: "" }, l ? { z: "text", x: cx, y: cy + 10, l, s: "c" } : null];
+  const rift = (cx, cy, l) => [{ z: "circ", cx, cy, r: 5, s: "c", l: "", nr: 1 }, l ? { z: "text", x: cx, y: cy + 10, l, s: "c" } : null];
   const REF_VP = [["Victory points", "RB p. 122"], ["Attack ratings", "RB p. 120"]];
 
   /* secondary tables */
@@ -672,7 +672,7 @@
     bring: ["7 numbered wreck tokens or models", "A ringed planet", "Celestial phenomena"],
     forces: FORCES,
     draw: (v, W, H) => { const pr = v === "adv" ? 10 : 15, wr = pr + 10, out = [...zones(W, H, 20), { z: "planet", cx: W / 2, cy: H / 2, r: pr }, { z: "ring", cx: W / 2, cy: H / 2, r: pr + 4, sw: 3, gas: 1 }];
-      for (let k = 0; k < 7; k++) { const a = 2 * Math.PI * k / 7; out.push({ z: "mark", x: W / 2 + wr * Math.cos(a), y: H / 2 + wr * Math.sin(a), s: "n" }); }
+      for (let k = 0; k < 7; k++) { const a = 2 * Math.PI * k / 7; out.push({ z: "mark", x: W / 2 + wr * Math.cos(a), y: H / 2 + wr * Math.sin(a), s: "n", free: 1 }); }
       const tl = "7 wrecks,\n10 cm from\nthe planet"; out.push({ z: "text", x: Math.min(W - textLen(tl, W) / 2 - 2, W / 2 + wr + 40), y: H / 2, l: tl, s: "n" }); return out; },
     fit: v => v === "adv" ? [100, 90] : [110, 100],
     mapNote: v => "Seven wrecks evenly spaced in a circle, 10 cm from the planet’s edge" + (v === "adv" ? ": one on the centre line, three in each half." : "."),
@@ -722,8 +722,8 @@
     glance: glance("tp", "A neutron star in the centre; a large ringed gas giant, 5 asteroid fields, 4 gas clouds, a small planetoid"),
     bring: ["A model or base for the neutron star", "A wreck", "A large ringed gas giant, 5 asteroid fields, 4 gas clouds, a small planetoid"],
     forces: FORCES("tp"),
-    draw: (v, W, H) => [...zones(W, H, 20), { z: "circ", cx: W / 2, cy: H / 2, r: 3, s: "c", l: "" }, { z: "text", x: W / 2, y: H / 2 + 10, l: "neutron star", s: "c" },
-      { z: "mark", x: W / 2 + 36, y: H / 2, s: "n", l: "" }, { z: "dim", x1: W / 2 + 3, y1: H / 2 - 10, x2: W / 2 + 36, y2: H / 2 - 10, l: "wreck: 36 cm" }],
+    draw: (v, W, H) => [...zones(W, H, 20), { z: "circ", cx: W / 2, cy: H / 2, r: 3, s: "c", l: "", nr: 1 }, { z: "text", x: W / 2, y: H / 2 + 10, l: "neutron star", s: "c" },
+      { z: "mark", x: W / 2 + 36, y: H / 2, s: "n", l: "wreck" }, { z: "dim", x1: W / 2, y1: H / 2 - 12, x2: W / 2 + 36, y2: H / 2 - 12, l: "36" }],
     fit: () => [110, 80],
     mapNote: "The wreck starts 36 cm from the neutron star along the long centre line; which side: {a:side}.",
     steps: [

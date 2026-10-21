@@ -212,7 +212,7 @@
     forces: { a: ["Equal points."], b: ["Equal points."] },
     draw: (v, W, H) => {
       const pts = [[.18, .3], [.42, .24], [.7, .3], [.3, .84], [.58, .8], [.84, .84]];
-      return pts.map(([x, y]) => ({ z: "mark", x: W * x, y: H * y, s: "n", l: "?" })).concat([
+      return pts.map(([x, y]) => ({ z: "mark", x: W * x, y: H * y, s: "n", l: "?", free: 1 })).concat([
         { z: "text", x: W / 2, y: H / 2, l: "derelicts: 20 cm apart" }
       ]);
     },

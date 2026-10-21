@@ -223,12 +223,12 @@
       const m1 = moon(1), m2 = moon(2), sx = (m1.x + m2.x) / 2, sy = (m1.y + m2.y) / 2;
       return [
         { z: "line", x1: W / 2, y1: 0, x2: W / 2, y2: H }, { z: "line", x1: 0, y1: H / 2, x2: W, y2: H / 2 },
-        { z: "hatch", x: W / 2, y: 0, w: W / 2, h: 18, l: "asteroid field" },
+        { z: "hatch", x: W / 2, y: 0, w: W / 2, h: 18, l: "asteroid field", free: "y" },
         R(0, 0, 15, H / 2, "a", "Imperial: 15 cm", { rot: -90 }), R(W - 15, 0, 15, H / 2, "b", "Chaos: 15 cm", { rot: 90 }),
         { z: "text", x: W / 4, y: H / 4 + 4, l: "SW quadrant" }, { z: "text", x: W * .62, y: H / 4 + 10, l: "NW quadrant" }, { z: "text", x: W / 4, y: H * .75, l: "SE quadrant" },
-        { z: "planet", cx: px, cy: py, r, l: "" },
-        { z: "planet", cx: m1.x, cy: m1.y, r: 2.5, l: "" }, { z: "planet", cx: m2.x, cy: m2.y, r: 2.5, l: "" },
-        { z: "mark", x: sx, y: sy, s: "a", l: "" }, { z: "text", x: sx, y: sy + mapFont(W) * 1.6, l: "space station", s: "a" },
+        { z: "planet", cx: px, cy: py, r, l: "", free: 1 },
+        { z: "planet", cx: m1.x, cy: m1.y, r: 2.5, l: "", free: 1 }, { z: "planet", cx: m2.x, cy: m2.y, r: 2.5, l: "", free: 1 },
+        { z: "mark", x: sx, y: sy, s: "a", l: "", free: 1 }, { z: "text", x: sx, y: sy + mapFont(W) * 1.6, l: "space station", s: "a" },
         { z: "sun", e: "l", l: "south: sunward edge" }, { z: "edge", e: "r", l: "north edge" }
       ];
     },
@@ -294,12 +294,11 @@
       const r = 7.5, px = W - 15 - r, py = H / 2;
       return [
         R(0, 0, 15, H, "b", "Attacker: 15 cm", { rot: -90 }),
-        R(67.5, 0, 15, H, "b", "Area to be mined: 15 cm", { rot: -90, dash: 1 }), { z: "line", x1: 75, y1: 0, x2: 75, y2: H },
-        { z: "circ", cx: px, cy: py, r: r + 30, s: "a" },
-        { z: "planet", cx: px, cy: py, r, l: "" },
+        R(67.5, 0, 15, H, "b", "Area to be mined: 15 cm", { rot: -90, dash: 1, free: "x" }), { z: "line", x1: 75, y1: 0, x2: 75, y2: H },
+        { z: "circ", cx: px, cy: py, r: r + 30, s: "a", free: 1 },
+        { z: "planet", cx: px, cy: py, r, l: "", free: 1 },
         { z: "text", x: px - 3, y: py + r + 13, l: "Defender:\nwithin 30 cm", s: "a" },
         { z: "dim", x1: 15, y1: H * .2, x2: 75, y2: H * .2, l: "60 cm" },
-        { z: "dim", x1: 75, y1: H * .85, x2: px - r, y2: H * .85, l: Math.round(px - r - 75) + " cm" },
         { z: "sun", e: "r", l: "sunward edge" }
       ];
     },
@@ -363,7 +362,7 @@
         R(0, top, di, D, "a", "Imperial: " + di + " cm", { rot: -90 }), R(W - de, top, de, D, "b", "Eldar: " + de + " cm", { rot: 90 }),
         { z: "line", x1: di, y1: H - 45, x2: W - de, y2: H - 45 },
         { z: "text", x: W / 2, y: H - 45 + 5, l: "gravity pull (45 cm)" },
-        { z: "mark", x: W / 2, y: top + 7, s: "n", l: "Abhorrence" },
+        { z: "mark", x: W / 2, y: top + 7, s: "n", l: "Abhorrence", free: 1 },
         { z: "edge", e: "b", l: "planet edge" }
       ];
     },
@@ -505,14 +504,14 @@
       if (v === "b1") return [att, R(30, H - 30, W - 60, 30, "a", "Defender: 30 cm · ships 15 cm apart"), sun];
       if (v === "b2") return [att, R(30, H - 60, W - 60, 40, "a", "Defender: 20–60 cm from the edge"), sun];
       if (v === "b3") return [att, def, sun, { z: "mark", x: W / 2, y: H / 2, s: "a", l: "3 retreating ships, facing away" },
-        { z: "planet", cx: W * .72, cy: H - 46, r: 4, l: "moon + airbase" }];
+        { z: "planet", cx: W - 50, cy: H - 45, r: 4, l: "moon + airbase" }];
       if (v === "b4") return [att, def, sun, { z: "planet", cx: W * .3, cy: 46, r: 4, l: "moon (airbase destroyed)" }];
       const cy = H / 2, px = W - 24;
       return [
         R(0, 30, 30, H - 60, "b", "Attacker: 30 cm", { rot: -90 }), R(W - 90, 30, 60, H - 60, "a", "Defender: 30–90 cm from the edge", { rot: 90 }),
-        { z: "planet", cx: px, cy, r: 10, l: "" },
-        { z: "mark", x: px, y: cy - 22, s: "a", l: "" }, { z: "mark", x: px, y: cy + 22, s: "a", l: "" },
-        { z: "mark", x: W - 50, y: cy - 34, s: "a", l: "" }, { z: "mark", x: W - 50, y: cy + 34, s: "a", l: "" }, { z: "mark", x: W - 12, y: cy + 40, s: "a", l: "" },
+        { z: "planet", cx: px, cy, r: 10, l: "", free: 1 },
+        { z: "mark", x: px, y: cy - 22, s: "a", l: "", free: 1 }, { z: "mark", x: px, y: cy + 22, s: "a", l: "", free: 1 },
+        { z: "mark", x: W - 50, y: cy - 34, s: "a", l: "", free: 1 }, { z: "mark", x: W - 50, y: cy + 34, s: "a", l: "", free: 1 }, { z: "mark", x: W - 12, y: cy + 40, s: "a", l: "", free: 1 },
         { z: "text", x: W - 40, y: 18, l: "Kotol, stations and platforms", s: "a" },
         { z: "sun", e: "b", l: "sunward: the defender’s left" }
       ];

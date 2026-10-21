@@ -34,7 +34,6 @@
       R(W / 2 - 30, 0, 60, 30, "b", ""), { z: "mark", x: W / 2, y: 10, s: "b", l: "" },
       { z: "text", x: W / 2, y: 22, l: "Chaos zone 60 × 30 cm", s: "b" },
       R(0, H - 30, W, 30, "a", "Patrol: whole long edge, 30 cm"),
-      { z: "dim", x1: W / 2 + 40, y1: 30, x2: W / 2 + 40, y2: H - 30, l: "60 cm" },
       { z: "edge", e: "b", s: "b", l: "Chaos exit: Planet Killer + 1 capital ship" }
     ],
     fit: () => [70, 70], srcTable: [180, 120],
@@ -134,8 +133,10 @@
       c: ["25% of the agreed points, chosen from the Eldar list.", "Arrives at random from turn 2 (tool in Play)."]
     },
     draw: (v, W, H) => [
-      R(W / 2 - 30, 0, 60, H, "a", "Order: within 30 cm\nof the centre line"),
-      { z: "planet", cx: W / 2 + 14, cy: H / 2 - 22, r: 7, l: "" }, { z: "mark", x: W / 2 - 12, y: H / 2 + 26, s: "n", l: "hulk" },
+      R(W / 2 - 30, 0, 60, H, "a", ""), { z: "text", x: W / 2, y: 18, l: "Order:\n30 cm from\ncentre line", s: "a" },
+      /* planeetta ja hulkki saavat olla missä tahansa 30 cm:n säteellä keskeltä: alue, ei kiinteitä paikkoja (0.9.3) */
+      { z: "circ", cx: W / 2, cy: H / 2, r: 30, s: "n", l: "" }, { z: "text", x: W / 2, y: H / 2 + 1, l: "planet + hulk:\nwithin 30 cm\nof the centre", s: "n" },
+      { z: "planet", cx: W / 2 + 17, cy: H / 2 - 23, r: 6, l: "", free: 1 }, { z: "mark", x: W / 2 - 13, y: H / 2 + 23, s: "n", l: "", free: 1 },
       R(0, 0, 20, H, "b", "Disorder: 20 cm", { rot: -90 }), R(W - 20, 0, 20, H, "b", "or 20 cm", { rot: 90 }),
       { z: "edge", e: "t", s: "c", dash: 1, l: "Eldar arrive from a long edge" }, { z: "edge", e: "b", s: "c", dash: 1, l: "" }
     ],

@@ -175,7 +175,7 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
     Siinä on kolme asettelualuetta (Rearguard, Convoy ja Convoy Leaders, 30 × 15 cm), pienten
     pöytien sääntö (kartta kutistaa alueet) ja pisteytys kuljetuskapasiteetin mukaan, jossa
     parannukset eivät tuota pisteitä saattueelle.
-- **Escalating Engagementin aloitusmerkit alueena (21.10. iltapäivä, 0.9.2, EI vielä julkaistu):**
+- **Escalating Engagementin aloitusmerkit alueena (21.10. iltapäivä, 0.9.2, julkaistu klo 14.42, Worker 38f69b31, GitHub d0e7c2a):**
   horizon huomautti, että kartan P1- ja P2-merkit näyttivät kiinteiltä paikoilta. Käyttäjä: "turha olla
   tarkka piste vaan ennemmin deployment alue maalaus". Nyt kartalla on maalattu neutraali alue
   (30 cm reunoista) ja sen yläreunassa teksti "Starting markers: anywhere in here, 60 cm+ from the enemy
@@ -183,6 +183,12 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
   RB s. 138 (v1.10 ja v1.11); horizon muisti 30 cm, mutta se on etäisyys reunoista. Muutos koskee myös
   Ahriman's Arrivalia, joka lainaa kartan (`cl-mag-a.js`: P1/P2-nimeäminen poistettu). Karttatesti 0 + 0,
   maastotesti 0. Script-tagit `?v=0.9.2`.
+- **Tekniset mitat kaikkiin karttoihin (0.9.3, 21.10.2026 ilta, EI julkaistu):** käyttäjä: *"ainakin kaikessa saisi
+  olla tekniseen piirrustuksen tyyliset mitat että tuon kuvan saa aina replikoitua omalla pöydällä"*, ja pisteistä:
+  *"turha olla tarkka piste vaan ennemmin deployment alue maalaus minne laittaa se yksikkö"*. Moottori mittaa jokaisen
+  kiinteän kohteen pöydän reunoista pöydän ulkopuolelle, ja kartat, joissa piste näytti kiinteältä paikalta vaikka sääntö
+  sallii alueen, korjattiin. Selite kertoo ruudukon ("180 × 120 cm · grid 30 cm"). Uusi testi `testit/mittatesti.js`.
+  Ks. luku "Tekniset mitat (0.9.3)". Script-tagit `?v=0.9.8`.
 - **Rules writer myös fanilisäosiin ja Event Horizon -nimi (21.10. iltapäivä, julkaistu 0.9.1:n mukana):**
   horizon kysyi Discordissa, miten Rules writer -tagi on jaettu lisäosille, ja toivoi skenaariolleen
   nimeä "Just Event Horizon". Muutokset:
@@ -254,7 +260,8 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
 | `testit/sivuaudit.py` | Sääntöviitteiden auditointi RB/FL-tekstidumppeja vasten (otsikkotaso), käsin tarkistetut poikkeukset listassa. |
 | `tee_kuvakkeet.py` | `apple-touch-icon.png` ja `favicon.png` (sama kuvio kuin SVG-favicon). |
 | `testit/selaintesti.js` | Regressiotesti selaimessa (ks. Testaus). |
-| `testit/karttatesti.js` | Karttojen tekstien sijoittelu kaikilla pöydillä ja fonttikoilla (ks. Testaus). |
+| `testit/karttatesti.js` | Karttojen tekstien sijoittelu kaikilla pöydillä ja fonttikoilla (ks. Testaus). Mittojen luvut ovat mukana. |
+| `testit/mittatesti.js` | Node (0.9.3): jokaisen kartan kiinteät kohteet on mitattu pöydän reunoista, ja jokainen mitan luku vastaa piirrettyä pituutta. Ks. "Tekniset mitat (0.9.3)". |
 | `testit/kuvakierros.js` | Kuvakaappaus jokaisesta sivusta ja asettelun tarkistus, Node + headless Chrome (ks. Testaus). `--maasto` arpoo maaston jokaiseen skenaarioon ennen kuvausta (0.9). |
 | `battlezone-core.js` | **GENEROITU, älä muokkaa** (0.9): Battlezone Generatorin arvontaydin, kopio `../terrain generator/index.html`:n BZCORE-lohkosta nimiavaruutena `BZ`. Ks. "Maasto (0.9)". |
 | `tee_maastoydin.py` | Kirjoittaa `battlezone-core.js`:n generaattorista (`--tarkista` = vain tarkistus). |
@@ -352,7 +359,9 @@ Srinagarin Cantatum Bellum merkittiin Chaos-alukseksi ja Falling Downin paljaste
 tuli kaksi muutosta. Result näyttää sovitut voittoon, tasapeliin ja pituuteen liittyvät kohdat (`agreeList(sc, st, only)`),
 ja joukkokortissa "Suggested: Any" näkyy muodossa "any fleet". Uusi tarkistin `testit/sivuaudit_tiukka.py` etsii viitteitä,
 joiden sivulla on vain sekakirjaiminen osuma, vaikka varsinainen otsikko on toisella sivulla. Se löysi Warp rifts RB s. 101 → 111,
-jonka `sivuaudit.py` hyväksyi. Kaksi löydöstä (`fan-pdd.js`) korjasi rinnakkainen Chapter I -istunto. Script-tagit lopuksi `?v=0.8.5`.
+jonka `sivuaudit.py` hyväksyi. Kaksi löydöstä (`fan-pdd.js`) korjasi rinnakkainen Chapter I -istunto. Script-tagit lopuksi `?v=0.8.5`. Käyttäjän päätökset (21.10. iltapäivä): Book of Nemesiksen turnausskenaarioissa attack rating
+-heiton voittaja *aloittaa* (lähteen sanamuoto), ja Cerberus 3:n Inquisition-alukset pelataan lehden hinnoilla
+(270/175 pts, Fleets-kirjan 300 pts mainittu Source notessa; `?v=0.9.3`).
 Testit korjausten jälkeen (204 skenaariota) olivat vihreitä.
 
 **Sivuviiteauditointi** (`python -X utf8 "scenario library/testit/sivuaudit.py"`):
@@ -1000,6 +1009,108 @@ Nämä näkyvät paneelin perusteluissa, maininnoissa ja lokissa. Mitään ei ol
   ja vuorolla 3 "went off on turn 2 … stop rolling". Battlezone Generator selaimessa ytimen siirron jälkeen:
   arpoo, piirtää, säännöt ja Start of turn toimivat, ja konsolissa ei virheitä.
 - Komento: `node testit/kuvakierros.js <ulos> --maasto` kuvaa sivut maasto arvottuna.
+
+## Tekniset mitat (0.9.3, 21.10.2026)
+
+Käyttäjä: *"ainakin kaikessa saisi olla tekniseen piirrustuksen tyyliset mitat että tuon kuvan saa aina replikoitua
+omalla pöydällä"*. Arvotusta maastosta: *"terrain sijoittelu mittoja ei tarvi. kerrot vain ruudukon mitat aina jossain.
+ei se terrain ole niin millilleen"*. Pisteistä: *"turha olla tarkka piste vaan ennemmin deployment alue maalaus minne laittaa
+se yksikkö"* (Escalating Engagement, 0.9.2).
+
+### Järjestelmä (`index.html`, lohko "dimensions (0.9.3)" ennen `mapSVG`:tä)
+
+- **Yleinen moottori, ei käsityötä 245 karttaan.** `dimFeatures` poimii kartan kiinteät kohteet: vyöhykkeet ja kentät
+  (rect, hatch, poly-kärjet), planeetat, merkit, ympyrät ja renkaat (keskipiste + säde), kulmaympyrät (säde reunalla),
+  akselinsuuntaiset jakoviivat ja vuoromerkit (tick). Uusi esine `{ z: "cm", x, y, l }` on keskipisteen risti
+  symbolisen kokoiselle kohteelle (The Bait, Parol's Bait, Corribra 3, To Find the Light, Hunter Hunted, Corribra 4).
+- **Ratkaisija** (`dimPlan`): pöydän reunat tunnetaan. Käsin tehty `dim`, jonka teksti on pelkkä luku, on rajoite (kun toinen
+  pää tunnetaan, toinenkin tunnetaan), esim. Cruiser Clashin "90" ja "60". Puuttuvat arvot mitataan reunasta lyhin ensin,
+  kunnes kaikki tunnetaan, joten mittoja tulee vähin määrä. Pelkkä luku pöydän reunasta alkaen ("45 cm") siirtyy
+  reunamitaksi; ehdolliset ("up to 100 cm", "at least 60 cm", "30+") jäävät paikalleen sääntömerkinnöiksi.
+- **Piirto** (`dimSVG`): mitat ovat pöydän ulkopuolella, kuten teknisessä piirustuksessa: apuviiva kohteesta reunalle
+  (pöydän sisällä ohut katkoviiva), nuolellinen mittaviiva ja luku keskellä. x-mitat lähempään pitkään reunaan, y-mitat
+  sivuille; tasatilanteessa reuna, jolla on vähemmän reunatekstejä. Vasen puolisko mitataan vasemmasta reunasta ja oikea
+  oikeasta. Puoliskolla enintään kaksi arvoa mitataan kumpikin reunasta (pinottuina, säännön luku säilyy: konvoin "45"
+  ei hajoa muotoon 30 + 15); kolme tai useampi (ruudukot, vuoromerkit, Gunneryn 10 vyöhykettä) ketjuna yhdellä rivillä.
+  Reunarivi on reunaviivan ja -tekstin ulkopuolella, ja `viewBox` kasvaa vain sillä puolella, jolla mittoja on.
+  Luvut ilman yksikköä (kaikki senttejä), fontti 0,8 × kartan fontti, viivan ja luvun väri `--chart-label` (tummassa
+  teemassa `--chart-frame` jäi liian himmeäksi). Lyhyellä välillä nuolet ulkopuolelta ja luku välin ohi.
+- **Säde:** viiva keskeltä kehälle ja luku kehän ulkopuolelle kohtaan, jossa se ei osu teksteihin. Kun ympyrän keskellä on
+  planeetta, viiva alkaa planeetan reunasta ja luku on etäisyys reunasta ("30"), koska painovoimakaivo ja muut etäisyydet
+  mitataan planeetan reunasta (RB s. 113) ja planeettasymbolin koko on vain kuva. Muuten "R30". Sädemittaa ei piirretä, jos
+  kartan teksti jo kertoo luvun ("within 30 cm"), eikä kaasu- ja asteroidinauhoille (`gas`/`ast`: leveys ja etäisyys ovat
+  askeleissa).
+- **Selite** (`mapSize`): "180 × 120 cm · grid 30 cm" (200 cm:stä alkaen 50 cm, `mapGrid`). Tämä on arvotun maaston ainoa
+  mitta, kuten käyttäjä pyysi.
+- **Käsin tehdyt mitat** säilyivät rajoitteina ja saivat saman ohuen tyylin ("60 cm" → "60").
+
+### Liput ja periaatteet
+
+- `free: 1` = kohteen paikka ei ole kiinteä (lähde: "anywhere", "up to 150 cm", "as on the map, agree the spots",
+  "near your short edge", "in one quarter", "placed by the tool"), joten mittoja ei tule. Kohde jää kuvaksi, ja teksti tai
+  alue kertoo säännön. `free: "x"` / `"y"` = vapaa vain siinä suunnassa (esim. konvoin tulokaistan 8 cm:n leveys on symboli,
+  korkeus 45 cm reunoista on sääntö). `nr: 1` = ei sädemittaa (koko on symboli tai kerrotaan sanoin).
+- **Mittaa vain, mitä lähde kiinnittää.** Kaikki 245 karttaa käytiin läpi arkkeina (20 karttaa kerrallaan) skenaarion
+  askelia ja karttahuomautusta vasten. Säännön paikat ("in the centre", "60 cm from…", "150 cm from the Tau edge") ovat
+  mitattuja kohteita; vapaat merkittiin `free`-lipulla.
+- **Lehtien luonnoskartat:** paikat pyöristettiin 180 × 120 -pöydällä tasalukuihin, jos lähde antaa vain kuvan (Callavell,
+  Who Goes There?, Kotol 3). Lähteen tarkat luvut eivät muuttuneet.
+- **Planeetan reunasta annetut etäisyydet** (Fannon's Patrol "5 cm from both edges", Nightmares "the planet's edge is 30 cm
+  from…", Planetary Disease "10 cm from the defender's zone") mitataan planeetan reunaan käsin tehdyllä mitalla, ja
+  planeetta itse on `free`, koska sen keskipisteen paikka riippuisi symbolin koosta.
+
+### Pisteistä alueiksi ja muut sisältökorjaukset (tarkistus 21.10.)
+
+- **Solar Collectors:** kolmen pisteen tilalle 10 cm:n katkoviivakaista ja teksti "up to 10 cm onto the table, as far
+  apart as you like".
+- **Down the 'Slot, Wrecking Yard:** "comms ship: anywhere", merkki vapaa.
+- **Alien Intervention:** 30 cm:n ympyrä keskellä ("planet + hulk: within 30 cm of the centre"), planeetta ja hulkki kuvina.
+- **Belis Corona 2 ja 3:** reservimerkit pitkän reunan 15 cm:n kaistaleelle lyhyen reunan päähän, molemmille pitkille reunoille.
+- **Truth of Scheming:** "dockyard + orbitals: anywhere in the 15 cm gravity well", merkit vapaita.
+- **Pirate Bases:** "the bases go anywhere, 60 cm apart", tukikohdat ja niiden ympyrät vapaita, 60 cm:n mitta jää.
+- **Lievemmät ylärajat:** Damocles 3 "up to 60 cm", Belis Corona 1 telakka "up to 30 cm" vyöstä (vyön leveys heitetään:
+  mitataan keskiviiva), Cold Passage "up to 50 cm" ja taistelulaivat "within 5 cm of a long edge".
+- **Muut samanlaiset** (sanat anywhere/within/up to/near/as on the map): Planetary Assault, Exterminatus, Deadline,
+  Planet Killer Defence, Belis 2–3, Damocles 2 ja 4, Rebellion 1 ja Craftworld Assault (planeetta "no more than 150 cm"),
+  Siege of Fularis ("no more than 100 cm"), Pelucidar ("anywhere"), Numitor (tulopisteet "agree the exact spots"),
+  Hunter and the Prey (planeetat "at least 30 cm", mitta "30+"), Space Hulk!, Kotol 5, Retrieval, Depth of Spacen
+  tarinaversiot, Diasporex Diversionsin räjähdykset, Choir, Mobeel, Lachlon (kuut ja asema työkalun heitosta), Limante,
+  Falling Down, Kravertus, Fall of the Great Armada, Comet, Labyrinth, Ly'tan's Flight ja muut kuvailevat paikat.
+- **Korjatut virheet, jotka mitat paljastivat:** Surprise Attackin planeetta oli 2 cm keskeltä sivussa (kosmeettinen siirto),
+  Solblade 4:n Solblade oli H × 0,2:ssa vaikka lähde sanoo "in the centre of that edge", Rebellion 2:n planeetta W × 0,62:ssa
+  vaikka "as in Surprise Attack" = keskellä, Event Horizonin toinen rengas 2 cm liian kaukana (25 cm + 3,5), Rath's Last
+  Standin painovoimakaivo oli 31 cm keskeltä eli 21 cm planeetan reunasta (nyt 30 cm reunasta, kuten karttahuomautus), Cerberus 4:n Alurmenin kaivo 6 → 10 cm, The Siegen puolustusalue
+  oli kutistettu 45 cm:n ympyräksi (nyt 60 cm:n ympyrä ja 15 cm:n rajaviivat). Mittatesti löysi myös 11 käsin tehtyä mittaa,
+  joiden luku ei vastannut piirrettyä pituutta muilla kuin 180 × 120 -pöydillä: Chance Encounterin ja Titan Clashin "60 cm"
+  (vyöhykkeiden väliin jäävä jäännös, poistettu), Shadow of the Cometin "45 cm" (mitattiin kuun reunasta), Kravertuksen
+  "60 cm" (Arbitrum siirtyi pienellä pöydällä) ja Who Goes There?:n "60 cm".
+
+### Tietoiset rajaukset (älä "korjaa")
+
+- **Arvottu maasto (0.9) ei saa sijaintimittoja**, vain ruudukon koon selitteessä (käyttäjän päätös 21.10.).
+- **Vapaat kohteet eivät saa mittoja,** vaikka ne on piirretty jonnekin: mitta väittäisi paikan kiinteäksi.
+- **Symboliset koot** (planeettojen säde, merkkien etäisyys reunasta "on the edge", laatikoiden leveys tulokaistoilla) eivät
+  saa mittoja.
+- **Ketju vs. reunasta:** kolmesta arvosta alkaen ketju, jotta reunan ulkopuolelle riittää yksi rivi. Ketjun ensimmäinen
+  luku on reunasta, seuraavat edellisestä.
+- **Diagonaaliviivat** (Cerberus 4:n lähestymislinjat) eivät ole mitattavia kohteita.
+
+### Testit (0.9.3)
+
+- `node testit/mittatesti.js` (Node): jokainen kartta × versio × jokainen alasvedon pöytä, jolle skenaario mahtuu × leveä ja
+  kapea fontti × maasto pois/päällä. Testi poimii kohteet itse kartan esineistä (ei moottorin funktiolla) ja tarkistaa
+  piirretyistä mitoista (`m.dims`), että jokainen kiinteän kohteen x ja y ketjuuntuu pöydän reunaan (UNDIM), että säde on
+  mitattu tai sanottu (RADIUS) ja että jokainen luku vastaa piirrettyä pituutta (LABEL). `--lista` näyttää vapaaksi merkityt.
+  Tulos: 4 680 karttaa, 0 virhettä. Ensimmäinen ajo löysi 11 LABEL-virhettä (ks. yllä).
+- Karttatesti (mitat mukana tekstien päällekkäisyydessä): 3 120 karttaa, 26 740 tekstiä, 0 + 0; lisäksi numerokentät
+  maksimissaan 0 + 0 ja maasto arvottuna 0 + 0. Ensimmäinen ajo löysi 3 + 6 (säteen luku nimen päällä, kolmirivinen teksti
+  reunassa 244 × 122 -pöydällä, planeettojen nimet päällekkäin 152 × 112:ssa); korjattu.
+- Selaintesti leveänä (1440) ja kapeana (375): kumpikin 15 184 näkymää, 204 otsikkoa, 0 virhettä. Sisältötesti 0 + 0.
+  Maastotesti 0 virhettä (15 180 karttaa, 73 733 palaa). Kuvakierros 1 850 sivua, 0 löydöstä.
+- Käsin: kaikki 245 karttaa arkkeina kahdesti (ennen ja jälkeen korjausten, PC-fontilla), puhelinfontilla otos, sekä
+  sovellus Browser-paneelissa puhelimella (375, tumma teema) ja PC:llä (1440).
+- Ennen/jälkeen-kuvat: `julkaisu/mitat-esittely/` (puhelin ja PC). Arkki- ja vertailutyökalut olivat scratchpadissa
+  (`arkki.js`, `vertailu.js`): ne piirtävät kartat `testit/_lataa.js`:n kautta HTML:ksi ja headless-Chromella kuviksi.
 
 ## Julkaisu (20.10.2026)
 

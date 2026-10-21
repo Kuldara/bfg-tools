@@ -22,11 +22,11 @@
     forces: { a: ["About 1000 pts (the author’s suggestion). Two players may share the Imperial side."], b: ["About 1000 pts including a space hulk and roks.", "Until activated, your ships are the asteroids of the rear clusters."] },
     draw: (v, W, H, st, sc) => { const d = agN(sc, st, "dep"); return [
       R(0, 0, d, H, "a", ""), { z: "text", x: d / 2 + 1.5, y: H / 2, l: "Imperials " + d + " cm", s: "a", rot: -90 },
-      { z: "planet", cx: Math.min(45, W * .25), cy: H * .45, r: 7, l: "large planet" }, { z: "planet", cx: Math.max(W * .25 + 40, W - 100), cy: H * .45, r: 4, l: "small planet" },
-      { z: "hatch", x: W - 30, y: 12, w: 24, h: 26, l: "" }, { z: "hatch", x: W - 30, y: H / 2 - 13, w: 24, h: 26, l: "" }, { z: "hatch", x: W - 30, y: H - 38, w: 24, h: 26, l: "" },
-      { z: "text", x: W - 18, y: 46, l: "1–2", s: "b" }, { z: "text", x: W - 18, y: H / 2 + 20, l: "3–4", s: "b" }, { z: "text", x: W - 18, y: H - 5, l: "5–6", s: "b" },
-      { z: "hatch", x: W - 70, y: H - 22, w: 16, h: 14, l: "" },
-      { z: "dim", x1: Math.max(30, W - 100), y1: H * .7, x2: W - 40, y2: H * .7, l: "60 cm" }
+      { z: "planet", cx: Math.min(45, W * .25), cy: H / 2, r: 7, l: "large planet" }, { z: "planet", cx: Math.max(W * .25 + 15, W - 90), cy: H / 2, r: 4, l: "" }, { z: "text", x: Math.max(W * .25 + 15, W - 90), y: H / 2 - 4 - mapFont(W) * 1.1, l: "small planet", s: "n" },
+      { z: "hatch", x: W - 30, y: 10, w: 25, h: 25, l: "", free: "y" }, { z: "hatch", x: W - 30, y: (H - 25) / 2, w: 25, h: 25, l: "", free: "y" }, { z: "hatch", x: W - 30, y: H - 35, w: 25, h: 25, l: "", free: "y" },
+      { z: "text", x: W - 17.5, y: 43, l: "1–2", s: "b" }, { z: "text", x: W - 17.5, y: H / 2 + 20, l: "3–4", s: "b" }, { z: "text", x: W - 17.5, y: H - 4, l: "5–6", s: "b" },
+      { z: "hatch", x: W - 70, y: H - 25, w: 15, h: 15, l: "", free: 1 },
+      { z: "dim", x1: Math.max(W * .25 + 15, W - 90), y1: H * .7, x2: W - 30, y2: H * .7, l: "60 cm" }
     ]; },
     fit: () => [150, 90], srcTable: [180, 120],
     mapNote: "Drawn from the article’s sketch: the small planet sits 60 cm from the rear asteroid clusters, numbered for the scan roll.",
@@ -67,8 +67,9 @@
       b: ["Choose three escort types, then roll a D6 for each: 1 or 6 = none, 2–5 = that many. Do this twice: two hidden groups (tool below).", "For a really tough game, roll a third group for the third field."]
     },
     draw: (v, W, H) => [
-      { z: "planet", cx: 13, cy: 13, r: 8, l: "" }, { z: "text", x: 24 + textLen("gas planet", W) / 2, y: 12, l: "gas planet", s: "n" },
-      { z: "hatch", x: 0, y: 0, w: W, h: 4, l: "" }, { z: "edge", e: "t", s: "n", l: "the great asteroid field: leaving here = destroyed" },
+      { z: "planet", cx: 13, cy: 13, r: 8, l: "", free: 1 }, { z: "text", x: 24 + textLen("gas planet", W) / 2, y: 12, l: "gas planet", s: "n" },
+      { z: "dim", x1: 0, y1: 13, x2: 5, y2: 13, l: "5" }, { z: "dim", x1: 13, y1: 0, x2: 13, y2: 5, l: "5" },
+      { z: "hatch", x: 0, y: 0, w: W, h: 4, l: "", free: "y" }, { z: "edge", e: "t", s: "n", l: "the great asteroid field: leaving here = destroyed" },
       { z: "hatch", x: 30, y: H - 15, w: 25, h: 15, l: "" }, { z: "hatch", x: 80, y: H - 15, w: 25, h: 15, l: "" }, { z: "hatch", x: 130, y: H - 15, w: 25, h: 15, l: "" },
       { z: "text", x: 92, y: H - 22, l: "pirates hide in two of the three fields", s: "b" },
       { z: "edge", e: "l", s: "a", l: "Patrol enters" }, { z: "edge", e: "r", s: "n", dash: 1, l: "open: leaving = escaped" },
@@ -110,10 +111,10 @@
       ? { a: ["2000 pts (the report’s size), plus D6×10 pts of planetary defences per 500 pts or part (RB p. 140).", "One capital ship or escort squadron per 500 pts is on patrol and arrives later (RB p. 140–141)."], b: ["2000 pts including the Planet Killer as the exterminator (FL p. 254); it loses no weapons for it."] }
       : { a: ["2000 pts (the report’s size)."], b: ["2000 pts including the Planet Killer."] },
     draw: (v, W, H) => v === "fl"
-      ? [{ z: "planet", cx: Math.min(W - 20, 150), cy: H / 2, r: 8, l: "planet" }, R(30, 30, Math.max(0, W - 60), Math.max(0, H - 60), "a", "", { dash: 1 }), { z: "text", x: W / 2, y: 40, l: "defenders: not within 30 cm of an edge", s: "a" },
+      ? [{ z: "planet", cx: Math.min(W - 20, 150), cy: H / 2, r: 8, l: "planet", free: 1 }, R(30, 30, Math.max(0, W - 60), Math.max(0, H - 60), "a", "", { dash: 1 }), { z: "text", x: W / 2, y: 40, l: "defenders: not within 30 cm of an edge", s: "a" },
         R(0, 0, 15, H, "b", ""), { z: "text", x: 9, y: H / 2, l: "Chaos 15 cm", s: "b", rot: -90 }]
-      : [{ z: "planet", cx: W * .72, cy: H / 2, r: 8, l: "planet" }, R(W * .7, 0, W * .3, H, "a", "", { dash: 1 }), { z: "text", x: W * .85, y: 14, l: "defenders (as played)", s: "a" },
-        R(0, 0, W * .3, H, "b", "", { dash: 1 }), { z: "text", x: W * .15, y: 14, l: "Chaos (as played)", s: "b" }],
+      : [{ z: "planet", cx: W * .72, cy: H / 2, r: 8, l: "planet", free: 1 }, R(W * .7, 0, W * .3, H, "a", "", { dash: 1, free: 1 }), { z: "text", x: W * .85, y: 14, l: "defenders (as played)", s: "a" },
+        R(0, 0, W * .3, H, "b", "", { dash: 1, free: 1 }), { z: "text", x: W * .15, y: 14, l: "Chaos (as played)", s: "b" }],
     fit: v => v === "fl" ? [100, 80] : [90, 60],
     mapNote: v => v === "fl" ? "Exterminatus set-up (RB p. 140): the planet no more than 150 cm from one short edge, the Chaos fleet within 15 cm of the edge furthest from it." : "The report gives no deployment zones; this sketch follows how the game was set up.",
     steps: [
@@ -216,7 +217,7 @@
       const zones = v === "v05" ? [R(0, cy - 7.5, rg, 15, "b", "Rear"), R(rg, cy - 7.5, cv, 15, "b", "Convoy"), R(rg + cv, cy - 7.5, 30, 15, "b", "Leaders")]
         : [R(sh, cy - 7.5, 30, 15, "b", "Convoy"), R(sh + 30, cy - 7.5, 30, 15, "b", "Leaders")];
       return [...zones,
-        R(W - 6, 30, 6, Math.max(4, H - 60), "b", ""), { z: "edge", e: "r", s: "b", l: "Escape corridor (30 cm from each long edge)" },
+        R(W - 6, 30, 6, Math.max(4, H - 60), "b", "", { free: "x" }), { z: "edge", e: "r", s: "b", l: "Escape corridor (30 cm from each long edge)" },
         { z: "tick", e: "t", list: [1, 2, 3, 4, 5, 6].map(t => [W - 30 * t, "T" + t]).filter(t => t[0] > 4) }, { z: "tick", e: "b", list: [1, 2, 3, 4, 5, 6].map(t => [W - 30 * t, "T" + t]).filter(t => t[0] > 4) },
         { z: "text", x: W / 2, y: 33, l: "raiders enter: corridor edge (turn 1)\nor along the long edges", s: "a" },
         v === "v05" ? null : { z: "edge", e: "l", s: "b", dash: 1, l: "rearguard enters turn 2" }];
@@ -264,7 +265,7 @@
     glance: [["Points", "Any; 500–1250 suggested"], ["Table", "Not given"], ["Battlezone", "Rolled as standard + the nest"], ["First turn", "Not given"], ["Game ends", "At 2 h 30 min"]],
     bring: ["A 15 cm circle for the nest", "Egg tokens"],
     forces: { a: ["Any points; 500–1250 recommended.", "Name one capital ship as the egg carrier."], b: ["Any points; 500–1250 recommended.", "Name one capital ship as the egg carrier."] },
-    draw: (v, W, H) => [{ z: "circ", cx: W / 2, cy: H / 2, r: 7.5, s: "n", l: "" }, { z: "text", x: W / 2, y: H / 2 + 14, l: "Psultoroth nest (15 cm)", s: "n" },
+    draw: (v, W, H) => [{ z: "circ", cx: W / 2, cy: H / 2, r: 7.5, s: "n", l: "", nr: 1 }, { z: "text", x: W / 2, y: H / 2 + 14, l: "Psultoroth nest (15 cm)", s: "n" },
       R(0, 0, W, 20, "a", "Fleet A: 20 cm"), R(0, H - 20, W, 20, "b", "Fleet B: 20 cm")],
     fit: () => [60, 70],
     steps: [
@@ -304,7 +305,7 @@
     bring: ["A large planet", "Low orbit table (RB p. 116)"],
     forces: { a: ["Any points; 500–1250 recommended."], b: ["Any points; 500–1250 recommended.", "You place the large planet as if it were your last ship."] },
     draw: (v, W, H) => [R(0, 0, 20, H, "a", "Attacker: 20 cm", { rot: -90 }), R(W - 20, 0, 20, H, "b", "Defender: 20 cm", { rot: 90 }),
-      { z: "planet", cx: W - 20 - 10 - 12, cy: H / 2, r: 12, l: "" }, { z: "text", x: W - 48, y: H / 2 + 24, l: "large planet, 10 cm\nfrom the defender’s zone", s: "n" }],
+      { z: "planet", cx: W - 20 - 10 - 12, cy: H / 2, r: 12, l: "", free: 1 }, { z: "dim", x1: W - 30, y1: H / 2 - 16, x2: W - 20, y2: H / 2 - 16, l: "10" }, { z: "text", x: W - 48, y: H / 2 + 24, l: "large planet, 10 cm\nfrom the defender’s zone", s: "n" }],
     fit: () => [90, 50],
     steps: [
       { t: "Decide who attacks and who defends (the source does not say how — roll off or agree)." },
@@ -339,7 +340,7 @@
     glance: [["Points", "Any; 500–1250 suggested"], ["Table", "Not given"], ["Battlezone", "Any, plus the corpse"], ["First turn", "Not given"], ["Game ends", "At 2 h 30 min"]],
     bring: ["A corpse model on a 60 mm (battleship) base", "Harvest squad tokens"],
     forces: { a: ["Any points; 500–1250 recommended."], b: ["Any points; 500–1250 recommended.", "More fleets may join — it works as a multiplayer game."] },
-    draw: (v, W, H) => [{ z: "mark", x: W / 2, y: H / 2, s: "n", l: "the corpse" }, { z: "circ", cx: W / 2, cy: H / 2, r: 10, s: "n", l: "" },
+    draw: (v, W, H) => [{ z: "mark", x: W / 2, y: H / 2, s: "n", l: "the corpse" }, { z: "circ", cx: W / 2, cy: H / 2, r: 10, s: "n", l: "", nr: 1 },
       R(0, 0, W, 20, "a", "Fleet A: 20 cm"), R(0, H - 20, W, 20, "b", "Fleet B: 20 cm")],
     fit: () => [60, 70],
     steps: [

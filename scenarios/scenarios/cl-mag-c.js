@@ -43,11 +43,11 @@
       const px = Math.max(20, W - 60), py = Math.min(40, H / 2);
       return [
         { z: "planet", cx: px, cy: py, r: 6, l: "" }, { z: "text", x: px - 22, y: py, l: "Namub", s: "n" },
-        { z: "mark", x: 10, y: 10, s: "a", l: "" }, { z: "arrow", x1: 12, y1: 12, x2: 26, y2: 24, s: "a" }, { z: "text", x: 36, y: 32, l: "Baruch (I2)", s: "a" },
-        { z: "mark", x: W * .45, y: 3, s: "b", l: "" }, { z: "arrow", x1: W * .45, y1: 6, x2: W * .45, y2: 20, s: "b" }, { z: "text", x: W * .45, y: 26, l: "Group One (C1)", s: "b" },
-        { z: "mark", x: Math.min(W - 25, px + 18), y: 3, s: "b", l: "" }, { z: "arrow", x1: Math.min(W - 25, px + 18), y1: 6, x2: Math.min(W - 25, px + 18), y2: 18, s: "b" }, { z: "text", x: Math.min(W - 25, px + 18) - 30, y: 17, l: "Group Two (C2)", s: "b" },
-        { z: "mark", x: W - 3, y: Math.min(H - 30, py + 22), s: "b", l: "" }, { z: "arrow", x1: W - 6, y1: Math.min(H - 30, py + 22), x2: W - 22, y2: Math.min(H - 30, py + 22), s: "b" }, { z: "text", x: W - 28, y: Math.min(H - 30, py + 22) + 8, l: "Bale (C3)", s: "b" },
-        { z: "mark", x: W - 6, y: H - 6, s: "a", l: "" }, { z: "arrow", x1: W - 9, y1: H - 9, x2: W - 23, y2: H - 21, s: "a" }, { z: "text", x: W - 40, y: H - 10, l: "Sankara (I4)", s: "a" }
+        { z: "mark", x: 10, y: 10, s: "a", l: "", free: 1 }, { z: "arrow", x1: 12, y1: 12, x2: 26, y2: 24, s: "a" }, { z: "text", x: 36, y: 32, l: "Baruch (I2)", s: "a" },
+        { z: "mark", x: W * .45, y: 3, s: "b", l: "", free: 1 }, { z: "arrow", x1: W * .45, y1: 6, x2: W * .45, y2: 20, s: "b" }, { z: "text", x: W * .45, y: 26, l: "Group One (C1)", s: "b" },
+        { z: "mark", x: Math.min(W - 25, px + 18), y: 3, s: "b", l: "", free: 1 }, { z: "arrow", x1: Math.min(W - 25, px + 18), y1: 6, x2: Math.min(W - 25, px + 18), y2: 18, s: "b" }, { z: "text", x: Math.min(W - 25, px + 18) - 30, y: 17, l: "Group Two (C2)", s: "b" },
+        { z: "mark", x: W - 3, y: Math.min(H - 30, py + 22), s: "b", l: "", free: 1 }, { z: "arrow", x1: W - 6, y1: Math.min(H - 30, py + 22), x2: W - 22, y2: Math.min(H - 30, py + 22), s: "b" }, { z: "text", x: W - 28, y: Math.min(H - 30, py + 22) + 8, l: "Bale (C3)", s: "b" },
+        { z: "mark", x: W - 6, y: H - 6, s: "a", l: "", free: 1 }, { z: "arrow", x1: W - 9, y1: H - 9, x2: W - 23, y2: H - 21, s: "a" }, { z: "text", x: W - 40, y: H - 10, l: "Sankara (I4)", s: "a" }
       ];
     },
     fit: () => [120, 80],
@@ -88,11 +88,11 @@
       b: ["Chaos Lord Aratah (Ld 8, Mark of Chaos of your choice) aboard the Soul of Hate, a Desolator class battleship (Ld 8, Mark of Chaos of your choice).", "Tormentation, Repulsive class grand cruiser (Ld 7)."]
     },
     draw: (v, W, H) => [
-      { z: "circ", cx: 0, cy: H / 2, r: 6, s: "b", l: "" }, { z: "text", x: 16, y: H / 2 + 12, l: "warp gate", s: "b" },
-      { z: "mark", x: Math.max(30, W - 52), y: H / 2, s: "b", l: "" }, { z: "text", x: Math.max(30, W - 52), y: H / 2 + mapFont(W) * 1.6, l: "Chaos flotilla", s: "b" }, { z: "arrow", x1: Math.max(28, W - 56), y1: H / 2, x2: Math.max(14, W - 72), y2: H / 2, s: "b" },
-      { z: "mark", x: W - 3, y: H / 2, s: "a", l: "Faithful" },
-      { z: "dim", x1: Math.max(30, W - 52), y1: H / 2 + mapFont(W) * 4, x2: W, y2: H / 2 + mapFont(W) * 4, l: "50 cm" },
-      { z: "mark", x: W * .45, y: 3, s: "a", l: "" }, { z: "arrow", x1: W * .45 - 2, y1: 6, x2: W * .45 - 14, y2: 18, s: "a" }, { z: "text", x: W * .45 + 6, y: 22, l: "Imperial battleships", s: "a" }
+      { z: "circ", cx: 0, cy: H / 2, r: 6, s: "b", l: "", nr: 1 }, { z: "text", x: 16, y: H / 2 + 12, l: "warp gate", s: "b" },
+      { z: "mark", x: Math.max(30, W - 40), y: H / 2, s: "b", l: "", free: "x" }, { z: "text", x: Math.max(30, W - 40), y: H / 2 + mapFont(W) * 1.6, l: "Chaos flotilla", s: "b" }, { z: "arrow", x1: Math.max(28, W - 44), y1: H / 2, x2: Math.max(14, W - 60), y2: H / 2, s: "b" },
+      { z: "mark", x: W - 3, y: H / 2, s: "a", l: "Faithful", free: "x" },
+      { z: "dim", x1: Math.max(0, W - 50), y1: H / 2 + mapFont(W) * 4, x2: W, y2: H / 2 + mapFont(W) * 4, l: "up to 50 cm" },
+      { z: "mark", x: W * .45, y: 3, s: "a", l: "", free: 1 }, { z: "arrow", x1: W * .45 - 2, y1: 6, x2: W * .45 - 14, y2: 18, s: "a" }, { z: "text", x: W * .45 + 6, y: 25, l: "Imperial battleships:\nwithin 5 cm of a long edge", s: "a" }
     ],
     fit: () => [120, 60],
     mapNote: "As the magazine’s map: the warp gate (a nova cannon template) touches the left short edge. The Chaos flotilla starts within 50 cm of the right edge, the Faithful behind it on the edge, the battleships within 5 cm of the top edge, heading to intercept.",
@@ -184,7 +184,7 @@
       a: ["Admiral Daniels (Ld 9, 2 re-rolls) aboard the Mars battlecruiser Olympus Mons.", "Venturer, Hawking class exploration cruiser, with Captain Lysander.", "Dictator Peregrine; Tyrant Righteous Duty (45 cm batteries); Gothic Kern’s Pride.", "12th Gunboat Flotilla (Swords); 18th Fast Attack Group, four Cobras."],
       b: ["Warlord Dethbringa (Extra Power Fields) aboard the Hammer battlekroozer Gork’s Maul (extra turret, boarding torpedoes).", "Terror ships Yellow Maw and Grashkul and the kill kroozer Da Nasty Grin, each with a Warlord (Extra Power Fields).", "Dakka Ladz (four Onslaughts), Da Rokkit Krew (four Ravagers), Bolg’s Boyz (four Brute ramships)."]
     },
-    draw: (v, W, H) => MAPS["blockade-run"](v, W, H).concat([0.15, 0.4, 0.65, 0.88].map(f => ({ z: "ring", cx: W * f, cy: 4, r: 3, sw: 6, gas: 1 })), [{ z: "text", x: W / 2, y: H - 22, l: "Venturer: no slow ship within 20 cm", s: "a" }]).map(it => it.z === "edge" && it.e === "t" ? Object.assign({}, it, { l: "Shroud Nebula: the Venturer escapes off this edge" }) : it),
+    draw: (v, W, H) => MAPS["blockade-run"](v, W, H).concat([0.15, 0.4, 0.65, 0.88].map(f => ({ z: "ring", cx: W * f, cy: 4, r: 3, sw: 6, gas: 1, free: 1 })), [{ z: "text", x: W / 2, y: H - 22, l: "Venturer: no slow ship within 20 cm", s: "a" }]).map(it => it.z === "edge" && it.e === "t" ? Object.assign({}, it, { l: "Shroud Nebula: the Venturer escapes off this edge" }) : it),
     fit: () => [60, 90],
     mapNote: "Blockade Run set-up. The Shroud Nebula lies just beyond the blockade’s edge: place 2D3 extra gas/dust clouds along it.",
     steps: [
@@ -325,7 +325,7 @@
       { s: "a", t: "Pick a short edge and deploy within 30 cm of it, every ship facing the other short edge, each ship or squadron at least 20 cm from the others. Give the rearguard Blood Bond (Sub-plots tab)." },
       { s: "b", t: "No deployment: the attackers roll for ships at the start of each turn. They take the first turn." }
     ],
-    notes: [OLD + "Built on Defence of Pelucidar (RB p. 180–181). Inquisition and Deathwatch ships: the magazine’s 270-pt Black Ship comes from BFG Magazine 9; the Fleets book’s Inquisition Blackship is a battleship-sized profile at 300 pts (FL p. 148), and the Deathwatch appear in its Inquisition section (FL p. 133). The magazine’s Deathwatch strike cruiser is a Space Marine strike cruiser (145 pts, FL p. 105) with two free refits, for 175 pts. Agree which costs you use.",
+    notes: [OLD + "Built on Defence of Pelucidar (RB p. 180–181). Inquisition and Deathwatch ships are played at the magazine’s costs: 270 pts for the Black Ship (its rules are in BFG Magazine 9) and 175 pts for a Deathwatch strike cruiser — a Space Marine strike cruiser (FL p. 105) with two free refits. For comparison, the Fleets book’s Inquisition Blackship is a battleship-sized profile at 300 pts (FL p. 148); the Deathwatch appear in its Inquisition section (FL p. 133).",
       "If you lack a model for a rolled result, take the next lowest result instead (no cruiser left: three escort squadrons). Agree beforehand whether destroyed ships go back into the pool.",
       "Necron Tombship with Sepulchre and Warmaster Umbros can each appear only once."],
     refs: [["Defence of Pelucidar (the base scenario)", "RB p. 180–181"], ["Blood Bond", "RB p. 125"], ["Necron ships", "FL p. 405–"], ["Inquisition", "FL p. 128–"]],
@@ -371,7 +371,7 @@
     draw: (v, W, H) => [
       { z: "corner", c: "tl", r: 30, s: "a", l: "A" }, { z: "corner", c: "tr", r: 30, s: "b", l: "B" },
       { z: "planet", cx: W / 2, cy: 20, r: 9, l: "" }, { z: "text", x: W / 2, y: 36, l: "medium planet, 20 cm in", s: "n" },
-      { z: "ring", cx: W / 2, cy: Math.max(55, H - 30), r: 10, s: "c" }, { z: "planet", cx: W / 2, cy: Math.max(55, H - 30), r: 4, l: "Alurmen" },
+      { z: "ring", cx: W / 2, cy: Math.max(55, H - 30), r: 14, s: "c" }, { z: "planet", cx: W / 2, cy: Math.max(55, H - 30), r: 4, l: "Alurmen" },
       { z: "line", x1: 22, y1: 22, x2: W / 2 - 6, y2: Math.max(55, H - 30) - 6 }, { z: "line", x1: W - 22, y1: 22, x2: W / 2 + 6, y2: Math.max(55, H - 30) - 6 }
     ],
     fit: () => [150, 90],

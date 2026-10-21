@@ -63,8 +63,9 @@
       const fx = W * 2 / 3, fw = 15;
       return [
         R(0, 0, 15, H, "b", "Attacker: 15 cm", { rot: -90 }), R(W - 15, 0, 15, H, "a", "Defender: 15 cm", { rot: 90 }),
-        { z: "hatch", x: fx - fw / 2, y: 0, w: fw, h: H / 2, l: "Crown Belt" },
-        { z: "mark", x: fx, y: Math.min(H - 8, H / 2 + 25), s: "a", l: "orbital dock" },
+        { z: "hatch", x: fx - fw / 2, y: 0, w: fw, h: H / 2, l: "Crown Belt", free: "x" }, { z: "line", x1: fx, y1: 0, x2: fx, y2: H / 2 },
+        { z: "mark", x: fx, y: Math.min(H - 8, H / 2 + 20), s: "a", l: "", free: "y" }, { z: "text", x: fx - 6 - textLen("orbital dock", W) / 2, y: Math.min(H - 8, H / 2 + 20), l: "orbital dock", s: "a" },
+        { z: "dim", x1: fx + 6, y1: H / 2, x2: fx + 6, y2: Math.min(H, H / 2 + 30), l: "up to 30 cm" },
         { z: "sun", e: "r", l: "sunward (defender’s) edge" }
       ];
     },
@@ -114,11 +115,11 @@
       b: ["The agreed points. No ships that fought in Battle 1.", "Two free transports or one free heavy transport per 500 pts; for every heavy transport you must take two transports before another heavy one. Transport variants cost points."]
     },
     draw: (v, W, H) => [
-      R(30, 30, W - 60, H - 60, "a", "", { dash: 1 }), { z: "text", x: W / 2 - 10, y: 38, l: "defenders’ third: as Planetary Assault", s: "a" },
-      { z: "planet", cx: W - 45, cy: H / 2 + 2, r: 8, l: "" },
+      R(30, 30, W - 60, H - 60, "a", "", { dash: 1 }), { z: "text", x: W / 2 - 10, y: 44, l: "defenders’ third: as Planetary Assault", s: "a" },
+      { z: "planet", cx: W - 45, cy: H / 2 + 2, r: 8, l: "", free: 1 },
       R(0, 0, 15, H, "b", "Attacker: 15 cm", { rot: -90 }),
-      { z: "mark", x: W - 8, y: 3, s: "a", l: "" }, { z: "mark", x: W - 8, y: H - 3, s: "a", l: "" },
-      { z: "text", x: W - 50, y: 10, l: "reserve markers", s: "a" }, { z: "text", x: W - 50, y: H - 10, l: "reserve markers", s: "a" },
+      R(W - 15, 0, 15, 5, "a", "", { free: "y" }), R(W - 15, H - 5, 15, 5, "a", "", { free: "y" }),
+      { z: "text", x: W - 52, y: 21, l: "reserve markers: on the\nlong edge, within 15 cm\nof the short edge", s: "a" }, { z: "text", x: W - 52, y: H - 21, l: "reserve markers: on the\nlong edge, within 15 cm\nof the short edge", s: "a" },
       { z: "edge", e: "r", s: "a", dash: 1, l: "Defender’s reserve edge" }
     ],
     fit: () => [120, 80],
@@ -169,11 +170,11 @@
       b: ["Invasion fleet: the Desecrator Treacherous (Ld 6/8, Lord of Tzeentch); Carnage Raining Death; Devastation Deathbane; Acheron Chaos Eternus; Hades Injustice; Skull Breakers (four Idolators, two Iconoclasts).", "Reserve: Desolator Wage of Sin; Retaliator Insidious Horror; Slaughters Killfrenzy and Heathen Promise; Devastation Dangerous Wind; Murder Revolution; Destructors (six Infidels)."]
     },
     draw: (v, W, H) => [
-      R(30, 30, W - 60, H - 60, "a", "", { dash: 1 }), { z: "text", x: W / 2 - 10, y: 38, l: "as Planetary Assault", s: "a" },
-      { z: "planet", cx: W - 45, cy: H / 2 + 2, r: 8, l: "" },
+      R(30, 30, W - 60, H - 60, "a", "", { dash: 1 }), { z: "text", x: W / 2 - 10, y: 44, l: "as Planetary Assault", s: "a" },
+      { z: "planet", cx: W - 45, cy: H / 2 + 2, r: 8, l: "", free: 1 },
       R(0, 0, 15, H, "b", "Attacker: 15 cm", { rot: -90 }),
-      { z: "mark", x: W - 8, y: 3, s: "n", l: "" }, { z: "mark", x: W - 8, y: H - 3, s: "n", l: "" },
-      { z: "text", x: W - 55, y: 10, l: "late-arrival markers", s: "n" }, { z: "text", x: W - 55, y: H - 10, l: "late-arrival markers", s: "n" }
+      R(W - 15, 0, 15, 5, "n", "", { free: "y" }), R(W - 15, H - 5, 15, 5, "n", "", { free: "y" }),
+      { z: "text", x: W - 55, y: 21, l: "late-arrival markers: on\nthe long edge, within 15 cm\nof the short edge", s: "n" }, { z: "text", x: W - 55, y: H - 21, l: "late-arrival markers: on\nthe long edge, within 15 cm\nof the short edge", s: "n" }
     ],
     fit: () => [120, 80],
     mapNote: "Planetary Assault layout. Both sides’ late-arrival markers start on either long edge within 15 cm of the short edge nearest the planet.",
@@ -300,7 +301,7 @@
     },
     draw: (v, W, H) => [
       R(30, 30, W - 60, H - 60, "b", "", { dash: 1 }), { z: "text", x: W / 2 - 10, y: 38, l: "Tau place everything (no patrol roll)", s: "b" },
-      { z: "planet", cx: W - 45, cy: H / 2 + 2, r: 8, l: "" }, { z: "text", x: W - 45, y: H / 2 + 18, l: "Merchants on the planet", s: "b" },
+      { z: "planet", cx: W - 45, cy: H / 2 + 2, r: 8, l: "", free: 1 }, { z: "text", x: W - 45, y: H / 2 + 18, l: "Merchants on the planet", s: "b" },
       R(0, 0, 15, H, "a", "Crusade fleet: 15 cm", { rot: -90 })
     ],
     fit: () => [120, 70],
@@ -352,8 +353,8 @@
     },
     draw: (v, W, H) => [
       R(0, 0, 15, H, "a", "Task force: 15 cm", { rot: -90 }),
-      { z: "mark", x: Math.min(W - 20, 60), y: H / 2, s: "b", l: "Demiurg" }, { z: "arrow", x1: Math.min(W - 20, 60) + 4, y1: H / 2, x2: Math.min(W - 6, 78), y2: H / 2, s: "b" },
-      { z: "dim", x1: 0, y1: H / 2 + mapFont(W) * 2.5, x2: Math.min(W - 20, 60), y2: H / 2 + mapFont(W) * 2.5, l: "60 cm" },
+      { z: "mark", x: Math.min(W - 20, 60), y: H / 2, s: "b", l: "Demiurg", free: "x" }, { z: "arrow", x1: Math.min(W - 20, 60) + 4, y1: H / 2, x2: Math.min(W - 6, 78), y2: H / 2, s: "b" },
+      { z: "dim", x1: 0, y1: H / 2 + mapFont(W) * 2.5, x2: Math.min(W - 20, 60), y2: H / 2 + mapFont(W) * 2.5, l: "up to 60 cm" },
       { z: "edge", e: "r", s: "b", l: "Tau edge: the Demiurg escape here" }
     ],
     fit: () => [90, 40],
@@ -407,7 +408,7 @@
     },
     draw: (v, W, H) => [
       R(30, 30, W - 60, H - 60, "b", "", { dash: 1 }), { z: "text", x: W / 2 - 10, y: 38, l: "Tau place their own ships", s: "b" },
-      { z: "planet", cx: W - 45, cy: H / 2, r: 8, l: "" }, { z: "mark", x: W - 45 - 8 - 12, y: H / 2, s: "b", l: "station" },
+      { z: "planet", cx: W - 45, cy: H / 2, r: 8, l: "", free: 1 }, { z: "mark", x: W - 45 - 8 - 12, y: H / 2, s: "b", l: "station", free: 1 },
       R(0, 0, 15, H, "a", "Crusade fleet: 15 cm", { rot: -90 })
     ],
     fit: () => [120, 70],

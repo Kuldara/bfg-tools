@@ -527,7 +527,7 @@ html.wide:not(.short) .mapstick > .col:last-child { max-height: calc(100vh - var
   <p class="kbd">Keyboard: <b>1</b>–<b>4</b> switch a scenario’s tabs · <b>←</b> <b>→</b> change the turn on Play.</p>
 </footer>
 
-<script src="battlezone-core.js?v=0.9.2"></script>
+<script src="battlezone-core.js?v=0.9.8"></script>
 <script>
 "use strict";
 /* ---------------------------------------------------------------- data */
@@ -1444,7 +1444,8 @@ const MAPS = {
   "the-bait": (v, W, H) => {
     const cx = W / 2, cy = H / 2, pz = Math.max(0, cx - 60);
     return [
-      R(cx - 10, cy - 12, 20, 24, "a", "Bait"), { z: "arrow", x1: cx + 12, y1: cy, x2: cx + 28, y2: cy, s: "a" },
+      /* laatikko on symboli, mitataan keskipiste (RB s. 129: "in the centre of the table") */
+      R(cx - 10, cy - 12, 20, 24, "a", "", { free: 1 }), { z: "cm", x: cx, y: cy, s: "a", l: "Bait" }, { z: "arrow", x1: cx + 12, y1: cy, x2: cx + 28, y2: cy, s: "a" },
       pz > 0 ? R(0, 0, pz, H, "b", pz >= 25 ? "Pursuers\nmore than\n60 cm\nbehind" : "") : null,
       { z: "dim", x1: cx - 60, y1: H - 16, x2: cx, y2: H - 16, l: "over 60 cm" },
       { z: "edge", e: "r", s: "a", l: "Reinforcements enter" },
@@ -1459,8 +1460,8 @@ const MAPS = {
   "surprise-attack": (v, W, H) => [
     R(30, 30, W - 60, H - 60, "b", "", { dash: 1 }),
     { z: "text", x: W / 2, y: 36, l: "D3 on full alert: 30 cm+ from edges", s: "b" },
-    { z: "circ", cx: W / 2, cy: H / 2 + 2, r: 22, s: "b", l: "" }, { z: "planet", cx: W / 2, cy: H / 2 + 2, r: 7, l: "" },
-    { z: "text", x: W / 2, y: H / 2 + 19, l: "standby: within 15 cm", s: "b" },
+    { z: "circ", cx: W / 2, cy: H / 2, r: 22, s: "b", l: "" }, { z: "planet", cx: W / 2, cy: H / 2, r: 7, l: "" },
+    { z: "text", x: W / 2, y: H / 2 + 17, l: "standby: within 15 cm", s: "b" },
     ...EDGES4("a", "Attacker enters from an edge of choice")
   ],
   "blockade-run": (v, W, H) => {
@@ -1475,7 +1476,7 @@ const MAPS = {
   "convoy": (v, W, H) => [
     R(30, 30, W - 60, H - 60, "b", "", { dash: 1 }),
     { z: "text", x: W / 2, y: 38, l: "contact markers: 30 cm from edges, 30 cm apart", s: "b" },
-    H > 90 ? R(0, 45, 8, H - 90, "a", "") : null, { z: "arrow", x1: 10, y1: H / 2, x2: 26, y2: H / 2, s: "a" },
+    H > 90 ? R(0, 45, 8, H - 90, "a", "", { free: "x" }) : null, { z: "arrow", x1: 10, y1: H / 2, x2: 26, y2: H / 2, s: "a" },
     { z: "text", x: 40, y: H / 2 + 8, l: "convoy enters", s: "a" },
     { z: "dim", x1: 4, y1: 0, x2: 4, y2: 45, l: "45 cm" },
     { z: "edge", e: "r", s: "a", l: "Exit: transports count here" }
@@ -1483,7 +1484,7 @@ const MAPS = {
   "planetary-assault": (v, W, H) => [
     R(30, 30, W - 60, H - 60, "b", "", { dash: 1 }),
     { z: "text", x: W / 2 - 14, y: 38, l: "patrols: 30 cm+ from edges", s: "b" },
-    { z: "planet", cx: W - 45, cy: H / 2 + 2, r: 8, l: "" }, { z: "text", x: W - 45, y: H / 2 + 25, l: "Planet: up to 150 cm\nfrom a short edge" },
+    { z: "planet", cx: W - 45, cy: H / 2 + 2, r: 8, l: "", free: 1 }, { z: "text", x: W - 45, y: H / 2 + 25, l: "Planet: up to 150 cm\nfrom a short edge" },
     R(0, 0, 15, H, "a", "Attacker: 15 cm", { rot: -90 })
   ],
   "escalating-engagement": (v, W, H) => [
@@ -1496,7 +1497,7 @@ const MAPS = {
   "exterminatus": (v, W, H) => [
     R(30, 30, W - 60, H - 60, "b", "", { dash: 1 }),
     { z: "text", x: W / 2 - 14, y: 38, l: "defender: 30 cm+ from edges", s: "b" },
-    { z: "planet", cx: W - 45, cy: H / 2 + 2, r: 8, l: "" }, { z: "text", x: W - 45, y: H / 2 + 25, l: "Planet: up to 150 cm\nfrom a short edge" },
+    { z: "planet", cx: W - 45, cy: H / 2 + 2, r: 8, l: "", free: 1 }, { z: "text", x: W - 45, y: H / 2 + 25, l: "Planet: up to 150 cm\nfrom a short edge" },
     R(0, 0, 15, H, "a", "Attacker: 15 cm", { rot: -90 }),
     { z: "edge", e: "t", s: "b", dash: 1, l: "patrols arrive on a random edge" }, { z: "edge", e: "b", s: "b", dash: 1, l: "" }
   ],
@@ -1553,8 +1554,8 @@ const MAPS = {
   "parols-bait": (v, W, H) => {
     const cx = W / 2, cy = H / 2, pz = Math.max(0, cx - 60);
     return [
-      R(cx - 12, cy - 15, 24, 30, "a", "Pursued\n(centre)"), { z: "arrow", x1: cx + 14, y1: cy, x2: cx + 28, y2: cy, s: "a" },
-      R(cx + 30, Math.min(30, H / 4), Math.min(50, W - cx - 40), H - 2 * Math.min(30, H / 4), "a", "Mines:\nanywhere\nin front", { dash: 1 }),
+      R(cx - 12, cy - 15, 24, 30, "a", "", { free: 1 }), { z: "cm", x: cx, y: cy, s: "a", l: "Pursued" }, { z: "arrow", x1: cx + 14, y1: cy, x2: cx + 28, y2: cy, s: "a" },
+      R(cx + 30, Math.min(30, H / 4), Math.min(50, W - cx - 40), H - 2 * Math.min(30, H / 4), "a", "Mines:\nanywhere\nin front", { dash: 1, free: 1 }),
       pz > 0 ? R(0, 0, pz, H, "b", pz >= 25 ? "Pursuers\n60 cm+\nbehind" : "") : null,
       { z: "dim", x1: cx - 60, y1: H - 16, x2: cx, y2: H - 16, l: "at least 60 cm" },
       { z: "edge", e: "r", s: "a", l: "Reinforcements enter" },
@@ -1563,18 +1564,18 @@ const MAPS = {
   },
   "pelucidar": (v, W, H) => [
     R(30, 30, W - 60, H - 60, "a", "Defender\n30 cm+ from every edge\n20 cm apart, same facing"),
-    { z: "planet", cx: W / 3, cy: 15, r: 7, l: "" }, { z: "text", x: W / 3 + 10 + textLen("Pelucidar: anywhere", W) / 2, y: 15, l: "Pelucidar: anywhere", s: "n" },
+    { z: "planet", cx: W / 3, cy: 15, r: 7, l: "", free: 1 }, { z: "text", x: W / 3 + 10 + textLen("Pelucidar: anywhere", W) / 2, y: 15, l: "Pelucidar: anywhere", s: "n" },
     ...EDGES4("b", "Horde enters (see note)", "Horde enters (see note)"),
     { z: "dim", x1: 0, y1: H - 20, x2: 30, y2: H - 20, l: "30 cm" }
   ],
   "siege-of-fularis": (v, W, H) => {
     const px = W - 60, py = H / 2;
     return [
-      { z: "circ", cx: px, cy: py, r: 60, s: "b", l: "" },
+      { z: "circ", cx: px, cy: py, r: 60, s: "b", l: "", free: 1 },
       { z: "text", x: px, y: py - 30, l: "Defender: up to 1000 pts\nwithin 60 cm of the planet", s: "b" },
-      { z: "ring", cx: px, cy: py, r: 75, dash: 1, l: "" },
+      { z: "ring", cx: px, cy: py, r: 75, dash: 1, l: "", free: 1 },
       { z: "text", x: Math.max(35, px - 68), y: 16, l: "75 cm: longest shot", s: "n" },
-      { z: "planet", cx: px, cy: py, r: 7, l: "Medium planet" },
+      { z: "planet", cx: px, cy: py, r: 7, l: "Medium planet", free: 1 },
       R(0, 0, 15, H, "a", "Attacker: whole fleet, 15 cm", { rot: -90 }),
       { z: "dim", x1: px, y1: H - 14, x2: W, y2: H - 14, l: "up to 100 cm" },
       { z: "edge", e: "t", s: "b", dash: 1, l: "Patrol arrives: 1–2" }, { z: "edge", e: "b", s: "b", dash: 1, l: "Patrol arrives: 3–4" },
@@ -1609,7 +1610,7 @@ const MAPS = {
   "event-horizon": (v, W, H, st, sc) => {
     const cx = W / 2, cy = Math.max(44, H - 44);
     return [
-      { z: "ring", cx, cy, r: 25.5, sw: 5, gas: 1 }, { z: "ring", cx, cy, r: 38.5, sw: 7, gas: 1 },
+      { z: "ring", cx, cy, r: 25.5, sw: 5, gas: 1 }, { z: "ring", cx, cy, r: 36.5, sw: 7, gas: 1 },
       { z: "planet", cx, cy, r: 8, l: "Large planet" }, { z: "mark", x: cx, y: cy - 16, s: "c", l: "Event Horizon" },
       { z: "corner", c: "tl", r: agN(sc, st, "corner"), s: "n", l: "deploy" }, { z: "corner", c: "tr", r: agN(sc, st, "corner"), s: "n", l: "deploy" }
     ];
@@ -2121,14 +2122,207 @@ function mapColWidth() {
 function mapNarrow() { return window.__mapNarrow !== undefined ? window.__mapNarrow : (NARROW.matches || mapColWidth() < 560); }
 function mapFont(W) { return (mapNarrow() ? 6.8 : 5.4) * (W + 30) / 210; }
 function textLen(l, W) { return Math.max(...String(l).split("\n").map(t => t.length)) * mapFont(W) * .6; }
+
+/* ---------------------------------------------------------------- dimensions (0.9.3)
+   Tekniset mitat (käyttäjä 21.10.): jokaisen kiinteän kohteen paikka ja koko luetaan pöydän reunoista, jotta
+   kartan voi toistaa omalla pöydällä. Yleinen moottori, ei käsityötä 245 karttaan:
+   - Kohteet: vyöhykkeet ja kentät (rect, hatch, poly), planeetat, merkit, ympyrät ja renkaat, kulmaympyrät,
+     jakoviivat ja vuoromerkit. free: 1 = paikka on vapaa (lähde: "anywhere", "up to" …), ei mittoja;
+     free: "x" / "y" = vapaa vain siinä suunnassa; nr: 1 = ei sädemittaa (koko kerrotaan muualla).
+   - Käsin tehty dim on rajoite: kun toinen pää tunnetaan, toinenkin tunnetaan. Pelkkä luku pöydän reunasta
+     ("45 cm") siirtyy reunamitaksi; ehdolliset ("up to 100 cm", "at least 60 cm") jäävät paikalleen.
+   - Puuttuvat mitat lisätään pöydän ulkopuolelle: x-mitat lähempään reunaan (ylä/ala), y-mitat sivuille.
+     Vasen puolisko mitataan vasemmasta reunasta ja oikea oikeasta; saman puoliskon kohteet ketjuna yhdellä rivillä.
+   - Säde: viiva keskeltä kehälle ja "R30" kehän ulkopuolelle, ellei kartan teksti jo kerro lukua ("within 30 cm").
+   - Arvottu maasto (0.9) ei saa mittoja (käyttäjä: "ei se terrain ole niin millilleen"); ruudukko on selitteessä.
+   m.dims (mapSVG:n jälkeen) luettelee piirretyt mitat; testit/mittatesti.js tarkistaa niistä, että jokainen
+   kiinteä kohde on mitattu ja jokainen luku vastaa geometriaa. */
+const DIM_E = .05;
+const DIM_PURE = /^\s*\d+(\.\d+)?\s*(cm)?\s*$/;
+function dimNum(v) { const r = Math.round(Math.abs(v) * 10) / 10; return Math.abs(r - Math.round(r)) < .05 ? String(Math.round(r)) : r.toFixed(1); }
+/* ympyrän keskellä oleva planeetta: sen säde (0, jos ei planeettaa) */
+function dimHub(items, c) { const p = items.find(p => p.z === "planet" && Math.abs(p.cx - c.cx) < DIM_E && Math.abs(p.cy - c.cy) < DIM_E && p.r < c.r); return p ? p.r : 0; }
+/* mitattavat kohteet: { ax, v, side, px, py, force }; side = reuna, jolle mitta piirretään; (px, py) = apuviivan alku */
+function dimFeatures(items, W, H) {
+  const E = DIM_E, lim = ax => ax === "x" ? W : H, inner = (ax, v) => v > E && v < lim(ax) - E;
+  const lab = { t: 0, b: 0, l: 0, r: 0 };
+  for (const it of items) if (it.z === "edge") lab[it.e] += it.l ? 2 : 1; else if (it.z === "sun") lab[it.e || "l"] += 2;
+  /* lähempi reuna; tasan keskellä se, jolla on vähemmän reunatekstejä */
+  const pick = (a, b, da, db) => Math.abs(da - db) < E ? (lab[a] <= lab[b] ? a : b) : da < db ? a : b;
+  const sX = (y0, y1) => pick("t", "b", y0, H - y1), sY = (x0, x1) => pick("l", "r", x0, W - x1);
+  const feats = [], links = [], keep = [], radial = [];
+  const fx = (v, side, px, py, force) => { if (inner("x", v)) feats.push({ ax: "x", v, side, px, py, force }); };
+  const fy = (v, side, px, py, force) => { if (inner("y", v)) feats.push({ ax: "y", v, side, px, py, force }); };
+  const pt = (it, x, y) => { if (it.free !== "x") fx(x, sX(y, y), x, y); if (it.free !== "y") fy(y, sY(x, x), x, y); };
+  const texts = items.map(it => String(it.l || "")).join("\n");
+  const said = r => new RegExp("(^|[^\\d.])" + dimNum(r).replace(".", "\\.") + "\\s?cm").test(texts);
+  /* planeetan ympärillä säde luetaan myös planeetan reunasta (planeettasymbolin koko on vain kuva) */
+  const stated = it => { const r0 = dimHub(items, it); return said(it.r) || (r0 > 0 && said(it.r - r0)); };
+  for (const it of items) {
+    const z = it.z;
+    if (it.free === 1 || it.free === true) { if (z === "dim") keep.push(it); continue; }
+    if (z === "rect" || z === "hatch") {
+      if (it.w < E || it.h < E) continue;
+      const sx = sX(it.y, it.y + it.h), sy = sY(it.x, it.x + it.w), ey = sx === "t" ? it.y : it.y + it.h, ex = sy === "l" ? it.x : it.x + it.w;
+      if (it.free !== "x") { fx(it.x, sx, it.x, ey); fx(it.x + it.w, sx, it.x + it.w, ey); }
+      if (it.free !== "y") { fy(it.y, sy, ex, it.y); fy(it.y + it.h, sy, ex, it.y + it.h); }
+    } else if (z === "poly") for (const [x, y] of it.pts) pt(it, x, y);
+    else if (z === "planet") pt(it, it.cx, it.cy);
+    else if (z === "mark" || z === "cm") pt(it, it.x, it.y);
+    /* kaasu- ja asteroidinauhat (gas/ast): leveys ja etäisyys tulevat askelista, mitataan vain keskipiste */
+    else if (z === "circ" || z === "ring") { pt(it, it.cx, it.cy); if (!it.nr && !it.gas && !it.ast && !stated(it)) radial.push(it); }
+    else if (z === "corner") { const x = it.c[1] === "l" ? it.r : W - it.r, t = it.c[0] === "t"; fx(x, t ? "t" : "b", x, t ? 0 : H); }
+    else if (z === "line") {
+      if (Math.abs(it.x1 - it.x2) < E) { const y0 = Math.min(it.y1, it.y2), y1 = Math.max(it.y1, it.y2), s = sX(y0, y1); fx(it.x1, s, it.x1, s === "t" ? y0 : y1); }
+      else if (Math.abs(it.y1 - it.y2) < E) { const x0 = Math.min(it.x1, it.x2), x1 = Math.max(it.x1, it.x2), s = sY(x0, x1); fy(it.y1, s, s === "l" ? x0 : x1, it.y1); }
+    } else if (z === "tick") { for (const [x] of it.list) fx(x, it.e, x, it.e === "t" ? 0 : H); }
+    else if (z === "dim") {
+      const hz = Math.abs(it.y1 - it.y2) < E, ax = hz ? "x" : "y", a = hz ? it.x1 : it.y1, b = hz ? it.x2 : it.y2, pure = DIM_PURE.test(String(it.l));
+      const end = !inner(ax, a) && inner(ax, b) ? b : !inner(ax, b) && inner(ax, a) ? a : null;
+      if (pure && end !== null && !it.keep) { if (hz) fx(end, it.y1 < H / 2 ? "t" : "b", end, it.y1, 1); else fy(end, it.x1 < W / 2 ? "l" : "r", it.x1, end, 1); }
+      else { keep.push(it); if (pure) links.push([ax, a, b]); }
+    }
+  }
+  return { feats, links, keep, radial };
+}
+/* mitoitussuunnitelma: mitkä arvot mitataan reunoilta (vähin määrä, lyhin ensin), apuviivojen alut */
+function dimPlan(items, W, H) {
+  const E = DIM_E, lim = ax => ax === "x" ? W : H, F = dimFeatures(items, W, H);
+  const det = { x: [0, W], y: [0, H] }, has = (ax, v) => det[ax].some(d => Math.abs(d - v) < E);
+  const learn = (ax, v) => {
+    if (has(ax, v)) return; det[ax].push(v);
+    for (const [a, p, q] of F.links) if (a === ax) { if (Math.abs(p - v) < E) learn(ax, q); else if (Math.abs(q - v) < E) learn(ax, p); }
+  };
+  const chosen = [], add = f => { chosen.push({ ax: f.ax, v: f.v, side: f.side }); learn(f.ax, f.v); };
+  for (const f of F.feats) if (f.force && !chosen.some(c => c.ax === f.ax && Math.abs(c.v - f.v) < E)) add(f);
+  const near = f => Math.min(f.v, lim(f.ax) - f.v);
+  for (const f of F.feats.filter(f => !f.force).sort((p, q) => near(p) - near(q))) if (!has(f.ax, f.v)) add(f);
+  /* apuviiva alkaa kauimmasta saman arvon kohteesta samalla reunalla (lähemmät jäävät sen varrelle) */
+  for (const c of chosen) {
+    const same = F.feats.filter(f => f.ax === c.ax && f.side === c.side && Math.abs(f.v - c.v) < E), real = same.filter(f => !f.force), pool = real.length ? real : same;
+    const far = f => c.side === "t" ? f.py : c.side === "b" ? H - f.py : c.side === "l" ? f.px : W - f.px;
+    c.from = pool.reduce((p, q) => far(q) > far(p) ? q : p);
+  }
+  return { chosen, keep: F.keep, radial: F.radial, links: F.links };
+}
+/* mitat SVG:nä: reunarivit pöydän ulkopuolella, käsin tehdyt paikallaan ja säteet; palauttaa myös reunojen tilan */
+function dimSVG(m, S, fs, boxes) {
+  const W = m.w, H = m.h, E = DIM_E, fd = fs * .8, al = 3 * S, plan = dimPlan(m.items, W, H), list = [];
+  let body = "", over = "";
+  /* sama väri kuin luvuilla: tummassa teemassa --chart-frame jäisi liian himmeäksi */
+  const ink = "var(--chart-label)", line = (x1, y1, x2, y2, extra) => "<line x1='" + x1 + "' y1='" + y1 + "' x2='" + x2 + "' y2='" + y2 + "' stroke='" + ink + "'" + extra + "/>";
+  const txt = (x, y, l, rot) => { const w = String(l).length * fd * .6, h = fd * 1.1;
+    boxes.push(rot ? { x0: x - h / 2, x1: x + h / 2, y0: y - w / 2, y1: y + w / 2, dim: 1 } : { x0: x - w / 2, x1: x + w / 2, y0: y - h / 2, y1: y + h / 2, dim: 1 });
+    return "<text x='" + x + "' y='" + y + "' text-anchor='middle' dominant-baseline='middle' font-size='" + fd + "' font-weight='600' fill='var(--chart-label)'" + (rot ? " transform='rotate(" + rot + " " + x + " " + y + ")'" : "") + ">" + esc(l) + "</text>"; };
+  /* nuolellinen mittaviiva; lyhyellä välillä nuolet ulkopuolelta */
+  const arrow = (x1, y1, x2, y2) => {
+    const len = Math.hypot(x2 - x1, y2 - y1);
+    if (len >= 2 * al + S) return line(x1, y1, x2, y2, " stroke-width='.45' marker-start='url(#da)' marker-end='url(#da)'");
+    const ux = (x2 - x1) / (len || 1), uy = (y2 - y1) / (len || 1);
+    return line(x1, y1, x2, y2, " stroke-width='.45'") + line(x1 - ux * 2.6 * al, y1 - uy * 2.6 * al, x1, y1, " stroke-width='.45' marker-end='url(#da)'") + line(x2 + ux * 2.6 * al, y2 + uy * 2.6 * al, x2, y2, " stroke-width='.45' marker-end='url(#da)'");
+  };
+  /* reunojen varattu tila: reunaviiva ja sen teksti, aurinkoreunan teksti */
+  const ext = { t: 0, b: 0, l: 0, r: 0 }, o = 2.2 * S;
+  for (const it of m.items) {
+    if (it.z === "edge") ext[it.e] = Math.max(ext[it.e], it.l ? o + fs * ({ t: 1.05, b: 1.15, l: .9, r: 1 })[it.e] + fs * .62 : o + 1.3 * S);
+    else if (it.z === "sun") { const e = it.e || "l", c = 2.2 + fs * .9; ext[e] = Math.max(ext[e], (e === "b" ? c + fs * .1 : e === "t" ? 2.2 + fs * .9 : c) + fs * .62); }
+  }
+  const pad = { t: 0, b: 0, l: 0, r: 0 };
+  for (const side of ["t", "b", "l", "r"]) {
+    const vals = plan.chosen.filter(c => c.side === side);
+    if (!vals.length) continue;
+    const hz = side === "t" || side === "b", L = hz ? W : H, D = ext[side] ? ext[side] + 2.4 * S : 3.4 * S, ov = 1.6 * S;
+    /* rivin paikka: ylä/vasen negatiivinen, ala/oikea pöydän yli */
+    const at = d => side === "t" || side === "l" ? -d : (hz ? H : W) + d;
+    /* puolisko: enintään kaksi arvoa mitataan reunasta (säännön luku säilyy, toinen rivi ulompana),
+       useampi (ruudukot, vuoromerkit) ketjuna yhdellä rivillä */
+    const RS = fd * 1.35 + 1.4 * S, rowD = k => D + (k - 1) * RS;
+    const lo = vals.filter(c => c.v <= L / 2 + E).sort((p, q) => p.v - q.v), hi = vals.filter(c => c.v > L / 2 + E).sort((p, q) => q.v - p.v);
+    const segs = [];
+    const half = (cs, o) => {
+      if (!cs.length) return 0;
+      if (cs.length <= 2) { cs.forEach((c, k) => { c.row = k + 1; segs.push({ a: Math.min(o, c.v), b: Math.max(o, c.v), row: k + 1, o }); }); return cs.length; }
+      let p = o; for (const c of cs) { c.row = 1; segs.push({ a: Math.min(p, c.v), b: Math.max(p, c.v), row: 1, o, chain: 1 }); p = c.v; } return 1;
+    };
+    const nLo = half(lo, 0), nHi = half(hi, L), rows = Math.max(nLo, nHi);
+    let far = rowD(rows) + fd * 1.3;
+    /* apuviivat: kohteesta reunalle katkoviivana, reunan ulkopuolella yhtenäisenä omalle riville asti */
+    const thin = " stroke-width='.35' opacity='.75'";
+    for (const c of vals) {
+      const f = c.from, to = at(rowD(c.row) + ov);
+      if (hz) { const edgeY = side === "t" ? 0 : H; if (Math.abs(f.py - edgeY) > E) body += line(c.v, f.py, c.v, edgeY, " stroke-width='.35' stroke-dasharray='1.2 1.2' opacity='.6'"); over += line(c.v, edgeY, c.v, to, thin); }
+      else { const edgeX = side === "l" ? 0 : W; if (Math.abs(f.px - edgeX) > E) body += line(f.px, c.v, edgeX, c.v, " stroke-width='.35' stroke-dasharray='1.2 1.2' opacity='.6'"); over += line(edgeX, c.v, to, c.v, thin); }
+    }
+    /* pöydän kulma on mittojen alku: reunan jatke ulos */
+    for (const [n, o] of [[nLo, 0], [nHi, L]]) if (n) { const to = at(rowD(n) + ov), e0 = side === "t" || side === "l" ? 0 : (hz ? H : W); over += hz ? line(o, e0, o, to, thin) : line(e0, o, to, o, thin); }
+    let prev = null;
+    for (const sg of segs.sort((p, q) => p.row - q.row || p.a - q.a)) {
+      const { a, b, row } = sg, l = dimNum(b - a), tl = l.length * fd * .6, mid = (a + b) / 2, rowP = at(rowD(row));
+      over += hz ? arrow(a, rowP, b, rowP) : arrow(rowP, a, rowP, b);
+      const fits = b - a >= tl + 2 * al + .8 * S;
+      let c = mid, pos = at(rowD(row) + fd * .72);
+      if (!sg.chain && !fits) c = sg.o === 0 ? b + 1.2 * S + tl / 2 : a - 1.2 * S - tl / 2;   /* reunasta mitattu lyhyt: luku ulkopuolelle */
+      else if (sg.chain) {
+        /* ketjussa luku, joka ei mahdu tai osuisi edelliseen, porrastetaan ulommas */
+        const hit = prev && prev.row === row && mid - tl / 2 < prev.hi + .8 * S;
+        if (!fits || hit) { pos = at(rowD(row) + fd * 1.85); far = Math.max(far, rowD(row) + fd * 2.45); } else prev = { row, hi: mid + tl / 2 };
+      }
+      over += hz ? txt(Math.min(W - tl / 2, Math.max(tl / 2, c)), pos, l) : txt(pos, c, l, side === "l" ? -90 : 90);
+      list.push({ kind: "edge", ax: hz ? "x" : "y", side, a, b, l });
+    }
+    pad[side] = far + .8 * S;
+  }
+  /* käsin tehdyt mitat paikallaan (ohuet, pieni luku; "60 cm" → "60") */
+  for (const it of plan.keep) {
+    const hz = Math.abs(it.y1 - it.y2) < E, l0 = String(it.l), l = DIM_PURE.test(l0) ? l0.replace(/\s*cm\s*$/, "") : l0, tl = l.length * fd * .6;
+    over += arrow(it.x1, it.y1, it.x2, it.y2);
+    if (l) {
+      const half = tl / 2 + fd * .5, right = it.x1 + 2 * half <= W - .5 || it.x1 >= W;
+      let ly = it.y1 - fd * .9;
+      if (ly - fd * .6 < 0 && it.y1 >= 0) ly = it.y1 + fd * .9;
+      over += hz ? txt(Math.min(W - tl / 2, Math.max(tl / 2, (it.x1 + it.x2) / 2)), ly, l) : txt(right ? it.x1 + half : it.x1 - half, (it.y1 + it.y2) / 2, l);
+    }
+    list.push({ kind: "hand", ax: hz ? "x" : "y", a: hz ? it.x1 : it.y1, b: hz ? it.x2 : it.y2, l: l0, free: !!it.free });
+  }
+  /* säteet: viiva keskeltä (tai planeetan reunasta) kehälle, luku kehän ulkopuolelle sinne, missä se ei osu
+     teksteihin; planeetan ympärillä luku on etäisyys planeetan reunasta ("30"), muuten säde ("R30") */
+  for (const it of plan.radial) {
+    const r0 = dimHub(m.items, it), l = r0 ? dimNum(it.r - r0) : "R" + dimNum(it.r), tl = l.length * fd * .6, th = fd * 1.1;
+    /* tekstilaatikot ovat arvioita: väistetään pienellä varalla */
+    const pd = S, hitN = b => boxes.reduce((n, q) => n + Math.max(0, Math.min(b.x1 + pd, q.x1) - Math.max(b.x0 - pd, q.x0)) * Math.max(0, Math.min(b.y1 + pd, q.y1) - Math.max(b.y0 - pd, q.y0)), 0);
+    let best = null;
+    for (const out of [1, 0]) for (const deg of [-50, -130, 50, 130, -90, 90, -20, -160, 20, 160, 0, 180]) {
+      const c = Math.cos(deg * Math.PI / 180), s = Math.sin(deg * Math.PI / 180), ex = it.cx + it.r * c, ey = it.cy + it.r * s;
+      if (ex < .5 || ex > W - .5 || ey < .5 || ey > H - .5) continue;
+      const g = 1.2 * S + Math.abs(c) * tl / 2 + Math.abs(s) * th / 2, d = out ? it.r + g : it.r - g - al;
+      if (!out && d < r0 + tl) continue;
+      const bx = it.cx + d * c, by = it.cy + d * s, b = { x0: bx - tl / 2, x1: bx + tl / 2, y0: by - th / 2, y1: by + th / 2 };
+      const offT = Math.max(0, -b.x0, b.x1 - W, -b.y0, b.y1 - H), score = hitN(b) + offT * 50 + (out ? 0 : 5);
+      if (!best || score < best.score) best = { score, c, s, bx, by, ex, ey };
+      if (score === 0) break;
+    }
+    if (!best) continue;
+    body += line(it.cx + r0 * best.c, it.cy + r0 * best.s, best.ex, best.ey, " stroke-width='.45' marker-end='url(#da)'");
+    over += txt(best.bx, best.by, l);
+    list.push({ kind: "radius", cx: it.cx, cy: it.cy, r: it.r, r0, l });
+  }
+  m.dims = list;
+  return { body, over, pad };
+}
+/* ruudukko 30 cm, 200 cm:stä alkaen 50 cm; selite kertoo sen ja mittojen yksikön (0.9.3) */
+function mapGrid(W, H) { return Math.max(W, H) >= 200 ? 50 : 30; }
+function mapSize(W, H) { return W + " × " + H + " cm · grid " + mapGrid(W, H) + " cm"; }
 function mapSVG(m) {
   const W = m.w, H = m.h, S = (W + 30) / 210, narrow = mapNarrow();
   const fs = (narrow ? 6.8 : 5.4) * S, P = 15 * S;
   const col = s => s === "a" ? "var(--a)" : s === "b" ? "var(--b)" : s === "c" ? "var(--c)" : "var(--ink-3)";
   const soft = s => s === "a" ? "var(--a-soft)" : s === "b" ? "var(--b-soft)" : s === "c" ? "var(--c-soft)" : "var(--n-soft)";
+  /* tekstien arvioidut laatikot: mitat (dimSVG) väistävät niitä */
+  const boxes = [];
   const T = (x, y, l, s, extra, size) => {
-    const f = size || fs, lines = String(l).split("\n"), lh = f * 1.18, y0 = y - (lines.length - 1) * lh / 2;
-    if (!/rotate/.test(extra || "") && x >= 0 && x <= W) { const half = tw(l, f) / 2 + .5; x = half * 2 < W ? Math.min(W - half, Math.max(half, x)) : W / 2; }
+    const f = size || fs, lines = String(l).split("\n"), lh = f * 1.18, y0 = y - (lines.length - 1) * lh / 2, rot = /rotate/.test(extra || "");
+    if (!rot && x >= 0 && x <= W) { const half = tw(l, f) / 2 + .5; x = half * 2 < W ? Math.min(W - half, Math.max(half, x)) : W / 2; }
+    { const bw = tw(l, f) / 2, bh = lines.length * lh / 2; boxes.push(rot ? { x0: x - bh, x1: x + bh, y0: y - bw, y1: y + bw } : { x0: x - bw, x1: x + bw, y0: y - bh, y1: y + bh }); }
     return "<text x='" + x + "' y='" + y0 + "' text-anchor='middle' dominant-baseline='middle' font-size='" + f + "' font-weight='650' fill='" + (s ? col(s) : "var(--chart-label)") + "'" + (extra || "") + ">" +
       lines.map((t, i) => "<tspan x='" + x + "' dy='" + (i ? lh : 0) + "'>" + esc(t) + "</tspan>").join("") + "</text>";
   };
@@ -2148,12 +2342,13 @@ function mapSVG(m) {
     }
     return [best[0], fs * Math.max(.55, best[1])];
   };
-  let g = "", step = Math.max(W, H) >= 200 ? 50 : 30;
+  let g = "", step = mapGrid(W, H);
   for (let x = step; x < W; x += step) g += "<line x1='" + x + "' y1='0' x2='" + x + "' y2='" + H + "' stroke='var(--chart-grid)' stroke-width='.4'/>";
   for (let y = step; y < H; y += step) g += "<line x1='0' y1='" + y + "' x2='" + W + "' y2='" + y + "' stroke='var(--chart-grid)' stroke-width='.4'/>";
   const defs = "<clipPath id='tbl'><rect x='0' y='0' width='" + W + "' height='" + H + "'/></clipPath>" +
     "<pattern id='hat' width='4' height='4' patternUnits='userSpaceOnUse' patternTransform='rotate(45)'><line x1='0' y1='0' x2='0' y2='4' stroke='var(--ast)' stroke-width='.8' opacity='.45'/></pattern>" +
     "<marker id='ar' viewBox='0 0 10 10' refX='8' refY='5' markerWidth='5' markerHeight='5' orient='auto-start-reverse'><path d='M0 0L10 5L0 10z' fill='context-stroke'/></marker>" +
+    "<marker id='da' viewBox='0 0 10 5' refX='10' refY='2.5' markerUnits='userSpaceOnUse' markerWidth='" + (3 * S) + "' markerHeight='" + (1.5 * S) + "' orient='auto-start-reverse'><path d='M0 0L10 2.5L0 5z' fill='var(--chart-label)'/></marker>" +
     [["sunl", "x1='0' x2='1' y1='0' y2='0'"], ["sunr", "x1='1' x2='0' y1='0' y2='0'"], ["sunt", "x1='0' x2='0' y1='0' y2='1'"], ["sunb", "x1='0' x2='0' y1='1' y2='0'"]].map(([id, d]) =>
       "<linearGradient id='" + id + "' " + d + "><stop offset='0' stop-color='var(--sun)' stop-opacity='.55'/><stop offset='1' stop-color='var(--sun)' stop-opacity='0'/></linearGradient>").join("");
   let body = "", over = "";
@@ -2184,18 +2379,15 @@ function mapSVG(m) {
     } else if (it.z === "mark") {
       const r = 3.2 * S; over += "<path d='M" + it.x + " " + (it.y - r) + "L" + (it.x + r) + " " + it.y + "L" + it.x + " " + (it.y + r) + "L" + (it.x - r) + " " + it.y + "z' fill='" + col(s) + "'/>";
       if (it.l) over += T(it.x, it.y - r - fs * .9, it.l, s);
+    } else if (it.z === "cm") {
+      /* keskipistemerkki (0.9.3): symbolisen kokoisen kohteen paikka, mitataan kuten merkki */
+      const k = 2.6 * S; over += "<path d='M" + (it.x - k) + " " + it.y + "H" + (it.x + k) + "M" + it.x + " " + (it.y - k) + "V" + (it.y + k) + "' stroke='" + (s ? col(s) : "var(--chart-frame)") + "' stroke-width='.6'/>";
+      if (it.l) over += T(it.x, it.y - k - fs * .8, it.l, s);
     } else if (it.z === "text") {
       over += T(it.x, it.y, it.l, s, it.rot ? " transform='rotate(" + it.rot + " " + it.x + " " + it.y + ")'" : "");
     } else if (it.z === "arrow") {
       over += "<line x1='" + it.x1 + "' y1='" + it.y1 + "' x2='" + it.x2 + "' y2='" + it.y2 + "' stroke='" + col(s) + "' stroke-width='" + (1.3 * S) + "' marker-end='url(#ar)'/>";
       if (it.l) over += T((it.x1 + it.x2) / 2, (it.y1 + it.y2) / 2 - fs * 1.6, it.l, s);
-    } else if (it.z === "dim") {
-      const hz = it.y1 === it.y2;
-      over += "<line x1='" + it.x1 + "' y1='" + it.y1 + "' x2='" + it.x2 + "' y2='" + it.y2 + "' stroke='var(--chart-frame)' stroke-width='.6' marker-start='url(#ar)' marker-end='url(#ar)'/>";
-      const half = tw(it.l) / 2 + fs * .5, right = it.x1 + 2 * half <= W - .5 || it.x1 >= W;
-      let ly = it.y1 - fs * .9;
-      if (ly - fs * .6 < 0 && it.y1 >= 0) ly = it.y1 + fs * .9;
-      over += hz ? T((it.x1 + it.x2) / 2, ly, it.l, null) : T(right ? it.x1 + half : it.x1 - half, (it.y1 + it.y2) / 2, it.l, null);
     } else if (it.z === "edge") {
       const o = 2.2 * S, sw = 2.4 * S, d = it.dash ? " stroke-dasharray='4 3'" : "";
       let x1, y1, x2, y2, tx, ty;
@@ -2229,9 +2421,10 @@ function mapSVG(m) {
     }
   }
   const frame = "<rect x='0' y='0' width='" + W + "' height='" + H + "' fill='none' stroke='var(--chart-frame)' stroke-width='.9'/>";
-  const dims = "";
-  return "<svg viewBox='" + (-P) + " " + (-P) + " " + (W + 2 * P) + " " + (H + 2 * P) + "' role='img' aria-label='Deployment map'><defs>" + defs + "</defs>" +
-    "<rect x='0' y='0' width='" + W + "' height='" + H + "' fill='var(--chart-bg)'/>" + g + body + (m.bz ? bzSVG(m.bz, W, H, m.sel, fs) : "") + frame + over + dims + "</svg>";
+  /* tekniset mitat (0.9.3): reunarivit kasvattavat kuvan reunaa vain sillä puolella, jolla niitä on */
+  const D = dimSVG(m, S, fs, boxes), pl = Math.max(P, D.pad.l), pt = Math.max(P, D.pad.t), pr = Math.max(P, D.pad.r), pb = Math.max(P, D.pad.b);
+  return "<svg viewBox='" + (-pl) + " " + (-pt) + " " + (W + pl + pr) + " " + (H + pt + pb) + "' role='img' aria-label='Deployment map'><defs>" + defs + "</defs>" +
+    "<rect x='0' y='0' width='" + W + "' height='" + H + "' fill='var(--chart-bg)'/>" + g + body + (m.bz ? bzSVG(m.bz, W, H, m.sel, fs) : "") + D.body + frame + over + D.over + "</svg>";
 }
 
 /* ---------------------------------------------------------------- celestial phenomena (0.9)
@@ -2646,8 +2839,8 @@ function bzLegend(m) {
 }
 function mapBlock(sc, v) {
   const [W, H] = tableWH(), fit = fitOf(sc, v), src = sc.srcTable || SRC_TABLE[sc.id], m = mapOf(sc, v), st = stOf(sc);
-  if (!mapFn(sc)) return bzCtl(sc, st, v, m) + "<div class='mapwrap'>" + (m.bz ? mapSVG(m) + "<div class='legend'>" + bzLegend(m) + "<span class='msize'>" + W + " × " + H + " cm</span></div>" : "") + "<div class='mapnote' style='padding:10px 6px'>" + esc(val(sc.noMap, v) || "This scenario has no fixed table layout.") + "</div></div>" + bzBox(sc, st, v, m);
-  let h = bzCtl(sc, st, v, m) + "<div class='mapwrap'>" + mapSVG(m) + "<div class='legend'>" + (sc.legend || Object.keys(sc.sides).map(k => [k, sc.sides[k].n])).map(([k, n]) => "<span><i style='background:var(--" + k + ")'></i>" + esc(n) + "</span>").join("") + bzLegend(m) + "<span class='msize'>" + W + " × " + H + " cm</span></div>" +
+  if (!mapFn(sc)) return bzCtl(sc, st, v, m) + "<div class='mapwrap'>" + (m.bz ? mapSVG(m) + "<div class='legend'>" + bzLegend(m) + "<span class='msize'>" + mapSize(W, H) + "</span></div>" : "") + "<div class='mapnote' style='padding:10px 6px'>" + esc(val(sc.noMap, v) || "This scenario has no fixed table layout.") + "</div></div>" + bzBox(sc, st, v, m);
+  let h = bzCtl(sc, st, v, m) + "<div class='mapwrap'>" + mapSVG(m) + "<div class='legend'>" + (sc.legend || Object.keys(sc.sides).map(k => [k, sc.sides[k].n])).map(([k, n]) => "<span><i style='background:var(--" + k + ")'></i>" + esc(n) + "</span>").join("") + bzLegend(m) + "<span class='msize'>" + mapSize(W, H) + "</span></div>" +
     (val(sc.mapNote, v) ? "<div class='mapnote'>" + esc(tpl(val(sc.mapNote, v), sc, stOf(sc))) + "</div>" : "") +
     (src && (src[0] !== W || src[1] !== H) ? "<div class='mapnote'>The source plays on " + src[0] + " × " + src[1] + " cm.</div>" : "") + "</div>";
   if (W < fit[0] || H < fit[1]) h += "<div class='note' style='margin-top:8px'><b>Small table.</b> This scenario’s distances need at least " + fit[0] + " × " + fit[1] + " cm. On " + W + " × " + H + " cm some zones overlap or run off the table.</div>";
@@ -3185,30 +3378,30 @@ let lastMapNarrow = null;
 window.addEventListener("resize", () => { const n = mapNarrow(); if (lastMapNarrow !== null && n !== lastMapNarrow) render(true); lastMapNarrow = n; });
 </script>
 <!-- scenario files: each adds its scenarios with addScenarios([...]) -->
-<script src="scenarios/blackcrusade.js?v=0.9.2"></script>
-<script src="scenarios/fleets.js?v=0.9.2"></script>
-<script src="scenarios/cl-early.js?v=0.9.2"></script>
-<script src="scenarios/cl-mag-a.js?v=0.9.2"></script>
-<script src="scenarios/cl-mag-b.js?v=0.9.2"></script>
-<script src="scenarios/cl-mag-c.js?v=0.9.2"></script>
-<script src="scenarios/cl-mag-d.js?v=0.9.2"></script>
-<script src="scenarios/cl-fanatic.js?v=0.9.2"></script>
-<script src="scenarios/cl-invasion.js?v=0.9.2"></script>
-<script src="scenarios/_wr.js?v=0.9.2"></script>
-<script src="scenarios/wr-committee.js?v=0.9.2"></script>
-<script src="scenarios/wr-community-a.js?v=0.9.2"></script>
-<script src="scenarios/wr-spreading-war.js?v=0.9.2"></script>
-<script src="scenarios/wr-community-l4a.js?v=0.9.2"></script>
-<script src="scenarios/wr-community-l4b.js?v=0.9.2"></script>
-<script src="scenarios/wr-community-l4c.js?v=0.9.2"></script>
-<script src="scenarios/wr-community-l4d.js?v=0.9.2"></script>
-<script src="scenarios/fan-tournament.js?v=0.9.2"></script>
-<script src="scenarios/fan-nemesis.js?v=0.9.2"></script>
-<script src="scenarios/fan-pdd.js?v=0.9.2"></script>
-<script src="scenarios/fan-starblade.js?v=0.9.2"></script>
-<script src="scenarios/terrain-map.js?v=0.9.2"></script>
-<script src="scenarios/open-points.js?v=0.9.2"></script>
-<script src="scenarios/wr-rating.js?v=0.9.2"></script>
+<script src="scenarios/blackcrusade.js?v=0.9.8"></script>
+<script src="scenarios/fleets.js?v=0.9.8"></script>
+<script src="scenarios/cl-early.js?v=0.9.8"></script>
+<script src="scenarios/cl-mag-a.js?v=0.9.8"></script>
+<script src="scenarios/cl-mag-b.js?v=0.9.8"></script>
+<script src="scenarios/cl-mag-c.js?v=0.9.8"></script>
+<script src="scenarios/cl-mag-d.js?v=0.9.8"></script>
+<script src="scenarios/cl-fanatic.js?v=0.9.8"></script>
+<script src="scenarios/cl-invasion.js?v=0.9.8"></script>
+<script src="scenarios/_wr.js?v=0.9.8"></script>
+<script src="scenarios/wr-committee.js?v=0.9.8"></script>
+<script src="scenarios/wr-community-a.js?v=0.9.8"></script>
+<script src="scenarios/wr-spreading-war.js?v=0.9.8"></script>
+<script src="scenarios/wr-community-l4a.js?v=0.9.8"></script>
+<script src="scenarios/wr-community-l4b.js?v=0.9.8"></script>
+<script src="scenarios/wr-community-l4c.js?v=0.9.8"></script>
+<script src="scenarios/wr-community-l4d.js?v=0.9.8"></script>
+<script src="scenarios/fan-tournament.js?v=0.9.8"></script>
+<script src="scenarios/fan-nemesis.js?v=0.9.8"></script>
+<script src="scenarios/fan-pdd.js?v=0.9.8"></script>
+<script src="scenarios/fan-starblade.js?v=0.9.8"></script>
+<script src="scenarios/terrain-map.js?v=0.9.8"></script>
+<script src="scenarios/open-points.js?v=0.9.8"></script>
+<script src="scenarios/wr-rating.js?v=0.9.8"></script>
 <!--SCENARIO-FILES-->
 <script>wrInit(); document.getElementById("scn").textContent = SC.length; render(false);</script>
 </body>

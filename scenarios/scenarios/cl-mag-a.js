@@ -87,7 +87,7 @@
     },
     draw: (v, W, H) => [
       R(Math.max(0, W - 60), 0, Math.min(60, W), 45, "b", "Attackers\n60 × 45 cm"), R(Math.max(0, W - 60), H - 45, Math.min(60, W), 45, "b", "Attackers\n60 × 45 cm"),
-      H > 90 ? R(0, 45, 8, H - 90, "a", "") : null, { z: "arrow", x1: 10, y1: H / 2, x2: 26, y2: H / 2, s: "a" },
+      H > 90 ? R(0, 45, 8, H - 90, "a", "", { free: "x" }) : null, { z: "arrow", x1: 10, y1: H / 2, x2: 26, y2: H / 2, s: "a" },
       { z: "text", x: 46, y: H / 2 + 8, l: "convoy enters", s: "a" },
       { z: "edge", e: "r", s: "a", l: "Exit: transports escape here" }
     ],

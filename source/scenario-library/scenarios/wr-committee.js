@@ -55,15 +55,15 @@
         return [R(x0, 0, zw, d, "a", "Patrol"), R(x0, H - d, zw, d, "b", "Opponent"), { z: "text", x: W / 2, y: H / 2, l: "as Cruiser Clash — or opposite corners", s: "n" }]; }
       if (v === "prize") return [{ z: "circ", cx: W / 2, cy: H / 2, r: 10, s: "n", l: "" }, { z: "mark", x: W / 2, y: H / 2, s: "n", l: "the prize (~10 cm)" },
         { z: "edge", e: "t", s: "a", l: "Patrol enters" }, { z: "edge", e: "b", s: "b", l: "Opponent enters" }];
-      if (v === "mark") return [{ z: "hatch", x: W * .55, y: H * .2, w: W * .35, h: H * .6, l: "pirate hideout:\na strong defensive position" }, R(W * .62, H * .4, 24, 20, "b", "Pirates"),
+      if (v === "mark") return [{ z: "hatch", x: W * .55, y: H * .2, w: W * .35, h: H * .6, l: "pirate hideout:\na strong defensive position", free: 1 }, R(W * .62, H * .4, 24, 20, "b", "Pirates", { free: 1 }),
         { z: "edge", e: "l", s: "a", l: "Patrol arrives" }];
-      if (v === "merch") return [R(0, H / 2 - 20, 20, 40, "a", "Convoy"), { z: "arrow", x1: 24, y1: H / 2, x2: W - 24, y2: H / 2, s: "a", l: "convoy crosses short edge to short edge" },
+      if (v === "merch") return [R(0, H / 2 - 20, 20, 40, "a", "Convoy", { free: 1 }), { z: "arrow", x1: 24, y1: H / 2, x2: W - 24, y2: H / 2, s: "a", l: "convoy crosses short edge to short edge" },
         { z: "edge", e: "r", s: "a", l: "Convoy exit" }, { z: "edge", e: "t", s: "b", dash: 1, l: "Raiders (agree where)" }];
-      if (v === "quick") return [{ z: "ring", cx: W / 2 - 14, cy: H / 2, r: 16, sw: 14, gas: 1 }, R(W / 2 - 8, H / 2 - 10, 26, 20, "a", "Patrol"),
+      if (v === "quick") return [{ z: "ring", cx: W / 2 - 14, cy: H / 2, r: 16, sw: 14, gas: 1, free: 1 }, R(W / 2 - 8, H / 2 - 10, 26, 20, "a", "Patrol", { free: 1 }),
         ...EDGES4("b", "Aliens close in from every edge"), { z: "edge", e: "r", s: "a", l: "Escape edge (chosen before play)" }];
-      if (v === "haven") return [{ z: "mark", x: W / 2, y: H / 2, s: "a", l: "Trading haven" }, { z: "circ", cx: W / 2, cy: H / 2, r: 14, s: "a", l: "" },
-        R(W / 2 + 24, H / 2 - 20, 30, 40, "b", "Attackers"), { z: "edge", e: "l", s: "a", l: "Patrol enters to the rescue" }];
-      return [R(W * .45, H * .1, W * .5, H * .58, "b", "Enemy fleet gathering\n(unaware at first)"), { z: "edge", e: "l", s: "a", l: "Patrol arrives — and must get out again" },
+      if (v === "haven") return [{ z: "mark", x: W / 2, y: H / 2, s: "a", l: "Trading haven", free: 1 }, { z: "circ", cx: W / 2, cy: H / 2, r: 14, s: "a", l: "", free: 1 },
+        R(W / 2 + 24, H / 2 - 20, 30, 40, "b", "Attackers", { free: 1 }), { z: "edge", e: "l", s: "a", l: "Patrol enters to the rescue" }];
+      return [R(W * .45, H * .1, W * .5, H * .58, "b", "Enemy fleet gathering\n(unaware at first)", { free: 1 }), { z: "edge", e: "l", s: "a", l: "Patrol arrives — and must get out again" },
         { z: "text", x: W / 2, y: H * .84, l: "1 intel point per enemy ship\nwithin 30 cm of a patrol ship", s: "a" }];
     },
     mapNote: v => ({ show: "Deploy as in Cruiser Clash, or one fleet in a corner and the other in the opposite corner.", prize: "Both fleets enter from opposite long edges.", mark: "The article suggests using a modified Hunter and the Prey or The Bait.", merch: "The convoy crosses the full 180 cm length.", quick: "The patrol starts in the centre beside a large gas or dust cloud.", haven: "The attack is already under way when the patrol arrives.", flood: "Sketch of the idea: the article gives no deployment." }[v]),
@@ -127,7 +127,7 @@
     draw: (v, W, H) => [
       { z: "mark", x: W / 2, y: H / 2, s: "b", l: "Metis" }, { z: "line", x1: W / 2, y1: 0, x2: W / 2, y2: H / 2 - 6 },
       { z: "edge", e: "t", s: "a", l: "Crowe enters in line with the Metis" },
-      R(W * .18, H * .22, 10, 5, "n", ""), R(W * .72, H * .3, 10, 10, "n", ""), R(W * .3, H * .66, 10, 15, "n", ""),
+      R(W * .18, H * .22, 10, 5, "n", "", { free: 1 }), R(W * .72, H * .3, 10, 10, "n", "", { free: 1 }), R(W * .3, H * .66, 10, 15, "n", "", { free: 1 }),
       { z: "text", x: W / 2, y: H * .9, l: "mighty explosions: 5+ cm apart,\n10+ cm from ships", s: "n" }
     ],
     fit: () => [60, 60],
@@ -282,7 +282,7 @@
     glance: [["Points", "Solblade 250 + 250 defences · Tyranids 1500"], ["Table", "Not given"], ["Battlezone", "Primary biosphere"], ["First turn", "Tyranids"], ["Game ends", "8 turns, or one side destroyed"]],
     bring: ["250 pts of high-orbit defences", "Asteroid markers"],
     forces: { a: SOL_A(250).concat(["Plus 250 pts of stationary high-orbit defences (FL p. 496–)."]), b: SOL_B(1500, ["At least one hive ship — preferably more."]) },
-    draw: (v, W, H) => [R(0, 0, 15, H, "a", ""), { z: "text", x: 7.5, y: H * .62, l: "Defences: 15 cm", s: "a", rot: -90 }, { z: "mark", x: 6, y: H * .2, s: "a", l: "" }, { z: "text", x: 32, y: H * .2, l: "Solblade", s: "a" },
+    draw: (v, W, H) => [R(0, 0, 15, H, "a", ""), { z: "text", x: 7.5, y: H * .78, l: "Defences", s: "a", rot: -90 }, { z: "mark", x: 6, y: H / 2, s: "a", l: "" }, { z: "text", x: 32, y: H / 2, l: "Solblade", s: "a" },
       R(W - 30, 0, 30, H, "b", "Tyranids: 30 cm", { rot: 90 }), { z: "edge", e: "l", s: "a", l: "Defensive line" },
       { z: "arrow", x1: W - 40, y1: H * .42, x2: W - 90, y2: H * .42, s: "b", l: "thrown asteroids: 25 cm a turn" }],
     fit: () => [80, 40],
@@ -331,8 +331,8 @@
     draw: (v, W, H) => {
       const px = 30, cx = Math.min(W - 15, px + 90);
       return [{ z: "ring", cx: px, cy: H / 2, r: 8 + 12.5, sw: 5, gas: 1 }, { z: "planet", cx: px, cy: H / 2, r: 8, l: "" },
-        { z: "mark", x: px + 45, y: H / 2, s: "b", l: "500 pts" },
-        R(cx - 4, 0, 8, H / 3, "b", ""), R(cx - 4, H / 3, 8, H / 3, "b", ""), R(cx - 4, 2 * H / 3, 8, H / 3, "b", ""),
+        { z: "mark", x: px + 45, y: H / 2, s: "b", l: "", free: 1 }, { z: "text", x: px + 45, y: H / 2 + 12, l: "500 pts, 45 cm out", s: "b" },
+        R(cx - 4, 0, 8, H / 3, "b", "", { free: "x" }), R(cx - 4, H / 3, 8, H / 3, "b", "", { free: "x" }), R(cx - 4, 2 * H / 3, 8, H / 3, "b", "", { free: "x" }), { z: "line", x1: cx, y1: 0, x2: cx, y2: H },
         { z: "text", x: cx + 12, y: H / 6, l: "A", s: "b" }, { z: "text", x: cx + 12, y: H / 2, l: "B", s: "b" }, { z: "text", x: cx + 12, y: 5 * H / 6, l: "C", s: "b" },
         { z: "dim", x1: px, y1: H - 10, x2: cx, y2: H - 10, l: "90 cm from the planet" },
         { z: "edge", e: "r", s: "a", l: "Solblade enters" }];

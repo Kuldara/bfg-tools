@@ -128,11 +128,11 @@
         R(45, 0, W - 45, H, "b", "", { dash: 1 }),
         R(0, 0, 15, H, "a", "Hunters: 15 cm", { rot: -90 }),
         { z: "line", x1: W / 2, y1: 0, x2: W / 2, y2: H }, { z: "line", x1: 0, y1: H / 2, x2: W, y2: H / 2 },
-        { z: "planet", cx: px, cy: y1, r, l: "A" }, { z: "planet", cx: px, cy: y2, r, l: "B" },
+        { z: "planet", cx: px, cy: y1, r, l: "A", free: 1 }, { z: "planet", cx: px, cy: y2, r, l: "B", free: 1 },
         { z: "text", x: (45 + W / 2) / 2 + 5, y: H / 4, l: "raider markers\nbeyond 45 cm", s: "b" },
         { z: "text", x: (45 + W / 2) / 2 + 5, y: H * .75, l: "D3 asteroid\nfields per quarter", s: "n" },
         { z: "dim", x1: 0, y1: H - 12, x2: 45, y2: H - 12, l: "45 cm" },
-        { z: "dim", x1: px + r, y1: y1, x2: W, y2: y1, l: "30" }
+        { z: "dim", x1: px + r, y1: y1, x2: W, y2: y1, l: "30+" }
       ];
     },
     fit: () => [120, 115],
@@ -200,7 +200,7 @@
     },
     draw: (v, W, H) => [
       R(0, 0, W, 45, "b", "Attacker markers"), R(0, H - 45, W, 45, "b", "Attacker markers"),
-      H > 90 ? R(0, 45, 8, H - 90, "a", "") : null,
+      H > 90 ? R(0, 45, 8, H - 90, "a", "", { free: "x" }) : null,
       { z: "arrow", x1: 10, y1: H / 2, x2: 26, y2: H / 2, s: "a" },
       { z: "edge", e: "l", s: "a", l: "Defender enters (edge rolled)" },
       { z: "edge", e: "r", s: "a", dash: 1, l: "Escape edge" },
@@ -309,7 +309,7 @@
     },
     draw: (v, W, H) => [
       R(0, 0, W, 45, "b", "Attackers (see note)"), R(0, H - 45, W, 45, "b", "Attackers (see note)"),
-      { z: "mark", x: 22, y: H / 2, s: "a", l: "space hulk" },
+      { z: "mark", x: 22, y: H / 2, s: "a", l: "space hulk", free: 1 },
       { z: "arrow", x1: 34, y1: H / 2, x2: 52, y2: H / 2, s: "a" },
       { z: "edge", e: "r", s: "a", l: "Space hulk’s escape edge" },
       { z: "dim", x1: W - 22, y1: 0, x2: W - 22, y2: 45, l: "45 cm" }
@@ -459,10 +459,10 @@
       return [
         R(30, 30, W - 60, H - 60, "a", "", { dash: 1 }),
         { z: "text", x: W / 2 + 10, y: 38, l: "Eldar patrols: 30 cm+ from edges", s: "a" },
-        { z: "ring", cx, cy, r: well, s: "a" }, { z: "planet", cx, cy, r: body, l: "" },
+        { z: "ring", cx, cy, r: well, s: "a", free: 1 }, { z: "planet", cx, cy, r: body, l: "", free: 1 },
         { z: "text", x: cx, y: cy + well + 7, l: "craftworld, gravity well " + well + " cm", s: "a" },
         R(W - 15, 0, 15, H, "b", "Attacker: 15 cm", { rot: 90 }),
-        { z: "dim", x1: cx, y1: H - 14, x2: W, y2: H - 14, l: Math.round(W - cx) + " cm" }
+        { z: "dim", x1: cx, y1: H - 14, x2: W, y2: H - 14, l: "up to 150 cm" }
       ];
     },
     fit: () => [120, 80],

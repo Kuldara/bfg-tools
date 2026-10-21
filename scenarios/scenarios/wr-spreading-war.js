@@ -26,7 +26,7 @@
       b: ["Two squadrons of three escorts (Savages and Ravagers).", "Two squadrons of two Onslaughts.", "One Kill Kroozer.", "Substitute other escorts as your collection needs — but no ram ships."]
     },
     draw: (v, W, H) => [R(0, 0, 20, H, "a", "Convoy: 20 cm", { rot: -90 }), { z: "edge", e: "r", s: "a", l: "Cargo exit (and raider entry from its corners)" },
-      { z: "mark", x: W - 4, y: 4, s: "b", l: "" }, { z: "mark", x: W - 4, y: H - 4, s: "b", l: "" }, { z: "text", x: W - 30, y: 16, l: "Orks enter at a corner", s: "b" }],
+      { z: "mark", x: W - 4, y: 4, s: "b", l: "", free: 1 }, { z: "mark", x: W - 4, y: H - 4, s: "b", l: "", free: 1 }, { z: "text", x: W - 30, y: 16, l: "Orks enter at a corner", s: "b" }],
     fit: () => [80, 50],
     steps: [
       { t: "Set up phenomena as for The Gauntlet (RB p. 178): primary biosphere, ignore planets. (The author points to Convoy or The Gauntlet and prefers The Gauntlet’s terrain.)" },
@@ -57,7 +57,7 @@
     },
     draw: (v, W, H) => { const px = Math.min(W - 40, W / 2 + 30), sx = Math.min(W - 6, px + 10 + 20);
       return [{ z: "planet", cx: px, cy: H / 2, r: 10, l: "" }, { z: "mark", x: sx, y: H / 2, s: "a", l: "station" },
-        { z: "circ", cx: sx, cy: H / 2, r: 18, s: "a", l: "" }, { z: "text", x: sx - 6, y: H / 2 + 28, l: "Imperial groups\nnear the station", s: "a" },
+        { z: "circ", cx: sx, cy: H / 2, r: 18, s: "a", l: "", nr: 1 }, { z: "text", x: sx - 6, y: H / 2 + 28, l: "Imperial groups\nnear the station", s: "a" },
         { z: "edge", e: "r", s: "a", l: "Jump route: two All Ahead Full moves this way" }, { z: "edge", e: "l", s: "b", dash: 1, l: "Orks (see note)" },
         { z: "dim", x1: W / 2, y1: 12, x2: px, y2: 12, l: "30 cm" }]; },
     fit: () => [130, 60],
@@ -92,8 +92,8 @@
       a: ["4 cruisers (one may be a battlecruiser). One cruiser must carry launch bays with assault boats as well as bombers and fighters.", "10 escorts."],
       b: ["2 cruisers (one may be a battlecruiser; at most one with launch bays).", "6 escorts.", "4 liquid-gas container ships (fuel cargo ships will do)."]
     },
-    draw: (v, W, H) => [{ z: "planet", cx: W / 2, cy: H / 2, r: 12, l: "" }, R(56, H / 2 - 22, 8, 44, "b", ""), { z: "text", x: 60, y: H / 2 + 30, l: "2 cruisers + 3 escorts, 60 cm in", s: "b" },
-      R(W / 2 - 15, H / 2 - 12 - 20 - 8, 30, 12, "b", "tankers + 3 escorts"),
+    draw: (v, W, H) => [{ z: "planet", cx: W / 2, cy: H / 2, r: 12, l: "" }, R(56, H / 2 - 22, 8, 44, "b", "", { free: 1 }), { z: "line", x1: 60, y1: H / 2 - 22, x2: 60, y2: H / 2 + 22 }, { z: "text", x: 60, y: H / 2 + 30, l: "2 cruisers + 3 escorts, 60 cm in", s: "b" },
+      R(W / 2 - 15, H / 2 - 12 - 20 - 8, 30, 12, "b", "tankers + 3 escorts", { free: 1 }),
       { z: "edge", e: "l", s: "a", l: "Imperials enter" }, { z: "edge", e: "r", s: "b", l: "Renegade escape edge" }],
     fit: () => [150, 80], srcTable: [180, 120],
     mapNote: "The tankers and three escorts orbit 20 cm from the planet’s edge on the side nearest a long edge.",
@@ -184,7 +184,7 @@
     bring: ["12 bomber, 4 torpedo bomber and 4 fighter markers", "4 numbered contact markers", "A Sword frigate as the communications ship"],
     forces: { a: ["12 bombers, 4 torpedo bombers and 4 fighters as markers (the carriers stay off the table).", "One Sword frigate: the communications ship."], b: ["1 light cruiser without launch bays.", "One squadron of 5 Iconoclast escorts carrying the supplies."] },
     draw: (v, W, H) => [{ z: "edge", e: "l", s: "b", l: "Supply run enters" }, R(W - 20, 0, 20, H, "b", "Jump point: exit 20 cm from the edge", { rot: 90 }),
-      { z: "mark", x: W * .45, y: H * .3, s: "a", l: "comms ship" }, { z: "edge", e: "t", s: "a", dash: 1, l: "attack craft waves enter along the long edges" }, { z: "edge", e: "b", s: "a", dash: 1, l: "" },
+      { z: "mark", x: W * .45, y: H * .3, s: "a", l: "comms ship: anywhere", free: 1 }, { z: "edge", e: "t", s: "a", dash: 1, l: "attack craft waves enter along the long edges" }, { z: "edge", e: "b", s: "a", dash: 1, l: "" },
       { z: "text", x: 40, y: H / 2, l: "4 numbered markers\nnear the entry", s: "a" }],
     fit: () => [90, 50],
     steps: [
@@ -218,7 +218,7 @@
     bring: ["12 bomber, 8 torpedo bomber and 8 fighter markers", "Assault boat markers", "A Sword frigate as the communications ship"],
     forces: { a: ["12 bombers, 8 torpedo bombers and 8 fighters as markers, plus unlimited assault boats (rules in Play).", "One Sword frigate: the communications ship."], b: ["A heavy cruiser (with or without launch bays).", "A cruiser without launch bays.", "6 Iconoclast escorts."] },
     draw: (v, W, H) => [{ z: "edge", e: "l", s: "b", l: "Supply run enters" }, R(W - 20, 0, 20, H, "b", "Jump point: exit 20 cm from the edge", { rot: 90 }),
-      { z: "mark", x: W * .45, y: H * .3, s: "a", l: "comms ship" }, { z: "edge", e: "t", s: "a", dash: 1, l: "attack craft and assault boats enter along the long edges" }, { z: "edge", e: "b", s: "a", dash: 1, l: "" }],
+      { z: "mark", x: W * .45, y: H * .3, s: "a", l: "comms ship: anywhere", free: 1 }, { z: "edge", e: "t", s: "a", dash: 1, l: "attack craft and assault boats enter along the long edges" }, { z: "edge", e: "b", s: "a", dash: 1, l: "" }],
     fit: () => [90, 50],
     steps: [
       { t: "Set up exactly as Down the ’Slot: The Gauntlet’s table (RB p. 178) with random phenomena, the communications ship anywhere, four numbered contact markers near the renegade entry." },
@@ -290,8 +290,8 @@
       a: ["Marines: 1 Battle Barge, 4 Strike Cruisers, 8 escorts.", "Navy: 1 battlecruiser (may have launch bays), 1 cruiser, 1 light cruiser, 6 escorts."],
       b: ["1 battleship (may have launch bays), 3 cruisers (one may have launch bays).", "An airbase on the planet, the orbital factory/battle station, a mining battle station by the asteroids, and an asteroid defence platform."]
     },
-    draw: (v, W, H) => [{ z: "planet", cx: 60, cy: H - 60, r: 9, l: "" }, { z: "mark", x: 60 + 9 + 15, y: H - 60, s: "b", l: "" }, { z: "text", x: 60 + 9 + 15 + 5 + textLen("factory station", W) / 2, y: H - 60, l: "factory station", s: "b" },
-      { z: "hatch", x: 90, y: H - 12, w: 25, h: 12, l: "" }, { z: "hatch", x: W / 2 - 5, y: 0, w: 35, h: 14, l: "" }, { z: "mark", x: W / 2 + 12, y: 16, s: "b", l: "" }, { z: "text", x: W / 2 + 12, y: 29, l: "mining station", s: "b" },
+    draw: (v, W, H) => [{ z: "planet", cx: 60, cy: H - 60, r: 9, l: "" }, { z: "mark", x: 60 + 9 + 15, y: H - 60, s: "b", l: "", free: 1 }, { z: "text", x: 60 + 9 + 15 + 5 + textLen("factory station", W) / 2, y: H - 60, l: "factory station", s: "b" },
+      { z: "hatch", x: 90, y: H - 12, w: 25, h: 12, l: "" }, { z: "hatch", x: W / 2 - 5, y: 0, w: 35, h: 14, l: "" }, { z: "mark", x: W / 2 + 12.5, y: 14, s: "b", l: "" }, { z: "text", x: W / 2 + 12.5, y: 27, l: "mining station", s: "b" },
       { z: "edge", e: "l", s: "b", l: "Rebels enter" }, { z: "edge", e: "r", s: "a", l: "Imperials enter" },
       { z: "dim", x1: 0, y1: H - 30, x2: 60, y2: H - 30, l: "60 cm" }],
     fit: () => [150, 90], srcTable: [180, 120],
@@ -331,7 +331,7 @@
       a: ["Two rosters: 1200 and 1500 pts, two launch-bay ships in each.", "Each capital ship takes one crew skill (campaign rules); escorts only in squadrons of three or more."],
       b: ["Two rosters: 1200 and 1500 pts; up to three launch-bay ships in the larger, two in the smaller.", "Only each force’s flagship takes a crew skill."]
     },
-    draw: (v, W, H) => [{ z: "planet", cx: 40, cy: H / 2, r: 10, l: "" }, { z: "text", x: 40, y: H / 2 + 18, l: "airbase, silos, platforms", s: "a" },
+    draw: (v, W, H) => [{ z: "planet", cx: 40, cy: H / 2, r: 10, l: "", free: 1 }, { z: "text", x: 40, y: H / 2 + 18, l: "airbase, silos, platforms", s: "a" },
       R(W - 30, 0, 30, H, "b", "Orks: 30 cm", { rot: 90 }),
       { z: "tick", e: "t", list: [[W - 30, "T1"], [W - 60, "T2–3"]] }, { z: "tick", e: "b", list: [[W - 30, "T1"], [W - 60, "T2–3"]] },
       { z: "text", x: W * .4, y: 27, l: "Fitch arrives along a chosen long edge", s: "a" }],
@@ -364,7 +364,7 @@
     glance: [["Points", "The roster left over from the first raid"], ["Table", "Standard"], ["Battlezone", "A planet only"], ["First turn", "Fitch"], ["Victory", "VP; undamaged installations are Imperial bonus"]],
     bring: ["A planet with two airbases, each with 2 laser silos"],
     forces: { a: ["The roster that did not fight the first raid (1200 or 1500 pts), with its crew skills."], b: ["The roster that did not fight the first raid (1200 or 1500 pts)."] },
-    draw: (v, W, H) => [{ z: "planet", cx: W * .62, cy: H / 2, r: 10, l: "" }, { z: "text", x: W * .62, y: H / 2 + 18, l: "two airbases, 4 laser silos", s: "a" },
+    draw: (v, W, H) => [{ z: "planet", cx: W / 2, cy: H / 2, r: 10, l: "" }, { z: "text", x: W / 2, y: H / 2 + 18, l: "two airbases, 4 laser silos", s: "a" },
       { z: "edge", e: "l", s: "a", l: "Fitch races in" }, { z: "edge", e: "t", s: "b", dash: 1, l: "Ork flank (one long edge, chosen secretly)" }, { z: "edge", e: "b", s: "b", dash: 1, l: "" }],
     fit: () => [120, 60],
     steps: [

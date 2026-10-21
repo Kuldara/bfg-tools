@@ -20,7 +20,8 @@
     bring: ["Six asteroid fields of random shape", "Plenty of ordnance markers"],
     forces: { a: ["1500 pts. Bring plenty of ordnance: attack craft count for searching."], b: ["1000 pts. Only your uncrippled ships go on to part 2."] },
     draw: (v, W, H, st, sc) => { const d = agN(sc, st, "dep"); const out = [{ z: "edge", e: "t", s: "n", dash: 1, l: "sunward long edge" }, R(0, 0, d, H, "a", ""), { z: "text", x: d / 2 + 1.5, y: H / 2, l: "Searchers " + d + " cm", s: "a", rot: -90 }, R(W - d, 0, d, H, "b", ""), { z: "text", x: W - d / 2 - 1.5, y: H / 2, l: "Eldar " + d + " cm", s: "b", rot: 90 }];
-      for (let i = 0; i < 3; i++) for (let j = 0; j < 2; j++) { const cx = W * (i + .5) / 3, cy = H * (j + .5) / 2; out.push({ z: "hatch", x: cx - 11 + (i % 2 ? 4 : -3), y: cy - 9 + (j ? -3 : 3), w: 22, h: 18, l: "" }, { z: "text", x: cx, y: cy + 15, l: String(i * 2 + j + 1) }); }
+      for (let i = 0; i < 3; i++) for (let j = 0; j < 2; j++) { const cx = W * (i + .5) / 3, cy = H * (j + .5) / 2; out.push({ z: "hatch", x: cx - 11 + (i % 2 ? 4 : -3), y: cy - 9 + (j ? -3 : 3), w: 22, h: 18, l: "", free: 1 }, { z: "text", x: cx, y: cy + 15, l: String(i * 2 + j + 1) }); }
+      out.push({ z: "line", x1: W / 3, y1: 0, x2: W / 3, y2: H }, { z: "line", x1: 2 * W / 3, y1: 0, x2: 2 * W / 3, y2: H }, { z: "line", x1: 0, y1: H / 2, x2: W, y2: H / 2 });
       return out; },
     fit: () => [120, 80],
     mapNote: "One field in each sixth of the table; the article leaves their shapes and sizes random.",
@@ -122,10 +123,10 @@
       b: ["Kill Kroozer “Waaagh of Doom”: Warboss with mega-armoured boarding Nobz, Ld 7.", "Terror Ship “’Ere We Go!”: Warboss with looted torpedoes and maniac gunners, Ld 8.", "Brutes: 3 “Smash!” (Ld 7), 3 “Kill!” (Ld 6), 2 “What?” (Ld 8), 2 “Where?” (Ld 7).", "5 Ravagers “Squeee!” (Ld 7)."]
     },
     draw: (v, W, H) => [{ z: "line", x1: W / 2, y1: 0, x2: W / 2, y2: H }, { z: "line", x1: 0, y1: H / 3, x2: W, y2: H / 3 }, { z: "line", x1: 0, y1: 2 * H / 3, x2: W, y2: 2 * H / 3 },
-      { z: "hatch", x: W / 4 - 7.5, y: H / 6 - 3.75, w: 15, h: 7.5, l: "" }, { z: "planet", cx: W / 4, cy: H / 2, r: 9, l: "Imego V" },
-      { z: "planet", cx: 3 * W / 4, cy: H / 2, r: 3.5, l: "" }, { z: "mark", x: 3 * W / 4 + 6, y: H / 2, s: "a", l: "dock: transports" },
-      { z: "ring", cx: W / 4, cy: 5 * H / 6, r: 3, gas: 1, sw: 6 }, { z: "ring", cx: W / 4, cy: 5 * H / 6, r: 3.2, gas: 1, sw: 6 }, { z: "text", x: W / 4, y: 5 * H / 6 + 12, l: "gas cloud" },
-      { z: "edge", e: "l", s: "b", l: "Orks: from the planet’s edge" }, { z: "corner", c: "tr", r: 18, s: "b", l: "Orks" }, { z: "corner", c: "br", r: 18, s: "a", l: "escape" }],
+      { z: "hatch", x: W / 4 - 7.5, y: H / 6 - 3.75, w: 15, h: 7.5, l: "", free: 1 }, { z: "planet", cx: W / 4, cy: H / 2, r: 9, l: "Imego V" },
+      { z: "planet", cx: 3 * W / 4, cy: H / 2, r: 3.5, l: "" }, { z: "mark", x: 3 * W / 4 + 6, y: H / 2, s: "a", l: "dock: transports", free: 1 },
+      { z: "ring", cx: W / 4, cy: 5 * H / 6, r: 3, gas: 1, sw: 6, free: 1 }, { z: "ring", cx: W / 4, cy: 5 * H / 6, r: 3.2, gas: 1, sw: 6, free: 1 }, { z: "text", x: W / 4, y: 5 * H / 6 + 12, l: "gas cloud" },
+      { z: "edge", e: "l", s: "b", l: "Orks: from the planet’s edge" }, { z: "corner", c: "tr", r: 18, s: "b", l: "Orks", free: 1 }, { z: "corner", c: "br", r: 18, s: "a", l: "escape", free: 1 }],
     fit: () => [120, 80], srcTable: [180, 120],
     mapNote: "The table is cut into six parts (two columns, three rows). Imego V is in the middle left, its moon and the dock in the middle right. The corner marks follow the history: Orks from behind the asteroids and the top right, the escape point bottom right.",
     steps: [
@@ -171,7 +172,7 @@
       a: ["Emissary light cruiser commanded by Nua’ta (Ld 8).", "3 Castellan escorts.", "The author uses Taros-pattern versions; the standard ones work."],
       b: ["Shown as: a heavy transport, 3 transports and 2 Swords.", "In truth (revealed in play): 3 Corsair escorts and a Dark Eldar light cruiser — two transports are real."]
     },
-    draw: (v, W, H, st, sc) => [{ z: "planet", cx: W / 2, cy: H - 16, r: 14, l: "" }, { z: "hatch", x: W / 2 - 15, y: H - 16 - 14 - 30, w: 30, h: 9, l: "" }, { z: "text", x: W / 2, y: H - 64, l: "asteroids, 30 cm (Castellans hide here)", s: "a" },
+    draw: (v, W, H, st, sc) => [{ z: "planet", cx: W / 2, cy: H - 16, r: 14, l: "", free: 1 }, { z: "hatch", x: W / 2 - 15, y: H - 16 - 14 - 30, w: 30, h: 9, l: "", free: 1 }, { z: "text", x: W / 2, y: H - 64, l: "asteroids, 30 cm (Castellans hide here)", s: "a" },
       { z: "arrow", x1: 12, y1: H - 40, x2: W - 30, y2: H - 40, s: "b", l: "" }, { z: "text", x: 40, y: H - 46, l: "convoy route", s: "b" },
       { z: "edge", e: "l", s: "b", l: "Convoy enters" }, R(W - agN(sc, st, "dep"), 0, agN(sc, st, "dep"), H, "a", ""), { z: "text", x: W - agN(sc, st, "dep") / 2 - 1.5, y: H / 3, l: "Nua’ta " + agN(sc, st, "dep") + " cm", s: "a", rot: 90 }],
     fit: () => [100, 80],
@@ -213,7 +214,7 @@
     },
     draw: (v, W, H) => { const cx = W / 2, cy = H / 2, ax = Math.max(8, cx - 10 - 60);
       return [{ z: "planet", cx, cy, r: 10, l: "" }, { z: "ring", cx, cy, r: 20, s: "b" }, { z: "text", x: cx, y: cy + 25, l: "4 cargo ships, 10 cm out", s: "b" },
-        { z: "planet", cx, cy: Math.max(4, cy - 10 - 40), r: 4, l: "" }, { z: "text", x: cx - 16, y: Math.max(4, cy - 10 - 40), l: "moon" }, R(cx - 5, cy - 10 - 20 - 5, 10, 10, "b", ""), { z: "text", x: cx + 40, y: cy - 30, l: "cargo box, 20 cm out", s: "b" },
+        { z: "planet", cx, cy: Math.max(4, cy - 10 - 40), r: 4, l: "" }, { z: "text", x: cx - 16, y: Math.max(4, cy - 10 - 40), l: "moon" }, R(cx - 5, cy - 10 - 20 - 5, 10, 10, "b", "", { free: 1 }), { z: "text", x: cx + 40, y: cy - 30, l: "cargo box, 20 cm out", s: "b" },
         { z: "mark", x: Math.min(W - 6, cx + 10 + 30), y: cy, s: "b", l: "patrol" },
         ...(v === "solo" ? [{ z: "mark", x: ax, y: cy, s: "a", l: "" }, { z: "text", x: ax, y: cy - 9, l: "raiders, 60 cm out", s: "a" }] : [{ z: "edge", e: "l", s: "a", l: "Raider marker enters" }]),
         { z: "edge", e: "r", s: "a", l: "Raiders exit here" }]; },
