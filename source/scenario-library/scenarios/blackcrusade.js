@@ -203,14 +203,15 @@
     notes: ["The book says reserves enter from “the designated long table edge as per the map”, but the printed map marks no such edge — agree one before play."],
     refs: [["Space station, orbital dock, platforms, mines, monitor, system ship", "FL p. 507–515"], ["Victory points", "RB p. 122"]],
     play: [
-      { w: "Start of your turn", s: "a", t: "Roll a D6 for each ship or squadron still in reserve (speed table below; a mixed squadron uses its slowest ship). Each time a ship or squadron fails twice, add +1 to its later rolls — cumulative." },
+      { w: "Start of your turn", s: "a", t: "Roll a D6 for each ship or squadron still in reserve (arrival rolls below; a mixed squadron uses its slowest ship). Each time a ship or squadron fails twice, add +1 to its later rolls — cumulative." },
       { w: "All game", s: "b", t: "To win you must destroy both space stations, the orbital dock, all four inner platforms and 25% (by points) of the reinforcement fleet. Anything less is a defender’s win." },
       { w: "Turn 8", t: "Last turn." }
     ],
     turnMax: () => 8,
     fx: T => [["a", "Start of your turn: reserve arrival rolls"]].concat(T === 8 ? [[null, "Last turn"]] : []),
     tools: [
-      { k: "pick", id: "spd", l: "Reserve arrival — ship speed", rows: SPEED_ROWS, foot: "D6 per ship or squadron in reserve; +1 for every two failed rolls so far (cumulative)." },
+      ARRIVAL("res", "Reserve arrival rolls", { cl: "Ships or squadrons in reserve", il: i => "Reserve " + (i + 1),
+        sub: "D6 per ship or squadron in reserve. " + ARRIVE_SUB + " Add +1 to a ship's roll for every two of its failed rolls so far (cumulative) — the result below is before that bonus." }),
       { k: "counter", id: "stn", l: "Space stations destroyed", s: "b", max: 2, goal: 2, res: 1 },
       { k: "toggle", id: "dock", l: "Orbital dock destroyed", s: "b" },
       { k: "counter", id: "inner", l: "Inner platforms destroyed", s: "b", max: 4, goal: 4, res: 1 },

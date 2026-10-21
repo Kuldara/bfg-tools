@@ -537,7 +537,7 @@ html.wide:not(.short) .mapstick > .col:last-child { max-height: calc(100vh - var
   <p class="kbd">Keyboard: <b>1</b>–<b>4</b> switch a scenario’s tabs · <b>←</b> <b>→</b> change the turn on Play.</p>
 </footer>
 
-<script src="battlezone-core.js?v=0.12.0"></script>
+<script src="battlezone-core.js?v=0.12.1"></script>
 <script>
 "use strict";
 /* ---------------------------------------------------------------- data */
@@ -597,6 +597,18 @@ const CORE_OTHERS = "Written for any fleet list. Choose who attacks with the att
 /* edge numbers on the Escalating Engagement map (RB p. 138) */
 const EDGE_ROWS = () => [[1, 1, "Left short edge"], [2, 3, "Top long edge"], [4, 5, "Bottom long edge"], [6, 6, "Right short edge"]];
 const SPEED_ROWS = [["Up to 20 cm", "5+"], ["25 cm", "4+"], ["30 cm or more", "3+"]];
+/* saapumisheitto nopeuden mukaan (RB s. 139, 141; käyttäjä 21.10.: "ei voi vissiin rollata"): D6 per laiva, laivue tai
+   merkki, ja tulos kertoo suoraan, mille nopeuksille se riittää. Valinnainen toinen noppa = saapumisreuna (edges). */
+const ARRIVE_TXT = n => n >= 5 ? "arrives at any speed" : n === 4 ? "arrives if 25 cm or faster" : n === 3 ? "arrives if 30 cm or faster" : "does not arrive";
+const ARRIVE_SUB = "Speed up to 20 cm needs 5+, 25 cm 4+, 30 cm or more 3+ (a squadron uses its slowest ship).";
+const edgeOf = (rows, d) => { const r = rows.find(x => d >= x[0] && d <= x[1]); return r ? r[2].toLowerCase() : ""; };
+const ARRIVAL = (id, l, o) => {
+  const x = Object.assign({ k: "shiproll", id, l, sub: ARRIVE_SUB, cl: "Off the table", n0: 2, il: i => "Ship or squadron " + (i + 1) }, o || {});
+  if (x.edges) Object.assign(x, { roll: () => [d6(), d6()], show: d => d[0] + (d[0] >= 3 ? " · edge " + d[1] : ""),
+    out: d => { const e = edgeOf(x.edges, d[1]); return ARRIVE_TXT(d[0]) + (d[0] >= 3 ? ", on " + (/^the /.test(e) ? e : "the " + e) : ""); } });
+  else Object.assign(x, { roll: () => d6(), out: x.out || (d => ARRIVE_TXT(d)) });
+  return x;
+};
 
 /* Convoy threat tables (FL p. 198–199): alternatives to the rulebook's attacker table.
    Revised from "Convoy Run Variants" (Andy Chambers, Pavel Stafa, Michael Powers; Warp Storm, 2000). */
@@ -910,7 +922,9 @@ const SC = [
   ],
   tools: [
     { k: "roll", id: "edge", l: "Random table edge", sub: "D6, for the marker drawn in your end phase", rows: EDGE_ROWS },
-    { k: "pick", id: "arr", l: "Arrival roll — slowest ship in the division", rows: SPEED_ROWS, foot: "D6 per marker on an edge, +2 if friendly ships are within 30 cm of it." },
+    ARRIVAL("arr2", "Arrival rolls — markers on an edge", { cl: "Markers on an edge", il: i => "Marker " + (i + 1),
+      sub: "D6 per marker; the slowest ship in its division decides: up to 20 cm needs 5+, 25 cm 4+, 30 cm or more 3+. +2 if friendly ships are within 30 cm of the marker.",
+      out: d => ARRIVE_TXT(d) + (d < 5 ? "; with +2 (friendly ships within 30 cm): " + ARRIVE_TXT(d + 2) : "") }),
     { k: "counter", id: "offa", l: "Player 1: divisions still to arrive", s: "a", start: 4, max: 4 },
     { k: "counter", id: "offb", l: "Player 2: divisions still to arrive", s: "b", start: 4, max: 4 }
   ],
@@ -948,7 +962,8 @@ const SC = [
     { w: "Shooting", s: "b", t: "Defenders may always target an Exterminator; no Leadership test is needed even if it is not the closest target." },
     { w: "Start of your turn", s: "b", t: "Roll a D6 for each capital ship and escort squadron on patrol (tool below). Arrivals come on from a random table edge." }
   ],
-  tools: [{ k: "pick", id: "pspd", l: "Patrol arrival — ship speed", rows: SPEED_ROWS, foot: "D6 per capital ship or escort squadron not in play." }],
+  tools: [ARRIVAL("pat", "Patrol arrival rolls", { cl: "Patrols not in play", il: i => "Patrol " + (i + 1), edges: EDGE_ROWS(),
+    sub: "At the start of your turn: one D6 per capital ship or escort squadron not in play (one on patrol per 500 pts). " + ARRIVE_SUB + " The second die is the arrival edge: 1 left, 2–3 top, 4–5 bottom, 6 right (unless you agreed another way)." })],
   end: ["One fleet disengages.", "All the attacker’s Exterminators are destroyed.", "An Exterminator destroys the planet."],
   win: ["A fleet that disengages loses.", "All Exterminators destroyed: the defender wins.", "The planet destroyed: the attacker wins.", "In a campaign a destroyed world rolls on the table on RB p. 141."],
   rtools: [{ k: "ending", id: "how", l: "How did it end?", rows: [["The planet was destroyed", "a"], ["All Exterminators were destroyed", "b"], ["The attacker disengaged", "b"], ["The defender disengaged", "a"]] }],
@@ -1136,13 +1151,13 @@ const SC = [
     { w: "Charging the shot", s: "a", t: "Super-Mega-Death Shot (FL p. 284): a Blackstone must not move or fire for two turns, then stays still and fires in the shooting phase of the third. Blackstones no further apart than a Nova Cannon template’s diameter can combine." },
     { w: "Firing at the planet", s: "a", t: "In this scenario the shot is aimed at the planet from up to 75 cm. Use the range tool below — closer is better, base contact destroys the planet outright." },
     { w: "Disrupting the charge", s: "b", t: "A capital ship touching the area between charging Blackstones disrupts the charge: it takes 8 lance shots per charging Blackstone (no shields, no brace), each Blackstone takes D6 hits and must start charging again. Escorts and ordnance there are destroyed (FL p. 284)." },
-    { w: "Start of your turn", s: "b", t: "You may roll for patrol ships not yet on the table: one D6 per escort squadron and per capital ship or squadron. Use the arrival tools below." },
+    { w: "Start of your turn", s: "b", t: "You may roll for patrol ships not yet on the table: one D6 per escort squadron and per capital ship or squadron. Use the arrival rolls below (Tools)." },
     { w: "Any time", t: "A crippled Blackstone cannot fire the shot — and the game ends at once in the defender’s favour." }
   ],
   tools: [
     { k: "pick", id: "shot", l: "Shot at the planet — range from the planet", rows: [["60–75 cm", "6+"], ["45–60 cm", "5+"], ["30–45 cm", "4+"], ["15–30 cm", "3+"], ["Under 15 cm", "2+"], ["Base contact", "Destroyed"]], foot: "D6 score needed to exterminate the planet." },
-    { k: "pick", id: "pspd", l: "Patrol arrival — ship speed", rows: SPEED_ROWS, foot: "One D6 per escort squadron and per capital ship or squadron." },
-    { k: "roll", id: "pedge", l: "Patrol arrival edge", sub: "D6", rows: () => [[1, 2, "Top long edge"], [3, 4, "Bottom long edge"], [5, 6, "The attacker’s short edge"]] }
+    ARRIVAL("pat", "Patrol arrival rolls", { cl: "Patrols not yet on the table", il: i => "Patrol " + (i + 1), edges: [[1, 2, "Top long edge"], [3, 4, "Bottom long edge"], [5, 6, "The attacker’s short edge"]],
+      sub: "One D6 per escort squadron and per capital ship or squadron. " + ARRIVE_SUB + " The second die is the arrival edge: 1–2 top, 3–4 bottom, 5–6 the attacker’s short edge." })
   ],
   end: ["One fleet disengages or is destroyed.", "A Blackstone is crippled.", "The planet is exterminated."],
   win: ["The planet is destroyed: the attacker wins.", "A Blackstone is crippled: the defender wins.", "A fleet that disengages or is destroyed loses."],
@@ -3179,7 +3194,7 @@ function widget(sc, st, v, t) {
     const n = get(st, t.id + "_n", n0Of(t, st)), res = get(st, t.id, null);
     return "<div class='wg'><h3>" + esc(t.l) + "</h3>" + (t.sub ? "<div class='sub'>" + esc(t.sub) + "</div>" : "") + "<div class='ctr'><span class='lab'>" + esc(t.cl || "Capital ships") + "</span><button class='sq' data-a='cnt2' data-id='" + t.id + "_n' data-d='-1'" + (n <= 1 ? " disabled" : "") + " aria-label='Fewer'>−</button><span class='val'>" + n + "</span><button class='sq' data-a='cnt2' data-id='" + t.id + "_n' data-d='1' aria-label='More'>+</button></div>" +
       "<div class='rollrow' style='margin-top:8px'><button class='btn primary' data-a='shr' data-id='" + t.id + "'>" + esc(t.btn ? t.btn(n) : "Roll " + n + " × D6") + "</button>" + (res ? "<button class='btn' data-a='shc' data-id='" + t.id + "'>Clear</button>" : "") + "</div>" +
-      (res ? "<ol class='plain'>" + res.map((d, i) => "<li>" + esc(t.il ? t.il(i) : "Ship " + (i + 1)) + ": <b>" + (Array.isArray(d) ? d.join(" + ") : d) + "</b> → " + esc(t.out(d, st)) + "</li>").join("") + "</ol>" : "<p class='calc' style='margin:0'>" + esc(t.none || "Roll here, or roll your own dice and read the rule above.") + "</p>") + (t.foot ? t.foot(st) : "") + "</div>";
+      (res ? "<ol class='plain'>" + res.map((d, i) => "<li>" + esc(t.il ? t.il(i) : "Ship " + (i + 1)) + ": <b>" + (t.show ? t.show(d) : Array.isArray(d) ? d.join(" + ") : d) + "</b> → " + esc(t.out(d, st)) + "</li>").join("") + "</ol>" : "<p class='calc' style='margin:0'>" + esc(t.none || "Roll here, or roll your own dice and read the rule above.") + "</p>") + (t.foot ? t.foot(st) : "") + "</div>";
   }
   if (t.k === "val") {
     const cur = get(st, t.id, 0);
@@ -3503,32 +3518,32 @@ let lastMapNarrow = null;
 window.addEventListener("resize", () => { const n = mapNarrow(); if (lastMapNarrow !== null && n !== lastMapNarrow) render(true); lastMapNarrow = n; });
 </script>
 <!-- scenario files: each adds its scenarios with addScenarios([...]) -->
-<script src="scenarios/blackcrusade.js?v=0.12.0"></script>
-<script src="scenarios/fleets.js?v=0.12.0"></script>
-<script src="scenarios/cl-early.js?v=0.12.0"></script>
-<script src="scenarios/cl-mag-a.js?v=0.12.0"></script>
-<script src="scenarios/cl-mag-b.js?v=0.12.0"></script>
-<script src="scenarios/cl-mag-c.js?v=0.12.0"></script>
-<script src="scenarios/cl-mag-d.js?v=0.12.0"></script>
-<script src="scenarios/cl-fanatic.js?v=0.12.0"></script>
-<script src="scenarios/cl-invasion.js?v=0.12.0"></script>
-<script src="scenarios/_wr.js?v=0.12.0"></script>
-<script src="scenarios/wr-committee.js?v=0.12.0"></script>
-<script src="scenarios/wr-community-a.js?v=0.12.0"></script>
-<script src="scenarios/wr-spreading-war.js?v=0.12.0"></script>
-<script src="scenarios/wr-community-l4a.js?v=0.12.0"></script>
-<script src="scenarios/wr-community-l4b.js?v=0.12.0"></script>
-<script src="scenarios/wr-community-l4c.js?v=0.12.0"></script>
-<script src="scenarios/wr-community-l4d.js?v=0.12.0"></script>
-<script src="scenarios/fan-tournament.js?v=0.12.0"></script>
-<script src="scenarios/fan-nemesis.js?v=0.12.0"></script>
-<script src="scenarios/fan-pdd.js?v=0.12.0"></script>
-<script src="scenarios/fan-starblade.js?v=0.12.0"></script>
-<script src="scenarios/terrain-map.js?v=0.12.0"></script>
-<script src="scenarios/open-points.js?v=0.12.0"></script>
-<script src="scenarios/wr-rating.js?v=0.12.0"></script>
-<script src="scenarios/play-maps.js?v=0.12.0"></script>
-<script src="scenarios/sizes.js?v=0.12.0"></script>
+<script src="scenarios/blackcrusade.js?v=0.12.1"></script>
+<script src="scenarios/fleets.js?v=0.12.1"></script>
+<script src="scenarios/cl-early.js?v=0.12.1"></script>
+<script src="scenarios/cl-mag-a.js?v=0.12.1"></script>
+<script src="scenarios/cl-mag-b.js?v=0.12.1"></script>
+<script src="scenarios/cl-mag-c.js?v=0.12.1"></script>
+<script src="scenarios/cl-mag-d.js?v=0.12.1"></script>
+<script src="scenarios/cl-fanatic.js?v=0.12.1"></script>
+<script src="scenarios/cl-invasion.js?v=0.12.1"></script>
+<script src="scenarios/_wr.js?v=0.12.1"></script>
+<script src="scenarios/wr-committee.js?v=0.12.1"></script>
+<script src="scenarios/wr-community-a.js?v=0.12.1"></script>
+<script src="scenarios/wr-spreading-war.js?v=0.12.1"></script>
+<script src="scenarios/wr-community-l4a.js?v=0.12.1"></script>
+<script src="scenarios/wr-community-l4b.js?v=0.12.1"></script>
+<script src="scenarios/wr-community-l4c.js?v=0.12.1"></script>
+<script src="scenarios/wr-community-l4d.js?v=0.12.1"></script>
+<script src="scenarios/fan-tournament.js?v=0.12.1"></script>
+<script src="scenarios/fan-nemesis.js?v=0.12.1"></script>
+<script src="scenarios/fan-pdd.js?v=0.12.1"></script>
+<script src="scenarios/fan-starblade.js?v=0.12.1"></script>
+<script src="scenarios/terrain-map.js?v=0.12.1"></script>
+<script src="scenarios/open-points.js?v=0.12.1"></script>
+<script src="scenarios/wr-rating.js?v=0.12.1"></script>
+<script src="scenarios/play-maps.js?v=0.12.1"></script>
+<script src="scenarios/sizes.js?v=0.12.1"></script>
 <!--SCENARIO-FILES-->
 <script>wrInit(); document.getElementById("scn").textContent = SC.length; render(false);</script>
 </body>

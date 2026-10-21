@@ -223,6 +223,14 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
   battle -arvontaan tulee toinen valikko "vs …" (`f.sug2`, `p.sug2`). Kumpikin on vapaaehtoinen. Kun molemmat on valittu,
   suosituksen pitää sisältää kumpikin laivasto, ja "any fleets" -skenaariot pysyvät mukana kuten ennenkin.
   Orks vs Imperial Navy: arvontapooli 70 (52 any fleets + 18 suositeltua), etusivu 72 (osittainen osuma, esim. Orks-alaryhmät).
+- **Saapumisheitot nopalla (21.10. ilta, 0.12.1).** Käyttäjä Exterminatuksesta: *"ei voi vissiin rollata tuota patrol saapuu"*.
+  - **Mitä muuttui:** neljässä skenaariossa oli pelkkä nopeustaulukko (pick). Tilalle tuli `ARRIVAL`-noppa: D6 jokaiselle
+    laivalle, laivueelle tai merkille, ja tulos kertoo suoraan, mille nopeuksille se riittää (RB s. 139, 141). Exterminatuksessa ja Siege of
+    Fularisissa sama nappi heittää myös saapumisreunan.
+  - **Escalating Engagement:** tulos näyttää myös +2:n (omat laivat 30 cm:n sisällä).
+  - **Above Belis Corona:** kumulatiivinen +1 (joka toinen epäonnistuminen) lisätään itse, ja teksti sanoo sen.
+  - **Tallennetut tilat:** uudet tunnisteet (`arr2`, `pat`, `res`), jotta vanhat taulukkovalinnat eivät sotke noppaa.
+    `shiproll` sai valinnaisen näyttömuodon `show` ("6 · edge 5").
 - **0.12 (21.10.2026 ilta): skenaarion koon suodatin** (julkaistu käyttäjän luvalla ("joo"): Worker-versio ec842632,
   GitHub Kuldara/bfg-tools 9f947de; index.html tavuvertailussa TARKISTETTU, live 204 skenaariota, S/M/L 131/109/119). Käyttäjä: *"voisi myös lisätä yhdeksi
   suodattimeksi skenaarion koon. esim kolme. about 750 1250 ja 1500 tai isommat"*. Etusivun Filtersiin rivi **Size** ja
