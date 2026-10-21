@@ -554,7 +554,7 @@
     ],
     stools: [],
     notes: [TP_RULES, "The mission says the markers are worth 0, 1 or 2 but not how many of each, how many transports a fleet brings or where the lines go. These shape the result, so agree them first (Agree before you start).", "A marker counts for the kind of ship that picked it up. The mission does not say what happens to markers on a ship that is destroyed; suggestion: they are lost with it."],
-    refs: [["Transports", "RB p. 135"], ...REF_VP],
+    refs: [["Transport (Imperial profile; other fleets have their own)", "FL p. 85"], ...REF_VP],
     play: [
       { w: "Picking up salvage", t: "A ship picks up a marker by stopping on it; turn it over. It is worth its value × 3 if a transport picked it up, × 2 for a cruiser or battleship, × 1 for an escort." },
       P_TIME("tp")

@@ -239,11 +239,11 @@
       { w: "Scoring", t: "Raiders score only for transports: 100 VP each (plus upgrade points). Escaped transports score the same for the convoy, which also scores normally for raider ships damaged, destroyed or disengaged.", not: ["v05"] },
       { w: "Scoring", t: "Raiders score only for transports: 100 VP per point of transport capacity destroyed, plus its upgrade points. The convoy scores 100 VP per point of capacity through the corridor — upgrades are a sunk cost — plus standard VP for raider ships damaged, destroyed or disengaged.", only: ["v05"] }
     ],
-    fx: (T, st, v) => [["a", T === 1 ? "Entry: corridor edge, or up to 30 cm along the long edges" : "Entry: up to " + 30 * T + " cm along the long edges"]].concat(T === 2 && v !== "v05" ? [["b", "Rearguard moves on from the convoy edge"]] : []),
+    fx: (T, st, v) => [["a", T === 1 ? "Entry: corridor edge, or up to 30 cm along the long edges" : 30 * T >= tableWH()[0] ? "Entry: anywhere along the long edges" : "Entry: up to " + 30 * T + " cm along the long edges"]].concat(T === 2 && v !== "v05" ? [["b", "Rearguard moves on from the convoy edge"]] : []),
     tools: [
       { k: "counter", id: "dead", l: "Transports destroyed (points of capacity in version 0.5)", s: "a", res: 1 },
       { k: "counter", id: "out", l: "Transports through the corridor (points of capacity in version 0.5)", s: "b", res: 1 },
-      { k: "num", id: "ext", l: "Convoy VP from raider ships (standard)", s: "b", after: v => "" }
+      { k: "num", id: "ext", l: "Convoy VP from raider ships (standard)", s: "b", after: v => "", res: 1 }
     ],
     end: ["Every transport has escaped or been destroyed.", "Or the raiders are destroyed or driven off — transports still on the table then count for the convoy."],
     win: v => v === "v05" ? ["Raiders: 100 VP per point of transport capacity destroyed (plus its upgrade points). Nothing for warships.", "Convoy: 100 VP per point of capacity through the escape corridor (no upgrade points), plus standard VP for raider ships.", "Higher total wins."]

@@ -58,14 +58,15 @@
       { k: "toggle", id: "rel", l: "The relief force has arrived", s: "a" },
       { k: "roll", id: "edge", l: "Relief force edge", rows: () => [[1, 1, "Right edge"], [2, 3, "Bottom edge"], [4, 5, "Top edge"], [6, 6, "Left edge"]] },
       { k: "counter", id: "rc", l: "Transports the raiders control", s: "b", max: 8, res: 1 },
-      { k: "counter", id: "dc", l: "Transports the defenders have recaptured", s: "a", max: 8, res: 1 }
+      { k: "counter", id: "dc", l: "Transports the defenders have recaptured", s: "a", max: 8, res: 1 },
+      { k: "counter", id: "xd", l: "Transports destroyed (they count for nobody)", max: 8, res: 1 }
     ],
     rtools: [{ k: "ending", id: "field", l: "Who holds the table at the end?", rows: [["The defenders", "a"], ["The raiders", "b"]] }],
     end: ["When one side disengages or is destroyed."],
-    win: ["Each side scores 1 point for every transport it controls at the end.", "Inactive transports, and transports that disengaged, go to whoever holds the table.", "More points wins."],
+    win: ["Each side scores 1 point for every transport it controls at the end.", "Inactive transports, and transports that disengaged, go to whoever holds the table. Destroyed ones count for nobody.", "More points wins."],
     result(st) {
-      const r = get(st, "rc", 0), d = get(st, "dc", 0), rest = Math.max(0, 8 - r - d), f = get(st, "field", -1);
-      if (f < 0) return [null, "Who holds the table?", "Raiders " + r + ", defenders " + d + ", and " + rest + " transports go to whoever holds the table."];
+      const r = get(st, "rc", 0), d = get(st, "dc", 0), rest = Math.max(0, 8 - r - d - get(st, "xd", 0)), f = get(st, "field", -1);
+      if (f < 0) return [null, "Who holds the table?", "Raiders " + r + ", defenders " + d + ", and " + rest + " transport" + (rest === 1 ? "" : "s") + " go to whoever holds the table."];
       const R = r + (f === 1 ? rest : 0), D = d + (f === 0 ? rest : 0);
       return R === D ? ["draw", "Level", "Raiders " + R + " – Defenders " + D + "."] : [R > D ? "b" : "a", (R > D ? "Raiders" : "Defenders") + " win", "Raiders " + R + " – Defenders " + D + " transports."];
     },

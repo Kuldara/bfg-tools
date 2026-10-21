@@ -172,7 +172,7 @@
       { s: "b", t: "Eldar deploy last, anywhere within 30 cm of the Gate." }
     ],
     notes: ["“Defender roll for holofields if eldar are not present” is unclear — read here as: without Eldar, roll off for who controls the Gate’s holofield saves.", "How more than two fleets share the long edges is not given."],
-    refs: [["Warp rifts", "RB p. 101"], ["Holofields", "FL p. 303"]],
+    refs: [["Warp rifts", "RB p. 111"], ["Holofields", "FL p. 303"]],
     play: [
       { w: "The Gate", t: "Immobile: 10 hits, armour 6+, holofield, 3 turrets. It never fires, moves or takes orders." },
       { w: "If it is destroyed", t: "Remove it: every ship within 15 cm takes D6 lance hits (shields and armour as normal). A warp rift opens in its place for the rest of the game, and Leadership checks within 15 cm of it are at −1." },
@@ -213,7 +213,7 @@
     ],
     stools: [{ k: "roll", id: "edge", l: "Attackers’ edge", sub: "D6", rows: () => [[1, 3, "The first non-sunward edge"], [4, 6, "The second non-sunward edge"]] }],
     notes: ["The Cantatum Bellum has no profile in the source, and the end of its explosion rule is cut off (“place it in the place of the …”) — agree a ship, and read it as the rift opening where the ship was.", "Athagey and Kor Phaeron have no profiles either; use a fleet commander from each list.", "No table size is given."],
-    refs: [["Radiation bursts", "RB p. 115"], ["Warp rifts", "RB p. 101"], ["Catastrophic damage (warp drive implosion)", "RB p. 71"]],
+    refs: [["Radiation bursts", "RB p. 115"], ["Warp rifts", "RB p. 111"], ["Catastrophic damage (warp drive implosion)", "RB p. 71"]],
     play: [
       { w: "Every turn", t: "At the start of each turn roll a D6: on 5–6 a radiation burst occurs (RB p. 115)." },
       { w: "Relay interference", t: "No teleport attacks inside Srinagar’s gravity well." },

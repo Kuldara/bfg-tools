@@ -165,7 +165,7 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
     - Falling Down: kartan alkuperä (Ar'Cianr, WR20) karttahuomautukseen.
     - Kirjastossa ei ole enää E- eikä W-skenaarioita; tyhjät sääntöluokat piilotetaan
       suodattimista.
-- **BFG Scenario Listing -vertailu (21.10., EI vielä julkaistu):** ElectricFan127 jakoi Discordissa
+- **BFG Scenario Listing -vertailu (21.10., julkaistu 0.8:n mukana):** ElectricFan127 jakoi Discordissa
   yhteisön skenaarioluettelon (152 riviä). Lähes kaikki rivit ovat jo kirjastossa, ks.
   `../tulosteet/ref/bfg_julkaisut/Fanilisaosat/LUEMINUT.md`. Puuttuvat viisi fanilisäosaa
   (Advanced Scenarios, Book of Nemesis, Project Distant Darkness, Starblade ja Tournament Mission
@@ -175,7 +175,14 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
     Siinä on kolme asettelualuetta (Rearguard, Convoy ja Convoy Leaders, 30 × 15 cm), pienten
     pöytien sääntö (kartta kutistaa alueet) ja pisteytys kuljetuskapasiteetin mukaan, jossa
     parannukset eivät tuota pisteitä saattueelle.
-- **0.8 (21.10.2026): fanilisäosat (EI vielä julkaistu, odottaa käyttäjän lupaa).** Viiden
+- **0.8.x (21.10.2026): Project Distant Darkness Chapter I (EI vielä julkaistu).** Käyttäjä toi
+  zipin ("lisää scenario sourceja"): siinä oli puuttunut Chapter I *The Art of Command*; Main ja Chapter II
+  olivat tavulleen samat kuin kansiossa jo olleet. 12 skenaariota (kymmenen tehtävää ja kaksi pientä
+  sukkula-alatehtävää) Revivalin ja Distant Sunin väliin, 192 → **204 skenaariota**. Tulkinnat: luku
+  "Fanilisäosat (0.8)" → Project Distant Darkness. Testit ks. Testaus. Moottoriin valinnainen
+  `legend: [[väri, teksti], …]` kartan selitteelle (Part One: Fleet Engagementin värit ovat vyöhykkeitä).
+- **0.8 (21.10.2026): fanilisäosat (julkaistu 21.10. käyttäjän luvalla, Worker-versio 6ef53186,
+  GitHub-peili 3af2fba; index.html tavuvertailussa TARKISTETTU).** Viiden
   fanilisäosan skenaariot, 137 → **192 skenaariota** (+55). Yksityiskohdat: luku "Fanilisäosat (0.8)".
   - Uusi kategoria **Fan supplements** etusivulle, Sources-sivulle ja koko kirjaston arvontaan, merkki
     **Fan supplement** (`trust: "fan"`) ja neljä ryhmää: `fan-tour`, `fan-nem`, `fan-pdd`, `fan-sb`.
@@ -212,7 +219,7 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
 | `scenarios/cl-invasion.js` | Invasion (GW US 2002): 7 yleisskenaariota + 2 40K-kytkettyä. |
 | `scenarios/fan-tournament.js` | Fanilisäosat (0.8): AdeptiConin turnaustehtävät 2007–2016 (Tournament Mission Pack) ja kuusi niistä Advanced Scenarios -versioina, 17 skenaariota. Yhteiset apurit: battle pointit (`tpResult`, `advResult`), anti-disengage-bonus (`cowTool`), sivutavoitteet (`secRoll`, `secTools`, `ptsTools`). |
 | `scenarios/fan-nemesis.js` | Book of Nemesis (2007): Gehennan 4 erikoisskenaariota, 3 historiallista, 4 turnaus- ja 2 erikoisskenaariota (13). Gehennan omat puolustukset (`DEF_PROFILES`) työkaluissa. |
-| `scenarios/fan-pdd.js` | Project Distant Darkness: Revival 9 + Distant Sun 7 (16). Lisäosan omat profiilit (Mantis, Marauder, hahmot, Tigershark) työkaluissa ja huomautuksissa kirjan vaihtoehdon kanssa. |
+| `scenarios/fan-pdd.js` | Project Distant Darkness: Revival 9 + The Art of Command 12 + Distant Sun 7 (28). Lisäosan omat profiilit (Mantis, Marauder, hahmot, Tigershark) työkaluissa ja huomautuksissa kirjan vaihtoehdon kanssa. |
 | `scenarios/fan-starblade.js` | Starblade (9). Arvottu asteroidiruudukko piirtyy karttaan (`squares`). |
 | `testit/sisaltotesti.js` | Sisältötesti selaimessa: karttojen puolivärit, askelten puolet, tulosfunktiot satunnaissyötteillä, verbin taipuminen ja WR-luokitus (ARVIO). |
 | `testit/leveat.js` | Leveiden näyttöjen mittari: näytöllisiä, leveys ja ensimmäisen näytön sisältö viidellä näytöllä (ks. Leveät näytöt). |
@@ -290,6 +297,29 @@ jossa fontti on lähes 9 cm), kuvakierros 19 (taulukon `nowrap`-ensimmäinen sar
 tulosnapin oikea teksti); kaikki korjattu. Lisäksi kaikki 63 fanikarttaa (versioineen) katsottiin silmin
 rinnakkain 180 × 120 -pöydällä: kolme ahdasta kohtaa, joita karttatesti ei mittaa (nuoli tekstin
 alussa, teksti kiinni vyöhykkeen reunassa), korjattiin.
+
+**0.8 + Chapter I (21.10.2026, `?v=0.8.4`), 204 skenaariota:** selaintesti leveänä (1440) ja kapeana (375)
+15 184 näkymää, 204 erillistä otsikkoa, 0 virhettä; karttatesti 3 120 karttaa, 14 984 tekstiä, 0 + 0;
+sisältötesti 0 + 0 (15 180 tulosfunktiokutsua, 314 sovittavaa kohtaa); sivuviiteauditointi 310 viitettä,
+0 tarkistamatta; kuvakierros koko kirjastosta 1 850 sivua, 0 löydöstä, ja PDD:n sivuista kuvina 258 sivua,
+0 löydöstä. Ensimmäinen karttatestiajo löysi 1 + 3 (nimiöt päällekkäin 244 × 122 -pöydällä
+puhelinfontilla, asteroidinimiö pöydän reunan yli, teksti merkin päällä). Uudet kartat katsottiin lisäksi
+silmin rinnakkain: viisi kohtaa, joita testi ei mittaa (mittaviiva tekstin läpi, tekstit katkoviivan
+päällä, Fleet Engagement -kartan selite laivastojen nimillä). Selitteelle tuli valinnainen kenttä
+`legend: [[väri, teksti], …]` (index.html), jota Part One käyttää ("Dark zone", "Light zone"). Kaikki
+korjattu.
+
+**Pistokoetarkastus 21.10.2026 (käsin, `pistokokeet_2026-10-21.md`):** siemennetty, kategorioittain ositettu
+otanta (siemen 20261021): 46 skenaariota luettiin lähdettä vasten, ja kaikki skenaariotiedostot olivat mukana. Kaikkien
+192:n näkyvä teksti tarkistettiin heuristiikoilla. Lisäksi tehtiin 60 tuomion oraakkelitapausta, selainpelaus, karttoja
+lähteen karttaa vasten ja neljä näyttökokoa. Löydöksiä 26, joista 24 korjattiin. Keskitason löydökset: Fleetsin
+Convoy-merkkien vapaaehtoinen aktivointi oli rajattu vuoroon 2, Treasure Fleetin tuomio jakoi tuhotut kuljetusalukset,
+Srinagarin Cantatum Bellum merkittiin Chaos-alukseksi ja Falling Downin paljastetut kuljetusalukset puuttuivat. Moottoriin
+tuli kaksi muutosta. Result näyttää sovitut voittoon, tasapeliin ja pituuteen liittyvät kohdat (`agreeList(sc, st, only)`),
+ja joukkokortissa "Suggested: Any" näkyy muodossa "any fleet". Uusi tarkistin `testit/sivuaudit_tiukka.py` etsii viitteitä,
+joiden sivulla on vain sekakirjaiminen osuma, vaikka varsinainen otsikko on toisella sivulla. Se löysi Warp rifts RB s. 101 → 111,
+jonka `sivuaudit.py` hyväksyi. Kaksi löydöstä (`fan-pdd.js`) korjasi rinnakkainen Chapter I -istunto. Script-tagit lopuksi `?v=0.8.5`.
+Testit korjausten jälkeen (204 skenaariota) olivat vihreitä.
 
 **Sivuviiteauditointi** (`python -X utf8 "scenario library/testit/sivuaudit.py"`):
 jokainen refs-pari tarkistetaan RB/FL-tekstidumppien (`simulaattorit yms/simulaattori/
@@ -389,7 +419,7 @@ alkuun.
 | **Warp Rift · L3** (0.6) | 8 yhteisön pelattua + The Spreading War (11) | WR14–49 |
 | **Books · Fleets** (0.7) | Merchantmen's Folly, The Hunter and the Prey, The Gauntlet (Rogue Traders), Explorer's Prize, Space Hulk!, The Void Malevolent, Craftworld Assault | FL s. 200–211, 312–315 |
 | **Classic GW** (0.7) | Warp Storm: Callavell, Torpedo Run · Planet Killer 1: Space Hulk Convoy, Phillipa II · BFG Magazine 1–19: Corribra II 1–4, Pirates, Treasure Fleet, Evacuation, Cadian Line, Ahriman's Arrival, Rath's Last Stand, Antioc 1/3/4, Execution Hour, The Siege, Defence of Macragge, Numitor, Cold Passage, They Come Only to Murder, Cerberus 1–4, Belis Corona 1–4, Damocles 1–2 · Fanatic Magazine: Damocles 3–4, Wolf Packs, Tau Space Tau Trade · Fanatic Online: Daemon Run, Lachlon II, Port Maw Blockade, Abhorrence, Planet Fall, Kotol (5) · Invasion: The Chart, Conquest, Breakthrough, Head of the Snake, Retrieval, Defensive Ring, Port Maw, Boarding Party, Deadline | BFG Magazine, Fanatic, Invasion |
-| **Fan supplements** (0.8) | Turnaus 17: Manna from the Heaven (+ Supply Run), The Road to Hell, The Influence of Space Power, Battle on the Edge of the Warp, Scavenger Hunt, The Black Hole, Sink the Bismark, An Unexpected Encounter, Battle in the Derelict Base, Capture the Station, Retrieve the Salvage, Protect the Salvage, Brace for Impact, Wrecks O’Plenty, Neutron Star, Shepard Moon, Hide N’ Seek · Book of Nemesis 13: Death of the Governor, Guns of Naravona, Shadow of the Comet, Line of Gehenna, Incident at Kravertus II, The Fall of Great Armada, The Longest Travel, Recon in Force, Tearing the Flanks, Titan Clash, Capture the Hulk, Ambush, Gunnery Practice · Project Distant Darkness 16: Hunter-Prey, Light and Darkness, Stolen Goods, Barrage, Crossfire, Silent Strike, Hunter Cadre, Another Day Another Plan, Into Darkness; Distant Sun: Into the Claw, Supply and Demand, Nightmares, Spirit Within Spirit Without, Rising Shadow, Abandon All Hope, Ever Dream · Starblade 9: Dark Crescent Moon … Starblade | `../tulosteet/ref/bfg_julkaisut/Fanilisaosat/` |
+| **Fan supplements** (0.8) | Turnaus 17: Manna from the Heaven (+ Supply Run), The Road to Hell, The Influence of Space Power, Battle on the Edge of the Warp, Scavenger Hunt, The Black Hole, Sink the Bismark, An Unexpected Encounter, Battle in the Derelict Base, Capture the Station, Retrieve the Salvage, Protect the Salvage, Brace for Impact, Wrecks O’Plenty, Neutron Star, Shepard Moon, Hide N’ Seek · Book of Nemesis 13: Death of the Governor, Guns of Naravona, Shadow of the Comet, Line of Gehenna, Incident at Kravertus II, The Fall of Great Armada, The Longest Travel, Recon in Force, Tearing the Flanks, Titan Clash, Capture the Hulk, Ambush, Gunnery Practice · Project Distant Darkness 28: Hunter-Prey, Light and Darkness, Stolen Goods, Barrage, Crossfire, Silent Strike, Hunter Cadre, Another Day Another Plan, Into Darkness; The Art of Command 12: When It All Comes Back, Awakening in the Labyrinth, The Truth of Scheming, To Find the Light, No Way Out, Distant Darkness, Ly’tan’s Flight, A Lost Tale, The Art of Command Part One ja Part Two, Garit’s Escape, For the Greater Good; Distant Sun: Into the Claw, Supply and Demand, Nightmares, Spirit Within Spirit Without, Rising Shadow, Abandon All Hope, Ever Dream · Starblade 9: Dark Crescent Moon … Starblade | `../tulosteet/ref/bfg_julkaisut/Fanilisaosat/` |
 | **Warp Rift · L4** (0.6) | 24: Mobeel Narrows, Choir of a Thousand Voices, Wolf Hunt, Hunter Hunted, Cat and Mouse, Solar Collectors, Hunt for the Eldar 1–2, Convoy Battle, Contact!, Falling Down, Darkening Technology Raid, Stygies-kampanjapuu, Looting the Hulk, Pirate Bases, Battles in the Warp, Fleet Engagement Variant, Solitaire Campaign, The Trap, Hive Ship Pirate Base, Norduun, Fall of Hyra, Shattered Gate, Srinagar | WR5–48 |
 
 Kaikki tulkinnat ja ristiriidat ovat skenaarioiden "Source notes" -laatikoissa
@@ -729,7 +759,7 @@ ovat PDF-sivuja; Book of Nemesiksessä myös painettu sivu ("p. 42 (printed 40)"
 |---|---|---|
 | BFG Tournament Mission Pack (AdeptiConin tehtävät 2007–2016, vihkon koonnut Paolo Barbero) + BFG Advanced Scenarios (Paolo Barbero) | 18 tehtävää → 17 skenaariota | `fan-tournament.js` |
 | Book of Nemesis (Cypra Probatii -portaali, päätoimittaja Marcin K. Gerkowicz, 2007) | 13 | `fan-nemesis.js` |
-| Project Distant Darkness: Revival + Chapter II Distant Sun (horizon & Zhai Morenn) | 9 + 7 | `fan-pdd.js` |
+| Project Distant Darkness: Revival + Chapter I The Art of Command + Chapter II Distant Sun (horizon & Zhai Morenn) | 9 + 12 + 7 | `fan-pdd.js` |
 | Starblade (horizon) | 9 | `fan-starblade.js` |
 
 **Päällekkäisyydet (kerran kirjastossa, toinen lähde krediiteissä ja versiona):** Advanced Scenariosin
@@ -785,7 +815,21 @@ oletus ratkaisee voiton, `v: 1`).
   Darknessin pelaajajako ja pituus → kentät. Supply and Demandin saattueen laatikko on mahdoton
   sellaisenaan → oma luenta kenttänä. Silent Strike mainitsee vuoron 6, vaikka peli on 8 vuoroa → 8.
   Abandon All Hopen miinat 10 vai 15 cm → kenttä (oletus 15, voittoehto). "Outer biosphere" ei ole
-  kirjan vyöhyke → primary biosphere. Chapter I (The Art of Command) puuttuu: taulukossa ei linkkiä.
+  kirjan vyöhyke → primary biosphere.
+- Project Distant Darkness Chapter I, *The Art of Command* (lisätty 21.10. käyttäjän tuomasta zipistä,
+  `_lahde/`): jokainen tehtävä on yksi kappale tarinan keskellä, ja lähde antaa yleensä vain toisen puolen
+  tavoitteen ("Endtime") → kaikki muu on vastapuolen voitto, sanottuna huomautuksissa. Hahmojen arvot
+  (s. 4) poikkeavat sekä Revivalista että Distant Sunista → oma `CHARS_AOC`; yhteiset re-rollit s. 5.
+  Imperiumin Tau-alukset olivat alun perin Forge Worldin (IA3) → FL:n Kor’vattra/Kor’or’vesh; "Lar’shi"
+  = Hero, "ion cannon variant" = Dal’yth/Vash’ya, "launch bay variant" = Vash’ya. Kentät: Mission Onen
+  Castellanin paikka; Labyrinthin renkaan 25 cm planeetan reunasta (silloin Castellanit ovat keskellä
+  "just outside"); Truth of Schemingin telakan uni, ohituksen uusinta ja lähtötapa (telakalle ei profiilia
+  → FL:n orbital dock); No Way Outin epäonnistunut luovutus; Distant Darknessin dronien aseet ja panssari
+  (ei annettu), "All Ahead Full on 2D6" = 2D6 cm 4D6:n sijaan; sukkuloiden liike ja ammunta; Part Onen
+  Horizon’s Edge (profiililinkki puuttuu → battle barge) ja "standard Forgeworld" Emissary; Part Twon
+  Empire-alue, pituus (Cruiser Clash, 8 vuoroa) ja itsetuhon heittohetki; For the Greater Goodin
+  pelastus ja pelastus ilman kaikkia viittä (oletus tasapeli). Part One on tavallinen Fleet Engagement
+  (variantit A–D ja muodostelmatyökalu kuten ytimessä; kartan värit ovat vyöhykkeet, eivät laivastot).
 - Starblade: alukset kirjasta suoraan; "phantom lances" = Shadowhunterin shadow lance. Voiton
   muoto Gracessa, Tragedyssä ja finaalissa ("defeat Barha’desh") → kentät. Visionsin Eldar-vyöhyke
   luettu kulmavyöhykkeeksi pitkän reunan varrella.

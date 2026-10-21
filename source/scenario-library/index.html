@@ -484,7 +484,7 @@ html.short .mapwrap svg { max-height: 78vh; }
 </header>
 <main id="app"></main>
 <footer>
-  <p><b>Scenario Library</b> · version 0.8 · <span id="scn">192</span> scenarios. Unofficial fan-made tool, not affiliated with Games Workshop.</p>
+  <p><b>Scenario Library</b> · version 0.8 · <span id="scn">204</span> scenarios. Unofficial fan-made tool, not affiliated with Games Workshop.</p>
   <p>Every scenario here is summarised in our own words for play at the table; “Playing with other fleets” notes marked as suggestions are ours, not the source’s. Credit belongs to the original authors; the page references point to the sources: the BFG Remastered <i>Rulebook v1.10</i> and <i>Fleets v0.36</i>, the classic Games Workshop and Fanatic publications (<i>Warp Storm</i>, <i>Planet Killer</i>, <i>Battlefleet Gothic Magazine</i>, <i>Invasion</i>, <i>Fanatic Magazine</i>, <i>Fanatic Online</i>) the fan magazine <a href="https://specialist-arms.com/bfg/warprift/" target="_blank" rel="noopener">Warp Rift</a>, and the fan supplements <i>Book of Nemesis</i>, <i>Project Distant Darkness</i>, <i>Starblade</i>, the <i>BFG Tournament Mission Pack</i> and <i>BFG Advanced Scenarios</i>.</p>
   <p>RB = Rulebook v1.10, FL = Fleets v0.36. Progress is saved in this browser only.</p>
   <p class="kbd">Keyboard: <b>1</b>–<b>4</b> switch a scenario’s tabs · <b>←</b> <b>→</b> change the turn on Play.</p>
@@ -1014,7 +1014,7 @@ const SC = [
     { k: "num", id: "reinf", l: "Reinforcement points brought on", s: "a", after: v => "Pursuers’ bonus: <b>" + Math.floor(v / 2) + " VP</b>" }
   ],
   end: ["One fleet is destroyed or disengages."],
-  win: ["Standard victory points for ships crippled, destroyed or disengaged (RB p. 122).", "The pursuers add half the points value of all reinforcements brought on.", "If mines were bought, their victory points go to the attacker."],
+  win: ["Standard victory points for ships crippled, destroyed or disengaged (RB p. 122).", "The pursuers add half the points value of all reinforcements brought on.", "If mines were bought, their victory points go to “the attacker” — agreed: {a:minevp}."],
   result(st) { const r = num(st, "reinf"); return [null, "Count victory points", "Pursuers’ bonus from reinforcements: " + Math.floor(r / 2) + " VP."]; }
 },
 /* ===================================================== CAMPAIGN: PELUCIDAR */
@@ -1614,7 +1614,8 @@ const arrivalSpan = (T, v) => {
   const hits = rows.filter(r => r[1] >= lo && r[0] <= hi).map(r => r[2]);
   return "Arrivals: D6 + " + T + " = " + lo + "–" + hi + " → " + hits.join(" · ");
 };
-const entryFx = T => [["a", T === 1 ? "Reinforcements: from the short edge only" : "Reinforcements: short edge, or up to " + (T - 1) * 30 + " cm along the long edges"]];
+/* 30 cm lisää joka vuorolta; kun matka ylittää pöydän pituuden, koko pitkä reuna (pistokoe 21.10.) */
+const entryFx = T => [["a", T === 1 ? "Reinforcements: from the short edge only" : (T - 1) * 30 >= tableWH()[0] ? "Reinforcements: short edge, or anywhere along the long edges" : "Reinforcements: short edge, or up to " + (T - 1) * 30 + " cm along the long edges"]];
 const TURNFX = {
   "cruiser-clash": T => T === 8 ? [[null, "Last turn"]] : [],
   "the-bait": T => entryFx(T),
@@ -1637,8 +1638,10 @@ const TURNFX = {
   "planetary-assault": () => [],
   "escalating-engagement": (T, st) => {
     const o = [];
-    if (get(st, "offa", 4) > 0) o.push(["a", "Arrival rolls at the start, a new marker in the end phase"]);
-    if (get(st, "offb", 4) > 0) o.push(["b", "Arrival rolls at the start, a new marker in the end phase"]);
+    /* vuorolla 1 reunalla ei ole vielä merkkejä: ensimmäinen asetetaan oman vuoron end phasessa (RB s. 139) */
+    const txt = T === 1 ? "End phase: place your first marker on a random edge (no arrival rolls yet)" : "Arrival rolls at the start, a new marker in the end phase";
+    if (get(st, "offa", 4) > 0) o.push(["a", txt]);
+    if (get(st, "offb", 4) > 0) o.push(["b", txt]);
     return o;
   },
   "exterminatus": () => [["a", "Start of turn: D6 per Exterminator within 45 cm of the planet edge, 4+ destroys the planet"], ["b", "Start of your turn: patrol arrival rolls"]],
@@ -1848,14 +1851,14 @@ function renderSources() {
     "<p>They were official publications in their day, but they were written for the original 1999 rules or for <i>Armada</i>, not for Remastered. Where a rule has since changed or moved, the scenario page says so in a source note, and page references to old books are given as their Remastered equivalents where one exists. Scenarios that were later reprinted in the Remastered books (the Armageddon scenarios, Craftworld Assault, Hunter and the Prey) appear only once, under the book. The <i>2002 Annual</i> reprinted earlier material, so it adds no scenarios of its own.</p>" +
     "<p class='small muted'>Page numbers are PDF pages of the scans in circulation. " + SC.filter(s => CL_GRPS.includes(s.grp)).length + " classic scenarios in this app.</p>");
   h += sec("Warp Rift <span class='badge bk'>WR</span>",
-    "<p>A free fan magazine for Battlefleet Gothic, published as PDF since April 2004 — 49 issues by June 2026. It is put together by a small team of players: founded by Cybershadow and edited by Roy “horizon” Amkreutz, who is also one of the Remastered authors. Issues carry fleet lists, scenarios, campaigns, tactics, painting and fiction.</p>" +
+    "<p>A free fan magazine for Battlefleet Gothic, published as PDF since April 2004 — 49 issues by June 2026. It is put together by a small team of players: founded by Cybershadow and edited by Roy “horizon” Amkreutz, who also maintains the Remastered FAQ runs (RB p. 4). Issues carry fleet lists, scenarios, campaigns, tactics, painting and fiction.</p>" +
     "<p>Being a fan magazine, Warp Rift is <b>not</b> an official rules source: its articles are written by whoever submits one, and they all have the same fan-work status. On the scenario list Warp Rift is one category, in issue order. Tags add what the source says: <b>Rules writer</b> (the author also writes the rules), <b>Lore competition</b>, <b>Community</b>, <b>Played</b> and <b>Play both sides</b> — search for any of them. The one exception to fan-work status is issue 48’s <i>Armada Indomitus: Codex Orks</i>, which the magazine credits to the BFG Rules Review Committee; it reprints and updates the Armageddon scenarios.</p>" +
     "<p class='small muted'>All issues can be downloaded free from <a href='" + WR + "' target='_blank' rel='noopener'>specialist-arms.com/bfg/warprift</a>. Page numbers here are PDF pages (in issues 1–10 the printed number is one lower).</p>");
   h += sec("Fan supplements <span class='badge t-fan'>Fan supplement</span>",
     "<p>Players have also written whole supplements of their own. Like Warp Rift, they are fan work, not official rules. Most of the ships they name are now in the Fleets book; where a scenario needs something the books do not have, its page gives the source’s profile and a book alternative.</p>" +
     "<ul class='plain'><li><b>Tournament Mission Pack</b> and <b>Advanced Scenarios</b>: the missions of the AdeptiCon Battlefleet Gothic tournaments (2007–2016), collected by Paolo Barbero for the Babafleet Gothic group of the Baba Yaga Dungeon Club (Alessandria, Italy). <i>Advanced Scenarios</i> revises six of them; each of those six appears here once, with both versions.</li>" +
     "<li><b>Book of Nemesis</b> (2007): rules and scenarios of the Polish Cypra Probatii community, edited by Marcin “MKG” Gerkowicz — the Gehenna campaign’s special scenarios and the historical, tournament and special scenarios.</li>" +
-    "<li><b>Project Distant Darkness</b> and its <b>Chapter II: Distant Sun</b>: Tau narrative scenarios by Roy “horizon” Amkreutz and Chris “Zhai Morenn” Lautermilch. Chapter I, <i>The Art of Command</i>, is not in this library.</li>" +
+    "<li><b>Project Distant Darkness</b> with its <b>Chapter I: The Art of Command</b> and <b>Chapter II: Distant Sun</b>: Tau narrative scenarios by Roy “horizon” Amkreutz and Chris “Zhai Morenn” Lautermilch, one running story in three parts.</li>" +
     "<li><b>Starblade</b>: a nine-scenario Craftworld Eldar series by Roy “horizon” Amkreutz.</li></ul>" +
     "<p class='small muted'>The supplements circulate as free PDFs; the community’s <i>BFG Scenario Listing</i> links them. Page numbers are PDF pages. " + SC.filter(s => FAN_GRPS.includes(s.grp)).length + " fan supplement scenarios in this app.</p>");
   h += sec("The High Admiralty",
@@ -1986,7 +1989,7 @@ const INFO = {
   "gauntlet": { bg: "Ghazghkull’s Waaagh! hit the Armageddon sector so fast that many worlds were cut off and the Imperial Navy was scattered. Daring convoy runs through Ork-held space kept the sector from being strangled.", cr: [ARMADA, RB_CREDIT + " p. 178.", AI_CREDIT] },
   "parols-bait": { bg: "With the Ork tide spreading through the Armageddon system, Admiral Parol pulled his ships out of the front line rather than lose the fleet before it could matter. He split his forces to harry the Orks’ flanks and tested every textbook stratagem to delay them.", cr: [ARMADA, RB_CREDIT + " p. 179.", AI_CREDIT] },
   "pelucidar": { bg: "The first ships of Ghazghkull’s fleet reached the Armageddon system while the Navy was still coming to full alert. Admiral Parol had to buy time for Armageddon itself; this scenario is one small part of the much larger battle at the high-gravity world of Pelucidar.", cr: [ARMADA, RB_CREDIT + " p. 180–181.", AI_CREDIT + " That reprint changes the arrival chart (switch in the scenario)."] },
-  "siege-of-fularis": { bg: "Re-fights the Gothic War battle in which two Blackstone Fortresses first fired their combined shot, stripping Fularis II of its defences, its atmosphere and its life. The author wrote it as a character alternative to the rulebook’s Exterminatus, so a Blackstone can be a real planet killer in a normal-sized game.", cr: ["Ray Bell — Warp Rift 5 (December 2004), also in Warp Rift Lite 05.", "Ray Bell later co-wrote the 2010 Compendium as a member of the High Admiralty (RB p. 3)."] },
+  "siege-of-fularis": { bg: "Re-fights the Gothic War battle in which two Blackstone Fortresses first fired their combined shot, stripping Fularis II of its defences, its atmosphere and its life. The author wrote it as a character alternative to the rulebook’s Exterminatus, so a Blackstone can be a real planet killer in a normal-sized game.", cr: ["Ray Bell — Warp Rift 5 (December 2004), also in Warp Rift Lite 05.", "Ray Bell later co-wrote the 2010 Compendium (RB p. 3)."] },
   "assassination": { bg: "During the Gothic War, while Abaddon kept the Navy busy, Ork-held systems were left to grow. Commodore-Captain Leoten Semper’s fleet strikes one of them to destroy every warp-capable Ork ship before they can spread — and to field-test new ‘rock-buster’ seismic torpedoes. Based on Gordon Rennie’s Black Library novel Shadow Point.", cr: ["Ray Bell — Warp Rift 10 (March 2006), also in Warp Rift Lite 10.", "The article also has a full re-enactment of the novel’s battle with fan-made Ork Rok profiles (not included here)."] },
   "eliarenaths-gift": { bg: "Months after the Battle of Gethsemane, an Imperial patrol met a lone Eldar pirate ship in an asteroid field. The Eldar offered to lead the way to an Ork lair, then fell back with a ‘damaged sail’ just as the Orks sprang their trap. The ship’s name points to Eliarenath, who in Eldar legend betrayed the hero Eldanesh to Khaine.", cr: ["Roy “horizon” Amkreutz — Warp Rift 11 (March 2007).", "Eliarenath’s Gift is one of the named ships of the Gothic War (FL p. 321)."] },
   "diasporex-gambit": { bg: "Inquisitor Lord Jeremiah Crowe of the Ordo Hereticus hunts the ships of the Diasporex, an old nomad fleet that Imperial records say never fell to Chaos — he wants such a vessel for his own war against daemons. His trail leads to the Rogue Trader Premar Lart.", cr: ["Roy “horizon” Amkreutz — Warp Rift 34 (February 2022), “Tales from the Book of the Void”.", "Set during horizon’s fan campaign book Book of the Void I: The Discordia Incident."] },
@@ -2025,6 +2028,7 @@ function sideName(sc, s) { return sc.sides[s] ? sc.sides[s].n : s; }
 function entryInfo(t) {
   const d = Math.max(0, t - 1) * 30;
   return "<h3>Reinforcement entry, turn " + t + "</h3><p class='calc'>" + (d === 0 ? "Only from the <b>short edge</b> in front of the fleeing ships." :
+    d >= tableWH()[0] ? "From the <b>short edge</b>, or <b>anywhere</b> along either long edge." :
     "From the <b>short edge</b>, or up to <b>" + d + " cm</b> along either long edge from that end.") + "</p>";
 }
 function d6() { const u = new Uint32Array(1); crypto.getRandomValues(u); return 1 + (u[0] % 6); }
@@ -2039,7 +2043,8 @@ function vis(it, v) { return !(it.only && !it.only.includes(v)) && !(it.not && i
 function pickV(x, v) { x = val(x, v); return x && !Array.isArray(x) && typeof x === "object" ? (x[v] || x[Object.keys(x)[0]]) : x; }
 const SIDECLS = { a: "sa", b: "sb", c: "sc" };
 function whoTag(sc, s) { return s && sc.sides[s] ? "<span class='who " + SIDECLS[s] + "'>" + esc(sc.sides[s].n) + "</span>" : ""; }
-function sugText(sc) { return sc.suggest ? "Suggested: " + sc.suggest.join(" vs ") : ANY; }
+/* enemmän faktioita kuin puolia (esim. seitsemän luonnoksen Depth of Space): luettelo, ei kuuden laivaston "vs"-ketjua */
+function sugText(sc) { return sc.suggest ? "Suggested: " + sc.suggest.join(sc.suggest.length > Object.keys(sc.sides || {}).length ? ", " : " vs ") : ANY; }
 function seg(act, key, vals, cur, labels) {
   return "<div class='seg' role='group'>" + vals.map((x, i) => "<button data-a='" + act + "' data-k='" + key + "' data-val='" + x + "' aria-pressed='" + (String(cur) === String(x)) + "'>" + esc(labels ? labels[i] : x) + "</button>").join("") + "</div>";
 }
@@ -2249,11 +2254,11 @@ function agreeBlock(sc, st) {
         ? "<input type='text' inputmode='decimal' class='n' data-a='agr' data-id='" + x.id + "' value='" + esc(cur) + "' placeholder='" + esc(String(x.d)) + "' aria-label='" + esc(x.l) + "'>"
         : "<textarea rows='" + Math.min(4, Math.max(1, Math.ceil(String(x.d).length / 34))) + "' data-a='agr' data-id='" + x.id + "' placeholder='" + esc(String(x.d)) + "' aria-label='" + esc(x.l) + "'>" + esc(cur) + "</textarea>";
       return "<label class='agr'><span class='agl'>" + esc(x.l) + "</span><span class='agi'>" + field + (x.u ? "<span class='u'>" + esc(x.u) + "</span>" : "") + "</span>" +
-        "<span class='ags'>" + (x.o ? "Our suggestion" + (x.s ? " — " + esc(x.s.replace(/^Suggestion\s*/, "").replace(/^\(|\)$/g, "")) : "") : "Default from " + esc(x.s || "the rulebook")) + "</span></label>";
+        "<span class='ags'>" + (x.o ? "Our suggestion" + (x.s ? " — " + esc(x.s.replace(/^(Our )?suggestion\s*[,:]?\s*/i, "").replace(/^\((.*)\)$/, "$1")) : "") : "Default from " + esc(x.s || "the rulebook")) + "</span></label>";
     }).join("") + "</div>";
 }
-function agreeList(sc, st) {
-  const items = agItems(sc, st);
+function agreeList(sc, st, only) {
+  const items = agItems(sc, st).filter(x => !only || only(x));
   if (!items.length) return "";
   return "<div class='agreed'><b>Agreed before the game</b> (Set-up tab)<ul>" + items.map(x => "<li><span class='k'>" + esc(x.l) + ":</span> " + esc(agV(sc, st, x.id)) + (x.u ? " " + esc(x.u) : "") + "</li>").join("") + "</ul></div>";
 }
@@ -2373,7 +2378,7 @@ function renderSc() {
 
 function sideCards(sc, lists) {
   return "<div class='sides'>" + Object.keys(sc.sides).filter(k => lists[k]).map(k =>
-    "<div class='side " + k + "'><h3><span class='" + SIDECLS[k] + "'>" + esc(sc.sides[k].n) + "</span><small>" + esc(sc.sides[k].f ? "suggested: " + sc.sides[k].f : "any fleet") + "</small></h3><ul>" +
+    "<div class='side " + k + "'><h3><span class='" + SIDECLS[k] + "'>" + esc(sc.sides[k].n) + "</span><small>" + esc(sc.sides[k].f && !/^any( fleets?)?$/i.test(sc.sides[k].f) ? "suggested: " + sc.sides[k].f : "any fleet") + "</small></h3><ul>" +
     lists[k].map(x => "<li>" + fmt(x) + "</li>").join("") + "</ul></div>").join("") + "</div>";
 }
 
@@ -2388,7 +2393,7 @@ function tableCtl() {
 function mapBlock(sc, v) {
   const [W, H] = tableWH(), fit = fitOf(sc, v), src = sc.srcTable || SRC_TABLE[sc.id];
   if (!mapFn(sc)) return "<div class='mapwrap'><div class='mapnote' style='padding:10px 6px'>" + esc(val(sc.noMap, v) || "This scenario has no fixed table layout.") + "</div></div>";
-  let h = "<div class='mapwrap'>" + mapSVG(mapOf(sc, v)) + "<div class='legend'>" + Object.keys(sc.sides).map(k => "<span><i style='background:var(--" + k + ")'></i>" + esc(sc.sides[k].n) + "</span>").join("") + "<span class='msize'>" + W + " × " + H + " cm</span></div>" +
+  let h = "<div class='mapwrap'>" + mapSVG(mapOf(sc, v)) + "<div class='legend'>" + (sc.legend || Object.keys(sc.sides).map(k => [k, sc.sides[k].n])).map(([k, n]) => "<span><i style='background:var(--" + k + ")'></i>" + esc(n) + "</span>").join("") + "<span class='msize'>" + W + " × " + H + " cm</span></div>" +
     (val(sc.mapNote, v) ? "<div class='mapnote'>" + esc(tpl(val(sc.mapNote, v), sc, stOf(sc))) + "</div>" : "") +
     (src && (src[0] !== W || src[1] !== H) ? "<div class='mapnote'>The source plays on " + src[0] + " × " + src[1] + " cm.</div>" : "") + "</div>";
   if (W < fit[0] || H < fit[1]) h += "<div class='note' style='margin-top:8px'><b>Small table.</b> This scenario’s distances need at least " + fit[0] + " × " + fit[1] + " cm. On " + W + " × " + H + " cm some zones overlap or run off the table.</div>";
@@ -2460,9 +2465,12 @@ function resultView(sc, st, v) {
   const tools = (sc.rtools || []).filter(x => vis(x, v)), counters = sc.tools.filter(x => vis(x, v) && x.res);
   const checkH = tools.length || counters.length ? "<h2>Check</h2>" + counters.map(t => widget(sc, st, v, t)).join("") + tools.map(t => widget(sc, st, v, t)).join("") : "";
   const spH = spResultBlock(sc, st, v, r);
-  if (layout() === "narrow") return verdictH + endH + winH + checkH + spH;
+  /* sovitut kohdat, jotka koskevat pelin loppua tai voittoa, myös tuomion viereen (pistokoe 21.10.):
+     tuomio laskee lähteen tai oletuksen mukaan, ja pelaaja näkee, mitä he sopivat */
+  const agH = agreeList(sc, st, x => x.v || /length|tie|draw|result|victor|win|score|band|lose|escape|captur|defeat/i.test(x.l));
+  if (layout() === "narrow") return verdictH + agH + endH + winH + checkH + spH;
   /* leveällä: tuomio ja syötteet vasemmalla (tarttuu), säännöt ja sub-plotit oikealla */
-  return cols([[verdictH, checkH], [endH, winH, spH]], "c-res even");
+  return cols([[verdictH, agH, checkH], [endH, winH, spH]], "c-res even");
 }
 
 /* ---------------------------------------------------------------- before the battle */
@@ -2694,7 +2702,7 @@ function reinfAgain(t, r, turn) {
 /* shiproll: oletusmäärä (luku tai tilan funktio, esim. heittojen määrä toisesta työkalusta) */
 function n0Of(t, st) { const n = typeof t.n0 === "function" ? t.n0(st) : t.n0; return Math.max(1, Math.min(20, n || 4)); }
 function timerText(t0, lim) {
-  if (!t0) return "Time limit " + Math.floor(lim / 60) + " h " + (lim % 60 ? lim % 60 + " min" : "") + ". Not started.";
+  if (!t0) return "Time limit " + [Math.floor(lim / 60) ? Math.floor(lim / 60) + " h" : "", lim % 60 ? lim % 60 + " min" : ""].filter(Boolean).join(" ") + ". Not started.";
   const m = Math.floor((Date.now() - t0) / 60000), left = lim - m;
   return left > 0 ? "<b>" + Math.floor(m / 60) + " h " + (m % 60) + " min</b> played · " + left + " min left" : "<b>Time is up</b> — finish the current turn.";
 }
@@ -2900,29 +2908,29 @@ let lastMapNarrow = null;
 window.addEventListener("resize", () => { const n = mapNarrow(); if (lastMapNarrow !== null && n !== lastMapNarrow) render(true); lastMapNarrow = n; });
 </script>
 <!-- scenario files: each adds its scenarios with addScenarios([...]) -->
-<script src="scenarios/blackcrusade.js?v=0.8.0"></script>
-<script src="scenarios/fleets.js?v=0.8.0"></script>
-<script src="scenarios/cl-early.js?v=0.8.0"></script>
-<script src="scenarios/cl-mag-a.js?v=0.8.0"></script>
-<script src="scenarios/cl-mag-b.js?v=0.8.0"></script>
-<script src="scenarios/cl-mag-c.js?v=0.8.0"></script>
-<script src="scenarios/cl-mag-d.js?v=0.8.0"></script>
-<script src="scenarios/cl-fanatic.js?v=0.8.0"></script>
-<script src="scenarios/cl-invasion.js?v=0.8.0"></script>
-<script src="scenarios/_wr.js?v=0.8.0"></script>
-<script src="scenarios/wr-committee.js?v=0.8.0"></script>
-<script src="scenarios/wr-community-a.js?v=0.8.0"></script>
-<script src="scenarios/wr-spreading-war.js?v=0.8.0"></script>
-<script src="scenarios/wr-community-l4a.js?v=0.8.0"></script>
-<script src="scenarios/wr-community-l4b.js?v=0.8.0"></script>
-<script src="scenarios/wr-community-l4c.js?v=0.8.0"></script>
-<script src="scenarios/wr-community-l4d.js?v=0.8.0"></script>
-<script src="scenarios/fan-tournament.js?v=0.8.0"></script>
-<script src="scenarios/fan-nemesis.js?v=0.8.0"></script>
-<script src="scenarios/fan-pdd.js?v=0.8.0"></script>
-<script src="scenarios/fan-starblade.js?v=0.8.0"></script>
-<script src="scenarios/open-points.js?v=0.8.0"></script>
-<script src="scenarios/wr-rating.js?v=0.8.0"></script>
+<script src="scenarios/blackcrusade.js?v=0.8.5"></script>
+<script src="scenarios/fleets.js?v=0.8.5"></script>
+<script src="scenarios/cl-early.js?v=0.8.5"></script>
+<script src="scenarios/cl-mag-a.js?v=0.8.5"></script>
+<script src="scenarios/cl-mag-b.js?v=0.8.5"></script>
+<script src="scenarios/cl-mag-c.js?v=0.8.5"></script>
+<script src="scenarios/cl-mag-d.js?v=0.8.5"></script>
+<script src="scenarios/cl-fanatic.js?v=0.8.5"></script>
+<script src="scenarios/cl-invasion.js?v=0.8.5"></script>
+<script src="scenarios/_wr.js?v=0.8.5"></script>
+<script src="scenarios/wr-committee.js?v=0.8.5"></script>
+<script src="scenarios/wr-community-a.js?v=0.8.5"></script>
+<script src="scenarios/wr-spreading-war.js?v=0.8.5"></script>
+<script src="scenarios/wr-community-l4a.js?v=0.8.5"></script>
+<script src="scenarios/wr-community-l4b.js?v=0.8.5"></script>
+<script src="scenarios/wr-community-l4c.js?v=0.8.5"></script>
+<script src="scenarios/wr-community-l4d.js?v=0.8.5"></script>
+<script src="scenarios/fan-tournament.js?v=0.8.5"></script>
+<script src="scenarios/fan-nemesis.js?v=0.8.5"></script>
+<script src="scenarios/fan-pdd.js?v=0.8.5"></script>
+<script src="scenarios/fan-starblade.js?v=0.8.5"></script>
+<script src="scenarios/open-points.js?v=0.8.5"></script>
+<script src="scenarios/wr-rating.js?v=0.8.5"></script>
 <!--SCENARIO-FILES-->
 <script>wrInit(); document.getElementById("scn").textContent = SC.length; render(false);</script>
 </body>

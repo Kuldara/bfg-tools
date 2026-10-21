@@ -47,7 +47,7 @@
     refs: [["Contact markers", "RB p. 134–135"], ["Flame of Asuryan", "FL p. 329"], ["Wraithship", "FL p. 331"], ["Terror ship", "FL p. 380"], ["Onslaught attack ship", "FL p. 384"], ["Asteroid fields", "RB p. 110"]],
     play: [
       { w: "Contact markers", s: "a", t: "As in Convoy (RB p. 134–135): an Eldar ship moving within 30 cm reveals a marker; the Orks deploy the group under it after your movement phase. Blank markers are removed." },
-      { w: "Start of the Ork movement, from turn 2", s: "b", t: "You may reveal one marker yourself — two if an Eldar ship is on special orders." }
+      { w: "Start of the Ork movement", s: "b", t: "You may reveal one marker yourself — two if an Eldar ship is on special orders." }
     ],
     tools: [{ k: "html", html: SHIPS }],
     rtools: [{ k: "ending", id: "how", l: "How did it end?", rows: [["The Eldar left by the far short edge", "a"], ["The Spirit of Arina was destroyed", "b"]] }],

@@ -135,5 +135,5 @@ const WR_RATE = {
   "wr-shattered-gate": { r: "Book rules only; one holofield rule is unclear and the length is not given. No play report.",
     a: [{ id: "holo", l: "Gate holofield saves without Eldar", d: "Roll off for who rolls the Gate’s holofield saves", o: 1 }, WR_A.len] },
   "wr-srinagar": { r: "Named ships with fan-made profiles in the same issue, but any fleets can play; one ship has no profile.", t: ["Fan rules optional"],
-    a: [{ id: "cb", l: "The Cantatum Bellum", d: "A Chaos cruiser of your choice; when it is destroyed, a warp rift opens where it was", o: 1 }] }
+    a: [{ id: "cb", l: "The Cantatum Bellum", d: "An Imperial cruiser of your choice; when it is destroyed, a warp rift opens where it was", o: 1 }] }
 };

@@ -291,7 +291,7 @@
       { s: "a", t: "Pick a short edge as the defensive line. Place the defences within 15 cm of it, and the Solblade in the centre of that edge." },
       { s: "b", t: "Set up within 30 cm of the opposite short edge. You take the first turn." }
     ],
-    notes: ["The result bands in the source overlap (“7–10” and “3–7”): exactly 7 or 3 asteroids sits in two bands — agree which before play."],
+    notes: ["The result bands in the source overlap (“7–10” and “3–7”): exactly 7 or 3 asteroids sits in two bands — agree which before play. Its “+10” is read as more than 10, since 10 is already in 7–10."],
     refs: SOL_REFS.concat([["Planetary defences", "FL p. 496–"]]),
     play: [
       { w: "Throwing asteroids", s: "b", t: "A hive ship or Tyranid cruiser may give up its prow weapons in the shooting phase to throw an asteroid — no asteroid field needed. It flies 25 cm a turn in a straight line and stops at planets, moons and asteroid fields. In a warp rift, D6: on 4+ it scatters 4D6+30 cm from the rift’s centre." },
@@ -305,12 +305,13 @@
     end: ["After eight turns.", "Or the Tyranid fleet, or the Solblade and all defences, are destroyed."],
     win: ["Count the asteroids hurled past the Imperial defences in eight turns.", "More than 10: major Tyranid victory. 7–10: minor Tyranid victory. 3–7: draw. 3 or fewer: Solblade victory."],
     provisional: st => st.turn < 8,
-    result(st) { const n = get(st, "past", 0);
+    result(st, v, sc) { const n = get(st, "past", 0), ag = sc ? agV(sc, st, "bands") : "", dflt = !sc || ag === "7 = minor Tyranid victory, 3 = draw";
       if (n > 10) return ["b", "Major Tyranid victory", n + " asteroids got through."];
       if (n >= 8) return ["b", "Minor Tyranid victory", n + " asteroids got through."];
-      if (n === 7) return ["draw", "Minor Tyranid victory or draw", "7 asteroids — the source lists 7 in both bands."];
+      /* 7 ja 3 ovat lähteessä kahdessa luokassa: oletuksella sovittu luokka, muutetulla sovitulla tekstillä molemmat vaihtoehdot */
+      if (n === 7) return dflt ? ["b", "Minor Tyranid victory", "7 asteroids — in two of the source’s bands; agreed: minor Tyranid victory."] : ["draw", "Minor Tyranid victory or draw", "7 asteroids — in two of the source’s bands. Agreed: " + ag + "."];
       if (n >= 4) return ["draw", "Draw", n + " asteroids got through."];
-      if (n === 3) return ["a", "Draw or Solblade victory", "3 asteroids — the source lists 3 in both bands."];
+      if (n === 3) return dflt ? ["draw", "Draw", "3 asteroids — in two of the source’s bands; agreed: draw."] : ["a", "Draw or Solblade victory", "3 asteroids — in two of the source’s bands. Agreed: " + ag + "."];
       return ["a", "Solblade victory", n + " asteroids got through."]; },
     info: { bg: "A Tyranid swarm failed to break an Imperial world’s fortified defences — then new bio-ships appeared and began hurling asteroids at the positions. The overwhelmed gunners called for help, and a Solblade was close by.", cr: SOL_CR(41) }
   },

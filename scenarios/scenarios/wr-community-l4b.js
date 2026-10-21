@@ -116,7 +116,7 @@
     sides: { a: { n: "Garrison", f: "Imperial Navy" }, b: { n: "Ork raid", f: "Orks" } },
     pitch: "The first Ork attack on the sector catches the fleet asleep at its dock: wake up, get the transports out, and find out why your guns barely scratch them.",
     glance: [["Points", "Historical forces"], ["Table", "180 × 120 cm in six parts"], ["Battlezone", "Fixed; a solar flare"], ["First turn", "The Orks (as Surprise Attack)"], ["Victory", "Victory points (as Surprise Attack)"]],
-    bring: ["A planet and a moon with a dock", "An asteroid field 15 × 7.5 cm", "A gas cloud 12.5 × 10 cm", "Low orbit table"],
+    bring: ["A planet and a moon with a dock", "An asteroid field 15 × 7.5 cm", "A gas cloud 12.5 × 10 cm"],
     forces: {
       a: ["Lunar “Divine Judgement” (nova cannon, Ld 10) — with a reactor leak.", "Dauntless “Aarwa’s Bane” (torpedoes, Ld 8).", "4 heavy transports “Red 5” (Ld 6).", "2 Cobras “Tac Patrol” (Ld 8); 3 Cobras “Scrubbers” (Ld 9).", "3 escort carriers “Detio” (Ld 8). No fleet commander."],
       b: ["Kill Kroozer “Waaagh of Doom”: Warboss with mega-armoured boarding Nobz, Ld 7.", "Terror Ship “’Ere We Go!”: Warboss with looted torpedoes and maniac gunners, Ld 8.", "Brutes: 3 “Smash!” (Ld 7), 3 “Kill!” (Ld 6), 2 “What?” (Ld 8), 2 “Where?” (Ld 7).", "5 Ravagers “Squeee!” (Ld 7)."]
@@ -185,7 +185,7 @@
     notes: ["No first turn, deployment depths or game length are given.", "The Dark Eldar light cruiser is the author’s profile (in Play)."],
     refs: [["Tau ships", "FL p. 458–"], ["Dark Eldar ships", "FL p. 352–"], ["Boarding actions", "RB p. 89"]],
     play: [
-      { w: "The reveal", s: "b", t: "When the convoy reaches the asteroid field: the two Swords and one transport become three Corsair escorts; the heavy transport becomes a Dark Eldar light cruiser. The other two transports stay transports." },
+      { w: "The reveal", s: "b", t: "When the convoy reaches the asteroid field: the two Swords and one transport become three Corsair escorts; the heavy transport becomes a Dark Eldar light cruiser. The other two transports stay transports — already plundered and on autopilot, they are worth no victory points and are no objective from now on." },
       { w: "Leaving", t: "No ship may disengage except by moving off a table edge." }
     ],
     tools: [
@@ -193,7 +193,7 @@
       { k: "html", html: "<h3>Dark Eldar light cruiser</h3><table class='ltab'><tr><td>Profile</td><td>4 hits · 40 cm · 90° · shadowfield · armour 5+ · no turrets</td></tr><tr><td>Weapons</td><td>Prow batteries 30 cm, strength 6, front · prow phantom lance 30 cm, strength 2, front</td></tr></table>" }
     ],
     end: ["Not given — play it as a skirmish until one side is gone."],
-    win: ["Normal victory points, except Nua’ta’s Emissary is worth double if hulked in a boarding action."],
+    win: ["Normal victory points, except Nua’ta’s Emissary is worth double if hulked in a boarding action.", "Once the trap is sprung, the two real transports are worth no victory points."],
     result() { return [null, "Count victory points", "Double for the Emissary if it was hulked by boarding."]; },
     info: { bg: "Before the Distant Darkness story, Nua’ta commanded a Tau light cruiser raiding lightly defended Imperial targets. A convoy captain secretly loyal to the Tau passed on its route — or so the Tau believed.", cr: [wrCredit(24, "Zhai Morenn"), "Part of the Distant Darkness fan project; the issue also carries the story that leads into the battle."] }
   },

@@ -1,6 +1,7 @@
 /* Fan supplements: Project Distant Darkness, the Tau supplement by Roy "horizon" Amkreutz and
    Chris "Zhai Morenn" Lautermilch — the nine scenarios of "For the Greater Good: Revival" (p. 19–29)
-   and the seven of Chapter II, "Distant Sun" (p. 9–51). Fixed forces, a running story.
+   the twelve missions of Chapter I, "The Art of Command" (p. 7–41, ten missions and two small
+   sub-missions), and the seven of Chapter II, "Distant Sun" (p. 9–51). Fixed forces, a running story.
    The Tau ship designs became the Kor'or'vesh list of the Fleets book (FL p. 456–478); the supplement's
    own extras (characters, Mantis, Marauder, Tigersharks) are given on the pages with a book alternative.
    Page numbers are PDF pages. Summarised in our own words; every scenario is hand-made (see LUEMINUT.md). */
@@ -10,6 +11,18 @@
   const OTHERS_T = "Written for the Distant Darkness Tau, whose ships are now the Fleets book’s Kor’or’vesh list (FL p. 456). Any fleets can play with ships of similar size; the supplement’s own extras are on the page with a book alternative.";
   const REVP = n => "Project Distant Darkness p. " + n;
   const SUNP = n => "Distant Sun p. " + n;
+  const AOC = "Project Distant Darkness: The Art of Command (Chapter I), written by Roy “horizon” Amkreutz and Chris “Zhai Morenn” Lautermilch; cover and page background by John “Magelord” Reed, Tau characters by K. “Khar” Górniak, mission pictures by Jack Watling, page borders by AwesomeSauceStudios.";
+  const AOCP = n => "The Art of Command p. " + n;
+  /* The Art of Command p. 4–5: the five, their shared re-rolls and their ships */
+  const CHARS_AOC = "<h3>The five in The Art of Command (p. 4)</h3><ul class='plain small'>" +
+    "<li><b>Kor’O Ry’zon</b>, Ld 10 — elite command crew: once per battle, pass a Leadership test or command check without rolling.</li>" +
+    "<li><b>Kor’vre L’ikei</b>, Ld 8 — expert pilot: Come to New Heading without halving weapons.</li>" +
+    "<li><b>Kor’vre Nua’ta</b>, Ld 8 — survival instinct: re-roll a failed Brace for Impact.</li>" +
+    "<li><b>Kor’el Tas’ka</b>, Ld 9 — strike craft admiral: merge waves launched from up to three other ships into one.</li>" +
+    "<li><b>Kor’vre Sheva’s</b>, Ld 9 — arrogant: Brace for Impact at −1 Ld; his drilled Fire Warriors give +1 in boarding actions.</li></ul>" +
+    "<p class='small muted' style='margin:6px 0 0'>Shared re-rolls (p. 5): 1 with one or two of them in the battle, 2 with three or four, 3 with all five. Their ships are the Phase II Lar’shi’vre of the Revival supplement — the Fleets book’s Protector class cruiser (FL p. 470); Ry’zon’s carries Tigershark fighter-bombers instead of Mantas. Book alternative: plain Protectors with the Leadership above.</p>";
+  const AOC_EMPIRE = "In the original the Tau Empire’s ships use Forge World’s rules (Imperial Armour 3 and its Tau fleet list); those designs are now the Fleets book’s Kor’vattra and Kor’or’vesh lists (FL p. 454–478).";
+  const SHUTTLE_ROLL = { k: "roll", id: "jinx", s: "a", l: "Jinx save", sub: "D6 for each hit on the shuttle", rows: () => [[1, 3, "Not saved"], [4, 6, "Saved: it jinks clear"]] };
   /* the supplement's characters (Revival p. 17; Distant Sun p. 3) */
   const CHARS_REV = "<h3>Distant Darkness commanders (Revival p. 17)</h3><ul class='plain small'>" +
     "<li><b>Kor’O Ry’zon</b>, Ld 9, 1 re-roll — elite command crew: once per battle his ship passes a Leadership test or command check without rolling.</li>" +
@@ -103,7 +116,7 @@
     ],
     stools: [],
     notes: ["The text sends the freighters off “the long table edge”, but the map marks the escape zone on the right short edge. Agree which (Agree before you start).", "The escape table counts 1–6 freighters; none at all is read as a major Tau victory too.", "Ry’zon’s Phase II Protector is the supplement’s early design; the Fleets book Protector (FL p. 470) stands in."],
-    refs: [["Protector class cruiser", "FL p. 470"], ["Castellan class escort", "FL p. 474"], ["Endeavour class light cruiser", "FL p. 72"], ["Transports", "RB p. 135"], ["Battlezone generators", "RB p. 107–108"]],
+    refs: [["Protector class cruiser", "FL p. 470"], ["Castellan class escort", "FL p. 474"], ["Endeavour class light cruiser", "FL p. 72"], ["Transport", "FL p. 85"], ["Battlezone generators", "RB p. 107–108"]],
     play: [
       { w: "Ry’zon within 45 cm of the freighters", s: "a", t: "(Read this when it happens.) The freighters carry only civilians. Your new goal: take them as hostages — destroy every Imperial warship before any freighter leaves the table, and leave the freighters alone." },
       { w: "Freighters", s: "b", t: "Escape with as many as you can: {a:edge}." }
@@ -367,6 +380,451 @@
     result(st) { return ending(st, [["Both Tau ships survived and the city was spared", "a", "Tau victory"], ["A Tau ship was destroyed, or the city was", "b", "Tau defeat"], ["Both Tau ships destroyed or gone, a Dark Eldar escort still in play", "b", "Dark Eldar: appalling"]]); },
     info: { bg: "Nua’ta, once tortured by Dark Eldar, hears a Haemonculus’ voice in his head. When a young colony falls silent he slips away to find Dark Eldar raiding it — and the voice urges him to destroy the city they hold. Ry’zon sends L’ikei and her Mantis after him.", cr: [REV + " " + REVP(28) + "–29."] }
   },
+  /* ============================================================ ART OF COMMAND 1 WHEN IT ALL COMES BACK */
+  {
+    id: "fan-p-comes-back", grp: "fan-pdd", name: "When It All Comes Back", series: "The Art of Command · Mission One", trust: "fan",
+    why: "Ry’zon, cornered by two Empire cruisers sent to arrest him, fights back — and L’ikei’s stealth ship drops in behind them.", src: AOCP(7), book: "O", suggest: ["Tau"],
+    others: OTHERS_T + " The arrest party can be any two cruisers of about 180 pts each.",
+    sides: { a: { n: "Ry’zon", f: "Tau: Distant Darkness" }, b: { n: "Arrest party", f: "Tau Empire: two Hero class cruisers" } },
+    pitch: "Two Empire cruisers have come round the dark side of a planet to arrest Kor’O Ry’zon for murder, and the shooting has already started. Out of nowhere, L’ikei’s Mantis drops out of the warp right behind them.",
+    glance: [["Points", "Fixed forces"], ["Table", "120 × 120 cm"], ["Battlezone", "Inner biosphere: a medium planet in one quarter"], ["First turn", "Ry’zon"], ["Game ends", "Both Hero cruisers are gone, or Ry’zon or the Mantis is"]],
+    bring: ["Two Tau Hero class cruisers", "A Protector, a Castellan and a light cruiser for the Mantis", "A medium planet", "Blast markers; 2 Barracuda and 1 Manta markers"],
+    forces: { a: ["Ry’zon’s Phase II Protector class cruiser (FL p. 470), commanded by Kor’O Ry’zon (tools).", "1 Castellan class escort (FL p. 474).", "The Mantis, a stealth Emissary commanded by Kor’vre L’ikei (tools)."], b: ["Two Hero class starships (FL p. 460) under Kor’O O’lio’nu. Their Leadership is not given: roll it (RB p. 45)."] },
+    draw: (v, W, H) => { const cx = W / 2, cy = Math.max(40, H / 2), y1 = cy - 30;
+      return [{ z: "planet", cx: W * .8, cy: Math.min(H - 14, cy + 32), r: 10 }, { z: "ring", cx, cy, r: 20, s: "a" },
+        { z: "mark", x: cx, y: cy, s: "a", l: "Ry’zon" }, { z: "arrow", x1: cx + 6, y1: cy, x2: cx + 18, y2: cy, s: "a" },
+        { z: "mark", x: cx, y: y1, s: "b", l: "Hero 1" }, { z: "arrow", x1: cx + 6, y1: y1, x2: cx + 18, y2: y1, s: "b" },
+        { z: "mark", x: cx - 25, y: y1, s: "b", l: "Hero 2" }, { z: "mark", x: cx - 55, y: y1, s: "a", l: "Mantis" },
+        { z: "dim", x1: cx - 55, y1: y1 + 9, x2: cx - 25, y2: y1 + 9, l: "30" }, { z: "dim", x1: cx - 25, y1: y1 + 9, x2: cx, y2: y1 + 9, l: "25" },
+        { z: "dim", x1: cx + 26, y1: y1, x2: cx + 26, y2: cy, l: "30 cm" }]; },
+    fit: () => [120, 90], srcTable: [120, 120],
+    mapNote: "Ry’zon in the centre (the dashed circle: his two Barracudas within 20 cm). The first Hero 30 cm to one side on a parallel course, the second 25 cm behind it, the Mantis 30 cm behind that. Ry’zon’s Castellan: {a:cas}. The planet goes in any quarter.",
+    steps: [
+      { t: "Place a medium planet in one quarter of the table, and any other phenomena you like (inner biosphere, RB p. 107)." },
+      { s: "a", t: "Place Ry’zon’s Protector in the centre, facing any way: one blast marker in contact, Port Armament Damaged, fully loaded. Put two of its Barracuda markers within 20 cm. The Castellan, also loaded, goes {a:cas}." },
+      { s: "b", t: "Place the first Hero 30 cm to one side of Ry’zon on a parallel course: it has lost 4 hits, has Engine Room Damaged, is loaded, and has one Manta marker within 5 cm." },
+      { s: "b", t: "Place the second Hero 25 cm behind the first, facing the same way: it has lost 1 hit, has a blast marker in contact, and must reload its ordnance." },
+      { s: "a", t: "Place the Mantis 30 cm behind the second Hero, just out of the warp: fully loaded and on Lock On special orders." },
+      { s: "a", t: "You take the first turn." }
+    ],
+    stools: [],
+    notes: ["The supplement gives only Ry’zon’s goal: destroy both cruisers with Ry’zon and L’ikei alive. Everything else — a cruiser that gets away included — is a win for the arrest party here.", "The Empire’s “Lar’shi” are the Fleets book’s Hero class. " + AOC_EMPIRE],
+    refs: [["Hero class starship", "FL p. 460"], ["Protector class cruiser", "FL p. 470"], ["Castellan class escort", "FL p. 474"], ["Emissary class envoy ship", "FL p. 472"], ["Critical hits table", "RB p. 67"], ["Blast markers", "RB p. 68–69"], ["Lock On", "RB p. 63"]],
+    play: [
+      { w: "Re-rolls", s: "a", t: "With two of the five in the battle, Ry’zon and L’ikei share one re-roll (Art of Command p. 5)." },
+      { w: "The Mantis", s: "a", t: "It may use its stealth system to slip back into the warp and out again (tools)." },
+      { w: "The goal", s: "a", t: "Destroy both Hero cruisers while Ry’zon and the Mantis both survive." }
+    ],
+    tools: [{ k: "html", html: CHARS_AOC }, { k: "html", html: MANTIS }],
+    rtools: [endTool([["Both Heroes destroyed; Ry’zon and the Mantis alive", "a", "Ry’zon breaks free"], ["Ry’zon or the Mantis was destroyed", "b", "Arrest party wins"], ["A Hero got away, or Ry’zon or L’ikei left", "b", "Arrest party wins"]])],
+    end: ["Both Hero cruisers are destroyed or have left the table, or Ry’zon or the Mantis is destroyed or has left."],
+    win: ["Ry’zon: destroy both Hero cruisers, with his ship and the Mantis both still in the battle.", "Anything else is a win for the arrest party."],
+    result(st, v, S) { return endingResult(st, S, "how"); },
+    info: { bg: "Kor’O O’lio’nu has orders from the Aun’va himself: arrest Ry’zon for the murder of Aun’el Ame’ru. L’ikei intercepted the signals and followed in the Mantis — she arrives in the middle of the fight, right behind the second cruiser.", cr: [AOC + " " + AOCP(6) + "–7."] }
+  },
+  /* ============================================================ ART OF COMMAND 2 AWAKENING IN THE LABYRINTH */
+  {
+    id: "fan-p-labyrinth", grp: "fan-pdd", name: "Awakening in the Labyrinth", series: "The Art of Command · Mission Two", trust: "fan",
+    why: "Three Castellan escorts caught by Necron raiders at a ringed planet: one of them has to get away.", src: AOCP(10), book: "O", suggest: ["Tau", "Necrons"],
+    others: "Any three escorts against five fast raiders.",
+    sides: { a: { n: "Tas’ka", f: "Tau: three Castellans" }, b: { n: "Necrons", f: "Necron raiders" } },
+    pitch: "Tas’ka’s three escorts are fixing silent surveillance posts in a planet’s asteroid ring when five energy signatures come round the dark side of the planet at extreme speed.",
+    glance: [["Points", "Fixed forces"], ["Table", "120 × 120 cm"], ["Battlezone", "A medium planet with an asteroid ring, nothing else"], ["First turn", "Tas’ka"], ["Game ends", "A Castellan escapes, or all three are destroyed"]],
+    bring: ["3 Castellan class escorts", "3 Jackal and 2 Dirge class raiders", "A medium planet and an asteroid ring"],
+    forces: { a: ["3 Castellan class escorts (FL p. 474) in one squadron, led by Kor’el Tas’ka: Ld 9, 1 re-roll (tools)."], b: ["3 Jackal class raiders (FL p. 408).", "2 Dirge class raiders (FL p. 409).", "Leadership as for any Necron fleet (FL p. 404)."] },
+    draw: (v, W, H) => { const cx = W / 2, cy = H / 2, px = cx - 30.4, py = cy - 30.4;
+      return [{ z: "planet", cx: px, cy: py, r: 10 }, { z: "ring", cx: px, cy: py, r: 37.5, sw: 5, ast: 1 },
+        { z: "mark", x: cx, y: cy, s: "a", l: "" }, { z: "arrow", x1: cx, y1: cy - 5, x2: cx, y2: cy - 17, s: "a" }, { z: "text", x: cx, y: cy + mapFont(W) * 1.6, l: "Tas’ka: 3 Castellans", s: "a" },
+        { z: "tick", e: "t", s: "b", list: [[cx, "Necrons enter"]] }]; },
+    fit: () => [100, 90], srcTable: [120, 120],
+    mapNote: "A medium planet in one quarter, ringed by asteroids: {a:ring}. The Castellans start in the middle of the table, facing the edge beside the planet’s quarter; the Necrons come in at the middle of that edge.",
+    steps: [
+      { t: "Place a medium planet in one quarter, with an asteroid ring 5 cm wide around it: {a:ring}. No other phenomena." },
+      { s: "a", t: "Place the three Castellans in the middle of the table, just outside the ring, facing the edge beside the planet’s quarter — the Necron edge." },
+      { s: "b", t: "Your ships move on from the middle of the Necron edge in your first turn." },
+      { s: "a", t: "You take the first turn." }
+    ],
+    stools: [],
+    notes: ["“Outer biosphere” is not a rulebook battlezone, but nothing beyond the planet and its ring goes on the table, so it makes no difference here.", "The supplement does not say whether the ring’s 25 cm runs from the planet’s edge or its centre. From the edge, the ring passes just short of the table’s centre, which puts the Castellans’ start “just outside” it, as the text says."],
+    refs: [["Castellan class escort", "FL p. 474"], ["Jackal class raider", "FL p. 408"], ["Dirge class raider", "FL p. 409"], ["Necron Leadership", "FL p. 404"], ["Ringed planets", "RB p. 113"], ["Asteroid fields", "RB p. 110"]],
+    play: [
+      { w: "Escape", s: "a", t: "Get one Castellan off the table by any edge and you win." },
+      { w: "Tas’ka", s: "a", t: "Ld 9 and one re-roll; her strike-craft talent does not matter here, as Castellans carry none." }
+    ],
+    tools: [{ k: "html", html: CHARS_AOC }],
+    rtools: [endTool([["A Castellan left the table", "a", "Tas’ka escapes"], ["All three Castellans destroyed", "b", "Necrons win"]])],
+    end: ["A Castellan leaves the table by any edge, or all three are destroyed."],
+    win: ["Tas’ka: one Castellan escapes off a table edge.", "Necrons: destroy all three first."],
+    result(st, v, S) { return endingResult(st, S, "how"); },
+    info: { bg: "Two surveillance posts in Tau subsystem seven-five have gone silent. Tas’ka brings three Kir’shasvre — Castellans — into the asteroid ring to repair them. The first is back on line when her sensors pick up three Jackals and two Dirges coming round the planet.", cr: [AOC + " " + AOCP(8) + "–11."] }
+  },
+  /* ============================================================ ART OF COMMAND 3 THE TRUTH OF SCHEMING */
+  {
+    id: "fan-p-scheming", grp: "fan-pdd", name: "The Truth of Scheming", series: "The Art of Command · Mission Three", trust: "fan",
+    why: "The Mantis must creep up to a secret Tau dockyard, dock for a full turn and leave — without waking its guns.", src: AOCP(15), book: "O", suggest: ["Tau"],
+    others: "Any light cruiser that can hide, against an orbital dock and two defences.",
+    sides: { a: { n: "L’ikei", f: "Tau: the Mantis" }, b: { n: "Dockyard", f: "Automated Tau defences" } },
+    pitch: "A drone-run dockyard that no Tau records admit to. The security codes have not come, so L’ikei takes the Mantis in quietly, with Sheva’s and his Fire Warriors aboard to get inside.",
+    glance: [["Points", "Fixed forces"], ["Table", "120 × 120 cm"], ["Battlezone", "Outer reaches: a medium planet in the centre, nothing else"], ["First turn", "L’ikei"], ["Game ends", "The Mantis departs or is destroyed"]],
+    bring: ["A light cruiser for the Mantis", "An orbital dock and two Tau security orbitals", "A medium planet", "Remora drone fighter markers"],
+    forces: { a: ["The Mantis, a stealth Emissary commanded by Kor’vre L’ikei: Ld 8, 1 re-roll (tools)."], b: ["The dockyard: an orbital dock (FL p. 508) whose launch bays field Remora drone fighters.", "2 Tau security orbitals (FL p. 479)."] },
+    draw: (v, W, H) => { const cx = W / 2, cy = H / 2;
+      return [{ z: "planet", cx, cy, r: 10 }, { z: "ring", cx, cy, r: 25, s: "n" },
+        { z: "mark", x: cx, y: cy - 20, s: "b", l: "dockyard" }, { z: "mark", x: cx - 20, y: cy - 8, s: "b", l: "orbital" }, { z: "mark", x: cx + 20, y: cy - 8, s: "b", l: "orbital" },
+        ...EDGES4("a", "Mantis: any edge")]; },
+    fit: () => [90, 90], srcTable: [120, 120],
+    mapNote: "A medium planet in the centre; the dashed circle is its gravity well. The dockyard and both orbitals sit inside it, the orbitals in line of sight of the dockyard. The Mantis starts on any edge.",
+    steps: [
+      { t: "Place a medium planet in the centre of the table. No other phenomena." },
+      { s: "b", t: "Place the dockyard and the two security orbitals in the planet’s gravity well, both orbitals with a clear line of sight to the dockyard. The orbitals start asleep." },
+      { s: "a", t: "Place the Mantis on any table edge. You take the first turn." }
+    ],
+    stools: [],
+    notes: ["The supplement calls it an orbital dockyard but gives no profile; the Fleets book’s orbital dock (FL p. 508) is the nearest match, with its launch bays fielding the Remoras.", "“The Reaches” is read as the outer reaches; with only the planet on the table it makes no difference.", "Only the orbitals are said to sleep; whether the dockyard sleeps with them is left to agree."],
+    refs: [["Orbital dock", "FL p. 508"], ["Security orbital", "FL p. 479"], ["Tau attack craft", "FL p. 451"], ["Emissary class envoy ship", "FL p. 472"], ["Gravity wells", "RB p. 112–113"], ["Fighting in low orbit", "RB p. 116"], ["Leadership tests", "RB p. 49"]],
+    play: [
+      { w: "Asleep", s: "b", t: "The security orbitals do not attack while asleep; the dockyard {a:dock}." },
+      { w: "Detection", s: "b", t: "At the start of each of your turns, if the Mantis is out of the warp, within 60 cm of a defence and in its line of sight, roll 2D6 (tool): on 10+ the defences wake up." },
+      { w: "Override", s: "a", t: "When they wake, pass a Leadership test to shut them down again; you may keep trying ({a:retry})." },
+      { w: "Remoras", s: "b", t: "The dockyard launches Remora drone fighters instead of its usual attack craft. They count as fighter-bombers, and enemy turrets hit them only on a 5+." },
+      { w: "The mission", s: "a", t: "Come out of the warp in base contact with the dockyard and stay there one full turn, then depart: {a:dep}. The dockyard must not be destroyed." }
+    ],
+    tools: [{ k: "roll", id: "det", s: "b", l: "Detection roll", sub: "2D6: +1 Mantis on All Ahead Full, +1 within 30 cm of a defence, −1 on Burn Retros, −2 in low orbit", d2: 1, rows: () => [[2, 9, "The defences sleep on"], [10, 12, "They wake: L’ikei tests Leadership to shut them down"]] },
+      { k: "toggle", id: "docked", s: "a", res: 1, l: "The Mantis has spent a full turn docked" }, { k: "html", html: MANTIS }, { k: "html", html: CHARS_AOC }],
+    rtools: [endTool([["Docked a full turn and departed; dockyard intact", "a", "L’ikei gets in and out"], ["Departed without a full turn docked", "b", "Mission failed"], ["The dockyard was destroyed", "b", "Mission failed"], ["The Mantis was destroyed", "b", "The defences win"]])],
+    end: ["The Mantis departs ({a:dep}) or is destroyed."],
+    win: ["L’ikei: dock out of the warp for one full turn, then depart, with the dockyard still intact.", "Anything else: the defences win."],
+    result(st, v, S) { return endingResult(st, S, "how"); },
+    info: { bg: "Tas’ka’s report of a Tau-built dockyard missing from every record tells Ly’tan what it is: the hiding place of the first Distant Darkness cruisers. He sends L’ikei and Sheva’s to look — and if the security codes are late, to break in. Tau High Command, meanwhile, is studying the recordings of Ry’zon’s escape.", cr: [AOC + " " + AOCP(12) + "–16."] }
+  },
+  /* ============================================================ ART OF COMMAND 4 TO FIND THE LIGHT */
+  {
+    id: "fan-p-find-light", grp: "fan-pdd", name: "To Find the Light", series: "The Art of Command · Mission Four", trust: "fan",
+    why: "A small Tau convoy under Necron attack: two of its five transports must get away, and Ry’zon is on his way.", src: AOCP(18), book: "O", suggest: ["Tau", "Necrons"],
+    others: OTHERS_T + " Any convoy of five transports and two escorts against five raiders, with one cruiser coming to help.",
+    sides: { a: { n: "Convoy", f: "Tau Empire, with Ry’zon" }, b: { n: "Necrons", f: "Necron raiders" } },
+    pitch: "Five transports and two Defenders are nearly at their waystation when Necron raiders fall on them. Ry’zon, out on a patrol of his own, hears the distress call and turns at once.",
+    glance: [["Points", "Fixed forces"], ["Table", "120 × 120 cm"], ["Battlezone", "Outer reaches: a large asteroid field, more as you like"], ["First turn", "Convoy"], ["Game ends", "Two transports escape, or too few are left"]],
+    bring: ["5 Tau transports and 2 Defender class escorts", "A Protector class cruiser for Ry’zon", "3 Dirge and 2 Jackal class raiders", "A 20 × 20 cm asteroid field"],
+    forces: { a: ["5 Tau transports (FL p. 463) and 2 Defender class escorts (FL p. 464).", "Ry’zon’s Phase II Protector class cruiser (FL p. 470), commanded by Kor’O Ry’zon (tools), arriving in turn 2."], b: ["3 Dirge class raiders (FL p. 409).", "2 Jackal class raiders (FL p. 408).", "Leadership as for any Necron fleet (FL p. 404)."] },
+    draw: (v, W, H) => [{ z: "hatch", x: W / 4 - 10, y: H / 4 - 10, w: 20, h: 20, l: "" }, R(W / 2 - 15, H / 2 - 10, 30, 20, "a", "convoy"), ...EDGES4("b", "Necrons: one edge, close together")],
+    fit: () => [80, 80], srcTable: [120, 120],
+    mapNote: "A 20 × 20 cm asteroid field in one quarter. The convoy in the middle; the Necrons together on any one edge. Ry’zon arrives in turn 2 from any edge the Tau player chooses.",
+    steps: [
+      { t: "Place a 20 × 20 cm asteroid field in one quarter, and any other phenomena you like (outer reaches, RB p. 108)." },
+      { s: "a", t: "Set up the five transports and two Defenders in the middle of the table, facing any way." },
+      { s: "b", t: "Set up your five raiders anywhere along one table edge, all within 10 cm of each other." },
+      { s: "a", t: "Ry’zon stays off the table until turn 2. You take the first turn." }
+    ],
+    stools: [],
+    notes: ["The supplement’s Tau transports are given for scenarios in the Fleets book (FL p. 463).", AOC_EMPIRE],
+    refs: [["Transports in a Tau fleet", "FL p. 463"], ["Defender class starship", "FL p. 464"], ["Protector class cruiser", "FL p. 470"], ["Dirge class raider", "FL p. 409"], ["Jackal class raider", "FL p. 408"], ["Asteroid fields", "RB p. 110"]],
+    play: [
+      { w: "Turn 2", s: "a", t: "Ry’zon moves on from any table edge you choose." },
+      { w: "Escape", s: "a", t: "Get transports off the table by any edge: two are enough." }
+    ],
+    fx: T => T === 2 ? [["a", "Ry’zon enters from any table edge"]] : [],
+    tools: [{ k: "counter", id: "esc", s: "a", res: 1, l: "Transports escaped", max: 5, goal: 2 }, { k: "counter", id: "lost", s: "b", res: 1, l: "Transports destroyed", max: 5 }, { k: "html", html: CHARS_AOC }],
+    end: ["Two transports have escaped, or fewer than two are left to try."],
+    win: ["Convoy: get at least two transports off any table edge.", "Necrons: destroy four transports, so that two can no longer escape."],
+    result(st) { const e = get(st, "esc", 0), l = get(st, "lost", 0);
+      if (e >= 2) return ["a", "The convoy gets through", e + " transports escaped."];
+      if (l >= 4) return ["b", "The Necrons win", l + " transports destroyed: two can no longer get away."];
+      return [null, "Battle in progress", e + " escaped, " + l + " destroyed — two must escape."]; },
+    info: { bg: "Haunted since the attempt to arrest him, Ry’zon is alone on a patrol in the Liet sector when a convoy reports Necron raiders and two transports already lost. Back at the project, W’tail is telling Ly’tan what renegades like Commander Farsight could do with the project’s ships.", cr: [AOC + " " + AOCP(17) + "–18."] }
+  },
+  /* ============================================================ ART OF COMMAND 5 NO WAY OUT */
+  {
+    id: "fan-p-no-way-out", grp: "fan-pdd", name: "No Way Out", series: "The Art of Command · Mission Five", trust: "fan",
+    why: "Nua’ta’s Marauder must hand a data packet to a Merchant hiding in a comet’s tail while an Imperial flotilla closes in.", src: AOCP(21), book: "O", suggest: ["Tau", "Imperial Navy"],
+    others: OTHERS_T + " The flotilla is any light cruiser with four escorts.",
+    sides: { a: { n: "Nua’ta", f: "Tau: the Marauder and a hidden Merchant" }, b: { n: "Imperial flotilla", f: "Imperial Navy" } },
+    pitch: "Barely out of the medical bay, Nua’ta is sent on a ‘short mission’ by Por’el W’tail: meet a Merchant waiting in a comet’s tail and pass it an encrypted data packet. An Imperial flotilla is already there.",
+    glance: [["Points", "Fixed forces"], ["Table", "180 × 120 cm"], ["Battlezone", "Deep space: a comet in the centre, other phenomena as usual"], ["First turn", "Nua’ta"], ["Game ends", "Both Tau ships are gone, or a Tau ship or the flotilla is destroyed"]],
+    bring: ["A light cruiser for the Marauder", "A Tau Merchant class cruiser and a contact marker", "A Dauntless light cruiser and 4 Sword frigates", "A moon for the comet and a dust cloud for its tail"],
+    forces: { a: ["The Marauder, an Emissary with advanced missiles, commanded by Kor’vre Nua’ta: Ld 8, 1 re-roll (tools).", "Merchant class starship (FL p. 462) in the Dal’yth configuration, with the stronger hull (6 hits), hidden as a contact marker."], b: ["Dauntless class light cruiser (FL p. 77).", "4 Sword class frigates (FL p. 82).", "Leadership as rolled (RB p. 45)."] },
+    draw: (v, W, H, st) => { const cx = W / 2, cy = H / 2, tl = (st && st.w && st.w.tail) || 10;
+      return [{ z: "sun", e: "t" }, R(cx - 4, cy + 2, 8, tl, "n", "", { dash: 1 }), { z: "ring", cx, cy, r: 8, s: "n" }, { z: "planet", cx, cy, r: 3 },
+        { z: "text", x: cx - 11 - textLen("comet", W) / 2, y: cy, l: "comet", s: "n" },
+        { z: "mark", x: cx, y: cy + 6, s: "a", l: "" }, { z: "text", x: cx + 11 + textLen("Merchant", W) / 2, y: cy + 8, l: "Merchant", s: "a" },
+        { z: "edge", e: "l", s: "a", l: "Nua’ta: the Marauder" }, { z: "edge", e: "r", s: "b", l: "Imperial flotilla" }]; },
+    fit: () => [100, 70], srcTable: [180, 120],
+    mapNote: "The comet is a moon in the centre with a 5 cm gravity well (dashed); its tail is a dust cloud 3D6 cm long, pointing away from the sunward edge. The Merchant’s contact marker sits in the tail, inside the gravity well. Nua’ta starts on one short edge, the flotilla on the other.",
+    steps: [
+      { t: "Place the comet in the centre: a moon with a 5 cm gravity well, and a dust cloud 3D6 cm long as its tail, pointing away from the sunward edge (roll below). Then roll for other phenomena as usual (deep space, RB p. 107–108)." },
+      { s: "a", t: "Place a contact marker for the Merchant in the comet’s tail, inside its gravity well, and the Marauder on one short edge." },
+      { s: "b", t: "Place the Dauntless and the four Swords on the opposite short edge." },
+      { s: "a", t: "You take the first turn. Both ships are yours and active from the start." }
+    ],
+    stools: [{ k: "val", id: "tail", l: "Comet tail: 3D6 cm", opts: [], roll: () => d6() + d6() + d6(), unit: " cm" }],
+    notes: ["The Marauder is the supplement’s own ship (Revival p. 11, 16); the book alternative is an Emissary keeping the missile rule.", "The story keeps for later who was waiting in the comet, and why."],
+    refs: [["Merchant class starship", "FL p. 462"], ["Emissary class envoy ship", "FL p. 472"], ["Dauntless class light cruiser", "FL p. 77"], ["Sword class frigate", "FL p. 82"], ["Moons", "RB p. 113"], ["Gas and dust clouds", "RB p. 109"], ["Contact markers", "RB p. 134"], ["Leadership tests", "RB p. 49"]],
+    play: [
+      { w: "The comet", t: "Its 5 cm gravity well works like a planet’s; its tail is a dust cloud." },
+      { w: "Hidden", s: "a", t: "The Merchant stays a contact marker until it moves or fires, or any other ship comes within 10 cm of it." },
+      { w: "The data packet", s: "a", t: "Bring the Marauder within 10 cm of the Merchant and pass a Leadership test: the packet is handed over. A failed test: {a:retry}." },
+      { w: "Get away", s: "a", t: "Both your ships must survive: leave by any table edge, or destroy the flotilla." }
+    ],
+    tools: [{ k: "toggle", id: "data", s: "a", res: 1, l: "The data packet is handed over" }, { k: "html", html: MARAUDER }, { k: "html", html: CHARS_AOC }],
+    rtools: [endTool([["Packet handed over; both Tau ships off the table or the flotilla destroyed", "a", "Nua’ta succeeds"], ["A Tau ship was destroyed", "b", "The Imperials win"], ["The Tau left without handing over the packet", "b", "Mission failed"]])],
+    end: ["Both Tau ships have left the table, or a Tau ship is destroyed, or the flotilla is destroyed."],
+    win: ["Nua’ta: hand over the packet (within 10 cm, then a Leadership test) and keep both ships alive — off any table edge, or by destroying the flotilla.", "Imperials: destroy either Tau ship, or stop the handover."],
+    result(st, v, S) { return endingResult(st, S, "how"); },
+    info: { bg: "Nua’ta wakes after thirty rotaa in the medical bay to find the voice in his head gone. Por’el W’tail sends him straight out in the Marauder without waiting for Ly’tan’s word — then tells someone he calls Commander that another thread is being dealt with.", cr: [AOC + " " + AOCP(19) + "–21."] }
+  },
+  /* ============================================================ ART OF COMMAND 6 DISTANT DARKNESS */
+  {
+    id: "fan-p-distant-darkness", grp: "fan-pdd", name: "Distant Darkness", series: "The Art of Command · Mission Six", trust: "fan", players: [1, 2],
+    why: "Five Tau cruisers fight their way out of a dockyard whose own security drones have been turned against them.", src: AOCP(24), book: "O", suggest: ["Tau"],
+    others: "Any five cruisers; the drones are scenario rules, so any fleet can run this.",
+    sides: { a: { n: "The five", f: "Tau: five Protectors" }, b: { n: "Drones", f: "Dockyard security drones" } },
+    pitch: "The five have just taken the last Phase I cruisers out of the secret dockyard when the station comes alive: explosions inside, and wave after wave of armed drones pouring out of its hangars.",
+    glance: [["Points", "Fixed forces"], ["Table", "180 × 120 cm"], ["Battlezone", "Deep space: a small planet and the dockyard near one short edge"], ["First turn", "The five"], ["Game ends", "All five are off the far edge, or one is destroyed"]],
+    bring: ["5 Tau Protector class cruisers", "A dockyard on a large flying base and a small planet", "About 30 drone markers"],
+    forces: { a: ["Five Phase II Protector class cruisers (FL p. 470), one each for Ry’zon, L’ikei, Nua’ta, Tas’ka and Sheva’s (tools)."], b: ["The dockyard: a large flying base that releases the drones.", "D6+2 new security drones every turn (profile in the tools)."] },
+    draw: (v, W, H) => { const cy = H / 2;
+      return [{ z: "planet", cx: 20, cy, r: 6 }, { z: "ring", cx: 30, cy, r: 20, s: "a" }, { z: "mark", x: 30, y: cy, s: "b", l: "" }, { z: "text", x: 30, y: cy + 13, l: "dockyard", s: "b" },
+        { z: "arrow", x1: 44, y1: cy, x2: 60, y2: cy, s: "a" }, { z: "text", x: 30, y: cy - 25, l: "the five: within 20 cm", s: "a" },
+        { z: "edge", e: "r", s: "a", l: "all five must escape here" }]; },
+    fit: () => [100, 70], srcTable: [180, 120],
+    mapNote: "A small planet in the middle of one short edge, 20 cm in; the dockyard 10 cm further onto the table. The five start within 20 cm of the dockyard (dashed) and must leave by the far short edge.",
+    steps: [
+      { t: "Place a small planet in the middle of one short edge, 20 cm in, and the dockyard on its large flying base 10 cm further onto the table. Add other phenomena as you like (deep space)." },
+      { s: "a", t: "Place the five Protectors within 20 cm of the dockyard, facing the far short edge. You take the first turn." },
+      { s: "b", t: "From your first turn, the dockyard launches new drones every turn (tools)." }
+    ],
+    stools: [],
+    notes: ["“All Ahead Full special orders are done on 2D6” is read as 2D6 cm of extra movement instead of the usual 4D6.", "The drones always head for the nearest Protector, so one player can run them: the scenario works solo too."],
+    refs: [["Protector class cruiser", "FL p. 470"], ["All Ahead Full", "RB p. 46"], ["Flying bases", "RB p. 57"], ["Disengaging", "RB p. 56"]],
+    play: [
+      { w: "No way back", s: "a", t: "Your ships may not disengage, and All Ahead Full adds only 2D6 cm." },
+      { w: "Every drone turn", s: "b", t: "Roll a D6 + 2: that many new drones launch, placed touching the dockyard’s base. Every drone moves toward the nearest Protector and attacks it." },
+      { w: "Drone weapons", s: "b", t: "They fire {a:gun}. Shoot at them {a:arm}." },
+      { w: "Escape", s: "a", t: "Every Protector must leave by the short edge opposite the dockyard." }
+    ],
+    tools: [{ k: "roll", id: "dr", s: "b", l: "New drones this turn", sub: "D6 + 2", rows: () => [[1, 1, "3 drones"], [2, 2, "4 drones"], [3, 3, "5 drones"], [4, 4, "6 drones"], [5, 5, "7 drones"], [6, 6, "8 drones"]] },
+      { k: "counter", id: "out", s: "a", res: 1, l: "Protectors off the far edge", max: 5, goal: 5 },
+      { k: "html", html: "<h3>Security drone (Art of Command p. 24)</h3><p class='small' style='margin:0'>Speed 30 cm, turns in any direction, 1 hit, shields 1, turrets 1. Weapons: “2 railgun batteries”, 30 cm, all round (how they fire: see Agree). No armour value is given.</p>" },
+      { k: "html", html: CHARS_AOC }],
+    rtools: [endTool([["All five Protectors left by the far edge", "a", "The five escape"], ["A Protector was destroyed", "b", "The trap works"]])],
+    end: ["All five Protectors have left by the far short edge, or one of them is destroyed."],
+    win: ["The five: get every Protector off the short edge opposite the dockyard.", "Drones: destroy any one Protector."],
+    result(st, v, S) { return endingResult(st, S, "how"); },
+    info: { bg: "Ly’tan sends all five to bring the four remaining Phase I cruisers home, the security codes sent ahead. Shas’O K’raj’s pathfinders are already watching: they send override protocols to the station, and as the hangar doors open, every drone is ordered to kill.", cr: [AOC + " " + AOCP(22) + "–25."] }
+  },
+  /* ============================================================ ART OF COMMAND SUB-MISSION 7 LY'TAN'S FLIGHT */
+  {
+    id: "fan-p-lytan-flight", grp: "fan-pdd", name: "Ly’tan’s Flight", series: "The Art of Command · Sub-mission Seven", trust: "fan",
+    why: "A tiny chase: Ly’tan’s shuttle must reach an asteroid field before a renegade cruiser shoots it down.", src: AOCP(26), book: "K", suggest: ["Tau"],
+    others: "Any one cruiser chasing a shuttle marker.",
+    sides: { a: { n: "Ly’tan", f: "Tau: one shuttle" }, b: { n: "O’Shovah", f: "Farsight Enclaves: one Merchant" } },
+    pitch: "Ly’tan thought he was handing his project to High Command. Behind the door stood Commander O’Shovah, thanking him for building his fleet. Ly’tan knocks W’tail down and runs for his shuttle.",
+    glance: [["Points", "Fixed: a shuttle against a cruiser"], ["Table", "120 × 120 cm"], ["Battlezone", "Outer reaches: an asteroid field along one edge"], ["First turn", "Ly’tan"], ["Game ends", "The shuttle reaches the asteroids or is destroyed"]],
+    bring: ["A marker for the shuttle", "A Tau Merchant class cruiser", "An asteroid field 10 cm deep along one edge"],
+    forces: { a: ["Ly’tan’s shuttle: a marker, speed 15 cm, with a 4+ save against every hit."], b: ["Merchant class starship (FL p. 462) in the Dal’yth configuration, with ion cannons."] },
+    draw: (v, W, H) => { const cx = W / 2;
+      return [{ z: "hatch", x: 0, y: 0, w: W, h: 10, l: "" }, { z: "text", x: W / 2, y: 10 + mapFont(W) * .9, l: "asteroid field", s: "n" }, { z: "mark", x: cx, y: H - 4, s: "b", l: "Merchant" }, { z: "mark", x: cx, y: H - 34, s: "a", l: "Ly’tan’s shuttle" },
+        { z: "dim", x1: cx + 4 + textLen("Merchant", W) / 2, y1: H - 34, x2: cx + 4 + textLen("Merchant", W) / 2, y2: H - 4, l: "30 cm" }]; },
+    fit: () => [60, 60], srcTable: [120, 120],
+    mapNote: "An asteroid field 10 cm deep along one edge. The Merchant touches the opposite edge; the shuttle starts 30 cm from it.",
+    steps: [
+      { t: "Place an asteroid field 10 cm deep along one whole table edge." },
+      { s: "b", t: "Place the Merchant touching the opposite edge." },
+      { s: "a", t: "Place the shuttle marker 30 cm from the Merchant. You take the first turn." }
+    ],
+    stools: [],
+    notes: ["The supplement gives the shuttle only its speed and its 4+ “jinx” save; how it moves and how the Merchant shoots at it are left to agree.", "In the story the shuttle makes it: the Merchant is too large to follow it into the asteroids."],
+    refs: [["Merchant class starship", "FL p. 462"], ["Asteroid fields", "RB p. 110"], ["Gunnery table", "RB p. 62"]],
+    play: [
+      { w: "The shuttle", s: "a", t: "It moves up to 15 cm, {a:turn}. Each time it is hit, it jinks clear on a 4+ (tool)." },
+      { w: "Shooting at it", s: "b", t: "Shoot at the shuttle {a:shot}." },
+      { w: "Escape", s: "a", t: "Reach the asteroid field with the shuttle intact." }
+    ],
+    tools: [SHUTTLE_ROLL],
+    rtools: [endTool([["The shuttle reached the asteroid field", "a", "Ly’tan escapes"], ["The shuttle was destroyed", "b", "O’Shovah wins"]])],
+    end: ["The shuttle reaches the asteroid field or is destroyed."],
+    win: ["Ly’tan: reach the asteroid field.", "O’Shovah: destroy the shuttle first."],
+    result(st, v, S) { return endingResult(st, S, "how"); },
+    info: { bg: "Ly’tan follows W’tail aboard an Il’fannor class ship, sure he is about to hand Project Distant Darkness to Tau High Command. The Tau waiting in a Crisis suit is Commander O’Shovah. Ly’tan strikes W’tail down, and his Fire Warriors cover the run back to the shuttle.", cr: [AOC + " " + AOCP(26) + "–27."] }
+  },
+  /* ============================================================ ART OF COMMAND 7 A LOST TALE */
+  {
+    id: "fan-p-lost-tale", grp: "fan-pdd", name: "A Lost Tale", series: "The Art of Command · Mission Seven", trust: "fan",
+    why: "Five Tau cruisers against a big Necron raid while their admiral sits frozen: all five must survive and destroy every Necron.", src: AOCP(29), book: "O", suggest: ["Tau", "Necrons"],
+    others: OTHERS_T + " The Necrons are any large raiding fleet.",
+    sides: { a: { n: "The five", f: "Tau: five Protectors" }, b: { n: "Necrons", f: "Necron raiding fleet" } },
+    pitch: "A message from W’tail has just told Ry’zon that Ly’tan murdered his Aun. While Ry’zon sits frozen in his chair, Necron ships come in out of the sun at extreme speed.",
+    glance: [["Points", "Fixed forces"], ["Table", "180 × 120 cm"], ["Battlezone", "Inner biosphere, phenomena as you like"], ["First turn", "Necrons"], ["Game ends", "A fleet is destroyed"]],
+    bring: ["5 Tau Protector class cruisers", "2 Scythe, 2 Shroud, 3 Jackal and 3 Dirge class Necron ships"],
+    forces: { a: ["Five Phase II Protector class cruisers (FL p. 470), one each for the five (tools)."], b: ["2 Scythe class harvest ships (FL p. 406).", "2 Shroud class light cruisers (FL p. 407).", "3 Jackal and 3 Dirge class raiders (FL p. 408–409).", "Leadership as for any Necron fleet (FL p. 404)."] },
+    draw: (v, W, H) => { const cy = H / 2, dx = Math.sqrt(Math.max(0, 6400 - cy * cy)), x0 = Math.min(W - 4, 60 + dx);
+      return [{ z: "sun", e: "t" }, { z: "ring", cx: 60, cy, r: 80, s: "b" }, { z: "mark", x: 60, y: cy, s: "a", l: "the five" }, { z: "arrow", x1: 66, y1: cy, x2: 80, y2: cy, s: "a" },
+        { z: "dim", x1: 0, y1: cy + 10, x2: 60, y2: cy + 10, l: "60 cm" }, { z: "dim", x1: 60, y1: cy + 10 + mapFont(W) * 2.2, x2: 140, y2: cy + 10 + mapFont(W) * 2.2, l: "80 cm" },
+        R(x0, 0, W - x0, 5, "b", ""), { z: "text", x: (x0 + W) / 2, y: 12, l: "Necrons enter", s: "b" }]; },
+    fit: () => [150, 100], srcTable: [180, 120],
+    mapNote: "The five set up 60 cm from one short edge in a wing formation, facing the other short edge. The Necrons move on along the sunward edge, at least 80 cm from every Tau ship (dashed: 80 cm from the formation’s centre).",
+    steps: [
+      { t: "Mark one long edge as sunward and place phenomena as you like (inner biosphere, RB p. 107)." },
+      { s: "a", t: "Set up the five Protectors in a wing formation 60 cm from one short edge, facing the other. Roll how long Ry’zon is in shock (tool)." },
+      { s: "b", t: "Your ships move on in turn 1 from the sunward edge, no closer than 80 cm to any Tau ship. You take the first turn." }
+    ],
+    stools: [{ k: "val", id: "shock", l: "Ry’zon in shock: D3+1 turns", opts: [2, 3, 4], roll: () => Math.ceil(d6() / 2) + 1, unit: " turns" }],
+    notes: ["The supplement does not draw the wing formation: any arrowhead of the five will do.", "In the story Ry’zon comes round in time and saves them all with a manoeuvre L’ikei calls ridiculous."],
+    refs: [["Scythe class harvest ship", "FL p. 406"], ["Shroud class light cruiser", "FL p. 407"], ["Jackal class raider", "FL p. 408"], ["Dirge class raider", "FL p. 409"], ["Necron Leadership", "FL p. 404"], ["Protector class cruiser", "FL p. 470"], ["Brace for Impact", "RB p. 47"]],
+    play: [
+      { w: "Ry’zon in shock", s: "a", t: "For the first D3+1 turns Ry’zon’s ship is at −2 Leadership and may take no special orders except Brace for Impact." },
+      { w: "No disengaging", t: "Neither fleet may disengage." },
+      { w: "The goal", s: "a", t: "Destroy every Necron ship without losing a single Protector." }
+    ],
+    fx: (T, st) => { const n = get(st, "shock", 0); return n ? (T <= n ? [["a", "Ry’zon in shock: −2 Ld, Brace for Impact only"]] : []) : (T <= 4 ? [["a", "Ry’zon in shock for D3+1 turns (roll it in Set-up)"]] : []); },
+    tools: [{ k: "html", html: CHARS_AOC }],
+    rtools: [endTool([["Every Necron destroyed, all five Protectors alive", "a", "The five win"], ["A Protector was destroyed", "b", "Necrons win"]])],
+    end: ["One fleet is destroyed. No one may disengage."],
+    win: ["The five: destroy every Necron ship without losing a single Protector.", "Necrons: destroy any one Protector."],
+    result(st, v, S) { return endingResult(st, S, "how"); },
+    info: { bg: "Aun’O Mealuo has a list of traitors, sent — he finds — by Por’el W’tail. At the same moment W’tail’s message reaches Ry’zon: Ly’tan killed Aun’el Ame’ru and impersonated the Aun’va. As the shock hits him, the scanners report Necrons.", cr: [AOC + " " + AOCP(26) + "–29."] }
+  },
+  /* ============================================================ ART OF COMMAND 8 THE ART OF COMMAND PT. 1 */
+  {
+    id: "fan-p-art-command-1", grp: "fan-pdd", name: "The Art of Command, Part One", series: "The Art of Command · Mission Eight", trust: "fan",
+    why: "A full Fleet Engagement: a Novamarine strike force against the Tau rear guard that must keep it away from the dockyards.", src: AOCP(32), book: "K", suggest: ["Tau", "Space Marines"],
+    others: "A plain Fleet Engagement with fixed forces: any two large fleets of about equal size.",
+    sides: { a: { n: "Tau Empire", f: "Tau: Kor’el Or’nri’s rear guard" }, b: { n: "Novamarines", f: "Space Marines" } },
+    pitch: "The Novamarines strike at the Distant Darkness dockyards and run straight into Kor’O A’zju’s rear guard — whose commander has his own reasons not to let humans see what is there.",
+    glance: [["Points", "Fixed forces, about equal"], ["Table", "180 × 120 cm"], ["Battlezone", "Phenomena as you like"], ["First turn", "Roll-off after deployment"], ["Game ends", "A fleet disengages or is destroyed"]],
+    bring: ["A Space Marine flagship for the Horizon’s Edge (see Agree)", "4 strike cruisers; 4 Nova, 3 Gladius and 3 Hunter class escorts", "A Tau Explorer, 2 Heroes, 2 Emissaries, 2 Merchants, 3 Castellans, 3 Defenders and 2 Messengers"],
+    forces: { a: ["Explorer class starship (FL p. 458) with launch bays — the Vash’ya configuration — under Kor’el Or’nri: Ld 8, 1 re-roll.", "2 Hero class starships (FL p. 460) with ion cannons — the Vash’ya configuration.", "2 Emissary class envoy ships (FL p. 472) — configuration: see Agree.", "2 Merchant class starships (FL p. 462) with ion cannons — the Dal’yth configuration.", "3 Castellan class escorts (FL p. 474), 3 Defenders (FL p. 464) and 2 Messengers (FL p. 465).", "All other Leadership rolled (RB p. 45)."], b: ["The Horizon’s Edge (see Agree), flagship of Master of the Fleet Lonan Dunhir: Ld 10, 2 re-rolls.", "4 strike cruisers (FL p. 105).", "2 squadrons of 2 Nova class frigates (FL p. 107).", "3 Gladius class frigates (FL p. 108) and 3 Hunter class destroyers (FL p. 109).", "All other Leadership rolled (RB p. 45)."] },
+    variants: [["A", "Set-up A"], ["B", "Set-up B"], ["C", "Set-up C"], ["D", "Set-up D"]],
+    draw: (v, W, H) => MAPS["fleet-engagement"](v, W, H), legend: [["a", "Dark zone"], ["b", "Light zone"]],
+    fit: v => ({ A: [140, 100], B: [70, 80], C: [140, 60], D: [110, 100] }[v] || [140, 100]), srcTable: [180, 120],
+    mapNote: "The Fleet Engagement set-up maps (RB p. 142). Blue is the dark zone, red the light one — the formations decide which fleet takes which, so here the colours are zones, not fleets. The Horizon’s Edge: {a:he}.",
+    steps: [
+      { t: "Mark one long edge as sunward and set up phenomena as you like." },
+      { t: "Each player secretly chooses a formation — Sphere, Wedge or Cross — and both reveal. Enter them in the tool below, the Tau as Player 1." },
+      { t: "Split result: both roll a D6. +1 if your fastest ship is faster than any enemy ship, +1 for the best admiral, +1 for the most escorts. The winner picks the set-up." },
+      { t: "Roll Leadership for every ship without a fixed value (RB p. 45). The Emissaries: {a:emi}." },
+      { t: "Both roll a D6. The lower roll deploys a squadron or lone ship first, then take turns, with at least one ship or squadron in every division. The higher roll then chooses to go first or second." }
+    ],
+    stools: [{ k: "formation", id: "form" }], stoolsFirst: 1,
+    notes: ["The supplement links the Horizon’s Edge to a profile that is not in the document.", "In the story Or’nri fights a withdrawing battle to lead the Marines away from the dockyards; the rules are a plain Fleet Engagement.", AOC_EMPIRE],
+    refs: [["Fleet Engagement", "RB p. 142–143"], ["Victory points", "RB p. 122"], ["Strike cruiser", "FL p. 105"], ["Nova class frigate", "FL p. 107"], ["Gladius class frigate", "FL p. 108"], ["Hunter class destroyer", "FL p. 109"], ["Explorer class starship", "FL p. 458"], ["Messenger class starship", "FL p. 465"]],
+    play: [{ w: "All game", t: "No special rules: standard victory points decide (tools)." }],
+    tools: vpTools("Tau Empire", "Novamarines"),
+    end: ["One fleet disengages or is destroyed."],
+    win: ["Both fleets score standard victory points (RB p. 122). The higher total wins."],
+    result(st) { return vpr(st, "Tau Empire", "Novamarines"); },
+    info: { bg: "Inquisitor Luvern’s small Novamarine strike force has found the project’s dockyards. Kor’O A’zju’s Empire fleet is heading there too, to take the traitors, and leaves Kor’el Or’nri with the rear guard — which the Marines take for a fleet on training manoeuvres, and attack.", cr: [AOC + " " + AOCP(30) + "–32."] }
+  },
+  /* ============================================================ ART OF COMMAND 9 THE ART OF COMMAND PT. 2 */
+  {
+    id: "fan-p-art-command-2", grp: "fan-pdd", name: "The Art of Command, Part Two", series: "The Art of Command · Mission Nine", trust: "fan",
+    why: "The Tau Empire must board and take three Distant Darkness ships — whose crews blow them up rather than be captured.", src: AOCP(37), book: "K", suggest: ["Tau"],
+    others: "Any two fleets, one of which must not be captured.",
+    sides: { a: { n: "Distant Darkness", f: "Tau: W’tail’s volunteers" }, b: { n: "Tau Empire", f: "Tau: Kor’O A’zju’s fleet" } },
+    pitch: "W’tail has wiped the records and taken most of the fleet into the warp. The ships left behind, crewed by volunteers, cast off as A’zju’s fleet arrives — under orders never to be taken.",
+    glance: [["Points", "Fixed forces"], ["Table", "180 × 120 cm"], ["Battlezone", "Outer reaches, no planets"], ["First turn", "Roll-off, winner chooses"], ["Game ends", "As agreed: 8 turns by default"]],
+    bring: ["Two Tau fleets (see Forces)", "A 20 × 30 cm asteroid field", "Other phenomena, but no planets"],
+    forces: { a: ["Custodian class battleship (FL p. 468): Ld 9, 1 re-roll.", "3 Protector class cruisers (FL p. 470) and 2 Emissary class envoy ships (FL p. 472).", "3 Warden class gunships (FL p. 475) and 6 Castellan class escorts (FL p. 474).", "All other Leadership rolled (RB p. 45)."], b: ["Custodian class battleship (FL p. 468), Kor’O A’zju: Ld 9, 2 re-rolls.", "Explorer class starship with launch bays (FL p. 458).", "2 Protector class cruisers (FL p. 470) and 2 Hero class starships (FL p. 460).", "3 Castellans (FL p. 474), 3 Orca class gunships (FL p. 466) and 3 Wardens (FL p. 475).", "All other Leadership rolled (RB p. 45)."] },
+    draw: (v, W, H) => { const zw = Math.min(90, W), x0 = (W - zw) / 2;
+      return [{ z: "hatch", x: 0, y: H - 30, w: 20, h: 30, l: "" }, R(0, H - 30, 20, 30, "a", "", { dash: 1 }), { z: "text", x: 24 + textLen("Distant Darkness", W) / 2, y: H - 15, l: "Distant Darkness", s: "a" },
+        R(x0, 0, zw, 30, "b", "Tau Empire"), { z: "dim", x1: x0, y1: 30 + mapFont(W) * 2, x2: x0 + zw, y2: 30 + mapFont(W) * 2, l: "90 cm" }]; },
+    fit: () => [140, 90], srcTable: [180, 120],
+    mapNote: "The Distant Darkness fleet sets up in a 20 × 30 cm asteroid field in one corner. The Tau Empire zone shown is the default agreed below: {a:emp}.",
+    steps: [
+      { t: "Place a 20 × 30 cm asteroid field in one corner, and other phenomena as you like — but no planets (outer reaches, RB p. 108)." },
+      { s: "a", t: "Set up your whole fleet in the asteroid field." },
+      { s: "b", t: "Set up in {a:emp}." },
+      { t: "Roll Leadership for every ship without a fixed value (RB p. 45). Roll off: the winner chooses to go first or second." }
+    ],
+    stools: [],
+    notes: ["“Played as a standard Cruiser Clash” is read as its set-up and its eight turns; the forces are fixed and the only goal is the Empire’s.", "The whole Distant Darkness fleet starts inside the asteroid field, as the supplement says; the field’s usual effects apply as it moves out.", "In the story every ship blows itself up — Aun’O Mealuo does not get a single one."],
+    refs: [["Cruiser Clash", "RB p. 128"], ["Boarding actions", "RB p. 89–90"], ["Catastrophic damage table", "RB p. 71"], ["Asteroid fields", "RB p. 110"], ["Custodian class battleship", "FL p. 468"], ["Explorer class starship", "FL p. 458"], ["Orca class gunship", "FL p. 466"], ["Warden class gunship", "FL p. 475"]],
+    play: [
+      { w: "Never captured", s: "a", t: "Whenever one of your ships is crippled, or a squadron falls below half strength, roll a D6 {a:sd}: on a 3+ it explodes in a plasma drive overload (RB p. 71)." },
+      { w: "Prizes", s: "b", t: "Win boarding actions against three Distant Darkness ships, two of them capital ships." },
+      { w: "Game length", t: "{a:len}." }
+    ],
+    turnMax: () => 8,
+    tools: [{ k: "roll", id: "sdr", s: "a", l: "Self-destruct", sub: "D6 for a crippled ship or a broken squadron", rows: () => [[1, 2, "Not this time"], [3, 6, "Plasma drive overload: it explodes"]] },
+      { k: "counter", id: "cap", s: "b", res: 1, l: "Capital ships boarded and taken", max: 6, goal: 2 }, { k: "counter", id: "esc", s: "b", res: 1, l: "Escorts boarded and taken", max: 9 }],
+    rtools: [endTool([["Three ships taken, two of them capital ships", "b", "The Empire takes its prizes"], ["The battle ended without that", "a", "Nothing is captured"]])],
+    end: ["{a:len}.", "Or one fleet is destroyed or has disengaged."],
+    win: ["Tau Empire: win boarding actions against three Distant Darkness ships, at least two of them capital ships.", "Anything less: the Distant Darkness volunteers win — nothing is captured."],
+    result(st, v, S) { return endingResult(st, S, "how"); },
+    info: { bg: "W’tail empties the project’s files, has his loyal officers stun the other Tau, and takes most of the fleet into the warp. Volunteers stay with the rest. While the Novamarines are drawn away and the human workers riot, A’zju’s fleet closes on the dockyards and calls on the traitors to surrender.", cr: [AOC + " " + AOCP(34) + "–37."] }
+  },
+  /* ============================================================ ART OF COMMAND SUB-MISSION 9 GARIT'S ESCAPE */
+  {
+    id: "fan-p-garit", grp: "fan-pdd", name: "Garit’s Escape", series: "The Art of Command · Sub-mission Nine", trust: "fan",
+    why: "A stolen shuttle full of human workers runs for the asteroids, chased by Tau Barracudas.", src: AOCP(38), book: "K", suggest: ["Tau"],
+    others: "Any fighters chasing a shuttle marker.",
+    sides: { a: { n: "Garit", f: "Humans: one stolen shuttle" }, b: { n: "Barracudas", f: "Tau Empire fighters" } },
+    pitch: "In the chaos at the dockyards, human workers seize shuttles and take off. Garit is in one of them — and the Barracudas shoot down any shuttle that does not answer their challenge.",
+    glance: [["Points", "Fixed: a shuttle against fighters"], ["Table", "120 × 120 cm"], ["Battlezone", "Outer reaches: an asteroid field along one edge"], ["First turn", "Garit"], ["Game ends", "The shuttle reaches the asteroids or is destroyed"]],
+    bring: ["A marker for the shuttle", "Barracuda fighter markers", "An asteroid field 10 cm deep along one edge"],
+    forces: { a: ["Garit’s shuttle: a marker, speed 20 cm, a 4+ save against every hit, and a small railgun."], b: ["D3 Barracuda fighters every turn, speed 25 cm, firing up to 15 cm and hitting on a 5+."] },
+    draw: (v, W, H) => { const cx = W / 2;
+      return [{ z: "hatch", x: 0, y: 0, w: W, h: 10, l: "" }, { z: "text", x: W / 2, y: 10 + mapFont(W) * .9, l: "asteroid field", s: "n" }, { z: "mark", x: cx, y: H - 30, s: "a", l: "Garit’s shuttle" }, { z: "dim", x1: cx + 14, y1: H - 30, x2: cx + 14, y2: H, l: "30 cm" },
+        { z: "edge", e: "b", s: "b", dash: 1, l: "Barracudas: from a random edge" }, { z: "edge", e: "l", s: "b", dash: 1, l: "" }, { z: "edge", e: "r", s: "b", dash: 1, l: "" }]; },
+    fit: () => [60, 60], srcTable: [120, 120],
+    mapNote: "An asteroid field 10 cm deep along one edge. The shuttle starts 30 cm from the opposite edge. Barracudas arrive from any of the other three edges, chosen at random.",
+    steps: [
+      { t: "Place an asteroid field 10 cm deep along one whole table edge." },
+      { s: "a", t: "Place the shuttle 30 cm from the opposite edge. You take the first turn." }
+    ],
+    stools: [],
+    notes: ["The Barracudas here are simple markers with their own speed and shooting, not normal attack craft — and the shuttle’s little railgun can pick them off.", "In the last chapter seventeen humans reach the asteroids alive, and Garit begins to remember."],
+    refs: [["Tau attack craft", "FL p. 451"], ["Asteroid fields", "RB p. 110"], ["Ordnance attacks", "RB p. 75"]],
+    play: [
+      { w: "The shuttle", s: "a", t: "It moves up to 20 cm, {a:turn}, and jinks clear of each hit on a 4+. Its small railgun reaches 15 cm and destroys a Barracuda marker on a 6." },
+      { w: "New Barracudas", s: "b", t: "Roll {a:when}: that many Barracudas arrive from a random edge — never the asteroid edge. They move 25 cm and fire up to 15 cm, hitting on a 5+." },
+      { w: "Escape", s: "a", t: "Reach the asteroid field with the shuttle intact." }
+    ],
+    tools: [{ k: "roll", id: "bn", s: "b", l: "Barracudas arriving", sub: "D3: roll a D6", rows: () => [[1, 2, "1 Barracuda"], [3, 4, "2 Barracudas"], [5, 6, "3 Barracudas"]] },
+      { k: "roll", id: "be", s: "b", l: "Which edge they come from", sub: "D6", rows: () => [[1, 2, "The edge left of the asteroid field"], [3, 4, "The edge right of the asteroid field"], [5, 6, "The edge facing the asteroid field"]] }, SHUTTLE_ROLL],
+    rtools: [endTool([["The shuttle reached the asteroid field", "a", "Garit escapes"], ["The shuttle was destroyed", "b", "Shot down"]])],
+    end: ["The shuttle reaches the asteroid field or is destroyed."],
+    win: ["Garit: reach the asteroid field.", "Barracudas: destroy the shuttle first."],
+    result(st, v, S) { return endingResult(st, S, "how"); },
+    info: { bg: "As the Tau turn on each other, the human workers at the facility riot. Some fight, some hide wounded Tau friends, and some seize the shuttles and flee. Garit, who has stood and watched it all with a clouded mind, sits in the back of one of them.", cr: [AOC + " " + AOCP(35) + "–38, 42."] }
+  },
+  /* ============================================================ ART OF COMMAND 10 FOR THE GREATER GOOD */
+  {
+    id: "fan-p-greater-good", grp: "fan-pdd", name: "For the Greater Good", series: "The Art of Command · Mission Ten", trust: "fan",
+    why: "Ly’tan’s crippled battleship is about to be destroyed by the Empire, and the five he wronged come back to try to save him.", src: AOCP(41), book: "O", suggest: ["Tau"],
+    others: OTHERS_T,
+    sides: { a: { n: "The five", f: "Tau: five Protectors and Ly’tan" }, b: { n: "Tau Empire", f: "Tau: an Empire hunting group" } },
+    pitch: "Ly’tan has been found by Empire ships that do not even try to talk to him. Ry’zon’s five arrive in time to see it — and decide that he is their only chance of redemption.",
+    glance: [["Points", "Fixed forces"], ["Table", "180 × 120 cm"], ["Battlezone", "Deep space, phenomena as you like"], ["First turn", "Ly’tan and the five"], ["Game ends", "Ly’tan is destroyed or rescued"]],
+    bring: ["A Tau Explorer and 2 Wardens for Ly’tan", "5 Tau Protector class cruisers", "2 Heroes, 2 Protectors and 3 Castellans for the Empire", "Damage and critical hit markers"],
+    forces: { a: ["Ly’tan’s Explorer class starship (FL p. 458) with 2 Warden class gunships (FL p. 475): 7 hits left, Thrusters Damaged and Starboard Armament Damaged. Leadership rolled.", "Five Phase II Protector class cruisers (FL p. 470), one each for the five (tools)."], b: ["2 Hero class starships (FL p. 460), both Ld 8, with 1 re-roll: one has 6 hits left and Shields Collapse, the other 7 hits left; both unloaded and on Brace for Impact.", "2 Protector class cruisers (FL p. 470): one has 3 hits left, the other a Fire! critical.", "3 Castellan class escorts (FL p. 474).", "All other Leadership rolled (RB p. 45)."] },
+    draw: (v, W, H) => { const cx = W / 2, cy = H / 2;
+      return [{ z: "ring", cx, cy, r: 20, s: "b" }, { z: "ring", cx, cy, r: 40, s: "b" }, { z: "mark", x: cx, y: cy, s: "a", l: "Ly’tan" }, { z: "arrow", x1: cx + 6, y1: cy, x2: cx + 16, y2: cy, s: "a" },
+        { z: "text", x: cx, y: cy - 30, l: "Empire: 20–40 cm", s: "b" }, { z: "edge", e: "l", s: "a", l: "the five enter, turn 1" }]; },
+    fit: () => [100, 90], srcTable: [180, 120],
+    mapNote: "Ly’tan in the centre, facing one short edge. The Empire ships set up 20–40 cm from him (between the dashed circles), each facing a random way. The five enter in turn 1 from the short edge behind him.",
+    steps: [
+      { t: "Place phenomena as you like (deep space, RB p. 107–108)." },
+      { s: "a", t: "Place Ly’tan’s Explorer and its two Wardens in the middle of the table, facing one short edge. Mark its damage: 7 hits left, Thrusters Damaged, Starboard Armament Damaged." },
+      { s: "b", t: "Place your ships 20–40 cm from Ly’tan’s Explorer, each facing a random way (scatter dice). Mark the damage listed under Forces." },
+      { s: "a", t: "The five stay off the table: they enter in turn 1 from the short edge behind Ly’tan. You take the first turn." }
+    ],
+    stools: [],
+    notes: ["The supplement says the Empire must destroy Ly’tan and the five must survive and “against all odds” try to rescue him; what counts as a rescue is left to agree.", "“Two Hero’s, leadership 8, 1 re-roll (both)” is read as both at Ld 8 with one re-roll between them.", "In the story they are too late: Ly’tan’s ship explodes, and his last message reaches Ry’zon."],
+    refs: [["Explorer class starship", "FL p. 458"], ["Hero class starship", "FL p. 460"], ["Protector class cruiser", "FL p. 470"], ["Castellan class escort", "FL p. 474"], ["Warden class gunship", "FL p. 475"], ["Critical hits table", "RB p. 67"], ["Brace for Impact", "RB p. 47"]],
+    play: [
+      { w: "Turn 1", s: "a", t: "Move Ly’tan first; only then do the five move on from the short edge behind him." },
+      { w: "The rescue", s: "a", t: "Keep all five alive and rescue Ly’tan: {a:rescue}." },
+      { w: "The Empire’s orders", s: "b", t: "Destroy Ly’tan’s Explorer. Nothing else counts." }
+    ],
+    fx: T => T === 1 ? [["a", "Move Ly’tan first, then the five enter from behind him"]] : [],
+    tools: [{ k: "html", html: CHARS_AOC }],
+    rtools: [endTool([["Ly’tan was destroyed", "b", "The Empire wins"], ["Ly’tan rescued, all five alive", "a", "The five win"], ["Ly’tan rescued, but a Protector was lost", "draw", "As agreed"]])],
+    end: ["Ly’tan is destroyed, or rescued: {a:rescue}."],
+    win: ["Tau Empire: destroy Ly’tan’s Explorer.", "The five: rescue Ly’tan and keep all five Protectors alive.", "Ly’tan rescued, but a Protector lost: {a:lost}."],
+    result(st, v, S) { return endingResult(st, S, "how"); },
+    info: { bg: "The five come back to the project to find an Empire fleet in control and the dockyards in ruins. Before Ry’zon can tell the others what he has decided, a distress call comes in — from Ly’tan, hunted by Empire ships that will not answer him. L’ikei speaks for them all: he is their only chance of redemption.", cr: [AOC + " " + AOCP(40) + "–42."] }
+  },
   /* ============================================================ DISTANT SUN 1 INTO THE CLAW */
   {
     id: "fan-p-claw", grp: "fan-pdd", name: "Into the Claw", series: "Distant Sun · Chapter One", trust: "fan",
@@ -389,7 +847,7 @@
       { s: "a", t: "You take the first turn." }
     ],
     stools: [],
-    notes: ["Exactly half the Tyranids surviving when the Tau have all disengaged is not covered: call it a plain draw.", "The vanguard drone ships and Kraken are in the Fleets book’s Tyranid lists (FL p. 429, 435–436)."],
+    notes: ["The supplement puts the waystation “10 cm from any short table edge” of its square 120 × 120 cm table, where every edge is short. On a longer table we use a long edge, so the fleets start the same 90-odd cm apart; a short edge works too if you want a longer approach.", "Exactly half the Tyranids surviving when the Tau have all disengaged is not covered: call it a plain draw.", "The vanguard drone ships and Kraken are in the Fleets book’s Tyranid lists (FL p. 429, 435–436)."],
     refs: [["Vanguard fleet list", "FL p. 429"], ["Kraken", "FL p. 435"], ["Vanguard drone ship", "FL p. 436"], ["Protector class cruiser", "FL p. 470"], ["Warp rifts", "RB p. 111"]],
     play: [{ w: "Disengaging", s: "a", t: "Your ships may disengage, but losing a single ship loses the battle." }],
     tools: [{ k: "html", html: CHARS_SUN }],
@@ -420,7 +878,7 @@
     ],
     stools: [],
     notes: ["The convoy’s box is described as on the hunters’ side, 30 cm deep, at least 10 cm from the edge behind it and 20–30 cm from the asteroid field — it cannot be all of these along the same edge as the field. The default is our reading; agree yours.", "Sheva’s +1 boarding bonus also helps here: his ship lifts the medicine on a 3+."],
-    refs: [["Hero class starship", "FL p. 460"], ["Emissary class envoy ship", "FL p. 472"], ["Defender class starship", "FL p. 464"], ["Transports", "RB p. 135"], ["Disengaging", "RB p. 56"]],
+    refs: [["Hero class starship", "FL p. 460"], ["Emissary class envoy ship", "FL p. 472"], ["Defender class starship", "FL p. 464"], ["Transports in a Tau fleet", "FL p. 463"], ["Disengaging", "RB p. 56"]],
     play: [
       { w: "Turns 1–3", s: "b", t: "−2 Leadership: the convoy is taken by surprise." },
       { w: "Lifting the medicine", s: "a", t: "Bring a ship into contact with a cargo transport and roll a D6 instead of a boarding action: 4+ succeeds (3+ for Sheva’s). Then get away — disengage any way you can." },

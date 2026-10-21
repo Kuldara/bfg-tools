@@ -316,7 +316,7 @@
       { t: "Set up celestial phenomena in any agreed way." },
       { t: "Split each fleet into 3 battlegroups, each with at least 1 capital ship or 3 escorts." },
       { t: "Roll off: the winner picks a corner and places one battlegroup there, chosen at random. The other player places one random battlegroup in the opposite corner. Everything else waits in reserve." },
-      { t: "Roll attack ratings (Before the battle): the winner chooses who takes the first turn." }
+      { t: "Roll attack ratings (Before the battle): the winner takes the first turn." }
     ],
     stools: [{ k: "rand", id: "bg", l: "Pick a battlegroup at random" }],
     notes: ["The book shows the corner zones as triangles, 90 cm along the long edge and 60 cm along the short one.", "“Friendly” and “enemy” edges are the two edges meeting at your starting corner and at the enemy’s."],
@@ -353,7 +353,7 @@
       { t: "Set up celestial phenomena in any agreed way." },
       { t: "Roll off: the winner chooses a deployment zone. Each player rolls for the direction their fleet faces (tools below)." },
       { t: "The winner deploys the whole fleet, then the opponent. Every ship parallel to the long edges, facing the rolled way, with at least one capital ship or escort squadron in each of the three sectors." },
-      { t: "Roll attack ratings (Before the battle): the winner chooses who takes the first turn." }
+      { t: "Roll attack ratings (Before the battle): the winner takes the first turn." }
     ],
     stools: [{ k: "roll", id: "da", s: "a", l: "Player A: which way do you face?", rows: () => [[1, 3, "Left to right"], [4, 6, "Right to left"]] }, { k: "roll", id: "db", s: "b", l: "Player B: which way do you face?", rows: () => [[1, 3, "Left to right"], [4, 6, "Right to left"]] }],
     notes: ["The book’s direction roll does not say whose left and right; read it from your own long edge, or agree one view for both fleets before rolling.", "The book does not say whether one roll covers both fleets; here each fleet rolls."],
@@ -383,7 +383,7 @@
     steps: [
       { t: "Set up celestial phenomena in any agreed way." },
       { t: "Roll off: the winner chooses a zone and deploys the whole fleet, 30 cm deep along a long edge; the opponent deploys in the other." },
-      { t: "Roll attack ratings (Before the battle): the winner chooses who takes the first turn." }
+      { t: "Roll attack ratings (Before the battle): the winner takes the first turn." }
     ],
     stools: [],
     notes: ["Intelligence service is the book’s optional extra: the spy, documents or samples are aboard the flagships."],
@@ -413,7 +413,7 @@
     steps: [
       { t: "Set up celestial phenomena in any agreed way, and place the hulk in the middle of the table." },
       { t: "Roll off: the winner chooses a zone, 15 cm deep along a long edge; deploy as the map shows ({a:dep})." },
-      { t: "Roll attack ratings (Before the battle): the winner chooses who takes the first turn." }
+      { t: "Roll attack ratings (Before the battle): the winner takes the first turn." }
     ],
     stools: [],
     notes: ["The book gives the order of choosing zones but not of placing ships; the default is our suggestion.", "Booty lost to something nobody did — a solar flare, say — costs and gives nobody anything."],

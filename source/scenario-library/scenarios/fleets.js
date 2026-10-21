@@ -11,7 +11,7 @@
   /* contact markers as in Convoy (RB p. 134–135) */
   const markers = (who, foe, s, fs) => [
     { w: "Your movement", s, t: "Any of your ships moving within 30 cm of a face-down contact marker activates it: flip it at once, then finish the move. After your movement phase the " + foe + (foe.endsWith("s") ? " deploy" : " deploys") + " every activated marker." },
-    { w: "Start of " + foe + " movement, from turn 2", s: fs, t: "You may activate one marker yourself — two if any enemy ship is on special orders." }
+    { w: "Start of the " + foe + (foe.endsWith("s") ? "’" : "’s") + " movement", s: fs, t: "You may activate one marker yourself — two if any enemy ship is on special orders." }
   ];
 
   /* escaping transport value: heavy = 2 (1 crippled), armed freighter and armed cargo vessel / fast clipper = ½, rounded down at the end (FL p. 182, 192, 523) */

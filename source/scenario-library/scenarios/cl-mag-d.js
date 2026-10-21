@@ -419,7 +419,7 @@
       { t: "Roll off. The higher roll chooses to go first or second (Admiral Jallaque adds +1)." }
     ],
     notes: [OLD + "Planetary Assault: RB p. 136–137. Tau vessels: FL p. 458–.",
-      "The magazine prints an “Orbital Cluster” with a battleship-like profile (Battleship/12, 15 cm, 1 shield, armour 5+/4+ rear, 5 turrets) whose weapons are bought one at a time. The text only says high orbit platforms are built from its weapon options; how the cluster itself is fielded is not explained."],
+      "The magazine prints an “Orbital Cluster” with a battleship-like profile (Battleship/12, 15 cm, 1 shield, armour 5+/4+ rear, 5 turrets) whose weapons are bought one at a time. The text only says high orbit platforms are built from its weapon options; how the cluster itself is fielded is not explained.", "The forces text gives the defender “a Tau Orbital cluster” for free, but the set-up places the Security Orbital Station; this page reads the free item as the station (120 pts)."],
     refs: [["Planetary Assault", "RB p. 136–137"], ["Tau vessels", "FL p. 458–"], ["Planetary defences", "FL p. 496–"]],
     play: [
       { w: "Tau Security Orbital Station (120 pts, free)", s: "b", t: "Defence/12, speed 0, 1 shield, armour 5+, 2 turrets. Railgun batteries 45 cm, firepower 3; ion cannon 30 cm, strength 3; launch bays, one squadron of Barracudas (25 cm) or Mantas (20 cm). All around." },

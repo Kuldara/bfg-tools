@@ -16,7 +16,7 @@
     return A === B ? ["draw", "Level", A + " – " + B + " VP."] : [A > B ? "a" : "b", wins(A > B ? an : bn), an + " " + A + " – " + bn + " " + B + " VP."];
   };
   const AHRIMAN = [
-    { w: "Ahriman", s: "b", t: "Ld 10 on the fleet’s most expensive ship. His fleet may re-roll one command check or Leadership test each turn, and he uses Abaddon’s “You have failed me for the last time” (FL p. 231)." },
+    { w: "Ahriman", s: "b", t: "Ld 10 on the fleet’s most powerful ship. His fleet may re-roll one command check or Leadership test each turn, and he uses Abaddon’s “You have failed me for the last time” (FL p. 231)." },
     { w: "Blessing of Tzeentch · Ward of Chaos", s: "b", t: "Enemy ships firing at his ship shift one column right on the gunnery table. Enemy ships within 15 cm of his ship count as having a blast marker on their base." },
     { w: "Daemonic Horde, once per game", s: "b", t: "Pick any one enemy ship — any range, no line of sight needed. Roll a D6, then that many dice to hit against its lowest armour. Shields count; check criticals as normal; no Lock On re-rolls." }
   ];
@@ -325,7 +325,7 @@
       { s: "a", t: "Pick a short edge and deploy within 30 cm of it, every ship facing the other short edge, each ship or squadron at least 20 cm from the others. Give the rearguard Blood Bond (Sub-plots tab)." },
       { s: "b", t: "No deployment: the attackers roll for ships at the start of each turn. They take the first turn." }
     ],
-    notes: [OLD + "Built on Defence of Pelucidar (RB p. 180–181). Inquisition and Deathwatch ships: the magazine’s Black Ship is now in the Fleets book (FL p. 128–), as are the Deathwatch (FL p. 98–).",
+    notes: [OLD + "Built on Defence of Pelucidar (RB p. 180–181). Inquisition and Deathwatch ships: the magazine’s 270-pt Black Ship comes from BFG Magazine 9; the Fleets book’s Inquisition Blackship is a battleship-sized profile at 300 pts (FL p. 148), and the Deathwatch appear in its Inquisition section (FL p. 133). The magazine’s Deathwatch strike cruiser is a Space Marine strike cruiser (145 pts, FL p. 105) with two free refits, for 175 pts. Agree which costs you use.",
       "If you lack a model for a rolled result, take the next lowest result instead (no cruiser left: three escort squadrons). Agree beforehand whether destroyed ships go back into the pool.",
       "Necron Tombship with Sepulchre and Warmaster Umbros can each appear only once."],
     refs: [["Defence of Pelucidar (the base scenario)", "RB p. 180–181"], ["Blood Bond", "RB p. 125"], ["Necron ships", "FL p. 405–"], ["Inquisition", "FL p. 128–"]],
@@ -390,7 +390,7 @@
     refs: [["Planetary Assault", "RB p. 136–137"], ["Low orbit table", "RB p. 116"], ["Mercurial zone generator", "RB p. 107"], ["Space Marine Gladius, Sword", "FL p. 102–"]],
     play: [
       { w: "Landing troops", t: "On the low orbit table, each turn a capital ship spends within 30 cm of Alurmen’s edge and more than 45 cm from any intact defence station scores 2 assault points (1 if crippled). Not if it shot, launched ordnance or was on special orders that turn." },
-      { w: "Space Marines", t: "Their capital ships get no extra troops. One squadron of Gladius or Sword escorts may carry troops instead: each one that lands on the planet edge scores 1 assault point and is removed." },
+      { w: "Space Marines", t: "Their capital ships get no extra troops. One squadron of up to 4 Gladius or Sword escorts may carry troops instead — tell your opponent which one. Each one that lands on the planet edge scores 1 assault point and is removed." },
       { w: "Eldar defence stations", t: "Defence/1, armour 5+, a 4+ save against any damage and against hit-and-run effects; either a weapons battery (45 cm, firepower 6) or pulsar lances (45 cm, strength 2), front arc. At the end of every ordnance phase each fires at the nearest target in range (D6 if tied), ignoring lone fighters. It cannot be attacked until it has fired once." },
       { w: "The Venturer", s: "a", t: "Its holder may use Lysander’s re-rolls for the whole fleet. On the low orbit table, the Venturer or one friendly ship or squadron within 15 cm may ignore the 4+ save of one defence station within 45 cm when shooting at it." },
       ...AHRIMAN,

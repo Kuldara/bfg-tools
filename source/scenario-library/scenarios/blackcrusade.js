@@ -7,6 +7,7 @@
   const sunEntry = t => {
     const d = Math.max(0, t - 1) * 30;
     return "<h3>Reinforcement entry, turn " + t + "</h3><p class='calc'>" + (d === 0 ? "Only from the <b>sunward edge</b>." :
+      d >= tableWH()[0] ? "From the <b>sunward edge</b>, or <b>anywhere</b> along either long edge." :
       "From the <b>sunward edge</b>, or up to <b>" + d + " cm</b> along either long edge from that end.") + "</p>";
   };
   const alertInfo = (st, side) => {
@@ -103,7 +104,7 @@
       const n = get(st, "alert", 0), o = [];
       if (!n && T === 1) o.push(["b", "Roll the ambush penalty (D6) — tool below"]);
       if (n && T <= n) o.push(["b", "At −1 Leadership (ambushed, turns 1–" + n + ")"]);
-      o.push(["b", T === 1 ? "Reinforcements: sunward edge only" : "Reinforcements: sunward edge, or up to " + (T - 1) * 30 + " cm along the long edges"]);
+      o.push(["b", T === 1 ? "Reinforcements: sunward edge only" : (T - 1) * 30 >= tableWH()[0] ? "Reinforcements: sunward edge, or anywhere along the long edges" : "Reinforcements: sunward edge, or up to " + (T - 1) * 30 + " cm along the long edges"]);
       if (T === 8) o.push([null, "Last turn"]);
       return o;
     },
