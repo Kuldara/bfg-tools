@@ -119,7 +119,7 @@ const CHECK = `(() => {
       if (TERRAIN_ON) await cd.evaluate(`(() => { let k = 0; for (const sc of SC) { const st = stOf(sc); st.bz = { seed: 9000 + (k++) * 31, sel: "zone", log: true }; } save(); return 1; })()`);
       const routes = await cd.evaluate(`(() => {
         window.__R = null; const o = parseHash; parseHash = () => window.__R || o();
-        const r = CATS.map(c => ["home-" + c[0], {view: "list"}, {cat: c[0]}]).concat([["home-filters", {view: "list"}, {cat: "all", fopen: true}], ["prep", {view: "prep"}, {lib: false}], ["prep-lib", {view: "prep"}, {lib: true}], ["subplots", {view: "subplots"}], ["sources", {view: "sources"}]]);
+        const r = CATS.map(c => ["home-" + c[0], {view: "list"}, {cat: c[0]}]).concat([["home-filters", {view: "list"}, {cat: "all", fopen: true}], ["prep", {view: "prep"}, {lib: false}], ["prep-lib", {view: "prep"}, {lib: true}], ["home-filters-size", {view: "list"}, {cat: "all", fopen: true, size: "L"}], ["prep-lib-size", {view: "prep"}, {lib: true, size: "S"}], ["subplots", {view: "subplots"}], ["sources", {view: "sources"}]]);
         const only = ${JSON.stringify(ONLY_IDS)};
         for (const sc of SC) {
           if (only.length && !only.some(p => sc.id.startsWith(p))) continue;
@@ -136,6 +136,8 @@ const CHECK = `(() => {
           if (ex.cat) { DB.cat = ex.cat; DB.lq = ""; }
           DB.fopen = !!ex.fopen;
           if (ex.lib !== undefined) { if (!DB.prep) DB.prep = {}; DB.prep.bmode = ex.lib ? "lib" : "book"; }
+          /* 0.12: kokosuodatin valittuna vain *-size-sivuilla */
+          if (!DB.lf) DB.lf = {}; if (!DB.prep) DB.prep = {}; DB.lf.size = ex.size || ""; DB.prep.size = ex.size || "";
           window.__R = ${JSON.stringify(route)};
           if (window.__R.view === "sc") { const sc = SC.find(s => s.id === window.__R.id), st = stOf(sc); if (ex.v) st.v = ex.v; }
           render(false); window.scrollTo(0, 0);

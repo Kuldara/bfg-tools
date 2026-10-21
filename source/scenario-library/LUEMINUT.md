@@ -183,7 +183,7 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
   RB s. 138 (v1.10 ja v1.11); horizon muisti 30 cm, mutta se on etäisyys reunoista. Muutos koskee myös
   Ahriman's Arrivalia, joka lainaa kartan (`cl-mag-a.js`: P1/P2-nimeäminen poistettu). Karttatesti 0 + 0,
   maastotesti 0. Script-tagit `?v=0.9.2`.
-- **Play-välilehden osiot voi piilottaa (21.10. ilta).** Käyttäjä: *"voi tietty olla hide ominaisuuksia play
+- **Play-välilehden osiot voi piilottaa (21.10. ilta; julkaistu 0.11.2:n kanssa, GitHub 6c76abb. Ennen julkaisua selaintesti leveä ja kapea 0 virhettä, kuvakierros 1 850 sivua 0, mikään ei muuttunut testien aikana. Live: Cruiser Clashissa Play-kartta ja neljä Hide-nappia).** Käyttäjä: *"voi tietty olla hide ominaisuuksia play
   osuudessa. eri ihmisiä kiinnostaa eri jutut ja sillä vältyttäisiin scrollaukselta"*.
   - **Piilotettavat osiot:** vuoron opas (vuororata ja "Turn N" -lista; vuoronumero ja +/− pysyvät aina), kartta "On the
     table", "Scenario rules in play" ja "Tools". Hide- ja Show-nappi on otsikossa, ja piilotetusta osiosta jää vain otsikko.
@@ -223,6 +223,11 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
   battle -arvontaan tulee toinen valikko "vs …" (`f.sug2`, `p.sug2`). Kumpikin on vapaaehtoinen. Kun molemmat on valittu,
   suosituksen pitää sisältää kumpikin laivasto, ja "any fleets" -skenaariot pysyvät mukana kuten ennenkin.
   Orks vs Imperial Navy: arvontapooli 70 (52 any fleets + 18 suositeltua), etusivu 72 (osittainen osuma, esim. Orks-alaryhmät).
+- **0.12 (21.10.2026 ilta): skenaarion koon suodatin** (EI vielä julkaistu). Käyttäjä: *"voisi myös lisätä yhdeksi
+  suodattimeksi skenaarion koon. esim kolme. about 750 1250 ja 1500 tai isommat"*. Etusivun Filtersiin rivi **Size** ja
+  Before the battle -arvontaan sama nappirivi: Small (up to 1000) / Medium (1000–1500) / Large (1500+). Valinta on
+  vapaaehtoinen, ja toinen napautus poistaa sen. Käsin tehty luokitus kaikille 204 skenaariolle on `scenarios/sizes.js`:ssä.
+  Ks. luku "Skenaarion koko (0.12)".
 - **0.10.7 (21.10.2026 ilta): ei oletuksia kartalle eikä maastoa ilman nappia** (julkaistu yhdessä kahden laivaston suodattimen kanssa: GitHub 977e549; ennen julkaisua selaintesti leveä + kapea 0 virhettä, karttatesti 4 020 karttaa 0 + 0, sisältötesti 0 + 0, mittatesti 0, maastotesti 0, kuvakierros 1 850 sivua 0; live tarkistettu: Fleet Engagement "Set-up to be decided", maastonappi ilman laatikkoa, psug2/lsug2 julkaistussa index.html:ssä). Käyttäjä: *"älä näytä esim
   fleet engagment deployment karttaa avatessa kun sitä ei ole vielä päätetty. pitäisi varmaan olla tyhjä ja lukea
   jotain että to be desided jne. ja kaikkiin vastaaviin sama"* ja *"ei kannata laittaa terrainia defaulttina. vasta
@@ -352,6 +357,8 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
 | `battlezone-core.js` | **GENEROITU, älä muokkaa** (0.9): Battlezone Generatorin arvontaydin, kopio `../terrain generator/index.html`:n BZCORE-lohkosta nimiavaruutena `BZ`. Ks. "Maasto (0.9)". |
 | `tee_maastoydin.py` | Kirjoittaa `battlezone-core.js`:n generaattorista (`--tarkista` = vain tarkistus). |
 | `scenarios/terrain-map.js` | `TERRAIN`: jokaisen 204 skenaarion maasto (battlezone ja peruste, skenaarion planeetat ja palat, maininta). |
+| `scenarios/sizes.js` | `SIZE` (0.12): jokaisen 204 skenaarion kokoluokka (S/M/L tai any), pisteet ja peruste. Ks. "Skenaarion koko (0.12)". |
+| `testit/kokotesti.js` | Node (0.12): jokainen skenaario luokiteltu, luokat sallittuja, pisteteksti ja luokka johdonmukaisia, suodattimen luvut etusivulla ja arvonnassa samat. |
 | `testit/maastotesti.js` | Maastotesti Nodessa: ydinkopio, generaattorin sormenjäljet, jokainen skenaario × versio × 5 pöytää × 12 siementä. |
 | `testit/_lataa.js` | Lataa kirjaston Nodeen ilman selainta (DOM tyhjinä olioina); maastotestin apuri. |
 | `testit/maasto_sormenjaljet.json` | Battlezone Generatorin omien karttojen sormenjäljet (7 560 tapausta, ennen ytimen laajennusta). |
@@ -702,8 +709,8 @@ hyötyisi omasta erikoistyökalusta, tehdään se.
 - **C · Attack ratings:** "What is the roll for?" valitsee, valitseeko heitto
   skenaarion (RB s. 120) vai vain hyökkääjän (RB s. 121). Valintatilassa voittaja
   näkee valintalistan: Whole library -tilassa altaan, muuten Core 10:n.
-- Tila tallentuu `DB.prep`:iin (`bmode`, `src`, `bookOnly`, `fits`, `sug`, `excl`,
-  `lpick`, `rmode`).
+- Tila tallentuu `DB.prep`:iin (`bmode`, `src`, `bookOnly`, `fits`, `sug`, `sug2`, `size` (0.12), `excl`,
+  `lpick`, `rmode`). Etusivun suodattimet ovat `DB.lf`:ssä (`trust`, `book`, `pl`, `fits`, `size`, `sug`, `sug2`).
 
 ## Lähteet ja taustat (0.5)
 
@@ -1197,6 +1204,117 @@ se yksikkö"* (Escalating Engagement, 0.9.2).
   sovellus Browser-paneelissa puhelimella (375, tumma teema) ja PC:llä (1440).
 - Ennen/jälkeen-kuvat: `julkaisu/mitat-esittely/` (puhelin ja PC). Arkki- ja vertailutyökalut olivat scratchpadissa
   (`arkki.js`, `vertailu.js`): ne piirtävät kartat `testit/_lataa.js`:n kautta HTML:ksi ja headless-Chromella kuviksi.
+
+## Skenaarion koko (0.12, 21.10.2026)
+
+Käyttäjä: *"voisi myös lisätä yhdeksi suodattimeksi skenaarion koon. esim kolme. about 750 1250 ja 1500 tai isommat"*.
+Pisteet ovat skenaarioissa vapaata tekstiä (41 "Fixed forces", 14 "Equal", 11 "Equal: 1250 or 1500 pts", loput
+yksilöllisiä), joten luokitus on tehty käsin, skenaario kerrallaan, `scenarios/sizes.js`:ään.
+
+### Luokat
+
+Luokka tulee **isomman puolen pisteistä** eli siitä, kuinka paljon pelaajan pitää tuoda:
+- **Small** (`S`): enintään 1000 (750-pelit, partiot, escort-kahakat)
+- **Medium** (`M`): 1001–1499 (1250)
+- **Large** (`L`): 1500 tai enemmän
+
+`SIZE[id] = { s, pts, why }`: `s` on taulukko (`["S"]`, `["M", "L"]` …) tai `"any"`. `pts` ja `why` ovat englanniksi kuten
+muiden taulukoiden perustelut, mutta sivulla niitä ei (vielä) näytetä; kortin alarivillä näkyy jo glance-kentän pisteteksti.
+
+### Luokittelusäännöt
+
+- **Sovittava koko = any.** "Equal", "Agreed", "Any" ja suhteet ("Defender +50%", "Cat 4 : mouse 1") näkyvät kaikissa
+  luokissa kuten "any fleets" laivastosuodattimessa. Puuttuva rivi tulkitaan samoin (`sizeOk`), mutta testi vaatii rivin.
+- **Väli tai versiot osuvat useaan luokkaan.** "1250 or 1500" → Medium + Large. Versiot yhdistetään: Battle over Kotol
+  (750 → 1500) on S + M + L. Suodatin ei katso valittua versiota.
+- **Budjetti "up to X" = X.** Esim. turnausten Advanced-versio "up to 1250" on Medium.
+- **Lähteen suositus ratkaisee, laskuesimerkki ei.** The Siege: *"We have found 1,500 points serves very well"* (BFG Magazine 9)
+  → Large. Nest Raid, Planetary Disease ja The Corpse: "500–1250 recommended" → Small + Medium. Who Goes There "about 1000"
+  → Small. Sen sijaan Reconnaissance Runin "660 against 2000", Cat and Mousen "1000 : 250" ja Convoy Battlen "2000 → 30"
+  ovat esimerkkejä → any.
+- **Budjetin päälle annetut liikkuvat alukset lasketaan listahintaan.** Lachlon II: 1000 + ilmainen Emperor-luokan Legatus
+  Stygies (365) = 1365 → Medium. Siege of Fularis: kaksi Blackstonea. Line of Gehenna: Chaos space hulk (650).
+- **Eivät nosta luokkaa:** D6×10-puolustukset, kiinteät tavoitteet (Naravonan battlestation, Damocles 4:n Tau-asema),
+  kuljetusalukset (Navigate the Storm: 1000 + 10 kuljetusta → Small) ja saatettava hulkki (Space Hulk!).
+- **Kampanjat, joiden taistelut pelataan muina skenaarioina, ovat any:** Phillipa II (400–800 → 2000), Pirates (rosterit
+  2000/1500), Stygies-kampanjapuu (rosterit 1500–2000), Solitaire Campaign ja Hive Ship Pirate Base. Tietoinen linja: Pirates
+  ja Stygies vaativat ison kokoelman, vaikka yksittäinen taistelu voi olla pieni. Testi vaatii `type: "Campaign"` → any.
+- **Satunnaiset hyökkääjät** arvioidaan taulukon keskiarvolla: Merchantmen's Folly D3+5 heittoa ≈ 500–950 → Small,
+  Space Hulk! ≈ 1 000 ja saattue 1200 → Medium, Evacuation D3+3 heittoa ≈ 550 → Small.
+
+### Kiinteät joukot: laskutapa
+
+- Kaikki, millä on listahinta, eli alukset ja puolustukset (asemat, alustat), lasketaan listahintaan. Kuljetuksia ja
+  hyökkäysalusmerkkejä ei lasketa, paitsi tyranidien ostettavat merkit.
+- Hinnat ovat Fleets v0.36:sta: `../fleet builder/bfg_data.json` (generoitu Fleets WiP v0.36:sta ja RB v1.10:stä). Tyranidit on
+  laskettu aseineen `saannot_txt/fleets.txt`:n taulukosta (hive ship 200, cruiser 80, Kraken 25, vanguard 20, escort drone 10 +
+  aseet). Skenaarion oma profiili: Invincible 290 (Cold Passage). Spirit of Arina = Flame of Asuryan 320 kuten sovelluksen
+  huomautuksissa.
+- **Komentajat, merkit ja päivitykset eivät ole summassa.** Jos ne veisivät isomman puolen rajan yli tai summa on rajan
+  tuntumassa, skenaario saa molemmat luokat ja `why` kertoo syyn.
+
+### Rajatapaukset (kirjattu, älä "korjaa" kysymättä)
+
+| Skenaario | Luokka | Peruste |
+|---|---|---|
+| Chance Encounter | S + M | Planet Killer -laivasto 950 + Warmaster (Ld 9, 3 re-rollia) |
+| Death and Glory 2: Rear Guard | S + M | 870–1040 luokkavalinnoista riippuen |
+| Distant Darkness | S + M | viisi Protectoria 925 + viisi nimettyä komentajaa |
+| Ever Dream | S + M | Abandon All Hopen rippeet ≈ 970 aseineen, evoluutiot ja komentajat päälle |
+| Tears in Motion | S + M | neljä grand cruiseria 930 + merkit ja daemonship |
+| Starblade | S + M | 830 + Warmaster (Ld 10) ja Nurglen merkit |
+| The Art of Command, Part One | M + L | Tau 1385, Novamarines 1460 Horizon's Edgen kanssa (battle barge), + Master of the Fleet |
+| Grace | M + L | molemmat 1450 listahinnoin, amiraalit päälle |
+| Hunt for the Eldar 2 | M + L | osan 1 (1500 vs 1000) eloonjääneet + Haven 500 |
+| Eliarenath's Gift | M | partio 1180, väijytys 1250; Eclipse (250) on kolmas osapuoli. Jos väijyjä pelaa sen, hän tuo 1500 |
+| Carrier Clash (Antioc 4) | S + M + L | "Equal, 1000 or more": tiukka raja, 1000 on Small |
+| Battle over Kotol, Ambush (Book of Nemesis) | S + M + L | viisi taistelua 750 → 1500; puolustaja 1000–1500 |
+| Cadian Line, Minor Engagement | any | sovittu, enintään 1500 |
+| The Battle of Numitor, The Fate of the Abhorrence | any | lähde sallii sovitun koon; historialliset laivastot ≈ 1850 ja ≈ 1450 |
+| In the Depth of Space | S + L | versiot 750, Flood 1500, pikaluonnos 500 tai 1500; ei Medium-versiota |
+| Solblade 1, 2, 4, 5, 6 | L | Solblade-pelaaja tuo 250, tyranidit 1500–2000: isomman puolen sääntö |
+| Norduun | M | Chaos-saattueen metsästäjät 1020–1090 + Warmaster |
+
+### Jakauma (21.10.2026, `testit/kokotesti.js`)
+
+| Luokka(t) | Skenaarioita |
+|---|---|
+| S | 59 |
+| M | 16 |
+| L | 35 |
+| S + M | 10 |
+| M + L | 22 (mm. kaikki 17 turnausskenaariota) |
+| S + L | 1 |
+| S + M + L | 3 |
+| any | 58 |
+
+Suodattimen tulos: **Small 131** (73 omaa + 58 any), **Medium 109** (51 + 58), **Large 119** (61 + 58).
+Orks vs Imperial Navy (etusivu 72) + Small 49, + Medium 54, + Large 50.
+
+### Käyttöliittymä
+
+- Etusivun Filters: oma rivi **Size** Players-rivin alla, napit kuten Players (`chip("lfs", …)`, `DB.lf.size`). Lasketaan
+  Filters-napin lukuun, ja Clear filters tyhjentää sen.
+- Before the battle → Whole library: kolme nappia Book rules only / Fits my table -rivin alla (`psize`, `DB.prep.size`).
+- Brief ehdotti alasvetovalikkoa ("Any size / Small / Medium / Large"). Tein napit, koska valinta on silloin yksi napautus
+  eikä kaksi (UI-linja), ja Players-suodatin toimii jo samoin. "Any size" on se, ettei mitään nappia ole valittu.
+- Samalla korjattu vanha vika (käyttäjän luvalla): puhelimella etusivun "Suggested for" -valikko valui Filters-paneelin
+  reunan yli, koska `.flrow select` -säännöstä puuttui `max-width: 100%` (arvonnan `.tblctl select`issä se oli).
+
+### Testit (0.12)
+
+- `node "scenario library/testit/kokotesti.js"`: 204 riviä, 92 johdonmukaisuustarkistusta, suodattimen luvut etusivulla ja
+  arvonnassa samat, 0 virhettä.
+- Selaintesti (`?v=0.12.0`) leveänä (1440) ja kapeana (375): kumpikin 15 184 näkymää, 204 otsikkoa, 0 virhettä. Lisäksi
+  etusivu ja arvonta jokaisella kokovalinnalla: luvut 204 / 131 / 109 / 119 molemmissa, ei vaakavieritystä kapealla.
+- Sisältötesti 0 + 0 (15 180 tulosfunktiokutsua, 314 sovittavaa kohtaa). Mittatesti 0 virhettä. Kaikki `scenarios/*.js`
+  `node --check`.
+- Kuvakierros: 1 854 sivua, 0 löydöstä. `kuvakierros.js` kuvaa nyt myös sivut `home-filters-size` (Large valittuna) ja
+  `prep-lib-size` (Small valittuna); muilla sivuilla kokovalinta tyhjennetään.
+- Esittelykuvat: `julkaisu/koko-esittely/` (PC 1440 ja puhelin 390, tumma teema).
+- **Ansa (21.10.):** headless-Chrome Pythonin `http.server`ia (esikatselu 8785) vasten latasi osan skenaariotiedostoista
+  vajaana (All 77 / 204), vaikka load-tapahtuma tuli. Kuvaa omalla Node-palvelimella kuten `kuvakierros.js` ja tarkista
+  `SC.length` ennen kuvaa.
 
 ## Julkaisu (20.10.2026)
 
