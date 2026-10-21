@@ -185,7 +185,7 @@
   /* ------------------------------------------------------------ AHRIMAN'S ARRIVAL */
   {
     id: "cl-ahriman", grp: "cl-mag", name: "Ahriman’s Arrival", series: "Cerberus War · BFG Magazine 6", trust: "classic",
-    why: "Escalating Engagement against the Arch-Sorcerer Ahriman, whose whole fleet arrives at once on turn 2. The Imperials only have to hurt him.", src: "BFG Magazine 6 p. 19–21", book: "E", suggest: ["Imperial Navy", "Chaos"],
+    why: "Escalating Engagement against the Arch-Sorcerer Ahriman, whose whole fleet arrives at once on turn 2. The Imperials only have to hurt him.", src: "BFG Magazine 6 p. 19–21", book: "O", suggest: ["Imperial Navy", "Chaos"],
     others: "Any fleet can face Ahriman. He is an unofficial special character, so take him only with your opponent’s agreement; without him, give the Chaos flagship Abaddon’s re-roll rules (FL p. 230–231).",
     sides: { a: { n: "Imperial Navy", f: "Imperial Navy" }, b: { n: "Ahriman’s fleet", f: "Chaos (Tzeentch)" } },
     pitch: "Ahriman rides a warp current into the Willow system. The scattered Imperial fleet cannot win — but every hour it delays him buys warnings for the rest of the sector.",

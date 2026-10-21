@@ -194,14 +194,14 @@
     glance: [["Points", "Cat 4 : mouse 1 (e.g. 1000 : 250)"], ["Table", "Any; dense terrain"], ["Battlezone", "Any but Mercurial"], ["First turn", "The mouse"], ["Victory", "Mouse survives to turn 11"]],
     bring: ["Plenty of phenomena to hide among"],
     forces: { a: ["A quarter of the agreed limit (250 pts against 1000)."], b: ["The full agreed limit."] },
-    draw: (v, W, H) => [{ z: "circ", cx: W / 2, cy: H / 2, r: 10, s: "a", l: "" }, { z: "text", x: W / 2, y: H / 2 - 16, l: "mouse: within 10 cm of each other", s: "a" },
-      { z: "edge", e: "l", s: "b", l: "Cat deploys along this short edge" }, { z: "dim", x1: 0, y1: H / 2 + 18, x2: W / 2 - 10, y2: H / 2 + 18, l: "60 cm +" }],
+    draw: (v, W, H, st, sc) => { const d = agN(sc, st, "dep"); return [{ z: "circ", cx: W / 2, cy: H / 2, r: 10, s: "a", l: "" }, { z: "text", x: W / 2, y: H / 2 - 16, l: "mouse: within 10 cm of each other", s: "a" },
+      R(0, 0, d, H, "b", ""), { z: "text", x: d / 2 + 1.5, y: H / 2, l: "Cat " + d + " cm", s: "b", rot: -90 }, { z: "dim", x1: d, y1: H / 2 + 18, x2: W / 2 - 10, y2: H / 2 + 18, l: "60 cm +" }]; },
     fit: () => [140, 60],
     mapNote: "The mouse must be over 60 cm from the cat’s edge, so the centre only works on tables at least about 140 cm long — otherwise set it further from the cat.",
     steps: [
       { t: "Pick any battlezone except Mercurial and set up plenty of phenomena by agreement — enough for a chase." },
       { s: "a", t: "Deploy first, near the centre: all ships within 10 cm of each other, more than 60 cm from the cat’s short edge." },
-      { s: "b", t: "Deploy anywhere along your short edge, more than 60 cm from every mouse ship." },
+      { s: "b", t: "Deploy within {a:dep} cm of your short edge (agreed above), more than 60 cm from every mouse ship." },
       { s: "a", t: "You take the first turn." }
     ],
     notes: ["The cat’s deployment depth is not given."],
@@ -217,7 +217,7 @@
   /* ------------------------------------------------------------ THE SOLAR COLLECTORS */
   {
     id: "wr-solar-collectors", grp: "untested", name: "The Solar Collectors", series: "Diasporex scenarios", trust: "untested",
-    why: NO_REPORT + " " + DIASP, src: "Warp Rift 15, p. 32 (collector rules p. 11)", book: "E", suggest: ["Diasporex (fan)"],
+    why: NO_REPORT + " " + DIASP + " The collector rules are given here, so any fleet can defend.", src: "Warp Rift 15, p. 32 (collector rules p. 11)", book: "O", suggest: ["Diasporex (fan)"],
     others: "The collector rules are given below, so any defending fleet can refuel this way.",
     sides: { a: { n: "Diasporex", f: "Diasporex (or any defender)" }, b: { n: "Attacker", f: "Any fleet" } },
     pitch: "Collectors soak up a star’s energy for six turns. The longer they charge, the harder they explode — and the defenders must carry them out.",

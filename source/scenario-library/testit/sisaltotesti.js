@@ -70,30 +70,31 @@
       if (/\b(\w+s|Eldar) wins\b/.test(h) && !/\b(\w*ss|Chaos) wins\b/.test(h)) { items.push("err TAIPUMINEN " + sc.id + " :: " + h); break; }
     }
   }
-  /* 5. ARVIO (21.10.): jokaisella Warp Rift -skenaariolla on kirjaston taso ja perustelu (scenarios/wr-rating.js),
-     taso fan ⇔ book "E", eikä luokitustiedostossa ole tuntemattomia tunnisteita. */
-  const wrIds = new Set(SC.filter(sc => sc.trust === "wr").map(sc => sc.id));
-  for (const sc of SC.filter(sc => sc.trust === "wr")) {
-    const r = WR_RATE[sc.id];
-    if (!r) { items.push("err ARVIO " + sc.id + " :: ei riviä wr-rating.js:ssä"); continue; }
-    if (!r.r) items.push("err ARVIO " + sc.id + " :: perustelu puuttuu");
-    if (!["rec", "agree", "fan"].includes(sc.tier)) items.push("err ARVIO " + sc.id + " :: taso " + sc.tier);
-    if ((sc.tier === "fan") !== (sc.book === "E")) items.push("err ARVIO " + sc.id + " :: taso " + sc.tier + " mutta book " + sc.book);
-    const ids = new Set();
-    for (const x of r.a || []) {
-      if (!x.id || !x.l || x.d === undefined || x.d === "") items.push("err ARVIO " + sc.id + " :: kohdasta puuttuu id, l tai d");
-      if (!x.o && !x.s) items.push("err ARVIO " + sc.id + " :: " + x.id + ": oletuksella ei lähdettä eikä o:1");
-      if (ids.has(x.id)) items.push("err ARVIO " + sc.id + " :: " + x.id + " kahdesti"); ids.add(x.id);
-    }
-    /* {a:id} askelissa ja huomautuksissa osoittaa olemassa olevaan kohtaan */
+  /* 5. AUKOT (21.10.): auki jäävät kohdat (scenarios/wr-rating.js WR_RATE ja open-points.js OPEN). Jokaisella
+     WR-skenaariolla on rivi ja muistiinpano; jokaisella kohdalla on id, otsikko, oletus ja lähde tai o: 1;
+     book "E" vain ilman kirjojen vaihtoehtoa (tagi Fan rules optional ei saa olla E:llä); {a:id} osoittaa
+     kohtaan, joka näkyy kyseisessä versiossa; tuntemattomia tunnisteita ei ole. */
+  const ids0 = new Set(SC.map(sc => sc.id)), wrIds = new Set(SC.filter(sc => sc.trust === "wr").map(sc => sc.id));
+  for (const id of Object.keys(WR_RATE)) if (!wrIds.has(id)) items.push("err AUKOT " + id + " :: tuntematon tunniste wr-rating.js:ssä");
+  for (const id of Object.keys(OPEN)) if (!ids0.has(id) || wrIds.has(id)) items.push("err AUKOT " + id + " :: tuntematon tai WR-tunniste open-points.js:ssä");
+  let nAg = 0;
+  for (const sc of SC) {
+    const r = sc.trust === "wr" ? WR_RATE[sc.id] : OPEN[sc.id];
+    if (sc.trust === "wr" && (!r || !r.r)) items.push("err AUKOT " + sc.id + " :: WR-skenaariolta puuttuu rivi tai muistiinpano");
+    if ((sc.tags || []).includes("Fan rules optional") && sc.book === "E") items.push("err AUKOT " + sc.id + " :: Fan rules optional mutta book E");
     const vs = sc.variants ? sc.variants.map(x => x[0]) : ["std"];
-    for (const v of vs) for (const t of sc.steps.map(x => x.t).concat((sc.play || []).map(x => x.t), pickV(sc.win, v) || [], pickV(sc.end, v) || [], [val(sc.mapNote, v) || "", val(sc.noMap, v) || ""])) {
-      for (const m of String(t).matchAll(/\{a:(\w+)\}/g)) if (!ids.has(m[1])) items.push("err ARVIO " + sc.id + " :: {a:" + m[1] + "} ilman kohtaa");
+    for (const v of vs) {
+      const ids = new Set();
+      for (const x of (sc.agree || []).filter(x => vis(x, v))) {
+        nAg++;
+        if (!x.id || !x.l || x.d === undefined || x.d === "") items.push("err AUKOT " + sc.id + " :: kohdasta puuttuu id, l tai d");
+        if (!x.o && !x.s) items.push("err AUKOT " + sc.id + " :: " + x.id + ": oletuksella ei lähdettä eikä o:1");
+        if (ids.has(x.id)) items.push("err AUKOT " + sc.id + " " + v + " :: " + x.id + " kahdesti samassa versiossa"); ids.add(x.id);
+      }
+      const texts = sc.steps.filter(x => vis(x, v)).map(x => x.t).concat((sc.play || []).filter(x => vis(x, v)).map(x => x.t), pickV(sc.win, v) || [], pickV(sc.end, v) || [], [val(sc.mapNote, v) || "", val(sc.noMap, v) || ""]);
+      for (const t of texts) for (const m of String(t).matchAll(/\{a:(\w+)\}/g)) if (!ids.has(m[1])) items.push("err AUKOT " + sc.id + " " + v + " :: {a:" + m[1] + "} ilman kohtaa");
     }
   }
-  /* sama {a:id}-tarkistus muille kuin WR-skenaarioille (niillä ei ole kohtia) */
-  for (const sc of SC.filter(sc => sc.trust !== "wr")) for (const x of sc.steps) if (/\{a:\w+\}/.test(x.t)) items.push("err ARVIO " + sc.id + " :: {a:..} ilman kohtia");
-  for (const id of Object.keys(WR_RATE)) if (!wrIds.has(id)) items.push("err ARVIO " + id + " :: tuntematon tunniste");
   const err = items.filter(x => x.startsWith("err")).length;
-  return JSON.stringify({ counts: { scenarios: SC.length, maps, lines, results, rated: wrIds.size }, err, warn: items.length - err, items });
+  return JSON.stringify({ counts: { scenarios: SC.length, maps, lines, results, openPoints: nAg }, err, warn: items.length - err, items });
 })()

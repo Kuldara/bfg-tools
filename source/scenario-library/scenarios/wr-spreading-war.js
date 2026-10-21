@@ -158,8 +158,10 @@
       a: ["3 light cruisers, 2 cruisers (only one with launch bays), 6 escorts.", "Normal Leadership in this battle."],
       b: ["2 cruisers (no heavy or battlecruisers), 1 battleship, 5 escorts.", "Only one ship — a cruiser or the battleship — may have launch bays."]
     },
-    noMap: "The scenario gives no table set-up. Agree one — a Fleet Engagement set-up works well.",
-    steps: [{ t: "Agree the table, phenomena, deployment and first turn — the scenario gives none." }],
+    draw: (v, W, H) => [R(W / 2 - 20, H - 20, 40, 20, "a", "Imperial box 40 × 20"), R(0, 0, 20, 20, "b", "box"), R(W - 20, 0, 20, 20, "b", "box"), { z: "text", x: W / 2, y: 16, l: "renegades: either or both\n20 × 20 corner boxes", s: "b" }],
+    fit: () => [80, 60],
+    mapNote: "The scenario gives no set-up. This is the default above: the set-up of Death and Glory, the scenario it continues (Warp Rift 28, p. 26).",
+    steps: [{ t: "Battlezone: {a:bz}. Set up phenomena for it by the rulebook." }, { t: "Set-up: {a:setup}." }, { t: "First turn: {a:first}." }],
     notes: [SERIES_NOTE, "No table set-up, deployment or first turn is given."],
     refs: [["Torpedoes and Reload Ordnance", "RB p. 46, 76–77"], ["Critical hits table", "RB p. 67"]],
     play: [
@@ -337,12 +339,12 @@
     mapNote: "Fitch enters 30 cm along his chosen long edge from the Ork edge on turn 1 (5+), or 60 cm on turn 2 (3+) or turn 3 (automatic).",
     steps: [
       { t: "Both players write two rosters, 1200 and 1500 pts. Put each in an envelope with two blank ones; each player draws until a roster comes out — that is the force for this battle, and the other roster fights the second raid. (The tool below does the same draw.)" },
-      { t: "Set up a planet only, as the source’s old rulebook page 76 (see note), with one airbase, two laser silos and two orbital weapons platforms just outside its gravity well." },
+      { t: "Set up a planet only, placed as in Planetary Assault (RB p. 136; the source’s old rulebook page 76), with one airbase, two laser silos and two orbital weapons platforms just outside its gravity well." },
       { s: "b", t: "Place your force 30 cm in from the short edge furthest from the planet. You go first." },
       { s: "a", t: "Choose a long edge for your arrival (see Play)." }
     ],
     stools: [{ k: "roll", id: "env", l: "Envelope draw (same odds)", sub: "D6 per player", rows: () => [[1, 3, "Your 1200 pt roster fights this battle"], [4, 6, "Your 1500 pt roster fights this battle"]] }],
-    notes: [SERIES_NOTE, "“Blue Rulebook page 76” is the old rulebook; it has not been matched to Rulebook v1.10 (Planetary Assault is the likely candidate). Its planetary defence pages (142, 146) are old pages too — see FL p. 496– for platforms."],
+    notes: [SERIES_NOTE, "“Blue Rulebook page 76” is the original rulebook’s Planetary Assault, now RB p. 136; its planetary defence pages (142, 146) are now FL p. 496–."],
     refs: [["Planetary defences", "FL p. 496–"], ["Crew skills (campaign)", "RB p. 159"], ["Victory points", "RB p. 122"]],
     play: [{ w: "Fitch arrives", s: "a", t: "Turn 1: on 5+ enter 30 cm along your chosen long edge, measured from the Ork edge. Turn 2: on 3+ enter 60 cm along it. Turn 3: enter there automatically." }, { w: "Ork targets", s: "b", t: "The airbase, its silos and the orbital platforms." }],
     fx: T => T === 1 ? [["a", "Arrival: 5+ at 30 cm along your long edge"]] : T === 2 ? [["a", "Arrival: 3+ at 60 cm (if not on yet)"]] : T === 3 ? [["a", "Arrival: automatic at 60 cm (if not on yet)"]] : [],
@@ -366,11 +368,11 @@
       { z: "edge", e: "l", s: "a", l: "Fitch races in" }, { z: "edge", e: "t", s: "b", dash: 1, l: "Ork flank (one long edge, chosen secretly)" }, { z: "edge", e: "b", s: "b", dash: 1, l: "" }],
     fit: () => [120, 60],
     steps: [
-      { t: "Set up a planet only, as the source’s old rulebook page 72 (see note), with two airbases each guarded by two laser silos." },
+      { t: "Set up a planet only, placed as in Surprise Attack (RB p. 132; the source’s old rulebook page 72), with two airbases each guarded by two laser silos." },
       { s: "b", t: "Secretly write down which long edge you will enter from." },
       { s: "a", t: "Enter first from one short edge, racing for the planet." }
     ],
-    notes: [SERIES_NOTE, "“Blue Rulebook page 72” is the old rulebook and has not been matched to Rulebook v1.10."],
+    notes: [SERIES_NOTE, "“Blue Rulebook page 72” is the original rulebook’s Surprise Attack, now RB p. 132."],
     refs: [["Planetary defences", "FL p. 496–"], ["Victory points", "RB p. 122"]],
     play: [{ w: "Orks arrive", s: "b", t: "Turn 1: on 5+ enter anywhere on your chosen long edge, but not within 45 cm of the Imperial force. Turn 2: on 4+. Turn 3: automatically." }],
     fx: T => T === 1 ? [["b", "Ork arrival: 5+"]] : T === 2 ? [["b", "Ork arrival: 4+ (if not on yet)"]] : T === 3 ? [["b", "Ork arrival: automatic (if not on yet)"]] : [],

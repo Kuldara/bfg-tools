@@ -76,7 +76,7 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
   - Sources-sivulla: "its articles are written by whoever submits one". Ainoa
     komitealle merkitty julkaisu on WR48:n *Armada Indomitus: Codex Orks*.
   Tunnisteet (`committee`, `wro`) pysyivät, joten tallennetut valinnat toimivat edelleen.
-- **Warp Riftin laatuluokitus (21.10., julkaistu):** horizon vastasi Discordissa: *"Everything
+- **Warp Riftin laatuluokitus (21.10., julkaistu; tasot poistettu samana iltana, ks. alla):** horizon vastasi Discordissa: *"Everything
   Ray, Bob, Nate or I have written for Warp Rift is the same fanwork status as any other
   written article … please don't give us a separate status."* ElectricFan127: arvioi teoksia
   niiden omilla ansioilla. Käyttäjä haluaa silti erottelun, joten se tehtiin skenaarion
@@ -90,7 +90,7 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
     - **Agree first** 10: perusasioita puuttuu tai ne ovat epäselviä.
     - **Needs fan rules** 13: kaikki `book: "E"`.
   - Etusivulla yksi kategoria **Warp Rift** (58), jonka lista jaetaan tasoittain.
-    Arvonnan lähteet ovat WR recommended / WR agree first / WR needs fan rules.
+    Arvonnan lähteet olivat WR recommended / WR agree first / WR needs fan rules (poistettu samana iltana).
   - Tagit kortissa ja otsakkeessa: **Rules writer** (13, käyttäjä halusi pitää tagin ja
     sen löytymisen haulla: "rules writer(s)", "by rules writers", "committee", "high
     admiralty"), **Played** (19), **Lore competition** (2) ja **Play both sides** (Spreading
@@ -110,16 +110,24 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
   Lisäksi *"tee kaikille … rank laadullisesti (sisäinen tutkimus) … miten laatua saisi huonoista
   paremmaksi lähdettä tarkastelemalla"*.
   - **Agree before you start:** jokainen kohta, jonka lähde jättää auki, on Set-upissa
-    kirjoituskenttä oletusarvoineen. Kentät on määritelty `scenarios/wr-rating.js`:ssä (`a`) ja
-    tallennetaan `st.w["ag_" + id]`. Oletus tulee kirjan vastaavasta virallisesta tapauksesta
+    kirjoituskenttä oletusarvoineen. Kentät on määritelty Warp Riftille `scenarios/wr-rating.js`:ssä
+    ja muille `scenarios/open-points.js`:ssä (`a`), ja ne tallennetaan `st.w["ag_" + id]`.
+    Versiokohtaiset kentät käyttävät `only`/`not`-suodatusta. Oletus tulee kirjan vastaavasta virallisesta tapauksesta
     sivunumerolla, esimerkiksi aloitusvuoro RB s. 128/133/143, kesto RB s. 130/132/139/143,
     syvyys 15 cm RB s. 133/136/140 ja hyökkääjä RB s. 121, tai se on merkitty sanalla Suggestion
-    (`o: 1`). Askeleet, kartta, Play-säännöt, End ja Victory näyttävät sovitun arvon
+    (`o: 1`, sivulla "Our suggestion"). Askeleet, kartta, Play-säännöt, End ja Victory näyttävät sovitun arvon
     (`{a:id}`, `agV`, `agN`), ja Play-välilehdellä on lista sovituista.
-  - **Taso lasketaan** (`wrInit`): Needs fan rules = book "E"; Agree first = jokin auki jäävä
-    kohta ratkaisee voiton (`v: 1`) tai lähde on luonnos (`sketch: 1`); muuten Recommended.
-    Tulos: Recommended 54, Agree first 3 (Depth of Space, Mobeel, Wolf Hunt), Needs fan rules 1
-    (Darkening Raid).
+  - **Ei laatuluokkia sivulla** (käyttäjä 21.10.: *"ei aleta luokittelemaan … max 3 kategoriaa
+    mutta jos ei ole järkeä niin ei tehdä"* ja *"wart drift jäänee yhdeksi kategoriaksi mutta vanha
+    alkuperäinen jako löytyy tägeillä"*). Oletusarvojen jälkeen Warp Riftin tasojako olisi ollut
+    55 / 3 / 0, joten tasot (Recommended / Agree first / Needs fan rules) poistettiin. Warp Rift
+    on yksi kategoria numerojärjestyksessä, ja vanha jako näkyy tageina: Rules writer, Lore
+    competition, Community ja Played. Tagi **Agree first** tulee, kun auki jäävä kohta ratkaisee
+    voiton (`v: 1`) tai lähde on luonnos (`sketch: 1`): Abhorrence, Mobeel ja Wolf Hunt.
+    Arvonnan lähteissä on taas yksi Warp Rift.
+  - **Kaikki skenaariot** (käyttäjä: *"anna sivuntekijän ehdotuksina kaikkiin"*): kirjojen ja
+    Classic GW:n aukot Source notes -huomautuksista kentiksi (`open-points.js`). Yhteensä 94
+    skenaariossa on kenttiä, 189 kohtaa versiot mukaan lukien.
   - **E vain ilman kirjojen vaihtoehtoa** (käyttäjän sääntö): 16 skenaariota E → O ja tagi
     *Fan rules optional* tai *Linked games optional*. Näitä ovat Classic GW:n Ahriman, Cold
     Passage, Cerberus 1 ja 4 (Ahrimanille vaihtoehto) sekä WR:n Diversions, Solblade 1–6, Solar
@@ -144,6 +152,19 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
     numerokentät maksimissaan: 0/0, kun Eldar Hunt 1:n ja Hammer Needs an Anvilin pöydän
     vähimmäiskokoa nostettiin. Sisältötestin ARVIO tarkistaa kentät ja `{a:id}`-viittaukset.
   - **Sisäinen laatututkimus** kaikista 137 skenaariosta: `tutkimus/` (ks. sen LUEMINUT).
+  - **Tutkimuksen suositukset toteutettu** (käyttäjä: *"toteuta kaikki suosituksesi"*):
+    - Depth of Space: versiokohtaiset oletukset kirjoittajan mainitsemista virallisista
+      skenaarioista.
+    - Abhorrence: kentät, ja kartta seuraa niitä.
+    - Boarding Party ja Deadline: W → O + Linked games optional.
+    - Darkening Raid: E → O + Fan rules optional; vaihtoehtona contact-merkit (RB s. 134–135).
+    - Pirate Bases: assault boat -versio.
+    - Fall of Hyra: ohje ilman kytkettyjä pelejä.
+    - Kotol: tasapeli ja vyöhykkeet kenttinä.
+    - Wolf Hunt: kaappaukseen FL s. 207 -viite.
+    - Falling Down: kartan alkuperä (Ar'Cianr, WR20) karttahuomautukseen.
+    - Kirjastossa ei ole enää E- eikä W-skenaarioita; tyhjät sääntöluokat piilotetaan
+      suodattimista.
 - **Leveät näytöt (20.10. yö, julkaistu):** käyttäjän pyyntö parantaa käyttöä PC:llä,
   tabletilla ja käännetyllä puhelimella ("paljon tyhjää sivuille ja silti paljon
   vieritettävää"). Esittelyn jälkeen käyttäjä: "ihan ok näyttää", lisää optimointia, sitten
@@ -158,7 +179,8 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
 | `scenarios/blackcrusade.js` | Black Crusade -kampanja, RB s. 191–199 (7). |
 | `scenarios/_wr.js` | Yhteiset apurit: `WR_DATES`, `wrCredit(n, tekijä)`, `entryTicks`. |
 | `scenarios/wr-committee.js` | WR-skenaariot, joiden kirjoittaja tekee myös sääntöjä (tagi Rules writer): Depth of Space (7 versiota), Diasporex Diversions, Solblade 1–6. |
-| `scenarios/wr-rating.js` | Warp Riftin `WR_RATE`: perustelu (`r`), auki jäävät kohdat kirjoituskenttinä (`a`: oletus, lähde tai Suggestion, yksikkö, max), tagit (`t`), `sketch`. Taso lasketaan `wrInit()`:ssä. Ladataan viimeisenä. |
+| `scenarios/open-points.js` | Kirjojen ja Classic GW:n `OPEN`: auki jäävät kohdat kirjoituskenttinä (`a`) ja tagit (`t`). Sama muoto kuin `WR_RATE`:ssa. |
+| `scenarios/wr-rating.js` | Warp Riftin `WR_RATE`: muistiinpano (`r`, sivulla "Our note"), auki jäävät kohdat kirjoituskenttinä (`a`: oletus, lähde tai oma ehdotus, yksikkö, max, versiot), tagit (`t`), `sketch`. `wrInit()` lukee molemmat tiedostot. Ladataan viimeisenä. |
 | `tutkimus/` | Sisäinen laatututkimus (ei julkaista): kaikkien skenaarioiden pisteytys ja parannusehdotukset. |
 | `scenarios/wr-community-a.js` | L3 pelattuja: Who Goes There?, Fannon's Patrol, Planet Killer, Minor Engagement, Commerce Raiders, Nest Raid, Planetary Disease, The Corpse. |
 | `scenarios/wr-spreading-war.js` | L3 Reg Steinerin The Spreading War (WR28–29), 11 skenaariota. |
@@ -266,13 +288,12 @@ satunnaisotos käsin: 40/40 oikein.
 | `campaign` / `rulebook` | Rulebook | Armageddon (3) ja Black Crusade (7) |
 | `committee` / `wr` | Warp Rift + tagi Rules writer | Kirjoittaja tekee myös sääntöjä (HA, sääntökomitea tai Remasteredin tekijä). Henkilökohtaisia artikkeleita, ei komitean julkaisuja |
 | `lore` / `wr` | Warp Rift + tagi Lore competition | Shadowsun-kilpailun voittajat |
-| `community` / `wr` | Warp Rift + tagi Played | L3: peliraportti tai -kokemus lähteessä |
-| `untested` / `wr` | Warp Rift | L4: ei peliraporttia, tai tarvitsee fanisääntöjä tai muita pelejä |
+| `community` / `wr` | Warp Rift + tagit Community, Played | L3: peliraportti tai -kokemus lähteessä |
+| `untested` / `wr` | Warp Rift + tagi Community | L4: ei peliraporttia |
 
 WR-skenaarioiden `grp` on sisäinen L-luokka, ja `wrInit()` asettaa kaikille `trust: "wr"`.
-Etusivun osion ja arvonnan lähteen ratkaisee kirjaston taso `sc.tier`, joka lasketaan säännöstä:
-E → Needs fan rules; voittoon vaikuttava auki jäävä kohta (`v: 1`) tai luonnos → Agree first;
-muuten Recommended. Tagi Rules writer säilyy ja löytyy haulla (käyttäjä 21.10.).
+Warp Rift on etusivulla ja arvonnassa yksi kategoria (21.10. ilta), ja lista on numerojärjestyksessä
+(`wrIssue`). Vanha jako löytyy tageista ja haulla (käyttäjä 21.10.).
 | `fleets` / `fleets` | Fleets book | Fleets v0.36:n skenaariot (etusivulla Books-kategoriassa) |
 | `cl-ws`, `cl-mag`, `cl-inv`, `cl-fan` / `classic` | Classic GW | Warp Storm; Planet Killer + BFG Magazine; Invasion + 2002 Annual; Fanatic Magazine + Fanatic Online |
 
@@ -476,7 +497,7 @@ hyötyisi omasta erikoistyökalusta, tehdään se.
     yleisskenaariota), ja tuloksen jälkeen Reroll.
   - **Whole library:** tämän sovelluksen oma lisäys, joka ei tule kirjasta.
     Arvonta on tasainen koko kirjastosta. Suodattimet: lähde (Core 10 /
-    Books / Classic GW / WR recommended / WR agree first / WR needs fan rules, 21.10. alkaen), "Book rules only", "Fits my table" (`FITS`
+    Books / Classic GW / Warp Rift, 21.10. illasta), "Book rules only", "Fits my table" (`FITS`
     nykyisellä pöydällä; jos jokin versio mahtuu, skenaario kelpaa) ja "Suggested
     for" -faktio (any-fleet-skenaariot pysyvät mukana). Altaan sirun napautus
     jättää skenaarion pois. Reroll arpoo eri skenaarion kuin edellinen.

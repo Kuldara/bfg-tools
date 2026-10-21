@@ -353,7 +353,7 @@
   /* ------------------------------------------------------------ BOARDING PARTY (BFG + 40K) */
   {
     id: "cl-inv-boarding", grp: "cl-inv", name: "Boarding Party", series: "Invasion · linked with Warhammer 40,000", trust: "classic",
-    why: "An outnumbered fleet sends a suicide squad aboard the enemy flagship. The boarding action is played out as a game of Warhammer 40,000.", src: "Invasion p. 16–17", book: "W", suggest: null,
+    why: "An outnumbered fleet sends a suicide squad aboard the enemy flagship. The boarding action is played out as a game of Warhammer 40,000.", src: "Invasion p. 16–17", book: "O", suggest: null,
     others: "Written for any two fleets, with Warhammer 40,000 armies to match.",
     sides: { a: { n: "Defender", f: "Any" }, b: { n: "Attacker", f: "Any" } },
     pitch: "Outgunned, your only hope is the enemy flagship’s torpedo bay. Get a squad aboard, plant the charges, and let the chain reaction do the rest.",
@@ -392,7 +392,7 @@
   /* ------------------------------------------------------------ DEADLINE (BFG + 40K) */
   {
     id: "cl-inv-deadline", grp: "cl-inv", name: "Deadline", series: "Invasion · linked with Warhammer 40,000", trust: "classic",
-    why: "A Macro Cannon on the planet blasts the attacking fleet — until the ground war knocks out its generators. The 40K game sets its firing schedule.", src: "Invasion p. 18–19", book: "W", suggest: null,
+    why: "A Macro Cannon on the planet blasts the attacking fleet — until the ground war knocks out its generators. The 40K game sets its firing schedule.", src: "Invasion p. 18–19", book: "O", suggest: null,
     others: "Written for any two fleets, with Warhammer 40,000 armies to match.",
     sides: { a: { n: "Attacker", f: "Any" }, b: { n: "Defender", f: "Any" } },
     pitch: "An ancient Macro Cannon guards the planet, and it is stopping the invasion cold. Down on the surface, troops are fighting for the three generators that feed it.",

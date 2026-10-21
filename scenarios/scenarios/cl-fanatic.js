@@ -249,7 +249,7 @@
       { k: "val", id: "m2d", l: "Second moon: distance (D6 × 10 cm)", opts: [10, 20, 30, 40, 50, 60], roll: () => 10 * d6(), unit: " cm" },
       { k: "val", id: "m2z", l: "Second moon: direction (D6: 1 = due south … 6 = due west)", opts: [1, 2, 3, 4, 5, 6], roll: () => d6(), unit: "" }
     ],
-    notes: [OLD + "The source has no map. We read “as wide as the quadrant, 15 cm deep” as strips along the short south and north edges; the north-west asteroid field then runs partly through the Chaos zone, as the text warns. If you read it as the west edge instead, agree before play.",
+    notes: [OLD + "The source has no map. The battlefield is “120 cm wide by 180 cm long” with north at the top, so the north and south edges are the short ones: “as wide as the quadrant, 15 cm deep” means strips along the short south and north edges, and the north-west asteroid field then runs partly through the Chaos zone, as the text warns.",
       "The Emperor class is FL p. 53 (365 pts) and names the Legatus Stygies; the Repulsive is FL p. 269 and names the Foe-Reaper. Use the current costs for victory points.",
       "Space station: FL p. 507 (150 pts there, 130 here because its weapons battery reaches only 30 cm).",
       "Victory points after 10 turns: the Foe-Reaper counts 125% of its cost if destroyed (and only then); the Legatus Stygies counts 50% if crippled but not destroyed. Holding the field counts for nothing."],
@@ -356,29 +356,29 @@
       a: ["Vengeance grand cruiser Undeniable (Ld 9) and Tyrant cruiser Crown of Steel (Ld 8).", "A Gothic, a Lunar, a Dictator and a Dauntless; 4 Cobras, 3 Swords, 3 Firestorms.", "At the start only the Crown of Steel, the Gothic, the Lunar and the Swords are on the table. The rest arrive on turn 5.", "Or an agreed points match — the Abhorrence is always there."],
       b: ["Shadow class cruiser Shrouded (Ld 9) and an Eclipse.", "6 Hellebores, 3 Aconites, 6 Nightshades, 3 Hemlocks.", "Or an agreed points match."]
     },
-    draw: (v, W, H) => {
-      const D = Math.min(H, 60), top = H - D;
+    draw: (v, W, H, st, sc) => {
+      const D = Math.min(H, 60), top = H - D, di = agN(sc, st, "idep"), de = agN(sc, st, "edep");
       return [
         top > 0 ? R(0, 0, W, top, "n", "Not used: the whole battle is in low orbit") : null,
-        R(0, top, 15, D, "a", "Imperial: 15 cm", { rot: -90 }), R(W - 15, top, 15, D, "b", "Eldar: 15 cm", { rot: 90 }),
-        { z: "line", x1: 15, y1: H - 45, x2: W - 15, y2: H - 45 },
+        R(0, top, di, D, "a", "Imperial: " + di + " cm", { rot: -90 }), R(W - de, top, de, D, "b", "Eldar: " + de + " cm", { rot: 90 }),
+        { z: "line", x1: di, y1: H - 45, x2: W - de, y2: H - 45 },
         { z: "text", x: W / 2, y: H - 45 + 5, l: "gravity pull (45 cm)" },
         { z: "mark", x: W / 2, y: top + 7, s: "n", l: "Abhorrence" },
         { z: "edge", e: "b", l: "planet edge" }
       ];
     },
     fit: () => [90, 45],
-    mapNote: "A low orbit table 60 cm deep, with the planet along one long edge (RB p. 116). The Abhorrence starts at the far edge, opposite the planet. Which short edge belongs to whom, and where the starting ships set up, is our suggestion — the article does not say.",
+    mapNote: "A low orbit table 60 cm deep, with the planet along one long edge (RB p. 116). The Abhorrence starts at the far edge, opposite the planet. The short edges and set-up depths are the defaults above — the article does not give them.",
     steps: [
-      { t: "The battle is fought entirely on a low orbit table: 45–60 cm deep and 90–135 cm long, one long edge being the planet (RB p. 116). Suggestion: 60 cm deep, a medium planet." },
+      { t: "The battle is fought entirely on a low orbit table, 45–60 cm deep and 90–135 cm long, one long edge being the planet (RB p. 116). Agreed: {a:lo}." },
       { t: "Place the Abhorrence on the long edge opposite the planet." },
-      { t: "Suggestion: roll off; the winner picks a short edge as their own, the other side gets the other one." },
-      { s: "a", t: "Set up the Crown of Steel, the Gothic, the Lunar and the Swords (suggestion: within 15 cm of your short edge). The rest arrive on turn 5." },
-      { s: "b", t: "Set up (suggestion: within 15 cm of your short edge)." },
+      { t: "Short edges: {a:edge}." },
+      { s: "a", t: "Set up the Crown of Steel, the Gothic, the Lunar and the Swords within {a:idep} cm of your short edge. The rest arrive on turn 5 from any of the three edges that are not the planet’s." },
+      { s: "b", t: "Set up within {a:edep} cm of your short edge." },
       { s: "b", t: "The Eldar take the first turn." }
     ],
     notes: [OLD + "The Abhorrence starts with four damage points. A Desolator has 12 hits; four damage would leave it uncrippled, while the story calls it crippled. Suggestion: read it as four hits left. Agree before play.",
-      "Where the sides set up and which edge is “yours” is not given; the steps above are our suggestion. Nor does the article say who moves the Abhorrence: suggestion — it does not move by itself, only when towed or pulled by the planet. It can be shot and boarded like any ship; if it is destroyed, nobody scores the 500 VP.",
+      "Where the sides set up and which edge is “yours” is not given; the defaults above are our suggestion. Nor does the article say who moves the Abhorrence: suggestion — it does not move by itself, only when towed or pulled by the planet. It can be shot and boarded like any ship; if it is destroyed, nobody scores the 500 VP.",
       "Apart from the 500 VP for towing the Abhorrence away, victory points are counted as normal (RB p. 122).",
       "Low orbit (RB p. 116): ships nearer than 45 cm to the planet edge are pulled towards it at the start of each player’s turn — 5, 8 or 10 cm for a small, medium or large planet. Off the planet edge means destroyed."],
     refs: [["Low orbit", "RB p. 116"], ["Desolator class battleship", "FL p. 267"], ["Critical hits", "RB p. 66–67"], ["Vengeance grand cruiser", "FL p. 58"], ["Eldar Corsair ships", "FL p. 316–328"], ["Victory points", "RB p. 122"]],

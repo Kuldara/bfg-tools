@@ -93,9 +93,21 @@ p { margin: 0 0 10px; }
 .t-fleets { background: var(--good-soft); color: var(--good); }
 .t-classic { background: var(--c-soft); color: var(--c); }
 .t-wr { background: var(--a-soft); color: var(--a); }
-.t-rec { background: var(--good-soft); color: var(--good); }
-.t-agree { background: var(--warn-soft); color: var(--warn); }
 .chip.tag { border-style: dashed; }
+.agrbox { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: var(--panel); margin-bottom: 6px; }
+.agr { display: grid; grid-template-columns: minmax(0, 1fr); gap: 3px; padding: 8px 0; border-top: 1px solid var(--line); }
+.agrbox .agr:first-of-type { border-top: 0; padding-top: 2px; }
+.agl { font-weight: 700; font-size: 14px; }
+.agi { display: flex; align-items: center; gap: 6px; }
+.agi input, .agi textarea { flex: 1; min-width: 0; padding: 8px 10px; border-radius: 9px; border: 1px solid var(--line); background: var(--panel-2); color: var(--ink); font: 500 15px/1.3 var(--font); }
+.agi textarea { resize: vertical; }
+.agi input.n { flex: 0 0 90px; }
+.agi input::placeholder, .agi textarea::placeholder { color: var(--ink-2); opacity: 1; }
+.agi .u { color: var(--ink-3); font-size: 13px; }
+.ags { font-size: 12px; color: var(--ink-3); }
+.agreed { border: 1px solid var(--line); border-radius: 10px; padding: 8px 12px; margin: 0 0 10px; font-size: 13.5px; background: var(--panel); }
+.agreed ul { margin: 4px 0 0; padding-left: 18px; }
+.agreed .k { color: var(--ink-3); }
 .shead .why .rate { display: block; margin-top: 2px; }
 .bk { background: var(--n-soft); color: var(--ink-2); }
 
@@ -487,19 +499,18 @@ const TRUST = {
   classic:   { l: "Classic GW",    d: "Published by Games Workshop or its Fanatic imprint, 1999–2008, for the original rules." },
   wr:        { l: "Warp Rift",     d: "From the Warp Rift fan magazine. Everything in it is fan work, whoever wrote it." }
 };
-/* Warp Rift: kirjaston oma arvio skenaariosta, ei kirjoittajasta (käyttäjä 21.10.). Tasot ja perustelut: scenarios/wr-rating.js */
-const WR_TIER = {
-  rec:   ["Recommended", "Plays with the books and is ready for the table."],
-  agree: ["Agree first", "Plays with the books, but key details are missing or unclear — settle them before you start."],
-  fan:   ["Needs fan rules", "Needs fan-made fleets or rules, from Warp Rift or elsewhere."]
-};
-/* tagit näkyvät kortissa ja löytyvät haulla; alias = hakusanat, jotka eivät näy */
-const WR_TAG = { committee: "Rules writer", lore: "Lore competition", community: "Played" };
+/* Warp Rift on yksi kategoria (käyttäjä 21.10.: ei laatuluokittelua sivulle); Warp Riftin vanha jako löytyy tageista.
+   Tagit näkyvät kortissa ja löytyvät haulla; alias = hakusanat, jotka eivät näy. */
+const WR_TAG = { committee: ["Rules writer"], lore: ["Lore competition"], community: ["Community", "Played"], untested: ["Community"] };
 const TAG_ALIAS = {
   "Rules writer": "rules writers by rules writers rules committee high admiralty remastered author",
   "Played": "play-tested playtested play report",
   "Lore competition": "shadowsun competition official background",
-  "Play both sides": "lopsided unbalanced swap sides"
+  "Play both sides": "lopsided unbalanced swap sides",
+  "Fan rules optional": "fan rules fan-made fleet",
+  "Linked games optional": "kill team one page rules linked games warhammer 40,000 40k",
+  "Community": "community scenario reader-written",
+  "Agree first": "agree victory open unclear"
 };
 const BOOK = { K: "Book rules only", O: "Book + scenario rules", E: "Needs fan rules", W: "Needs Warhammer 40,000" };
 /* Planetary Assault -perhe: tuomio on väliaikainen, kunnes VP:t on syötetty tai 10 assault pointia täynnä (ks. verdict) */
@@ -512,9 +523,7 @@ const GROUPS = [
   ["cl-mag",    "Classic · Planet Killer and BFG Magazine", "Fanatic Press, 2000–2004 · written for the original rules"],
   ["cl-inv",    "Classic · Invasion and the 2002 Annual", "Games Workshop, 2002 · written for the original rules"],
   ["cl-fan",    "Classic · Fanatic Magazine and Fanatic Online", "Games Workshop’s Fanatic, 2004–2008 · written for Armada-era rules"],
-  ["wr-rec",    "Warp Rift · recommended", "Plays with the books and is ready for the table · the library’s own rating of the scenario"],
-  ["wr-agree",  "Warp Rift · agree first", "Plays with the books, but key details are missing or unclear — settle them before you start"],
-  ["wr-fan",    "Warp Rift · needs fan rules", "Needs fan-made fleets or rules"]
+  ["wr",        "Warp Rift", "The fan magazine, 2004–2026, in issue order · tags show who wrote a scenario, whether it was played, and what to agree"]
 ];
 /* scenario files in scenarios/ add themselves here */
 function addScenarios(list) {
@@ -1180,7 +1189,7 @@ const SC = [
   mapNote: "Deployment depth from the short edges is not given — agree it before play.",
   steps: [
     { t: "Roll the battlezone and its phenomena as per the rulebook (RB p. 107–108)." },
-    { t: "Use a 180 × 120 cm table. The hunter deploys at one short edge, the hunted at the opposite short edge, heading towards each other." },
+    { t: "Use a 180 × 120 cm table. The hunter deploys within {a:dep} cm of one short edge, the hunted within {a:dep} cm of the opposite one (agreed above), heading towards each other." },
     { s: "b", t: "Secretly record which ship Lart is aboard (use the Hidden ship tool in Play)." },
     { s: "a", t: "The hunter takes the first turn." }
   ],
@@ -1221,7 +1230,7 @@ const SC = [
     { t: "Add two gas/dust rings: the first starts 15 cm from the planet’s edge and is 5 cm wide, the second starts 25 cm out and is 7 cm wide." },
     { t: "Each player places two asteroid fields, each D3×5 cm wide and D3×5 cm long." },
     { t: "Place the Event Horizon between the planet and the inner ring, on the table’s centre line." },
-    { t: "Roll off. The higher roll picks the corner its fleet deploys in." },
+    { t: "Roll off. The higher roll picks the corner its fleet deploys in: within {a:corner} cm of that corner (agreed above)." },
     { t: "The attacker takes the first turn." }
   ],
   notes: ["The source does not define the attacker, the table size or the size of the deployment corners. Agree before play.", "The article also prices the Event Horizon for normal Chaos fleets (300 pts, heavy cruiser slot)."],
@@ -1363,7 +1372,7 @@ function tableWH() {
   return t && t.w >= 40 && t.h >= 40 && t.w <= 400 && t.h <= 400 ? [t.w, t.h] : [180, 120];
 }
 /* text templates for table-relative numbers: {w3} = a third of the table length */
-function tpl(s) { const [W] = tableWH(); return String(s).replace(/\{w3\}/g, String(Math.round(W / 3))); }
+function tpl(s, sc, st) { const [W] = tableWH(); return String(s).replace(/\{w3\}/g, String(Math.round(W / 3))).replace(/\{a:(\w+)\}/g, (m, id) => sc ? agV(sc, st, id) : m); }
 
 /* ---------------------------------------------------------------- maps
    Every map is a function of the variant and the table size (cm). Distances the
@@ -1542,18 +1551,18 @@ const MAPS = {
       { z: "dim", x1: 0, y1: H - 8, x2: 60, y2: H - 8, l: "60 cm" }
     ];
   },
-  "diasporex-gambit": (v, W, H) => [
-    R(0, 0, 8, H, "a", ""), { z: "text", x: 22, y: H / 2, l: "Hunter", s: "a" },
-    R(W - 8, 0, 8, H, "b", ""), { z: "text", x: W - 22, y: H / 2, l: "Hunted", s: "b" },
+  "diasporex-gambit": (v, W, H, st, sc) => [
+    R(0, 0, agN(sc, st, "dep"), H, "a", ""), { z: "text", x: agN(sc, st, "dep") + 14, y: H / 2, l: "Hunter", s: "a" },
+    R(W - agN(sc, st, "dep"), 0, agN(sc, st, "dep"), H, "b", ""), { z: "text", x: W - agN(sc, st, "dep") - 14, y: H / 2, l: "Hunted", s: "b" },
     { z: "arrow", x1: 40, y1: H / 2, x2: 70, y2: H / 2, s: "a" }, { z: "arrow", x1: W - 40, y1: H / 2, x2: W - 70, y2: H / 2, s: "b" },
     { z: "edge", e: "l", s: "b", l: "Lart escapes here" }
   ],
-  "event-horizon": (v, W, H) => {
+  "event-horizon": (v, W, H, st, sc) => {
     const cx = W / 2, cy = Math.max(44, H - 44);
     return [
       { z: "ring", cx, cy, r: 25.5, sw: 5, gas: 1 }, { z: "ring", cx, cy, r: 38.5, sw: 7, gas: 1 },
       { z: "planet", cx, cy, r: 8, l: "Large planet" }, { z: "mark", x: cx, y: cy - 16, s: "c", l: "Event Horizon" },
-      { z: "corner", c: "tl", r: 26, s: "n", l: "deploy" }, { z: "corner", c: "tr", r: 26, s: "n", l: "deploy" }
+      { z: "corner", c: "tl", r: agN(sc, st, "corner"), s: "n", l: "deploy" }, { z: "corner", c: "tr", r: agN(sc, st, "corner"), s: "n", l: "deploy" }
     ];
   },
   "fall-of-arcianr": (v, W, H) => {
@@ -1581,13 +1590,13 @@ const FITS = {
   "blockade-run": () => [60, 80], "convoy": () => [90, 100], "planetary-assault": () => [100, 80], "escalating-engagement": () => [130, 80],
   "exterminatus": () => [100, 80], "fleet-engagement": v => ({ A: [140, 100], B: [70, 80], C: [140, 60], D: [110, 100] }[v] || [140, 100]),
   "gauntlet": v => v === "run" ? [80, 70] : [90, 50], "parols-bait": () => [140, 60], "pelucidar": () => [80, 80],
-  "siege-of-fularis": () => [120, 80], "assassination": () => [60, 50], "eliarenaths-gift": () => [150, 80], "diasporex-gambit": () => [80, 40],
+  "siege-of-fularis": () => [120, 80], "assassination": () => [60, 50], "eliarenaths-gift": () => [150, 80], "diasporex-gambit": () => [110, 60],
   "event-horizon": () => [100, 90], "fall-of-arcianr": () => [180, 60], "unknown-weapons": () => [60, 60]
 };
 const SRC_TABLE = { "assassination": [180, 120], "eliarenaths-gift": [180, 120], "diasporex-gambit": [180, 120], "unknown-weapons": [200, 200] };
 function mapFn(sc) { return sc.draw || MAPS[sc.id] || null; }
 function fitOf(sc, v) { return sc.fit ? sc.fit(v) : FITS[sc.id] ? FITS[sc.id](v) : [0, 0]; }
-function mapOf(sc, v) { const [W, H] = tableWH(), fn = mapFn(sc), st = DB.s && DB.s[sc.id] ? DB.s[sc.id] : { w: {}, turn: 1 }; return { w: W, h: H, items: fn ? fn(v, W, H, st).filter(Boolean) : [] }; }
+function mapOf(sc, v) { const [W, H] = tableWH(), fn = mapFn(sc), st = DB.s && DB.s[sc.id] ? DB.s[sc.id] : { w: {}, turn: 1 }; return { w: W, h: H, items: fn ? fn(v, W, H, st, sc).filter(Boolean) : [] }; }
 
 /* ---------------------------------------------------------------- turn track
    TURNFX[id](T, st, v) lists what is special about turn T: [side or null, text].
@@ -1832,25 +1841,29 @@ function renderSources() {
     "<p class='small muted'>Page numbers are PDF pages of the scans in circulation. " + SC.filter(s => CL_GRPS.includes(s.grp)).length + " classic scenarios in this app.</p>");
   h += sec("Warp Rift <span class='badge bk'>WR</span>",
     "<p>A free fan magazine for Battlefleet Gothic, published as PDF since April 2004 — 49 issues by June 2026. It is put together by a small team of players: founded by Cybershadow and edited by Roy “horizon” Amkreutz, who is also one of the Remastered authors. Issues carry fleet lists, scenarios, campaigns, tactics, painting and fiction.</p>" +
-    "<p>Being a fan magazine, Warp Rift is <b>not</b> an official rules source: its articles are written by whoever submits one, and they all have the same fan-work status. On the scenario list, Warp Rift scenarios are sorted by this library’s own rating of the <i>scenario</i>, not of its author: <b>Recommended</b> (plays with the books and is ready for the table), <b>Agree first</b> (key details missing or unclear) and <b>Needs fan rules</b>. Each scenario page gives the reason. Tags add what the source says: <b>Rules writer</b> (the author also writes the rules), <b>Played</b>, <b>Lore competition</b> and <b>Play both sides</b>. The one exception to fan-work status is issue 48’s <i>Armada Indomitus: Codex Orks</i>, which the magazine credits to the BFG Rules Review Committee; it reprints and updates the Armageddon scenarios.</p>" +
+    "<p>Being a fan magazine, Warp Rift is <b>not</b> an official rules source: its articles are written by whoever submits one, and they all have the same fan-work status. On the scenario list Warp Rift is one category, in issue order. Tags add what the source says: <b>Rules writer</b> (the author also writes the rules), <b>Lore competition</b>, <b>Community</b>, <b>Played</b> and <b>Play both sides</b> — search for any of them. The one exception to fan-work status is issue 48’s <i>Armada Indomitus: Codex Orks</i>, which the magazine credits to the BFG Rules Review Committee; it reprints and updates the Armageddon scenarios.</p>" +
     "<p class='small muted'>All issues can be downloaded free from <a href='" + WR + "' target='_blank' rel='noopener'>specialist-arms.com/bfg/warprift</a>. Page numbers here are PDF pages (in issues 1–10 the printed number is one lower).</p>");
   h += sec("The High Admiralty",
     "<p>The volunteer rules committee for Battlefleet Gothic, responsible for the 2010 FAQ/Compendium (written by Bob Henderson, Ray Bell and Nate Montes, RB p. 3). Warp Rift 48 names the BFG Rules Review Committee as Bob Henderson, Ray Bell, Nate Montes and Roy Amkreutz. Rules questions are still answered, most recently in the <i>Collected FAQ 2026</i> by Simon Saier and Roy Amkreutz.</p>");
+  h += sec("What the sources leave open",
+    "<p>Many scenarios leave something out: who goes first, how long the game lasts, how deep the deployment zones are. Their Set-up tab lists these under <i>Agree before you start</i>, each with a default you can change. Where the books have a matching case, the default comes from it with its page (for example, the first turn is rolled off as in RB p. 143); otherwise it is marked <i>Our suggestion</i>. The agreed values show up in the steps, on the map and on the Play tab.</p>");
   h += sec("Badges in this app",
     "<table class='ltab'>" +
     "<tr><td><span class='badge t-rulebook'>Rulebook</span></td><td>Printed in the BFG Remastered Rulebook v1.10 — as official as it gets.</td></tr>" +
     "<tr><td><span class='badge t-fleets'>Fleets book</span></td><td>Printed in the BFG Remastered Fleets book v0.36, the rulebook’s companion.</td></tr>" +
     "<tr><td><span class='badge t-classic'>Classic GW</span></td><td>Published by Games Workshop or its Fanatic imprint between 1999 and 2008, for the original rules.</td></tr>" +
     "<tr><td><span class='badge t-wr'>Warp Rift</span></td><td>From the Warp Rift fan magazine. Everything in it is fan work, whoever wrote it.</td></tr>" +
-    "<tr><td><span class='badge t-rec'>Recommended</span></td><td>Warp Rift, the library’s rating: plays with the books and is ready for the table. Some leave a detail such as the first turn to a roll-off.</td></tr>" +
-    "<tr><td><span class='badge t-agree'>Agree first</span></td><td>Warp Rift, the library’s rating: plays with the books, but key details are missing or unclear — settle them before you start.</td></tr>" +
+    "<tr><td><span class='chip tag'>Agree first</span></td><td>Tag: the victory condition, or the scenario as a whole, depends on something the source leaves open — settle it before you start.</td></tr>" +
+    "<tr><td><span class='chip tag'>Linked games optional</span></td><td>Tag: written to be linked with another game (Warhammer 40,000, Kill Team…); the page says how to play the space battle on its own.</td></tr>" +
+    "<tr><td><span class='chip tag'>Community</span></td><td>Tag: written by a Warp Rift reader; Played when the source mentions playing it.</td></tr>" +
+    "<tr><td><span class='chip tag'>Fan rules optional</span></td><td>Tag: written for fan-made ships or rules, but the books offer a clear alternative, given on the page.</td></tr>" +
     "<tr><td><span class='chip tag'>Rules writer</span></td><td>Tag: the author also writes the rules (a High Admiralty / rules committee member or a Remastered author). Still a personal article, not a committee release.</td></tr>" +
     "<tr><td><span class='chip tag'>Played</span></td><td>Tag: the source mentions a battle report, play-testing or a club that played it.</td></tr>" +
     "<tr><td><span class='chip tag'>Lore competition</span></td><td>Tag: from Warp Rift’s Shadowsun competition, built on published background.</td></tr>" +
     "<tr><td><span class='chip tag'>Play both sides</span></td><td>Tag: lopsided on purpose — the author suggests playing it twice, swapping sides, and comparing victory points.</td></tr>" +
     "<tr><td><span class='badge bk'>Book rules only</span></td><td>Needs nothing beyond the Rulebook and Fleets books.</td></tr>" +
     "<tr><td><span class='badge bk'>Book + scenario rules</span></td><td>Also uses special rules written into the scenario itself — all of them are on its page here.</td></tr>" +
-    "<tr><td><span class='badge bk'>Needs fan rules</span></td><td>Uses fan-made fleets or rules. Where the source prints them, the scenario page gives them too.</td></tr>" +
+    "<tr><td><span class='badge bk'>Needs fan rules</span></td><td>Can only be played with fan-made fleets or rules; the scenario page gives them where the source prints them. When the books offer a clear alternative, the scenario is marked Book + scenario rules instead.</td></tr>" +
     "<tr><td><span class='badge bk'>Needs Warhammer 40,000</span></td><td>A linked pair: part of the story is fought out as a game of Warhammer 40,000. The 40K half is summarised on the scenario page.</td></tr>" +
     "<tr><td><span class='chip any'>Any fleets</span></td><td>Written for any fleet list. Other scenarios name the fleets they were written for as a suggestion; any fleets can play them.</td></tr>" +
     "</table><p class='small muted'>Where a source is unclear or contradicts itself, the scenario page says so in a <b>Source notes</b> box instead of quietly picking one reading. Notes marked <b>Suggestion</b> are ours, not the source’s.</p>");
@@ -2173,21 +2186,54 @@ function render(keepScroll) {
 const CATS = [["core", "Core 10"], ["campaign", "Books"], ["classic", "Classic GW"], ["wr", "Warp Rift"], ["all", "All"]];
 const CL_GRPS = ["cl-ws", "cl-mag", "cl-inv", "cl-fan"];
 const WR_GRPS = ["committee", "lore", "community", "untested"];
-/* Warp Rift on yksi kategoria; lista jaetaan kirjaston arvion mukaan (secOf). wro/comm = 0.7:n tallenteet */
+/* Warp Rift on yksi kategoria, numerojärjestyksessä (secOf, wrIssue). wro/comm = 0.7:n tallenteet */
 const CAT_GRPS = { campaign: ["campaign", "fleets"], classic: CL_GRPS, wr: WR_GRPS };
 const CAT_OLD = { wro: "wr", comm: "wr" };
-function secOf(s) { return s.tier ? "wr-" + s.tier : s.grp; }
-/* ajetaan kerran, kun kaikki skenaariotiedostot on ladattu: WR-skenaarioille taso, perustelu, tagit ja yhteinen merkki */
+function secOf(s) { return WR_GRPS.includes(s.grp) ? "wr" : s.grp; }
+function wrIssue(s) { const m = /Warp Rift (\d+)/.exec(s.src || ""); return m ? +m[1] : 99; }
+/* ajetaan kerran, kun kaikki skenaariotiedostot on ladattu. Auki jäävät kohdat (a), muistiinpano (r) ja tagit (t):
+   WR:lle scenarios/wr-rating.js (WR_RATE), muille scenarios/open-points.js (OPEN). Agree first = tagi, kun jokin
+   auki jäävä kohta ratkaisee voiton (v: 1) tai lähde on luonnos (sketch: 1); ei luokka eikä arvosana. */
 function wrInit() {
-  const rate = typeof WR_RATE === "undefined" ? {} : WR_RATE;
+  const rate = typeof WR_RATE === "undefined" ? {} : WR_RATE, open = typeof OPEN === "undefined" ? {} : OPEN;
   for (const sc of SC) {
-    if (!WR_GRPS.includes(sc.grp)) continue;
-    const r = rate[sc.id];
-    sc.tier = sc.book === "E" ? "fan" : r && r[0] === "agree" ? "agree" : "rec";
-    sc.rate = r ? r[1] : "";
-    sc.tags = [WR_TAG[sc.grp], /^wr-sw-/.test(sc.id) ? "Play both sides" : ""].filter(Boolean);
-    sc.trust = "wr";
+    const wr = WR_GRPS.includes(sc.grp), r = (wr ? rate[sc.id] : open[sc.id]) || {};
+    sc.agree = r.a || [];
+    sc.rate = r.r || "";
+    sc.tags = (wr ? (WR_TAG[sc.grp] || []).concat(/^wr-sw-/.test(sc.id) ? ["Play both sides"] : []) : []).concat(r.t || [], r.sketch || sc.agree.some(x => x.v) ? ["Agree first"] : []);
+    if (wr) sc.trust = "wr";
   }
+}
+/* sovitut arvot (Agree before you start): tyhjä kenttä = oletus. Tallennus st.w["ag_" + id]. */
+function agItems(sc, st) { const v = st && st.v; return (sc && sc.agree || []).filter(x => !v || vis(x, v)); }
+function agItem(sc, id, st) { return agItems(sc, st).find(x => x.id === id) || (sc && sc.agree || []).find(x => x.id === id); }
+function agV(sc, st, id) {
+  const it = agItem(sc, id, st), x = st && st.w ? st.w["ag_" + id] : undefined;
+  return x !== undefined && String(x).trim() !== "" ? String(x).trim() : it ? String(it.d) : "";
+}
+/* numeerinen arvo kartalle: tyhjä, nolla, negatiivinen tai tekstiä → oletus; yli it.max (oletus 60 cm) piirretään maksimiin */
+function agN(sc, st, id) {
+  const it = agItem(sc, id, st), n = parseFloat(String(agV(sc, st, id)).replace(",", ".")), d = it && typeof it.d === "number" ? it.d : 0;
+  return isFinite(n) && n > 0 ? Math.min(n, it && it.max || 60) : d;
+}
+function agreeBlock(sc, st) {
+  const items = agItems(sc, st);
+  if (!items.length) return "";
+  return "<h2>Agree before you start</h2><div class='agrbox'><p class='small muted' style='margin:0 0 8px'>The source leaves these open. Each has a default — from the nearest official scenario, or our own suggestion — so change it if you agree something else.</p>" +
+    items.map(x => {
+      const cur = st.w && st.w["ag_" + x.id] !== undefined ? st.w["ag_" + x.id] : "", num = typeof x.d === "number";
+      /* numero = yksirivinen kenttä; teksti = rivittyvä tekstialue, jotta pitkä oletus näkyy kokonaan puhelimellakin */
+      const field = num
+        ? "<input type='text' inputmode='decimal' class='n' data-a='agr' data-id='" + x.id + "' value='" + esc(cur) + "' placeholder='" + esc(String(x.d)) + "' aria-label='" + esc(x.l) + "'>"
+        : "<textarea rows='" + Math.min(4, Math.max(1, Math.ceil(String(x.d).length / 34))) + "' data-a='agr' data-id='" + x.id + "' placeholder='" + esc(String(x.d)) + "' aria-label='" + esc(x.l) + "'>" + esc(cur) + "</textarea>";
+      return "<label class='agr'><span class='agl'>" + esc(x.l) + "</span><span class='agi'>" + field + (x.u ? "<span class='u'>" + esc(x.u) + "</span>" : "") + "</span>" +
+        "<span class='ags'>" + (x.o ? "Our suggestion" + (x.s ? " — " + esc(x.s.replace(/^Suggestion\s*/, "").replace(/^\(|\)$/g, "")) : "") : "Default from " + esc(x.s || "the rulebook")) + "</span></label>";
+    }).join("") + "</div>";
+}
+function agreeList(sc, st) {
+  const items = agItems(sc, st);
+  if (!items.length) return "";
+  return "<div class='agreed'><b>Agreed before the game</b> (Set-up tab)<ul>" + items.map(x => "<li><span class='k'>" + esc(x.l) + ":</span> " + esc(agV(sc, st, x.id)) + (x.u ? " " + esc(x.u) : "") + "</li>").join("") + "</ul></div>";
 }
 function inCat(s, c) { return c === "all" || (CAT_GRPS[c] ? CAT_GRPS[c].includes(s.grp) : s.grp === c); }
 const PLAYERS = [["2", "2 players"], ["3", "3 or more"], ["1", "Solo"]];
@@ -2214,7 +2260,7 @@ function hay(sc) {
   const i = sc.info || INFO[sc.id];
   const tags = (sc.tags || []).map(t => t + " " + (TAG_ALIAS[t] || "")).join(" ");
   return [sc.name, sc.series, val(sc.pitch, v0(sc)), sc.src, sc.why || "", (sc.suggest || []).join(" "), Object.values(sc.sides).map(x => x.n + " " + (x.f || "")).join(" "), i ? i.cr.join(" ") : "", sc.type || "",
-    TRUST[sc.trust].l, sc.tier ? WR_TIER[sc.tier][0] : "", tags].join(" ").toLowerCase();
+    TRUST[sc.trust].l, tags].join(" ").toLowerCase();
 }
 function listMatches(cat) {
   const f = lf(), q = (DB.lq || "").trim().toLowerCase(), tr = Object.keys(f.trust || {}).filter(k => f.trust[k]), bk = Object.keys(f.book || {}).filter(k => f.book[k]);
@@ -2230,6 +2276,7 @@ function listZone(cat) {
   if (!list.length) return h + "<p class='calc'>Nothing matches. Loosen the search or the filters.</p>";
   for (const [g, title, sub] of GROUPS) {
     const gl = list.filter(s => secOf(s) === g);
+    if (g === "wr") gl.sort((a, b) => wrIssue(a) - wrIssue(b));
     if (!gl.length) continue;
     h += "<div class='group-h'><h2>" + esc(title) + "</h2><span>" + esc(sub) + "</span></div><div class='cardgrid'>";
     for (const s of gl) {
@@ -2249,7 +2296,7 @@ function filterPanel() {
   const chip = (act, k, l, on) => "<button class='fbtn' data-a='" + act + "' data-k='" + k + "' aria-pressed='" + !!on + "'>" + esc(l) + "</button>";
   return "<div class='fpanel'>" +
     "<div class='flrow'><span class='flbl'>Source</span>" + Object.keys(TRUST).map(k => chip("lft", k, TRUST[k].l, f.trust && f.trust[k])).join("") + "</div>" +
-    "<div class='flrow'><span class='flbl'>Rules</span>" + Object.keys(BOOK).map(k => chip("lfb", k, BOOK[k], f.book && f.book[k])).join("") + "</div>" +
+    "<div class='flrow'><span class='flbl'>Rules</span>" + Object.keys(BOOK).filter(k => SC.some(s => s.book === k) || (f.book && f.book[k])).map(k => chip("lfb", k, BOOK[k], f.book && f.book[k])).join("") + "</div>" +
     "<div class='flrow'><span class='flbl'>Players</span>" + PLAYERS.map(([k, l]) => chip("lfp", k, l, f.pl === k)).join("") + chip("lff", "", "Fits my table (" + W + " × " + H + ")", f.fits) + "</div>" +
     "<div class='flrow'><select data-a='lsug' aria-label='Suggested for'><option value=''>Suggested for: any fleet</option>" + facs.map(x => "<option value='" + esc(x) + "'" + (f.sug === x ? " selected" : "") + ">Suggested for: " + esc(x) + "</option>").join("") + "</select>" +
     (lfActive(f) ? "<button class='btn' data-a='lfclr'>Clear filters</button>" : "") + "</div></div>";
@@ -2289,9 +2336,9 @@ function renderSc() {
   const topTabs = layout() !== "narrow";
   nav.innerHTML = "<a class='back' href='#/'>‹ Scenarios</a>" + (topTabs ? "<nav class='tabs toptabs' aria-label='Scenario tabs'>" + tabsIn + "</nav>" : "");
   let h = "<div class='shead'><div class='series'>" + esc(sc.series) + "</div><h1>" + esc(sc.name) + "</h1>" +
-    "<div class='chips'><span class='badge t-" + sc.trust + "'>" + TRUST[sc.trust].l + "</span>" + (sc.tier && sc.tier !== "fan" ? "<span class='badge t-" + sc.tier + "'>" + WR_TIER[sc.tier][0] + "</span>" : "") + "<span class='badge bk'>" + esc(BOOK[sc.book]) + "</span><span class='chip" + (sc.suggest ? "" : " any") + "'>" + esc(sugText(sc)) + "</span>" + tagChips(sc) + "</div>" +
+    "<div class='chips'><span class='badge t-" + sc.trust + "'>" + TRUST[sc.trust].l + "</span><span class='badge bk'>" + esc(BOOK[sc.book]) + "</span><span class='chip" + (sc.suggest ? "" : " any") + "'>" + esc(sugText(sc)) + "</span>" + tagChips(sc) + "</div>" +
     "<div class='src'>Source: " + esc(sc.src) + " · <a href='#/sources'>about the sources</a></div><div class='why'>" + esc(sc.why) +
-    (sc.rate ? "<span class='rate'>Library rating: <b>" + WR_TIER[sc.tier][0] + "</b> — " + esc(sc.rate) + "</span>" : "") + "</div>" +
+    (sc.rate ? "<span class='rate'><b>Our note:</b> " + esc(sc.rate) + "</span>" : "") + "</div>" +
     "<button class='btn infobtn' data-a='info' aria-expanded='" + !!(DB.info && DB.info[sc.id]) + "'>ⓘ Background & credits</button>" + (DB.info && DB.info[sc.id] ? infoPanel(sc) : "") + "</div>";
   if (!topTabs) h += "<nav class='tabs'>" + tabsIn + "</nav>";
   if (sc.variants) h += "<div class='varrow'><span>Version</span><div class='seg' role='group'>" + sc.variants.map(([id, l]) => "<button data-a='var' data-v='" + id + "' aria-pressed='" + (v === id) + "'>" + esc(l) + "</button>").join("") + "</div></div>";
@@ -2320,7 +2367,7 @@ function mapBlock(sc, v) {
   const [W, H] = tableWH(), fit = fitOf(sc, v), src = sc.srcTable || SRC_TABLE[sc.id];
   if (!mapFn(sc)) return "<div class='mapwrap'><div class='mapnote' style='padding:10px 6px'>" + esc(val(sc.noMap, v) || "This scenario has no fixed table layout.") + "</div></div>";
   let h = "<div class='mapwrap'>" + mapSVG(mapOf(sc, v)) + "<div class='legend'>" + Object.keys(sc.sides).map(k => "<span><i style='background:var(--" + k + ")'></i>" + esc(sc.sides[k].n) + "</span>").join("") + "<span class='msize'>" + W + " × " + H + " cm</span></div>" +
-    (val(sc.mapNote, v) ? "<div class='mapnote'>" + esc(tpl(val(sc.mapNote, v))) + "</div>" : "") +
+    (val(sc.mapNote, v) ? "<div class='mapnote'>" + esc(tpl(val(sc.mapNote, v), sc, stOf(sc))) + "</div>" : "") +
     (src && (src[0] !== W || src[1] !== H) ? "<div class='mapnote'>The source plays on " + src[0] + " × " + src[1] + " cm.</div>" : "") + "</div>";
   if (W < fit[0] || H < fit[1]) h += "<div class='note' style='margin-top:8px'><b>Small table.</b> This scenario’s distances need at least " + fit[0] + " × " + fit[1] + " cm. On " + W + " × " + H + " cm some zones overlap or run off the table.</div>";
   return h;
@@ -2338,14 +2385,14 @@ function setupView(sc, st, v, steps, nd) {
   let stepsH = "<h2>Set-up, step by step</h2><div class='donebar'>" + nd + " of " + steps.length + " done · tap a step when it is done</div><ol class='steps'>";
   steps.forEach((x, i) => {
     const k = stepKey(sc, x), d = !!st.done[k];
-    stepsH += "<li><button class='stepbtn' data-a='step' data-k='" + k + "' aria-pressed='" + d + "'><span class='num'>" + (d ? "✓" : i + 1) + "</span><span class='txt'>" + whoTag(sc, x.s) + fmt(tpl(x.t)) + "</span></button></li>";
+    stepsH += "<li><button class='stepbtn' data-a='step' data-k='" + k + "' aria-pressed='" + d + "'><span class='num'>" + (d ? "✓" : i + 1) + "</span><span class='txt'>" + whoTag(sc, x.s) + fmt(tpl(x.t, sc, st)) + "</span></button></li>";
   });
   stepsH += "</ol>";
   const notes = val(sc.notes, v), refs = val(sc.refs, v);
   const notesH = notes && notes.length ? "<h2>Source notes</h2>" + notes.map(n => "<div class='note'><b>Note.</b> " + fmt(n) + "</div>").join("") : "";
   const refsH = refs && refs.length ? "<h2>Rules you will need</h2><div class='refs'>" + refs.map(([a, b]) => "<span>" + esc(a) + "</span><span>" + esc(b) + "</span>").join("") + "</div>" : "";
   const foot = "<p class='small muted' style='margin-top:18px'>Sub-plots and the pre-battle order are on the <a href='#/prep'>Before the battle</a> page.</p>";
-  const pre = sc.stoolsFirst ? stH : "", post = sc.stoolsFirst ? "" : stH, L = layout();
+  const pre = (sc.stoolsFirst ? stH : "") + agreeBlock(sc, st), post = sc.stoolsFirst ? "" : stH, L = layout();
   if (L === "narrow") return pitch + glance + bring + forces + others + pre + table + stepsH + post + notesH + refsH + foot;
   /* käännetty puhelin: tiedot | kartta + askeleet. Leveä: teksti, askeleet ja työkalut vasemmalla, kartta
      tarttuu oikealle (näkyy askelia ja karttaa muuttavia työkaluja käytettäessä). xwide: askeleet omaan palstaan. */
@@ -2360,7 +2407,7 @@ function playView(sc, st, v) {
   const turnH = camp ? "" : "<div class='turnpanel'><div class='turnbar'><span class='lbl'>Turn</span><button class='sq' data-a='turn' data-d='-1' aria-label='Previous turn'" + (st.turn <= 1 ? " disabled" : "") + ">−</button><span class='val'>" + st.turn + "</span><button class='sq' data-a='turn' data-d='1' aria-label='Next turn'>+</button>" + (max ? "<span class='of'>of " + max + "</span>" : "") + "</div>" + turnTrack(sc, st, v) + "</div>";
   const campH = camp ? sc.tools.filter(x => vis(x, v)).map(t => widget(sc, st, v, t)).join("") : "";
   const rem = sc.play.filter(x => vis(x, v)).concat(spPlay(sc, st));
-  const rulesH = "<h2>Scenario rules in play</h2><ul class='rem'>" + rem.map(x => "<li><div class='when'>" + (x.s ? "<span class='" + SIDECLS[x.s] + "'>" + esc(sc.sides[x.s].n) + "</span> · " : "") + esc(x.w) + "</div>" + fmt(x.t) + "</li>").join("") + "</ul>";
+  const rulesH = "<h2>Scenario rules in play</h2>" + agreeList(sc, st) + "<ul class='rem'>" + rem.map(x => "<li><div class='when'>" + (x.s ? "<span class='" + SIDECLS[x.s] + "'>" + esc(sc.sides[x.s].n) + "</span> · " : "") + esc(x.w) + "</div>" + fmt(tpl(x.t, sc, st)) + "</li>").join("") + "</ul>";
   const tools = camp ? [] : sc.tools.filter(x => vis(x, v));
   const toolsH = tools.length ? "<h2>Tools</h2>" + tools.map(t => widget(sc, st, v, t)).join("") : "";
   const reset = "<div class='reset'>Finished, or starting over? <button class='btn' data-a='reset'>New game: clear this scenario’s progress</button></div>";
@@ -2386,8 +2433,8 @@ function verdict(sc, st, v) {
 function resultView(sc, st, v) {
   const r = verdict(sc, st, v);
   const verdictH = "<div class='verdict " + (r[0] || "") + "'><span class='k'>Result</span>" + esc(r[1]) + "<small>" + esc(r[2]) + "</small></div>";
-  const endH = "<h2>The game ends when</h2><ul class='plain'>" + pickV(sc.end, v).map(x => "<li>" + fmt(x) + "</li>").join("") + "</ul>";
-  const winH = "<h2>Victory</h2><ul class='plain'>" + pickV(sc.win, v).map(x => "<li>" + fmt(x) + "</li>").join("") + "</ul>";
+  const endH = "<h2>The game ends when</h2><ul class='plain'>" + pickV(sc.end, v).map(x => "<li>" + fmt(tpl(x, sc, st)) + "</li>").join("") + "</ul>";
+  const winH = "<h2>Victory</h2><ul class='plain'>" + pickV(sc.win, v).map(x => "<li>" + fmt(tpl(x, sc, st)) + "</li>").join("") + "</ul>";
   const tools = (sc.rtools || []).filter(x => vis(x, v)), counters = sc.tools.filter(x => vis(x, v) && x.res);
   const checkH = tools.length || counters.length ? "<h2>Check</h2>" + counters.map(t => widget(sc, st, v, t)).join("") + tools.map(t => widget(sc, st, v, t)).join("") : "";
   const spH = spResultBlock(sc, st, v, r);
@@ -2398,7 +2445,7 @@ function resultView(sc, st, v) {
 
 /* ---------------------------------------------------------------- before the battle */
 /* the scenario pool for rolling from the whole library */
-const POOL_SRC = [["core", "Core 10"], ["campaign", "Books"], ["classic", "Classic GW"], ["wr-rec", "WR recommended"], ["wr-agree", "WR agree first"], ["wr-fan", "WR needs fan rules"]];
+const POOL_SRC = [["core", "Core 10"], ["campaign", "Books"], ["classic", "Classic GW"], ["wr", "Warp Rift"]];
 function srcOf(sc) { return sc.grp === "core" ? "core" : sc.grp === "campaign" || sc.grp === "fleets" ? "campaign" : CL_GRPS.includes(sc.grp) ? "classic" : secOf(sc); }
 function fitsTable(sc) {
   const [W, H] = tableWH(), vs = sc.variants ? sc.variants.map(x => x[0]) : ["std"];
@@ -2746,6 +2793,7 @@ document.addEventListener("click", e => {
 });
 document.addEventListener("change", e => {
   const el = e.target;
+  if (el.dataset.a === "agr" && route.view === "sc") { render(true); return; }
   if (el.dataset.a === "psug" && route.view === "prep") { prep().sug = el.value; save(); render(true); return; }
   if (el.dataset.a === "lsug" && route.view === "list") { lf().sug = el.value; save(); render(true); return; }
   if (el.dataset.a !== "tblsel") return;
@@ -2775,6 +2823,12 @@ document.addEventListener("input", e => {
     document.querySelectorAll("[data-a='tblsel']").forEach(sel => { sel.value = pre ? pre[0] + "x" + pre[1] : "custom"; });
     const z = document.getElementById("mapzone");
     if (z && route.view === "sc") { const sc = SC.find(x => x.id === route.id); z.innerHTML = mapBlock(sc, stOf(sc).v); }
+    return;
+  }
+  if (el.dataset.a === "agr" && route.view === "sc") {
+    const sc = SC.find(x => x.id === route.id), st = stOf(sc); if (!st.w) st.w = {};
+    st.w["ag_" + el.dataset.id] = el.value; save();
+    const z = document.getElementById("mapzone"); if (z) z.innerHTML = mapBlock(sc, st.v);
     return;
   }
   if (el.dataset.a === "txt" && (route.view === "sc" || route.view === "subplots")) {
@@ -2824,24 +2878,25 @@ let lastMapNarrow = null;
 window.addEventListener("resize", () => { const n = mapNarrow(); if (lastMapNarrow !== null && n !== lastMapNarrow) render(true); lastMapNarrow = n; });
 </script>
 <!-- scenario files: each adds its scenarios with addScenarios([...]) -->
-<script src="scenarios/blackcrusade.js?v=0.7.56"></script>
-<script src="scenarios/fleets.js?v=0.7.56"></script>
-<script src="scenarios/cl-early.js?v=0.7.56"></script>
-<script src="scenarios/cl-mag-a.js?v=0.7.56"></script>
-<script src="scenarios/cl-mag-b.js?v=0.7.56"></script>
-<script src="scenarios/cl-mag-c.js?v=0.7.56"></script>
-<script src="scenarios/cl-mag-d.js?v=0.7.56"></script>
-<script src="scenarios/cl-fanatic.js?v=0.7.56"></script>
-<script src="scenarios/cl-invasion.js?v=0.7.56"></script>
-<script src="scenarios/_wr.js?v=0.7.56"></script>
-<script src="scenarios/wr-committee.js?v=0.7.56"></script>
-<script src="scenarios/wr-community-a.js?v=0.7.56"></script>
-<script src="scenarios/wr-spreading-war.js?v=0.7.56"></script>
-<script src="scenarios/wr-community-l4a.js?v=0.7.56"></script>
-<script src="scenarios/wr-community-l4b.js?v=0.7.56"></script>
-<script src="scenarios/wr-community-l4c.js?v=0.7.56"></script>
-<script src="scenarios/wr-community-l4d.js?v=0.7.56"></script>
-<script src="scenarios/wr-rating.js?v=0.7.56"></script>
+<script src="scenarios/blackcrusade.js?v=0.7.68"></script>
+<script src="scenarios/fleets.js?v=0.7.68"></script>
+<script src="scenarios/cl-early.js?v=0.7.68"></script>
+<script src="scenarios/cl-mag-a.js?v=0.7.68"></script>
+<script src="scenarios/cl-mag-b.js?v=0.7.68"></script>
+<script src="scenarios/cl-mag-c.js?v=0.7.68"></script>
+<script src="scenarios/cl-mag-d.js?v=0.7.68"></script>
+<script src="scenarios/cl-fanatic.js?v=0.7.68"></script>
+<script src="scenarios/cl-invasion.js?v=0.7.68"></script>
+<script src="scenarios/_wr.js?v=0.7.68"></script>
+<script src="scenarios/wr-committee.js?v=0.7.68"></script>
+<script src="scenarios/wr-community-a.js?v=0.7.68"></script>
+<script src="scenarios/wr-spreading-war.js?v=0.7.68"></script>
+<script src="scenarios/wr-community-l4a.js?v=0.7.68"></script>
+<script src="scenarios/wr-community-l4b.js?v=0.7.68"></script>
+<script src="scenarios/wr-community-l4c.js?v=0.7.68"></script>
+<script src="scenarios/wr-community-l4d.js?v=0.7.68"></script>
+<script src="scenarios/open-points.js?v=0.7.68"></script>
+<script src="scenarios/wr-rating.js?v=0.7.68"></script>
 <!--SCENARIO-FILES-->
 <script>wrInit(); document.getElementById("scn").textContent = SC.length; render(false);</script>
 </body>

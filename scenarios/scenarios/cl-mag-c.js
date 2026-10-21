@@ -77,7 +77,7 @@
   /* ------------------------------------------------------------ THE BATTLE OF THE COLD PASSAGE */
   {
     id: "cl-cold-passage", grp: "cl-mag", name: "The Battle of the Cold Passage", series: "Battlefleet Bakka · BFG Magazine 13", trust: "classic",
-    why: "Two Imperial battleships must catch a Chaos battleship before it reaches the warp gate. With an experimental fast battleship.", src: "BFG Magazine 13 p. 12–15", book: "E", suggest: ["Imperial Navy", "Chaos"],
+    why: "Two Imperial battleships must catch a Chaos battleship before it reaches the warp gate. With an experimental fast battleship.", src: "BFG Magazine 13 p. 12–15", book: "O", suggest: ["Imperial Navy", "Chaos"],
     others: "A historical refight with fixed ships. The author suggests standing in models or similar ships for the ones you lack; the fast battleship’s profile is given on the Play tab.",
     sides: { a: { n: "Battleship hunters", f: "Imperial Navy" }, b: { n: "Soul of Hate", f: "Chaos" } },
     pitch: "The raider battleship Soul of Hate runs for the only warp gate out of the Cold Passage. A barely trained battleship, a glass-jawed fast battleship and a lone light cruiser stand in its way.",
@@ -170,7 +170,7 @@
   /* ------------------------------------------------------------ CERBERUS 1 INTO THE NEBULA */
   {
     id: "cl-cerberus-1", grp: "cl-mag", name: "Into the Nebula", series: "Cerberus War · Scenario 1", trust: "classic",
-    why: "Blockade Run built on sub-plots: escort the exploration cruiser Venturer past an Ork blockade into the Shroud Nebula.", src: "BFG Magazine 13 p. 26–30", book: "E", suggest: ["Imperial Navy", "Orks"],
+    why: "Blockade Run built on sub-plots: escort the exploration cruiser Venturer past an Ork blockade into the Shroud Nebula.", src: "BFG Magazine 13 p. 26–30", book: "O", suggest: ["Imperial Navy", "Orks"],
     others: "Any runners and any blockaders; if the runners are not Imperial, the Venturer has fallen into alien hands. The Venturer’s profile is on the Play tab.",
     sides: { a: { n: "Battlegroup Olympus", f: "Imperial Navy" }, b: { n: "Blockade", f: "Orks" } },
     pitch: "The lost exploration cruiser Venturer is broadcasting an alien code — and the warp barrier around the Shroud Nebula is collapsing. A battered battlegroup must get it past an Ork blockade.",
@@ -354,8 +354,8 @@
   /* ------------------------------------------------------------ CERBERUS 4 APOTHEOSIS */
   {
     id: "cl-cerberus-4", grp: "cl-mag", name: "Apotheosis", series: "Cerberus War · Scenario 4", trust: "classic",
-    why: "The finale: two attacking fleets race to land the most troops on the craftworld Alurmen, through its last defence stations.", src: "BFG Magazine 14 p. 27–31", book: "E", suggest: ["Chaos", "Imperial Navy"],
-    others: "One side is Ahriman’s Chaos fleet; the other can be anyone — historically every race fought over Alurmen. Allied fleets on each side make it bigger still.",
+    why: "The finale: two attacking fleets race to land the most troops on the craftworld Alurmen, through its last defence stations.", src: "BFG Magazine 14 p. 27–31", book: "O", suggest: ["Chaos", "Imperial Navy"],
+    others: "One side is Ahriman’s Chaos fleet; the other can be anyone — historically every race fought over Alurmen. Allied fleets on each side make it bigger still. Ahriman is an unofficial character: without him, any Chaos warmaster can lead with Abaddon’s re-roll rules (FL p. 230–231), as Ahriman’s Arrival suggests.",
     sides: { a: { n: "Ahriman’s rivals", f: "Imperial Navy" }, b: { n: "Ahriman", f: "Chaos (Thousand Sons)" } },
     pitch: "Ahriman has found Alurmen and the webway nexus that could make him a god. Another armada has arrived at the same moment. Whoever lands enough troops first takes the craftworld.",
     glance: [["Points", "Equal, 3000 or more"], ["Table", "Large, laid out precisely"], ["Battlezone", "Mercurial zone + low orbit table"], ["First turn", "Roll-off"], ["Game ends", "One side leads by 8 assault points"]],

@@ -116,7 +116,7 @@
   /* ------------------------------------------------------------ THE FALL OF HYRA */
   {
     id: "wr-fall-of-hyra", grp: "untested", name: "The Fall of Hyra", series: "Badab War · linked event game", trust: "untested", players: 6, type: "Event",
-    why: "Played at the author’s weekend event, linked live to Kill Team and One Page Rules games; no Battlefleet Gothic report beyond that.", src: "Warp Rift 45, pp. 33–42 (scenario pp. 40–41)", book: "E", suggest: ["Space Marines", "Imperial Navy", "Chaos"],
+    why: "Played at the author’s weekend event, linked live to Kill Team and One Page Rules games; on its own, play the space battle and skip the ground effects.", src: "Warp Rift 45, pp. 33–42 (scenario pp. 40–41)", book: "O", suggest: ["Space Marines", "Imperial Navy", "Chaos"],
     others: "The ten pre-made lists mix Space Marine, Navy and Chaos ships. Without the linked games, play the space battle alone and skip the ground effects.",
     sides: { a: { n: "Loyalists", f: "Three players, pre-made lists" }, b: { n: "Secessionists", f: "Three players, pre-made lists" } },
     pitch: "Three against three over a shattered world. Kill teams fight aboard the ships while the fleets above decide what falls on the battle below.",
@@ -189,7 +189,7 @@
   /* ------------------------------------------------------------ SRINAGAR */
   {
     id: "wr-srinagar", grp: "untested", name: "Battle of Srinagar", series: "Indomitus Crusade era", trust: "untested",
-    why: NO_REPORT + " Named ships with profiles in the same issue.", src: "Warp Rift 48, p. 27 (ships p. 7)", book: "E", suggest: ["Imperial Navy", "Chaos (Word Bearers)"],
+    why: NO_REPORT + " Named ships with fan-made profiles in the same issue; any fleets can play it.", src: "Warp Rift 48, p. 27 (ships p. 7)", book: "O", suggest: ["Imperial Navy", "Chaos (Word Bearers)"],
     others: "Any defender guarding a world against a raid that must land troops and get out again.",
     sides: { a: { n: "Battlegroup Iotus", f: "Imperial Navy" }, b: { n: "Word Bearers", f: "Chaos" } },
     pitch: "Kor Phaeron’s Word Bearers raid an astropathic relay to learn of the Star Child: land troops, then get at least half the fleet out — with a hidden Imperial ship waiting in their path.",

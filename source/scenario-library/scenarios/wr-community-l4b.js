@@ -19,16 +19,16 @@
     glance: [["Points", "Searchers 1500 · Eldar 1000"], ["Table", "Any"], ["Battlezone", "Outer Reaches: six asteroid fields"], ["First turn", "Not given"], ["Victory", "Search all six fields"]],
     bring: ["Six asteroid fields of random shape", "Plenty of ordnance markers"],
     forces: { a: ["1500 pts. Bring plenty of ordnance: attack craft count for searching."], b: ["1000 pts. Only your uncrippled ships go on to part 2."] },
-    draw: (v, W, H) => { const out = [{ z: "edge", e: "t", s: "n", dash: 1, l: "sunward long edge" }, { z: "edge", e: "l", s: "a", l: "Searchers" }, { z: "edge", e: "r", s: "b", l: "Eldar" }];
+    draw: (v, W, H, st, sc) => { const d = agN(sc, st, "dep"); const out = [{ z: "edge", e: "t", s: "n", dash: 1, l: "sunward long edge" }, R(0, 0, d, H, "a", ""), { z: "text", x: d / 2 + 1.5, y: H / 2, l: "Searchers " + d + " cm", s: "a", rot: -90 }, R(W - d, 0, d, H, "b", ""), { z: "text", x: W - d / 2 - 1.5, y: H / 2, l: "Eldar " + d + " cm", s: "b", rot: 90 }];
       for (let i = 0; i < 3; i++) for (let j = 0; j < 2; j++) { const cx = W * (i + .5) / 3, cy = H * (j + .5) / 2; out.push({ z: "hatch", x: cx - 11 + (i % 2 ? 4 : -3), y: cy - 9 + (j ? -3 : 3), w: 22, h: 18, l: "" }, { z: "text", x: cx, y: cy + 15, l: String(i * 2 + j + 1) }); }
       return out; },
-    fit: () => [90, 60],
+    fit: () => [120, 80],
     mapNote: "One field in each sixth of the table; the article leaves their shapes and sizes random.",
     steps: [
       { t: "Outer Reaches. Place six asteroid fields of random shape and size, about one in each sixth of the table." },
       { t: "Declare one long edge sunward." },
-      { s: "a", t: "Deploy on one short edge." },
-      { s: "b", t: "Deploy on the opposite short edge." }
+      { s: "a", t: "Deploy within {a:dep} cm of one short edge (agreed above)." },
+      { s: "b", t: "Deploy within {a:dep} cm of the opposite short edge." }
     ],
     notes: ["No first turn, deployment depth or turn limit is given — roll off and agree.", "“Unopposed” is read as: your ships or ordnance in the field with no enemy ship or ordnance in it."],
     refs: [["Asteroid fields", "RB p. 104–116"], ["Disengaging", "RB p. 56"]],
@@ -42,7 +42,7 @@
   /* ------------------------------------------------------------ HUNT 2 */
   {
     id: "wr-eldar-hunt-2", grp: "untested", name: "The Hunt for the Eldar 2: The Haven", series: "Eldar Haven · linked pair 2/2", trust: "untested",
-    why: NO_REPORT, src: "Warp Rift 16, pp. 47, 49", book: "E", suggest: ["Any hunter", "Eldar Corsairs"],
+    why: NO_REPORT + " The Fleets book’s Eldar Haven can stand in for the fan-made Haven Spire.", src: "Warp Rift 16, pp. 47, 49", book: "O", suggest: ["Any hunter", "Eldar Corsairs"],
     others: "The Haven Spire is a fan profile (below). The official Eldar Haven space station (FL p. 334) can stand in if you prefer book rules.",
     sides: { a: { n: "Searchers", f: "Any fleet" }, b: { n: "Eldar", f: "Eldar Corsairs + Haven Spire" } },
     pitch: "The Haven is found. Cross the asteroid ring and destroy it before it slips away through the webway.",
@@ -115,7 +115,7 @@
     others: "The forces are a historical refight; any raider against a sleeping garrison can use the set-up.",
     sides: { a: { n: "Garrison", f: "Imperial Navy" }, b: { n: "Ork raid", f: "Orks" } },
     pitch: "The first Ork attack on the sector catches the fleet asleep at its dock: wake up, get the transports out, and find out why your guns barely scratch them.",
-    glance: [["Points", "Historical forces"], ["Table", "180 × 120 cm in six parts"], ["Battlezone", "Fixed; a solar flare"], ["First turn", "As Planetary Assault (roll off)"], ["Victory", "As Planetary Assault"]],
+    glance: [["Points", "Historical forces"], ["Table", "180 × 120 cm in six parts"], ["Battlezone", "Fixed; a solar flare"], ["First turn", "The Orks (as Surprise Attack)"], ["Victory", "Victory points (as Surprise Attack)"]],
     bring: ["A planet and a moon with a dock", "An asteroid field 15 × 7.5 cm", "A gas cloud 12.5 × 10 cm", "Low orbit table"],
     forces: {
       a: ["Lunar “Divine Judgement” (nova cannon, Ld 10) — with a reactor leak.", "Dauntless “Aarwa’s Bane” (torpedoes, Ld 8).", "4 heavy transports “Red 5” (Ld 6).", "2 Cobras “Tac Patrol” (Ld 8); 3 Cobras “Scrubbers” (Ld 9).", "3 escort carriers “Detio” (Ld 8). No fleet commander."],
@@ -130,12 +130,12 @@
     mapNote: "The table is cut into six parts (two columns, three rows). Imego V is in the middle left, its moon and the dock in the middle right. The corner marks follow the history: Orks from behind the asteroids and the top right, the escape point bottom right.",
     steps: [
       { t: "Divide a 180 × 120 cm table into six parts. Top left: a 15 × 7.5 cm asteroid field. Middle left: the abandoned planet Imego V. Middle right: its moon, with the dock. Bottom left: a 12.5 × 10 cm gas cloud. The right-hand parts are otherwise empty. A solar flare is under way." },
-      { s: "a", t: "The transports start docked at the moon; everything else is on stand down nearby." },
-      { s: "b", t: "Enter from the planet’s edge and the top right, behind the asteroids." },
-      { t: "Otherwise play as Planetary Assault (RB p. 136), with the Orks as the attacker." }
+      { s: "a", t: "The transports start docked at the moon. Everything else: {a:idep}." },
+      { s: "b", t: "Move on in your first turn from the planet’s edge and from the top right corner, behind the asteroids. You take the first turn." },
+      { t: "Otherwise play as Surprise Attack (RB p. 132), as the first version says, with the Orks as the attacker. The transports run for the jump point in the bottom right corner." }
     ],
-    notes: ["The first version (Warp Rift 23) calls the flare “possible”; the second says one is under way. The second is used here.", "Neither version gives Imperial deployment positions beyond the dock, or a victory condition other than “use Planetary Assault”. The history — transports running for the jump point — suggests agreeing a bonus for transports escaping past the bottom right corner.", "The Widowmaker sensor array on the Scrubbers is the author’s own upgrade with no rules given."],
-    refs: [["Planetary Assault", "RB p. 136–137"], ["Solar flares", "RB p. 114"], ["Escort carrier", "FL p. 521"], ["Ork ships and refits", "FL p. 361–393"]],
+    notes: ["The first version (Warp Rift 23, p. 13) introduces itself as a “Surprise attack scenario”, names the Ork entries (the planet’s edge and the top right corner behind the asteroids) and puts the transports’ escape point in the bottom right corner. The second version (Warp Rift 32) says “use the planetary assault scenario”, but nobody lands troops here: a raid on a fleet at its dock is Surprise Attack, so this page follows the first version.", "The first version (Warp Rift 23) calls the flare “possible”; the second says one is under way. The second is used here.", "Neither version says where the stood-down ships are or how the escaping transports score; the defaults are in Agree before you start. The history — transports running for the jump point — suggests agreeing a bonus for transports escaping past the bottom right corner.", "The Widowmaker sensor array on the Scrubbers is the author’s own upgrade with no rules given."],
+    refs: [["Surprise Attack", "RB p. 132"], ["Solar flares", "RB p. 114"], ["Escort carrier", "FL p. 521"], ["Ork ships and refits", "FL p. 361–393"]],
     play: [
       { w: "Stand down", s: "a", t: "All your ships start on stand down except the transports. A stood-down ship needs a passed Leadership test to come to battle stations and load weapons; until then it may only Brace and make one 45° turn, and counts as a defence that cannot move." },
       { w: "Leaving the dock", s: "a", t: "Each transport must pass a Leadership 6 test to leave the dock (skeleton crews). They may try from the first turn." },
@@ -143,18 +143,18 @@
       { w: "Resilient", s: "b", t: "Every Ork ship has a 5+ save against all damage except boarding — including attack craft and torpedoes." },
       { w: "Scarce ordnance", t: "Both sides reload ordnance at −1 Leadership, after all other modifiers." }
     ],
-    tools: [{ k: "counter", id: "ap", l: "Ork assault points", s: "b", goal: 10, res: 1 }, { k: "toggle", id: "leak", l: "The reactor leak is repaired", s: "a" }, { k: "counter", id: "esc", l: "Transports escaped", s: "a", max: 4 }],
+    tools: [{ k: "toggle", id: "leak", l: "The reactor leak is repaired", s: "a" }, { k: "counter", id: "esc", l: "Transports escaped (bottom right corner)", s: "a", max: 4 }],
     rtools: [
-      { k: "num", id: "avp", l: "Ork victory points", s: "b", after: v => "+" + Math.floor(v / 500) + " assault points" },
-      { k: "num", id: "dvp", l: "Imperial victory points", s: "a", after: v => "−" + Math.ceil(v / 500) + " assault points" }
+      { k: "num", id: "avp", l: "Ork victory points", s: "b", after: v => v + " VP" },
+      { k: "num", id: "dvp", l: "Garrison victory points (including escaped transports, as agreed)", s: "a", after: v => v + " VP" }
     ],
-    end: ["As Planetary Assault: one fleet destroyed or disengaged, or 10 assault points."],
-    win: ["As Planetary Assault (RB p. 137): assault points, +1 per 500 Ork VP, −1 per 500 Imperial VP; 0–1 defender’s victory, 2–5 defender’s marginal, 6–9 attacker’s marginal, 10+ attacker’s victory."],
-    provisional: PA_PROV,
+    end: ["As Surprise Attack: until one fleet disengages or is destroyed (RB p. 132)."],
+    win: ["As Surprise Attack (RB p. 132): both fleets score victory points; the higher total wins.", "Escaped transports: {a:tr}."],
+    provisional: st => !num(st, "avp") && !num(st, "dvp"),
     result(st) {
-      const t = get(st, "ap", 0) + Math.floor(num(st, "avp") / 500) - Math.ceil(num(st, "dvp") / 500);
-      const r = t >= 10 ? ["b", "Orks’ victory"] : t >= 6 ? ["b", "Orks’ marginal win"] : t >= 2 ? ["a", "Garrison’s marginal win"] : ["a", "Garrison’s victory"];
-      return [r[0], r[1], "Adjusted total: " + t + " assault points (RB p. 137)." + (get(st, "esc", 0) ? " Transports escaped: " + get(st, "esc", 0) + "." : "")];
+      const a = num(st, "avp"), d = num(st, "dvp");
+      if (!a && !d) return [null, "Count victory points", "Enter both totals below (RB p. 132)."];
+      return a === d ? ["draw", "Draw", a + " VP each."] : a > d ? ["b", wins("The Orks"), a + " VP to " + d + "."] : ["a", wins("The garrison"), d + " VP to " + a + "."];
     },
     info: { bg: "The first recorded clash with Orks in the Limante sector. Hiding their approach in a solar flare, the Orks disabled the orbital platforms and fell on a fleet still at its dock. Both cruisers and nearly all the escorts were lost covering the transports’ escape, and not one Ork ship was destroyed.", cr: [wrCredit(23, "Bryan McMahon"), "Revised as “Contact!” with the Battlefleet Limante fleet entries in Warp Rift 32 (whose page header says Issue 30 by mistake)."] }
   },
@@ -171,15 +171,15 @@
       a: ["Emissary light cruiser commanded by Nua’ta (Ld 8).", "3 Castellan escorts.", "The author uses Taros-pattern versions; the standard ones work."],
       b: ["Shown as: a heavy transport, 3 transports and 2 Swords.", "In truth (revealed in play): 3 Corsair escorts and a Dark Eldar light cruiser — two transports are real."]
     },
-    draw: (v, W, H) => [{ z: "planet", cx: W / 2, cy: H - 16, r: 14, l: "" }, { z: "hatch", x: W / 2 - 15, y: H - 16 - 14 - 30, w: 30, h: 9, l: "" }, { z: "text", x: W / 2, y: H - 64, l: "asteroids, 30 cm (Castellans hide here)", s: "a" },
+    draw: (v, W, H, st, sc) => [{ z: "planet", cx: W / 2, cy: H - 16, r: 14, l: "" }, { z: "hatch", x: W / 2 - 15, y: H - 16 - 14 - 30, w: 30, h: 9, l: "" }, { z: "text", x: W / 2, y: H - 64, l: "asteroids, 30 cm (Castellans hide here)", s: "a" },
       { z: "arrow", x1: 12, y1: H - 40, x2: W - 30, y2: H - 40, s: "b", l: "" }, { z: "text", x: 40, y: H - 46, l: "convoy route", s: "b" },
-      { z: "edge", e: "l", s: "b", l: "Convoy enters" }, { z: "edge", e: "r", s: "a", l: "Nua’ta" }],
+      { z: "edge", e: "l", s: "b", l: "Convoy enters" }, R(W - agN(sc, st, "dep"), 0, agN(sc, st, "dep"), H, "a", ""), { z: "text", x: W - agN(sc, st, "dep") / 2 - 1.5, y: H / 3, l: "Nua’ta " + agN(sc, st, "dep") + " cm", s: "a", rot: 90 }],
     fit: () => [100, 80],
-    mapNote: "The map printed with the scenario belongs to a Tyranid scenario, so this one is drawn from the text: the convoy passes between the asteroid field and the gas giant, Nua’ta comes from the far side.",
+    mapNote: "The map printed with the scenario belongs to another scenario — Fall of Ar’Cianr (Warp Rift 20), labels and all — so this one is drawn from the text: the convoy passes between the asteroid field and the gas giant, Nua’ta comes from the far side.",
     steps: [
       { t: "Set up a large gas giant with a 30 cm long asteroid field in its gravity well. The convoy’s route runs between the field and the planet." },
       { s: "a", t: "Hide the three Castellans in the asteroid field: they attack after the convoy has passed." },
-      { s: "a", t: "Nua’ta deploys on the side of the table opposite the convoy and must be in position as the convoy arrives at the field." },
+      { s: "a", t: "Nua’ta deploys within {a:dep} cm of the edge opposite the convoy (agreed above) and must be in position as the convoy arrives at the field." },
       { s: "b", t: "Bring the “convoy” on as Imperial ships. Its escorts may not leave formation or attack until the convoy reaches the field." }
     ],
     notes: ["No first turn, deployment depths or game length are given.", "The Dark Eldar light cruiser is the author’s profile (in Play)."],
@@ -201,7 +201,7 @@
   {
     id: "wr-darkening-raid", grp: "untested", name: "Darkening Technology Raid", series: "Stealth raid · solo or two players", trust: "untested", players: [1, 2],
     variants: [["solo", "Solo"], ["duo", "Two players"]],
-    why: NO_REPORT + " Built on the author’s own stealth house rules, summarised here.", src: "Warp Rift 25, pp. 10–12", book: "E", suggest: null,
+    why: NO_REPORT + " Built on the author’s own stealth house rules, summarised here.", src: "Warp Rift 25, pp. 10–12", book: "O", suggest: null,
     others: "Written for any fleets; the author covers Eldar (escort frigates carry the field) and Orks (easier to detect) too.",
     sides: { a: { n: "Raiders", f: "Any fleet" }, b: { n: "Rear-area garrison", f: "Any fleet" } },
     pitch: v => v === "solo" ? "Play the raider against a scripted garrison: creep in under a stealth field, hit the cargo ships, and get out the far side." : "A small raiding force creeps towards a sleepy rear-area world as a single hidden marker. Find it before it finds the cargo ships.",

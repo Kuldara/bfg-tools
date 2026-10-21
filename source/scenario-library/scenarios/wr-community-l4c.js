@@ -138,27 +138,34 @@
   /* ------------------------------------------------------------ PIRATE BASES */
   {
     id: "wr-pirate-bases", grp: "untested", name: "Pirate Bases", series: "Wreck scenarios · mini-game", trust: "untested", players: [2, 3],
-    why: NO_REPORT + " A short game meant for the author’s fan attack craft rules.", src: "Warp Rift 28, p. 19", book: "E", suggest: null,
+    variants: [["std", "Fighters and bombers"], ["ab", "With assault boats (the author’s variant)"]],
+    why: NO_REPORT + " A short game meant for the author’s fan attack craft rules; it also plays with the standard ones.", src: "Warp Rift 28, p. 19", book: "O", suggest: null,
     others: "Any fleets: it is mostly attack craft markers and a few escorts.",
     sides: { a: { n: "Pirate band A", f: "Any" }, b: { n: "Pirate band B", f: "Any" } },
     pitch: "A quick game between bigger battles: two pirate bases 60 cm apart, swarms of fighters and bombers, a handful of escorts. Destroy the other base.",
     glance: [["Points", "Free: about 9 fighters, 9 bombers, 3 escorts"], ["Table", "Small"], ["Battlezone", "None needed"], ["First turn", "Not given"], ["Victory", "Destroy the enemy base"]],
     bring: ["Two hulks (or asteroids, stations) as bases", "Plenty of fighter and bomber markers"],
     forces: { a: ["Mostly fighter and bomber squadrons, plus up to six escorts. The author used 9 fighters, 9 bombers and 3 Firestorms.", "Mark some fighter squadrons as elite (the author: 2 of 9)."], b: ["The same."] },
-    draw: (v, W, H) => [{ z: "mark", x: W / 2 - 30, y: H / 2, s: "a", l: "base A" }, { z: "mark", x: W / 2 + 30, y: H / 2, s: "b", l: "base B" }, { z: "dim", x1: W / 2 - 30, y1: H / 2 + 10, x2: W / 2 + 30, y2: H / 2 + 10, l: "60 cm" }],
-    fit: () => [80, 40],
-    steps: [{ t: "Place two bases 60 cm apart. More players can add more bases." }, { t: "Pick your forces and set up around your base." }],
+    draw: (v, W, H, st, sc) => { const d = agN(sc, st, "dep"); return [{ z: "circ", cx: W / 2 - 30, cy: H / 2, r: d, s: "a", l: "" }, { z: "circ", cx: W / 2 + 30, cy: H / 2, r: d, s: "b", l: "" },
+      { z: "mark", x: W / 2 - 30, y: H / 2, s: "a", l: "base A" }, { z: "mark", x: W / 2 + 30, y: H / 2, s: "b", l: "base B" }, { z: "dim", x1: W / 2 - 30, y1: H / 2 + d + 6, x2: W / 2 + 30, y2: H / 2 + d + 6, l: "60 cm" }]; },
+    fit: () => [110, 50],
+    steps: [{ t: "Place two bases 60 cm apart. More players can add more bases." }, { t: "Pick your forces and set up within {a:dep} cm of your base (agreed above)." }],
     notes: ["The game was written for the author’s fan fighter and bomber rules (Warp Rift 27); with the standard rules it plays, but the author warns it gets dull fast.", "No first turn or deployment distances are given."],
     refs: [["Attack craft", "RB p. 79–86"]],
     play: [
       { w: "Bases", t: "Each base: 8 hits, armour 5+, no turrets or shields. Critical hits do nothing." },
       { w: "Elite fighters", t: "Ordinary against ordinary: hit on 4+. Ordinary against elite: 5+, elite against ordinary 3+ (2+ against bombers). Elite against elite: 4+." },
-      { w: "Variant", t: "The author suggests adding assault boats and taking the enemy base by boarding instead." }
+      { w: "Assault boats", t: "Both sides may also launch assault boats. The author gives no detail of how a base is taken; as agreed, a base is taken {a:take}.", only: ["ab"] }
     ],
-    tools: [{ k: "counter", id: "ha", l: "Hits on base A", s: "b", max: 8, goal: 8 }, { k: "counter", id: "hb", l: "Hits on base B", s: "a", max: 8, goal: 8 }],
-    end: ["When a base is destroyed."],
-    win: ["Destroy the enemy base."],
-    result(st, v, S) { return get(st, "hb", 0) >= 8 ? ["a", wins(sideName(S, "a")), "Base B is destroyed."] : get(st, "ha", 0) >= 8 ? ["b", wins(sideName(S, "b")), "Base A is destroyed."] : [null, "Battle in progress", "8 hits destroys a base."]; },
+    tools: [{ k: "counter", id: "ha", l: "Hits on base A", s: "b", max: 8, goal: 8 }, { k: "counter", id: "hb", l: "Hits on base B", s: "a", max: 8, goal: 8 },
+      { k: "toggle", id: "ta", l: "Base A has been taken by boarding", s: "b", only: ["ab"] }, { k: "toggle", id: "tb", l: "Base B has been taken by boarding", s: "a", only: ["ab"] }],
+    end: v => v === "ab" ? ["When a base is destroyed or taken."] : ["When a base is destroyed."],
+    win: v => v === "ab" ? ["Destroy the enemy base, or take it with assault boats."] : ["Destroy the enemy base."],
+    result(st, v, S) {
+      if (get(st, "hb", 0) >= 8 || get(st, "tb", false)) return ["a", wins(sideName(S, "a")), get(st, "tb", false) ? "Base B is taken." : "Base B is destroyed."];
+      if (get(st, "ha", 0) >= 8 || get(st, "ta", false)) return ["b", wins(sideName(S, "b")), get(st, "ta", false) ? "Base A is taken." : "Base A is destroyed."];
+      return [null, "Battle in progress", "8 hits destroys a base."];
+    },
     info: { bg: HULK_BG + " This one is a short pirate scrap for when time is tight.", cr: [wrCredit(28, SANG), "The fighter and bomber rules it was written for are in Warp Rift 27."] }
   },
   /* ------------------------------------------------------------ BATTLES IN THE WARP */

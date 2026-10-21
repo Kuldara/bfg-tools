@@ -20,20 +20,20 @@
     glance: [["Points", "About 1000 each (2–3 hours)"], ["Table", "180 × 120 cm, played lengthways"], ["Battlezone", "Fixed: two planets and rear asteroid clusters"], ["First turn", "Not given"], ["Victory", "Imperials must destroy the hulk"]],
     bring: ["A large planet and a small planet", "Asteroid clusters at the far end", "An Ork space hulk and roks (they start as asteroids)"],
     forces: { a: ["About 1000 pts (the author’s suggestion). Two players may share the Imperial side."], b: ["About 1000 pts including a space hulk and roks.", "Until activated, your ships are the asteroids of the rear clusters."] },
-    draw: (v, W, H) => [
-      R(0, 0, 6, H, "a", ""), { z: "text", x: 16, y: H / 2, l: "Imperial baseline", s: "a", rot: -90 },
+    draw: (v, W, H, st, sc) => { const d = agN(sc, st, "dep"); return [
+      R(0, 0, d, H, "a", ""), { z: "text", x: d / 2 + 1.5, y: H / 2, l: "Imperials " + d + " cm", s: "a", rot: -90 },
       { z: "planet", cx: Math.min(45, W * .25), cy: H * .45, r: 7, l: "large planet" }, { z: "planet", cx: Math.max(W * .25 + 40, W - 100), cy: H * .45, r: 4, l: "small planet" },
       { z: "hatch", x: W - 30, y: 12, w: 24, h: 26, l: "" }, { z: "hatch", x: W - 30, y: H / 2 - 13, w: 24, h: 26, l: "" }, { z: "hatch", x: W - 30, y: H - 38, w: 24, h: 26, l: "" },
       { z: "text", x: W - 18, y: 46, l: "1–2", s: "b" }, { z: "text", x: W - 18, y: H / 2 + 20, l: "3–4", s: "b" }, { z: "text", x: W - 18, y: H - 5, l: "5–6", s: "b" },
       { z: "hatch", x: W - 70, y: H - 22, w: 16, h: 14, l: "" },
       { z: "dim", x1: Math.max(30, W - 100), y1: H * .7, x2: W - 40, y2: H * .7, l: "60 cm" }
-    ],
+    ]; },
     fit: () => [150, 90], srcTable: [180, 120],
     mapNote: "Drawn from the article’s sketch: the small planet sits 60 cm from the rear asteroid clusters, numbered for the scan roll.",
     steps: [
       { t: "Set up a 180 × 120 cm table lengthways with the terrain of the sketch: a large and a small planet, and asteroid clusters at the far end." },
       { s: "b", t: "Take the Ork player aside. Your hulk and roks start as asteroids in the rear clusters; do not tell the Imperial players what they face." },
-      { s: "a", t: "Deploy along the baseline opposite the clusters." },
+      { s: "a", t: "Deploy within {a:dep} cm of the baseline opposite the clusters (agreed above)." },
       { t: "Brief the Imperial players: contact with a colony has been lost; investigate with caution, and destroy any enemies found." }
     ],
     notes: ["The source gives no first turn, deployment depth or game length — agree them. The author advises the Imperials to move their minimum distance until the enemy is found.", "The author’s first game kept the Imperial players in the dark until the Orks moved — part of the fun."],
@@ -96,39 +96,59 @@
   },
   /* ------------------------------------------------------------ PLANET KILLER HOUSE RULE */
   {
-    id: "wr-planet-killer-defence", grp: "community", name: "Planetary Defence", series: "House rules from a battle report", trust: "community", type: "House rule",
-    why: "Not a written scenario: a battle report in which the players made up quick rules for the Planet Killer, followed by a tactical analysis.", src: "Warp Rift 22, pp. 8–11", book: "O", suggest: ["Imperial Navy", "Chaos"],
+    id: "wr-planet-killer-defence", grp: "community", name: "Planetary Defence", series: "From a battle report", trust: "community", type: "Battle report",
+    why: "Not a written scenario: a battle report in which the players made up quick rules for the Planet Killer. The Fleets book has the official rule for exactly this game — the Planet Killer in Exterminatus (FL p. 254) — so that is the default here.", src: "Warp Rift 22, pp. 8–11", book: "O", suggest: ["Imperial Navy", "Chaos"],
+    variants: [["fl", "Fleets book rule (FL p. 254)"], ["report", "As played (report)"]],
     others: "The attacker needs the Planet Killer (FL p. 252), so Chaos; any fleet can defend.",
     sides: { a: { n: "Defenders", f: "Imperial Navy" }, b: { n: "Planet Killer fleet", f: "Chaos (required)" } },
-    pitch: "The Planet Killer goes for a defended world. Get it into orbit and roll for the kill; the defenders have to stop it first.",
-    glance: [["Points", "2000 each (as played)"], ["Table", "Not given"], ["Battlezone", "Medium planet with gas clouds and asteroids"], ["First turn", "Roll-off"], ["Victory", "Planet destroyed, or standard victory points"]],
-    bring: ["The Planet Killer (FL p. 252)", "Medium planet", "Gas clouds and asteroid fields"],
-    forces: { a: ["2000 pts (the report’s size)."], b: ["2000 pts including the Planet Killer."] },
-    draw: (v, W, H) => [{ z: "planet", cx: W * .72, cy: H / 2, r: 8, l: "planet" }, R(W * .7, 0, W * .3, H, "a", "", { dash: 1 }), { z: "text", x: W * .85, y: 14, l: "defenders (as played)", s: "a" },
-      R(0, 0, W * .3, H, "b", "", { dash: 1 }), { z: "text", x: W * .15, y: 14, l: "Chaos (as played)", s: "b" }],
-    fit: () => [90, 60],
-    mapNote: "The report gives no deployment zones; this sketch follows how the game was set up.",
+    pitch: "The Planet Killer goes for a defended world. Get it into position and kill the planet; the defenders have to stop it first.",
+    glance: v => v === "fl"
+      ? [["Points", "2000 each (as played)"], ["Table", "As Exterminatus"], ["Battlezone", "Primary or inner biosphere, a planet"], ["First turn", "Roll-off"], ["Victory", "Planet destroyed, or the Planet Killer stopped"]]
+      : [["Points", "2000 each (as played)"], ["Table", "Not given"], ["Battlezone", "Medium planet with gas clouds and asteroids"], ["First turn", "Roll-off"], ["Victory", "Planet destroyed, or standard victory points"]],
+    bring: v => v === "fl" ? ["The Planet Killer (FL p. 252)", "A planet", "Low orbit table", "Nova cannon template (Armageddon gun)"] : ["The Planet Killer (FL p. 252)", "Medium planet", "Gas clouds and asteroid fields"],
+    forces: v => v === "fl"
+      ? { a: ["2000 pts (the report’s size), plus D6×10 pts of planetary defences per 500 pts or part (RB p. 140).", "One capital ship or escort squadron per 500 pts is on patrol and arrives later (RB p. 140–141)."], b: ["2000 pts including the Planet Killer as the exterminator (FL p. 254); it loses no weapons for it."] }
+      : { a: ["2000 pts (the report’s size)."], b: ["2000 pts including the Planet Killer."] },
+    draw: (v, W, H) => v === "fl"
+      ? [{ z: "planet", cx: Math.min(W - 20, 150), cy: H / 2, r: 8, l: "planet" }, R(30, 30, Math.max(0, W - 60), Math.max(0, H - 60), "a", "", { dash: 1 }), { z: "text", x: W / 2, y: 40, l: "defenders: not within 30 cm of an edge", s: "a" },
+        R(0, 0, 15, H, "b", ""), { z: "text", x: 9, y: H / 2, l: "Chaos 15 cm", s: "b", rot: -90 }]
+      : [{ z: "planet", cx: W * .72, cy: H / 2, r: 8, l: "planet" }, R(W * .7, 0, W * .3, H, "a", "", { dash: 1 }), { z: "text", x: W * .85, y: 14, l: "defenders (as played)", s: "a" },
+        R(0, 0, W * .3, H, "b", "", { dash: 1 }), { z: "text", x: W * .15, y: 14, l: "Chaos (as played)", s: "b" }],
+    fit: v => v === "fl" ? [100, 80] : [90, 60],
+    mapNote: v => v === "fl" ? "Exterminatus set-up (RB p. 140): the planet no more than 150 cm from one short edge, the Chaos fleet within 15 cm of the edge furthest from it." : "The report gives no deployment zones; this sketch follows how the game was set up.",
     steps: [
-      { t: "Agree the points (the report used 2000). Place a medium planet with some gas clouds and asteroid fields around it." },
-      { t: "Roll off: the winner chooses to set up first or second (in the report the Chaos player chose second)." },
-      { s: "a", t: "Set up around the planet." },
-      { s: "b", t: "Set up facing the defenders, the Planet Killer’s group angled towards the planet." },
-      { t: "Roll off again for the first turn." }
+      { t: "Agree the points (the report used 2000). Battlezone: primary or inner biosphere. Place a planet no more than 150 cm from one short edge (roll its size: 1 small, 2–5 medium, 6 large) and declare a sunward edge (RB p. 140).", only: ["fl"] },
+      { s: "a", t: "Pick one capital ship or escort squadron per 500 pts to be on patrol, kept off the table. Deploy the rest anywhere, but not within 30 cm of a table edge.", only: ["fl"] },
+      { s: "b", t: "Deploy the whole fleet within 15 cm of the edge furthest from the planet. The Planet Killer is your exterminator (FL p. 254).", only: ["fl"] },
+      { t: "Set out the low orbit table. Roll off: the higher roll chooses to go first or second.", only: ["fl"] },
+      { t: "Agree the points (the report used 2000). Place a medium planet with some gas clouds and asteroid fields around it.", only: ["report"] },
+      { t: "Roll off: the winner chooses to set up first or second (in the report the Chaos player chose second).", only: ["report"] },
+      { s: "a", t: "Set up around the planet.", only: ["report"] },
+      { s: "b", t: "Set up facing the defenders, the Planet Killer’s group angled towards the planet.", only: ["report"] },
+      { t: "Roll off again for the first turn.", only: ["report"] }
     ],
-    notes: ["These were the players’ “rudimentary rules” for one game; they never fixed zones, game length or how often the shot may be tried. The report’s pattern: 6+ on the first try, then reload, then 5+ on each later try.", "The report’s analysis: the Chaos player could only win by bombing the planet and disengaging — a single huge ship is not a good fleet."],
-    refs: [["The Planet Killer", "FL p. 252"], ["Reload Ordnance", "RB p. 46"]],
+    notes: v => v === "fl"
+      ? ["The players’ own quick rules (6+, reload, then 5+) are the other version. The Fleets book’s rule for this exact situation — the Planet Killer as an exterminator — is used here.", "The report’s analysis: the Chaos player could only win by bombing the planet and disengaging — a single huge ship is not a good fleet."]
+      : ["These were the players’ “rudimentary rules” for one game; they never fixed zones, game length or how often the shot may be tried. The report’s pattern: 6+ on the first try, then reload, then 5+ on each later try.", "The report’s analysis: the Chaos player could only win by bombing the planet and disengaging — a single huge ship is not a good fleet."],
+    refs: v => v === "fl" ? [["Exterminatus", "RB p. 140–141"], ["The Planet Killer", "FL p. 252–254"], ["Low orbit", "RB p. 116"]] : [["The Planet Killer", "FL p. 252"], ["Reload Ordnance", "RB p. 46"]],
     play: [
-      { w: "Destroying the planet", s: "b", t: "Once the Planet Killer has arrived in orbit, roll a D6 at the start of your next turn: on 6 the planet is destroyed." },
-      { w: "Trying again", s: "b", t: "The next turn the Planet Killer must reload; after that it may roll again, now needing 5+." }
+      { w: "Destroying the planet", s: "b", t: "Two ways (FL p. 254). Low orbit: like any exterminator, enter low orbit; at the start of each turn the Planet Killer is within 60 cm of the planet table edge, the planet is destroyed — no 4+ roll needed.", only: ["fl"] },
+      { w: "Armageddon Overcharge", s: "b", t: "Or declare a charge for three consecutive turns: no turning, shooting or special orders, +2 shields. After movement in the third turn fire the nova cannon template 60 cm straight ahead; the first planet or moon its centre hole touches is removed on 2+ in D3 turns (FL p. 253).", only: ["fl"] },
+      { w: "Losing the gun", s: "b", t: "If the Armageddon gun cannot be used for any reason, the Planet Killer can no longer exterminate and Chaos loses (FL p. 254).", only: ["fl"] },
+      { w: "Patrols", s: "a", t: "At the start of each of your turns roll for each patrol not yet in play: speed up to 20 cm arrives on 5+, 25 cm on 4+, 30 cm or more on 3+, on a random table edge (RB p. 141).", only: ["fl"] },
+      { w: "Destroying the planet", s: "b", t: "Once the Planet Killer has arrived in orbit, roll a D6 at the start of your next turn: on 6 the planet is destroyed.", only: ["report"] },
+      { w: "Trying again", s: "b", t: "The next turn the Planet Killer must reload; after that it may roll again, now needing 5+.", only: ["report"] }
     ],
     tools: [
+      { k: "counter", id: "chg", l: "Armageddon Overcharge counters", s: "b", max: 3, only: ["fl"], warn: v => v >= 3 ? "Fire after movement this turn: template 60 cm straight ahead." : "" },
       { k: "toggle", id: "orb", l: "The Planet Killer is in orbit", s: "b" },
-      { k: "counter", id: "tries", l: "Attempts made to destroy the planet", s: "b", warn: v => v === 0 ? "First attempt: 6 destroys the planet." : "Reload next turn, then roll again: 5+ destroys the planet." }
+      { k: "counter", id: "tries", l: "Attempts made to destroy the planet", s: "b", only: ["report"], warn: v => v === 0 ? "First attempt: 6 destroys the planet." : "Reload next turn, then roll again: 5+ destroys the planet." }
     ],
-    end: ["The planet is destroyed, or a fleet disengages or is destroyed."],
-    win: ["Chaos wins by destroying the planet.", "Otherwise standard victory points (RB p. 122) — in the report the Imperial fleet held the field 1362 VP to 350."],
-    rtools: [{ k: "ending", id: "how", l: "How did it end?", rows: [["The planet was destroyed", "b"], ["The planet survived — count victory points", "draw"]] }],
-    result(st, v, S) { return endingResult(st, S, "how"); },
+    end: v => v === "fl" ? ["One fleet disengages, the Planet Killer can no longer exterminate, or the planet is destroyed (RB p. 141, FL p. 254)."] : ["The planet is destroyed, or a fleet disengages or is destroyed."],
+    win: v => v === "fl" ? ["The planet destroyed: Chaos wins.", "The Planet Killer destroyed or its gun lost: the defenders win.", "A fleet that disengages loses (RB p. 141)."] : ["Chaos wins by destroying the planet.", "Otherwise standard victory points (RB p. 122) — in the report the Imperial fleet held the field 1362 VP to 350."],
+    rtools: [{ k: "ending", id: "how", l: "How did it end?", rows: [["The planet was destroyed", "b"], ["The Planet Killer was destroyed or lost its gun", "a"], ["The defenders disengaged", "b"], ["The Chaos fleet disengaged", "a"]], only: ["fl"] },
+      { k: "ending", id: "howr", l: "How did it end?", rows: [["The planet was destroyed", "b"], ["The planet survived — count victory points", "draw"]], only: ["report"] }],
+    result(st, v, S) { return endingResult(st, S, v === "fl" ? "how" : "howr"); },
     info: { bg: "Admiral Kratz reports a 2000 pt game in which Cav’s freshly built Planet Killer went for a world defended by Vaaish’s battleship-heavy Imperial fleet. The players wrote quick rules for blowing up the planet; Cav got two attempts, failed both, and lost the fleet.", cr: [wrCredit(22, "Admiral Kratz (report and analysis)"), "Game played by Vaaish (Imperial Navy) and Cav (Chaos)."] }
   },
   /* ------------------------------------------------------------ MINOR ENGAGEMENT */

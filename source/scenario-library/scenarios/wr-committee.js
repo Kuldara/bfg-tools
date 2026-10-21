@@ -113,8 +113,8 @@
   /* ------------------------------------------------------------ DIASPOREX GAMBIT 2 */
   {
     id: "wr-diasporex-diversions", grp: "committee", name: "Diversions", series: "The Diasporex Gambit · Scenario Two", trust: "committee",
-    why: "By Roy “horizon” Amkreutz, Warp Rift’s editor. Uses a fan-made Inquisition escort and the fan-made Diasporex fleet.",
-    src: "Warp Rift 34, pp. 46–47", book: "E", suggest: ["Inquisition", "Diasporex (fan)"],
+    why: "By Roy “horizon” Amkreutz, Warp Rift’s editor. Written for a fan-made Inquisition escort and the fan-made Diasporex fleet; any escort squadron and lone light cruiser will do.",
+    src: "Warp Rift 34, pp. 46–47", book: "O", suggest: ["Inquisition", "Diasporex (fan)"],
     others: "Any small boarding-minded escort squadron can hunt any lone light cruiser. The Operations Vessel profile is printed with the scenario (tool in Play); the Metis comes from the fan-made Diasporex list.",
     sides: { a: { n: "Hunter", f: "Inquisition" }, b: { n: "Target", f: "Diasporex (fan list)" } },
     pitch: "In the middle of a huge battle, Inquisitor Lord Crowe’s secret squadron dives through exploding wreckage to capture one intact Diasporex cruiser.",
@@ -162,7 +162,7 @@
   /* ------------------------------------------------------------ SOLBLADE 1 */
   {
     id: "wr-solblade-1", grp: "committee", name: "The Master Node", series: "Solblades · Scenario One", trust: "committee",
-    why: "By Roy “horizon” Amkreutz, Warp Rift’s editor. Needs the Solblade fleet rules from Warp Rift 40.", src: "Warp Rift 40, p. 15", book: "E", suggest: ["Space Marines", "Tyranids"],
+    why: "By Roy “horizon” Amkreutz, Warp Rift’s editor. Written for the Solblade fleet rules from Warp Rift 40; any small, fast Imperial strike group from the books works too.", src: "Warp Rift 40, p. 15", book: "O", suggest: ["Space Marines", "Tyranids"],
     others: SOL_OTHERS, sides: SOL_SIDES,
     pitch: "A Solblade must punch through a feeding hive fleet and land troops to kill the master hive node on the planet below.",
     glance: [["Points", "Solblade 250 · Tyranids 1500"], ["Table", "Not given (60 cm quadrants)"], ["Battlezone", "Inner or primary biosphere"], ["First turn", "Solblade"], ["Game ends", "A landing succeeds or the Solblade dies"]],
@@ -205,7 +205,7 @@
   /* ------------------------------------------------------------ SOLBLADE 2 */
   {
     id: "wr-solblade-2", grp: "committee", name: "Let Them Burn!", series: "Solblades · Scenario Two", trust: "committee",
-    why: "By Roy “horizon” Amkreutz, Warp Rift’s editor. Needs the Solblade fleet rules from Warp Rift 40.", src: "Warp Rift 40, p. 16", book: "E", suggest: ["Space Marines", "Tyranids"],
+    why: "By Roy “horizon” Amkreutz, Warp Rift’s editor. Written for the Solblade fleet rules from Warp Rift 40; any small, fast Imperial strike group from the books works too.", src: "Warp Rift 40, p. 16", book: "O", suggest: ["Space Marines", "Tyranids"],
     others: SOL_OTHERS, sides: SOL_SIDES,
     pitch: "A supernova shockwave sweeps across the table. The Tyranids flee it; the Solblade has to hold them back long enough for the wave to do the work.",
     glance: [["Points", "Solblade 250 · Tyranids 1500"], ["Table", "Not given"], ["Battlezone", "Any, rolled as per the rulebook"], ["First turn", "Tyranids"], ["Game ends", "Tyranids destroyed or escaped"]],
@@ -246,7 +246,7 @@
   /* ------------------------------------------------------------ SOLBLADE 3 */
   {
     id: "wr-solblade-3", grp: "committee", name: "Kill the Hive", series: "Solblades · Scenario Three", trust: "committee",
-    why: "By Roy “horizon” Amkreutz, Warp Rift’s editor. Needs the Solblade fleet rules from Warp Rift 40.", src: "Warp Rift 41, p. 17", book: "E", suggest: ["Space Marines", "Tyranids"],
+    why: "By Roy “horizon” Amkreutz, Warp Rift’s editor. Written for the Solblade fleet rules from Warp Rift 40; any small, fast Imperial strike group from the books works too.", src: "Warp Rift 41, p. 17", book: "O", suggest: ["Space Marines", "Tyranids"],
     others: SOL_OTHERS, sides: SOL_SIDES,
     pitch: "Guns cannot crack this hive ship’s shell. A tiny Solblade has to fight its way aboard and kill it from within.",
     glance: [["Points", "Solblade 175 · Tyranids 1000"], ["Table", "Not given"], ["Battlezone", "Any"], ["First turn", "Solblade"], ["Game ends", "The Solblade boards, or dies"]],
@@ -276,7 +276,7 @@
   /* ------------------------------------------------------------ SOLBLADE 4 */
   {
     id: "wr-solblade-4", grp: "committee", name: "Asteroids?", series: "Solblades · Scenario Four", trust: "committee",
-    why: "By Roy “horizon” Amkreutz, Warp Rift’s editor. Needs the Solblade fleet rules from Warp Rift 40.", src: "Warp Rift 41, p. 18", book: "E", suggest: ["Space Marines", "Tyranids"],
+    why: "By Roy “horizon” Amkreutz, Warp Rift’s editor. Written for the Solblade fleet rules from Warp Rift 40; any small, fast Imperial strike group from the books works too.", src: "Warp Rift 41, p. 18", book: "O", suggest: ["Space Marines", "Tyranids"],
     others: SOL_OTHERS, sides: SOL_SIDES,
     pitch: "New bio-ships hurl asteroids at a fortified world. A Solblade and the orbital defences must stop the barrage getting through.",
     glance: [["Points", "Solblade 250 + 250 defences · Tyranids 1500"], ["Table", "Not given"], ["Battlezone", "Primary biosphere"], ["First turn", "Tyranids"], ["Game ends", "8 turns, or one side destroyed"]],
@@ -317,7 +317,7 @@
   /* ------------------------------------------------------------ SOLBLADE 5 */
   {
     id: "wr-solblade-5", grp: "committee", name: "Ahbtospar’s Folly", series: "Solblades · Scenario Five", trust: "committee",
-    why: "By Roy “horizon” Amkreutz, Warp Rift’s editor. Needs the Solblade fleet rules from Warp Rift 40.", src: "Warp Rift 42, pp. 9–10", book: "E", suggest: ["Space Marines", "Tyranids"],
+    why: "By Roy “horizon” Amkreutz, Warp Rift’s editor. Written for the Solblade fleet rules from Warp Rift 40; any small, fast Imperial strike group from the books works too.", src: "Warp Rift 42, pp. 9–10", book: "O", suggest: ["Space Marines", "Tyranids"],
     others: SOL_OTHERS + " The scenario suggests the Ultramarines Solblade of First Captain Agemman (WR42 p. 9).",
     sides: SOL_SIDES,
     pitch: "First Captain Agemman’s Solblade must run a Tyranid gauntlet to reach a besieged world and open an escape route.",
@@ -358,7 +358,7 @@
   /* ------------------------------------------------------------ SOLBLADE 6 */
   {
     id: "wr-solblade-6", grp: "committee", name: "Do Not Falter!", series: "Solblades · Scenario Six", trust: "committee",
-    why: "By Roy “horizon” Amkreutz, Warp Rift’s editor. Needs the Solblade fleet rules from Warp Rift 40.", src: "Warp Rift 42, p. 11", book: "E", suggest: ["Space Marines", "Tyranids"],
+    why: "By Roy “horizon” Amkreutz, Warp Rift’s editor. Written for the Solblade fleet rules from Warp Rift 40; any small, fast Imperial strike group from the books works too.", src: "Warp Rift 42, p. 11", book: "O", suggest: ["Space Marines", "Tyranids"],
     others: SOL_OTHERS, sides: SOL_SIDES,
     pitch: "Three Solblades hold the line while a world evacuates. The hive fleet comes in three waves; every 100 pts that reaches the planet costs lives.",
     glance: [["Points", "Three Solblades (750) · Tyranids 2000"], ["Table", "Not given"], ["Battlezone", "Primary biosphere"], ["First turn", "Tyranids"], ["Game ends", "8 turns, or one side destroyed"]],
