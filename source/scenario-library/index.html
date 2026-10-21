@@ -2864,7 +2864,9 @@ const PENDING_VAR = {
   "fleet-engagement": "Enter both formations in the\nFormations tool and roll off (step 3)",
   "fan-p-art-command-1": "Enter both formations in the\nFormations tool and roll off (step 3)"
 };
-function varPending(sc, st) { return !!PENDING_VAR[sc.id] && !(st.vSet || (st.v && st.v !== v0(sc))); }
+/* päätetty vain, kun asettelu on valittu tässä pelissä (st.vSet; New game nollaa). Aiempi tallennettu st.v ei riitä:
+   käyttäjällä näkyi edellisen kerran Set-up B, vaikka tämän pelin muodostelmia ei ollut valittu (21.10.) */
+function varPending(sc, st) { return !!PENDING_VAR[sc.id] && !st.vSet; }
 function mapBlock(sc, v) {
   const [W, H] = tableWH(), fit = fitOf(sc, v), src = sc.srcTable || SRC_TABLE[sc.id], st = stOf(sc), m = mapOf(sc, v);
   if (varPending(sc, st)) {
