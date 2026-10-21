@@ -1,0 +1,324 @@
+{
+  "list": "Tyranids — Hive Fleet",
+  "book_page": 430,
+  "read_pages": [
+    423,
+    424,
+    425,
+    426,
+    427,
+    428,
+    430,
+    431
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "may opt to include the direct influence of the Hive Mind in lieu of having a fleet commander",
+      "text": "The Tyranid player may opt to include the direct influence of the Hive Mind in lieu of having a fleet commander.",
+      "page": 430,
+      "status": "manual",
+      "why": "Selittaa miksi FLEET COMMANDER -osiossa ei ole komentajaa vaan kaksi ostettavaa vaikutusta."
+    },
+    {
+      "key": "A maximum of one Hive Mind Influence re-roll can be purchased per hive ship",
+      "text": "A maximum of one Hive Mind Influence re-roll can be purchased per hive ship in the fleet.",
+      "page": 430,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. upgrade_ratio: paivityksen ottaneet yksikot per hive ship. Aiempi puute: Suhdeluku jonka OSOITTAJA on paivitysrivi eika alus. Moottori laskee suhdeluvut osioiden alusmaarista, joten tata ei voi ilmaista.",
+      "kind": "upgrade_ratio",
+      "per": 1,
+      "allow": 1,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "A maximum of one Hive Mind Imperative can be purchased per two hive ships",
+      "text": "A maximum of one Hive Mind Imperative can be purchased per two hive ships in the fleet, though a single Hive Mind Imperative may be purchased as long as the fleet contains at least one hive ship.",
+      "page": 430,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. upgrade_ratio min_one: yksi sallitaan jo yhdella hive shipilla. Aiempi puute: Sama syy, ja lisaksi lause sisaltaa poikkeuksen: yhden saa ostaa jo yhdella hive shipilla.",
+      "kind": "upgrade_ratio",
+      "per": 2,
+      "allow": 1,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Each hive ship allows the Tyranid player to purchase",
+      "text": "Each hive ship allows the Tyranid player to purchase 6-12 escort ships and 0-2 capital ships.",
+      "page": 430,
+      "status": "manual",
+      "why": "Kaksi saantoa yhdessa lauseessa. Runkoalusten puoli on valvottu seuraavan sivun lauseesta ('up to 2 capital ships for each hive ship'); saattajien 6-12 ei ole."
+    },
+    {
+      "key": "up to 2 capital ships for each hive ship",
+      "text": "You may include up to 2 capital ships for each hive ship in the fleet.",
+      "page": 430,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 2,
+      "per": 1,
+      "why": "Jasentyi vasta kun suhdelukukaava opetettiin tuntemaan 'for each' sanaparin 'for every' rinnalla (7.9.2026)."
+    },
+    {
+      "key": "between 6 and 12 escort class ships for each hive ship",
+      "text": "You may include between 6 and 12 escort class ships for each hive ship.",
+      "page": 431,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. Kaksi saantoa: min_ratio 6 ja ratio 12 per hive ship. Aiempi puute: Suhdeluku jossa on seka ala- etta ylaraja. Moottorin ratio valvoo vain ylarajaa, eika lukusana 'between' kelpaa maaraksi. Kaytannossa tama on listan tarkein raj",
+      "kind": "min_ratio",
+      "min": 6,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "If no hive ships are chosen, only Kraken and Vanguard drone ships may be included",
+      "text": "If no hive ships are chosen, only Kraken and Vanguard drone ships may be included in the fleet.",
+      "page": 431,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. conditional_cap: ilman hive shipia muut kuin Kraken/Vanguard (myos CAPITAL SHIPS) = 0. Aiempi puute: Ehdollinen kielto: 'jos X, niin vain Y'. Moottorissa ei ole ehdollista saantotyyppia.",
+      "kind": "conditional_cap",
+      "max_unmet": 0,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "at least six escort drones for every hive ship",
+      "text": "The fleet must have at least six escort drones for every hive ship in the fleet.",
+      "page": 431,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. Aiempi puute: Suhdeluku VAHIMMAISMAARANA, kuten Dark Eldarin saattajaraja. Moottori valvoo vain ylarajoja.",
+      "kind": "min_ratio",
+      "min": 6,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "squadrons of 1 to 12 vessels",
+      "text": "Tyranid Escorts come as squadrons of 1 to 12 vessels, while all other types are individuals and may not deploy in squadrons.",
+      "page": 431,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 1,
+      "max": 12,
+      "why": "Kirjoitettu kasin samasta syysta kuin Vanguard-listalla: valimerkkina on sana 'to', ja lause on SQUADRONS-osiossa jossa ei ole aluksia."
+    },
+    {
+      "key": "Up to 10 % of the fleet",
+      "text": "Up to 10 % of the fleet's points allowance may be spent on Ordnance markers as long as at least one hive ship is chosen.",
+      "page": 431,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. points_share of=limit, cond: vahintaan yksi hive ship. Aiempi puute: Prosenttiosuus laivaston pisterajasta, ja lisaksi ehto ('as long as at least one hive ship'). Kumpaakaan ei voi ilmaista. Ordnance-merkit ovat listariveina hint",
+      "kind": "points_share",
+      "pct": 10,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "the points cost indicated provides you with one port weapon and one starboard weapon",
+      "text": "When buying 'port/starboard weapons' the points cost indicated provides you with one port weapon and one starboard weapon (of the same type) for the points cost indicated.",
+      "page": 431,
+      "status": "manual",
+      "why": "Hinnoittelun tulkinta: yksi osto = molemmat puolet. Rivit ovat omassa osiossaan 'Up to Three Port/Starboard Weapons'."
+    },
+    {
+      "key": "No hive ship may ever have more than three different special refits",
+      "text": "No hive ship may ever have more than three different special refits, no cruiser more than two and no escort more than one.",
+      "page": 426,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. unit_upgrade_max: BIO-ENHANCEMENTS-rivit per yksikko: hive ship 3, cruiser 2, escort 1 (kolme saantoa). Aiempi puute: Bio-enhancementien lukumaararaja alustyypeittain. Sovellus ei laske montako eri refittia yhdella aluksella on, joten raja jaa pelaajalle. Se lukee BIO-ENHANCEME",
+      "kind": "unit_upgrade_max",
+      "max": 3,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "no single bio-enhancement may be granted more than once",
+      "text": "With the exception of reinforced carapace and extra spore cysts, no single bio-enhancement may be granted more than once.",
+      "page": 426,
+      "status": "manual",
+      "why": "Rakenne sallii jokaisen rivin kerran; poikkeuksia (carapace ja spore cysts useasti) ei voi ostaa v1:ssa - toistettavat listapaivitykset ovat v1.1-ominaisuus (docs/BACKLOG.md).",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Tyranids cannot use the torpedo refits available to other races",
+      "text": "Because the equivalent of Tyranid torpedoes are always boarding torpedoes, Tyranids cannot use the torpedo refits available to other races.",
+      "page": 426,
+      "status": "manual",
+      "why": "Kielto koskee muiden faktioiden refit-taulukoita, joita talla listalla ei tarjota lainkaan."
+    }
+  ],
+  "entries": [
+    {
+      "name": "Hive Mind Influence re-roll",
+      "pts": 30,
+      "page": null,
+      "sec": "FLEET COMMANDER"
+    },
+    {
+      "name": "Hive Mind Imperative",
+      "pts": 40,
+      "page": null,
+      "sec": "FLEET COMMANDER"
+    },
+    {
+      "name": "Hive ship (Ld 8)",
+      "pts": 200,
+      "page": 432,
+      "sec": "HIVE SHIPS"
+    },
+    {
+      "name": "Increase to Ld 9",
+      "pts": 40,
+      "page": null,
+      "sec": "HIVE SHIPS"
+    },
+    {
+      "name": "Cruiser",
+      "pts": 80,
+      "page": 434,
+      "sec": "CAPITAL SHIPS"
+    },
+    {
+      "name": "Pyro-acid battery",
+      "pts": 15,
+      "page": null,
+      "sec": "Up to Three Port/Starboard Weapons"
+    },
+    {
+      "name": "Bio-plasma discharge",
+      "pts": 20,
+      "page": null,
+      "sec": "Up to Three Port/Starboard Weapons"
+    },
+    {
+      "name": "Launch bays",
+      "pts": 20,
+      "page": null,
+      "sec": "Up to Three Port/Starboard Weapons"
+    },
+    {
+      "name": "Pyro-acid battery",
+      "pts": 15,
+      "page": null,
+      "sec": "Up to two Port/Starboard Weapons"
+    },
+    {
+      "name": "Bio-plasma discharge",
+      "pts": 20,
+      "page": null,
+      "sec": "Up to two Port/Starboard Weapons"
+    },
+    {
+      "name": "Vanguard drone ship",
+      "pts": 20,
+      "page": 436,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Escort drone",
+      "pts": 10,
+      "page": 437,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Kraken",
+      "pts": 25,
+      "page": 435,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Boarding torpedoes",
+      "pts": 15,
+      "page": null,
+      "sec": "ESCORTS",
+      "grp": true
+    },
+    {
+      "name": "Strength 4 boarding torpedo marker",
+      "pts": 12,
+      "page": null,
+      "sec": "ORDNANCE"
+    },
+    {
+      "name": "Assault boat marker",
+      "pts": 8,
+      "page": null,
+      "sec": "ORDNANCE"
+    },
+    {
+      "name": "Fighter marker",
+      "pts": 7,
+      "page": null,
+      "sec": "ORDNANCE"
+    },
+    {
+      "name": "Solar Vanes",
+      "pts": 15,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Adrenaline Sacs",
+      "pts": 10,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Psychic Scream",
+      "pts": 20,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "More Discharge Vents",
+      "pts": 15,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Extra Spore Cysts (each)",
+      "pts": 10,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Reinforced Carapace (each)",
+      "pts": 10,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Mucous Membrane",
+      "pts": 20,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Accelerated Healing",
+      "pts": 10,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Drone Link",
+      "pts": 20,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Tenacity",
+      "pts": 20,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Mega-Spore Mines",
+      "pts": 10,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    }
+  ],
+  "notes": [
+    "Hive shipin ja risteilijan aseet ovat kirjassa kolmessa lohkossa: 'One prow weapon', 'One thorax weapon' ja 'Up to Three (tai two) Port/Starboard Weapons'. Kaksi viimeista sulautuivat 7.9.2026 asti yhdeksi, koska osion otsikko ei saanut sisaltaa kauttaviivaa. Sulautumisen jalkeen kaksoiskappaleiden karsinta pudotti hive shipilta 'Bio-plasma discharge +20' ja 'Launch bays +20', eli kaksi kolmesta port/starboard-vaihtoehdosta katosi kokonaan.",
+    "ESCORTS-osiossa on kolme alusta perakkain, kullakin oma aselistansa. Kaikissa kolmessa on 'Feeder tentacles +5', ja karsinta pudotti kaksi jalkimmaista - Escort drone ja Kraken menettivat vaihtoehdon. Korjattu nollaamalla karsinnan muisti jokaisen alusrivin kohdalla.",
+    "Aseet ovat toisensa poissulkevia alus kerrallaan: Krakenin valinta ei sammuta Escort dronen asetta, vaikka ne ovat samassa osiossa.",
+    "Tama on kirjan monimutkaisin lista. Valvottavaksi saatiin kaksi saantoa (runkoalusten suhdeluku ja skwadronin koko); viisi jaa puutteeksi, ja niista tarkein on saattajien 6-12 per hive ship.",
+    "Krakenin torpedorivi on talla listalla 'Boarding torpedoes' (+15) ja Vanguard-listalla 'Torpedoes' (+15). Ero on kirjan oma.",
+    "Tama lista paljasti laajan puutteen: faktion yhteiset saannot (tyranideilla sivut 423-428) nakyivat vain kunkin faktion ENSIMMAISELLA listalla, koska kirja painaa ne kerran sen edelle. Kaksikymmenta listaa 32:sta oli ilman - Hive Fleet mukaan lukien. Nyt lista perii lohkon edellliselta listalta, ja tama referenssi tarkistaa perimisen: kolme bio-enhancement-saantoa on luettu sivulta 426, joka ei ole taman listan omalla sivualalla."
+  ]
+}

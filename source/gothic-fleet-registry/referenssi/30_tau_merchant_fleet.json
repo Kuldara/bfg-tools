@@ -1,0 +1,259 @@
+{
+  "list": "Tau — Merchant Fleet",
+  "book_page": 454,
+  "read_pages": [
+    448,
+    449,
+    450,
+    451,
+    452,
+    453,
+    454,
+    455
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Commander",
+      "text": "0-1 Commander",
+      "page": null,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "Your fleet may include a fleet commander to lead it if you wish",
+      "text": "Your fleet may include a fleet commander to lead it if you wish.",
+      "page": null,
+      "status": "manual",
+      "why": "Vapaaehtoisuus alle 750 pisteen laivastoissa."
+    },
+    {
+      "key": "Your fleet must include a commander if it is greater than 750 pts",
+      "text": "Your fleet must include a commander if it is greater than 750 pts.",
+      "page": null,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "over": true
+    },
+    {
+      "key": "the commander may be either a Kor",
+      "text": "The commander may be either a Kor'O or Kor'el.",
+      "page": null,
+      "status": "manual",
+      "why": "Kirjassa lause alkaa pienella kirjaimella; jatetty sellaiseksi. Molemmat rivit ovat listalla, ja osion 0-1 raja huolehtii siita etta vain toinen valitaan."
+    },
+    {
+      "key": "The commander has one re-roll included in his points cost",
+      "text": "The commander has one re-roll included in his points cost.",
+      "page": 454,
+      "status": "manual",
+      "why": "Nakyy komentajaosion tekstina 9.9.2026 alkaen (lausesuodatin tuntee re-roll- ja leadership-sanat, P1-8e). Sisaltyva re-roll on ratkaisimen rerolls.included-kentassa ja komentajakortilla; laivastovalidaattori ei valvo re-rollien maaraa."
+    },
+    {
+      "key": "the commander's ship may carry a member of the Ethereal caste",
+      "text": "If you wish, the commander's ship may carry a member of the Ethereal caste and therefore purchase additional re-rolls at the cost shown.",
+      "page": null,
+      "status": "manual",
+      "why": "Aun'el ja Aun'O ovat paivitysrivaja komentajan alla."
+    },
+    {
+      "key": "Your fleet may include any number of battleships",
+      "text": "Your fleet may include any number of battleships.",
+      "page": 454,
+      "status": "manual",
+      "why": "Ei rajoita mitaan. Osiossa on vain Explorer."
+    },
+    {
+      "key": "it must include at least one Explorer",
+      "text": "If your fleets is worth more than 750 pts it must include at least one Explorer.",
+      "page": 454,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "over": true,
+      "why": "Kirjoitettu kasin. Lause ei mainitse osion otsikkoa 'Battleships', ja osiovartija hylkasi sen siksi - vartija on olemassa juuri siksi ettei osiolaskuri mittaisi vaaraa osiota. Kirjassa on painovirhe 'your fleets'; jatetty sellaiseksi."
+    },
+    {
+      "key": "Your fleet may include any number of Merchant class starships",
+      "text": "Your fleet may include any number of Merchant class starships.",
+      "page": 454,
+      "status": "manual",
+      "why": "Ei rajoita mitaan."
+    },
+    {
+      "key": "one Hero class starship for every Merchant or Explorer",
+      "text": "It may also include up to one Hero class starship for every Merchant or Explorer in the fleet.",
+      "page": 454,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 1,
+      "why": "Kirjoitettu kasin: nimittaja on kaksi ALUSLUOKKAA kahdesta eri osiosta (Merchant Cruisers-osiossa, Explorer Battleships-osiossa), eika kumpikaan ole osion otsikko."
+    },
+    {
+      "key": "one Messenger class starship per 500 points",
+      "text": "Your fleet may include up to one Messenger class starship per 500 points.",
+      "page": null,
+      "status": "enforced",
+      "kind": "per_points",
+      "each": 1,
+      "per": 500,
+      "why": "Kirjoitettu kasin: ESCORTS-osiossa on nelja muutakin alusta, joten laskenta on rajattava nimella. Pisterajoille lisattiin 7.9.2026 sama nimisuodatin joka suhdeluvuilla jo oli."
+    },
+    {
+      "key": "Your fleet may include any number of Defender class starships",
+      "text": "Your fleet may include any number of Defender class starships.",
+      "page": 454,
+      "status": "manual",
+      "why": "Ei rajoita mitaan."
+    },
+    {
+      "key": "You may not have more Orcas and Wardens than the gravitic hook capacity",
+      "text": "You may not have more Orcas and Wardens than the gravitic hook capacity of the fleet.",
+      "page": null,
+      "status": "enforced",
+      "why": "Valvottu 14.9.2026 (J95): kapasiteetti luetaan profiilin koukkuriveilta (esim. Explorer 3 x 'Capacity: 1 Orca/Warden', s.458), ja laivastotason saanto on 'Gravitic hook capacity (Orcas and Wardens)'.",
+      "classified_on": "2026-09-14",
+      "kind": "hook_capacity"
+    },
+    {
+      "key": "Any ship equipped with Wardens can only be equipped with Wardens",
+      "text": "Any ship equipped with Wardens can only be equipped with Wardens and may not have other hook-transported escorts.",
+      "page": null,
+      "status": "manual",
+      "why": "Sidos emoalukseen; sovellus ei sido saattajia emoaluksiin."
+    },
+    {
+      "key": "A ship may have either Orcas or Dhows, but not both",
+      "text": "A ship may have either Orcas or Dhows, but not both so the gravitic hook capacity of the fleet is divided between Orcas and Dhows.",
+      "page": null,
+      "status": "manual",
+      "why": "Aluskohtaista jakoa (mika alus kantaa mita) ei mallinneta (J8). Lauseen seuraus, eli kapasiteetin jakautuminen Orcien ja Dhowien kesken, on valvottu saannolla 'Gravitic hook capacity (Dhows and Orcas)' (J95)."
+    },
+    {
+      "key": "Defenders are fielded in squadrons of 2",
+      "text": "Defenders are fielded in squadrons of 2-6 ships.",
+      "page": 455,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6,
+      "why": "Korjattu 10.9.2026 (laivastopistokoe S2, raportti 17): saanto oli SQUADRONS-osiossa, jossa ei ole aluksia, eika tarkistanut mitaan. Nyt pick nimeaa Defender-luokan ESCORTS-osiosta; Messengerit saavat toimia yksin ('Messengers operate as single ships, or in squadrons')."
+    },
+    {
+      "key": "up to one Warsphere if the fleet is worth 1500 points",
+      "text": "A Tau fleet can include up to one Warsphere if the fleet is worth 1500 points, or up to two Warspheres in games larger than that.",
+      "page": null,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. tiers: 1500 -> 1, yli 1500 -> 2. Aiempi puute: Ehdollinen porrastus ('jos 1500, niin yksi; sita isommissa kaksi'), ei tasainen suhde pisteisiin. Moottorin per_points laskee tasaisesti, joten se antaisi 3000 ",
+      "kind": "tiers",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "one Demiurg vessel for every three Tau capital ships",
+      "text": "A Tau fleet can include up to one Demiurg vessel for every three Tau capital ships in the fleet.",
+      "page": null,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 3,
+      "why": "Kirjoitettu kasin: nimittaja 'Tau capital ships' tarkoittaa kahta osiota (Battleships ja Cruisers), eika osioiden ratkaisu loyda sita."
+    },
+    {
+      "key": "Nicassar Dhows in place of some or all of its Orcas",
+      "text": "Your fleet may include Nicassar Dhows in place of some or all of its Orcas.",
+      "page": 455,
+      "status": "manual",
+      "why": "Vaihtokauppa Orcojen kanssa; molemmat rajoittuvat gravitic hook -kapasiteettiin, jota ei valvota."
+    }
+  ],
+  "entries": [
+    {
+      "name": "Tau Kor'el (Ld 8)",
+      "pts": 50,
+      "page": null,
+      "sec": "Commander"
+    },
+    {
+      "name": "Tau Kor'O (Ld 9)",
+      "pts": 80,
+      "page": null,
+      "sec": "Commander"
+    },
+    {
+      "name": "Aun'el (one extra re-roll)",
+      "pts": 25,
+      "page": null,
+      "sec": "Commander"
+    },
+    {
+      "name": "Aun'O (two extra re-rolls)",
+      "pts": 75,
+      "page": null,
+      "sec": "Commander"
+    },
+    {
+      "name": "Messenger class starship",
+      "pts": 50,
+      "page": 465,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Defender class starship",
+      "pts": 45,
+      "page": 464,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Warden class gunship",
+      "pts": 30,
+      "page": 475,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Orca class gunship",
+      "pts": 25,
+      "page": 466,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Kroot Warsphere",
+      "pts": 145,
+      "page": 494,
+      "sec": "Kroot Vessels"
+    },
+    {
+      "name": "Stronghold Commerce Vessel",
+      "pts": 350,
+      "page": 488,
+      "sec": "Demiurg Vessels"
+    },
+    {
+      "name": "Bastion Commerce Vessel",
+      "pts": 255,
+      "page": 489,
+      "sec": "Demiurg Vessels"
+    },
+    {
+      "name": "Citadel Commerce Vessel",
+      "pts": 185,
+      "page": 490,
+      "sec": "Demiurg Vessels"
+    },
+    {
+      "name": "Nicassar Dhow",
+      "pts": 45,
+      "page": 491,
+      "sec": "Nicassar Vessels"
+    }
+  ],
+  "notes": [
+    "Explorer, Hero ja Merchant esiintyvat listalla kahtena rivina kumpikin ('- Vash'ya Mk XXIII configuration' jne). Se ei ole virhe: kirjan profiilisivuilla on samasta rungosta useampi konfiguraatio, ja sovellus tarjoaa ne erikseen samaan hintaan.",
+    "Otsikko 'ALLIES, SUBJECTS & MERCENARIES' sisaltaa pilkun, jota otsikkokaava ei salli. Se oli 7.9.2026 asti tavallista tekstia, jolloin palkkasoturikappale valui SQUADRONS-osion peraan. Pilkkua ei voi sallia kaavassa (kirjan kaksiriviset otsikot katkeaisivat vaarasta kohdasta), joten tama otsikko on nimetty poikkeus.",
+    "Listan kolme keskeisinta rajoitetta olivat 7.9.2026 asti kokonaan valvomatta, kaikki samasta syysta: kirja nimeaa ALUSLUOKAN siella missa moottori odottaa osion otsikkoa.",
+    "Gravitic hook -kapasiteetti on listan ainoa asia jota ei voi valvoa lainkaan: se lukee runkoalusten profiileissa, ei listariveilla. Orcojen, Wardenien ja Dhowien maara riippuu siita."
+  ]
+}

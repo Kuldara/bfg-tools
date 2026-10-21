@@ -1,0 +1,244 @@
+{
+  "list": "Rogue Traders",
+  "book_page": 174,
+  "read_pages": [
+    174,
+    175
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-2 Veteran Rogue Traders",
+      "text": "0-2 Veteran Rogue Traders",
+      "page": 174,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 2
+    },
+    {
+      "key": "a Veteran Rogue Trader must be assigned to a Rogue Trader cruiser",
+      "text": "If a fleet has more than one Rogue Trader cruiser or also includes more than one squadron of transports, a Veteran Rogue Trader must be assigned to a Rogue Trader cruiser.",
+      "page": 174,
+      "status": "manual",
+      "why": "Sijoittelu tehdaan poydalla; ehto riippuu lisaksi kuljetusskwadronien maarasta."
+    },
+    {
+      "key": "Any fleet except Necrons or Tyranids may include a single Rogue Trader capital ship",
+      "text": "Any fleet except Necrons or Tyranids may include a single Rogue Trader capital ship.",
+      "page": 174,
+      "status": "enforced",
+      "why": "1.1 (14.9.2026): osio ROGUE TRADERS lisattiin 21 listalle. Tau, Demiurg ja Imperiumin listat saavat per_points-saannon (yksi per 750 p tai osa), muut cap 1. Ulkopuolelle jaavat Necronit ja tyranidit (kirjan 'except'), Rogue Trader -listat itse, Bakka / Tau Commerce Protection / Demiurg (oma tasmallisempi saanto) seka Crusade ja Grey Knights (oma kielto, s.99 ja s.145). Rivi on Rogue Trader Cruiser; Exploration-listan variantit ovat oma tapauksensa. Viimeinen virke ('always count against cruiser restrictions') toteutuu section_countin pickilla. Koskee sita laivastoa johon Rogue Trader liitetaan, ei tata listaa.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "ork-fleet-may-include-one-rogue-trader-cruiser",
+        "ork-fleet-may-not-include-two-rogue-trader-cruisers",
+        "navy-fleet-two-rogue-trader-cruisers-per-750",
+        "rogue-trader-cruisers-fill-the-navy-cruiser-limit"
+      ]
+    },
+    {
+      "key": "one Rogue Trader cruiser for every 750 points or part thereof",
+      "text": "Tau, Demiurg and Imperial fleets may include one Rogue Trader cruiser for every 750 points or part thereof in their fleet.",
+      "page": 174,
+      "status": "enforced",
+      "kind": "per_points",
+      "each": 1,
+      "per": 750,
+      "why": "1.1 (14.9.2026): osio ROGUE TRADERS lisattiin 21 listalle. Tau, Demiurg ja Imperiumin listat saavat per_points-saannon (yksi per 750 p tai osa), muut cap 1. Ulkopuolelle jaavat Necronit ja tyranidit (kirjan 'except'), Rogue Trader -listat itse, Bakka / Tau Commerce Protection / Demiurg (oma tasmallisempi saanto) seka Crusade ja Grey Knights (oma kielto, s.99 ja s.145). Rivi on Rogue Trader Cruiser; Exploration-listan variantit ovat oma tapauksensa. Viimeinen virke ('always count against cruiser restrictions') toteutuu section_countin pickilla. Koskee isantalaivastoa (Tau, Demiurg, Imperial). Listojen valiset liitokset eivat ole v1:n mallissa; Tau Commerce -listalla vastaava saanto on valvottu sen omilla riveilla.",
+      "classified_on": "2026-09-09",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "ork-fleet-may-include-one-rogue-trader-cruiser",
+        "ork-fleet-may-not-include-two-rogue-trader-cruisers",
+        "navy-fleet-two-rogue-trader-cruisers-per-750",
+        "rogue-trader-cruisers-fill-the-navy-cruiser-limit"
+      ]
+    },
+    {
+      "key": "Rogue Trader cruisers always count against cruiser restrictions",
+      "text": "Rogue Trader cruisers always count against cruiser restrictions in any fleet list that has such restrictions.",
+      "page": 174,
+      "status": "manual",
+      "why": "Koskee isantalaivaston rajoja."
+    },
+    {
+      "key": "Heavy transports may not be in squadrons with other transport types",
+      "text": "Heavy transports may not be in squadrons with other transport types.",
+      "page": 174,
+      "status": "manual",
+      "why": "Skwadronin kokoonpano paatetaan poydalla."
+    },
+    {
+      "key": "A single squadron of 2-6 Rogue Trader escorts and auxiliary vessels",
+      "text": "A single squadron of 2-6 Rogue Trader escorts and auxiliary vessels may accompany each Rogue Trader capital ship in a fleet, in any mix desired.",
+      "page": 174,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6,
+      "why": "Koko 2-6 on squadron-saanto. 10.9.2026 (laivastopistokoe S2, raportti 17) samasta lauseesta lisatty suhdeluku: enintaan kuusi saattajaa RT-alusta kohden, rahtialukset pois ('these squadrons can only contain cargo ships'), Havoc saattajaksi ja Siluria alukseksi Nate Montesin huomion mukaan. Sekalaivuetta ('in any mix desired') ei voi ilmaista yksikkomallissa, joten laivueiden lukumaaraa ei valvota."
+    },
+    {
+      "key": "Xenos vessels cannot be used in fleets that include Space Marine ships",
+      "text": "Xenos vessels cannot be used in fleets that include Space Marine ships.",
+      "page": 174,
+      "status": "manual",
+      "why": "Ehdollinen kielto, riippuu isantalaivaston sisallosta."
+    },
+    {
+      "key": "For every 750 points in the fleet, Rogue Traders may be accompanied by a single Demiurg or Kroot vessel",
+      "text": "For every 750 points in the fleet, Rogue Traders may be accompanied by a single Demiurg or Kroot vessel unless the fleet is using auxiliary ships that cannot be allies with the Demiurg or Kroot (such as Space Marines).",
+      "page": 175,
+      "status": "enforced",
+      "why": "1.1 (14.9.2026): osio sai rivit ja saannon. 750 luetaan taytena, koska lause ei sano 'or part thereof' - toisin kuin s.174:n RT-risteilijasaanto, joka sanoo. Alukset tulevat toisista listoista; talla listalla ei ole niiden riveja. Exploration-listalla Kroot Warsphere on valvottu.",
+      "classified_on": "2026-09-09",
+      "kind": "per_points"
+    },
+    {
+      "key": "Any game that includes a Rogue Trader cruiser must include a sub-plot",
+      "text": "Any game that includes a Rogue Trader cruiser must include a sub-plot from ... p.82-84 in the Rulebook.",
+      "page": 175,
+      "status": "manual",
+      "why": "Skenaariosaanto."
+    },
+    {
+      "key": "may roll randomly against the Xenotech System table below for +15 points per cruiser",
+      "text": "Each Rogue Trader vessel may roll randomly against the Xenotech System table below for +15 points per cruiser or +5 points per escort. For an additional +5 points per ship, the player can select the desired technology instead of rolling randomly for it.",
+      "page": 175,
+      "status": "manual",
+      "why": "Hinnoitellut optiot; rivit 'Xenotech System, rolled randomly (cruiser) 15 pts', 'Xenotech System, rolled randomly (escort, per ship) 5 pts' ja 'Choose the Xenotech System instead of rolling 5 pts / alus' ovat valittavissa. Pistokoe 6: aiemmin yksi rivi tarjosi saattajille cruiserin hinnan 15; Heavy Transport (s.182, oma +10 refit) ja Xenos Vessel -rungot (s.184-188, xenotech sisaltyy) eivat saa listan riveja."
+    },
+    {
+      "key": "Auxiliary vessels in a Rogue Trader escort squadron can only use these refits",
+      "text": "Auxiliary vessels in a Rogue Trader escort squadron can only use these refits if they are in a squadron that includes at least three Rogue Trader escorts.",
+      "page": 175,
+      "status": "manual",
+      "why": "Ehto riippuu skwadronin kokoonpanosta."
+    },
+    {
+      "key": "each Rogue Trader cruiser and escort squadron may roll one random crew skill",
+      "text": "To represent this each Rogue Trader cruiser and escort squadron may roll one random crew skill on ... in the Remastered Rulebook for +10% point value.",
+      "page": 175,
+      "status": "manual",
+      "why": "Prosenttihinta: rivit 'Crew skill, rolled randomly (cruiser / escort squadron, +10% of its points)' ovat valittavissa, ja sovellus laskee 10 % yksikon pisteista ennen crew skillia ylospain (J44, 11.9.2026; pohja ja pyoristys T27). Taulukko Rulebook s.159."
+    },
+    {
+      "key": "If both players agree before the game, these ships can be included in a Rogue Trader fleet",
+      "text": "Siluria Class Light Cruisers and Havoc Class Frigates are older, outdated ships ... If both players agree before the game, these ships can be included in a Rogue Trader fleet, as a cruiser and an escort respectively.",
+      "page": 174,
+      "status": "out_of_scope",
+      "why": "Pelaajien sopimus; rivit ovat valittavissa omassa osiossaan.",
+      "classified_on": "2026-09-09"
+    }
+  ],
+  "entries": [
+    {
+      "name": "Veteran Rogue Trader (Ld 9)",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Rogue Trader Cruiser",
+      "pts": 185,
+      "page": 180
+    },
+    {
+      "name": "Dauntless Class Light Cruiser",
+      "pts": 125,
+      "page": 77
+    },
+    {
+      "name": "Endeavour Class Light Cruiser",
+      "pts": 110,
+      "page": 181
+    },
+    {
+      "name": "Heavy Transport",
+      "pts": 40,
+      "page": 182
+    },
+    {
+      "name": "Xenos Vessel",
+      "pts": 50,
+      "page": 184
+    },
+    {
+      "name": "Recommissioned Escort",
+      "pts": 30,
+      "page": 189
+    },
+    {
+      "name": "Iconoclast Destroyer",
+      "pts": 30,
+      "page": 190
+    },
+    {
+      "name": "Armed Cargo Vessel",
+      "pts": 20,
+      "page": 192
+    },
+    {
+      "name": "Siluria Class Light Cruiser",
+      "pts": 100,
+      "page": 78
+    },
+    {
+      "name": "Havoc Class Frigate",
+      "pts": 35,
+      "page": 81
+    }
+  ],
+  "extra_entries": [
+    {
+      "name": "Imperial Power Ram (6+ prow, not with a Nova Cannon)",
+      "pts": 5,
+      "why": "s.174 POWER RAM"
+    },
+    {
+      "name": "Xenotech System, rolled randomly (cruiser)",
+      "pts": 15,
+      "why": "s.175 '+15 points per cruiser'"
+    },
+    {
+      "name": "Xenotech System, rolled randomly (escort, per ship)",
+      "pts": 5,
+      "why": "s.175 '+5 points per escort'"
+    },
+    {
+      "name": "Choose the Xenotech System instead of rolling",
+      "pts": 5,
+      "why": "s.175"
+    },
+    {
+      "name": "Crew skill, rolled randomly (cruiser, +10% of its points)",
+      "pts": null,
+      "why": "s.175 '+10% point value' (J44): prosenttihinta, sovellus laskee"
+    },
+    {
+      "name": "Crew skill, rolled randomly (escort squadron, +10% of its points)",
+      "pts": null,
+      "why": "s.175 '+10% point value' (J44): prosenttihinta, sovellus laskee"
+    },
+    {
+      "name": "Xenos Vessel - Pthuxutl war cruiser",
+      "pts": 50,
+      "why": "Kirjan sivujen 186-188 nimetyt Xenos Vessel -variantit, kaikki 50 pts. Kirja sanoo 'all of them cost 50 points'; sovellus tarjoaa ne erikseen jotta kortti nayttaa oikean xenotech-jarjestelman."
+    },
+    {
+      "name": "Xenos Vessel - Fra'al raider",
+      "pts": 50,
+      "why": "sama, s.187"
+    },
+    {
+      "name": "Xenos Vessel - Nekulli whip",
+      "pts": 50,
+      "why": "sama, s.188"
+    }
+  ],
+  "notes": [
+    "Sivut 168-173 ovat kertomusta (Durandal Grohe, Memet Poralius, Behemoth). Ne poistettiin nakyvista LORE_SECTIONS-taulussa: kaikki seitseman lausetta olivat tarinaa.",
+    "Tama lista on luonteeltaan liitannainen kuten Inkvisitio: useimmat rajat koskevat sita laivastoa johon Rogue Trader liitetaan, ei tata listaa. Siksi valvottuja saantoja on vain kaksi.",
+    "'Auxiliary vessels (pg. 191)' on hinnaltaan 'varies' - alus valitaan toisesta laivastolistasta. Sovellus ei tarjoa rivia paivityksena (10.9.2026, pistokoe 4): s.191 on listasaanto, ja alukset poimitaan saattamansa laivaston listalta."
+  ]
+}

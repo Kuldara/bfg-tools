@@ -1,0 +1,60 @@
+{"id": "S0481", "l": "PELI", "a": "play", "f": "mark_effect", "p": "F232", "pok": "ok", "n": "Mark of Khorne Warmasterin aluksella; kortille."}
+{"id": "S0482", "l": "PELI", "a": "play", "f": "mark_effect", "p": "F232", "pok": "ok", "n": "Mark of Tzeentch: lisä-re-roll."}
+{"id": "S0483", "l": "PELI", "a": "play", "f": "mark_effect", "p": "F232", "pok": "ok", "n": "Mark of Nurgle; +1 DP on mod-kenttänä (build_data.py:3559)."}
+{"id": "S0484", "l": "PELI", "a": "play", "f": "commander_assign", "p": "F232", "pok": "ok", "n": "Lord sijoitetaan alukselle pöydällä; Ld komentajakortilla."}
+{"id": "S0485", "l": "VALVOTTU", "a": "checked", "f": "group_rule", "p": "F232", "pok": "ok", "n": "Lordin Mark-rivit jakavat ryhmän 'mark' (yksi Mark).", "vk": "ajo ok"}
+{"id": "S0486", "l": "PELI", "a": "play", "f": "mark_effect", "p": "F232", "pok": "ok", "n": "Mark of Tzeentch -vaikutus."}
+{"id": "S0487", "l": "PELI", "a": "play", "f": "mark_effect", "p": "F232", "pok": "ok", "n": "Mark of Nurgle -vaikutus."}
+{"id": "S0488", "l": "PELI", "a": "play", "f": "ordnance_choice", "p": "F233", "pok": "ok", "n": "Ordnance pelissä."}
+{"id": "S0489", "l": "PELI", "a": "play", "f": "card_rule", "p": "F233", "pok": "ok", "n": "Torpedot; kortilla (domain.js:2667)."}
+{"id": "S0490", "l": "VALVOTTU", "a": "checked", "f": "renegades", "p": "F222", "pok": "ok", "n": "Renegade Imperial Vessels -osio: noopt ja kiellot (build_data.py:4999–5061). -1 Ld ja saattajien sekoitus kuuluvat kortille ja pöytään. Ajo 20.10.: renegade-riveillä noopt, ja käyttöliittymä piilottaa optiot (app_template.html:2960). Avoin tulkinta: rivi tarjoaa 'Special torpedoes', vaikka s.222 kieltää 'special weapon rules' ja 'Chaos ordnance'.", "vk": "ajo ok"}
+{"id": "S0491", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F234", "pok": "ok", "n": "Warmaster kalleimmalle alukselle; Ld +2 (max 9) komentajakortilla."}
+{"id": "S0492", "l": "VALVOTTU", "a": "checked", "f": "group_rule", "p": "F234", "pok": "ok", "n": "Black Crusaden Warmaster: yksi Mark (ryhmä mark).", "vk": "ajo ok"}
+{"id": "S0493", "l": "KUVAUS", "a": "row", "f": "reroll_price", "p": "F234", "pok": "ok", "n": "Lisä-re-roll +25 (upgrades.py:336)."}
+{"id": "S0494", "l": "KUVAUS", "a": "row", "f": "rerolls_included", "p": "F234", "pok": "osittain", "n": "Abaddonin re-roll; kirjan oma rikkinäinen viite 'pg 74[??]' (oikea s.231)."}
+{"id": "S0495", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F234", "pok": "ok", "n": "Lord ei Warmasterin alukselle."}
+{"id": "S0496", "l": "PELI", "a": "play", "f": "commander_effect", "p": "F234", "pok": "ok", "n": "Lordin +1 Ld (max 9)."}
+{"id": "S0497", "l": "KUVAUS", "a": "row", "f": "reroll_price", "p": "F234", "pok": "ok", "n": "Lordin re-roll +25 (upgrades.py:351)."}
+{"id": "S0498", "l": "VALVOTTU", "a": "checked", "f": "group_rule", "p": "F234", "pok": "ok", "n": "Lordin alukselle yksi Mark (ryhmä mark).", "vk": "ajo ok"}
+{"id": "S0499", "l": "PELI", "a": "play", "f": "mark_effect", "p": "F234", "pok": "ok", "n": "Mark of Tzeentch -vaikutus."}
+{"id": "S0500", "l": "PELI", "a": "play", "f": "mark_effect", "p": "F234", "pok": "ok", "n": "Mark of Nurgle -vaikutus."}
+{"id": "S0501", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F234", "pok": "ok", "n": "CSM-miehistö +35, cond cap ja ei Daemonship (upgrades.py:355)."}
+{"id": "S0502", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F234", "pok": "ok", "n": "CSM-miehistön aluksen Mark (build_data.py:2655). Varmista Black Crusaden rivi ja s.225:n rajaus.", "vk": "ajo ok"}
+{"id": "S0503", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F234", "pok": "ok", "n": "Chosen Terminators: ehto battleship/GC + CSM-miehistö (upgrades.py:375). Warmasterin tai Lordin CSM-alus ilman miehistöriviä jää ehdon ulkopuolelle (sidosta ei mallinneta)."}
+{"id": "S0504", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F235", "pok": "ok", "n": "Abaddon Planet Killerille, jos se on mukana. Varmista, onko build_data.py:5731 vain korttiteksti. Ajo 20.10.: Abaddon + Planet Killer -laivastossa ei sijoitustarkistusta.", "vk": "aukko ajossa"}
+{"id": "S0505", "l": "VALVOTTU", "a": "checked", "f": "ratio_base", "p": "F235", "pok": "ok", "n": "Planet Killer lasketaan battleshipiksi risteilijäsuhteessa (build_data.py:1493).", "vk": "ajo ok"}
+{"id": "S0506", "l": "RAKENNE", "a": "guaranteed", "f": "no_limit", "p": "F235", "pok": "ok", "n": "Ei rajaa; rivi kiinnittyy aluksen tyyppiin."}
+{"id": "S0507", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F235", "pok": "ok", "n": "Daemonshipillä ei Warmasteria eikä Lordia."}
+{"id": "S0508", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F235", "pok": "ok", "n": "Black Crusaden Daemonship-Markit (build_data.py:2637)."}
+{"id": "S0509", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F235", "pok": "ok", "n": "Miehistö- ja Mark-rivit vain capital shipeille (cond cap). Warmaster/Lord saattajalla = sijoitus, ei mallinneta.", "vk": "ajo ok"}
+{"id": "S0510", "l": "TAUSTA", "a": "drop", "f": "modelling", "p": "F235", "pok": "ok", "n": "Maalausvinkki ilman pelivaikutusta."}
+{"id": "S0511", "l": "PELI", "a": "play", "f": "ordnance_choice", "p": "F235", "pok": "ok", "n": "Ordnance pelissä."}
+{"id": "S0512", "l": "OMINAISUUS", "a": "feature", "f": "missing_row", "p": "F235", "pok": "ok", "n": "CSM-miehistön Thunderhawk-vaihto (s.235, 237, 242, 246) puuttuu: yhdelläkään Chaos-listalla ei ole Thunderhawk-riviä (ajo 20.10.). Aiempi koodiviite upgrades.py:391 oli eri rivi.", "vk": "aukko ajossa"}
+{"id": "S0513", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F236", "pok": "ok", "n": "Jumalan Warmaster kalleimmalle alukselle; Ld +2 (max 10)."}
+{"id": "S0514", "l": "VALVOTTU", "a": "checked", "f": "mandatory_row", "p": "F236", "pok": "ok", "n": "Mark of Tzeentch dflt-rivinä + mark_paid-sääntö (domain.js:4430)."}
+{"id": "S0515", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F236", "pok": "ok", "n": "Lord ei Warmasterin alukselle."}
+{"id": "S0516", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F236", "pok": "ok", "n": "Lordin Mark of Tzeentch +25 re-rollin kanssa."}
+{"id": "S0517", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F236", "pok": "ok", "n": "Tzeentch-listan Lord-osiossa on vain Mark of Tzeentch.", "vk": "ajo ok"}
+{"id": "S0518", "l": "PELI", "a": "play", "f": "mark_effect", "p": "F236", "pok": "ok", "n": "Mark of Tzeentch -vaikutus."}
+{"id": "S0519", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F236", "pok": "ok", "n": "Thousand Sons -miehistö +35."}
+{"id": "S0520", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F236", "pok": "ok", "n": "Mark of Tzeentch -rivi ehdolla miehistö (upgrades.py:397)."}
+{"id": "S0521", "l": "VALVOTTU", "a": "checked", "f": "row_limit", "p": "F236", "pok": "ok", "n": "Warp Beasts mx=2 ja ehto Mark of Tzeentch (build_data.py:1906, ROW_CONDS)."}
+{"id": "S0522", "l": "PELI", "a": "play", "f": "mark_effect", "p": "F236", "pok": "ok", "n": "Warp Beasts -vaikutus."}
+{"id": "S0523", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F236", "pok": "ok", "n": "Johdanto."}
+{"id": "S0524", "l": "PELI", "a": "play", "f": "mark_effect", "p": "F236", "pok": "ok", "n": "Strand of Fortune -vaikutus."}
+{"id": "S0525", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F237", "pok": "ok", "n": "Scion of Prospero ei saa Daemonship-riviä (upgrades.py:1284). Lippulaivan poissulku vaatisi aboard-merkinnän.", "vk": "ajo ok"}
+{"id": "S0526", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F237", "pok": "ok", "n": "Daemonshipillä ei Warmasteria eikä Lordia (Strand of Fortune -rivin noup daemonship kattaa vain yhden seurauksen)."}
+{"id": "S0527", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F237", "pok": "ok", "n": "noup chaos space marine crew."}
+{"id": "S0528", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F237", "pok": "ok", "n": "Tzeentchin Daemonship-osiossa vain Mark of Tzeentch -rivi (upgrades.py:417)."}
+{"id": "S0529", "l": "ROSKA", "a": "fix", "f": "sentence_split", "p": "F235", "pok": "osittain", "x": "split", "n": "Lause katkeaa ('it may only carry'). Sama kuin S0512."}
+{"id": "S0530", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F231", "pok": "ok", "n": "Lord ei Abaddonin alukselle (jumalalistoilla Abaddon-osiossa)."}
+{"id": "S0531", "l": "VALVOTTU", "a": "checked", "f": "mandatory_row", "p": "F240", "pok": "ok", "n": "Mark of Nurgle dflt-rivinä + mark_paid."}
+{"id": "S0532", "l": "KUVAUS", "a": "row", "f": "reroll_price", "p": "F240", "pok": "ok", "n": "Lordin re-roll +25."}
+{"id": "S0533", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F240", "pok": "ok", "n": "Nurgle-listan Lordilla vain Mark of Nurgle.", "vk": "ajo ok"}
+{"id": "S0534", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F240", "pok": "ok", "n": "Death Guard -miehistö +35."}
+{"id": "S0535", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F240", "pok": "ok", "n": "Mark of Nurgle -rivi ehdolla miehistö."}
+{"id": "S0536", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F240", "pok": "ok", "n": "Hives of Nurgle ehdolla Mark tai Daemonship (ROW_CONDS)."}
+{"id": "S0537", "l": "PELI", "a": "play", "f": "mark_effect", "p": "F240", "pok": "ok", "n": "Hives of Nurgle -vaikutus."}
+{"id": "S0538", "l": "VALVOTTU", "a": "checked", "f": "row_limit", "p": "F240", "pok": "ok", "n": "Ark of Pestilence mx=3 (build_data.py:1909)."}
+{"id": "S0539", "l": "PELI", "a": "play", "f": "mark_effect", "p": "F240", "pok": "ok", "n": "Ark of Pestilence -vaikutus."}
+{"id": "S0540", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F241", "pok": "ok", "n": "Nurglen Daemonship sisältää Markin (build_data.py:6397).", "vk": "ajo ok"}

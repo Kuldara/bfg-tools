@@ -1,0 +1,30 @@
+{"id": "S1141", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F483", "pok": "ok", "n": "Blast markerien kerääminen."}
+{"id": "S1142", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F483", "pok": "ok", "n": "Blast markerit."}
+{"id": "S1143", "l": "OMINAISUUS", "a": "feature", "f": "lend_route", "p": "F483", "pok": "ok", "n": "Demiurg Bastion mihin tahansa laivastoon paitsi Orks, Tyranids, Necrons; ostetaan risteilijänä, mutta ei kasvata battleship- ja GC-oikeuksia. Yleinen palkkasoturireitti; koodista ei löytynyt. Ajo 20.10.: Gothic-, Incursion- ja Corsair-listoilla ei Demiurg-rivejä.", "vk": "aukko ajossa"}
+{"id": "S1144", "l": "OMINAISUUS", "a": "feature", "f": "lend_route", "p": "F483", "pok": "ok", "n": "Palkkasoturi-Demiurg: ei komentajaa kyytiin, ei komentajan re-rolleja, ei sekalaivueita. Kuuluu edellisen reitin sääntöihin ja kortille."}
+{"id": "S1145", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F483", "pok": "ok", "n": "Tau-listoilla Demiurg-rivit ovat listan omia."}
+{"id": "S1146", "l": "PELI", "a": "play", "f": "card_rule", "p": "F483", "pok": "ok", "x": "heading", "n": "Palkkasoturi disengage crippled-tilassa."}
+{"id": "S1147", "l": "PELI", "a": "play", "f": "card_rule", "p": "F483", "pok": "ok", "n": "Orkkeja vastaan poikkeus."}
+{"id": "S1148", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F484", "pok": "ok", "n": "Cutting beam."}
+{"id": "S1149", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F484", "pok": "ok", "n": "Cutting beam."}
+{"id": "S1150", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F484", "pok": "ok", "n": "Cutting beam."}
+{"id": "S1151", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F484", "pok": "ok", "n": "Esimerkki."}
+{"id": "S1152", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F484", "pok": "ok", "n": "Cutting beam."}
+{"id": "S1153", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F484", "pok": "ok", "n": "Launch bayt ja torpedot."}
+{"id": "S1154", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F484", "pok": "ok", "n": "Kortilla (domain.js:2859)."}
+{"id": "S1155", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F484", "pok": "ok", "n": "Torpedot ja attack craft."}
+{"id": "S1156", "l": "LASKETTAVA", "a": "roster", "f": "attack_rating", "p": "F486", "pok": "ok", "n": "Demiurg 2."}
+{"id": "S1157", "l": "PELI", "a": "play", "f": "card_rule", "p": "F486", "pok": "ok", "n": "Liittolaisen Ld; kortilla demiurg_ally (domain.js:3018)."}
+{"id": "S1158", "l": "PELI", "a": "play", "f": "card_rule", "p": "F486", "pok": "ok", "n": "Sama kortilla."}
+{"id": "S1159", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F486", "pok": "ok", "n": "Kampanja."}
+{"id": "S1160", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F486", "pok": "ok", "n": "Re-rollit omassa osiossaan."}
+{"id": "S1161", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F486", "pok": "ok", "n": "Re-roll-rivi vain Demiurg-alukselle (ROW_CONDS upgrades.py:101)."}
+{"id": "S1162", "l": "PELI", "a": "play", "f": "card_rule", "p": "F486", "pok": "ok", "n": "Disengage vasta 2 HP:ssa."}
+{"id": "S1163", "l": "LASKETTAVA", "a": "roster", "f": "victory_points", "p": "F486", "pok": "ok", "n": "Strongholdin, Bastionin ja Citadelin VP-arvo 400/300/200 eroaa hinnasta; rosteriin ja korttiin."}
+{"id": "S1164", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F486", "pok": "ok", "n": "Palkkasoturit eivät ammu toisiaan."}
+{"id": "S1165", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F486", "pok": "ok", "n": "Sama."}
+{"id": "S1166", "l": "RAKENNE", "a": "guaranteed", "f": "ship_type", "p": "F487", "pok": "ok", "n": "Kroot Vessels omana osionaan, risteilijäkatto laskee vain Cruisers-osion (referenssi 32 #267)."}
+{"id": "S1167", "l": "TAUSTA", "a": "drop", "f": "intro", "p": "F487", "pok": "ok", "n": "Johdanto."}
+{"id": "S1168", "l": "OMINAISUUS", "a": "feature", "f": "hook_capacity", "p": "F487", "pok": "ok", "n": "War Hostin hook-kapasiteetti on yhä notice-varoituksena ('not checked by the app'), vaikka Tau-listoille J95 toteutti hook_capacityn. Sama sääntölaji voisi kattaa War Hostin."}
+{"id": "S1169", "l": "VALVOTTU", "a": "checked", "f": "other_section", "p": "F487", "pok": "ok", "n": "Erilliset laivuesäännöt Tau Escorts- ja Rogue Trader Escorts -osioissa (J57); eri rivit = eri laivueet."}
+{"id": "S1170", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F487", "pok": "ok", "n": "Torpedo bombers -rivi; boarding torpedo -riviä ei tarjota."}

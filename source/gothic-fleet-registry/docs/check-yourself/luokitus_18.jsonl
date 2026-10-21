@@ -1,0 +1,60 @@
+{"id": "S1021", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F426", "pok": "ok", "n": "Extra Spore Cysts nmno kraken (upgrades.py:235)."}
+{"id": "S1022", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F426", "pok": "ok", "n": "Kerronta."}
+{"id": "S1023", "l": "KUVAUS", "a": "drop", "f": "row_desc_dup", "p": "F426", "pok": "ok", "n": "Reinforced Carapace -rivin kuvaus."}
+{"id": "S1024", "l": "VALVOTTU", "a": "checked", "f": "group_rule", "p": "F426", "pok": "ok", "n": "×1–×3 ryhmässä bio_carapace, ×4 vain hive shipille (cond nm)."}
+{"id": "S1025", "l": "TAUSTA", "a": "drop", "f": "clarification", "p": "F427", "pok": "ok", "n": "Selventää, että neljäs carapace on vain hive shipille; toteutuu ×4-rivin ehdosta."}
+{"id": "S1026", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F427", "pok": "ok", "n": "Kerronta."}
+{"id": "S1027", "l": "KUVAUS", "a": "drop", "f": "row_desc_dup", "p": "F427", "pok": "ok", "n": "Mucous Membrane -rivin kuvaus."}
+{"id": "S1028", "l": "KUVAUS", "a": "drop", "f": "row_desc_dup", "p": "F427", "pok": "ok", "n": "Accelerated Healing -rivin kuvaus."}
+{"id": "S1029", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F427", "pok": "ok", "n": "Kerronta."}
+{"id": "S1030", "l": "KUVAUS", "a": "drop", "f": "row_desc_dup", "p": "F427", "pok": "ok", "n": "Drone Link -rivin kuvaus."}
+{"id": "S1031", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F427", "pok": "ok", "n": "Tenacity-kerronta."}
+{"id": "S1032", "l": "ROSKA", "a": "fix", "f": "table_merge", "p": "F427", "pok": "ok", "x": "table", "n": "Hintarivin jäänne '/launch bay' + Mega-Spore Mines -kuvaus."}
+{"id": "S1033", "l": "KUVAUS", "a": "drop", "f": "row_desc_dup", "p": "F427", "pok": "ok", "n": "Mega-Spore Mines -rivin kuvaus (upgrades.py:250); kirjan oma viite '[???]'."}
+{"id": "S1034", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F428", "pok": "ok", "x": "heading", "n": "Skenaariohuomautus."}
+{"id": "S1035", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F428", "pok": "ok", "n": "Skenaario."}
+{"id": "S1036", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F428", "pok": "ok", "n": "Skenaario."}
+{"id": "S1037", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F428", "pok": "ok", "n": "Skenaario."}
+{"id": "S1038", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F428", "pok": "ok", "n": "Skenaario."}
+{"id": "S1039", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F428", "pok": "ok", "x": "heading", "n": "Skenaario."}
+{"id": "S1040", "l": "RAKENNE", "a": "guaranteed", "f": "no_limit", "p": "F429", "pok": "ok", "n": "Ei rajaa."}
+{"id": "S1041", "l": "OMINAISUUS", "a": "feature", "f": "mandatory_choice", "p": "F429", "pok": "ok", "x": "split", "n": "Drone shipin on pakko valita yksi ase. Poissulku on ryhmänä, pakko ei (referenssi 28 #227); domain.js:n need1-malli (Waystation) sopisi."}
+{"id": "S1042", "l": "RAKENNE", "a": "guaranteed", "f": "no_limit", "p": "F429", "pok": "ok", "n": "Ei rajaa."}
+{"id": "S1043", "l": "OMINAISUUS", "a": "feature", "f": "mandatory_choice", "p": "F429", "pok": "ok", "x": "split", "n": "Krakenin pakollinen asevalinta."}
+{"id": "S1044", "l": "KUVAUS", "a": "drop", "f": "intro", "p": "F429", "pok": "ok", "n": "Johdanto laivuesääntöön."}
+{"id": "S1045", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F429", "pok": "ok", "n": "squadron 6–12 samassa osiossa; lyhyet rivit yhdistyvät toisiin (domain.js:4196). Referenssi 28 #231 on vanhentunut, varmista sekalaivue.", "vk": "ajo ok"}
+{"id": "S1046", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F429", "pok": "ok", "n": "Kerronta."}
+{"id": "S1047", "l": "PELI", "a": "play", "f": "leadership_roll", "p": "F429", "pok": "ok", "n": "Ld = laivueen koko."}
+{"id": "S1048", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F429", "pok": "ok", "n": "Instinctive Behaviour."}
+{"id": "S1049", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F429", "pok": "ok", "n": "Instinctive Behaviour."}
+{"id": "S1050", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F429", "pok": "ok", "n": "Instinctive Behaviour."}
+{"id": "S1051", "l": "VALVOTTU", "a": "checked", "f": "other_section", "p": "F426", "pok": "ok", "n": "unit_upgrade_max FLEET RULES -osiossa."}
+{"id": "S1052", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F430", "pok": "ok", "n": "Osiossa on Hive Mind -vaikutukset komentajan sijaan."}
+{"id": "S1053", "l": "KUVAUS", "a": "drop", "f": "intro", "p": "F430", "pok": "ok", "n": "Nimeää rivit."}
+{"id": "S1054", "l": "KUVAUS", "a": "row", "f": "reroll_price", "p": "F430", "pok": "ok", "n": "Influence re-rollit."}
+{"id": "S1055", "l": "PELI", "a": "play", "f": "reroll_use", "p": "F430", "pok": "ok", "n": "Imperative."}
+{"id": "S1056", "l": "PELI", "a": "play", "f": "reroll_use", "p": "F430", "pok": "ok", "n": "Imperative."}
+{"id": "S1057", "l": "VALVOTTU", "a": "checked", "f": "other_section", "p": "F430", "pok": "ok", "n": "ESCORTS-osion min_ratio 6 ja ratio 12 sekä CAPITAL SHIPS ratio 2. Referenssi 29 #237 on vanhentunut."}
+{"id": "S1058", "l": "OMINAISUUS", "a": "feature", "f": "mandatory_choice", "p": "F430", "pok": "ok", "x": "split", "n": "Hive shipin on pakko valita aseet; tarkista, valvotaanko yhtään asepaikkaa."}
+{"id": "S1059", "l": "OMINAISUUS", "a": "feature", "f": "mandatory_choice", "p": "F430", "pok": "ok", "x": "split", "n": "Risteilijän asevalinta."}
+{"id": "S1060", "l": "ROSKA", "a": "fix", "f": "sentence_merge", "p": "F431", "pok": "osittain", "x": "split", "n": "Vanguard-otsikko ja 'at least six escort drones' yhdessä. Jälkimmäinen on valvottu (min_ratio Escort drones per hive ship)."}
+{"id": "S1061", "l": "VALVOTTU", "a": "checked", "f": "other_section", "p": "F431", "pok": "ok", "n": "Erilliset min_ratio-säännöt escort droneille ja kaikille saattajille."}
+{"id": "S1062", "l": "ROSKA", "a": "fix", "f": "sentence_merge", "p": "F431", "pok": "osittain", "x": "split", "n": "Kaksi luettelon otsikkoa yhdessä. Sisältö: pakollinen asevalinta (mandatory_choice)."}
+{"id": "S1063", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F431", "pok": "ok", "n": "Aallot laivueina."}
+{"id": "S1064", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F431", "pok": "ok", "n": "Kampanja."}
+{"id": "S1065", "l": "KUVAUS", "a": "drop", "f": "intro", "p": "F431", "pok": "ok", "n": "Johdanto."}
+{"id": "S1066", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F431", "pok": "ok", "n": "Port/starboard-hinta on pari; rivin kuvaukseksi."}
+{"id": "S1067", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F431", "pok": "ok", "n": "Ei jaeta tulivoimaa."}
+{"id": "S1068", "l": "TAUSTA", "a": "drop", "f": "intro", "p": "F450", "pok": "ok", "x": "heading", "n": "Otsikot + yleislause."}
+{"id": "S1069", "l": "LASKETTAVA", "a": "roster", "f": "attack_rating", "p": "F450", "pok": "ok", "x": "heading", "n": "Tau 2."}
+{"id": "S1070", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F450", "pok": "ok", "x": "heading", "n": "Ei teleport-hyökkäyksiä."}
+{"id": "S1071", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F450", "pok": "ok", "n": "Gravitic hookit pelissä."}
+{"id": "S1072", "l": "PELI", "a": "play", "f": "victory_points", "p": "F450", "pok": "ok", "n": "Hookit ja VP."}
+{"id": "S1073", "l": "PELI", "a": "play", "f": "card_rule", "p": "F450", "pok": "ok", "n": "Deflector."}
+{"id": "S1074", "l": "PELI", "a": "play", "f": "card_rule", "p": "F451", "pok": "ok", "n": "Deflector; kortilla (domain.js:3053)."}
+{"id": "S1075", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F451", "pok": "ok", "n": "Kerronta."}
+{"id": "S1076", "l": "PELI", "a": "play", "f": "card_rule", "p": "F451", "pok": "ok", "n": "Tracking systems."}
+{"id": "S1077", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F451", "pok": "ok", "n": "Kerronta."}
+{"id": "S1078", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F451", "pok": "ok", "n": "Kerronta."}
+{"id": "S1079", "l": "PELI", "a": "play", "f": "ordnance_speed", "p": "F451", "pok": "ok", "x": "table", "n": "Nopeustaulukko + Mantas-otsikko."}
+{"id": "S1080", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F451", "pok": "ok", "n": "Mantas."}

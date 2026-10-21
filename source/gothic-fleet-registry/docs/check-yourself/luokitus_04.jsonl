@@ -1,0 +1,60 @@
+{"id": "S0181", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F102", "pok": "ok", "n": "VBB:n putkista boarding torpedoes; kortilla Astartes Torpedoes."}
+{"id": "S0182", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F102", "pok": "ok", "n": "Boarding torpedoes +1 hit and run."}
+{"id": "S0183", "l": "TAUSTA", "a": "drop", "f": "intro", "p": "F118", "pok": "ok", "x": "heading", "n": "LEADERSHIP-otsikko liimattu kerrontaan."}
+{"id": "S0184", "l": "TAUSTA", "a": "drop", "f": "intro", "p": "F118", "pok": "ok", "n": "Johdanto Ld-taulukkoon."}
+{"id": "S0185", "l": "ROSKA", "a": "fix", "f": "table_merge", "p": "F118", "pok": "osittain", "x": "table", "n": "Ld-taulukko (rivi '1' puuttuu) ja Gifts-valinta kuutosella samassa lauseessa. Sisältö PELI."}
+{"id": "S0186", "l": "PELI", "a": "play", "f": "gifts", "p": "F118", "pok": "ok", "n": "Gifts-valinta ei koske Archmagosin alusta."}
+{"id": "S0187", "l": "LASKETTAVA", "a": "roster", "f": "attack_rating", "p": "F118", "pok": "ok", "x": "heading", "n": "AdMech 2."}
+{"id": "S0188", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F118", "pok": "ok", "n": "Hyökkääjä saa uusia boarding- ja H&R-heiton; kortilla (domain.js:3065)."}
+{"id": "S0189", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F118", "pok": "ok", "n": "AdMech-aluksille ei tarjota assault boateja tai boarding torpedoja. Varmista, ettei mikään rivi tarjoa (vrt. S0052-tyyppinen kielto s.125).", "vk": "ajo ok"}
+{"id": "S0190", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F118", "pok": "ok", "x": "heading", "n": "Power Ram -rivin ehto (upgrades.py:586)."}
+{"id": "S0191", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F118", "pok": "ok", "n": "Johdanto."}
+{"id": "S0192", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F118", "pok": "ok", "n": "Omien hylkyjen ampuminen."}
+{"id": "S0193", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F118", "pok": "ok", "n": "Edellisen rajaus."}
+{"id": "S0194", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F118", "pok": "ok", "x": "heading", "n": "Otsikko ja kerronta."}
+{"id": "S0195", "l": "TAUSTA", "a": "drop", "f": "intro", "p": "F118", "pok": "ok", "n": "Selittää, miksi listalla ei ole battlecruisereita; ei rajoita mitään."}
+{"id": "S0196", "l": "VALVOTTU", "a": "checked", "f": "mandatory_row", "p": "F118", "pok": "ok", "n": "Pakollinen 0 pts rivi req=1 (upgrades.py:573)."}
+{"id": "S0197", "l": "VALVOTTU", "a": "checked", "f": "mandatory_row", "p": "F119", "pok": "ok", "n": "Pakollinen +1 turret req=1, cap=1 (upgrades.py:568)."}
+{"id": "S0198", "l": "PELI", "a": "play", "f": "gifts", "p": "F119", "pok": "ok", "n": "Gifts-heitto ennen peliä."}
+{"id": "S0199", "l": "PELI", "a": "play", "f": "gifts", "p": "F119", "pok": "ok", "n": "Gifts."}
+{"id": "S0200", "l": "PELI", "a": "play", "f": "gifts", "p": "F119", "pok": "osittain", "x": "table", "n": "Gifts-taulukon otsikko ja rivi 1 (rivinumero puuttuu)."}
+{"id": "S0201", "l": "PELI", "a": "play", "f": "gifts", "p": "F119", "pok": "ok", "n": "Gifts."}
+{"id": "S0202", "l": "PELI", "a": "play", "f": "gifts", "p": "F119", "pok": "ok", "n": "Gifts (Advanced Engines). Koodiosumat ovat eri lauseita."}
+{"id": "S0203", "l": "PELI", "a": "play", "f": "gifts", "p": "F119", "pok": "ok", "n": "Gifts."}
+{"id": "S0204", "l": "PELI", "a": "play", "f": "gifts", "p": "F119", "pok": "ok", "n": "Gifts (sama vaikutus kuin Bakan refit s.50)."}
+{"id": "S0205", "l": "PELI", "a": "play", "f": "gifts", "p": "F119", "pok": "ok", "n": "Gifts."}
+{"id": "S0206", "l": "PELI", "a": "play", "f": "gifts", "p": "F119", "pok": "ok", "n": "Gifts, edellisen jatko."}
+{"id": "S0207", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F120", "pok": "ok", "n": "Korjaus +1D6; kortilla (domain.js:2600)."}
+{"id": "S0208", "l": "TAUSTA", "a": "drop", "f": "intro", "p": "F120", "pok": "ok", "n": "Quest for Knowledge -johdanto."}
+{"id": "S0209", "l": "ROSKA", "a": "fix", "f": "subplot", "p": "F120", "pok": "osittain", "x": "split", "n": "Lause katkeaa sivun palstanvaihtoon; jatko on S0229 ('normally as desired...'). Välissä taulukon otsikko ja rivi 1. Sisältö: Quest for Knowledge -alajuoni."}
+{"id": "S0210", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F120", "pok": "ok", "n": "Alajuonen tulos."}
+{"id": "S0211", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F120", "pok": "ok", "n": "Alajuonen tulos."}
+{"id": "S0212", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F120", "pok": "ok", "n": "Alajuonen voittoehto."}
+{"id": "S0213", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F120", "pok": "ok", "n": "Alajuoni."}
+{"id": "S0214", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F120", "pok": "osittain", "x": "table", "n": "Alajuonen rivi '(+1/-1)'-etuliitteellä."}
+{"id": "S0215", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F120", "pok": "ok", "n": "Alajuoni."}
+{"id": "S0216", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F120", "pok": "ok", "n": "Alajuoni."}
+{"id": "S0217", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F120", "pok": "ok", "n": "Alajuoni."}
+{"id": "S0218", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F120", "pok": "ok", "n": "Experimental vessel -alajuoni."}
+{"id": "S0219", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F120", "pok": "ok", "n": "Alajuoni."}
+{"id": "S0220", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F120", "pok": "osittain", "x": "table", "n": "Improvement-taulukon otsikko ja rivi."}
+{"id": "S0221", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F120", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0222", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F120", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0223", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F120", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0224", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F120", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0225", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F120", "pok": "osittain", "x": "table", "n": "Side effect -taulukon otsikko ja rivi."}
+{"id": "S0226", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F120", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0227", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F120", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0228", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F120", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0229", "l": "ROSKA", "a": "fix", "f": "subplot", "p": "F121", "pok": "ok", "x": "split", "n": "S0209:n jatko + WEAPONS OF THE ADEPTUS MECHANICUS -otsikko ja kerronta samassa lauseessa."}
+{"id": "S0230", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F121", "pok": "ok", "n": "Nova Cannon instead of prow torpedoes, ehto cruiser + 6+ prow + prow torpedo, noopt ja noup Power Ram (upgrades.py:601)."}
+{"id": "S0231", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F121", "pok": "ok", "n": "Retributionin rivi (upgrades.py:609)."}
+{"id": "S0232", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F121", "pok": "ok", "n": "Plasma-boosted batteries, ehto 30 cm patteri (upgrades.py:617)."}
+{"id": "S0233", "l": "RAKENNE", "a": "guaranteed", "f": "swap_exclusive", "p": "F121", "pok": "ok", "n": "Torpedot voi vaihtaa vain kerran (swp vaatii 'has prow torpedo'); muut parannukset vapaasti."}
+{"id": "S0234", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F121", "pok": "ok", "n": "Dorsal lance instead of prow torpedoes (upgrades.py:629)."}
+{"id": "S0235", "l": "KUVAUS", "a": "drop", "f": "ship_option_pointer", "p": "F121", "pok": "ok", "n": "Keulapanssari 6+ on jo Endeavourin ja Endurancen profiilioptio (OPT_EFFECTS s.72–76). Varmista, että AdMechin Endeavour-rivi saa profiilin option.", "vk": "ajo ok"}
+{"id": "S0236", "l": "KUVAUS", "a": "drop", "f": "ship_option_pointer", "p": "F121", "pok": "ok", "n": "Edellisen hinta: kääntösäde 45°, kuuluu profiilioptioon."}
+{"id": "S0237", "l": "RAKENNE", "a": "guaranteed", "f": "no_limit", "p": "F121", "pok": "ok", "x": "heading", "n": "Ei saattajarajaa; rivit ovat listalla."}
+{"id": "S0238", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F121", "pok": "ok", "n": "Saattajat hinnoitellaan listan rivin hinnalla, ei profiilin."}
+{"id": "S0239", "l": "PELI", "a": "play", "f": "card_rule", "p": "F121", "pok": "ok", "n": "AdMech-saattaja ei saa Gifts-heittoa eikä SM:n boarding-bonusta. Varmista, ettei SM-saattajan kortti AdMech-listalla tulosta astartes-sääntöä.", "vk": "ajo ok"}
+{"id": "S0240", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F121", "pok": "ok", "n": "Pakollinen turret-refit vain capital (cond cap=1); saattajille oma maksullinen rivi (upgrades.py:622)."}

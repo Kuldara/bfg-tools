@@ -1,0 +1,60 @@
+{"id": "S0961", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F402", "pok": "ok", "x": "heading", "n": "Kampanja."}
+{"id": "S0962", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F403", "pok": "ok", "n": "Kertomus."}
+{"id": "S0963", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F404", "pok": "ok", "n": "Kerronta."}
+{"id": "S0964", "l": "PELI", "a": "play", "f": "card_rule", "p": "F404", "pok": "ok", "n": "Sepulchre-aluksen Ld 10; kortille."}
+{"id": "S0965", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F404", "pok": "ok", "n": "Re-rollit omassa osiossaan, ei komentajan alla (referenssi 26 #220)."}
+{"id": "S0966", "l": "KUVAUS", "a": "row", "f": "rerolls_included", "p": "F404", "pok": "ok", "n": "Yksi ilmainen re-roll + rivit (Necrons ja Demiurg s.486)."}
+{"id": "S0967", "l": "VALVOTTU", "a": "checked", "f": "row_limit", "p": "F404", "pok": "ok", "n": "Sepulchre mx=1 (ENTRY_LIMITS)."}
+{"id": "S0968", "l": "VALVOTTU", "a": "checked", "f": "row_limit", "p": "F404", "pok": "ok", "n": "0-6 ja 0-3 rivirajoina."}
+{"id": "S0969", "l": "PELI", "a": "play", "f": "crit_table", "p": "F423", "pok": "ok", "x": "heading", "n": "Tyranid-kriittitaulukko; kortille."}
+{"id": "S0970", "l": "PELI", "a": "play", "f": "crit_table", "p": "F423", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0971", "l": "PELI", "a": "play", "f": "crit_table", "p": "F423", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0972", "l": "PELI", "a": "play", "f": "crit_table", "p": "F423", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0973", "l": "PELI", "a": "play", "f": "crit_table", "p": "F423", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0974", "l": "PELI", "a": "play", "f": "crit_table", "p": "F423", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0975", "l": "PELI", "a": "play", "f": "crit_table", "p": "F423", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0976", "l": "PELI", "a": "play", "f": "crit_table", "p": "F423", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0977", "l": "PELI", "a": "play", "f": "crit_table", "p": "F423", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0978", "l": "PELI", "a": "play", "f": "crit_table", "p": "F423", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0979", "l": "PELI", "a": "play", "f": "crit_table", "p": "F423", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0980", "l": "PELI", "a": "play", "f": "crit_table", "p": "F423", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0981", "l": "PELI", "a": "play", "f": "crit_table", "p": "F423", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0982", "l": "PELI", "a": "play", "f": "crit_table", "p": "F423", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0983", "l": "PELI", "a": "play", "f": "catastrophic_table", "p": "F423", "pok": "ok", "x": "heading", "n": "Katastrofitaulukko."}
+{"id": "S0984", "l": "PELI", "a": "play", "f": "catastrophic_table", "p": "F423", "pok": "ok", "n": "Katastrofitaulukko."}
+{"id": "S0985", "l": "PELI", "a": "play", "f": "catastrophic_table", "p": "F423", "pok": "ok", "n": "Katastrofitaulukko."}
+{"id": "S0986", "l": "PELI", "a": "play", "f": "catastrophic_table", "p": "F423", "pok": "ok", "n": "Katastrofitaulukko."}
+{"id": "S0987", "l": "PELI", "a": "play", "f": "catastrophic_table", "p": "F423", "pok": "ok", "n": "Katastrofitaulukko."}
+{"id": "S0988", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F424", "pok": "ok", "x": "heading", "n": "Johdanto."}
+{"id": "S0989", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F424", "pok": "ok", "n": "Tyranid-ordnance."}
+{"id": "S0990", "l": "PELI", "a": "play", "f": "ordnance_speed", "p": "F424", "pok": "ok", "x": "table", "n": "Nopeustaulukko."}
+{"id": "S0991", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F424", "pok": "ok", "n": "Ei torpedo bomber -riviä Tyranideille.", "vk": "ajo ok"}
+{"id": "S0992", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F424", "pok": "ok", "n": "Ordnance."}
+{"id": "S0993", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F424", "pok": "ok", "n": "Ordnance-raja 2× bayt."}
+{"id": "S0994", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F424", "pok": "ok", "n": "Crippled."}
+{"id": "S0995", "l": "PELI", "a": "play", "f": "card_rule", "p": "F424", "pok": "ok", "x": "heading", "n": "Crippled-yhteenveto + suunnittelijan huomautus."}
+{"id": "S0996", "l": "KUVAUS", "a": "drop", "f": "intro", "p": "F425", "pok": "ok", "n": "Selittää profiilin rakenteen."}
+{"id": "S0997", "l": "KUVAUS", "a": "drop", "f": "intro", "p": "F425", "pok": "ok", "n": "Selittää aserivit."}
+{"id": "S0998", "l": "VALVOTTU", "a": "checked", "f": "repeatable_rows", "p": "F425", "pok": "ok", "n": "Hive shipillä on kolme erillistä Port/starboard set 1–3 -paikkaa, joista jokaisessa sama valikoima (ajo 20.10.), joten saman aseen voi valita kolmesti.", "vk": "ajo ok"}
+{"id": "S0999", "l": "PELI", "a": "play", "f": "crit_table", "p": "F425", "pok": "ok", "x": "heading", "n": "Omat kriittitaulukot."}
+{"id": "S1000", "l": "PELI", "a": "play", "f": "crit_table", "p": "F425", "pok": "ok", "n": "Johdanto."}
+{"id": "S1001", "l": "PELI", "a": "play", "f": "crit_table", "p": "F425", "pok": "ok", "n": "Kriittisääntö."}
+{"id": "S1002", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F426", "pok": "ok", "n": "Kerronta."}
+{"id": "S1003", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F426", "pok": "ok", "n": "Kampanja."}
+{"id": "S1004", "l": "TARKISTA", "a": "keep", "f": "agreement", "p": "F426", "pok": "ok", "n": "Bio-enhancements yksittäispelissä vain sopimuksella. Aito Check yourself."}
+{"id": "S1005", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F426", "pok": "ok", "n": "Kampanja."}
+{"id": "S1006", "l": "VALVOTTU", "a": "checked", "f": "group_rule", "p": "F426", "pok": "ok", "n": "Muut rivit take/off; carapace ja spore cysts ×2/×3-riveinä ryhmissä bio_carapace/bio_spores (J9)."}
+{"id": "S1007", "l": "TAUSTA", "a": "drop", "f": "example", "p": "F426", "pok": "ok", "n": "Esimerkki; unit_upgrade_max kolme erilaista on valvottu."}
+{"id": "S1008", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F426", "pok": "ok", "n": "Ei crew skillejä."}
+{"id": "S1009", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F426", "pok": "ok", "n": "Torpedo-refittejä ei tarjota.", "vk": "ajo ok"}
+{"id": "S1010", "l": "PELI", "a": "play", "f": "random_refit", "p": "F426", "pok": "ok", "n": "Valinnainen satunnaisheitto."}
+{"id": "S1011", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F426", "pok": "ok", "n": "Solar Vanes -kerronta."}
+{"id": "S1012", "l": "KUVAUS", "a": "drop", "f": "row_desc_dup", "p": "F426", "pok": "ok", "n": "Rivin kuvauksena (upgrades.py:226)."}
+{"id": "S1013", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F426", "pok": "ok", "n": "Kerronta."}
+{"id": "S1014", "l": "KUVAUS", "a": "drop", "f": "row_desc_dup", "p": "F426", "pok": "ok", "n": "Adrenaline Sacs -rivin kuvaus."}
+{"id": "S1015", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F426", "pok": "ok", "n": "Kerronta."}
+{"id": "S1016", "l": "KUVAUS", "a": "drop", "f": "row_desc_dup", "p": "F426", "pok": "ok", "n": "Psychic Scream -rivin kuvaus."}
+{"id": "S1017", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F426", "pok": "ok", "n": "Kerronta."}
+{"id": "S1018", "l": "KUVAUS", "a": "drop", "f": "row_desc_dup", "p": "F426", "pok": "ok", "n": "More Discharge Vents -rivin kuvaus."}
+{"id": "S1019", "l": "KUVAUS", "a": "drop", "f": "row_desc_dup", "p": "F426", "pok": "ok", "n": "Extra Spore Cysts -rivin kuvaus."}
+{"id": "S1020", "l": "VALVOTTU", "a": "checked", "f": "group_rule", "p": "F426", "pok": "ok", "n": "Enintään kaksi: ×1/×2-rivit ryhmässä bio_spores."}

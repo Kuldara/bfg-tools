@@ -1,0 +1,263 @@
+{
+  "list": "Eldar Corsairs — Later Gothic War",
+  "book_page": 317,
+  "read_pages": [
+    317
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Pirate Prince",
+      "text": "0-1 Pirate Prince",
+      "page": 317,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "worth over 750 points a Pirate Prince must be included",
+      "text": "If the fleet is worth over 750 points a Pirate Prince must be included to lead it.",
+      "page": 317,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "over": true
+    },
+    {
+      "key": "adds +2 to its Leadership, to a maximum of 10",
+      "text": "You may include 1 Pirate Prince in your fleet, who must be assigned to a ship and adds +2 to its Leadership, to a maximum of 10.",
+      "page": 317,
+      "status": "manual",
+      "why": "Sijoittelu ja johtajuuden yläraja ratkaistaan pelissa."
+    },
+    {
+      "key": "Your fleet may be led by an Eldar Hero, in place of its normal fleet commander",
+      "text": "Your fleet may be led by an Eldar Hero, in place of its normal fleet commander.",
+      "page": 317,
+      "status": "enforced",
+      "kind": "cap",
+      "max": 1,
+      "why": "Valvottu 10.9.2026 (laivastopistokoe S5, raportti 17): Hero tayttaa pakollisen Pirate Princen (mandatory_at-pick kattaa molemmat osiot) ja Prince + Hero on enintaan yksi. Aiemmin Heron johtama yli 750 pisteen laivasto sai virheen 'Pirate Prince missing'.",
+      "classified_on": "2026-09-10"
+    },
+    {
+      "key": "Only a fleet led by an Eldar Hero may take reserves",
+      "text": "Your fleet may be led by an Eldar Hero, in place of its normal fleet commander. Only a fleet led by an Eldar Hero may take reserves from the Craftworld Eldar fleet list.",
+      "page": 317,
+      "status": "enforced",
+      "why": "1.1 (14.9.2026): sama saanto kuin RESERVES AND ALLIES -osion lause, kirjan toisessa kohdassa. Valvotaan listan res_ok-luvalla, jonka ehto on Eldar Hero. Ehdollinen reserve-oikeus; sovellus ei mallinna reserveja.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "corsairs-craftworld-reserve-needs-an-eldar-hero",
+        "corsairs-craftworld-reserve-with-an-eldar-hero"
+      ]
+    },
+    {
+      "key": "0-12 Cruisers",
+      "text": "0-12 Cruisers",
+      "page": 317,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 12
+    },
+    {
+      "key": "escorts in your fleet in squadrons of 2",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "page": 317,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "any mix of Darkstar fighters and Eagle bombers",
+      "text": "Any ship with launch bays may choose to have them launch any mix of Darkstar fighters and Eagle bombers. Ships with torpedo tubes are armed with Eldar torpedoes.",
+      "page": 317,
+      "status": "manual",
+      "why": "Ordnance-valinta pelin aikana."
+    },
+    {
+      "key": "Dragonship or Wraithship may be taken for every three cruisers",
+      "text": "Following this, one Craftworld Eldar Flame of Asuryan, Dragonship or Wraithship may be taken for every three cruisers in the fleet.",
+      "page": 317,
+      "status": "manual",
+      "why": "Reserve-saanto: alukset tulevat Craftworld-listasta."
+    },
+    {
+      "key": "no more than one for every three escort vessels in the fleet",
+      "text": "Craftworld Eldar Shadowhunters may be taken in the same ratio of no more than one for every three escort vessels in the fleet.",
+      "page": 317,
+      "status": "manual",
+      "why": "Reserve-saanto."
+    },
+    {
+      "key": "Corsair Eldar escorts and Shadowhunters may not be in the same squadron",
+      "text": "Corsair Eldar escorts and Shadowhunters may not be in the same squadron.",
+      "page": 317,
+      "status": "manual",
+      "why": "Skwadronin kokoonpano paatetaan poydalla."
+    },
+    {
+      "key": "If the Flame of Asuryan is taken, the Eldar Hero must be embarked aboard it",
+      "text": "If the Flame of Asuryan is taken, the Eldar Hero must be embarked aboard it.",
+      "page": 317,
+      "status": "manual",
+      "why": "Sijoittelu."
+    },
+    {
+      "key": "up to one battleship for every full 1,000 points",
+      "text": "Your fleet may include up to one battleship for every full 1,000 points it contains. Therefore, if you have between 0 to 999 points, you cannot field any battleships, while from 1000 to 1,999 points you can include one, and so on.",
+      "page": 317,
+      "status": "enforced",
+      "kind": "per_points",
+      "each": 1,
+      "per": 1000,
+      "why": "Ei jasentynyt ennen 7.9.2026: kaava luki 'include' ennen 'up to' -jatkoa, jolloin lukusanaksi tuli 'up', ja sana 'full' katkaisi pisteluvun. PYORISTYS: kirja sanoo 'FULL 1,000 points' ja antaa esimerkin 0-999 = ei yhtaan, 1000-1999 = yksi. Sovellus pyoristi 7.9.2026 asti ylospain kuten muut pisterajat, jolloin 500 pisteen laivastossa sai yhden taistelulaivan. Nyt saannolla on oma lippunsa (full) ja vain se pyoristaa alaspain ilman vahimmaismaaraa."
+    },
+    {
+      "key": "An Eldar Hero must lead the fleet in order to use Craftworld Eldar vessels as reserves",
+      "text": "An Eldar Hero must lead the fleet in order to use Craftworld Eldar vessels as reserves.",
+      "page": 317,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "corsairs-craftworld-reserve-needs-an-eldar-hero",
+        "corsairs-craftworld-reserve-with-an-eldar-hero"
+      ],
+      "why": "1.1 (14.9.2026): listan kentta res_ok, jossa lupa on ehdollinen (needs_re = Eldar Hero tai Prince Yriel). Eldar ja Craftworld Eldar ovat s.14:n rotuluettelossa eri rotuja, joten ilman tata lupaa rotuportti estaisi koko asian. Suhdeluvut tulevat kirjan yleisesta 1:3-saannosta (s.14)."
+    },
+    {
+      "key": "Yriel may be taken instead of the Hero Fleet Commander",
+      "text": "Yriel may be taken instead of the Hero Fleet Commander as listed in the Corsair and Craftworld Eldar fleet lists.",
+      "page": 319,
+      "status": "enforced",
+      "kind": "cap",
+      "max": 1,
+      "why": "J161, pelaajaraportti 9.10.2026: laatikko on painettu Iyandenin sivulle 319, mutta lause nimeaa Corsair-listat. Yriel-rivi (150 pts, 1 re-roll hinnassa) on listan RESERVES AND ALLIES -osiossa, ja han on yksi kolmesta komentajasta (Pirate Prince, Eldar Hero tai Yriel); pakollinen komentaja (yli 750) tayttyy hanella.",
+      "classified_on": "2026-10-09"
+    },
+    {
+      "key": "if the Flame of Asuryan with Yriel is added to the parent fleet it is exempt from the reserve rules",
+      "text": "Furthermore, if the Flame of Asuryan with Yriel is added to the parent fleet it is exempt from the reserve rules *eg you do not have to field three capital ships in a Corsair Eldar fleet list(.",
+      "page": 319,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "corsair-lgw-yriel-flame-exempt-from-reserve-rules",
+        "corsair-lgw-hero-flame-still-needs-three-cruisers",
+        "corsair-lgw-yriel-dragonship-is-an-ordinary-reserve"
+      ],
+      "why": "Moottorissa (domain.js resolveFleet, listan kentta res_exempt): Flame of Asuryan reservina ei kuluta 1:3-budjettia, kun laivastoa johtaa Prince Yriel. Vain Flame ja vain Yrielin kanssa: Hero tarvitsee yha kolme risteilijaa ja Dragonship on tavallinen reservi. Kirjan lauseessa on painovirhe sulkeissa ('*eg ... list(').",
+      "classified_on": "2026-10-09"
+    },
+    {
+      "key": "He must be embarked aboard the Flame of Asuryan if it is present",
+      "text": "He must be embarked aboard the Flame of Asuryan if it is present, in which case his cost is 125 points.",
+      "page": 319,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "corsair-lgw-yriel-flame-discount-not-ticked",
+        "corsair-lgw-yriel-flame-exempt-from-reserve-rules"
+      ],
+      "why": "Rivi 'Embarked aboard the Flame of Asuryan' (-25) on pelaajan rasti; resolveFleet vertaa sen laivastoon (listan kentta aboard): Flame ilman rastia on huomautus (25 pistetta liikaa), rasti ilman Flamea on virhe.",
+      "classified_on": "2026-10-09"
+    }
+  ],
+  "entries": [
+    {
+      "name": "Pirate Prince (+2 Ld)",
+      "pts": 100,
+      "page": null
+    },
+    {
+      "name": "One re-roll",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Two re-rolls",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Three re-rolls",
+      "pts": 100,
+      "page": null
+    },
+    {
+      "name": "Eldar Hero (Ld 10)",
+      "pts": 100,
+      "page": null
+    },
+    {
+      "name": "One re-roll",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Two re-rolls",
+      "pts": 75,
+      "page": null
+    },
+    {
+      "name": "Void Stalker class battleship",
+      "pts": 380,
+      "page": 320
+    },
+    {
+      "name": "Eclipse class cruiser",
+      "pts": 250,
+      "page": 321
+    },
+    {
+      "name": "Shadow class cruiser",
+      "pts": 210,
+      "page": 322
+    },
+    {
+      "name": "Aurora class light cruiser",
+      "pts": 140,
+      "page": 323
+    },
+    {
+      "name": "Solaris class light cruiser",
+      "pts": 130,
+      "page": 324
+    },
+    {
+      "name": "Hellebore class frigate",
+      "pts": 65,
+      "page": 325
+    },
+    {
+      "name": "Aconite class frigate",
+      "pts": 55,
+      "page": 326
+    },
+    {
+      "name": "Hemlock class destroyer",
+      "pts": 40,
+      "page": 327
+    },
+    {
+      "name": "Nightshade class destroyer",
+      "pts": 40,
+      "page": 328
+    }
+  ],
+  "notes": [
+    "Kirjassa on KAKSI Eldar Corsairs -listaa: sivun 316 otsikko on 'GOTHIC SECTOR' ja sivun 317 'LATER GOTHIC WAR'. Ne olivat 7.9.2026 asti sulautettuina yhdeksi, jolloin listassa oli kaksi identtista Pirate Prince- ja Eldar Hero -osiota. Sama vika kuin Grey Knightsissa.",
+    "Komentajaosiot ovat sanasta sanaan samat molemmilla listoilla. Huomaa etta 'One re-roll' maksaa Pirate Princella 25 ja Eldar Herolla 50 - sama nimi, eri hinta, eri osio.",
+    "Tama on laajempi versio: mukana Void Stalker -taistelulaiva seka Aurora- ja Solaris-kevytristeilijat."
+  ],
+  "extra_entries": [
+    {
+      "name": "Prince Yriel",
+      "pts": 150,
+      "page": 319
+    }
+  ]
+}

@@ -1,0 +1,290 @@
+{
+  "list": "Imperial Navy — Armageddon Sector",
+  "book_page": 40,
+  "read_pages": [
+    40,
+    41
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Fleet Commander",
+      "text": "0-1 Fleet Commander",
+      "page": 40,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "worth over 750 points a fleet commander must be included",
+      "text": "If the fleet is worth over 750 points a fleet commander must be included to lead it.",
+      "page": 40,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "over": true
+    },
+    {
+      "key": "As long as at least one Space Marine Battle barge is included",
+      "text": "As long as at least one Space Marine Battle barge is included you may choose a Master of the Fleet, who will always be assigned to a Battle barge and cannot be assigned to a non-Space Marine ship.",
+      "page": 40,
+      "status": "manual",
+      "why": "Ehdollinen komentajavalinta: riippuu siita mita aluksia laivastossa on. Moottori ei osaa sitoa komentajaa alustyyppiin."
+    },
+    {
+      "key": "you cannot choose to buy Master of the Fleet re-rolls if your fleet is commanded by an Admiral",
+      "text": "The cost of your re-rolls depends on the commander you choose (ie you cannot choose to buy Master of the Fleet re-rolls if your fleet is commanded by an Admiral).",
+      "page": 40,
+      "status": "manual",
+      "why": "Kaksi erillista re-roll-hinnastoa; valinta on pelaajan. Rivit ovat omissa osioissaan 'Admiral Re-rolls' ja 'Master of the Fleet Re-rolls'."
+    },
+    {
+      "key": "one battleship in your fleet for every three cruisers",
+      "text": "You may include up to one battleship in your fleet for every three cruisers or battlecruisers.",
+      "page": 41,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 3,
+      "per_types": [
+        "cruisers",
+        "battlecruisers"
+      ]
+    },
+    {
+      "key": "one battlecruiser in your fleet for every cruiser",
+      "text": "You may include up to one battlecruiser in your fleet for every cruiser.",
+      "page": 41,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 1,
+      "per_types": [
+        "cruiser"
+      ],
+      "why": "Huomaa: 'for every cruiser' ilman lukusanaa, eli suhde on 1:1 eika 1:2 kuten muissa Imperial-listoissa. Ei jasentynyt ennen 7.9.2026, koska lukusanan paikalle tarttui sanan alku ('cruise' + 'r')."
+    },
+    {
+      "key": "0-12 Cruisers",
+      "text": "0-12 Cruisers",
+      "page": 41,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 12
+    },
+    {
+      "key": "escorts in your fleet in squadrons of 2",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "page": 41,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "Space Marine vessels may not be squadroned with non-Space Marine vessels",
+      "text": "* Space Marine vessels may not be squadroned with non-Space Marine vessels.",
+      "page": 41,
+      "status": "manual",
+      "why": "Skwadronin kokoonpano paatetaan poydalla, ei listassa."
+    },
+    {
+      "key": "No more than two of these vessels (Endurance and Defiant class light cruisers)",
+      "text": "No more than two of these vessels (Endurance and Defiant class light cruisers) may be taken for every 500 points (or portion thereof) in the fleet.",
+      "page": 41,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. per_points pick=Endurance|Defiant. Aiempi puute: Pisterajaan sidottu raja, mutta kohteena kaksi nimettya listariviä eika osio. per_points-tarkistus laskee osion, joten se hyvaksyisi mitka tahansa risteilijat. ",
+      "kind": "per_points",
+      "per": 500,
+      "each": 2,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "may only take reserves from other Imperial Navy fleets list NOT Space Marine fleet lists",
+      "text": "However, it is important to note that despite the inclusion of Space Marine vessels in the fleet list, this is still an Imperial Navy fleet and hence may only take reserves from other Imperial Navy fleets list NOT Space Marine fleet lists.",
+      "page": 41,
+      "status": "manual",
+      "why": "Reserve-saanto ylittaa listarajan."
+    },
+    {
+      "key": "any mix of Fury interceptors and Starhawk bombers",
+      "text": "Any ship with launch bays may choose to have them launch any mix of Fury interceptors and Starhawk bombers.",
+      "page": 41,
+      "status": "manual",
+      "why": "ordnance-valinta pelin aikana"
+    },
+    {
+      "key": "Some ships may carry Shark assault boats",
+      "text": "Some ships may carry Shark assault boats at an additional cost.",
+      "page": 41,
+      "status": "manual",
+      "why": "viittaa profiileihin: Emperor s.53, Oberon s.56"
+    },
+    {
+      "key": "Ships with torpedo tubes are armed with ordinary torpedoes",
+      "text": "Ships with torpedo tubes are armed with ordinary torpedoes.",
+      "page": 41,
+      "status": "out_of_scope",
+      "why": "Toteava oletus, ei valintaa eika rajoitetta.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Imperial Navy fleets choosing reserves from this fleet list cannot choose Space Marine vessels",
+      "text": "Likewise, Imperial Navy fleets choosing reserves from this fleet list cannot choose Space Marine vessels from it.",
+      "page": 41,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "armageddon-space-marine-vessels-are-not-lent",
+        "armageddon-navy-vessels-are-still-lent"
+      ],
+      "why": "Osittainen lainauskielto lahdelistan puolelle (lend_ban): tahdella merkityt rivit ovat Space Marine -aluksia (s.41: '* Space Marine vessels may not be squadroned with non-Space Marine vessels'), ja s.15 sanoo saman esimerkkina Gothic Sectorista. Tasan yksi tahti nimen lopussa, koska kaksi tahtea merkitsee Endurancen ja Defiantin (harvinaiset variantit). Loytyi pistokokeessa 20 (siemen 2026091413): Gladius* tarjottiin Bakalle reservina ja laivasto hyvaksyttiin vihreana. Sovellus oli 1.0:sta asti tarjonnut nama kahdeksan rivia reservina jokaiselle Imperial Navy -listalle."
+    }
+  ],
+  "entries": [
+    {
+      "name": "Fleet-Admiral (Ld 8)",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Admiral (Ld 9)",
+      "pts": 100,
+      "page": null
+    },
+    {
+      "name": "Solar Admiral (Ld 10)",
+      "pts": 150,
+      "page": null
+    },
+    {
+      "name": "Master of the Fleet (Ld 10)",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Apocalypse class battleship",
+      "pts": 365,
+      "page": 52
+    },
+    {
+      "name": "Emperor class battleship",
+      "pts": 365,
+      "page": 53
+    },
+    {
+      "name": "Oberon class battleship",
+      "pts": 335,
+      "page": 56
+    },
+    {
+      "name": "Space Marine Battle barge*",
+      "pts": 425,
+      "page": 104
+    },
+    {
+      "name": "Mars class battlecruiser",
+      "pts": 270,
+      "page": 61
+    },
+    {
+      "name": "Armageddon class battlecruiser",
+      "pts": 235,
+      "page": 65
+    },
+    {
+      "name": "Dictator class cruiser",
+      "pts": 220,
+      "page": 67
+    },
+    {
+      "name": "Tyrant class cruiser",
+      "pts": 185,
+      "page": 69
+    },
+    {
+      "name": "Gothic class cruiser",
+      "pts": 180,
+      "page": 70
+    },
+    {
+      "name": "Lunar class cruiser",
+      "pts": 180,
+      "page": 71
+    },
+    {
+      "name": "Space Marine Strike Cruiser*",
+      "pts": 145,
+      "page": 105
+    },
+    {
+      "name": "Endeavour class light cruiser",
+      "pts": 110,
+      "page": 72
+    },
+    {
+      "name": "Endurance class light cruiser**",
+      "pts": 110,
+      "page": 74
+    },
+    {
+      "name": "Defiant class light cruiser**",
+      "pts": 120,
+      "page": 76
+    },
+    {
+      "name": "Firestorm Class Frigate",
+      "pts": 40,
+      "page": 79
+    },
+    {
+      "name": "Falchion Class Frigate",
+      "pts": 35,
+      "page": 80
+    },
+    {
+      "name": "Nova Class Frigate*",
+      "pts": 50,
+      "page": 107
+    },
+    {
+      "name": "Rapid Strike Vessel (Firestorm)*",
+      "pts": 45,
+      "page": 79
+    },
+    {
+      "name": "Gladius Class Frigate*",
+      "pts": 45,
+      "page": 108
+    },
+    {
+      "name": "Hunter Class Destroyer*",
+      "pts": 40,
+      "page": 109
+    },
+    {
+      "name": "Rapid Strike Vessel (Sword)*",
+      "pts": 40,
+      "page": 82
+    },
+    {
+      "name": "Rapid Strike Vessel (Cobra)*",
+      "pts": 35,
+      "page": 84
+    }
+  ],
+  "extra_entries": [
+    {
+      "name": "Imperial Power Ram",
+      "pts": 5,
+      "why": "jaetuista Imperial Navy -saannoista s.32"
+    }
+  ],
+  "notes": [
+    "Re-roll-rivit ovat kahdessa osiossa, koska kirjassa on kaksi eri hinnastoa: Admiral 25/75/150 ja Master of the Fleet 25/50/75. Sovellus pitaa ne erillaan, mika vastaa kirjaa.",
+    "Rapid Strike Vessel -rivit viittaavat kahteen sivuun kirjassa (esim. 'pg 106 (pg 79)'): saannot ovat sivulla 106 ja profiili alkuperaisen aluksen sivulla. Sovellus kayttaa profiilisivua.",
+    "Sivut 42-47 kuuluvat taman listan sivualaan mutta ovat kertomusta (Dominus Astra, Calgar, Rathin henkilokuva). Ne on poistettu nakyvista LORE_SECTIONS-taulussa."
+  ]
+}

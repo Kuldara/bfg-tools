@@ -1,0 +1,60 @@
+{"id": "S0121", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F95", "pok": "ok", "n": "Thunderhawk-refitin vaikutus (vain Thunderhawkit, bayt puolitetaan). Koskee rivejä kuten Inquisitorin 'Thunderhawks, launch bays halved' ja Venerable-runkoa; rivin kuvaukseksi."}
+{"id": "S0122", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F95", "pok": "ok", "n": "Saattajille ei tarjota Thunderhawk-päivitystä. Varmista, ettei mikään rivi tarjoa sitä escortille.", "vk": "ajo ok"}
+{"id": "S0123", "l": "RAKENNE", "a": "guaranteed", "f": "list_gate", "p": "F96", "pok": "ok", "n": "Annihilator vain Crusade-listalle: kortin sääntö on porttiin sidottu (SPECIAL_WEAPON_RULES, referenssi 05 #37). Lause näkyy silti Codexissa ja Dominionissa yhteisenä tekstinä."}
+{"id": "S0124", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F96", "pok": "ok", "n": "Annihilatorin liike."}
+{"id": "S0125", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F96", "pok": "ok", "n": "Turret suppression; sama lause Ork-listoilla (fighta-bommerz, s.359)."}
+{"id": "S0126", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F96", "pok": "ok", "n": "Turret suppression."}
+{"id": "S0127", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F96", "pok": "ok", "n": "Turret suppression."}
+{"id": "S0128", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F96", "pok": "ok", "n": "Turret suppression."}
+{"id": "S0129", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F96", "pok": "ok", "n": "Turret suppression."}
+{"id": "S0130", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F96", "pok": "ok", "n": "Planetary assault -kampanja."}
+{"id": "S0131", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F96", "pok": "ok", "n": "Honour Guardin käyttö."}
+{"id": "S0132", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F96", "pok": "ok", "n": "Honour Guard / teleport."}
+{"id": "S0133", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F96", "pok": "ok", "n": "Honour Guard."}
+{"id": "S0134", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F96", "pok": "ok", "n": "Terminators; kortin sääntö (domain.js:2748)."}
+{"id": "S0135", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F96", "pok": "ok", "n": "Terminators."}
+{"id": "S0136", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F96", "pok": "ok", "n": "Appeals-taulukko; kirjan oma sivuviite '[???]'."}
+{"id": "S0137", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F96", "pok": "ok", "n": "Appeals."}
+{"id": "S0138", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F96", "pok": "ok", "n": "Appeals, esimerkki."}
+{"id": "S0139", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F96", "pok": "ok", "n": "Kampanjan refit-heitto (myös Tau s.452)."}
+{"id": "S0140", "l": "VALVOTTU", "a": "checked", "f": "commander_count", "p": "F97", "pok": "ok", "n": "Komentajan määrä 1 osion rajana.", "vk": "ajo ok"}
+{"id": "S0141", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F97", "pok": "ok", "n": "Codex: Master of the Fleet battle bargelle ennen strike cruiseria, jos bargeja on. Vaatii 'embarked aboard' -merkinnän (J8 rajasi sidonnan)."}
+{"id": "S0142", "l": "KUVAUS", "a": "row", "f": "reroll_price", "p": "F97", "pok": "ok", "n": "Re-rollit ovat komentajan riveinä."}
+{"id": "S0143", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F97", "pok": "ok", "n": "Johdanto Terminator-riville (kaksoispiste lopussa). Varmista rivi ja sen ehto (MoF:n alus).", "vk": "ajo ok"}
+{"id": "S0144", "l": "VALVOTTU", "a": "checked", "f": "vbb", "p": "F97", "pok": "ok", "n": "Codexin Venerable battle barge: 0-1, kuuluu kolmen bargen kattoon, runkovalinta + 35 (domain.js:1265, HULL_CHOICES). Codexissa ei ole 1 000 pisteen ehtoa kuten Crusadessa ja Dominionissa.", "vk": "ajo ok"}
+{"id": "S0145", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F98", "pok": "ok", "n": "Crusade ja Dominion: MoF pakko battle bargelle, jos bargeja on. 'Embarked aboard' -merkintä."}
+{"id": "S0146", "l": "PELI", "a": "play", "f": "commander_assign", "p": "F98", "pok": "ok", "n": "Vapaaehtoinen sijoitus VBB:lle tai fortress-monasterylle; vaikuttaa re-rollien yhdistämiseen (S0149)."}
+{"id": "S0147", "l": "KUVAUS", "a": "row", "f": "reroll_price", "p": "F98", "pok": "ok", "n": "MoF-re-rollien käyttöalue; komentajakortille."}
+{"id": "S0148", "l": "KUVAUS", "a": "row", "f": "reroll_price", "p": "F98", "pok": "ok", "n": "Fortress-monasteryn omat re-rollit (upgrades.py:272)."}
+{"id": "S0149", "l": "PELI", "a": "play", "f": "reroll_pool", "p": "F98", "pok": "ok", "n": "Re-rollien yhdistäminen, kun MoF on monasteryllä. Vrt. J164 (Ramiliesin re-roll)."}
+{"id": "S0150", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F98", "pok": "ok", "n": "Kerronta."}
+{"id": "S0151", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F98", "pok": "ok", "n": "Kerronta."}
+{"id": "S0152", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F99", "pok": "ok", "n": "Honour Guard -rivin hinta ja ehto (battle barge tai strike cruiser). Varmista rivin cond.", "vk": "ajo ok"}
+{"id": "S0153", "l": "LASKETTAVA", "a": "roster", "f": "attack_rating", "p": "F99", "pok": "ok", "n": "Crusade 3."}
+{"id": "S0154", "l": "LASKETTAVA", "a": "roster", "f": "attack_rating", "p": "F99", "pok": "ok", "n": "Crusade 1, jos fortress-monastery on mukana: laskettavissa rosterista."}
+{"id": "S0155", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F99", "pok": "ok", "n": "res_ban (build_data.py:5406)."}
+{"id": "S0156", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F99", "pok": "ok", "n": "Monasteryn kanssa aina puolustaja. Voisi näkyä rosterin muistutuksena."}
+{"id": "S0157", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F99", "pok": "ok", "n": "Skenaarion käyttöohje."}
+{"id": "S0158", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F100", "pok": "ok", "n": "Dominion: MoF pakko Venerable battle bargelle, jos se on mukana."}
+{"id": "S0159", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F100", "pok": "ok", "n": "Johdanto SM-kapteeneihin."}
+{"id": "S0160", "l": "PELI", "a": "play", "f": "leadership_roll", "p": "F100", "pok": "ok", "n": "Kapteenin alus heittää SM:n Ld-taulukolta."}
+{"id": "S0161", "l": "PELI", "a": "play", "f": "commander_effect", "p": "F100", "pok": "ok", "n": "Kapteeni ei tuo muita SM-sääntöjä; kortille."}
+{"id": "S0162", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F100", "pok": "ok", "n": "SM-kapteenin alus saa Honour Guardin. Varmista, että Honour Guard -rivin ehto sallii kapteenin IN-aluksen.", "vk": "koodi luettu"}
+{"id": "S0163", "l": "VALVOTTU", "a": "checked", "f": "lend_upgrade_ban", "p": "F101", "pok": "ok", "n": "Dominioniin lainatulle IN-alukselle ei tarjota yhtään SM-päivitystä (ajo 20.10.): rivien ehdot (battle barge, strike cruiser) rajaavat ne pois.", "vk": "ajo ok"}
+{"id": "S0164", "l": "LASKETTAVA", "a": "roster", "f": "attack_rating", "p": "F101", "pok": "ok", "n": "Dominion 3."}
+{"id": "S0165", "l": "LASKETTAVA", "a": "roster", "f": "attack_rating", "p": "F101", "pok": "ok", "n": "Dominion 2, jos mukana on IN-, Mechanicus- tai RT-aluksia."}
+{"id": "S0166", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F101", "pok": "ok", "n": "RESERVE_GRANTS (build_data.py:5303)."}
+{"id": "S0167", "l": "RAKENNE", "a": "guaranteed", "f": "ship_type", "p": "F101", "pok": "ok", "n": "Profiilien rt-kenttä tekee jo battle bargesta battleshipin ja strike cruiserista cruiserin (build_data.py:5308)."}
+{"id": "S0168", "l": "VALVOTTU", "a": "checked", "f": "other_section", "p": "F101", "pok": "ok", "n": "conditional_cap Cruisers-osiossa (build_data.py:5373)."}
+{"id": "S0169", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F101", "pok": "ok", "n": "Kampanjan täydennykset."}
+{"id": "S0170", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F102", "pok": "ok", "n": "Space Wolves -kerronta."}
+{"id": "S0171", "l": "ROSKA", "a": "fix", "f": "sentence_split", "p": "F102", "pok": "ok", "n": "Lause katkeaa ajatusviivaan; jatko on S0172. Sisältö (yksi VBB) on valvottu."}
+{"id": "S0172", "l": "ROSKA", "a": "fix", "f": "sentence_split", "p": "F102", "pok": "osittain", "n": "S0171:n jatko. Runkovalinta on toteutettu (domain.js:1265, HULL_CHOICES)."}
+{"id": "S0173", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F102", "pok": "ok", "n": "+35 miehistöstä lasketaan hintaan (domain.js:1266)."}
+{"id": "S0174", "l": "VALVOTTU", "a": "checked", "f": "vbb", "p": "F102", "pok": "ok", "n": "VBB ilman profiilin optioita (domain.js:73)."}
+{"id": "S0175", "l": "TAUSTA", "a": "drop", "f": "example", "p": "F102", "pok": "ok", "n": "Esimerkki edellisestä."}
+{"id": "S0176", "l": "TAUSTA", "a": "drop", "f": "intro", "p": "F102", "pok": "ok", "n": "Johdanto seuraaviin VBB-refitteihin, jotka on toteutettu."}
+{"id": "S0177", "l": "VALVOTTU", "a": "checked", "f": "vbb", "p": "F102", "pok": "ok", "n": "Bayt puolitetaan ylöspäin (domain.js:73–76); lause on esimerkki."}
+{"id": "S0178", "l": "VALVOTTU", "a": "checked", "f": "vbb", "p": "F102", "pok": "ok", "n": "Vain Thunderhawkit (domain.js:73)."}
+{"id": "S0179", "l": "RAKENNE", "a": "guaranteed", "f": "vbb", "p": "F102", "pok": "ok", "n": "Baytön runko ei saa Thunderhawkeja; malli lisää ne vain bayhin."}
+{"id": "S0180", "l": "VALVOTTU", "a": "checked", "f": "vbb", "p": "F102", "pok": "ok", "n": "venerable_prow_torpedoes-optio (domain.js:99)."}

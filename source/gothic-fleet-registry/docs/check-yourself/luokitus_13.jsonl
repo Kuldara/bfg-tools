@@ -1,0 +1,60 @@
+{"id": "S0721", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F359", "pok": "ok", "n": "Boarding torpedoes -rivi vain capital shipeille (upgrades.py:681)."}
+{"id": "S0722", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F359", "pok": "ok", "x": "heading", "n": "Vaihteleva launch capacity."}
+{"id": "S0723", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F359", "pok": "ok", "n": "Launch capacity."}
+{"id": "S0724", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F359", "pok": "ok", "n": "Fighta-bommaz."}
+{"id": "S0725", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F359", "pok": "ok", "n": "Fighta-bommaz."}
+{"id": "S0726", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F359", "pok": "ok", "n": "Turret suppression."}
+{"id": "S0727", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F359", "pok": "ok", "n": "Turret suppression."}
+{"id": "S0728", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F359", "pok": "ok", "n": "Turret suppression."}
+{"id": "S0729", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F359", "pok": "ok", "n": "Turret suppression."}
+{"id": "S0730", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F359", "pok": "ok", "n": "Esimerkki."}
+{"id": "S0731", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F359", "pok": "ok", "n": "Esimerkki."}
+{"id": "S0732", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F359", "pok": "ok", "n": "Esimerkki."}
+{"id": "S0733", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F359", "pok": "ok", "n": "Torpedo-bommaz."}
+{"id": "S0734", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F359", "pok": "ok", "n": "Torpedo-bommaz; kortilla (domain.js:2775)."}
+{"id": "S0735", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F359", "pok": "ok", "n": "Torpedo-bommaz."}
+{"id": "S0736", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F359", "pok": "ok", "n": "Torpedo-bommaz +10 / bay (upgrades.py:676)."}
+{"id": "S0737", "l": "TAUSTA", "a": "drop", "f": "example", "p": "F359", "pok": "ok", "n": "Hintaesimerkki; rivi laskee hinnan itse."}
+{"id": "S0738", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F359", "pok": "ok", "n": "Lisävalinta, ei korvaa fighta-bommazeja; rivin kuvaukseksi."}
+{"id": "S0739", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F360", "pok": "ok", "x": "heading", "n": "Ork orbital mines -rivi (build_data.py:3875)."}
+{"id": "S0740", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F360", "pok": "ok", "n": "Space Hulk ei saa miinoja (build_data.py:3876)."}
+{"id": "S0741", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F360", "pok": "ok", "n": "Battleshipit eivät saa miinoja (vain cruiser/GC, build_data.py:3870)."}
+{"id": "S0742", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F360", "pok": "ok", "n": "Satunnainen tulivoima."}
+{"id": "S0743", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F360", "pok": "ok", "n": "Heavy gunz."}
+{"id": "S0744", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F360", "pok": "ok", "n": "Heavy gunz."}
+{"id": "S0745", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F360", "pok": "ok", "n": "Torpedo launcha."}
+{"id": "S0746", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F360", "pok": "ok", "n": "Torpedot laivueessa."}
+{"id": "S0747", "l": "VALVOTTU", "a": "checked", "f": "row_offered", "p": "F360", "pok": "ok", "x": "heading", "n": "Rok puolustusrivinä (J172 valmis 14.10.)."}
+{"id": "S0748", "l": "PELI", "a": "play", "f": "defence_rule", "p": "F360", "pok": "ok", "n": "Rok puolustuksena; kortilla rok_defence (domain.js:2952)."}
+{"id": "S0749", "l": "PELI", "a": "play", "f": "defence_rule", "p": "F360", "pok": "ok", "n": "Sama."}
+{"id": "S0750", "l": "PELI", "a": "play", "f": "defence_rule", "p": "F360", "pok": "ok", "n": "Sama."}
+{"id": "S0751", "l": "PELI", "a": "play", "f": "defence_rule", "p": "F360", "pok": "ok", "n": "Sama."}
+{"id": "S0752", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F361", "pok": "osittain", "x": "table", "n": "Engine refit -taulukon otsikko ja rivi."}
+{"id": "S0753", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F361", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0754", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F361", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0755", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F361", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0756", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F361", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0757", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F361", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0758", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F361", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0759", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F361", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0760", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F361", "pok": "osittain", "x": "table", "n": "Ship refit -taulukon otsikko ja rivi."}
+{"id": "S0761", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F361", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0762", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F361", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0763", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F361", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0764", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F361", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0765", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F361", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0766", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F361", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0767", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F362", "pok": "ok", "x": "heading", "n": "Crew skills -johdanto."}
+{"id": "S0768", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F362", "pok": "osittain", "x": "table", "n": "Taulukon otsikko ja rivi."}
+{"id": "S0769", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F362", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0770", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F362", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0771", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F362", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0772", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F362", "pok": "osittain", "n": "Taulukon rivi."}
+{"id": "S0773", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F362", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0774", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F362", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0775", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F362", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0776", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F362", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0777", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F362", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0778", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F362", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0779", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F362", "pok": "osittain", "x": "table", "n": "Weapons refit -taulukon otsikko ja rivi."}
+{"id": "S0780", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F362", "pok": "ok", "n": "Refit-taulukko."}

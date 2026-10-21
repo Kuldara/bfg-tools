@@ -1,0 +1,193 @@
+{
+  "list": "Space Marines — Codex Astartes",
+  "book_page": 97,
+  "read_pages": [
+    91,
+    94,
+    95,
+    96,
+    97,
+    102
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Master of the Fleet",
+      "text": "0-1 Master of the Fleet",
+      "page": 97,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "worth over 750 points, the Master of the Fleet must be included",
+      "text": "If the fleet is worth over 750 points, the Master of the Fleet must be included to lead it.",
+      "page": 97,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "over": true
+    },
+    {
+      "key": "he must be assigned to a battle barge in preference to a strike cruiser",
+      "text": "If your fleet includes any battle barges, he must be assigned to a battle barge in preference to a strike cruiser.",
+      "page": 97,
+      "status": "manual",
+      "why": "Komentajan sijoittelu riippuu siita mita aluksia laivastossa on; sijoittelu tehdaan poydalla."
+    },
+    {
+      "key": "0-3 Battle Barges",
+      "text": "0-3 Battle Barges",
+      "page": 97,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 3
+    },
+    {
+      "key": "one Space Marine battle barge for every 1,000 points or part thereof",
+      "text": "You may include one Space Marine battle barge for every 1,000 points or part thereof in your fleet.",
+      "page": 97,
+      "status": "enforced",
+      "kind": "per_points",
+      "each": 1,
+      "per": 1000,
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. per_points pick=Battle Barges -osio (Venerable lasketaan kolmesta). Aiempi puute: PER_PTS tunnistaa lauseen, mutta resolve_sections ei osaa yhdistaa ilmausta 'Space Marine battle barge' osioon 'Battle Barges' - se vaatii tasmallisen osiotunni",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "single Venerable battle barge (counting as one of the three allowed)",
+      "text": "The fleet can include a single Venerable battle barge (counting as one of the three allowed), chosen from any available Imperial or Chaos battleship, grand cruiser, battlecruiser or heavy cruiser at the listed cost, plus an additional +35 points for its Space Marine crew.",
+      "page": 97,
+      "status": "enforced",
+      "why": "Maara yksi on valvottu (mx=1). Runko on nyt VALINTA (P1-4, 9.9.2026): rivi tarjoaa 26 Imperial/Chaos-runkoa (battleship, grand cruiser, battlecruiser, heavy cruiser) +35 pts, tai Seditio Opprimeren omalla hinnallaan. Golden: venerable-default-seditio, -on-mars-hull, -on-desolator-hull, -hull-then-option-reset.",
+      "enforced_by": "hull_choice"
+    },
+    {
+      "key": "0-10 Cruisers",
+      "text": "0-10 Cruisers",
+      "page": 97,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 10
+    },
+    {
+      "key": "escorts in your fleet in squadrons of 2",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "page": 97,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "Any ship with launch bays carries Thunderhawk Gunships",
+      "text": "Any ship with launch bays carries Thunderhawk Gunships.",
+      "page": 97,
+      "status": "out_of_scope",
+      "why": "Toteava; Thunderhawk-saanto on kortilla laukaisukuilujen tahtiviitteena.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Ships with torpedo tubes are armed with ordinary torpedoes and boarding torpedoes",
+      "text": "Ships with torpedo tubes are armed with ordinary torpedoes and boarding torpedoes.",
+      "page": 97,
+      "status": "out_of_scope",
+      "why": "Toteava; boarding-torpedot ovat kortilla Astartes Torpedoes -saantona.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "add +2 to their D6 roll when they fight in a boarding action",
+      "text": "To represent this, Space Marine ships add +2 to their D6 roll when they fight in a boarding action and +1 when they make any hit and run attack.",
+      "page": 94,
+      "status": "manual",
+      "why": "Jaettu Space Marine -saanto. Nakyy myos jokaisella kortilla SPECIAL_HULL_RULES-saannon 'astartes_core' kautta."
+    },
+    {
+      "key": "Space Marines have a starting attack or initiative rating of 3",
+      "text": "ATTACK RATING Space Marines have a starting attack or initiative rating of 3.",
+      "page": 94,
+      "status": "manual",
+      "why": "Nakyy 7.9.2026 jalkeen: 'attack rating' lisattiin RULEYyn, ja lohko 'FLEET RULES (pg. 91-96)' sisaltaa nyt jaetut Space Marine -saannot. Sama koski aiemmin kaikkia faktioita: attack rating ei nakynyt missaan."
+    }
+  ],
+  "entries": [
+    {
+      "name": "Master of the Fleet (Ld 10)",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "One re-roll",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Two re-rolls",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Three re-rolls",
+      "pts": 75,
+      "page": null
+    },
+    {
+      "name": "Terminator boarding party",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Venerable battle barge",
+      "pts": null,
+      "page": 103
+    },
+    {
+      "name": "Battle barge",
+      "pts": 425,
+      "page": 104
+    },
+    {
+      "name": "Strike cruisers",
+      "pts": 145,
+      "page": 105
+    },
+    {
+      "name": "Nova class Frigate",
+      "pts": 50,
+      "page": 107
+    },
+    {
+      "name": "Gladius class Frigate",
+      "pts": 45,
+      "page": 108
+    },
+    {
+      "name": "Hunter class Destroyer",
+      "pts": 40,
+      "page": 109
+    },
+    {
+      "name": "Rapid strike vessel (Firestorm)",
+      "pts": 45,
+      "page": 79
+    },
+    {
+      "name": "Rapid strike vessel (Sword)",
+      "pts": 40,
+      "page": 82
+    },
+    {
+      "name": "Rapid strike vessel (Cobra)",
+      "pts": 35,
+      "page": 84
+    }
+  ],
+  "notes": [
+    "Kirja merkitsee Venerable battle bargen sivulle 102, ja se on OIKEIN: sivu 102 on saantosivu 'PTS: VARY', jonka tilastot riippuvat valitusta rungosta eika siina ole tilastolohkoa. Sovellus kayttaa kortissa sivun 103 esimerkkialusta (Seditio Opprimere, 450 pts) ja kertoo sen rivin huomautuksessa. Huomautuksen sanamuoto korjattiin 7.9.2026: se vaitti aiemmin kirjan viitetta vaaraksi.",
+    "Jaetut Space Marine -saannot ovat sivuilla 91-96: johtajuustaulukko (D6 1-2 Ld8, 3-4 Ld9, 5-6 Ld10), attack rating 3, +2 boarding ja +1 hit-and-run, planetary assault 2 pistetta, Thunderhawk- ja Thunderhawk Annihilator -saannot, drop podit, Honour Guard, Terminator boarding parties.",
+    "Lohko 'FLEET RULES (pg. 91-96)' oli tyhja 7.9.2026 asti, koska RULEY ei tunnistanut naiden sivujen kieliasua saannoiksi. Nyt siella nakyvat mm. attack rating, Thunderhawk-saannot ja Terminator-saannot. Tarkein osa nakyy lisaksi jokaisella kortilla SPECIAL_HULL_RULES-saannon 'astartes_core' kautta."
+  ]
+}

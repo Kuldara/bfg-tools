@@ -1,0 +1,345 @@
+{
+  "list": "Imperial Navy — Bakka Sector",
+  "book_page": 48,
+  "read_pages": [
+    48,
+    49,
+    50
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Admiral",
+      "text": "0-1 Admiral",
+      "page": 48,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "worth over 750 points an Admiral must be included",
+      "text": "If the fleet is worth over 750 points an Admiral must be included to lead it.",
+      "page": 48,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "over": true
+    },
+    {
+      "key": "Battlefleet with 1,500 points or greater may be led by Lord Admiral Rath",
+      "text": "An Imperial Bakka Battlefleet with 1,500 points or greater may be led by Lord Admiral Rath, who must always be placed on a battleship, though it not necessarily be the most expensive one present.",
+      "page": 48,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. Sijoitus taistelulaivalle jaa pelaajalle (lause nakyy). Aiempi puute: Yksittaisen rivin (Lord Admiral Rath) pisteraja. Moottorin mandatory_at koskee osiota eika riviä, eika se osaa estaa rivin valintaa pisterajan alapuolella.",
+      "kind": "allowed_at",
+      "points": 1500,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Bakka fleets may only field a single Emperor battleship",
+      "text": "Bakka fleets may only field a single Emperor battleship, and this only as reserves unless Admiral Rath leads the fleet, in which case it must be his flagship.",
+      "page": 48,
+      "status": "manual",
+      "why": "Maararaja yksi on jo voimassa: kirjan listarivi on '(0-1) Emperor class battleship', ja sovellus asettaa siita rivirajan mx=1. Ehto 'vain reserveina ellei Rath johda' jaa pelaajalle."
+    },
+    {
+      "key": "one battleship in your fleet for every three cruisers",
+      "text": "You may include up to one battleship in your fleet for every three cruisers or battlecruisers.",
+      "page": 49,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 3,
+      "per_types": [
+        "cruisers",
+        "battlecruisers"
+      ]
+    },
+    {
+      "key": "If taken as reserves, grand cruisers do not count for this purpose",
+      "text": "If taken as reserves, grand cruisers do not count for this purpose.",
+      "page": 49,
+      "status": "manual",
+      "why": "Bakan omassa listassa ei ole grand cruisereita; saanto koskee vain reserveina otettuja, jotka eivat ole taman listan riveja."
+    },
+    {
+      "key": "An Emperor class battleship can only be taken as reserves",
+      "text": "An Emperor class battleship can only be taken as reserves unless Admiral Rath leads the fleet.",
+      "page": 49,
+      "status": "manual",
+      "why": "Ehdollinen: riippuu siita onko Rath valittu. Moottorissa ei ole ehdollisia rivirajoja."
+    },
+    {
+      "key": "one battlecruiser in your fleet for every two cruisers",
+      "text": "You may include up to one battlecruiser in your fleet for every two cruisers.",
+      "page": 49,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 2,
+      "per_types": [
+        "cruisers"
+      ]
+    },
+    {
+      "key": "0-12 Cruisers",
+      "text": "0-12 Cruisers",
+      "page": 49,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 12
+    },
+    {
+      "key": "no restriction for the number of Endurance light cruisers",
+      "text": "There is no restriction for the number of Endurance light cruisers taken in a Bakka fleet.",
+      "page": 49,
+      "status": "manual",
+      "why": "Poikkeus muiden listojen Endurance-rajaan. Ei rajoita mitaan, joten valvottavaa ei ole."
+    },
+    {
+      "key": "escorts in your fleet in squadrons of 2",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "page": 49,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "An Emperor class battleship may carry Shark assault boats at an additional cost of +5 points",
+      "text": "An Emperor class battleship may carry Shark assault boats at an additional cost of +5 points.",
+      "page": 49,
+      "status": "manual",
+      "why": "Hinnoiteltu optio, sama osto kuin Emperorin oma s.53 optio 'For an extra +5 points an Emperor class ship may carry squadrons of Shark assault boats'; sovellus myy sen kerran aluksen optiona (pistokoe 15 rivi 13)."
+    },
+    {
+      "key": "cruisers from the Adeptus Mechanicus fleet list may be taken instead of",
+      "text": "In a Bakka fleet list, cruisers from the Adeptus Mechanicus fleet list may be taken instead of and in the same manner as Imperial Navy battlecruisers, counting as battlecruisers against any fleet limits in all respects.",
+      "page": 49,
+      "status": "manual",
+      "why": "Alukset tulevat toisesta listasta, jota tama lista ei sisalla."
+    },
+    {
+      "key": "the fleet may not be led by nor take an Archmagos when used this way",
+      "text": "However, the fleet may not be led by nor take an Archmagos when used this way.",
+      "page": 49,
+      "status": "manual",
+      "why": "Ehdollinen kielto, riippuu edellisesta valinnasta."
+    },
+    {
+      "key": "one reserve cruiser, battlecruiser or grand cruiser for every three Bakka cruisers",
+      "text": "Ships from any Imperial fleet list may be used as reserves, with one reserve cruiser, battlecruiser or grand cruiser for every three Bakka cruisers in the fleet, one reserve battleship for every three Bakka battleships in the fleet, etc.",
+      "page": 50,
+      "status": "manual",
+      "why": "Reserve-saanto ylittaa listarajan."
+    },
+    {
+      "key": "One Rogue Trader cruiser and its attendant escorts may be taken for every 750 points",
+      "text": "One Rogue Trader cruiser and its attendant escorts may be taken for every 750 points in the fleet.",
+      "page": 50,
+      "status": "enforced",
+      "why": "1.1 (14.9.2026): osio sai rivit ja saannon. 750 luetaan taytena, koska lause ei sano 'or part thereof' - toisin kuin s.174:n RT-risteilijasaanto, joka sanoo. Alus tulee Rogue Trader -listasta, jota tama lista ei sisalla.",
+      "kind": "per_points"
+    },
+    {
+      "key": "Reserve cruisers (not battlecruisers or grand cruisers) always count toward the twelve-cruiser fleet limit",
+      "text": "Reserve cruisers (not battlecruisers or grand cruisers) always count toward the twelve-cruiser fleet limit.",
+      "page": 50,
+      "status": "manual",
+      "why": "Koskee reservialuksia, joita ei ole listan riveina; 0-12 -raja itsessaan on valvottu."
+    },
+    {
+      "key": "One cannot take as reserves the reserves of another fleet list",
+      "text": "One cannot take as reserves the reserves of another fleet list.",
+      "page": 50,
+      "status": "manual",
+      "why": "Reserve-saanto."
+    },
+    {
+      "key": "Adeptus Mechanicus capital ships may take the Fleet Defence Turrets refit",
+      "text": "When used with Battlefleet Bakka, Adeptus Mechanicus capital ships may take the Fleet Defence Turrets refit instead of rolling randomly on the Mechanicus Gifts table.",
+      "page": 50,
+      "status": "manual",
+      "why": "Koskee AdMech-aluksia, jotka tulevat toisesta listasta. Rivi 'Fleet Defence Turret 5 pts' on silti tarjolla."
+    },
+    {
+      "key": "Fleet Defence Turret",
+      "text": "Fleet Defence Turret ........................+5 points. Two turrets on a ship are exchanged for fleet defence turrets capable of protecting itself or any one other vessel within 15 cm each ordnance phase, adding +2 to the turret strength of the ship it is defending.",
+      "page": 50,
+      "status": "out_of_scope",
+      "why": "Refit koskee Adeptus Mechanicus -aluksia, joita Bakka-lista ei sisalla riveina (ne tulevat AdMech-listasta reserveina). Listojen valiset reservit ovat v1.1.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Any capital ship of Battlefleet Bakka can add this upgrade",
+      "text": "Any capital ship of Battlefleet Bakka can add this upgrade.",
+      "page": 50,
+      "status": "manual",
+      "why": "Nakyy 7.9.2026 jalkeen: lause on kirjassa kiinni hintarivissa '+1 turret .... +5 points', ja hinnan nimeava lause paastetaan nyt nakyviin. Hintarivi siivotaan alusta pois, joten pelaaja nakee pelkan saantolauseen."
+    },
+    {
+      "key": "It does not count against refits ships can take normally",
+      "text": "It does not count against refits ships can take normally.",
+      "page": 50,
+      "status": "manual",
+      "why": "Nakyy 7.9.2026 jalkeen: 'does not count' lisattiin RULEYyn."
+    }
+  ],
+  "entries": [
+    {
+      "name": "Fleet-Admiral (Ld 8)",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Admiral (Ld 9)",
+      "pts": 100,
+      "page": null
+    },
+    {
+      "name": "Solar Admiral (Ld 10)",
+      "pts": 150,
+      "page": null
+    },
+    {
+      "name": "Lord Admiral Rath (Ld10)",
+      "pts": 200,
+      "page": null
+    },
+    {
+      "name": "One extra re-roll",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Two extra re-rolls",
+      "pts": 75,
+      "page": null
+    },
+    {
+      "name": "Three extra re-rolls",
+      "pts": 150,
+      "page": null
+    },
+    {
+      "name": "Emperor class battleship",
+      "pts": 365,
+      "page": 53
+    },
+    {
+      "name": "Retribution class battleship",
+      "pts": 345,
+      "page": 54
+    },
+    {
+      "name": "Victory class battleship",
+      "pts": 345,
+      "page": 55
+    },
+    {
+      "name": "Vanquisher class battleship",
+      "pts": 300,
+      "page": 57
+    },
+    {
+      "name": "Dominion class battlecruiser",
+      "pts": 260,
+      "page": 62
+    },
+    {
+      "name": "Mercury class battlecruiser",
+      "pts": 255,
+      "page": 64
+    },
+    {
+      "name": "Armageddon class battlecruiser",
+      "pts": 235,
+      "page": 65
+    },
+    {
+      "name": "Dominator class cruiser",
+      "pts": 190,
+      "page": 68
+    },
+    {
+      "name": "Tyrant class cruiser",
+      "pts": 185,
+      "page": 69
+    },
+    {
+      "name": "Gothic class cruiser",
+      "pts": 180,
+      "page": 70
+    },
+    {
+      "name": "Lunar class cruiser",
+      "pts": 180,
+      "page": 71
+    },
+    {
+      "name": "Endeavour Class Light Cruiser",
+      "pts": 115,
+      "page": 73
+    },
+    {
+      "name": "Endurance Class Light Cruiser",
+      "pts": 115,
+      "page": 75
+    },
+    {
+      "name": "Siluria Class Light Cruiser",
+      "pts": 100,
+      "page": 78
+    },
+    {
+      "name": "Havoc class frigate",
+      "pts": 35,
+      "page": 81
+    },
+    {
+      "name": "Sword class frigate",
+      "pts": 35,
+      "page": 82
+    },
+    {
+      "name": "Viper class destroyer",
+      "pts": 35,
+      "page": 83
+    },
+    {
+      "name": "Jovian class battlecruiser",
+      "pts": 260,
+      "page": 63
+    }
+  ],
+  "extra_entries": [
+    {
+      "name": "Torpedo bombers",
+      "pts": 10,
+      "why": "kirjan ORDNANCE s.49: 'They may also take torpedo bombers for +10 points per launch bay.'"
+    },
+    {
+      "name": "Shark assault boats (Emperor class only)",
+      "pts": 5,
+      "why": "kirjan ORDNANCE s.49"
+    },
+    {
+      "name": "+1 turret (Battlefleet Bakka refit)",
+      "pts": 5,
+      "why": "s.50, mille tahansa Bakan capital shipille"
+    },
+    {
+      "name": "Imperial Power Ram",
+      "pts": 5,
+      "why": "jaetuista Imperial Navy -saannoista s.32"
+    }
+  ],
+  "notes": [
+    "Emperor class battleship on kirjassa merkitty '(0-1)', ja sovellus asettaa siita rivirajan mx=1. Sama koskee Jovian class battlecruiseria RESERVES-osiossa.",
+    "Bakan Endeavour ja Endurance maksavat 115 pts, kun ne muissa Imperial-listoissa maksavat 110. Ero on kirjassa, ei virhe.",
+    "Sivun 48 Dominus Astra -kertomus on poistettu nakyvista LORE_SECTIONS-taulussa; sen viimeinen virke ('Bakka fleets may only field a single Emperor battleship') on silti pateva saanto ja kirjattu tanne.",
+    "Sivu 51 on tyhja."
+  ]
+}

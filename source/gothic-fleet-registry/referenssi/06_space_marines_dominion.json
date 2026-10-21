@@ -1,0 +1,242 @@
+{
+  "list": "Space Marines — Dominion",
+  "book_page": 100,
+  "read_pages": [
+    100,
+    101,
+    102
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Master of the Fleet",
+      "text": "0-1 Master of the Fleet",
+      "page": 100,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "worth over 750 points, a Master of the Fleet must be included",
+      "text": "If the fleet is worth over 750 points, a Master of the Fleet must be included to lead it.",
+      "page": 100,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "over": true
+    },
+    {
+      "key": "If a Venerable battle barge is included in the fleet, the Master of the Fleet must be assigned to it",
+      "text": "If a Venerable battle barge is included in the fleet, the Master of the Fleet must be assigned to it.",
+      "page": 100,
+      "status": "manual",
+      "why": "Sijoittelu tehdaan poydalla. Huomaa ero: Codex Astartesissa sijoittelu on 'in preference to', tassa pakko."
+    },
+    {
+      "key": "Any Imperial Navy battleship, grand cruiser or battlecruiser may have a Space Marine Captain",
+      "text": "Any Imperial Navy battleship, grand cruiser or battlecruiser may have a Space Marine Captain assigned to it.",
+      "page": 100,
+      "status": "manual",
+      "why": "Koskee Imperial Navy -aluksia, jotka tulevat tahan listaan reserveina; niita ei ole taman listan riveina."
+    },
+    {
+      "key": "Space Marine Captains roll against the Space Marines leadership table",
+      "text": "Space Marine Captains roll against the Space Marines leadership table instead of the normal leadership table.",
+      "page": 100,
+      "status": "manual",
+      "why": "Johtajuus arvotaan pelin alussa."
+    },
+    {
+      "key": "Imperial Navy ships led by a Space Marine Captain do not benefit from any of the Space Marines special rules",
+      "text": "Except for this bonus, Imperial Navy ships led by a Space Marine Captain do not benefit from any of the Space Marines special rules concerning boarding, hit and run attacks, ordnance, etc.",
+      "page": 100,
+      "status": "manual",
+      "why": "Tarkea rajaus: kapteeni antaa vain johtajuustaulukon, ei muita Space Marine -saantoja."
+    },
+    {
+      "key": "0-3 Battle Barges",
+      "text": "0-3 Battle Barges",
+      "page": 101,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 3
+    },
+    {
+      "key": "one Space Marine battle barge for every 1,000 points or part thereof",
+      "text": "You may include one Space Marine battle barge for every 1,000 points or part thereof in your fleet.",
+      "page": 101,
+      "status": "enforced",
+      "kind": "per_points",
+      "each": 1,
+      "per": 1000,
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. per_points pick=Battle Barges -osio (Venerable lasketaan kolmesta). Aiempi puute: resolve_sections ei yhdista ilmausta 'Space Marine battle barge' osioon 'Battle Barges'. Sama kaikissa kolmessa Space Marine -listassa.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "must be worth at least 1,000 points to include a single Venerable battle barge",
+      "text": "The fleet must be worth at least 1,000 points to include a single Venerable battle barge (counting as one of the three allowed), chosen from any available Imperial or Chaos battleship, grand cruiser, battlecruiser or heavy cruiser at the listed cost, plus an additional +35 points for its Space Marine crew.",
+      "page": 101,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. Lause pidetaan nakyvissa (keep_text). Aiempi puute: Pisterajaan sidottu lupa, jollaista saantotyyppia ei ole. Maara yksi on valvottu rivirajana mx=1.",
+      "kind": "allowed_at",
+      "points": 1000,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "0-10 Cruisers",
+      "text": "0-10 Cruisers",
+      "page": 101,
+      "status": "enforced",
+      "kind": "conditional_cap",
+      "why": "1.1 (14.9.2026): raja on ehdollinen, koska s.101 sanoo 'When reserves are taken in this manner, the fleet can have up to twelve cruisers'. Ehto on laivaston ROOLI (onko siina reservia), ei rivi.",
+      "max_unmet": 10,
+      "max_met": 12
+    },
+    {
+      "key": "escorts in your fleet in squadrons of 2",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "page": 101,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "cannot be given any form of Space Marine upgrade",
+      "text": "Imperial Navy, Adeptus Mechanicus and Rogue Trader vessels are equipped with their own standard ordnance (even if they have Space Marine Captains) and cannot be given any form of Space Marine upgrade.",
+      "page": 101,
+      "status": "manual",
+      "why": "Koskee toisen listan aluksia."
+    },
+    {
+      "key": "This is reduced to 2 if the fleet has any Imperial Navy, Mechanicus or Rogue Trader vessels",
+      "text": "A Space Marine Dominion Fleet has an attack rating of 3. This is reduced to 2 if the fleet has any Imperial Navy, Mechanicus or Rogue Trader vessels at all.",
+      "page": 101,
+      "status": "manual",
+      "why": "Attack rating on pelinaikainen arvo."
+    },
+    {
+      "key": "When reserves are taken in this manner, the fleet can have up to twelve cruisers",
+      "text": "When reserves are taken in this manner, the fleet can have up to twelve cruisers.",
+      "page": 101,
+      "status": "enforced",
+      "why": "1.1 (14.9.2026): sama saanto kuin edellinen rivi - conditional_cap, jonka cond_role on 'reserve'. Reservit ovat nyt moottorissa, joten rajan nosto on valvottu.",
+      "kind": "conditional_cap"
+    },
+    {
+      "key": "a Dominion Fleet cannot take reinforcements from the Space Marines table",
+      "text": "However, in the course of a campaign, a Dominion Fleet cannot take reinforcements from the Space Marines table listed on ... of the Battlefleet Gothic rulebook.",
+      "page": 101,
+      "status": "manual",
+      "why": "Kampanjasaanto."
+    },
+    {
+      "key": "a dominion fleet can take Imperial Navy vessels as normal reserves",
+      "text": "A Space Marine Dominion Fleet has close ties with nearby Imperial Navy forces. Contrary to the normal rules, a dominion fleet can take Imperial Navy vessels as normal reserves and reinforcements, including Adeptus Mechanicus and non-xenos Rogue Trader vessels.",
+      "page": 101,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "dominion-takes-imperial-navy-reserves",
+        "dominion-reserve-grant-does-not-cover-chaos",
+        "dominion-rogue-trader-cruiser-as-reserve",
+        "dominion-cannot-take-xenos-rogue-trader-vessels"
+      ],
+      "why": "1.1 (14.9.2026): listan kentta res_ok = nimetty reservilupa, joka kaataa rotuportin vain nimetyilta lahteilta (rotu imperial navy ja kolme Rogue Traders -listaa); xenos-rivit rajattu pois (s.101 'non-xenos'). Ilman tata rotuportti (s.15) estaisi koko asian, koska Dominion on rodultaan space marines."
+    }
+  ],
+  "entries": [
+    {
+      "name": "Master of the Fleet (Ld 10)",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "One re-roll",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Two re-rolls",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Three re-rolls",
+      "pts": 75,
+      "page": null
+    },
+    {
+      "name": "Terminator boarding party",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Space Marine Captain",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Honour Guard",
+      "pts": 10,
+      "page": null
+    },
+    {
+      "name": "Venerable battle barge",
+      "pts": null,
+      "page": 103
+    },
+    {
+      "name": "Battle barge",
+      "pts": 425,
+      "page": 104
+    },
+    {
+      "name": "Strike cruiser",
+      "pts": 145,
+      "page": 105
+    },
+    {
+      "name": "Nova class Frigate",
+      "pts": 50,
+      "page": 107
+    },
+    {
+      "name": "Gladius class Frigate",
+      "pts": 45,
+      "page": 108
+    },
+    {
+      "name": "Hunter class Destroyer",
+      "pts": 40,
+      "page": 109
+    },
+    {
+      "name": "Rapid strike vessel (Firestorm)",
+      "pts": 45,
+      "page": 79
+    },
+    {
+      "name": "Rapid strike vessel (Falchion)",
+      "pts": 40,
+      "page": 80
+    },
+    {
+      "name": "Rapid strike vessel (Sword)",
+      "pts": 40,
+      "page": 82
+    },
+    {
+      "name": "Rapid strike vessel (Cobra)",
+      "pts": 35,
+      "page": 84
+    }
+  ],
+  "notes": [
+    "Dominion on ainoa Space Marine -lista jossa on Rapid strike vessel (Falchion). Kirja s.101.",
+    "Kirja kirjoittaa taman listan riviksi 'Strike cruiser' yksikossa, kun Codex Astartes ja Crusade kayttavat monikkoa 'Strike cruisers'. Sovellus sailyttaa kirjan sanamuodon listakohtaisesti.",
+    "Reserve-saanto sallii kahdentoista risteilijan laivaston, mutta vain reservien kanssa. Sovellus valvoo perusrajaa 0-10."
+  ]
+}

@@ -1,0 +1,232 @@
+{
+  "list": "Space Marines — Crusade",
+  "book_page": 98,
+  "read_pages": [
+    98,
+    99,
+    102
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Master of the Fleet",
+      "text": "0-1 Master of the Fleet",
+      "page": 98,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "worth over 750 points, the Master of the Fleet must be included",
+      "text": "If the fleet is worth over 750 points, the Master of the Fleet must be included to lead it.",
+      "page": 98,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "over": true
+    },
+    {
+      "key": "may be assigned to a venerable battle barge or fortress monastery if one is present",
+      "text": "The Master of the Fleet may be assigned to a venerable battle barge or fortress monastery if one is present, but does not have to be.",
+      "page": 98,
+      "status": "manual",
+      "why": "Sijoittelu tehdaan poydalla."
+    },
+    {
+      "key": "0-1 Fortress-Monastery",
+      "text": "0-1 Fortress-Monastery",
+      "page": 98,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "worth at least 2,000 points, it may include one Fortress-Monastery",
+      "text": "If your fleet is worth at least 2,000 points, it may include one Fortress-Monastery.",
+      "page": 98,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. Aiempi puute: Pisterajaan sidottu LUPA, ei pakko. Moottorin mandatory_at valvoo vain pakkoa ('must be included'); tallaista 'saa ottaa vasta N pisteesta' -tyyppia ei ole. Sam",
+      "kind": "allowed_at",
+      "points": 2000,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "fortress-monastery may purchase re-rolls, which it may use for its own command checks only",
+      "text": "As the base of operations for the entire Chapter, the fortress-monastery may purchase re-rolls, which it may use for its own command checks only.",
+      "page": 98,
+      "status": "manual",
+      "why": "Uudelleenheittojen kaytto ratkaistaan pelissa. Rivit ovat omassa osiossaan."
+    },
+    {
+      "key": "0-3 Battle Barges",
+      "text": "0-3 Battle Barges",
+      "page": 99,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 3
+    },
+    {
+      "key": "one Space Marine battle barge for every 1,000 points or part thereof",
+      "text": "You may include one Space Marine battle barge for every 1,000 points or part thereof in your fleet.",
+      "page": 99,
+      "status": "enforced",
+      "kind": "per_points",
+      "each": 1,
+      "per": 1000,
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. per_points pick=Battle Barges -osio (Venerable lasketaan kolmesta). Aiempi puute: resolve_sections ei yhdista ilmausta 'Space Marine battle barge' osioon 'Battle Barges'. Sama kaikissa kolmessa Space Marine -listassa.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "must be worth at least 1,000 points to include a single Venerable battle barge",
+      "text": "The fleet must be worth at least 1,000 points to include a single Venerable battle barge (counting as one of the three allowed), chosen from any available Imperial or Chaos battleship, grand cruiser, battlecruiser or heavy cruiser at the listed cost, plus an additional +35 points for its Space Marine crew.",
+      "page": 99,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. Lause pidetaan myos nakyvissa (keep_text), koska se kertoo runkovalinnan hinnan. Aiempi puute: Sama pisterajaan sidottu lupa kuin Fortress-Monasteryssa. Maara yksi on valvottu rivirajana mx=1.",
+      "kind": "allowed_at",
+      "points": 1000,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "0-10 Cruisers",
+      "text": "0-10 Cruisers",
+      "page": 99,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 10
+    },
+    {
+      "key": "escorts in your fleet in squadrons of 2",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "page": 99,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "Any ship with launch bays carries Thunderhawks and Thunderhawk Annihilators",
+      "text": "Any ship with launch bays carries Thunderhawks and Thunderhawk Annihilators.",
+      "page": 99,
+      "status": "out_of_scope",
+      "why": "Toteava; Annihilator-saanto on kortilla vain Crusade-listalla (SPECIAL_WEAPON_RULES list-portti).",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "equipped with an Honour Guard for +10 points per ship",
+      "text": "Any battle barge or strike cruiser in the fleet may be equipped with an Honour Guard for +10 points per ship.",
+      "page": 99,
+      "status": "manual",
+      "why": "Hinnoiteltu optio; rivi 'Honour Guard 10 pts' on valittavissa."
+    },
+    {
+      "key": "fortress-monastery is equipped with Terminator boarding parties and an Honour Guard as part of its point cost",
+      "text": "A fortress-monastery is equipped with Terminator boarding parties and an Honour Guard as part of its point cost.",
+      "page": 99,
+      "status": "out_of_scope",
+      "why": "Varusteet sisaltyvat hintaan; ei valintaa eika laskettavaa.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "If the fleet includes a fortress-monastery, it has an attack rating of 1",
+      "text": "A Space Marine Crusade Fleet has an attack rating of 3. If the fleet includes a fortress-monastery, it has an attack rating of 1.",
+      "page": 99,
+      "status": "manual",
+      "why": "Attack rating on pelinaikainen arvo, ei laivaston koostumusraja."
+    },
+    {
+      "key": "will not take ships from or provide ships to any other fleet list",
+      "text": "A Space Marine Crusade fleet will not take ships from or provide ships to any other fleet list as reserves or allies, including Imperial Navy, Rogue Trader or Adeptus Mechanicus fleet lists.",
+      "page": 99,
+      "status": "enforced",
+      "why": "1.1 (14.9.2026): listan kentta res_ban. Kielto on molempiin suuntiin ja voittaa myos s.139:n inkvisiittoriluvan, koska se on listan oma ja tasmallisempi. Ilman tata yleinen rotusaanto sallisi Crusaden ja Codex Astartesin vaihtaa aluksia - molemmat ovat rodultaan space marines. Reserve-saanto; sovellus ei mallinna reserveja lainkaan, joten kielto toteutuu itsestaan.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "crusade-takes-no-reserves-at-all",
+        "crusade-ships-are-no-reserves-for-others"
+      ]
+    },
+    {
+      "key": "fortress-monastery should only be used as a defence",
+      "text": "Like the rules for a Ramilies Star Fortress, the fortress-monastery should only be used as a defence or in some scenarios substituting for the planet itself.",
+      "page": 99,
+      "status": "manual",
+      "why": "Skenaariosaanto."
+    }
+  ],
+  "entries": [
+    {
+      "name": "Master of the Fleet (Ld 10)",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "One re-roll",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Two re-rolls",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Three re-rolls",
+      "pts": 75,
+      "page": null
+    },
+    {
+      "name": "Terminator boarding party",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Fortress-Monastery",
+      "pts": 1000,
+      "page": 110
+    },
+    {
+      "name": "Venerable battle barge",
+      "pts": null,
+      "page": 103
+    },
+    {
+      "name": "Battle barge",
+      "pts": 425,
+      "page": 104
+    },
+    {
+      "name": "Strike cruisers",
+      "pts": 145,
+      "page": 105
+    },
+    {
+      "name": "Nova class Frigate",
+      "pts": 50,
+      "page": 107
+    },
+    {
+      "name": "Gladius class Frigate",
+      "pts": 45,
+      "page": 108
+    },
+    {
+      "name": "Hunter class Destroyer",
+      "pts": 40,
+      "page": 109
+    },
+    {
+      "name": "Honour Guard",
+      "pts": 10,
+      "page": null
+    }
+  ],
+  "notes": [
+    "Crusade-listalla EI ole Rapid strike vessel -rivaja, toisin kuin Codex Astartesissa ja Dominionissa. Tama on kirjassa (s. 99), ei puute.",
+    "Fortress-Monasteryn uudelleenheitot ovat kirjassa oma hinnastonsa (25/50/75) ja erillaan Master of the Fleetin samanhintaisista riveista. Sovellus pitaa ne eri osioissa, mika vastaa kirjaa.",
+    "Sivun 102 Venerable battle barge -saannot koskevat myos tata listaa; kortti kayttaa sivun 103 esimerkkialusta."
+  ]
+}

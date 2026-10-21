@@ -1,0 +1,156 @@
+{
+  "list": "Dark Eldar — Pirates",
+  "book_page": 351,
+  "read_pages": [
+    351,
+    352
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Dread Archon",
+      "text": "0-1 Dread Archon",
+      "page": 351,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "fleet is worth over 750 points a Dread Archon must be included",
+      "text": "1f the fleet is worth over 750 points a Dread Archon must be included to lead it.",
+      "page": 351,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "over": true,
+      "why": "Kirjassa on painovirhe: lause alkaa '1f' eika 'If'. Se ei haittaa, koska kaava etsii osuman lauseen keskelta eika vaadi alkua."
+    },
+    {
+      "key": "adds + 2 to its Leadership, to a maximum of 10",
+      "text": "You may include 1 Dread Archon in your fleet, who must be assigned to a ship and adds +2 to its Leadership, to a maximum of 10.",
+      "page": 351,
+      "status": "manual",
+      "why": "Sijoittelu ja johtajuuden ylaraja ratkaistaan pelissa."
+    },
+    {
+      "key": "0-12 Cruisers",
+      "text": "0-12 Cruisers",
+      "page": 351,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 12
+    },
+    {
+      "key": "Torture class cruisers may choose one of the following for the points shown",
+      "text": "Torture class cruisers may choose one of the following for the points shown: ... Prow Torpedoes +20 pts ... Phantom Lance +20 pts ... 1-2 Impaler Assault Modules +20 /+40 pts ... Launch Bays +40 pts",
+      "page": 351,
+      "status": "manual",
+      "why": "Kirja sanoo 'one of the following', eli valinnat ovat toisensa poissulkevia. Sovellus tarjoaa ne aluksen profiilin optioina, joissa poissulkevuus on toteutettu; listariveina ne olisivat vain hintoja ilman ehtoa."
+    },
+    {
+      "key": "escorts in your fleet in squadrons of 2",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "page": 351,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "must contain at least three escorts for every capital ship taken",
+      "text": "However, Dark Eldar fleets must contain at least three escorts for every capital ship taken.",
+      "page": 351,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. Aiempi puute: Suhdeluku VAHIMMAISMAARANA ja vastakkaiseen suuntaan: saattajia on oltava vahintaan kolme jokaista runkoalusta kohden. Moottorin ratio valvoo vain ylarajaa ('en",
+      "kind": "min_ratio",
+      "min": 3,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Ships with launch bays may launch any mix of Raptor fighters",
+      "text": "Ships with launch bays may launch any mix of Raptor fighters, Razorwing bombers and Slavebringer assault boats.",
+      "page": 351,
+      "status": "manual",
+      "why": "Ordnance-valinta pelin aikana."
+    },
+    {
+      "key": "Leech torpedoes must be loaded with a separate reload ordnance roll",
+      "text": "Ships with torpedo tubes are armed with both Eldar torpedoes and Leech torpedoes, though the Leech torpedoes must be loaded with a separate reload ordnance roll as described in the special rules.",
+      "page": 351,
+      "status": "manual",
+      "why": "Pelinaikainen saanto; sovellus tarjoaa rivin 'Leech torpedoes 0 pts' merkinnaksi."
+    }
+  ],
+  "entries": [
+    {
+      "name": "Dread Archon (+2 Ld)",
+      "pts": 100,
+      "page": null
+    },
+    {
+      "name": "One re-roll",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Two re-rolls",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Three re-rolls",
+      "pts": 100,
+      "page": null
+    },
+    {
+      "name": "Torture class cruiser",
+      "pts": 210,
+      "page": 352
+    },
+    {
+      "name": "Prow Torpedoes",
+      "pts": 20,
+      "page": null
+    },
+    {
+      "name": "Phantom Lance",
+      "pts": 20,
+      "page": null
+    },
+    {
+      "name": "Launch Bays",
+      "pts": 40,
+      "page": null
+    },
+    {
+      "name": "Mimic Engines",
+      "pts": 20,
+      "page": null
+    },
+    {
+      "name": "Corsair Class Escort",
+      "pts": 50,
+      "page": 353
+    },
+    {
+      "name": "Mimic Engines",
+      "pts": 5,
+      "page": null
+    }
+  ],
+  "extra_entries": [
+    {
+      "name": "Leech torpedoes",
+      "pts": 0,
+      "why": "s.351 ORDNANCE, ilmainen merkinta"
+    }
+  ],
+  "notes": [
+    "Listariveina EI ole Impaler Assault Module -vaihtoehtoa, ja se on oikein: kirjan rivi on '1-2 Impaler Assault Modules.........+20 /+40 pts', eli kaksi eri hintaa samalla rivilla. Sovellus tarjoaa ne aluksen profiilin optioina 'Impaler module I' ja 'Impaler module II', kumpikin 20 pts, mika vastaa kirjan sivun 352 sanamuotoa 'up to 2 Impaler assault modules for +20 each'.",
+    "Tama on ainoa lista jonka rivi kantaa yha hintataulukon silppua nakyvassa tekstissa: 'Torture class cruisers may choose one of the following for the points shown: 1-2 Impaler Assault Modules.........+20 /+40 pts ...'. Silppu on lauseen KESKELLA, ja sen siivoaminen veisi lauseen alusta itse saannon. Jatetty tarkoituksella.",
+    "Mimic Engines esiintyy kahdesti eri hinnalla: 20 pts runkoalukselle ja 5 pts saattajalle. Se on kirjassa, ei virhe.",
+    "'Dark Eldar fleets must contain at least three escorts for every capital ship' on listan tiukin rajoite eika se ole valvottavissa. Se kannattaa muistaa listaa rakentaessa."
+  ]
+}

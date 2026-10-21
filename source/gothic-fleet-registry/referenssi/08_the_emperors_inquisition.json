@@ -1,0 +1,224 @@
+{
+  "list": "The Emperor's Inquisition",
+  "book_page": 138,
+  "read_pages": [
+    134,
+    135,
+    138,
+    139,
+    140,
+    142
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "The Inquisition has no fleet list on its own",
+      "text": "The Inquisition has no fleet list on its own. Instead, there are various ways to add an Inquisitor or Inquisitorial ships to the Imperial factions.",
+      "page": 138,
+      "status": "out_of_scope",
+      "why": "Johdantolause; seuraava virke nakyy ja kertoo kehyksen.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "0-1 Inquisitor Lord",
+      "text": "0-1 Inquisitor Lord",
+      "page": 138,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "Any Imperial or Space Marine fleet 750 points or greater may be led by an Inquisitor Lord",
+      "text": "Any Imperial or Space Marine fleet 750 points or greater may be led by an Inquisitor Lord.",
+      "page": 138,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. Aiempi puute: Pisterajaan sidottu lupa, ei pakko. Sama saantotyyppi puuttuu kuin Space Marinesin Fortress-Monasteryssa.",
+      "kind": "allowed_at",
+      "points": 750,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "They must be aboard an Inquisitorial Cruiser if one is included",
+      "text": "They must be aboard an Inquisitorial Cruiser if one is included, otherwise they must be on an Inquisition Blackship if one is included. If none of these ships is present, they have to be placed on the most expensive ship in the fleet.",
+      "page": 138,
+      "status": "manual",
+      "why": "Sijoittelu tehdaan poydalla."
+    },
+    {
+      "key": "there should be only one Inquisitorial cruiser in the fleet",
+      "text": "As the rules state, there should be only one Inquisitorial cruiser in the fleet.",
+      "page": 138,
+      "status": "manual",
+      "why": "Maararaja on valvottu: kirjan rivi on '(0-1) Inquisitorial Cruiser', josta tulee rivirajoite mx=1."
+    },
+    {
+      "key": "Any Imperial or Space Marine fleet may include a single Inquisitorial Cruiser",
+      "text": "Any Imperial or Space Marine fleet may include a single Inquisitorial Cruiser in the fleet, which takes the place of a battlecruiser or strike cruiser in the fleet.",
+      "page": 138,
+      "status": "enforced",
+      "why": "J148 (kayttajaraportti 25.9.2026): isantalistoilla Inquisitorial Cruiser laskee taisteluristeilijasuhteen sallittuun puoleen ja taistelulaivasuhteen pohjaan (Imperial Navy), tai strike cruiserin paikkaan 0-10-rajassa (Space Marines). Talla listalla itsellaan ei ole isantaa, jonka paikan se veisi.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "inquisitorial-cruiser-takes-the-battlecruiser-slot"
+      ],
+      "classified_on": "2026-09-25"
+    },
+    {
+      "key": "A fleet may include a single Blackship, which as a special vessel does not count",
+      "text": "A fleet may include a single Blackship, which as a special vessel does not count toward or against other ship limits in the fleet.",
+      "page": 138,
+      "status": "manual",
+      "why": "Maara yksi valvottu rivirajana mx=1. Poikkeus muihin rajoihin koskee sita laivastoa johon alus liitetaan."
+    },
+    {
+      "key": "up to one Grey Knights Strike Cruiser may be taken for every 500 points",
+      "text": "If an Inquisitor Lord is leading the fleet, up to one Grey Knights Strike Cruiser may be taken for every 500 points in the fleet.",
+      "page": 138,
+      "status": "enforced",
+      "kind": "per_points",
+      "each": 1,
+      "per": 500,
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. cond_pick: vain jos Inquisitor Lord johtaa. Aiempi puute: Pisterajaan sidottu maara, mutta kohteena yksi listarivi eika osio. per_points laskee osion, joten se hyvaksyisi mitka tahansa runkoalukset.",
+      "cond_min": 1,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "may include a single Grey Knights battle barge",
+      "text": "A Space Marine fleet led by an Ordo Malleus Inquisitor including at least 1000 points of Inquisition vessels and Grey Knights strike cruisers may include a single Grey Knights battle barge.",
+      "page": 138,
+      "status": "manual",
+      "why": "Kolme ehtoa yhtaikaa: Space Marine -laivasto, Ordo Malleus -inkvisiittori ja 1 000 pistetta tiettyja aluksia. Maara yksi on valvottu rivirajana mx=1."
+    },
+    {
+      "key": "A second re-roll can be purchased for +25 points",
+      "text": "An Inquisitor Lord gets one re-roll, which may be used for any ship in the fleet. A second re-roll can be purchased for +25 points.",
+      "page": 138,
+      "status": "enforced",
+      "why": "J148: rivi 'One extra re-roll +25' on nyt myos kahdeksalla isantalistalla (J104 toi vain Lordin). Hinta ja re-rollien maara golden-tapauksessa.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "inquisitor-lord-buys-a-second-re-roll"
+      ],
+      "classified_on": "2026-09-25"
+    },
+    {
+      "key": "An Imperial Navy or Adeptus Mechanicus fleet led by an Inquisitor Lord has an attack rating of 2",
+      "text": "An Imperial Navy or Adeptus Mechanicus fleet led by an Inquisitor Lord has an attack rating of 2. A Space Marine fleet led by an Inquisitor Lord has an attack rating of 3 unless a Blackship is accompanying the fleet, in which case its attack rating is 2.",
+      "page": 139,
+      "status": "manual",
+      "why": "Pelinaikainen arvo."
+    },
+    {
+      "key": "it must replace its attack craft with Thunderhawks",
+      "text": "If an Imperial Navy or Adeptus Mechanicus ship embarking an Inquisitor is equipped with launch bays, it must replace its attack craft with Thunderhawks, with its launch bay strength divided in half (rounding down).",
+      "page": 139,
+      "status": "manual",
+      "why": "Sovellus tarjoaa taman rivina 'Embarks the Inquisitor: Thunderhawks, launch bays halved 0 pts'."
+    },
+    {
+      "key": "the fleet led by an Inquisitor must take a Secret Ploys sub-plot",
+      "text": "In addition to any sub-plots rolled normally, the fleet led by an Inquisitor must take a Secret Ploys sub-plot rolled randomly from ... p.84 of the Battlefleet Gothic Rulebook.",
+      "page": 139,
+      "status": "manual",
+      "why": "Skenaariosaanto."
+    },
+    {
+      "key": "may always take ships from the other two as reserves",
+      "text": "Any one of the Imperial Navy, Adeptus Mechanicus and Space Marine fleets led by an Inquisitor may always take ships from the other two as reserves in the normal manner.",
+      "page": 139,
+      "status": "enforced",
+      "why": "1.1 (14.9.2026): ehdollinen res_ok-lupa kahdeksalle isantalistalle (needs_re = Inquisitor Lord). s.15:n esimerkki (Gothic Sector ei saa Space Marine -reserveja) kuvaa oletuksen ja tama poikkeuksen; tarkistusrivi kertoo, mika puuttuu. Reserve-saanto listojen valilla.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "inquisitor-lord-opens-space-marine-reserves-for-the-navy",
+        "gothic-sector-cannot-take-space-marine-reserves"
+      ]
+    },
+    {
+      "key": "The ship adds +1 to its leadership (max. 10)",
+      "text": "The ship adds +1 to its leadership (max. 10). It also adds +2 to its roll during a boarding action.",
+      "page": 140,
+      "status": "manual",
+      "why": "Ordo Hereticus -inkvisiittorin vaikutus; hinnoiteltu rivi 'Ordo Hereticus Inquisitor Lord 25 pts'."
+    },
+    {
+      "key": "mounts hexagrammic wards throughout its hull",
+      "text": "The ship with the Ordo Malleus Inquisitor Lord aboard mounts hexagrammic wards throughout its hull and ignores any Chaos marks or Daemonship effects affecting leadership or boarding actions.",
+      "page": 142,
+      "status": "manual",
+      "why": "Ordo Malleus -inkvisiittorin vaikutus."
+    },
+    {
+      "key": "The enemy Chaos fleet may add one Mark of Chaos or upgrade a cruiser to a Daemonship at no cost",
+      "text": "An Ordo Malleus Inquisitor will only be called when intense demonic activity threatens to overrun an entire Sector. The enemy Chaos fleet may add one Mark of Chaos or upgrade a cruiser to a Daemonship at no cost.",
+      "page": 142,
+      "status": "manual",
+      "why": "Vastustajan saama etu, ei oman laivaston koostumusta. Tama on syy miksi coverage.py:n katselmoituihin lisattiin vastaava Ordo Xenos -lause."
+    }
+  ],
+  "entries": [
+    {
+      "name": "Inquisitor Lord (Ld 9)",
+      "pts": 75,
+      "page": null
+    },
+    {
+      "name": "One extra re-roll",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Inquisitorial Cruiser",
+      "pts": 270,
+      "page": 150
+    },
+    {
+      "name": "Inquisition Blackship",
+      "pts": 300,
+      "page": 148
+    },
+    {
+      "name": "Grey Knights Strike Cruiser",
+      "pts": 165,
+      "page": 151
+    },
+    {
+      "name": "Grey Knights Battle barge",
+      "pts": 440,
+      "page": 147
+    },
+    {
+      "name": "Ordo Hereticus Inquisitor Lord",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Ordo Xenos Inquisitor Lord",
+      "pts": 30,
+      "page": null
+    },
+    {
+      "name": "Ordo Malleus Inquisitor Lord",
+      "pts": 25,
+      "page": null
+    }
+  ],
+  "extra_entries": [
+    {
+      "name": "Embarks the Inquisitor: Thunderhawks, launch bays halved",
+      "pts": 0,
+      "why": "s.139 ORDNANCE AND UPGRADES"
+    },
+    {
+      "name": "Choose the Xenotech refit instead of rolling",
+      "pts": 5,
+      "why": "s.141 Ordo Xenos"
+    }
+  ],
+  "notes": [
+    "Sivut 132-137 ovat kertomusta (Ordo Malleus, Ordos Minoris, Grey Knightsin historia). Ne poistettiin nakyvista LORE_SECTIONS-taulussa: kaikki kymmenen lausetta olivat tarinaa.",
+    "Sivulta 144 alkaa kirjassa oma 'GREY KNIGHTS FLEET LIST'. Se oli 7.9.2026 asti sulautettu tahan listaan, jolloin listassa oli kaksi FLEET COMMANDER-, kaksi CAPITAL SHIPS- ja kaksi ATTACK RATING -osiota eri hinnoilla. Listat erotettiin; katso 09_grey_knights.json.",
+    "Talla listalla on koko kirjan huonoin valvontasuhde, ja syy on rakenteellinen: melkein jokainen raja viittaa toisen listan aluksiin ('Any Imperial or Space Marine fleet may include...'). Sovellus ei mallinna listojen valisia liitoksia, joten naita ei voi valvoa ilman aivan uutta kasitetta."
+  ]
+}

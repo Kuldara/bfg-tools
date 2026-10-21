@@ -1,0 +1,219 @@
+{
+  "list": "Orks — Cyclops Cluster",
+  "book_page": 365,
+  "read_pages": [
+    365
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "You may include 1 or more Warlord in your fleet",
+      "text": "You may include 1 or more Warlord in your fleet, each of whom must be assigned to a ship or squadron.",
+      "page": 365,
+      "status": "manual",
+      "why": "Sijoittelu alukselle tai skwadronille ratkaistaan pelissa."
+    },
+    {
+      "key": "worth 500 points or more it must include at least 1 Warlord",
+      "text": "If the fleet is worth 500 points or more it must include at least 1 Warlord to lead it.",
+      "page": 365,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 500,
+      "over": false,
+      "why": "'500 or more' on vahintaan, ei yli: tasan 500 pisteen laivasto tarvitsee jo Warlordin."
+    },
+    {
+      "key": "max of one Warlord per 500 points",
+      "text": "An Ork fleet can include a max. of one Warlord per 500 points.",
+      "page": 365,
+      "status": "enforced",
+      "kind": "per_points",
+      "each": 1,
+      "per": 500
+    },
+    {
+      "key": "if the fleet is worth up to 500 points, it may have one Warlord",
+      "text": "ie, if the fleet is worth up to 500 points, it may have one Warlord. If it is worth 500-1,000 points two Warlords may be included, etc.",
+      "page": 365,
+      "status": "manual",
+      "why": "Kirjan oma esimerkki edellisesta saannosta."
+    },
+    {
+      "key": "Warlords get one re-roll",
+      "text": "Warlords get one re-roll.",
+      "page": 365,
+      "status": "manual",
+      "why": "Nakyy komentajaosion tekstina 9.9.2026 alkaen (lausesuodatin tuntee re-roll- ja leadership-sanat, P1-8e). Sisaltyva re-roll on ratkaisimen rerolls.included-kentassa ja komentajakortilla; laivastovalidaattori ei valvo re-rollien maaraa."
+    },
+    {
+      "key": "may include up to one of the upgrades shown below",
+      "text": "A vessel carrying a Warlord doubles its boarding value and may include up to one of the upgrades shown below at the additional cost indicated.",
+      "page": 365,
+      "status": "manual",
+      "why": "Poissulkevuus on toteutettu: viisi paivitysta jakavat ryhmatunnuksen 'warlord_up', joten yhden valinta sammuttaa muut. Tarkistetaan alla entries-lohkon grp-kentassa. Rungon kaksinkertainen boarding-arvo jaa pelaajalle."
+    },
+    {
+      "key": "shield value is increased by",
+      "text": "Extra Power Fields: The ship's shield value is increased by +1. If this would take it to 3 or more shields, don't forget to mount it on a 60 mm base!",
+      "page": 365,
+      "status": "manual",
+      "why": "Nakyi 7.9.2026 asti tyhjana: lausesuodatin tunsi sanan 'reduced' muttei sanaa 'increased'."
+    },
+    {
+      "key": "+1 modifier on boarding",
+      "text": "Mega-armoured Boarding Parties: +1 modifier on boarding.",
+      "page": 365,
+      "status": "manual",
+      "why": "Rivin oma kuvaus pidetaan nakyvissa (KEEP_TEXT) - se on paivityksen vaikutus, ei kerrontaa.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "You may include up to six kroozers in your fleet",
+      "text": "You may include up to six kroozers in your fleet.",
+      "page": 365,
+      "status": "enforced",
+      "kind": "cap",
+      "max": 6
+    },
+    {
+      "key": "escorts in your fleet in squadrons of 2",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "page": 365,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "Ork capital ships can add +2 turrets to their ships for +20 points",
+      "text": "Ork capital ships can add +2 turrets to their ships for +20 points (this is not the same thing as saying “up to two turrets at +10 points each”).",
+      "page": null,
+      "status": "manual",
+      "why": "Kirja kirjoittaa taman vain leipatekstiin. Sovellus tarjoaa sen rivina 'Dakka Dakka: +2 turrets'."
+    },
+    {
+      "key": "Ork escorts may add +1 turret for +5 points per escort",
+      "text": "Ork escorts may add +1 turret for +5 points per escort.",
+      "page": null,
+      "status": "manual",
+      "why": "Rivina 'Dakka Dakka: +1 turret (every escort in the squadron)', hinta kerrotaan skwadronin aluksilla."
+    },
+    {
+      "key": "every escort in a given squadron must take the refit",
+      "text": "If this option is taken, every escort in a given squadron must take the refit, not just individual escorts in a squadron.",
+      "page": null,
+      "status": "manual",
+      "why": "Rivin hinta on per runko, joten koko skwadron maksaa sen - mutta itse pakko on pelaajan muistettava."
+    }
+  ],
+  "entries": [
+    {
+      "name": "Ork Warlord",
+      "pts": 40,
+      "page": null
+    },
+    {
+      "name": "One extra re-roll",
+      "pts": 20,
+      "page": null
+    },
+    {
+      "name": "Two extra re-rolls",
+      "pts": 40,
+      "page": null
+    },
+    {
+      "name": "Maniac Gunners",
+      "pts": 35,
+      "page": null,
+      "grp": "warlord_up"
+    },
+    {
+      "name": "Mad Meks",
+      "pts": 25,
+      "page": null,
+      "grp": "warlord_up"
+    },
+    {
+      "name": "Extra Power Fields",
+      "pts": 25,
+      "page": null,
+      "grp": "warlord_up"
+    },
+    {
+      "name": "Mega-armoured Boarding Parties",
+      "pts": 15,
+      "page": null,
+      "grp": "warlord_up"
+    },
+    {
+      "name": "Looted Torpedoes",
+      "pts": 20,
+      "page": null,
+      "grp": "warlord_up"
+    },
+    {
+      "name": "Terror ship",
+      "pts": 185,
+      "page": 380
+    },
+    {
+      "name": "Kill kroozer",
+      "pts": 155,
+      "page": 382
+    },
+    {
+      "name": "Ravager attack ship",
+      "pts": 40,
+      "page": 386
+    },
+    {
+      "name": "Onslaught attack ship",
+      "pts": 35,
+      "page": 384
+    },
+    {
+      "name": "Grunt assault ship",
+      "pts": 30,
+      "page": 388
+    },
+    {
+      "name": "Savage gunship",
+      "pts": 30,
+      "page": 385
+    },
+    {
+      "name": "Brute ramship",
+      "pts": 25,
+      "page": 387
+    }
+  ],
+  "extra_entries": [
+    {
+      "name": "Dakka Dakka: +2 turrets",
+      "why": "s.365/367 DAKKA DAKKA, kirja kirjoittaa vain leipatekstiin"
+    },
+    {
+      "name": "Dakka Dakka: +1 turret (every escort in the squadron)",
+      "why": "sama osio, hinta per saattaja"
+    },
+    {
+      "name": "Torpedo-bommas",
+      "why": "orkkien yhteiset saannot s.360, +10 per launch bay strength"
+    },
+    {
+      "name": "Boarding torpedoes",
+      "why": "orkkien yhteiset saannot s.360, +5 pts runkoalukselle"
+    },
+    {
+      "name": "Boarding torpedoes (Space Hulk)",
+      "why": "orkkien yhteiset saannot s.360, +15 pts. Cyclops-listalla ei ole Space Hulkia, joten rivia ei koskaan nayteta - se on sidottu aluksen nimeen."
+    }
+  ],
+  "notes": [
+    "Koko lista on kirjan sivulla 365 ja siina on vain nelja osiota: WARLORD, KROOZERS, ESCORTS ja DAKKA DAKKA. Ei taistelulaivoja, ei Rokkeja, ei Space Hulkia ja ei omaa ORDNANCE-osiota. Tama on tarkistettu: sivu 364 on kuvasivu ja sivu 366 aloittaa Waaagh!-listan.",
+    "Rivit 'Terror ship' ja 'Kill kroozer' ovat samat kuin Waaagh!-listalla samaan hintaan; Cyclops-listalla niiden ylapuolella ei kuitenkaan ole taistelulaivaosiota, joten kuuden kroozerin katto on listan ainoa runkoalusrajoite.",
+    "Ork Clanz -saannot (Gubbins, klaanit, Mob Rule, Young Gunz) EIVAT kuulu tahan listaan. Kirja sanoo sivulla 368: 'The Ork Clanz rules can be used in addition to the normal Ork rules, but only with its dedicated Clanz fleet list.'"
+  ]
+}

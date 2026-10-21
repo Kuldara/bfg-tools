@@ -1,0 +1,60 @@
+{"id": "S0301", "l": "VALVOTTU", "a": "checked", "f": "other_section", "p": "F140", "pok": "ok", "n": "Ordon valinta on cap-sääntönä ORDO HERETICUS INQUISITOR -osiossa (SRC-osuma); lause on johdanto-osiossa."}
+{"id": "S0302", "l": "TAUSTA", "a": "drop", "f": "example", "p": "F140", "pok": "ok", "n": "Esimerkkejä."}
+{"id": "S0303", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F140", "pok": "ok", "n": "Kerronta."}
+{"id": "S0304", "l": "VALVOTTU", "a": "checked", "f": "other_section", "p": "F140", "pok": "ok", "n": "requires-sääntö (Ordo vaatii Inquisitor Lordin) toisessa osiossa; hyöty aluksella = komentajakortti."}
+{"id": "S0305", "l": "PELI", "a": "play", "f": "commander_effect", "p": "F140", "pok": "ok", "n": "Ordo Hereticus +1 Ld; komentajakortille."}
+{"id": "S0306", "l": "PELI", "a": "play", "f": "commander_effect", "p": "F140", "pok": "ok", "n": "+2 boarding."}
+{"id": "S0307", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F140", "pok": "ok", "n": "Exterminatus-skenaarion ehto."}
+{"id": "S0308", "l": "OMINAISUUS", "a": "feature", "f": "rt_escorts", "p": "F140", "pok": "ok", "n": "Muuten ei lisärajoituksia; RT-risteilijä ja sen 'attendant escorts' saavat tulla. Saattajat puuttuvat isäntälistojen RT-osiosta (vrt. S0298). Sama kuin S0298.", "vk": "aukko ajossa"}
+{"id": "S0309", "l": "PELI", "a": "play", "f": "commander_effect", "p": "F141", "pok": "ok", "n": "Ordo Xenos boarding."}
+{"id": "S0310", "l": "PELI", "a": "play", "f": "commander_effect", "p": "F141", "pok": "ok", "n": "Ordo Xenos holofield-muutos."}
+{"id": "S0311", "l": "TARKISTA", "a": "keep", "f": "opponent_bonus", "p": "F141", "pok": "ok", "n": "Vastustajan xenos-laivasto saa D6×50 pistettä saattajia ilmaiseksi. Rosterin muistutukseksi."}
+{"id": "S0312", "l": "PELI", "a": "play", "f": "xenotech", "p": "F141", "pok": "ok", "n": "Refit-heitto taulukolta ennen peliä."}
+{"id": "S0313", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F141", "pok": "ok", "n": "'Choose the Xenotech refit instead of rolling' -rivi (upgrades.py:638)."}
+{"id": "S0314", "l": "PELI", "a": "play", "f": "xenotech", "p": "F141", "pok": "ok", "n": "Taulukon rivi; myös RT s.175."}
+{"id": "S0315", "l": "PELI", "a": "play", "f": "xenotech", "p": "F141", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0316", "l": "PELI", "a": "play", "f": "xenotech", "p": "F141", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0317", "l": "VALVOTTU", "a": "checked", "f": "inquisitor_allies", "p": "F141", "pok": "ok", "n": "Johdanto Ordo Xenos -liittolaisiin, jotka on toteutettu (build_data.py:4772, domain.js:4038).", "vk": "koodi luettu"}
+{"id": "S0318", "l": "VALVOTTU", "a": "checked", "f": "inquisitor_allies", "p": "F141", "pok": "ok", "n": "Demiurg-, Corsair- tai Tau-alus Ordo Xenos -inkvisiittorin kanssa (build_data.py:4764, domain.js:2992).", "vk": "koodi luettu"}
+{"id": "S0319", "l": "PELI", "a": "play", "f": "card_rule", "p": "F141", "pok": "ok", "n": "Inkvisiittorin alus menettää Deathwatch-bonuksen, jos xenos-alus otetaan. Kortille; varmista, näkyykö. Ajo 20.10.: Ordo Xenos -komentajan kortilla ei mainita Deathwatchia lainkaan; menetys xenos-liittolaisen kanssa kuuluisi kortille.", "vk": "aukko ajossa"}
+{"id": "S0320", "l": "VALVOTTU", "a": "checked", "f": "inquisitor_allies", "p": "F142", "pok": "ok", "n": "Ordo Malleus ja Bastionin Chaos-rungot (J144, build_data.py:4778)."}
+{"id": "S0321", "l": "VALVOTTU", "a": "checked", "f": "inquisitor_allies", "p": "F142", "pok": "ok", "n": "Strange happenings -vapautus kortilla (domain.js:2987) ja Grey Knights -kielto (domain.js:4039).", "vk": "koodi luettu"}
+{"id": "S0322", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F144", "pok": "ok", "n": "GK = Space Marines; kortilla astartes_core."}
+{"id": "S0323", "l": "RAKENNE", "a": "guaranteed", "f": "list_gate", "p": "F144", "pok": "ok", "n": "Annihilator-sääntö vain Crusade-kortilla."}
+{"id": "S0324", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F144", "pok": "ok", "n": "Inquisitor Lord Inquisitorial Cruiserille. SRC-osuma on harhaanjohtava: section_count-säännön src sisältää lauseen, mutta sääntö valvoo vain määrää."}
+{"id": "S0325", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F144", "pok": "ok", "n": "Muuten Blackshipille."}
+{"id": "S0326", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F144", "pok": "ok", "n": "Muuten kalleimmalle alukselle; sovellus voisi laskea kalleimman ja nimetä sen kortilla."}
+{"id": "S0327", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F144", "pok": "osittain", "x": "table", "n": "Hintarivi pistejonoineen ja vaikutuksen alku samassa lauseessa."}
+{"id": "S0328", "l": "PELI", "a": "play", "f": "commander_effect", "p": "F144", "pok": "ok", "n": "+2 boarding."}
+{"id": "S0329", "l": "ROSKA", "a": "fix", "f": "sentence_merge", "p": "F144", "pok": "ok", "x": "split", "n": "Huomautus ja re-roll-lause yhdessä. Sisältö: re-rollit riveinä (KUVAUS)."}
+{"id": "S0330", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F145", "pok": "ok", "n": "allowed_at samassa osiossa; src on yhdistelmä, joten tarkka vertailu ei osu."}
+{"id": "S0331", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F145", "pok": "ok", "n": "Sama yhdistelmä-src (Ordo Malleus -ehto)."}
+{"id": "S0332", "l": "VALVOTTU", "a": "checked", "f": "row_limit", "p": "F145", "pok": "ok", "n": "0-1."}
+{"id": "S0333", "l": "VALVOTTU", "a": "checked", "f": "row_limit", "p": "F145", "pok": "ok", "n": "Blackship 0-1, ei lasketa rajoihin.", "vk": "ajo ok"}
+{"id": "S0334", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F145", "pok": "ok", "n": "Terminators-rivin ehto (upgrades.py:97) – varmista raja 'one Grey Knights vessel'.", "vk": "ajo ok"}
+{"id": "S0335", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F145", "pok": "ok", "n": "Honour Guard GK capital shipille (ROW_CONDS).", "vk": "ajo ok"}
+{"id": "S0336", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F145", "pok": "ok", "n": "Honour Guardin käyttö."}
+{"id": "S0337", "l": "PELI", "a": "play", "f": "card_rule", "p": "F145", "pok": "ok", "n": "Hexagrammic wards kortilla (domain.js:2894)."}
+{"id": "S0338", "l": "PELI", "a": "play", "f": "card_rule", "p": "F145", "pok": "ok", "n": "Esimerkit."}
+{"id": "S0339", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F145", "pok": "ok", "n": "Kerronta."}
+{"id": "S0340", "l": "LASKETTAVA", "a": "roster", "f": "opponent_bonus", "p": "F145", "pok": "osittain", "x": "split", "n": "Vastustajan Chaos saa Markin tai Daemonshipin jokaista Ordo Malleus Inquisitor Lordia ja GK Strike Cruiseria kohden. Luettelomerkit katkesivat pois; määrä laskettavissa rosterista."}
+{"id": "S0341", "l": "LASKETTAVA", "a": "roster", "f": "attack_rating", "p": "F145", "pok": "ok", "n": "GK 3, Blackshipin kanssa 2."}
+{"id": "S0342", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F146", "pok": "ok", "n": "res_ban."}
+{"id": "S0343", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F146", "pok": "ok", "n": "Skenaariot."}
+{"id": "S0344", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F146", "pok": "ok", "n": "Secret Ploys."}
+{"id": "S0345", "l": "OMINAISUUS", "a": "feature", "f": "ratio_missing", "p": "F174", "pok": "ok", "n": "Base RT -listalla yksi RT-risteilijä ja kaksi Veteran RT:tä menee läpi (ajo 20.10.): osion section_count antaa katon 2, mutta 'yksi per RT-risteilijä' -suhdetta ei ole. Exploration-listalla vastaava ratio on (build_data.py:1650).", "vk": "aukko ajossa"}
+{"id": "S0346", "l": "KUVAUS", "a": "row", "f": "rerolls_included", "p": "F174", "pok": "ok", "n": "Sisältyvä re-roll; komentajakortille."}
+{"id": "S0347", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F174", "pok": "ok", "n": "Power Ram (upgrades.py:490)."}
+{"id": "S0348", "l": "VALVOTTU", "a": "checked", "f": "rt174", "p": "F174", "pok": "ok", "x": "wronglist", "n": "RT-listalla per_points (SRC). 13 Chaos-, Eldar- ja Ork-listalla lause ei koske listaa (niille vain 'a single Rogue Trader capital ship'): poista niiltä."}
+{"id": "S0349", "l": "OMINAISUUS", "a": "feature", "f": "lend_route", "p": "F174", "pok": "ok", "n": "Toinen RT-risteilijä saa olla Exploration-listan variantti. build_data.py:5664 rajasi tämän erikseen tehtäväksi."}
+{"id": "S0350", "l": "RAKENNE", "a": "guaranteed", "f": "squadron_unit", "p": "F174", "pok": "ok", "n": "Yksi rivi = yksi laivue; heavy transportit ovat omalla rivillään."}
+{"id": "S0351", "l": "VALVOTTU", "a": "checked", "f": "ally_matrix", "p": "F174", "pok": "ok", "n": "SM-alus ei pääse RT-listalle reservinä (rotuportti) eikä liittolaisena (allowance 0), joten xenos + SM ei voi syntyä (ajo 20.10.).", "vk": "ajo ok"}
+{"id": "S0352", "l": "TARKISTA", "a": "keep", "f": "agreement", "p": "F174", "pok": "ok", "n": "Pelaajien sopimus ennen peliä; rivit omassa osiossaan. Aito Check yourself."}
+{"id": "S0353", "l": "ROSKA", "a": "fix", "f": "section_title_fragment", "p": "F174", "pok": "ok", "x": "split", "n": "Osion otsikko on lauseen alku. Sisältö kerrontaa."}
+{"id": "S0354", "l": "OMINAISUUS", "a": "feature", "f": "hull_choice", "p": "F174", "pok": "ok", "n": "RT-risteilijäksi kelpaa mikä tahansa RT-, Exploration- tai Wolf Pack -listan risteilijärunko. Runkovalinta kuten VBB:llä. Ajo 20.10.: RT-risteilijällä ei ole runkovalintaa (vrt. VBB setHull).", "vk": "aukko ajossa"}
+{"id": "S0355", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F175", "pok": "ok", "n": "Pakollinen alajuoni."}
+{"id": "S0356", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F175", "pok": "ok", "n": "Alajuoni."}
+{"id": "S0357", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F175", "pok": "ok", "n": "Alajuoni."}
+{"id": "S0358", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F175", "pok": "ok", "n": "Alajuoni."}
+{"id": "S0359", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F175", "pok": "ok", "n": "Crew skill +10 % -rivit (J44)."}
+{"id": "S0360", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F175", "pok": "ok", "n": "Xenotech-rivit (upgrades.py:500)."}

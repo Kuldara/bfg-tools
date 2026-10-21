@@ -1,0 +1,399 @@
+{
+  "list": "Orks — Da Ork Clanz",
+  "book_page": 372,
+  "read_pages": [
+    368,
+    369,
+    370,
+    371,
+    372,
+    373
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "one Warlord for every 500 points",
+      "text": "Ork fleets always include one Warlord for every 500 points, or part, that the fleet is worth - no more, no less.",
+      "page": 372,
+      "status": "enforced",
+      "kind": "per_points",
+      "each": 1,
+      "per": 500,
+      "why": "Valvottu vain ylarajana. Lause on TASMAARA ('no more, no less'), eli alaraja jaa pelaajalle: 1 200 pisteen laivastossa on oltava tasan kolme Warlordia, ja sovellus huomauttaa vain jos niita on nelja."
+    },
+    {
+      "key": "A Warlord adds +2 to one boarding dice roll per game",
+      "text": "A Warlord adds +2 to one boarding dice roll per game.",
+      "page": 372,
+      "status": "manual",
+      "why": "Pelinaikainen etu."
+    },
+    {
+      "key": "one upgrade from the Gubbins list for every re-roll he has",
+      "text": "A Warlord may choose for his own ship or escort skwadron one upgrade from the Gubbins list for every re-roll he has at its listed cost.",
+      "page": 372,
+      "status": "out_of_scope",
+      "why": "Warlordin komentama alus ei ole mallinnettu (sijoitus). Re-rollien maara on nyt ratkaisimessa (rerolls.total), mutta gubbinien sitominen tiettyyn Warlordiin vaatii komentajan sijoituksen alukselle - v1.1.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "He must be embarked on the most expensive ship under his own command",
+      "text": "He must be embarked on the most expensive ship under his own command (as opposed to the whole fleet), even if it is an escort - annotate which one it is.",
+      "page": 372,
+      "status": "manual",
+      "why": "Sijoittelu; sovelluksessa on aluskohtainen muistiinpanokentta juuri tallaista merkintaa varten."
+    },
+    {
+      "key": "the Warlord must be in command of one tiddla skwadron of at least three escorts",
+      "text": "For every re-roll a Warlord has (including the first one for free), the Warlord must be in command of one tiddla skwadron of at least three escorts and one other skwadrons.",
+      "page": 372,
+      "status": "out_of_scope",
+      "why": "Skwadronirakenne ja Warlordin komento eivat ole v1:n mallissa.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "1-2 Kroozers, chosen from the following list",
+      "text": "Big ship skwadron: 1-2 Kroozers, chosen from the following list.",
+      "page": 372,
+      "status": "manual",
+      "why": "Skwadronin koko, ei laivaston yhteismaara."
+    },
+    {
+      "key": "3-10 Escorts, chosen from the following list",
+      "text": "Tiddla skwadron: 3-10 Escorts, chosen from the following list in any mix desired.",
+      "page": 372,
+      "status": "manual",
+      "why": "Skwadronin koko. Sovellus aloittaa saattajaskwadronin kahdesta aluksesta, koska talla listalla ei ole yleista squadron-saantoa; kolmen alaraja ja kymmenen ylaraja jaavat pelaajalle."
+    },
+    {
+      "key": "There is no restriction for what kinds or how many of what type of skwadrons are in the fleet",
+      "text": "There is no restriction for what kinds or how many of what type of skwadrons are in the fleet as long as no Warlord may have more than one ’Uge Ship, which counts as a skwadron by itself.",
+      "page": 373,
+      "status": "manual",
+      "why": "Kirjan oma lause s.373 nakyy pelaajalle Roks-osion Check yourself -tekstina. Aiempi referenssiteksti oli rakentajan oma huomautus ('Skwadron size, not a fleet total ...'), joka ei ole kirjan lause; se siirtyi 14.9.2026 osion notes-kenttaan ja nakyy otsikolla Builder's notes (pistokoe 20, check_pages.py)."
+    },
+    {
+      "key": "An Ork fleet with at least three Warlords may include one Space Hulk",
+      "text": "An Ork fleet with at least three Warlords may include one Space Hulk.",
+      "page": 372,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. Sivun 373 1500 pisteen raja on oma saantonsa. Aiempi puute: Ehto on toisen rivin lukumaarassa (kolme Warlordia), eika saantomoottorissa ole sellaista tyyppia. Kaytannossa raja tulee sivun 373 lauseesta 'a Space Hulk may ",
+      "kind": "conditional_cap",
+      "max_met": 1,
+      "max_unmet": 0,
+      "cond_min": 3,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Space Hulks so led can take upgrades from the list of Gubbins for double the listed cost",
+      "text": "Space Hulks so led can take upgrades from the list of Gubbins for double the listed cost.",
+      "page": 372,
+      "status": "manual",
+      "why": "Kaksinkertainen hinta jaa pelaajalle. Nakyi 7.9.2026 asti tyhjana sanan 'can' takia."
+    },
+    {
+      "key": "Upgrades that increase its boarding value or speed may not be taken",
+      "text": "Upgrades that increase its boarding value or speed may not be taken.",
+      "page": 372,
+      "status": "manual",
+      "why": "Koskee Space Hulkin Gubbineja: Soopa Boostas ja Mega-Armoured Boarding Parties ovat sille kiellettyja."
+    },
+    {
+      "key": "torpedo- bommas for +10 points per launch bay",
+      "text": "They may take torpedo-bommas for +10 points per launch bay (counting maximum number of launch bays).",
+      "page": 372,
+      "status": "manual",
+      "why": "Rivina 'Torpedo-bommas', hinta kerrotaan launch bay -vahvuudella."
+    },
+    {
+      "key": "Ork capital ships that use torpedoes may use boarding torpedoes for +5 points",
+      "text": "Ork capital ships that use torpedoes may use boarding torpedoes for +5 points.",
+      "page": 372,
+      "status": "manual",
+      "why": "Rivina 'Boarding torpedoes'."
+    },
+    {
+      "key": "no Warlord may have more than one ‘Uge Ship",
+      "text": "There is no restriction for what kinds or how many of what type of skwadrons are in the fleet as long as no Warlord may have more than one 'Uge Ship, which counts as a skwadron by itself.",
+      "page": 373,
+      "status": "manual",
+      "why": "Taman lauseen alkuosa on syy siihen, ettei osioiden otsikkolukuja saa valvoa laivastotasolla."
+    },
+    {
+      "key": "no more than one of each of the named Ork battleships may be in the fleet",
+      "text": "However, no more than one of each of the named Ork battleships may be in the fleet, no more than one 'Uge ship may be taken in the fleet for every two kroozers, and a Space Hulk may only be taken by a fleet of no less than 1500 points.",
+      "page": 373,
+      "status": "manual",
+      "why": "Kolme saantoa yhdessa virkkeessa. Ensimmainen on valvottu rivikohtaisena rajana (mx=1) neljalle nimetylle alukselle - katso entries. Kaksi muuta eivat: 'Uge ship -suhdeluku kroozereihin ja Space Hulkin 1500 pisteen alaraja jaavat pelaajalle, koska lause ei jasenny kolmeksi saannoksi."
+    },
+    {
+      "key": "A Warlord must have two kroozers in order to take a",
+      "text": "A Warlord must have two kroozers in order to take a 'Uge ship, meaning the Warlord must have at least one extra re-roll to do so.",
+      "page": 373,
+      "status": "manual",
+      "why": "Skwadronirakenne; ei valvottavissa."
+    },
+    {
+      "key": "gain a +1 bonus to their Leadership while they contain more than five models",
+      "text": "Ork escort skwadrons gain a +1 bonus to their Leadership while they contain more than five models.",
+      "page": 370,
+      "status": "manual",
+      "why": "MOB RULE. Pelinaikainen etu. Nakyi 7.9.2026 asti tyhjana: lausesuodatin tunsi muodon 'gains +1' muttei muotoa 'gains a +1 bonus'."
+    },
+    {
+      "key": "the maximum number of escorts in an Ork squadron can be up to ten",
+      "text": "Note: the maximum number of escorts in an Ork squadron can be up to ten.",
+      "page": 370,
+      "status": "manual",
+      "why": "Talla listalla saattajaskwadronin koko on 3-10, eika sovellus valvo sita."
+    },
+    {
+      "key": "Any skwadron can be given a clan upgrade by paying the points cost shown",
+      "text": "Any skwadron can be given a clan upgrade by paying the points cost shown, but the squadron must show clan colours.",
+      "page": 369,
+      "status": "manual",
+      "why": "Klaanirivit ovat omassa osiossaan ja jakavat ryhmatunnuksen 'clan', joten yhdelta alukselta voi valita vain yhden."
+    },
+    {
+      "key": "every capital ship in the skwadron must separately take and pay for the clan upgrade",
+      "text": "If taken, every capital ship in the skwadron must separately take and pay for the clan upgrade, not just individual ships.",
+      "page": 369,
+      "status": "manual",
+      "why": "Hinta on per alus; skwadronin koostumus jaa pelaajalle."
+    },
+    {
+      "key": "A vessel or escort skwadron led by a Warlord may be given up to one of the following upgrades per Command re-roll",
+      "text": "A vessel or escort skwadron led by a Warlord may be given up to one of the following upgrades per Command re-roll the Warlord has. Each upgrade can only be applied once.",
+      "page": 370,
+      "status": "out_of_scope",
+      "why": "Sama kuin Gubbins-lause: vaatii Warlordin sijoituksen alukselle - v1.1.",
+      "classified_on": "2026-09-09"
+    }
+  ],
+  "entries": [
+    {
+      "name": "Ork Warlord",
+      "pts": 0,
+      "page": null
+    },
+    {
+      "name": "One extra re-roll",
+      "pts": 20,
+      "page": null
+    },
+    {
+      "name": "Two extra re-rolls",
+      "pts": 40,
+      "page": null
+    },
+    {
+      "name": "Gorbag's Revenge",
+      "pts": 310,
+      "page": 377,
+      "mx": 1
+    },
+    {
+      "name": "Slamblasta",
+      "pts": 295,
+      "page": 378,
+      "mx": 1
+    },
+    {
+      "name": "Dethdeala",
+      "pts": 275,
+      "page": 376,
+      "mx": 1
+    },
+    {
+      "name": "Kroolboy",
+      "pts": 270,
+      "page": 379,
+      "mx": 1
+    },
+    {
+      "name": "Hammer class battlekroozer",
+      "pts": 245,
+      "page": 374
+    },
+    {
+      "name": "Zukov's Klaw (Goff only)",
+      "pts": 210,
+      "page": 381,
+      "mx": 1
+    },
+    {
+      "name": "Terror ship",
+      "pts": 185,
+      "page": 380
+    },
+    {
+      "name": "Kill kroozer",
+      "pts": 155,
+      "page": 382
+    },
+    {
+      "name": "Lite kroozer",
+      "pts": 90,
+      "page": 383
+    },
+    {
+      "name": "Ravager attack ship",
+      "pts": 40,
+      "page": 386
+    },
+    {
+      "name": "Onslaught attack ship",
+      "pts": 35,
+      "page": 384
+    },
+    {
+      "name": "Grunt assault ship",
+      "pts": 30,
+      "page": 388
+    },
+    {
+      "name": "Savage gunship",
+      "pts": 30,
+      "page": 385
+    },
+    {
+      "name": "Brute ramship",
+      "pts": 25,
+      "page": 387
+    },
+    {
+      "name": "Rok",
+      "pts": 80,
+      "page": 392
+    },
+    {
+      "name": "Ork hulk",
+      "pts": 600,
+      "page": 389
+    },
+    {
+      "name": "Soopa Boostas",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Extra Power Fields",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Extra Turrets",
+      "pts": 20,
+      "page": null
+    },
+    {
+      "name": "Maniac Turrets",
+      "pts": 10,
+      "page": null
+    },
+    {
+      "name": "Looted Lances",
+      "pts": 30,
+      "page": null
+    },
+    {
+      "name": "Looted Torpedoes",
+      "pts": 20,
+      "page": null
+    },
+    {
+      "name": "Mad Meks",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Maniac Gunners",
+      "pts": 30,
+      "page": null
+    },
+    {
+      "name": "Mega-Armoured Boarding Parties",
+      "pts": 15,
+      "page": null
+    },
+    {
+      "name": "Prow Ram",
+      "pts": 10,
+      "page": null
+    },
+    {
+      "name": "Tellyporta",
+      "pts": 30,
+      "page": null
+    },
+    {
+      "name": "Klaws",
+      "pts": 10,
+      "page": null
+    },
+    {
+      "name": "Shokk-Attack Lance",
+      "pts": 0,
+      "page": null
+    },
+    {
+      "name": "Assault Karrier",
+      "pts": 0,
+      "page": null
+    },
+    {
+      "name": "Clan: Goffs (Black)",
+      "pts": 20,
+      "page": null,
+      "grp": "clan"
+    },
+    {
+      "name": "Clan: Evil Sunz (Red)",
+      "pts": 20,
+      "page": null,
+      "grp": "clan"
+    },
+    {
+      "name": "Clan: Bad Moonz (Yellow)",
+      "pts": 30,
+      "page": null,
+      "grp": "clan"
+    },
+    {
+      "name": "Clan: Deathskullz (Blue)",
+      "pts": 30,
+      "page": null,
+      "grp": "clan"
+    },
+    {
+      "name": "Clan: Blood Axes (Green)",
+      "pts": 0,
+      "page": null,
+      "grp": "clan"
+    },
+    {
+      "name": "Clan: Snakebites (Brown)",
+      "pts": 0,
+      "page": null,
+      "grp": "clan"
+    }
+  ],
+  "extra_entries": [
+    {
+      "name": "Torpedo-bommas",
+      "why": "orkkien yhteiset saannot s.360"
+    },
+    {
+      "name": "Boarding torpedoes (Space Hulk)",
+      "why": "orkkien yhteiset saannot s.360, +15 pts"
+    }
+  ],
+  "notes": [
+    "Zukov's Klaw on kirjan pahin painovirhe talla listalla. Rivi sivulla 372 on '(0-1) Zukov's Klaw (Goff only) (pg. 377)). 2310 pts': seka sivuviite etta hinta ovat rikki. Profiili on sivulla 381 ja sanoo '210 PTS', ja sivun 534 pistehakemisto sanoo saman. Sovellus luki 7.9.2026 asti hinnaksi 310 eli 100 pistetta liikaa.",
+    "Myos 'Lite kroozer (pg. 380)' on vaara: sivu 380 on Terror Ship, ja Lite Kroozer on sivulla 383. Korjattu nimen perusteella.",
+    "Gubbins-hinnasto ja klaanietujen hinnat ovat kirjassa sivuilla 368-371, jotka ovat fyysisesti Waaagh!-listan ja taman listan valissa. Ne kuuluvat kirjan oman lauseen mukaan vain tahan listaan (s.368: 'only with its dedicated Clanz fleet list'), joten sovellus siirtaa koko lohkon tanne.",
+    "Warlord on talla listalla ilmainen ja pakollinen, toisin kuin kahdella muulla orkkilistalla joissa se maksaa 40 pistetta.",
+    "Klaanietuja on kuusi, ja kaksi niista (Blood Axes, Snakebites) ovat ilmaisia. Ne jakavat ryhmatunnuksen 'clan', koska kirja sanoo 'A Warlord and his skwadrons may only be from one clan'.",
+    "Listan skwadronirakenne on sen tarkein saanto eika se ole valvottavissa: mika alus kuuluu kenenkin Warlordin komentoon ratkaisee seka Gubbinien maaran etta sen montako skwadronia laivasto saa. Sovellus laskee pisteet ja rivirajat, ei rakennetta."
+  ]
+}

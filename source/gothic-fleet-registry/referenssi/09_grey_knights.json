@@ -1,0 +1,226 @@
+{
+  "list": "Grey Knights",
+  "book_page": 144,
+  "read_pages": [
+    144,
+    145
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "Grey Knights count as Space Marines in all respects",
+      "text": "Grey Knights count as Space Marines in all respects and as such follow all rules for Space Marines as written on pages 92-94.",
+      "page": 144,
+      "status": "manual",
+      "why": "Viittaa jaettuihin Space Marine -saantoihin. Korteilla nakyy SPECIAL_HULL_RULES-saanto 'astartes_core', jonka fleet-kuvio kattaa myos Grey Knightsin."
+    },
+    {
+      "key": "Grey Knights may not take Thunderhawk annihilators",
+      "text": "(Note: Grey Knights may not take Thunderhawk annihilators)",
+      "page": 144,
+      "status": "manual",
+      "why": "Ordnance-valinta pelin aikana. Tarkea ero Space Marines Crusade -listaan, joka nimenomaan saa ne."
+    },
+    {
+      "key": "If the fleet is above 750 points an Inquisitor Lord must lead the fleet",
+      "text": "If the fleet is above 750 points an Inquisitor Lord must lead the fleet.",
+      "page": 144,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "over": true,
+      "why": "Kirjan sanamuoto on 'above', joka lisattiin MAND_GT-kaavaan 7.9.2026. Ennen sita tama komentajapakko jai valvomatta."
+    },
+    {
+      "key": "If an Inquisitorial Cruiser is present the Inquisitor Lord must be placed aboard it",
+      "text": "If an Inquisitorial Cruiser is present the Inquisitor Lord must be placed aboard it. If the Inquisitorial Cruiser is not present but a Blackship is then the Inquisitor Lord must be placed aboard the Blackship. Otherwise the Inquisitor must be placed on the most expensive ship.",
+      "page": 144,
+      "status": "manual",
+      "why": "Sijoittelu tehdaan poydalla."
+    },
+    {
+      "key": "may purchase up to two more re-rolls for +25 points each",
+      "text": "An Inquisitor Lord gets one re-roll, and may purchase up to two more re-rolls for +25 points each.",
+      "page": 144,
+      "status": "manual",
+      "why": "Hinnoiteltu optio; rivit 'One extra re-roll 25' ja 'Two extra re-rolls 50' ovat valittavissa."
+    },
+    {
+      "key": "You may include a single Grey Knights Battle barge if the remainder of the fleet is at least worth 1000 points",
+      "text": "You may include a single Grey Knights Battle barge if the remainder of the fleet is at least worth 1000 points. Furthermore an Ordo Malleus Inquisitor Lord must lead in the fleet.",
+      "page": 145,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. allowed_at basis=remainder: laivaston muiden alusten pisteet >= 1000 JA Ordo Malleus Inquisitor Lord laivastossa (cond_pick). Komentajan sijoitus lippulaivaksi jaa pelaajalle. Aiempi puute: Kaksi ehtoa: pisteraja ja tietty komentaja. Kumpaakaan ei voi valvoa - pisterajaan sidottua lupaa ei ole saantotyyppina, eika komentajan lajia voi sitoa rivin k",
+      "kind": "allowed_at",
+      "points": 1000,
+      "basis": "remainder",
+      "cond_min": 1,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "A Grey Knights fleet may include a single Inquisitorial Cruiser",
+      "text": "A Grey Knights fleet may include a single Inquisitorial Cruiser in the fleet.",
+      "page": 145,
+      "status": "manual",
+      "why": "Maara yksi valvottu rivirajana mx=1 kirjan merkinnasta '(0-1)'."
+    },
+    {
+      "key": "A Grey Knights fleet may include a single Blackship",
+      "text": "A Grey Knights fleet may include a single Blackship, which as a special vessel does not count toward or against other ship limits in the fleet.",
+      "page": 145,
+      "status": "manual",
+      "why": "Maara yksi valvottu rivirajana mx=1."
+    },
+    {
+      "key": "One Grey Knights Strike Cruiser may be taken per 500 points",
+      "text": "One Grey Knights Strike Cruiser may be taken per 500 points (e.g. one from 0-500 points, two from 501-1000 points, etc.).",
+      "page": 145,
+      "status": "enforced",
+      "kind": "per_points",
+      "each": 1,
+      "per": 500,
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. Aiempi puute: Pisterajaan sidottu maara yhdelle listariville, ei osiolle.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "escorts in your fleet in squadrons of 2",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13)",
+      "page": 145,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "The vessel embarking the Inquisitor Lord or one Grey Knights vessel may take Grey Knight Terminators",
+      "text": "Grey Knights Terminators +50 pts. The vessel embarking the Inquisitor Lord or one Grey Knights vessel may take Grey Knight Terminators.",
+      "page": 145,
+      "status": "manual",
+      "why": "Hinnoiteltu optio; rivi 'Grey Knights Terminators 50 pts' on valittavissa."
+    },
+    {
+      "key": "Any Grey Knights capital ship in the fleet may embark an Honour Guard",
+      "text": "Grey Knights Honour Guard +10 pts. Any Grey Knights capital ship in the fleet may embark an Honour Guard for +10 points.",
+      "page": 145,
+      "status": "manual",
+      "why": "Hinnoiteltu optio; rivi 'Grey Knights Honour Guard 10 pts' on valittavissa."
+    },
+    {
+      "key": "Every Grey Knights capital ship in the fleet mounts hexagrammic wards",
+      "text": "Every Grey Knights capital ship in the fleet mounts hexagrammic wards throughout its hull and ignores any Chaos marks or Daemonship effects affecting leadership or boarding actions.",
+      "page": 145,
+      "status": "manual",
+      "why": "Pelinaikainen vaikutus; koskee kaikkia listan runkoaluksia automaattisesti."
+    },
+    {
+      "key": "An enemy Chaos fleet may add one Mark of Chaos; or upgrade a cruiser to a Daemonship",
+      "text": "A Grey Knights fleet will only be called when intense demonic activity threatens to overrun an entire Sector. An enemy Chaos fleet may add one Mark of Chaos; or upgrade a cruiser to a Daemonship; for no aditional cost, for each of the following included in the Grey Knights Fleet: ... Ordo Malleus Inquisitor Lord ... Grey Knights Strike Cruiser",
+      "page": 145,
+      "status": "manual",
+      "why": "Vastustajan saama etu, ei oman laivaston koostumusta."
+    },
+    {
+      "key": "A Grey Knights fleet led by an Inquisitor Lord has an attack rating of 3",
+      "text": "A Grey Knights fleet led by an Inquisitor Lord has an attack rating of 3 unless a Blackship is accompanying the fleet, in which case its attack rating is 2.",
+      "page": 145,
+      "status": "manual",
+      "why": "Pelinaikainen arvo."
+    },
+    {
+      "key": "will not take ships from or provide ships to any other fleet list",
+      "text": "A Grey Knights fleet will not take ships from or provide ships to any other fleet list as reserves or allies, including Imperial Navy, Rogue Trader or Adeptus Mechanicus fleet lists.",
+      "page": 145,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "crusade-takes-no-reserves-at-all"
+      ],
+      "why": "1.1 (14.9.2026): sama kielto kuin Crusadella (res_ban). Grey Knights ei ole s.14:n rotuluettelossa, joten rotuportti estaisi jo suurimman osan, mutta kielto antaa oikean syyn ja kattaa myos antamisen."
+    }
+  ],
+  "entries": [
+    {
+      "name": "Inquisitor Lord (Ld 9)",
+      "pts": 75,
+      "page": null
+    },
+    {
+      "name": "Grey Knights Battlebarge",
+      "pts": 440,
+      "page": 147
+    },
+    {
+      "name": "Inquisitorial Cruiser",
+      "pts": 270,
+      "page": 150
+    },
+    {
+      "name": "Inquisition Blackship",
+      "pts": 300,
+      "page": 148
+    },
+    {
+      "name": "Nova class Frigate",
+      "pts": 50,
+      "page": 107
+    },
+    {
+      "name": "Gladius class Frigate",
+      "pts": 45,
+      "page": 108
+    },
+    {
+      "name": "Hunter class Destroyer",
+      "pts": 40,
+      "page": 109
+    },
+    {
+      "name": "Rapid strike vessel (Sword)",
+      "pts": 40,
+      "page": 82
+    },
+    {
+      "name": "Rapid strike vessel (Cobra)",
+      "pts": 35,
+      "page": 84
+    },
+    {
+      "name": "Grey Knights Terminators",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Grey Knights Honour Guard",
+      "pts": 10,
+      "page": null
+    }
+  ],
+  "extra_entries": [
+    {
+      "name": "One extra re-roll",
+      "pts": 25,
+      "why": "s.144, kirjassa vain leipatekstissa"
+    },
+    {
+      "name": "Two extra re-rolls",
+      "pts": 50,
+      "why": "s.144, kaksi kertaa 25"
+    },
+    {
+      "name": "Ordo Malleus Inquisitor Lord (Ld 10)",
+      "pts": 100,
+      "why": "s.144"
+    },
+    {
+      "name": "Grey Knights Strike Cruiser",
+      "pts": 165,
+      "why": "Kirjan hinta sivulla 145 on painovirhe ('vvv'). Sama alus maksaa 165 pts sivulla 138. Lisatty kasin ENTRY_ADDS-taulussa, joka vaatii lahdelauseen loytyvan osion tekstista."
+    }
+  ],
+  "notes": [
+    "Tama lista erotettiin Inkvisitiosta 7.9.2026. Kirjassa sivulla 144 on oma otsikko 'GREY KNIGHTS FLEET LIST' ja sen alla omat FLEET COMMANDER-, CAPITAL SHIPS-, ESCORTS- ja ATTACK RATING -osiot. Ennen erottamista ne nakyivat Inkvisition alla kaksoiskappaleina.",
+    "Erottaminen paljasti kolme piilossa ollutta sidonnaisuutta, jotka kaikki oli sidottu listan NIMEEN: kaksi upgrades.py:n injektiota, kaksi build_data.py:n FIXES-korjausta ja yksi test_validator.js:n testi. Kaikki korjattiin osoittamaan Grey Knightsiin.",
+    "Kirja kirjoittaa sivulla 145 saattajien sivuviitteet vaarin: 'Rapid strike vessel (Sword) (pg. 104) (pg. 80)' - sivu 80 on Falchion ja sivu 82 on Sword. FIXES korjaa nama sivuille 82 ja 84. Sama virhe koskee myos rulesivua: kirja sanoo 104, oikea on 106.",
+    "Grey Knights Strike Cruiserin hinta on kirjassa lukukelvoton ('vvv'). Se on lisatty kasin sivun 138 hinnalla 165 pts."
+  ]
+}

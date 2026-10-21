@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>card</title>
+<style>
+/* ============================================================ TOKENS ===== */
+:root{
+  --ground:#E6E9ED; --panel:#F4F6F8; --sunk:#DCE1E6; --line:#C3CBD3;
+  --line-soft:#D6DCE2; --ink:#141A21; --ink-2:#3E4A57; --ink-3:#6B7885;
+  --accent:#1F6F63; --accent-ink:#12463E; --accent-wash:#DCEAE7;
+  --brass:#8A6A26; --brass-wash:#F0E7D2;
+  --ok:#2F6B48; --ok-wash:#DDEBE2;
+  --warn:#8A5B12; --warn-wash:#F5E9D5;
+  --bad:#993330; --bad-wash:#F6DEDC;
+  --shadow:0 1px 2px rgba(20,26,33,.08), 0 8px 24px -16px rgba(20,26,33,.35);
+  --r:3px;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --disp:"Archivo Narrow","Arial Narrow",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F151B; --panel:#161E26; --sunk:#0B1116; --line:#2C3945;
+    --line-soft:#222D38; --ink:#E4EAF0; --ink-2:#A9B6C3; --ink-3:#778695;
+    --accent:#5FB3A3; --accent-ink:#A5D8CD; --accent-wash:#15302C;
+    --brass:#C9A45C; --brass-wash:#2C2517;
+    --ok:#6FBF8E; --ok-wash:#162C21;
+    --warn:#D6A340; --warn-wash:#2E2415;
+    --bad:#E5807A; --bad-wash:#331A19;
+    --shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F151B; --panel:#161E26; --sunk:#0B1116; --line:#2C3945;
+  --line-soft:#222D38; --ink:#E4EAF0; --ink-2:#A9B6C3; --ink-3:#778695;
+  --accent:#5FB3A3; --accent-ink:#A5D8CD; --accent-wash:#15302C;
+  --brass:#C9A45C; --brass-wash:#2C2517;
+  --ok:#6FBF8E; --ok-wash:#162C21;
+  --warn:#D6A340; --warn-wash:#2E2415;
+  --bad:#E5807A; --bad-wash:#331A19;
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -16px rgba(0,0,0,.8);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font:15px/1.5 var(--sans);
+  -webkit-font-smoothing:antialiased;
+}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ============================================================= CHROME ==== */
+.topbar{
+  position:sticky; top:0; z-index:20; background:var(--panel);
+  border-bottom:1px solid var(--line);
+  display:flex; flex-wrap:wrap; gap:14px 18px; align-items:flex-end;
+  padding:12px 20px;
+}
+.brand{display:flex;flex-direction:column;gap:1px;margin-right:auto}
+.brand b{
+  font:600 20px/1 var(--disp); letter-spacing:.055em; text-transform:uppercase;
+}
+.brand span{font:400 11px/1.35 var(--mono);color:var(--ink-3);letter-spacing:.02em}
+.field{display:flex;flex-direction:column;gap:4px}
+.field>label{
+  font:600 10px/1 var(--sans); letter-spacing:.11em; text-transform:uppercase;
+  color:var(--ink-3);
+}
+select,input[type=number],input[type=text]{
+  background:var(--ground); border:1px solid var(--line); border-radius:var(--r);
+  padding:7px 9px;
+}
+select{max-width:320px}
+input[type=number]{width:104px;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.btn{
+  background:var(--ground); border:1px solid var(--line); border-radius:var(--r);
+  padding:7px 12px; cursor:pointer;
+  font:600 12px/1.2 var(--sans); letter-spacing:.03em;
+}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .btn.primary,
+:root:not([data-theme="light"]) .btn.primary{color:#08120F}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .btn.primary{color:#fff}}
+.btn.primary:hover{filter:brightness(1.08);color:#fff}
+:root[data-theme="dark"] .btn.primary:hover{color:#08120F}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap}
+
+.tally{
+  display:flex;align-items:baseline;gap:8px;
+  font-family:var(--mono);font-variant-numeric:tabular-nums;
+  border-left:3px solid var(--accent); padding-left:12px;
+}
+.tally b{font:600 26px/1 var(--mono)}
+.tally i{font-style:normal;font-size:12px;color:var(--ink-3)}
+.tally.over b{color:var(--bad)}
+
+/* ============================================================= LAYOUT ==== */
+.work{
+  display:grid; grid-template-columns:minmax(0,7fr) minmax(0,9fr);
+  gap:18px; padding:18px 20px 60px; align-items:start;
+  max-width:1560px; margin:0 auto;
+}
+@media (max-width:1020px){.work{grid-template-columns:1fr}}
+.col{display:flex;flex-direction:column;gap:14px;min-width:0}
+.card{
+  background:var(--panel); border:1px solid var(--line); border-radius:var(--r);
+  box-shadow:var(--shadow); overflow:hidden;
+}
+.card>h2{
+  margin:0; padding:9px 14px; background:var(--sunk);
+  border-bottom:1px solid var(--line);
+  font:600 11px/1.2 var(--sans); letter-spacing:.13em; text-transform:uppercase;
+  color:var(--ink-2); display:flex; justify-content:space-between; gap:10px;
+}
+.card>h2 em{font-style:normal;color:var(--ink-3);font-weight:500;letter-spacing:.04em}
+
+/* ---------------------------------------------------------- catalogue --- */
+.sec{border-bottom:1px solid var(--line-soft)}
+.sec:last-child{border-bottom:0}
+.sec>summary{
+  cursor:pointer; padding:9px 14px; display:flex; gap:10px; align-items:center;
+  font:600 13px/1.2 var(--disp); letter-spacing:.05em; text-transform:uppercase;
+  list-style:none;
+}
+.sec>summary::-webkit-details-marker{display:none}
+.sec>summary::before{
+  content:"+"; font-family:var(--mono); color:var(--ink-3); width:12px;
+}
+.sec[open]>summary::before{content:"\2013"}   /* CSS-escape, ei HTML-entiteetti */
+.sec>summary .n{
+  margin-left:auto; font:500 11px/1 var(--mono); color:var(--ink-3);
+  letter-spacing:0;
+}
+.secbody{padding:0 14px 12px}
+.limitchip{
+  display:inline-block; font:500 10px/1.6 var(--mono); letter-spacing:.02em;
+  background:var(--brass-wash); color:var(--brass);
+  border:1px solid color-mix(in srgb,var(--brass) 35%,transparent);
+  border-radius:2px; padding:0 6px; margin-left:8px; text-transform:none;
+}
+.rule{
+  font:400 12px/1.55 var(--sans); color:var(--ink-2);
+  border-left:2px solid var(--accent); padding:2px 0 2px 10px; margin:0 0 8px;
+}
+.rule.manual{border-left-color:var(--line)}
+.rule b{
+  font:600 9px/1.6 var(--sans); letter-spacing:.1em; text-transform:uppercase;
+  color:var(--accent); display:block;
+}
+.rule.manual b{color:var(--ink-3)}
+.pick{
+  display:grid; grid-template-columns:1fr auto auto; gap:8px; align-items:center;
+  padding:5px 0; border-top:1px solid var(--line-soft);
+}
+.pick:first-of-type{border-top:0}
+.pick .nm{font:500 13px/1.3 var(--sans)}
+.pick .nm small{display:block;color:var(--ink-3);font:400 11px/1.4 var(--mono)}
+.pick .p{font:600 13px/1 var(--mono);font-variant-numeric:tabular-nums;color:var(--brass)}
+.pick .warn{
+  grid-column:1/-1; margin:2px 0 4px;
+  font:400 11px/1.45 var(--sans); color:var(--warn);
+  background:var(--warn-wash); border-left:2px solid var(--warn);
+  padding:4px 8px; border-radius:2px;
+}
+.pick .warn b{font-weight:600;letter-spacing:.04em;text-transform:uppercase;font-size:9px;display:block}
+.add{
+  border:1px solid var(--line); background:var(--ground); border-radius:2px;
+  width:26px;height:24px;cursor:pointer;font:600 15px/1 var(--sans);color:var(--accent)
+}
+.add:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* --------------------------------------------------------------- fleet -- */
+.unit{border-bottom:1px solid var(--line-soft);padding:10px 14px}
+.unit:last-child{border-bottom:0}
+.uhead{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.uhead .cls{
+  font:600 14px/1.2 var(--disp); letter-spacing:.04em; text-transform:uppercase;
+}
+.uhead .ty{font:400 11px/1 var(--mono);color:var(--ink-3)}
+.uhead .pts{margin-left:auto;font:600 14px/1 var(--mono);color:var(--brass)}
+.uctl{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:7px}
+.uctl input[type=text]{padding:4px 7px;font-size:13px}
+.uctl .nmin{flex:1 1 190px;min-width:130px}
+.stepper{display:flex;align-items:center;gap:0;border:1px solid var(--line);border-radius:2px}
+.stepper button{border:0;background:transparent;width:24px;height:26px;cursor:pointer;color:var(--accent);font:600 14px/1 var(--sans)}
+.stepper span{
+  min-width:34px;text-align:center;font:500 12px/1 var(--mono);
+  border-left:1px solid var(--line);border-right:1px solid var(--line);padding:7px 0
+}
+.opt{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:start;
+  margin-top:7px;font-size:12px;line-height:1.5}
+.tri{display:flex;border:1px solid var(--line);border-radius:2px;overflow:hidden;flex:none}
+.tri button{
+  border:0;background:var(--ground);cursor:pointer;padding:3px 7px;
+  font:600 9px/1.4 var(--sans);letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-3);border-left:1px solid var(--line)
+}
+.tri button:first-child{border-left:0}
+.tri button[aria-pressed="true"]{background:var(--accent);color:#fff}
+.tri button.off[aria-pressed="true"]{background:var(--ink-3)}
+.tri button:disabled{opacity:.35;cursor:not-allowed}
+.opt input{margin-top:3px;accent-color:var(--accent)}
+.opt.dis{opacity:.5}
+.opt .c{font-family:var(--mono);color:var(--brass);white-space:nowrap}
+.ups{margin-top:8px;border-top:1px dashed var(--line);padding-top:7px}
+.ups>h5{font:600 10px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);margin:0 0 5px}
+.ups details>summary{cursor:pointer;font:400 11px/1.5 var(--mono);color:var(--ink-3);
+  list-style:none;padding:2px 0}
+.ups details>summary::-webkit-details-marker{display:none}
+.ups details>summary::before{content:"+ ";font-weight:700}
+.ups details[open]>summary::before{content:"\2013 "}
+.opt.req .tri{opacity:.55;pointer-events:none}
+.opt .src{display:block;color:var(--ink-3);font:400 11px/1.35 var(--sans);margin-top:2px}
+.pick.upg{opacity:.72}
+.pick.upg .p{color:var(--ink-3)}
+.pick .tag{display:inline-block;margin-left:6px;padding:1px 5px;border:1px solid var(--line);
+  border-radius:2px;font:600 9px/1.5 var(--sans);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--ink-3);vertical-align:1px}
+.maxp{font:400 11px/1 var(--mono);color:var(--ink-3);margin-left:6px}
+.stats{
+  display:flex;flex-wrap:wrap;gap:0 14px;margin-top:6px;
+  font:400 11px/1.6 var(--mono);color:var(--ink-3)
+}
+.stats b{color:var(--ink-2);font-weight:500}
+.del{
+  border:0;background:transparent;color:var(--ink-3);cursor:pointer;
+  font:500 11px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase
+}
+.del:hover{color:var(--bad)}
+
+/* ---------------------------------------------------------- validation -- */
+.checks{padding:4px 0}
+.chk{
+  display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:baseline;
+  padding:7px 14px;border-bottom:1px solid var(--line-soft);font-size:12.5px
+}
+.chk:last-child{border-bottom:0}
+.chk .dot{
+  width:8px;height:8px;border-radius:50%;background:var(--ok);
+  align-self:center;box-shadow:0 0 0 3px var(--ok-wash)
+}
+.chk.bad .dot{background:var(--bad);box-shadow:0 0 0 3px var(--bad-wash)}
+.chk.warn .dot{background:var(--warn);box-shadow:0 0 0 3px var(--warn-wash)}
+.chk .src{display:block;color:var(--ink-3);font-size:11px;line-height:1.45;margin-top:2px}
+.chk .val{font:500 11px/1 var(--mono);color:var(--ink-3);white-space:nowrap}
+.empty{padding:22px 14px;color:var(--ink-3);font-size:13px;text-align:center}
+
+.note{
+  padding:10px 14px;font-size:11.5px;line-height:1.55;color:var(--ink-3);
+  background:var(--sunk);border-top:1px solid var(--line-soft)
+}
+.note b{color:var(--ink-2)}
+
+/* ============================================================== PRINT ====
+   Korttiarkki: A4 pysty, 2 korttia, 144 x 135 mm. Mitat ja varit vastaavat
+   projektin ship cards -kortteja (BFG_Fleet_Cards_*_150pct_2up_A4.pdf). */
+.sheet{display:none}
+body.card-audit .topbar,body.card-audit .work{display:none!important}
+body.card-audit{background:#fff}
+body.card-audit .sheet{display:block}
+body.card-audit .page{margin:0}
+/* Ilman tata selain tiputtaa kaikki taustavarit tulostuksesta, ja kortista
+   tulee harmaa. Koskee koko arkkia lapsineen. */
+.sheet,.sheet *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+@media print{
+  html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .topbar,.work{display:none!important}
+  body{background:#fff;color:#000}
+  .sheet{display:block}
+}
+.page{
+  width:210mm;height:297mm;position:relative;background:#fff;
+  page-break-after:always;break-after:page;
+  font-family:"IBM Plex Sans",Arial,Helvetica,sans-serif;color:#211F20;
+  /* Nykyinen tuotantoformaatti. Oikea 6 x 6 in = 152.4 mm tarvitsee
+     1-up A4:n tai 2-up A3:n, koska kaksi ei mahdu A4:n 297 mm sivulle. */
+  --card-w:144mm;--card-h:135mm;--card-x:33mm;
+  --card-top:16.3mm;--card-bottom:156.7mm;
+}
+.pghead{position:absolute;left:12mm;right:12mm;top:6mm;display:flex;
+  align-items:baseline;gap:6mm}
+.pghead b{font:700 8pt/1.2 var(--disp);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;flex:none}
+.pghead i{font-style:normal;font:400 5.6pt/1.3 var(--sans);color:#6B6769;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.pghead .rt{margin-left:auto;font:400 5.6pt/1.2 var(--mono);color:#6B6769;white-space:nowrap}
+
+/* --- kortti --------------------------------------------------------- */
+.k{
+  position:absolute;left:var(--card-x);width:var(--card-w);height:var(--card-h);
+  background:#F6F2E9;border:.6pt solid var(--kd);overflow:hidden;
+  display:flex;flex-direction:column;
+}
+.k.top{top:var(--card-top)}
+.k.bot{top:var(--card-bottom)}
+.kfit{display:flex;flex-direction:column;height:100%;transform-origin:top left}
+
+.k-hd{background:var(--kd);color:#fff;display:flex;align-items:stretch;
+  border-left:2.6mm solid #D1792A}
+.k-hd .t{padding:1.25mm 3mm 1.2mm;min-width:0;flex:1}
+.k-hd h3{margin:0;font:700 13.5pt/1 var(--disp);letter-spacing:.005em;
+  text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.k-hd p{margin:.55mm 0 0;font:400 6pt/1.2 var(--sans);color:#E8E4DC}
+.k-hd .pts{display:flex;flex-direction:column;justify-content:center;
+  padding:0 3mm 0 0;gap:.55mm}
+.k-hd .pts span{font:700 5.2pt/1 var(--sans);letter-spacing:.13em;color:#F0C99A}
+.k-hd .pts i{display:block;width:34mm;height:6.9mm;background:#fff;
+  border:.9pt solid #D1792A;border-radius:.6mm}
+
+.k-st{display:flex;background:#FAF9F6;border-bottom:.6pt solid #B9B4B5}
+.k-st div{flex:1;padding:.85mm 1.8mm .9mm;border-left:.5pt solid #D8D3CB;
+  display:flex;flex-direction:column;gap:.65mm;min-width:0}
+.k-st div:first-child{border-left:0}
+.k-st span{font:700 5.4pt/1 var(--sans);letter-spacing:.09em;color:var(--km)}
+.k-st .v{display:flex;flex-direction:row;align-items:center;gap:1.6mm}
+.k-st b{font:700 8.6pt/1.02 var(--sans);min-width:0;white-space:nowrap}
+.k-st i{display:block;width:7mm;height:4.3mm;background:#fff;border:.6pt solid #8C8781;
+  border-radius:.5mm;flex:none}
+.k-st .wide i{width:20mm}
+
+.k-row{display:flex;gap:1mm;padding:.9mm 1.35mm 0;flex:none}
+.k-row.grow{flex:1;min-height:0;padding-bottom:.9mm}
+.k-box{background:#fff;border:.6pt solid #B9B4B5;display:flex;
+  flex-direction:column;min-width:0;overflow:hidden}
+.k-box>h4{margin:0;background:var(--km);color:#fff;
+  padding:.8mm 1.4mm;display:flex;justify-content:space-between;gap:1.2mm;
+  font:700 7.1pt/1.12 var(--sans);letter-spacing:.045em}
+.k-box>h4 em{font-style:normal;font:400 5.4pt/1.3 var(--sans);color:#E6EFE7;
+  align-self:center}
+.k-bd{padding:1mm 1.4mm;min-width:0;flex:1;overflow:hidden}
+.fit-content{transform-origin:top left}
+
+/* Vahinkoruudut kahtena kaistana: ylhaalla ehjat hitit, alhaalla
+   crippled-puolisko omalla otsikollaan. Jako on nyt rakenteessa eika vain
+   ruudun varissa, ja lohko mahtuu kapeampaan sarakkeeseen. */
+.k-hits{display:flex;flex-wrap:wrap;gap:.85mm}
+.k-hits i{width:4.5mm;height:4.5mm;border:.6pt solid #7D7873;background:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font:400 5pt/1 var(--mono);color:#6B6769;border-radius:.4mm}
+.k-hits.cr i{background:#F4E5E6;border-color:#C08E90;color:#9A5F62}
+.k-cr{margin:1.1mm 0 .6mm;font:700 4.9pt/1 var(--sans);letter-spacing:.06em;
+  color:#9A5F62}
+.k-cr em{font-style:normal;font-weight:400;letter-spacing:0;color:#8C8781}
+/* Kaksi runkoa kantaa 40 hittia. Taysikokoisina ne veisivat kahdeksan
+   rivia, joten niilla ruutu on pienempi. */
+.k.hp-big .k-hits i{width:3.2mm;height:3.2mm;font-size:3.7pt;border-radius:.3mm}
+.k.hp-big .k-hits{gap:.6mm}
+.k-note{margin:1mm 0 0;font:400 4.6pt/1.25 var(--sans);color:#4A4644}
+
+/* squadron */
+.k-sq{display:flex;gap:2.4mm}
+.k-sq div{flex:1}
+.k-sq span{display:block;font:700 5.4pt/1 var(--sans);letter-spacing:.08em;
+  color:var(--km);margin-bottom:1mm}
+.k-sq i{display:block;height:6.4mm;background:#fff;border:.6pt solid #8C8781;border-radius:.5mm}
+.k-mem{display:flex;flex-wrap:wrap;gap:1.4mm}
+.k-mem div{flex:1 1 30%;min-width:28mm;border:.6pt solid #B9B4B5;background:#FAF9F6;
+  border-radius:.5mm;padding:1.1mm 1.4mm;display:flex;align-items:center;gap:1.2mm;
+  font:400 6.2pt/1.1 var(--sans)}
+.k-mem div.gh{border-style:dashed;border-color:#CFCAC4;background:transparent}
+.k-mem em{font-style:normal;color:var(--km);font-weight:700;font-size:5.4pt}
+.k-mem u{text-decoration:none;flex:1;min-width:0;overflow:hidden;white-space:nowrap;
+  text-overflow:ellipsis}
+.k-mem s{text-decoration:none;width:5mm;height:4.4mm;border:.55pt solid #8C8781;
+  background:#fff;border-radius:.4mm;flex:none;
+  font:400 4.2pt/4.4mm var(--sans);text-align:center;color:#8C8781}
+
+/* loadout / options */
+.k-optbox{overflow:hidden}
+.k-opt-list{transform-origin:top left}
+.k-opt{display:flex;gap:1mm;align-items:flex-start;padding:.38mm 0;min-width:0}
+.k-opt+.k-opt{border-top:.4pt solid #EDE9E1}
+.k-opt .cb{width:3.1mm;height:3.1mm;border:.7pt solid #4A4644;background:#fff;
+  flex:none;margin-top:.25mm;border-radius:.4mm;position:relative}
+.k-opt .cb.on::after{content:"X";position:absolute;inset:0;
+  font:700 3pt/3.1mm var(--sans);text-align:center;color:#211F20}
+.k-opt .tx{flex:1;min-width:0}
+.k-opt .tx>b{display:block;font:700 5.55pt/1.12 var(--sans)}
+.k-opt .tx b.ast{display:inline;font:inherit;color:var(--ast);margin-right:.35mm}
+.k-opt .tx span{display:block;font:400 4.45pt/1.18 var(--sans);color:#6B6769;margin-top:.12mm}
+.k-opt .c{font:700 5.75pt/1.15 var(--mono);white-space:nowrap;color:#211F20}
+.k-opt.pick{border-left:1mm solid #D1792A;padding-left:1.1mm}
+
+/* Optiopolitiikka: 0-4 normaalina, 5-6 tiiviina, 7-8 dense-tilassa.
+   9+ aloittaa viela pienemmasta koosta. Kaikki nimet, hinnat ja kuvaukset
+   sailyvat aina; fitCards() jatkaa skaalausta ilman kovaa alarajaa. */
+.k.opt-compact .k-opt{padding:.25mm 0;gap:.8mm}
+.k.opt-compact .k-opt .tx b{font-size:5.15pt;line-height:1.08}
+.k.opt-compact .k-opt .tx span{font-size:4.1pt;line-height:1.12}
+.k.opt-compact .k-opt .c{font-size:5.35pt}
+.k.opt-dense .k-opt{padding:.16mm 0;gap:.65mm}
+.k.opt-dense .k-opt .cb{width:2.75mm;height:2.75mm;margin-top:.12mm}
+.k.opt-dense .k-opt .cb.on::after{line-height:2.75mm}
+.k.opt-dense .k-opt .tx b{font-size:4.85pt;line-height:1.04}
+.k.opt-dense .k-opt .tx span{font-size:3.85pt;line-height:1.06}
+.k.opt-dense .k-opt .c{font-size:5pt;line-height:1.05}
+.k.opt-overflow .k-opt{padding:.12mm 0}
+.k.opt-overflow .k-opt .tx b{font-size:4.7pt;line-height:1.03}
+.k.opt-overflow .k-opt .tx span{font-size:3.65pt;line-height:1.03}
+
+/* aseistus */
+.k-arm{width:100%;border-collapse:collapse;table-layout:fixed;
+  color:#211F20;font-family:var(--sans)}
+.k-arm th{font:700 5pt/1 var(--sans);letter-spacing:.06em;color:#6B6769;
+  overflow:hidden;white-space:nowrap;
+  text-align:left;padding:0 1.2mm .8mm;border-bottom:.5pt solid #D8D3CB}
+.k-arm th.r{text-align:center}
+.k-arm td{padding:.55mm 1.2mm;font:400 6pt/1.1 var(--sans);color:#211F20;
+  vertical-align:middle;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.k-arm tr.w td{background:var(--rw)}
+.k-arm .bg{width:3.2mm;height:3.2mm;border-radius:.5mm;display:inline-block;
+  color:#fff;font:700 4.2pt/3.2mm var(--sans);text-align:center;background:var(--bd)}
+.k-arm td.ar{text-align:center;padding-left:.3mm;padding-right:.6mm}
+/* Kapeat sarakkeet rivittyvat mieluummin kuin katkeavat: pisimmat arvot
+   ovat kaksisanaisia ("Thunderhawk: 20 cm", "Cap. 1 Orca/Warden") ja
+   mahtuvat kahdelle riville. Nimisarake pysyy yhdella rivilla. */
+.k-arm td.rg,.k-arm td.st{white-space:normal;line-height:1.02}
+.k-arm .st{font-weight:600}
+/* Kaariruusuke: nelja lohkoa, etu ylospain. Tumma lohko = kiintea kaari,
+   harmaa = valittavissa oleva. Ruusuke on samalla se ruutu johon kaytetty
+   kaari merkitaan, joten erillista kirjoitusruutua ei ole. Teksti ei
+   mahtunut sarakkeeseen: 438 solua 1829:sta katkesi ellipsiksi. */
+.k-arm .arcg{width:3.2mm;height:3.2mm;display:inline-block;vertical-align:middle}
+.k-arm .arcg path{fill:#fff;stroke:#8C8781;stroke-width:.4}
+.k-arm .arcg path.on{fill:#3F3B39}
+.k-arm .arcg path.pick{fill:#9E968B}
+.k-arm .arcg circle{fill:none;stroke:#4A4644;stroke-width:.75}
+.k-arm .noarc{color:#8C8781}
+/* Valintamerkit: nelio = itsenainen valinta (valikkoase), ympyra =
+   valitse yksi ryhmasta. Ryhma on aina tasan yhden aseen paikka. */
+.k-arm .wb,.k-arm .rb{width:2.5mm;height:2.5mm;border:.7pt solid #4A4644;
+  background:#fff;display:inline-block;position:relative;
+  vertical-align:-.35mm;margin-right:.4mm}
+.k-arm .wb.on::after{content:"X";position:absolute;inset:0;
+  font:700 2.1mm/2.6mm var(--mono);text-align:center;color:#211F20}
+.k-arm .rb{border-radius:50%}
+.k-arm .rb.on::after{content:"";position:absolute;inset:.55mm;
+  background:#211F20;border-radius:50%}
+/* Ryhmapalkki sitoo vaihtoehdot yhteen. Aiempi rivien valinen katkoviiva
+   erotti ne, mika oli vaarin pain: ne ovat yksi valinta. Rivien
+   taustavarit tulevat asetyypista, joten ryhmitys ei voi olla varissa. */
+.k-arm tbody.g td.nm{border-left:.7pt solid #8C8781;padding-left:.9mm}
+/* Perakkaiset ryhmat ovat eri valintoja, joten niiden valiin tarvitaan
+   vali - muuten kaksi palkkia koskettavat ja nayttavat yhdelta ryhmalta.
+   Vali on oma rivinsa eika tayte: tayte saisi rivin taustavarin, eika rako
+   nakyisi kahden samanvarisen rivin valissa. */
+.k-arm tbody.gp td{padding:0;height:1.2mm;border:0;background:transparent}
+.k-arm tr.alt .or{font:700 4pt/1 var(--sans);color:#8C8781;letter-spacing:.04em;
+  margin-right:.35mm}
+
+/* special rules */
+/* Gifts of the Omnissiah: kaksi saraketta SPECIAL-lohkon ylaosassa.
+   Numero on ulkoreunallinen ympyra, jotta heitetyn lahjan voi varittaa. */
+.k-gift{margin:0 0 1.3mm;padding-bottom:1.2mm;border-bottom:.4pt solid #D8D3CB}
+.k-gift>b{display:block;font:700 5pt/1.15 var(--sans);letter-spacing:.05em;
+  color:var(--km);margin-bottom:1mm}
+.k-gift>b em{font-style:normal;font-weight:400;letter-spacing:0;color:#6B6769}
+.k-gg{display:grid;grid-template-columns:1fr 1fr;gap:1mm 2.2mm}
+.k-gg>div{display:flex;gap:1.1mm;align-items:flex-start;min-width:0}
+.k-gg i{flex:none;width:3.1mm;height:3.1mm;border:.55pt solid var(--km);
+  border-radius:50%;background:#fff;font:700 4.1pt/3.1mm var(--mono);
+  font-style:normal;text-align:center;color:var(--km)}
+.k-gg span{min-width:0}
+.k-gg u{text-decoration:none;display:block;font:700 4.8pt/1.15 var(--sans)}
+.k-gg em{display:block;font-style:normal;font:400 4.4pt/1.2 var(--sans);
+  color:#4A4644;margin-top:.2mm}
+.k-gg em b{font-weight:700;color:var(--km)}
+.k-sr{margin:0;padding-left:3.2mm;list-style:disc}
+.k-sr li{font:400 5.4pt/1.3 var(--sans);margin-bottom:.7mm;color:#211F20}
+.k-sr li.ast{list-style:none;margin-left:-3.2mm;text-indent:0}
+b.ast{color:var(--ast,#D1792A);font-weight:700;margin-right:.35mm}
+.k-sr b.ast{display:inline-block;min-width:1.6mm}
+
+/* critical damage */
+.k-crit{display:flex;flex-wrap:wrap;gap:1mm}
+.k-crit div{flex:1 1 18%;min-width:23mm;border:.55pt solid #C9C4BC;background:#FAF9F6;
+  border-radius:.5mm;padding:.8mm 1mm;display:flex;align-items:center;gap:1mm}
+.k-crit .lb{flex:1;min-width:0}
+.k-crit b{display:block;font:700 4.7pt/1.1 var(--sans)}
+.k-crit em{display:block;font-style:normal;font:400 3.8pt/1.05 var(--sans);color:#6B6769}
+.k-crit .tk{display:flex;gap:.45mm;flex:none}
+.k-crit .tk i{width:2.1mm;height:2.1mm;border:.45pt solid #8C8781;background:#fff;
+  display:block;border-radius:.3mm}
+.k-crit .wide{flex:1 1 100%;background:#F3E8CF;border-color:#D9C79B;gap:5mm}
+.k-crit .wide span{font:700 5pt/1.2 var(--sans);flex:none}
+.k-crit .wide u{text-decoration:none;margin-left:auto;font:400 4.2pt/1.2 var(--sans);
+  color:#8A7340;text-align:right}
+
+.k-foot{margin:0 2mm 2mm;border:.6pt solid #B9B4B5;background:#fff;
+  padding:1.2mm 2mm;font:700 5.2pt/1 var(--sans);letter-spacing:.07em;color:#6B6769}
+
+/* roster print */
+.rost{font-family:var(--sans);color:#000}
+.rost h1{font:700 20pt/1.1 var(--disp);letter-spacing:.04em;text-transform:uppercase;margin:0}
+.rost .sub{font:400 8.5pt/1.4 var(--mono);color:#444;margin:1mm 0 5mm}
+.rost table{width:100%;border-collapse:collapse;font-size:9pt;color:#000;font-family:var(--sans)}
+.rost thead{display:table-header-group}
+.rost tr,.rost .rules li{break-inside:avoid;page-break-inside:avoid}
+.rost th{text-align:left;background:#222;color:#fff;padding:1.5mm 2mm;font:600 7.5pt/1 var(--sans);letter-spacing:.06em}
+.rost td{padding:1.4mm 2mm;border-bottom:.4pt solid #bbb;vertical-align:top;color:#000}
+.rost td.n{text-align:right;font-family:var(--mono)}
+.rost .tot td{border-top:1pt solid #000;font-weight:700}
+.rost .rules{margin-top:6mm;font-size:7.6pt;line-height:1.45;color:#333}
+.rost .rules h4{font:700 8pt/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;margin:0 0 1.5mm}
+.rost .rules li{margin-bottom:1mm}
+@page{size:A4 portrait;margin:0}
+
+/* Selain voi kuvata sivun kesken siirtyman, jolloin osa tekstista
+   jaa haalistuneeksi. Animaatiot pois, jotta kuva on aina valmis. */
+*,*::before,*::after{animation:none!important;transition:none!important}
+html,body{margin:0;padding:0;background:transparent}
+#sheet{display:block}
+#sheet .page{margin:0;box-shadow:none;position:relative;width:auto;height:auto;
+  background:transparent;overflow:visible}
+#sheet .k{position:relative!important;left:0!important;top:0!important}
+</style></head><body>
+<div class="sheet" id="sheet"><div class="page"><div class="k top" data-option-count="4"
+    style="--kd:#22303A;--km:#46626F"><div class="kfit">
+    <div class="k-hd">
+      <div class="t"><h3>Strike Cruiser</h3><p>Space Marines | Cruiser | pg. 105</p></div>
+      <div class="pts"><span>PTS</span><i></i></div>
+    </div>
+    <div class="k-st">
+      <div><span>SPEED</span><div class="v"><b>25 cm</b><i></i></div></div>
+      <div><span>TURNS</span><div class="v"><b>90°</b><i></i></div></div>
+      <div><span>SHIELDS</span><div class="v"><b>1</b><i></i></div></div>
+      <div><span>ARMOUR</span><div class="v"><b>6+</b><i></i></div></div>
+      <div><span>TURRETS</span><div class="v"><b>2</b><i></i></div></div>
+      <div class="wide"><span>LEADERSHIP</span><div class="v"><i></i></div></div>
+    </div>
+    <div class="k-row" style="height:31mm">
+      <div style="flex:0 0 38mm;display:flex"><div class="k-box"><h4>DAMAGE<em>tick per Hit</em></h4>
+      <div class="k-bd"><div class="fit-content"><div class="k-hits"><i>1</i><i>2</i><i>3</i></div>
+        <p class="k-cr">CRIPPLED <em>from box 4</em></p>
+        <div class="k-hits cr"><i>4</i><i>5</i><i>6</i></div>
+        <p class="k-note">CRIPPLED: Speed -5 cm; weapons, ordnance, shields and turrets 1/2.</p></div></div></div></div>
+      <div style="flex:1;display:flex"><div class="k-box" style="flex:1">
+        <h4>LOADOUT / OPTIONS<em>X = taken &middot; 145 pts as ticked, max 180</em></h4>
+        <div class="k-bd k-optbox"><div class="k-opt-list fit-content">
+          <div class="k-opt"><span class="cb on"></span>
+            <span class="tx"><b>Strike Cruiser / base</b>
+            <span>Entry cost in Space Marines — Dominion. Everything ticked below adds to it.</span></span>
+            <span class="c">145</span></div>
+          <div class="k-opt">
+      <span class="cb"></span>
+      <span class="tx"><b><b class="ast" style="--ast:#59636F" data-rule="boarding_torpedo" title="boarding torpedo">*</b><b class="ast" style="--ast:#59636F" data-rule="astartes_boarding" title="astartes boarding">*</b><b class="ast" style="--ast:#70469A" data-rule="thunderhawk" title="thunderhawk">*</b>May replace its launch bays for strength-6, speed: 30 cm torpedo tubes, which may fire normal or boarding torpedoes</b></span>
+      <span class="c">see text</span></div><div class="k-opt">
+      <span class="cb on"></span>
+      <span class="tx"><b><b class="ast" style="--ast:#7B3FB2" data-rule="bombardment" title="bombardment">*</b><b class="ast" style="--ast:#70469A" data-rule="thunderhawk" title="thunderhawk">*</b>May replace its launch bays for a firepower-5, range 30 cm (front arc only) bombardment cannon battery for no change in cost</b></span>
+      <span class="c">see text</span></div><div class="k-opt">
+      <span class="cb"></span>
+      <span class="tx"><b><b class="ast" style="--ast:#7B3FB2" data-rule="bombardment" title="bombardment">*</b>May replace its prow bombardment cannon for a strength-1, range: 30 cm lance firing Left/Front/Right for +20 points</b></span>
+      <span class="c">+20</span></div><div class="k-opt">
+      <span class="cb"></span>
+      <span class="tx"><b>May take an additional shield for +15 points</b></span>
+      <span class="c">+15</span></div>
+        </div></div></div></div>
+    </div>
+    <div class="k-row grow">
+      <div style="flex:1.25;display:flex"><div class="k-box" style="flex:1">
+        <h4>ARMAMENT<em>* = starred rule or option below &nbsp;|&nbsp; arc wedge = darken the one used</em></h4>
+        <div class="k-bd"><div class="fit-content"><table class="k-arm">
+          <thead><tr><th style="width:58%">Armament</th><th style="width:18%">Range/Speed</th><th style="width:16%">Str/FP</th><th class="r" style="width:8%">Arc</th></tr></thead>
+          <tbody><tr class="w" style="--rw:#F4E5BC">
+      <td class="nm"><span class="bg" style="--bd:#A97913">G</span>
+        &nbsp;<b class="ast" style="--ast:#A97913" data-rule="local_battery" title="local battery">*</b>Port weapons battery</td>
+      <td class="rg">30 cm</td><td class="st">4</td>
+      <td class="ar" data-arc="Left" title="Left"><svg class="arcg" viewBox="0 0 12 12" aria-hidden="true"><path d="M6,6L2.46,2.46A5,5 0 0 1 9.54,2.46Z" class=""/><path d="M6,6L9.54,2.46A5,5 0 0 1 9.54,9.54Z" class=""/><path d="M6,6L9.54,9.54A5,5 0 0 1 2.46,9.54Z" class=""/><path d="M6,6L2.46,9.54A5,5 0 0 1 2.46,2.46Z" class="on"/><circle cx="6" cy="6" r="5"/></svg></td></tr><tr class="w" style="--rw:#F4E5BC">
+      <td class="nm"><span class="bg" style="--bd:#A97913">G</span>
+        &nbsp;<b class="ast" style="--ast:#A97913" data-rule="local_battery" title="local battery">*</b>Starboard weapons battery</td>
+      <td class="rg">30 cm</td><td class="st">4</td>
+      <td class="ar" data-arc="Right" title="Right"><svg class="arcg" viewBox="0 0 12 12" aria-hidden="true"><path d="M6,6L2.46,2.46A5,5 0 0 1 9.54,2.46Z" class=""/><path d="M6,6L9.54,2.46A5,5 0 0 1 9.54,9.54Z" class="on"/><path d="M6,6L9.54,9.54A5,5 0 0 1 2.46,9.54Z" class=""/><path d="M6,6L2.46,9.54A5,5 0 0 1 2.46,2.46Z" class=""/><circle cx="6" cy="6" r="5"/></svg></td></tr></tbody><tbody class="gp"><tr><td colspan="4"></td></tr></tbody><tbody class="g"><tr class="w alt" style="--rw:#E5E8EA">
+      <td class="nm"><span class="rb"></span><span class="bg" style="--bd:#5B646D">T</span>
+        &nbsp;<i class="or">OR</i><b class="ast" style="--ast:#59636F" data-rule="astartes_boarding" title="astartes boarding">*</b>Prow torpedo tubes</td>
+      <td class="rg">30 cm</td><td class="st">6</td>
+      <td class="ar" data-arc="–" title="–"><span class="noarc">–</span></td></tr><tr class="w alt" style="--rw:#F6DFDB">
+      <td class="nm"><span class="rb on"></span><span class="bg" style="--bd:#A33A2E">N</span>
+        &nbsp;<i class="or">OR</i><b class="ast" style="--ast:#7B3FB2" data-rule="bombardment" title="bombardment">*</b>Prow bombardment cannon battery</td>
+      <td class="rg">30 cm</td><td class="st">5</td>
+      <td class="ar" data-arc="Front" title="Front"><svg class="arcg" viewBox="0 0 12 12" aria-hidden="true"><path d="M6,6L2.46,2.46A5,5 0 0 1 9.54,2.46Z" class="on"/><path d="M6,6L9.54,2.46A5,5 0 0 1 9.54,9.54Z" class=""/><path d="M6,6L9.54,9.54A5,5 0 0 1 2.46,9.54Z" class=""/><path d="M6,6L2.46,9.54A5,5 0 0 1 2.46,2.46Z" class=""/><circle cx="6" cy="6" r="5"/></svg></td></tr></tbody><tbody class="gp"><tr><td colspan="4"></td></tr></tbody><tbody class="g"><tr class="w" style="--rw:#F6DFDB">
+      <td class="nm"><span class="rb on"></span><span class="bg" style="--bd:#A33A2E">N</span>
+        &nbsp;<b class="ast" style="--ast:#7B3FB2" data-rule="bombardment" title="bombardment">*</b>Prow bombardment cannon</td>
+      <td class="rg">30 cm</td><td class="st">3</td>
+      <td class="ar" data-arc="Left/front/right" title="Left/front/right"><svg class="arcg" viewBox="0 0 12 12" aria-hidden="true"><path d="M6,6L2.46,2.46A5,5 0 0 1 9.54,2.46Z" class="pick"/><path d="M6,6L9.54,2.46A5,5 0 0 1 9.54,9.54Z" class="pick"/><path d="M6,6L9.54,9.54A5,5 0 0 1 2.46,9.54Z" class=""/><path d="M6,6L2.46,9.54A5,5 0 0 1 2.46,2.46Z" class="pick"/><circle cx="6" cy="6" r="5"/></svg></td></tr><tr class="w alt" style="--rw:#DCEAF0">
+      <td class="nm"><span class="rb"></span><span class="bg" style="--bd:#1F6F8B">L</span>
+        &nbsp;<i class="or">OR</i>Prow lance</td>
+      <td class="rg">30 cm</td><td class="st">1</td>
+      <td class="ar" data-arc="Left / Front / Right" title="Left / Front / Right"><svg class="arcg" viewBox="0 0 12 12" aria-hidden="true"><path d="M6,6L2.46,2.46A5,5 0 0 1 9.54,2.46Z" class="pick"/><path d="M6,6L9.54,2.46A5,5 0 0 1 9.54,9.54Z" class="pick"/><path d="M6,6L9.54,9.54A5,5 0 0 1 2.46,9.54Z" class=""/><path d="M6,6L2.46,9.54A5,5 0 0 1 2.46,2.46Z" class="pick"/><circle cx="6" cy="6" r="5"/></svg></td></tr></tbody></table></div></div></div></div>
+      <div style="flex:1;display:flex"><div class="k-box" style="flex:1">
+        <h4>SPECIAL RULES / UPGRADES</h4>
+        <div class="k-bd"><div class="fit-content"><ul class="k-sr">
+          <li class="ast"><b class="ast" style="--ast:#7B3FB2" data-rule="bombardment" title="bombardment">*</b><b class="ast" style="--ast:#A97913" data-rule="local_battery" title="local battery">*</b><b class="ast" style="--ast:#70469A" data-rule="thunderhawk" title="thunderhawk">*</b>At a minimum, as many strike cruisers in the fleet must be armed with their basic weapons as listed above as all other variants (with replaced launch bays and/or prow bombardment cannon) combined. Every strike cruiser may take an additional shield.</li><li class="ast"><b class="ast" style="--ast:#59636F" data-rule="boarding_torpedo" title="boarding torpedo">*</b>Boarding Torpedoes: resolve a Hit &amp; Run attack instead of normal torpedo damage when they hit. (Rulebook p. 78)</li><li class="ast"><b class="ast" style="--ast:#59636F" data-rule="astartes_boarding" title="astartes boarding">*</b>Astartes Torpedoes: may fire boarding torpedoes instead of ordinary torpedoes; their Hit &amp; Run attack gains the Space Marine +1 bonus. (Fleets p. 95)</li><li>Astartes crew: Leadership 8-10; +2 in boarding and +1 to Hit &amp; Run. Enemy Hit &amp; Run rolls suffer -1. (Fleets p. 94)</li><li>REPAIR: End Phase, D6 / remaining Hit; 6 = 1 crit; blast contact 1/2 dice.</li>
+        </ul></div></div></div></div>
+    </div>
+    <div class="k-row" style="height:27mm">
+      <div style="flex:1;display:flex"><div class="k-box"><h4>CRITICAL DAMAGE (2D6)<em>through shields: 6 &rarr; 2D6 &middot; 5 trackers / result</em></h4>
+      <div class="k-bd"><div class="fit-content"><div class="k-crit"><div><span class="lb"><b>2 DORSAL</b>
+      </span>
+      <span class="tk"><i></i><i></i><i></i><i></i><i></i></span></div><div><span class="lb"><b>3 STARBOARD</b>
+      </span>
+      <span class="tk"><i></i><i></i><i></i><i></i><i></i></span></div><div><span class="lb"><b>4 PORT</b>
+      </span>
+      <span class="tk"><i></i><i></i><i></i><i></i><i></i></span></div><div><span class="lb"><b>5 PROW</b>
+      </span>
+      <span class="tk"><i></i><i></i><i></i><i></i><i></i></span></div><div><span class="lb"><b>6 ENGINE +1</b>
+      <em>NO TURNS</em></span>
+      <span class="tk"><i></i><i></i><i></i><i></i><i></i></span></div><div><span class="lb"><b>7 FIRE! +1/turn</b>
+      </span>
+      <span class="tk"><i></i><i></i><i></i><i></i><i></i></span></div><div><span class="lb"><b>8 THRUST +1</b>
+      <em>SPEED -10</em></span>
+      <span class="tk"><i></i><i></i><i></i><i></i><i></i></span></div><div><span class="lb"><b>9 BRIDGE -3Ld*</b>
+      </span>
+      <span class="tk"><i></i><i></i><i></i><i></i><i></i></span></div><div><span class="lb"><b>10 SHIELDS 0*</b>
+      </span>
+      <span class="tk"><i></i><i></i><i></i><i></i><i></i></span></div>
+        <div class="wide"><span>11 Hull Breach +D3</span>
+          <span>12 Bulkhead Collapse +D6</span><u>* flagship also loses its remaining re-rolls; 9 and 10 cannot be repaired</u></div></div></div></div></div></div>
+    </div>
+    <div class="k-foot">NOTES / STATUS</div>
+  </div></div></div></div>
+<script>
+var $=function(q){return document.querySelector(q)};
+function fitCards(){
+  const sheet = $("#sheet");
+  const prev = sheet.getAttribute("style") || "";
+  sheet.setAttribute("style", "display:block;position:absolute;left:-20000px;top:0");
+
+  /* Jokainen kategorian sisalto sovitetaan omaan laatikkoonsa. Skaalauksella
+     ei ole kovaa alarajaa: mitaan ei leikata tai piiloteta, vaikka tuloksena
+     olisi poikkeuksellisella datalla hyvin pieni teksti. */
+  const fitInto = (box, content) => {
+    let k = 1, guard = 0;
+    const apply = () => {
+      content.style.transform = k < .999 ? "scale(" + k.toFixed(4) + ")" : "";
+      content.style.width = k < .999 ? (100 / k).toFixed(2) + "%" : "";
+    };
+    apply();
+    while(content.getBoundingClientRect().height > box.clientHeight - 1 && guard < 240){
+      k *= .96; apply(); guard++;
+    }
+    const overflow = content.getBoundingClientRect().height > box.clientHeight - 1;
+    content.dataset.fitScale = k.toFixed(4);
+    content.dataset.fitOverflow = overflow ? "true" : "false";
+    return {k, overflow};
+  };
+
+  /* Ylipitka solu pienennetaan katkaisun sijaan. Nimisarakkeessa se koskee
+     koko nimea, rivittyvissa sarakkeissa vain sanaa joka on yksinaan
+     saraketta leveampi - rivitys ei voi katkaista sanan sisalta. Alaraja
+     0,8: sita pienempi teksti olisi kortilla yhta hukassa kuin ellipsis.
+     Luku ja kirjoitus on eroteltu, jottei jokainen solu pakota omaa
+     uudelleenladontaansa. */
+  const cells = [...sheet.querySelectorAll(".k-arm td.nm,.k-arm td.rg,.k-arm td.st")];
+  cells.forEach(td => { td.style.fontSize = ""; });
+  cells.filter(td => td.scrollWidth > td.clientWidth).forEach(td => {
+    const base = parseFloat(getComputedStyle(td).fontSize);
+    /* Nimisarake on rivin paaotsikko ja pitaa 0,8:n rajan. Range ja Str
+       ovat toissijaisia, ja niissa esiintyy yksittaisia sanoja jotka ovat
+       yksinaan saraketta leveampia ("Thunderhawks:"); niille sallitaan
+       0,72, mika on 150 %:n tulosteessa yha 6,5 pt. */
+    const floor = td.classList.contains("nm") ? .8 : .72;
+    let px = base, guard = 0;
+    while(td.scrollWidth > td.clientWidth && guard < 24 && px > base * floor){
+      px *= .98; td.style.fontSize = px.toFixed(3) + "px"; guard++;
+    }
+    /* Yksi askel lisaa pyoristysvaraksi: scrollWidth on kokonaisluku, joten
+       silmukka pysahtyy kun ylitysta on viela alle pikselin - ja juuri se
+       jattaa ellipsiksen nakyviin. */
+    if(guard){ px *= .98; td.style.fontSize = px.toFixed(3) + "px"; }
+  });
+
+  sheet.querySelectorAll(".k").forEach(card => card.dataset.contentOverflow = "false");
+  sheet.querySelectorAll(".k-box > .k-bd > .fit-content").forEach(content => {
+    const result = fitInto(content.parentElement, content);
+    const card = content.closest(".k");
+    if(content.classList.contains("k-opt-list")) card.dataset.optionScale = result.k.toFixed(4);
+    if(result.overflow) card.dataset.contentOverflow = "true";
+  });
+
+  /* Pitka nimi ei jaa ellipsiksi: pienennetaan vain otsikkoa kunnes se mahtuu. */
+  sheet.querySelectorAll(".k-hd h3").forEach(title => {
+    let px = parseFloat(getComputedStyle(title).fontSize), guard = 0;
+    while(title.scrollWidth > title.clientWidth && guard < 160){
+      px *= .96; title.style.fontSize = px.toFixed(3) + "px"; guard++;
+    }
+  });
+
+  sheet.querySelectorAll(".k > .kfit").forEach(fit => {
+    const room = fit.parentElement.clientHeight;
+    let k = 1, guard = 0;
+    while(fit.scrollHeight * k > room + .5 && guard < 240){
+      k *= .96;
+      fit.style.transform = "scale(" + k.toFixed(4) + ")";
+      fit.style.width = (100 / k).toFixed(2) + "%";
+      guard++;
+    }
+    fit.parentElement.dataset.cardScale = k.toFixed(4);
+    if(fit.scrollHeight * k > room + .5)
+      fit.parentElement.dataset.contentOverflow = "true";
+  });
+  sheet.setAttribute("style", prev);
+}
+fitCards();
+document.title = "ready " + document.querySelector(".k").offsetWidth +
+  "x" + document.querySelector(".k").offsetHeight;
+</script>
+</body></html>

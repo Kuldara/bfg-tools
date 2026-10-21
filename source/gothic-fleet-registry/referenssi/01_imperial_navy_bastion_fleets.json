@@ -1,0 +1,282 @@
+{
+  "list": "Imperial Navy — Bastion Fleets",
+  "book_page": 36,
+  "read_pages": [
+    36,
+    37,
+    38,
+    39
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Admiral",
+      "text": "0-1 Admiral",
+      "page": 36,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "worth over 750 points an Admiral must be included",
+      "text": "If the fleet is worth over 750 points an Admiral must be included to lead it.",
+      "page": 36,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "why": "Kirjassa 'over 750 points'. MAND-kaava tunsi aiemmin vain muodon 'points or more', joten 13 listan komentajapakko jai valvomatta. Korjattu 7.9.2026; vertailutapa kirjataan nyt mukaan, koska 'over 750' ja '750 or more' eroavat tasan 750 pisteessa.",
+      "over": true
+    },
+    {
+      "key": "one battleship in your fleet for every three cruisers",
+      "text": "You may include up to one battleship in your fleet for every three cruisers or battlecruisers.",
+      "page": 37,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 3,
+      "per_types": [
+        "cruisers",
+        "battlecruisers"
+      ],
+      "why": "Osoittaja rajattava taistelulaivoihin ja nimittajaan otettava battlecruiserit: kaikki kolme tyyppia ovat kirjassa saman otsikon 'Battleships' alla. Tama oli ilmoitettu bugi 7.9.2026."
+    },
+    {
+      "key": "one battlecruiser or grand cruiser in your fleet for every two cruisers",
+      "text": "You may include up to one battlecruiser or grand cruiser in your fleet for every two cruisers.",
+      "page": 37,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 2,
+      "per_types": [
+        "cruisers"
+      ],
+      "why": "Ei jasentynyt itsestaan, koska kirjassa valiotsikko 'Battlecruisers & Grand Cruisers' on kiinni virkkeen alussa. Lisatty kasin RULE_PICKS-taulussa."
+    },
+    {
+      "key": "Grand Cruisers do not count as cruisers for purposes of fielding battleships",
+      "text": "Grand Cruisers do not count as cruisers for purposes of fielding battleships.",
+      "page": 37,
+      "status": "manual",
+      "why": "Selittava virke. Toteutuu jo: grand cruiserit eivat ole taistelulaivasaannon nimittajassa."
+    },
+    {
+      "key": "0-12 Cruisers",
+      "text": "0-12 Cruisers",
+      "page": 37,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 12
+    },
+    {
+      "key": "escorts in your fleet in squadrons of 2",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "page": 37,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "combined numbers of Endurance and Defiant class vessels may not exceed",
+      "text": "The Endurance and Defiant class light cruisers are rare variants of the Endeavour, hence the combined numbers of Endurance and Defiant class vessels may not exceed the number of Endeavour class light cruisers in the fleet.",
+      "page": 37,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. compare: Endurance+Defiant <= Endeavour. Aiempi puute: Vertailu kahden rivijoukon valilla. Moottorissa ei ole tata saantotyyppia; sama muoto kuin Protector- ja Demiurg-saannoissa.",
+      "kind": "compare",
+      "op": "<=",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "up to five Veteran Captains in your fleet",
+      "text": "You may include up to five Veteran Captains in your fleet.",
+      "page": 38,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 5,
+      "why": "Kirja kirjoittaa taman rajan kahdesti: otsikkona ja lauseena. Sovellus naytti niista kaksi identtista riviä, kunnes ne yhdistettiin 7.9.2026. Jaljelle jaa yksi tarkistus, jonka lahdelause on kirjan taysi virke."
+    },
+    {
+      "key": "must roll two dice and pick the lowest score when determining leadership",
+      "text": "Because of this, the ships and squadrons of Battlefleet Cadia must roll two dice and pick the lowest score when determining leadership.",
+      "page": 38,
+      "status": "manual",
+      "why": "pelinaikainen saanto, ei laivaston koostumus"
+    },
+    {
+      "key": "Each Veteran Captain must be assigned to a particular ship",
+      "text": "Each Veteran Captain must be assigned to a particular ship and improves its leadership by +1.",
+      "page": 38,
+      "status": "manual",
+      "why": "sijoittelu tapahtuu pelissa, ei listassa"
+    },
+    {
+      "key": "Ships assigned a Veteran Captain must be squadroned on the tabletop",
+      "text": "Ships assigned a Veteran Captain must be squadroned on the tabletop (their skills are too precious to waste on lone ships).",
+      "page": 38,
+      "status": "manual",
+      "why": "poydalla tarkistettava"
+    },
+    {
+      "key": "for every three vessels of a given type which you choose from the main fleet list",
+      "text": "These 'reserve' vessels are picked in the normal manner, so for every three vessels of a given type which you choose from the main fleet list, you may pick one vessel of that type from another Imperial list, or from the above selection of Chaos vessels (but not both).",
+      "page": 39,
+      "status": "manual",
+      "why": "Nakyy 9.9.2026 alkaen (lauseraja 400 -> 500 merkkia). Reservit toisista listoista eivat ole mallinnettu; pelaajan vastuu.",
+      "classified_on": "2026-09-09"
+    }
+  ],
+  "entries": [
+    {
+      "name": "Fleet-Admiral (Ld 8)",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Admiral (Ld 9)",
+      "pts": 100,
+      "page": null
+    },
+    {
+      "name": "Solar Admiral (Ld 10)",
+      "pts": 150,
+      "page": null
+    },
+    {
+      "name": "One extra re-roll",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Two extra re-rolls",
+      "pts": 75,
+      "page": null
+    },
+    {
+      "name": "Three extra re-rolls",
+      "pts": 150,
+      "page": null
+    },
+    {
+      "name": "Apocalypse class battleship",
+      "pts": 365,
+      "page": 52
+    },
+    {
+      "name": "Emperor class battleship",
+      "pts": 365,
+      "page": 53
+    },
+    {
+      "name": "Retribution class battleship",
+      "pts": 345,
+      "page": 54
+    },
+    {
+      "name": "Exorcist class grand cruiser",
+      "pts": 230,
+      "page": 59
+    },
+    {
+      "name": "Vengeance class grand cruiser",
+      "pts": 230,
+      "page": 58
+    },
+    {
+      "name": "Avenger class grand cruiser",
+      "pts": 200,
+      "page": 60
+    },
+    {
+      "name": "Mars class battlecruiser",
+      "pts": 270,
+      "page": 61
+    },
+    {
+      "name": "Armageddon class battlecruiser",
+      "pts": 235,
+      "page": 65
+    },
+    {
+      "name": "Overlord class battlecruiser",
+      "pts": 220,
+      "page": 66
+    },
+    {
+      "name": "Dictator class cruiser",
+      "pts": 220,
+      "page": 67
+    },
+    {
+      "name": "Tyrant class cruiser",
+      "pts": 185,
+      "page": 69
+    },
+    {
+      "name": "Gothic class cruiser",
+      "pts": 180,
+      "page": 70
+    },
+    {
+      "name": "Lunar class cruiser",
+      "pts": 180,
+      "page": 71
+    },
+    {
+      "name": "Dauntless class light cruiser",
+      "pts": 110,
+      "page": 77
+    },
+    {
+      "name": "Endeavour Class Light Cruiser",
+      "pts": 110,
+      "page": 72
+    },
+    {
+      "name": "Endurance Class Light Cruiser*",
+      "pts": 110,
+      "page": 74
+    },
+    {
+      "name": "Defiant Class Light Cruiser*",
+      "pts": 120,
+      "page": 76
+    },
+    {
+      "name": "Firestorm class frigate",
+      "pts": 40,
+      "page": 79
+    },
+    {
+      "name": "Sword class frigate",
+      "pts": 35,
+      "page": 82
+    },
+    {
+      "name": "Cobra class destroyer",
+      "pts": 30,
+      "page": 84
+    },
+    {
+      "name": "Veteran Captain (Ld +1)",
+      "pts": 50,
+      "page": null
+    }
+  ],
+  "extra_entries": [
+    {
+      "name": "Imperial Power Ram",
+      "pts": 5,
+      "why": "jaetuista Imperial Navy -saannoista sivulta 32"
+    }
+  ],
+  "notes": [
+    "Sivu 36 on listan alku ja kertomusta Bastion-laivastoista. Sivu 37 on koko koostumuslista. Sivu 38 on Battlefleet Cadia ja Veteran Captains. Sivu 39 on Segmentum Obscuruksen reservilaivastot.",
+    "Sivun 39 reservisaanto sallii viisi Chaos-alusta: Repulsive s.269, Executor s.271, Hades s.274, Murder s.279, Carnage s.277. Naita ei ole listan riveina, koska ne tulevat Reserves-saannon kautta.",
+    "Battlefleet Cadian johtajuussaanto (kaksi noppaa, pienempi) on pelinaikainen eika nay korteissa."
+  ]
+}

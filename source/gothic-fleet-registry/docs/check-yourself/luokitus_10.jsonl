@@ -1,0 +1,60 @@
+{"id": "S0541", "l": "ROSKA", "a": "fix", "f": "section_title_fragment", "p": "F242", "pok": "ok", "x": "split", "n": "Osion otsikko 'Marine crew may be' on lauseen keskeltä. Sisältö: CSM-miehistön Thunderhawk-rivi (KUVAUS)."}
+{"id": "S0542", "l": "VALVOTTU", "a": "checked", "f": "mandatory_row", "p": "F244", "pok": "ok", "n": "Mark of Khorne dflt + mark_paid."}
+{"id": "S0543", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F244", "pok": "ok", "n": "Khorne-listan Lordilla vain Mark of Khorne.", "vk": "ajo ok"}
+{"id": "S0544", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F244", "pok": "ok", "n": "World Eaters -miehistö +35."}
+{"id": "S0545", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F244", "pok": "ok", "n": "Mark of Khorne -rivi ehdolla miehistö."}
+{"id": "S0546", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F244", "pok": "ok", "n": "Berzerker Tide -päivityksen vaikutus; rivin ehto ROW_CONDS (upgrades.py:94)."}
+{"id": "S0547", "l": "PELI", "a": "play", "f": "mark_effect", "p": "F244", "pok": "ok", "n": "Khornen carrier-sääntö."}
+{"id": "S0548", "l": "PELI", "a": "play", "f": "mark_effect", "p": "F244", "pok": "ok", "n": "Edellisen jatko."}
+{"id": "S0549", "l": "VALVOTTU", "a": "checked", "f": "conditional_cap", "p": "F245", "pok": "ok", "n": "Khornelta puuttuu kahden battleshipin katto hulkin kanssa (build_data.py:1515), eli poikkeus on toteutettu jättämällä sääntö pois."}
+{"id": "S0550", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F245", "pok": "ok", "n": "Khornen Daemonship sisältää Markin (build_data.py:6397)."}
+{"id": "S0551", "l": "VALVOTTU", "a": "checked", "f": "mandatory_row", "p": "F248", "pok": "ok", "n": "Mark of Slaanesh dflt + mark_paid."}
+{"id": "S0552", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F248", "pok": "ok", "n": "Slaanesh-listan Lordilla vain Mark of Slaanesh.", "vk": "ajo ok"}
+{"id": "S0553", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F248", "pok": "ok", "n": "Emperor's Children -miehistö +35."}
+{"id": "S0554", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F248", "pok": "ok", "n": "Mark of Slaanesh -rivi ehdolla miehistö."}
+{"id": "S0555", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F248", "pok": "ok", "n": "Veil of Lust ehdolla Mark tai Daemonship."}
+{"id": "S0556", "l": "VALVOTTU", "a": "checked", "f": "row_limit", "p": "F248", "pok": "ok", "n": "Siren's Summon mx=2."}
+{"id": "S0557", "l": "PELI", "a": "play", "f": "mark_effect", "p": "F248", "pok": "ok", "n": "Siren's Summon -vaikutus."}
+{"id": "S0558", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F249", "pok": "ok", "n": "Slaaneshin Daemonship sisältää Markin."}
+{"id": "S0559", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F310", "pok": "ok", "x": "heading", "n": "Eldarin kampanjan crew skill -taulukon johdanto."}
+{"id": "S0560", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F310", "pok": "osittain", "x": "table", "n": "Taulukon otsikko ja rivi 1."}
+{"id": "S0561", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F310", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0562", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F310", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0563", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F310", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0564", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F310", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0565", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F310", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0566", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F310", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0567", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F310", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0568", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F310", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0569", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F310", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0570", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F310", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0571", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F312", "pok": "ok", "n": "Craftworld-skenaario (Iyanden)."}
+{"id": "S0572", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F312", "pok": "ok", "n": "Craftworld-skenaario."}
+{"id": "S0573", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F312", "pok": "ok", "n": "Craftworld-skenaarion 50 % reservit. Vastaava Haven/Webway-sääntö s.337 on toteutettu (domain.js:4588), joten skenaario voisi käyttää samaa mekanismia."}
+{"id": "S0574", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F312", "pok": "ok", "n": "Skenaario."}
+{"id": "S0575", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F312", "pok": "ok", "n": "Skenaario."}
+{"id": "S0576", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F312", "pok": "ok", "n": "Skenaario."}
+{"id": "S0577", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F312", "pok": "ok", "n": "Skenaario."}
+{"id": "S0578", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F313", "pok": "osittain", "x": "table", "n": "Karttakuvan tekstit liimattu lauseen alkuun."}
+{"id": "S0579", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F313", "pok": "ok", "n": "Skenaario."}
+{"id": "S0580", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F313", "pok": "ok", "x": "heading", "n": "Skenaario."}
+{"id": "S0581", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F313", "pok": "ok", "n": "Skenaario."}
+{"id": "S0582", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F313", "pok": "ok", "n": "Skenaario."}
+{"id": "S0583", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F313", "pok": "ok", "n": "Skenaario."}
+{"id": "S0584", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F313", "pok": "ok", "n": "Skenaario."}
+{"id": "S0585", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F313", "pok": "ok", "n": "Skenaario."}
+{"id": "S0586", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F313", "pok": "ok", "n": "Skenaario."}
+{"id": "S0587", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F313", "pok": "ok", "n": "Skenaario."}
+{"id": "S0588", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F313", "pok": "ok", "n": "Skenaario."}
+{"id": "S0589", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F314", "pok": "ok", "n": "Skenaario."}
+{"id": "S0590", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F314", "pok": "ok", "n": "Skenaario. Koodiosumat ovat low orbit -sääntöjä."}
+{"id": "S0591", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F314", "pok": "ok", "n": "Skenaario."}
+{"id": "S0592", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F314", "pok": "ok", "n": "Skenaario."}
+{"id": "S0593", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F314", "pok": "ok", "n": "Skenaario."}
+{"id": "S0594", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F314", "pok": "ok", "n": "Skenaario."}
+{"id": "S0595", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F314", "pok": "ok", "n": "Skenaario."}
+{"id": "S0596", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F314", "pok": "ok", "n": "Skenaario."}
+{"id": "S0597", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F314", "pok": "ok", "n": "Skenaario."}
+{"id": "S0598", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F314", "pok": "ok", "n": "Skenaario."}
+{"id": "S0599", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F314", "pok": "ok", "n": "Skenaario."}
+{"id": "S0600", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F314", "pok": "ok", "n": "Skenaario."}

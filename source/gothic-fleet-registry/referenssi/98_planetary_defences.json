@@ -1,0 +1,169 @@
+{
+  "scope": "general",
+  "title": "Fleets s.496-517 ja Rulebook s.100-101: planetary defences",
+  "book_page": 498,
+  "read_pages": [
+    498,
+    499,
+    500,
+    451,
+    452,
+    512,
+    513,
+    516,
+    517
+  ],
+  "read_on": "2026-10-08",
+  "_lue": "Kirjan yleisluku, ei laivastolistan referenssi (scope=general). Jokainen lause on luettu kirjasta sivunumeroineen: Fleets s.498-499 (saannot ja hintalista), s.500 (Ramilies), s.451-452 (Tau), Rulebook s.100-101. Rivien hinnat ja 0-N-rajat (s.499) eivat ole lauseita; ne on lukittu test_domain.js:n kohdassa 15 ja laivastogoldeneissa pd-minefield-limit ja pd-fire-ship-limit.",
+  "_miksi": "Puolustukset lisattiin 8.10.2026 omana osionaan jokaisen listan loppuun (kayttajan paatos). Luku ei kuulu yhteenkaan listaan, joten sen saannot ovat moottorissa (domain.js resolveFleet, m.defence) ja kortin saantoteksteissa (SPECIAL_HULL_RULES pd_*, fort_*, haven_*), eivat listojen saantodatassa.",
+  "rules": [
+    {
+      "key": "Orbital defences or ships that count as defences may be placed in squadrons",
+      "text": "Orbital defences or ships that count as defences may be placed in squadrons, with 1HP defences grouped in up to six units and larger defences grouped in up to four.",
+      "page": 100,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "pd-platform-squadron-over-six",
+        "pd-lone-escort-beside-defence-monitor"
+      ],
+      "why": "Rulebook s.100. Osion oma squadron-saanto (min 1, max 6) kattaa kuusi yhden osuman rivia; lause on saannon src. Fleets s.498 painaa saman lauseen muodossa 'l HP fixed or mobile defences' (pieni L ykkosen paikalla), joten lahteena on Rulebook. 'Larger defences grouped in up to four' ei ole valvottavissa: sovelluksessa monen osuman puolustus on aina yksi yksikko."
+    },
+    {
+      "key": "A Ramilies Star Fort cannot squadron with other orbital defences",
+      "text": "A Ramilies Star Fort cannot squadron with other orbital defences.",
+      "page": 100,
+      "status": "manual",
+      "why": "Rulebook s.100 (Fleets s.498 jattaa lauseen pois). Sovellus ei ryhmita monen osuman puolustuksia laivueiksi lainkaan, joten kielto ei voi rikkoutua; Ramilies on aina yksi yksikko."
+    },
+    {
+      "key": "the defender in a scenario may spend up to one-third of his allocated point value",
+      "text": "When desired, the defender in a scenario may spend up to one-third of his allocated point value on planetary defences, in addition to any planetary defences provided by the specific scenario.",
+      "page": 498,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "pd-one-third-advice",
+        "pd-blackstone-not-fleet-worth"
+      ],
+      "why": "Laillisuuspaneelin rivi 'Planetary defences (up to one third of the points)' nayttaa summan ja kolmanneksen pisterajasta. Se VAROITTAA eika hylkaa: raja koskee skenaarion puolustajaa, eika sovellus tieda skenaariota. Ramilies (s.500) ja Haven (s.337) eivat ole summassa."
+    },
+    {
+      "key": "these additional defences come directly from the points allowed against his or her fleet list",
+      "text": "However, these additional defences come directly from the points allowed against his or her fleet list.",
+      "page": 498,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "pd-blackstone-not-fleet-worth",
+        "pd-ramilies-fleet-points",
+        "pd-ramilies-counts-toward-fleet-worth"
+      ],
+      "why": "Puolustukset kuluttavat pisterajaa (Points limit laskee ne). TULKINTA (kayttajan paatos 8.10.2026, BACKLOG J170): ne eivat silti ole osa sita, 'minka arvoinen laivasto on' - komentajakynnys, 'one per 500 points' ja vastaavat lasketaan aluksista. Kirja ei sano kumpaakaan suoraan. Ramilies (s.500) ja Haven (s.337) ostetaan laivaston pisteista 'rather than defences', joten ne ovat osa laivaston arvoa kuten Fortress-Monastery."
+    },
+    {
+      "key": "Stationary planetary defences may be placed in base contact if desired",
+      "text": "Stationary planetary defences may be placed in base contact if desired, but they can never be stacked or have their bases overlap other stationary planetary defences.",
+      "page": 498,
+      "status": "manual",
+      "why": "Poydan asettelua; sovellus nayttaa lauseen osion Check yourself -kohdassa ja kortin saannossa pd_high_orbit."
+    },
+    {
+      "key": "They must be deployed within the planet or moon's gravity well",
+      "text": "They must be deployed within the planet or moon's gravity well (ie, 10 cm for a small planet, 15cm for a medium one, etc.).",
+      "page": 498,
+      "status": "manual",
+      "why": "Poydan asettelua; kortin saanto pd_high_orbit."
+    },
+    {
+      "key": "Low orbit defences may only be deployed on the low orbit table",
+      "text": "Low orbit defences may only be deployed on the low orbit table.",
+      "page": 498,
+      "status": "manual",
+      "why": "Skenaarion poytaa koskeva saanto; osion Check yourself -lause ja maakohteiden kortin saanto pd_ground."
+    },
+    {
+      "key": "a small planet can have no more than 4 planetary defences",
+      "text": "Alternatively, you can decide beforehand that you'll be fighting near to a planet, in which case the defending player may buy planetary defences out of their normal points value - a small planet can have no more than 4 planetary defences, a medium planet can have a maximum of 5 planetary defences and a large planet a maximum of 6.",
+      "page": 499,
+      "status": "manual",
+      "why": "Riippuu planeetan koosta, jota sovellus ei tieda, eika kirja maarittele mika on yksi 'planetary defence' (laivue, yksittainen miina?). Naytetaan Check yourself -lauseena."
+    },
+    {
+      "key": "perhaps no more than 10% of the fleet's points may be spent on planetary defences",
+      "text": "It is also a good idea to put an upper limit on the amount of points that can be spent (for example, in a standard battle perhaps no more than 10% of the fleet's points may be spent on planetary defences).",
+      "page": 499,
+      "status": "manual",
+      "why": "Kirjan oma esimerkki, ei saanto ('for example ... perhaps'). Naytetaan Check yourself -lauseena."
+    },
+    {
+      "key": "do not roll for leadership or have a leadership value",
+      "text": "Stationary defences and vessels used as planetary defences such as Defence Monitors or system ships do not roll for leadership or have a leadership value just as other normal planetary defences do not, with the exception that they reload ordnance (where applicable) on a nominal leadership of 7 unless specifically stated otherwise in their fleet lists or special rules.",
+      "page": 499,
+      "status": "manual",
+      "why": "Ei laivaston laillisuussaanto vaan pelin aikainen: profiilin kentta dld=7 ja kortin saanto pd_orders, pelisivulla kiintea Ld. Ristiriita kirjattu notes-kohtaan (s.499:n vasen palsta)."
+    },
+    {
+      "key": "You remove D6 Blast Markers from each defence with a speed of 0 cm",
+      "text": "You remove D6 Blast Markers from each defence with a speed of 0 cm in each End Phase after all other actions in the End Phase.",
+      "page": 101,
+      "status": "manual",
+      "why": "Rulebook s.101, pelin aikainen: kortin saannot pd_station, pd_platform ja pd_ground; system defence vesselit (pd_vessel) eivat saa sita."
+    },
+    {
+      "key": "The Tau may spend their points allocation for planetary defences on orbitals",
+      "text": "The Tau may spend their points allocation for planetary defences on orbitals.",
+      "page": 451,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "pd-tau-orbital-city"
+      ],
+      "why": "Kahden Tau-listan puolustusosiossa on vain orbitaalit (s.478-481)."
+    },
+    {
+      "key": "The Tau may not use any other form of planetary defence",
+      "text": "The Tau may not use any other form of planetary defence.",
+      "page": 452,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "pd-tau-orbital-city"
+      ],
+      "why": "Tau-listoilla ei ole s.499:n yleisia riveja lainkaan: rakenne on lukittu test_domain.js:n tarkistuksessa 'PD Tau (s.452)'. Demiurg War Host (s.482-487) on eri luku, jonka saannot eivat toista kieltoa: se saa yleiset rivit (tulkinta, BACKLOG J173)."
+    },
+    {
+      "key": "The Ramilies is available to Imperial and Chaos Fleets",
+      "text": "The Ramilies is available to Imperial and Chaos Fleets, subject to the rules below.",
+      "page": 500,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "pd-ramilies-fleet-points"
+      ],
+      "why": "Rivi on Imperial Navy -rodun listoilla (neljä Navy-listaa ja Adeptus Mechanicus, s.14) ja kuudella Chaos-listalla; test_domain 'PD Ramilies (s.500)'. 'Imperial' ei ole kirjassa maaritelty: Space Marineilla on oma Fortress-Monastery (s.98), Inquisitiosta, Grey Knightseista ja Rogue Tradereista kirja ei sano mitaan (tulkinta, BACKLOG J173)."
+    },
+    {
+      "key": "Choose one of the defence systems below",
+      "text": "Choose one of the defence systems below. This defines the point cost for the waystation.",
+      "page": 481,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "pd-waystation-needs-one-system",
+        "pd-waystation-with-railgun"
+      ],
+      "why": "Profiilin kentta need1 ja resolveFleetin rivi 'Waystation (choose one defence system)': ilman valintaa yksikko on laiton, kahdella valinnalla optioryhman oma raja hylkaa. Katselmointi 9.10.2026: ilman tata Waystation maksoi 0 pistetta."
+    }
+  ],
+  "notes": [
+    "RISTIRIITA s.499: oikean palstan laatikko ja Rulebook s.100 sanovat, etta puolustus tekee kaikki muut Leadership-testit arvolla 7. Vasemman palstan lopussa on irrallinen lause 'However, they automatically pass any other leadership tests they may be required to make' - vanhan saannon jaanne. s.360 (Orkit) toistaa vanhan muodon. Sovellus kayttaa laatikon ja Rulebookin muotoa (Ld 7).",
+    "RULEBOOK s.101, taulukon outoudet (kirjattu, ei yhtenaistetty): tulos 2-3 sanoo 'The station may not fire until its lance armament has been repaired' otsikon 'Lances Damaged' alla; tulos 4 hiljentaa patterit kokonaan, kun Ramiliesin taulukko (Fleets s.505) puolittaa ne; tulos 8-9 'Orbit Lost' siirtaa asemaa, vaikka sama sivu sanoo 'defences never drift'.",
+    "RISTIRIITA erikoistorpedot: s.19 'Escort squadrons and defences may not be equipped with special torpedoes at all', s.503 'A Ramilies can purchase special torpedoes' ilman hintaa tai tapaa. Sovellus ei tarjoa puolustuksille paivityksia; Ramiliesin torpedot ovat auki (BACKLOG J174).",
+    "KIRJA VAIKENEE: maakohteiden (Ground/1, s.517) laivueista. Rulebook s.100:n laivuelause nimeaa 'orbital defences or ships that count as defences'. Sovellus antaa maakohteille yhden kortin 1-6 kappaleelle ilman laivuesaantoa (ei laillisuusrivia); rivin oma raja 0-4 / 0-8 (s.499) valvotaan.",
+    "KIRJA VAIKENEE: yhden osuman puolustuksen kriittisesta osumasta. Rulebook s.66 nimeaa vain escortit. Kortti sanoo vain 'one unsaved Hit destroys it'.",
+    "s.512: yksittain ostetun miinan sijoitusta ei kerrota; kortti kayttaa yleista high orbit -saantoa (s.498). s.516: 'every ship within 3D6 cm' ei rajaa omia aluksia pois.",
+    "s.517 painaa kolme profiilia yhdelle sivulle (Air Base, Defence Laser Silo, Missile Silo) ja s.516 profiilin ilman aseistustaulukkoa (Fire Ship): poimija ei saa niita, joten ne on kuratoitu build_data.py:ssa (avaimet 516, 517b, 517c).",
+    "Haven (s.334-337): yksikaan lista ei paina sille rivia, eika kirja sano montako saa ottaa tai mista pisteista se maksetaan yksittaispelissa (vain kampanjalause s.337: 'counts against the fleet list in battles it takes part in'). Sovellus: Corsair- ja Craftworld-listoilla, Dark Eldarilla vaihdetuin asein (s.347), laivaston pisteista, ei kolmanneksen summassa."
+  ]
+}

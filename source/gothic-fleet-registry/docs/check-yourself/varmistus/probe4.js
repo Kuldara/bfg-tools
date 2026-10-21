@@ -1,0 +1,26 @@
+"use strict";
+const H = require("./harness.js");
+const { fleet, ups, opts, bad, warns, chk, card, tryit, api } = H;
+const L = nm => api.LISTS[H.li(nm)];
+const rowsOf = (nm, re) => L(nm).secs.flatMap(s => s.ents.map(e => s.t + " :: " + e.l + (e.mx ? " (mx " + e.mx + ")" : ""))).filter(x => new RegExp(re, "i").test(x));
+const T = f => { try { return f(); } catch (e) { return "VIRHE " + e.message; } };
+
+tryit("S0249b AdMech: SM-reservi ilman IN-capitalia", () => T(() => { fleet("Explorator", 3000).add("Gothic").add("Gothic").add("Gothic").add("Strike Cruiser", { from: "Codex Astartes" }); return bad(); }));
+tryit("S0300 Codex + Inq Lord + Corsair-liittolainen", () => T(() => { fleet("Codex Astartes", 3000).add("Inquisitor Lord").add("Strike Cruiser").add("Strike Cruiser").add("Strike Cruiser").add("Eclipse|Shadow", { from: "Eldar Corsairs — Gothic Sector", role: "ally" }); return bad(); }));
+tryit("S0351b RT + SM-liittolainen + xenos", () => T(() => { const b = fleet("Rogue Traders", 2000).add("Rogue Trader Cruiser").add("Strike Cruiser", { from: "Codex Astartes", role: "ally" }); return bad().concat(rowsOf("Rogue Traders", "xenos")); }));
+tryit("S0384 Exploration: SM-liittolainen + Demiurg", () => T(() => { fleet("Rogue Traders — Exploration", 3000).add("Rogue Trader Cruiser").add("Rogue Trader Cruiser").add("Rogue Trader Cruiser").add("Bastion|Citadel|Stronghold").add("Strike Cruiser", { from: "Codex Astartes", role: "ally" }); return bad(); }));
+tryit("S0380 Exploration: kaksi liittolaista eri listoilta", () => T(() => { const b = fleet("Rogue Traders — Exploration", 4000); for (let i = 0; i < 6; i++) b.add("Rogue Trader Cruiser"); b.add("Lunar", { from: "Imperial Navy — Gothic Sector", role: "ally" }).add("Murder", { from: "Chaos — Incursion", role: "ally" }); return bad(); }));
+tryit("S0373 Exploration auxiliary-rivit", () => rowsOf("Rogue Traders — Exploration", "auxil"));
+tryit("S0024 Inquisitor RT-risteilijalla?", () => rowsOf("Rogue Traders", "inquisit").concat(rowsOf("Imperial Navy — Gothic Sector", "inquisit")));
+tryit("S0025 Gothic: Inq cruiser + 0-1 + battlecruiser-paikka", () => T(() => { fleet("Imperial Navy — Gothic Sector", 1500).add("Inquisitorial Cruiser").add("Inquisitorial Cruiser").add("Lunar").add("Lunar"); return bad(); }));
+tryit("S0026 Gothic: 2x Blackship", () => T(() => { fleet("Imperial Navy — Gothic Sector", 1500).add("Blackship").add("Blackship"); return bad(); }));
+tryit("S0036 Gothic: 2x RT cruiser @750", () => T(() => { fleet("Imperial Navy — Gothic Sector", 750).add("Rogue Trader Cruiser").add("Rogue Trader Cruiser"); return bad(); }));
+tryit("S0037 Gothic: 12 cruiseria + RT cruiser", () => T(() => { const b = fleet("Imperial Navy — Gothic Sector", 3000); for (let i = 0; i < 12; i++) b.add("Lunar"); b.add("Rogue Trader Cruiser"); return chk("^cruisers"); }));
+tryit("S0045 Bastion: GC + battleship, 3 cruiseria", () => T(() => { fleet("Bastion Fleets", 3000).add("Lunar").add("Lunar").add("Vengeance|Avenger|Exorcist").add("Retribution|Emperor"); return chk("battleship"); }));
+tryit("S0144 Codex VBB 0-1 + kolmen katto", () => T(() => { fleet("Codex Astartes", 3000).add("Venerable").add("Venerable"); return bad(); }));
+tryit("S0333 GK 2x Blackship", () => T(() => { fleet("Grey Knights", 2000).add("Blackship").add("Blackship"); return bad(); }));
+tryit("S0345 RT: 1 RT cruiser + 2 Veteran RT", () => T(() => { fleet("Rogue Traders", 2000).add("Rogue Trader Cruiser").add("Veteran Rogue Trader").add("Veteran Rogue Trader"); return bad(); }));
+tryit("S0365 RT: 5 Stryxis", () => T(() => { const b = fleet("Rogue Traders", 3000); for (let i = 0; i < 5; i++) b.add("Stryxis"); return bad(); }));
+tryit("S0383 Exploration: 2 Stronghold", () => T(() => { fleet("Rogue Traders — Exploration", 4000).add("Rogue Trader Cruiser").add("Rogue Trader Cruiser").add("Rogue Trader Cruiser").add("Rogue Trader Cruiser").add("Rogue Trader Cruiser").add("Rogue Trader Cruiser").add("Stronghold").add("Stronghold"); return bad(); }));
+tryit("S0407 Pirates: Brigand-laivue 1", () => T(() => { const xs = rowsOf("Pirates", "xenos|eldar|ork|brigand"); return xs; }));
+tryit("S0422 Daemonship Mark -rivit muilla Chaos-listoilla", () => ["Incursion", "Tzeentch", "Nurgle", "Khorne", "Slaanesh", "Black Crusade"].map(g => { const b = fleet("Chaos — " + g, 2000).add("Murder|Carnage", { ups: ["^Daemonship"] }); return g + ": " + ups(b.last).filter(x => /mark/i.test(x)).join(" | "); }));

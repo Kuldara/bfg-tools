@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "referenssi/optiot.json",
+  "description": "Aluksen optioiden vaikutukset, luettu kirjasta. audit_effects.py tarkistaa nama ehdot itse (jsonschema-kirjastoa ei ole asennettu), joten tama tiedosto on sopimus ihmisille ja agenteille - ja se pidetaan yhta tiukkana kuin koodin tarkistus.",
+  "type": "object",
+  "required": ["options"],
+  "properties": {
+    "options": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/option" }
+    }
+  },
+  "$defs": {
+    "option": {
+      "type": "object",
+      "required": ["ship", "text", "page", "effect", "why", "verified"],
+      "additionalProperties": false,
+      "properties": {
+        "ship": {
+          "type": "string", "minLength": 3,
+          "description": "Aluksen nimi tasmalleen kuten bfg_data.json:n nm-kentassa."
+        },
+        "text": {
+          "type": "string", "minLength": 8,
+          "description": "Option teksti. Tasmays tehdaan 120 ensimmaisen merkin perusteella, joten alku riittaa mutta sen on oltava tasmalleen kirjan mukainen."
+        },
+        "page": {
+          "type": "integer", "minimum": 1, "maximum": 600,
+          "description": "Fleets WiP -kirjan sivu, jolta paatos on luettu. Pakollinen: kuittaus ilman sivua ei kelpaa."
+        },
+        "effect": {
+          "description": "Rakenteinen vaikutus, tai null jos optio EI muuta profiilia. Toteutetaan build_data.py:n OPT_EFFECTS-tauluun - PAITSI kun modelled_by on annettu: silloin effect vain kuvaa vaikutuksen, joka on jo datassa sen kentan kautta, eika sita lisata uudelleen.",
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object", "minProperties": 1, "additionalProperties": false,
+              "properties": {
+                "mod": {
+                  "type": "object", "additionalProperties": false,
+                  "description": "Statsin LISAYS (ei asetus): tu=1 tarkoittaa +1 tornia.",
+                  "properties": {
+                    "hp": { "type": "integer" }, "sh": { "type": "integer" },
+                    "tu": { "type": "integer" }
+                  }
+                },
+                "set": {
+                  "type": "object", "additionalProperties": false, "minProperties": 1,
+                  "description": "Tekstistatsin ASETUS (mod lisaa lukuun, set korvaa tekstin): sp = nopeus, tn = kaanto, ar = panssari. Endeavour s.72: ar '6+ front / 5+', tn '45°'.",
+                  "properties": {
+                    "sp": { "type": "string" }, "tn": { "type": "string" }, "ar": { "type": "string" }
+                  }
+                },
+                "swp": {
+                  "type": "object", "additionalProperties": false,
+                  "description": "Aserivin kentan muutos. f = rivin nimen regex, onlyrg = vain rivit joiden kantama sisaltaa taman (Mercury: vain 45 cm:n patterit), rg = kantama, rgadd = LISAA kantamasoluun uuden ordnance-tyypin korvaamatta (torpedo-bommat: 'Torpedo-Bommas: 20 cm'), st = tulivoima (absoluuttinen tai +N/-N).",
+                  "required": ["f"],
+                  "properties": {
+                    "f": { "type": "string" }, "onlyrg": { "type": "string" },
+                    "rg": { "type": "string" }, "rgadd": { "type": "string" }, "st": { "type": "string" }
+                  }
+                },
+                "sw": {
+                  "type": "object", "additionalProperties": false, "required": ["f", "t"],
+                  "description": "Aserivien KORVAUS vaihtoehdolla (rastiruutu kortilla): f = korvattavien rivien indeksit aw-taulukossa, t = korvaavat rivit samassa jarjestyksessa. Sama rakenne kuin swaps.py:n tuottama; kaytetaan kun swaps.py ei jasenna lausetta (Omnissiah s.126).",
+                  "properties": {
+                    "f": { "type": "array", "minItems": 1, "items": { "type": "integer", "minimum": 0 } },
+                    "t": { "type": "array", "minItems": 1, "items": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "string" } } }
+                  }
+                },
+                "add": {
+                  "description": "Uusi aserivi [nimi, kantama, tulivoima, kaari] TAI lista sellaisia (Murder: port- ja starboard-lanssi), kortilla vain kun optio on valittuna (take = tikattu, opt = tyhja ruutu, off = ei rivia). Sama 4-taulukko kuin listapaivityksen en.add.",
+                  "oneOf": [
+                    { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "string" } },
+                    { "type": "array", "minItems": 1, "items": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "string" } } }
+                  ]
+                },
+                "del": {
+                  "type": "string",
+                  "description": "Regex: valittu optio POISTAA nimeltaan tasmaavat aserivit (Cobra s.84: tutkarefit 'removes the squadron's weapons batteries')."
+                },
+                "qty": {
+                  "type": "object", "additionalProperties": false,
+                  "description": "Toistettava optio; max = montako kertaa.",
+                  "required": ["max"],
+                  "properties": { "max": { "type": "integer", "minimum": 2 } }
+                }
+              }
+            }
+          ]
+        },
+        "modelled_by": {
+          "type": "string", "enum": ["sw", "aws", "mod", "set", "swp", "add", "qty"],
+          "description": "Valinnainen. Vaikutus ON jo datassa talla kentalla, ja auditin loytamat sanat (esim. torpedon 'speed: 30 cm', 'turret strength') eivat ole erillinen profiilimuutos. Kaytetaan effect: null -arvon sijaan, jotta kuittaus ei vaita 'ei vaikutusta' optiolle jolla on vaikutus."
+        },
+        "why": {
+          "type": "string", "minLength": 15,
+          "description": "Yhdella tai kahdella lauseella: mita sivulla lukee ja mita siita seuraa."
+        },
+        "verified": {
+          "const": true,
+          "description": "Vain true kelpaa. Rivi, jota ei ole varmennettu, ei kuulu tanne vaan jonoon."
+        }
+      }
+    }
+  }
+}

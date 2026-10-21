@@ -1,0 +1,268 @@
+{
+  "list": "Rogue Traders — Exploration",
+  "book_page": 176,
+  "read_pages": [
+    176,
+    177
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "Rogue Traders have an attack (initiative) rating of 3",
+      "text": "When used with this fleet list, Rogue Traders have an attack (initiative) rating of 3.",
+      "page": 176,
+      "status": "manual",
+      "why": "Pelinaikainen arvo. Huomaa ero: perus-Rogue Trader -listalla arvoa ei anneta erikseen."
+    },
+    {
+      "key": "A Veteran Rogue Trader may be present for every two Rogue Trader cruisers in a fleet",
+      "text": "A Veteran Rogue Trader may be present for every two Rogue Trader cruisers in a fleet. At least one Veteran Rogue Trader must be assigned to a Rogue Trader cruiser in the fleet.",
+      "page": 176,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 2,
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. ratio min_one + mandatory_at 0: yksi Veteran RT vaaditaan ja sallitaan jo yhdella RT-risteilijalla. Aiempi puute: Suhdeluku yhteen ALUSLUOKKAAN ('Rogue Trader cruisers'), ei osioon. CAPITAL SHIPS -osiossa on seitseman eri runkoa, joista vain yksi on Rogue Trader cruiser, jo",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "no more than twelve capital s hips, at least half of which must be Rogue Trader Cruisers",
+      "text": "Your fleet may include no more than twelve capital ships, at least half of which must be Rogue Trader Cruisers and/or Endeavour light cruisers, following the basic profile for this ship.",
+      "page": 176,
+      "status": "enforced",
+      "kind": "cap",
+      "max": 12,
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. Kaksi saantoa: cap 12 (CAPITAL SHIPS + Siluria + Demiurg) ja compare 2 x (RT cruiser|Endeavour) >= runkoalukset. Aiempi puute: Kaksi vaatimusta yhdessa lauseessa: enintaan 12 runkoalusta JA vahintaan puolet tiettya kahta tyyppia. Jalkimmaista ei voi ilmaista nykyisilla saantotyypeilla, ",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "A single squadron of 2-6 Rogue Trader escorts, Rogue Trader cargo ships and auxiliary vessels",
+      "text": "A single squadron of 2-6 Rogue Trader escorts, Rogue Trader cargo ships and auxiliary vessels may accompany each Rogue Trader cruiser in a fleet, in any mix desired.",
+      "page": 177,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "Besides Xenos vessels, auxiliary vessels from only one race can be taken in a fleet",
+      "text": "Besides Xenos vessels, auxiliary vessels from only one race can be taken in a fleet. Any race can be used to provide auxiliary vessels except Orks, Dark Eldar, Necrons and Tyranids.",
+      "page": 177,
+      "status": "manual",
+      "why": "Apualukset tulevat toisista listoista; sovellus tarjoaa ne yhtena rivina 'Auxiliary vessels' ilman hintaa."
+    },
+    {
+      "key": "The fleet must include at least one squadron of escort-sized cargo ships",
+      "text": "The fleet must include at least one squadron of escort-sized cargo ships of any type (whether or not the scenario requires transports), in a squadron of 2 to 6 ships.",
+      "page": 177,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. mandatory_at points=0 pick=rahtialukset (TRANSPORTS + ESCORTS Cargo Vessel); skwadronin koko 2-6 on saattajasaannossa. Aiempi puute: Pakollinen skwadroni tietyntyyppisia aluksia. Moottorissa ei ole 'osion on sisallettava vahintaan yksi skwadroni' -tyyppia; mandatory_at koskee pisterajaa.",
+      "kind": "mandatory_at",
+      "points": 0,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "No more than 1/3 of the fleet’s total transport value can be made up of heavy transports",
+      "text": "No more than 1/3 of the fleet's total transport value can be made up of heavy transports.",
+      "page": 177,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. points_share of=pick: Heavy Transport -pisteet <= 1/3 TRANSPORTS-osion pisteista. Aiempi puute: Osuus toisten rivien pistearvosta. Moottorissa ei ole prosentti- tai osuusrajaa.",
+      "kind": "points_share",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Up to one cruiser from any fleet except Orks, Necrons and Tyranids can be taken for every three Rogue Trader cruisers",
+      "text": "Up to one cruiser from any fleet except Orks, Necrons and Tyranids can be taken for every three Rogue Trader cruisers in the fleet.",
+      "page": 177,
+      "status": "manual",
+      "why": "Reserve-saanto: alukset tulevat toisista listoista."
+    },
+    {
+      "key": "no more than one Stronghold may be taken",
+      "text": "Each Demiurg vessel taken still counts against the twelve-cruiser limit, and no more than one Stronghold may be taken.",
+      "page": 177,
+      "status": "enforced",
+      "why": "Valvottu rivirajana mx=1 (ENTRY_LIMITS, kohta 8). Demiurgien laskeminen 12 risteilijan rajaan on cap-saannon pick. Aiempi puute: Rivikohtainen maararaja yksi. Kirja ei merkitse rivia muodossa '(0-1)', joten jasennin ei aseta rivirajaa mx=1 - se lukee rajan vain listarivin merkinnasta.",
+      "enforced_by": "entry_max",
+      "entry": "Stronghold Commerce Vessel",
+      "mx": 1,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "A single Kroot Warsphere may be taken if there are at least three Rogue Trader cruisers",
+      "text": "A single Kroot Warsphere may be taken if there are at least three Rogue Trader cruisers in the fleet.",
+      "page": 177,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. Aiempi puute: Ehdollinen rivirajoite: maara yksi, ehtona kolme tietyn luokan alusta. Kumpaakaan puolta ei voi ilmaista.",
+      "kind": "conditional_cap",
+      "max_met": 1,
+      "max_unmet": 0,
+      "cond_min": 3,
+      "classified_on": "2026-09-09"
+    }
+  ],
+  "entries": [
+    {
+      "name": "Veteran Rogue Trader (Ld 9)",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Lunar class cruiser",
+      "pts": 195,
+      "page": 71
+    },
+    {
+      "name": "Carnage class cruiser",
+      "pts": 195,
+      "page": 277
+    },
+    {
+      "name": "Rogue Trader cruiser",
+      "pts": 185,
+      "page": 180
+    },
+    {
+      "name": "Tyrant class cruiser",
+      "pts": 185,
+      "page": 69
+    },
+    {
+      "name": "Murder class cruiser",
+      "pts": 185,
+      "page": 279
+    },
+    {
+      "name": "Dauntless class light cruiser",
+      "pts": 125,
+      "page": 77
+    },
+    {
+      "name": "Endeavour class light cruiser",
+      "pts": 110,
+      "page": 181
+    },
+    {
+      "name": "Siluria Class Light Cruiser",
+      "pts": 100,
+      "page": 78
+    },
+    {
+      "name": "Havoc Class Frigate",
+      "pts": 35,
+      "page": 81
+    },
+    {
+      "name": "Xenos Vessel",
+      "pts": 50,
+      "page": 184
+    },
+    {
+      "name": "Recommissioned Escort",
+      "pts": 30,
+      "page": 189
+    },
+    {
+      "name": "Iconoclast Destroyer",
+      "pts": 30,
+      "page": 190
+    },
+    {
+      "name": "Cargo Vessel",
+      "pts": 20,
+      "page": 192
+    },
+    {
+      "name": "Escort Carrier",
+      "pts": 60,
+      "page": 521
+    },
+    {
+      "name": "Q-Ship",
+      "pts": 60,
+      "page": 522
+    },
+    {
+      "name": "Heavy Transport",
+      "pts": 40,
+      "page": 182
+    },
+    {
+      "name": "Armed Cargo Vessel",
+      "pts": 20,
+      "page": 192
+    },
+    {
+      "name": "Armed Freighter",
+      "pts": 20,
+      "page": 523
+    },
+    {
+      "name": "Cargo Transport",
+      "pts": 10,
+      "page": 85
+    },
+    {
+      "name": "Stronghold Commerce Vessel",
+      "pts": 350,
+      "page": 488
+    },
+    {
+      "name": "Bastion Commerce Vessel",
+      "pts": 255,
+      "page": 489
+    },
+    {
+      "name": "Citadel Commerce Vessel",
+      "pts": 185,
+      "page": 490
+    },
+    {
+      "name": "Kroot Warsphere",
+      "pts": 145,
+      "page": 494
+    }
+  ],
+  "extra_entries": [
+    {
+      "name": "Imperial Power Ram (6+ prow, not with a Nova Cannon)",
+      "pts": 5,
+      "why": "s.176 POWER RAM"
+    },
+    {
+      "name": "Xenotech System, rolled randomly (cruiser)",
+      "pts": 15,
+      "why": "s.176 The Best Money Can Buy: 'The Xenotech Systems refits listed on [s.175] can only be used by Rogue Trader cruisers and escorts' ja 'may start by taking one refit from the Xenotech list for the appropriate point cost'; hinta s.175 (+15 per cruiser). Pistokoe 6 rivi 88."
+    },
+    {
+      "name": "Xenotech System, rolled randomly (escort, per ship)",
+      "pts": 5,
+      "why": "s.176 / s.175 '+5 points per escort'"
+    },
+    {
+      "name": "Choose the Xenotech System instead of rolling",
+      "pts": 5,
+      "why": "s.176 / s.175 'For an additional +5 points per ship, the player can select the desired technology'"
+    },
+    {
+      "name": "Xenos Vessel - Pthuxutl war cruiser",
+      "pts": 50,
+      "why": "s.186"
+    },
+    {
+      "name": "Xenos Vessel - Fra'al raider",
+      "pts": 50,
+      "why": "s.187"
+    },
+    {
+      "name": "Xenos Vessel - Nekulli whip",
+      "pts": 50,
+      "why": "s.188"
+    }
+  ],
+  "notes": [
+    "Kirjan sivulla 176 on painovirhe: 'Havoc Class Frigatevvvv....35 pts' - sivuviite on valunut nimen peraan. Sovellus nimesi rivin sen mukaan ja jai ilman korttia. Korjattu 7.9.2026 FIXES-taulussa nimeksi 'Havoc Class Frigate' ja sivulle 81, jonka kirja antaa samalle alukselle sivuilla 174 ja 179.",
+    "'Cargo Transport (pg. 85)' on kirjassa OIKEIN: sivu 85 on Imperial Navyn TRANSPORT-profiili ('PTS: SPECIAL'). Sovellus osoitti rivin virheellisesti sivulle 192 (Armed Cargo Vessel) ja vaitti kirjaa vaaraksi, koska sana 'transport' on pysaytyslistalla ja profiilin nimi typistyi tyhjaksi. Korjattu 7.9.2026.",
+    "Talla listalla on eniten kirjattuja puutteita koko kirjassa: viisi. Ne ovat kaikki samaa perhetta - raja kohdistuu alusluokkaan, osuuteen tai ehtoon, ei osioon."
+  ]
+}

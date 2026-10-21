@@ -1,0 +1,305 @@
+{
+  "_ohje": "Listapaivitysten vaikutusluokat, luettu kirjasta kasin (tyojono J1, Codex-katselmointi 10.9.2026). audit_upgrades.py tarkistaa, etta jokainen aluksen kortille tarjottu listapaivitysrivi osuu tasmalleen yhteen luokkaan ja etta luokan vaatima vaikutus on datassa. Luokat: stat = mod/set (statsirivi muuttuu), weapon = swp/add/del/sw (aserivi muuttuu), text = kortin paivitysruutu kertoo kirjan saannon (kirjan osion oma lause, rivin desc tai domain.js:n up-avaimella sidottu saanto), fleet = laivastotason osto jolla ei ole aluskohtaista vaikutusta. Komentajan riveja (at -> komentaja) ja aluksen oman option kattamia riveja ei luokitella: ne tulostuvat komentajakortille tai katoavat tarjonnasta. Ensimmainen osuva rivi voittaa.",
+  "classes": [
+    {
+      "match": "re-rolls?$",
+      "list": "^Demiurg",
+      "class": "text",
+      "page": 486,
+      "why": "Laivaston re-rollit, vain Demiurg-aluksille; kortti kertoo kayttorajauksen."
+    },
+    {
+      "match": "re-rolls?$",
+      "list": "Crusade",
+      "class": "text",
+      "page": 98,
+      "why": "Fortress-Monasteryn omat re-rollit (s.98): vain sen omiin command checkeihin, Master of the Fleetin kanssa koko laivastolle."
+    },
+    {
+      "match": "re-rolls?$",
+      "list": "^Necrons",
+      "class": "text",
+      "page": 404,
+      "why": "Necron-laivaston re-rollit, ostetaan laivastolle kerran (s.404)."
+    },
+    {
+      "match": "^Imperial Power Ram",
+      "class": "text",
+      "page": 176,
+      "why": "s.32/118/176: yksi automaattinen osuma rammatessa (power_ram-saanto)."
+    },
+    {
+      "match": "^Torpedo bombers( \\((Eldar or Tau|Tau) vessel\\))?$",
+      "class": "text",
+      "page": 22,
+      "why": "s.22: pommittajat hyokkaavat torpedoilla kaukaa; hinta per launch bay strength."
+    },
+    {
+      "match": "^Special torpedoes \\(",
+      "class": "text",
+      "page": 19,
+      "why": "s.19: erikoistorpedot ostetaan heittona D6-taulukolle ennen pelia; tyyppia ei tiedeta rakennettaessa, joten kortti tulostaa taulukon ja tyyppien saannot (special_torpedoes-saanto, s.19-21)."
+    },
+    {
+      "match": "^Orbital mines$",
+      "class": "weapon",
+      "page": 23,
+      "why": "s.23: miinat korvaavat launch bayn hyokkausalukset - launch bay -rivit muuttuvat miinariveiksi (swp permine, 10 cm s.512, yksi miina per bay-vahvuus); miinasaanto kortilla. Ei torpedo bombereiden eika aluksen omien hyokkaysalusvalintojen kanssa. J21 (10.9.2026, Bug Hunt -loydos 1)."
+    },
+    {
+      "match": "^Shark assault boats",
+      "class": "text",
+      "page": 49,
+      "why": "s.49: Emperorin launch bayt voivat kantaa Shark assault boatseja."
+    },
+    {
+      "match": "^\\+1 turret",
+      "class": "stat",
+      "page": 50,
+      "why": "s.50 Bakka, s.121 Mechanicus-saattajat: +1 torni."
+    },
+    {
+      "match": "^Honour Guard$",
+      "class": "text",
+      "page": 96,
+      "why": "s.96: teleporttihyokkays kahdella nopalla (honour_guard-saanto)."
+    },
+    {
+      "match": "^Mechanicus turret refit",
+      "class": "stat",
+      "page": 120,
+      "why": "s.120: +1 torni kaikille Mechanicus-capitaleille."
+    },
+    {
+      "match": "^Mechanicus dorsal lance battery",
+      "class": "weapon",
+      "page": 120,
+      "why": "s.120: 60 cm dorsal lance."
+    },
+    {
+      "match": "^Nova Cannon instead of prow torpedoes",
+      "class": "weapon",
+      "page": 121,
+      "why": "s.121: keulatorpedot -> Nova Cannon."
+    },
+    {
+      "match": "^Plasma-boosted batteries",
+      "class": "weapon",
+      "page": 121,
+      "why": "s.121: 30 cm patterit -> 45 cm."
+    },
+    {
+      "match": "^Dorsal lance instead of prow torpedoes",
+      "class": "weapon",
+      "page": 121,
+      "why": "s.121: Endeavour/Endurance torpedot -> 30 cm dorsal lance."
+    },
+    {
+      "match": "^Embarks the Inquisitor",
+      "class": "weapon",
+      "page": 142,
+      "why": "Inkvisiittorin alus: launch bayt puolittuvat ja kantavat Thunderhawkeja."
+    },
+    {
+      "match": "^Grey Knights (Terminators|Honour Guard)$",
+      "class": "text",
+      "page": 145,
+      "why": "s.145: osion omat lauseet tulostuvat."
+    },
+    {
+      "match": "^(Xenotech System|Choose the Xenotech)",
+      "class": "text",
+      "page": 175,
+      "why": "s.175: pelaaja heittaa tai valitsee Xenotech-jarjestelman; kortti kertoo taulukon."
+    },
+    {
+      "match": "^Summoned through the Webway Portal",
+      "class": "text",
+      "page": 337,
+      "why": "s.337: ostotapa - alus ostetaan puoleen hintaan ja saapuu poydan ulkopuolelta Havenin portaalista; kortin rivi kertoo saapumissaannon (J175 d)."
+    },
+    {
+      "match": "^Crew skill, rolled randomly",
+      "class": "text",
+      "page": 175,
+      "why": "s.175: pelaaja heittaa crew skillin Rulebookin taulukosta (s.159); kortti kertoo taulukon ja hinnan laskutavan (J44)."
+    },
+    {
+      "match": "^Mark of (Nurgle|Khorne|Slaanesh|Tzeentch)$",
+      "class": "text",
+      "page": 258,
+      "why": "Valmiina tuleva Mark, 0 pistetta, lukittu inforivi (J142). Barget s.258-264: 'This ship bears the Mark of X as part of its point cost'; Daemonshipit s.240/244/248: Mark 'already included in the cost'. Rivin desc on kirjan lause; ei mod-avainta, koska profiili sisaltaa jo Markin (Terminus Est hp 13) ja Daemonship-rivi kantaa Nurglen +1 hp:n. Label ilman 'The' tarkoituksella, jotta kortin Mark-saannot ja mark_paid eivat laukea toiseen kertaan."
+    },
+    {
+      "match": "^The Mark of Nurgle$",
+      "class": "stat",
+      "page": 240,
+      "why": "s.232/240: +1 Damage Point."
+    },
+    {
+      "match": "^The Mark of (Slaanesh|Khorne|Tzeentch)$",
+      "class": "text",
+      "page": 232,
+      "why": "s.232-248: Markin saanto (mark_*-saannot)."
+    },
+    {
+      "match": "Chaos Space Marine crew$",
+      "class": "text",
+      "page": 224,
+      "why": "s.224-225: CSM-miehiston saannot (csm_crew)."
+    },
+    {
+      "match": "^(Wage of Sin: )?Chosen Terminators",
+      "class": "text",
+      "page": 224,
+      "why": "s.224: teleporttihyokkays kahdella nopalla (chosen_terminators)."
+    },
+    {
+      "match": "^Daemonship:",
+      "class": "text",
+      "page": 227,
+      "why": "s.227-249: Daemonship-saannot (daemonship). Nurglen, Khornen ja Slaaneshin Daemonship sisaltaa Markin (Nurgle: mod hp +1), Black Crusaden ja Tzeentchin ei - statsivaikutus ei ole luokan ehto."
+    },
+    {
+      "match": "^(Warp Beasts|Strand of Fortune|Hives of Nurgle|Ark of Pestilence|Berzerker Tide|Veil of Lust|Siren.s Summon)$",
+      "class": "text",
+      "page": 236,
+      "why": "s.236-248 Forces of Chaos: osion omat lauseet tulostuvat."
+    },
+    {
+      "match": "^Ghostship$",
+      "class": "text",
+      "page": 307,
+      "why": "s.307: Ghostship-saannot (ghostship)."
+    },
+    {
+      "match": "^Aspect Warrior Host$",
+      "class": "text",
+      "page": 305,
+      "why": "s.305: Aspect Warrior Host (aspect_host)."
+    },
+    {
+      "match": "^Leech torpedoes$",
+      "class": "text",
+      "page": 347,
+      "why": "s.347: leech torpedoes, ladataan omalla Reload Ordnance -heitolla."
+    },
+    {
+      "match": "^Dakka Dakka",
+      "class": "stat",
+      "page": 365,
+      "why": "s.365/367: +2 tornia capitalille, +1 saattajalle."
+    },
+    {
+      "match": "^Torpedo-bommas$",
+      "class": "text",
+      "page": 360,
+      "why": "s.360: torpedo-bommat; hinta per launch bay strength."
+    },
+    {
+      "match": "^Boarding torpedoes( \\(Space Hulk\\))?$",
+      "class": "text",
+      "page": 360,
+      "why": "s.360/372: torpedot voivat olla boarding torpedoja (Hit & Run)."
+    },
+    {
+      "match": "^(Soopa Boostas|Extra Power Fields|Extra Turrets|Maniac Turrets)",
+      "class": "stat",
+      "page": 370,
+      "why": "s.370: +5 cm / +1 kilpi / +2 tornia (saattaja +1) / tornit D3."
+    },
+    {
+      "match": "^(Looted Lances|Shokk-Attack Lance)",
+      "class": "weapon",
+      "page": 370,
+      "why": "s.370-371: heavy gunz -> lance battery / prow heavy gunz -> Shokk-attack lance."
+    },
+    {
+      "match": "^(Looted Torpedoes|Mad Meks|Maniac Gunners|Mega-Armoured Boarding Parties|Prow Ram|Tellyporta|Klaws|Assault Karrier)",
+      "class": "text",
+      "page": 370,
+      "why": "s.370-371: Gubbin-saanto kortin paivitysruudussa."
+    },
+    {
+      "match": "^Clan: Evil Sunz",
+      "class": "stat",
+      "page": 369,
+      "why": "s.369: +5 cm."
+    },
+    {
+      "match": "^Clan: ",
+      "class": "text",
+      "page": 369,
+      "why": "s.369: klaanin saanto kortin paivitysruudussa."
+    },
+    {
+      "match": "^Sepulchre$",
+      "class": "text",
+      "page": 404,
+      "why": "Necron Sepulchre (sepulchre-saanto)."
+    },
+    {
+      "match": "^(Solar Vanes|Extra Spore Cysts|Reinforced Carapace)",
+      "class": "stat",
+      "page": 426,
+      "why": "s.426: +5 cm / +1 spore / +1 Hit."
+    },
+    {
+      "match": "^Mega-Spore Mines$",
+      "class": "weapon",
+      "page": 427,
+      "why": "s.427: launch bayt -> spore mine launcherit, hinta per launch bay."
+    },
+    {
+      "match": "^(Adrenaline Sacs|Psychic Scream|More Discharge Vents|Mucous Membrane|Accelerated Healing|Drone Link|Tenacity)$",
+      "class": "text",
+      "page": 426,
+      "why": "s.426-427: bio-enhancementin saanto kortin paivitysruudussa."
+    },
+    {
+      "match": "^Hive Mind (Influence re-roll|Imperative)$",
+      "class": "text",
+      "page": 430,
+      "why": "s.430: Hive Mind -re-roll / automaattinen lapaisy; laivastotason osto, kortti kertoo kayton."
+    },
+    {
+      "match": "^Increase to Ld 9$",
+      "class": "text",
+      "page": 430,
+      "why": "s.430: hive shipin Ld 9 (Ld ei ole kortin statsi, kortti kertoo arvon)."
+    },
+    {
+      "match": "marker$",
+      "list": "^Tyranids",
+      "class": "fleet",
+      "page": 431,
+      "why": "s.431: ordnance-merkit ostetaan laivastolle (enintaan 10 % pisteista), eivat ole aluksen varusteita."
+    },
+    {
+      "match": "^Improved Logic Engines$",
+      "class": "text",
+      "page": 453,
+      "why": "s.453: Kor'O'Mesmen alus ohittaa blast marker -kosketuksen Ld-vaikutukset."
+    },
+    {
+      "match": "^(Pyro-acid battery|Feeder tentacles|Massive claws|Bio-plasma discharge|Torpedoes|Feeder tentacles & massive claws|Bio-plasma spines|Launch bays|Prow Torpedoes|Phantom Lance|Mimic Engines)$",
+      "class": "weapon",
+      "page": 430,
+      "why": "Tyranid- ja Dark Eldar -asevalinnat: aluksen omat optiot kattavat nama; jos rivi jaa tarjolle, sen on muutettava aseistusta."
+    },
+    {
+      "match": "^Thunderhawk Gunships \\(Chaos Space Marine crew\\)$",
+      "list": "^Chaos",
+      "class": "text",
+      "page": 235,
+      "why": "J213: Space Marine -miehiston alus voi kantaa Thunderhawkeja ja silloin vain niita (s.235); kortti kertoo rajauksen, statsit eivat muutu."
+    },
+    {
+      "match": "^Fleet Defence Turrets \\(instead of a Mechanicus Gift\\)$",
+      "list": "^Imperial Navy — Bakka",
+      "class": "text",
+      "page": 50,
+      "why": "J217: Bakkan Adeptus Mechanicus -alus ottaa fleet defence turretit Mechanicus-lahjan sijaan (s.50); turretien maara ei muutu, kortti kertoo saannon."
+    }
+  ]
+}

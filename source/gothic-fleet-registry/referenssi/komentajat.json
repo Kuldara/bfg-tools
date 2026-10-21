@@ -1,0 +1,202 @@
+{
+  "_": "Komentajarivit, joille kirja ei anna Ld-arvoa rivin otsikossa tai rivin omassa tekstissa. Sivu + verified, kuten optiot.json. build_data.py hylkaa buildin, jos komentajalta puuttuu seka jasennetty etta kuitattu leadership. rerolls_scope / rerolls_unit (5.10.2026): kirjan oma rajaus sisaltyvalle re-rollille - kenen heittoihin sen saa kayttaa tai etta se on vuorokohtainen. Lyhyt englanninkielinen ilmaus, jonka sovellus tulostaa maaran peraan; kirjan lause on why-kentassa.",
+  "commanders": [
+    {
+      "list": "Imperial Navy — Bakka Sector",
+      "label": "Lord Admiral Rath (Ld10)",
+      "page": 48,
+      "leadership": {
+        "kind": "fixed",
+        "value": 10
+      },
+      "rerolls_included": 2,
+      "why": "s.48: 'Admirals get one Fleet Commander re-roll included in their points cost (Lord Admiral Rath has two)' ja 'Lord Admiral Rath is Ld 10 and comes with two re-rolls as part of his point cost'. Osion yleislause antaisi yhden (pistokoe 9 rivi 38).",
+      "verified": true
+    },
+    {
+      "list": "Space Marines — Dominion",
+      "label": "Space Marine Captain",
+      "page": 100,
+      "leadership": null,
+      "rerolls_included": 0,
+      "why": "s.100: ei Ld-arvoa; 'Space Marine Captains roll against the Space Marines leadership table instead of the normal leadership table'. Kortin LEADERSHIP jaa kasin taytettavaksi.",
+      "verified": true
+    },
+    {
+      "list": "Eldar — Iyanden Craftworld",
+      "label": "Farseers",
+      "page": 318,
+      "leadership": null,
+      "rerolls_included": 1,
+      "why": "s.318: 'gives the vessel a re-roll which may be used on itself, another capital ship in the same squadron or an escort squadron within 15 cm'; ei Ld-arvoa. Rajaus samasta lauseesta: 'may be used on itself, another capital ship in the same squadron or an escort squadron within 15 cm'.",
+      "verified": true,
+      "rerolls_scope": "own ship, its squadron or an escort squadron within 15 cm"
+    },
+    {
+      "list": "Eldar — Iyanden Craftworld",
+      "label": "Prince Yriel",
+      "page": 319,
+      "leadership": null,
+      "rerolls_included": 1,
+      "why": "s.319: 'He has one re-roll as part of his point cost, but a second or third re-roll can be purchased at +25 points each'; Ld-arvoa ei anneta (otetaan Heron sijaan).",
+      "verified": true
+    },
+    {
+      "list": "Orks — Cyclops Cluster",
+      "label": "Ork Warlord",
+      "page": 365,
+      "leadership": null,
+      "rerolls_included": 1,
+      "why": "s.365: 'Warlords get one re-roll. They can have up to two more re-rolls'; ei Ld-arvoa (orkien Ld tulee aluksesta, s.358).",
+      "verified": true
+    },
+    {
+      "list": "Orks — Waaagh!",
+      "label": "Ork Warlord",
+      "page": 366,
+      "leadership": null,
+      "rerolls_included": 1,
+      "why": "s.366: 'Warlords get one re-roll'; ei Ld-arvoa.",
+      "verified": true
+    },
+    {
+      "list": "Orks — Da Ork Clanz",
+      "label": "Ork Warlord",
+      "page": 372,
+      "leadership": null,
+      "rerolls_included": 1,
+      "why": "s.372: 'Ork Warlord ... Free. A Warlord has one re-roll, and may purchase one or two more'; ei Ld-arvoa. Rajaus s.372: 'A Warlord's re-rolls only count for the skwadrons under his command and not for the whole fleet.'",
+      "verified": true,
+      "rerolls_scope": "his own skwadrons only"
+    },
+    {
+      "list": "The Emperor's Inquisition",
+      "label": "Ordo Xenos Inquisitor Lord",
+      "page": 141,
+      "leadership": {
+        "kind": "modifier",
+        "value": 1,
+        "max": 10
+      },
+      "rerolls_included": 0,
+      "why": "s.141: 'The ship adds +1 to its leadership (max. 10).' Lause puuttuu poimitusta osiotekstista (lists.py), joten se kirjataan tahan kirjasta; Hereticus (s.140) ja Malleus (s.142) jasentyvat omasta tekstistaan.",
+      "verified": true
+    },
+    {
+      "list": "Tau — Commerce Protection",
+      "label": "Kor’O’Mesme* (Ld 9)",
+      "page": 453,
+      "rerolls_included": 2,
+      "why": "s.453 dossier: 'KOR'O VASH'YA Y'ELDI MESME: 110 PTS ... Leadership: 9, Re-rolls: 2'. Listarivi (s.456) antaa Ld 9:n otsikossa; sisaltyvat re-rollit vain dossierissa. Pistokoe 4 (10.9.2026) rivi 35.",
+      "verified": true
+    },
+    {
+      "list": "Imperial Navy — Bastion Fleets",
+      "label": "Veteran Captain (Ld +1)",
+      "page": 38,
+      "why": "s.38: 'A Veteran Captain gets one re-roll which is included in their points cost and can only be used on their own vessel or another vessel in their own squadron.' Ld +1 rivin otsikosta.",
+      "rerolls_included": 1,
+      "rerolls_scope": "own vessel or squadron only",
+      "verified": true
+    },
+    {
+      "list": "Rogue Traders",
+      "label": "Veteran Rogue Trader (Ld 9)",
+      "page": 174,
+      "why": "s.174: 'A Veteran Rogue Trader gets one re-roll, which may be used for his vessel or an accompanying Rogue Trader escort squadron.' Ld 9 rivin otsikosta.",
+      "rerolls_included": 1,
+      "rerolls_scope": "own vessel or its Rogue Trader escort squadron",
+      "verified": true
+    },
+    {
+      "list": "Rogue Traders — Exploration",
+      "label": "Veteran Rogue Trader (Ld 9)",
+      "page": 176,
+      "why": "s.176: 'A Veteran Rogue Trader gets one re-roll, which may be used for his vessel or an accompanying Rogue Trader escort squadron.' Ld 9 rivin otsikosta.",
+      "rerolls_included": 1,
+      "rerolls_scope": "own vessel or its Rogue Trader escort squadron",
+      "verified": true
+    },
+    {
+      "list": "Chaos — Black Crusade",
+      "label": "Abaddon (Ld 10)",
+      "page": 234,
+      "why": "s.234: 'Abaddon receives one re-roll per turn'; s.231: 'Re-rolls: 1 per turn.' ja 'Abaddon's fleet is allowed to re-roll a single Command check or Leadership test each turn.' Maara on yksi, mutta joka vuoro - ei kerran pelissa kuten muiden komentajien (s.11). Ld 10 rivin otsikosta.",
+      "rerolls_included": 1,
+      "rerolls_unit": "per turn",
+      "verified": true
+    },
+    {
+      "list": "Rogue Traders — Pirates and Wolf Packs",
+      "label": "Pirate Captain (+1 Ld)",
+      "page": 178,
+      "rerolls_included": 1,
+      "rerolls_scope": "at most one per turn per Captain",
+      "why": "s.178: 'A Pirate Captain gets one re-roll, and may purchase up to two more re-rolls for +25 points each.' ja 'Pirate Captains may use their re-rolls on any vessel or escort squadron in the fleet, but no individual Pirate Captain may use more than one re-roll per turn.' Ld +1 rivin otsikosta. Katselmointi 5.10.2026.",
+      "verified": true
+    },
+    {
+      "list": "Chaos — Black Crusade",
+      "label": "Chaos Lord (Ld +1)",
+      "page": 234,
+      "rerolls_included": 0,
+      "rerolls_scope": "his own ship or squadron only",
+      "why": "s.234: 'A Lord may be given a re-roll (which he can use for his own ship or squadron only) at +25 points.' Ei sisaltyvaa re-rollia; rajaus koskee ostettua. Ld +1 rivin otsikosta. Katselmointi 5.10.2026.",
+      "verified": true
+    },
+    {
+      "list": "Chaos — Tzeentch",
+      "label": "Chaos Lord (Ld +1)",
+      "page": 236,
+      "rerolls_included": 0,
+      "rerolls_scope": "his own ship or squadron only",
+      "why": "s.236: 'A Lord may be given a Mark of Tzeentch, providing a re-roll (which he can use for his own ship or squadron only) for +25 points.' Ei sisaltyvaa re-rollia; rajaus koskee ostettua. Ld +1 rivin otsikosta. Katselmointi 5.10.2026.",
+      "verified": true
+    },
+    {
+      "list": "Chaos — Nurgle",
+      "label": "Chaos Lord (Ld +1)",
+      "page": 240,
+      "rerolls_included": 0,
+      "rerolls_scope": "his own ship or squadron only",
+      "why": "s.240: 'A Lord may be given a re-roll (which he can use for his own ship or squadron only) for +25 points.' Ei sisaltyvaa re-rollia; rajaus koskee ostettua. Ld +1 rivin otsikosta. Katselmointi 5.10.2026.",
+      "verified": true
+    },
+    {
+      "list": "Chaos — Khorne",
+      "label": "Chaos Lord (Ld +1)",
+      "page": 244,
+      "rerolls_included": 0,
+      "rerolls_scope": "his own ship or squadron only",
+      "why": "s.244: 'A Lord may be given a re-roll (which he can use for his own ship or squadron only) for +25 points.' Ei sisaltyvaa re-rollia; rajaus koskee ostettua. Ld +1 rivin otsikosta. Katselmointi 5.10.2026.",
+      "verified": true
+    },
+    {
+      "list": "Chaos — Slaanesh",
+      "label": "Chaos Lord (Ld +1)",
+      "page": 248,
+      "rerolls_included": 0,
+      "rerolls_scope": "his own ship or squadron only",
+      "why": "s.248: 'A Lord may be given a re-roll (which he can use for his own ship or squadron only) for +25 points.' Ei sisaltyvaa re-rollia; rajaus koskee ostettua. Ld +1 rivin otsikosta. Katselmointi 5.10.2026.",
+      "verified": true
+    },
+    {
+      "list": "Eldar Corsairs — Gothic Sector",
+      "label": "Prince Yriel",
+      "page": 319,
+      "leadership": null,
+      "rerolls_included": 1,
+      "why": "s.319: 'Yriel may be taken instead of the Hero Fleet Commander as listed in the Corsair and Craftworld Eldar fleet lists' - rivi kuuluu siis myos talle listalle (s.316), vaikka laatikko on painettu Iyandenin sivulle. 'He has one re-roll as part of his point cost, but a second or third re-roll can be purchased at +25 points each'; Ld-arvoa ei anneta.",
+      "verified": true
+    },
+    {
+      "list": "Eldar Corsairs — Later Gothic War",
+      "label": "Prince Yriel",
+      "page": 319,
+      "leadership": null,
+      "rerolls_included": 1,
+      "why": "s.319: 'Yriel may be taken instead of the Hero Fleet Commander as listed in the Corsair and Craftworld Eldar fleet lists' - rivi kuuluu siis myos talle listalle (s.317), vaikka laatikko on painettu Iyandenin sivulle. 'He has one re-roll as part of his point cost, but a second or third re-roll can be purchased at +25 points each'; Ld-arvoa ei anneta.",
+      "verified": true
+    }
+  ]
+}

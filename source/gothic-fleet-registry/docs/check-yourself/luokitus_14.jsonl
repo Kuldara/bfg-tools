@@ -1,0 +1,60 @@
+{"id": "S0781", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F362", "pok": "ok", "n": "Refit/crew skill -taulukko."}
+{"id": "S0782", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F362", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0783", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F362", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0784", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F363", "pok": "osittain", "x": "table", "n": "Kampanjataulukon otsikko ja rivi."}
+{"id": "S0785", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F363", "pok": "ok", "n": "Kampanja."}
+{"id": "S0786", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F363", "pok": "ok", "n": "Kampanja."}
+{"id": "S0787", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F363", "pok": "ok", "n": "Kampanja."}
+{"id": "S0788", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F363", "pok": "ok", "n": "Kampanja."}
+{"id": "S0789", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F363", "pok": "ok", "n": "Kampanja."}
+{"id": "S0790", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F363", "pok": "ok", "n": "Kampanja."}
+{"id": "S0791", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F363", "pok": "ok", "n": "Kampanja."}
+{"id": "S0792", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F363", "pok": "ok", "n": "Kampanja."}
+{"id": "S0793", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F363", "pok": "ok", "n": "Kampanja."}
+{"id": "S0794", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F363", "pok": "ok", "n": "Kampanja."}
+{"id": "S0795", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F363", "pok": "ok", "n": "Kampanja."}
+{"id": "S0796", "l": "VALVOTTU", "a": "checked", "f": "commander_count", "p": "F365", "pok": "ok", "n": "Warlordien määrä per_points 500 -sääntönä; 'assigned to a ship or squadron' = sijoitus (J8).", "vk": "ajo ok"}
+{"id": "S0797", "l": "VALVOTTU", "a": "checked", "f": "example", "p": "F365", "pok": "ok", "n": "Esimerkki per_points-säännöstä."}
+{"id": "S0798", "l": "VALVOTTU", "a": "checked", "f": "example", "p": "F365", "pok": "ok", "n": "Esimerkki."}
+{"id": "S0799", "l": "KUVAUS", "a": "row", "f": "rerolls_included", "p": "F365", "pok": "ok", "n": "Sisältyvä re-roll."}
+{"id": "S0800", "l": "KUVAUS", "a": "row", "f": "reroll_price", "p": "F365", "pok": "ok", "n": "Re-rollit riveinä."}
+{"id": "S0801", "l": "VALVOTTU", "a": "checked", "f": "group_rule", "p": "F365", "pok": "ok", "n": "Yksi päivitys ryhmällä warlord_up; kaksinkertainen boarding-arvo komentajakortilla (J8)."}
+{"id": "S0802", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F365", "pok": "ok", "n": "Päivityksen vaikutus."}
+{"id": "S0803", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F365", "pok": "ok", "n": "Päivityksen vaikutus."}
+{"id": "S0804", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F365", "pok": "ok", "n": "Extra Power Fields."}
+{"id": "S0805", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F365", "pok": "ok", "n": "Mega-armoured Boarding Parties."}
+{"id": "S0806", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F365", "pok": "ok", "n": "Looted Torpedoes."}
+{"id": "S0807", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F365", "pok": "ok", "n": "Dakka Dakka +2 turrets -rivi (upgrades.py:432)."}
+{"id": "S0808", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F365", "pok": "ok", "n": "Saattajien Dakka Dakka."}
+{"id": "S0809", "l": "RAKENNE", "a": "guaranteed", "f": "squadron_unit", "p": "F365", "pok": "ok", "n": "Per runko -hinta ja laivue = yksi yksikkö."}
+{"id": "S0810", "l": "ROSKA", "a": "fix", "f": "sentence_split", "p": "F366", "pok": "ok", "x": "split", "n": "Katkelma, alku osion otsikossa. Sisältö kerrontaa."}
+{"id": "S0811", "l": "VALVOTTU", "a": "checked", "f": "dup", "p": "F367", "pok": "ok", "x": "dup", "n": "Sama sääntö sanotaan kahdesti; valvottu versio on seuraava kirjan lause (referenssi 24 #188)."}
+{"id": "S0812", "l": "VALVOTTU", "a": "checked", "f": "example", "p": "F367", "pok": "ok", "n": "Esimerkki."}
+{"id": "S0813", "l": "VALVOTTU", "a": "checked", "f": "example", "p": "F367", "pok": "ok", "n": "Esimerkki."}
+{"id": "S0814", "l": "RAKENNE", "a": "guaranteed", "f": "no_limit", "p": "F367", "pok": "ok", "n": "Ei rajaa."}
+{"id": "S0815", "l": "VALVOTTU", "a": "checked", "f": "row_offered", "p": "F367", "pok": "ok", "n": "Rok puolustusrivinä (J172)."}
+{"id": "S0816", "l": "TARKISTA", "a": "keep", "f": "squadron_tabletop", "p": "F367", "pok": "ok", "n": "Rok-laivueet enintään neljä, ei muiden kanssa. Capital-laivueita ei mallinneta; laivue ryhmänä -ominaisuus voisi valvoa."}
+{"id": "S0817", "l": "PELI", "a": "play", "f": "ordnance_choice", "p": "F367", "pok": "ok", "n": "Ordnance pelissä."}
+{"id": "S0818", "l": "KUVAUS", "a": "drop", "f": "ship_option_pointer", "p": "F367", "pok": "ok", "n": "Sama vaihto on aluksen profiilissa (s.380, 382)."}
+{"id": "S0819", "l": "PELI", "a": "play", "f": "commander_effect", "p": "F372", "pok": "ok", "n": "Warlordin boarding-bonus kerran pelissä."}
+{"id": "S0820", "l": "KUVAUS", "a": "row", "f": "reroll_price", "p": "F372", "pok": "ok", "n": "Re-rollit riveinä."}
+{"id": "S0821", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F372", "pok": "ok", "n": "up_budget GUBBINS-osiossa (yksi per Warlordin re-roll, laivastotasolla). Sidonta Warlordin omaan alukseen ei ole mallinnettu."}
+{"id": "S0822", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F372", "pok": "ok", "n": "Warlord kalleimmalle omien laivueidensa alukselle ('annotate which one'). Sovelluksen alusmuistiinpano kelpaa nyt; merkintä voisi tehdä sen."}
+{"id": "S0823", "l": "PELI", "a": "play", "f": "reroll_use", "p": "F372", "pok": "ok", "n": "Re-rollit vain omille laivueille."}
+{"id": "S0824", "l": "OMINAISUUS", "a": "feature", "f": "squadron_group", "p": "F372", "pok": "ok", "n": "Jokaista Warlordin re-rollia kohden tiddla-laivue (≥3) ja yksi muu laivue. Vaatii Warlord → laivueet -ryhmittelyn."}
+{"id": "S0825", "l": "PELI", "a": "play", "f": "commander_effect", "p": "F372", "pok": "ok", "n": "Ld:n vaihto."}
+{"id": "S0826", "l": "OMINAISUUS", "a": "feature", "f": "squadron_group", "p": "F372", "pok": "ok", "x": "split", "n": "Big ship skwadron 1–2 kroozeria. Capital-laivueita ei mallinneta. Luettelon otsikko kaksoispisteineen."}
+{"id": "S0827", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F372", "pok": "ok", "x": "split", "n": "squadron 3–10 samassa osiossa (J62)."}
+{"id": "S0828", "l": "OMINAISUUS", "a": "feature", "f": "squadron_group", "p": "F373", "pok": "ok", "n": "Alkuosa toteutuu rakenteesta (ei osiolaskureita, build_data.py:1729); 'enintään yksi 'Uge ship per Warlord' vaatii ryhmittelyn. Laivastotason 'Uge-suhde on valvottu (ratio USING SKWADRONS)."}
+{"id": "S0829", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F372", "pok": "ok", "n": "Warlord hulkille; hulkki = kaikki Warlordin laivueet. Clanzissa on conditional_cap (kolme Warlordia), sijoitusta ei."}
+{"id": "S0830", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F372", "pok": "ok", "n": "Hulkin gubbinit tuplahintaan (upgrades.py:141)."}
+{"id": "S0831", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F372", "pok": "ok", "n": "Soopa Boostas pois hulkilta (upgrades.py:142, T15)."}
+{"id": "S0832", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F372", "pok": "ok", "n": "Torpedo-bommaz-rivi."}
+{"id": "S0833", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F372", "pok": "ok", "n": "Boarding torpedoes -rivi."}
+{"id": "S0834", "l": "RAKENNE", "a": "guaranteed", "f": "squadron_unit", "p": "F373", "pok": "ok", "n": "Laivue on yksi yksikkö; sitä ei voi jakaa."}
+{"id": "S0835", "l": "VALVOTTU", "a": "checked", "f": "commander_count", "p": "F373", "pok": "ok", "n": "per_points 500 WARLORD-osiossa. Kirja sanoo 'at least one Warlord for every 500 points' (minimi); varmista, onko sääntö minimi vai maksimi. Ajo 20.10.: 'WARLORD 0 / 1 exactly' punaisena - sääntö on täsmämäärä, eli myös minimi valvotaan.", "vk": "ajo ok"}
+{"id": "S0836", "l": "TAUSTA", "a": "drop", "f": "example", "p": "F373", "pok": "ok", "n": "Esimerkki S0824:n rakenteesta; hyvä testitapaus, jos laivueryhmittely tehdään."}
+{"id": "S0837", "l": "TAUSTA", "a": "drop", "f": "example", "p": "F373", "pok": "ok", "n": "Esimerkki; testitapaus."}
+{"id": "S0838", "l": "TAUSTA", "a": "drop", "f": "example", "p": "F373", "pok": "ok", "n": "Esimerkki; testitapaus."}
+{"id": "S0839", "l": "OMINAISUUS", "a": "feature", "f": "squadron_group", "p": "F373", "pok": "ok", "n": "'Uge ship vaatii Warlordilta kaksi kroozeria."}
+{"id": "S0840", "l": "OMINAISUUS", "a": "feature", "f": "squadron_group", "p": "F373", "pok": "ok", "n": "Hulkkia johtava Warlord ei johda muita aluksia."}

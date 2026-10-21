@@ -1,0 +1,322 @@
+{
+  "list": "Tau — Commerce Protection",
+  "book_page": 456,
+  "read_pages": [
+    448,
+    449,
+    450,
+    451,
+    452,
+    453,
+    456,
+    457
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Commander",
+      "text": "0-1 Commander",
+      "page": null,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "Your fleet may include a fleet commander to lead it if you wish",
+      "text": "Your fleet may include a fleet commander to lead it if you wish.",
+      "page": null,
+      "status": "manual",
+      "why": "Vapaaehtoisuus alle 750 pisteen laivastoissa."
+    },
+    {
+      "key": "Your fleet must include a commander if it is greater than 750 pts",
+      "text": "Your fleet must include a commander if it is greater than 750 pts.",
+      "page": null,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "over": true
+    },
+    {
+      "key": "the commander may be either a Kor",
+      "text": "The commander may be either a Kor'O or Kor'el.",
+      "page": null,
+      "status": "manual",
+      "why": "Kirjassa lause alkaa pienella kirjaimella; jatetty sellaiseksi. Molemmat rivit ovat listalla, ja osion 0-1 raja huolehtii siita etta vain toinen valitaan."
+    },
+    {
+      "key": "The commander has one re-roll included in his points cost",
+      "text": "The commander has one re-roll included in his points cost.",
+      "page": 456,
+      "status": "manual",
+      "why": "Nakyy komentajaosion tekstina 9.9.2026 alkaen (lausesuodatin tuntee re-roll- ja leadership-sanat, P1-8e). Sisaltyva re-roll on ratkaisimen rerolls.included-kentassa ja komentajakortilla; laivastovalidaattori ei valvo re-rollien maaraa."
+    },
+    {
+      "key": "the commander's ship may carry a member of the Ethereal caste",
+      "text": "If you wish, the commander's ship may carry a member of the Ethereal caste and therefore purchase additional re-rolls at the cost shown.",
+      "page": null,
+      "status": "manual",
+      "why": "Aun'el ja Aun'O ovat paivitysrivaja komentajan alla."
+    },
+    {
+      "key": "If the fleet includes a Custodian, a Kor",
+      "text": "If the fleet includes a Custodian, a Kor'O must lead it.",
+      "page": 456,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. requires: Custodian -> Kor'O tai Kor'O'Mesme komentajana. Aiempi puute: Ehdollinen vaatimus: yhden rivin valinta pakottaa toisen. Moottorissa ei ole ehdollista saantotyyppia. Talla listalla se on helppo unohtaa, koska Kor'el on halv",
+      "kind": "requires",
+      "min": 1,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Your fleet may include any number of Explorer battleships",
+      "text": "Your fleet may include any number of Explorer battleships.",
+      "page": 456,
+      "status": "manual",
+      "why": "Ei rajoita mitaan."
+    },
+    {
+      "key": "up to one Custodian per FULL 750 points of Tau vessels",
+      "text": "Your fleet may include up to one Custodian per FULL 750 points of Tau vessels. Allied, Subject, Mercenary and Reserve vessels don't count toward this total.",
+      "page": 456,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. of_pick: nimittaja on Tau-alusten (komentaja, Battleships, Cruisers, ESCORTS) pisteet, ei pisteraja; full=True. Aiempi puute: Nimittaja on TAU-ALUSTEN pistemaara, ei laivaston pisteraja. Sovelluksen pisterajasaanto laskee aina pisterajasta, joten se antaisi vaarin liikaa laivastolle jo",
+      "kind": "per_points",
+      "per": 750,
+      "each": 1,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "any number of Merchant, Emissary or Protector class starships",
+      "text": "Your fleet may include any number of Merchant, Emissary or Protector class starships.",
+      "page": 456,
+      "status": "manual",
+      "why": "Ei rajoita mitaan."
+    },
+    {
+      "key": "one Hero class starship for every other type of capital ship",
+      "text": "It may also include up to one Hero class starship for every other type of capital ship in the fleet.",
+      "page": 456,
+      "status": "manual",
+      "why": "Sanamuoto on monitulkintainen (alusta vai luokkaa kohden); kirja ei ratkaise sita, joten lause naytetaan ja tulkinta jaa pelaajalle.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "one Messenger class starship per 500 points",
+      "text": "Your fleet may include up to one Messenger class starship per 500 points.",
+      "page": null,
+      "status": "enforced",
+      "kind": "per_points",
+      "each": 1,
+      "per": 500,
+      "why": "Kirjoitettu kasin: ESCORTS-osiossa on nelja muutakin alusta, joten laskenta on rajattava nimella. Pisterajoille lisattiin 7.9.2026 sama nimisuodatin joka suhdeluvuilla jo oli."
+    },
+    {
+      "key": "any number of Defender and/or Castellan class starships",
+      "text": "Your fleet may include any number of Defender and/or Castellan class starships.",
+      "page": 456,
+      "status": "manual",
+      "why": "Ei rajoita mitaan."
+    },
+    {
+      "key": "You may not have more Orcas and Wardens than the gravitic hook capacity",
+      "text": "You may not have more Orcas and Wardens than the gravitic hook capacity of the fleet.",
+      "page": null,
+      "status": "enforced",
+      "why": "Valvottu 14.9.2026 (J95): kapasiteetti luetaan profiilin koukkuriveilta (esim. Explorer 3 x 'Capacity: 1 Orca/Warden', s.458), ja laivastotason saanto on 'Gravitic hook capacity (Orcas and Wardens)'.",
+      "classified_on": "2026-09-14",
+      "kind": "hook_capacity"
+    },
+    {
+      "key": "Any ship equipped with Wardens can only be equipped with Wardens",
+      "text": "Any ship equipped with Wardens can only be equipped with Wardens and may not have other hook-transported escorts.",
+      "page": null,
+      "status": "manual",
+      "why": "Sidos emoalukseen; sovellus ei sido saattajia emoaluksiin."
+    },
+    {
+      "key": "A ship may have either Orcas or Dhows, but not both",
+      "text": "A ship may have either Orcas or Dhows, but not both so the gravitic hook capacity of the fleet is divided between Orcas and Dhows.",
+      "page": null,
+      "status": "manual",
+      "why": "Aluskohtaista jakoa (mika alus kantaa mita) ei mallinneta (J8). Lauseen seuraus, eli kapasiteetin jakautuminen Orcien ja Dhowien kesken, on valvottu saannolla 'Gravitic hook capacity (Dhows and Orcas)' (J95)."
+    },
+    {
+      "key": "Defenders are fielded in squadrons of 2",
+      "text": "Defenders are fielded in squadrons of 2-6 ships.",
+      "page": 455,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6,
+      "why": "Korjattu 10.9.2026 (laivastopistokoe S2, raportti 17): saanto oli SQUADRONS-osiossa, jossa ei ole aluksia, eika tarkistanut mitaan. Nyt pick nimeaa Defender-luokan ESCORTS-osiosta; Messengerit saavat toimia yksin ('Messengers operate as single ships, or in squadrons')."
+    },
+    {
+      "key": "up to one Warsphere if the fleet is worth 1500 points",
+      "text": "A Tau fleet can include up to one Warsphere if the fleet is worth 1500 points, or up to two Warspheres in games larger than that.",
+      "page": null,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. tiers: 1500 -> 1, yli 1500 -> 2. Aiempi puute: Ehdollinen porrastus ('jos 1500, niin yksi; sita isommissa kaksi'), ei tasainen suhde pisteisiin. Moottorin per_points laskee tasaisesti, joten se antaisi 3000 ",
+      "kind": "tiers",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Warspheres do not count against cruiser limits",
+      "text": "Warspheres do not count against cruiser limits in a Kor'vattra Fleet.",
+      "page": 457,
+      "status": "manual",
+      "why": "Talla listalla ei ole risteilijakattoa lainkaan, joten lauseella ei ole vaikutusta. Kor'vattra on Merchant-lista."
+    },
+    {
+      "key": "one Demiurg vessel for every three Tau capital ships",
+      "text": "A Tau fleet can include up to one Demiurg vessel for every three Tau capital ships in the fleet.",
+      "page": null,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 3,
+      "why": "Kirjoitettu kasin: nimittaja 'Tau capital ships' tarkoittaa kahta osiota (Battleships ja Cruisers), eika osioiden ratkaisu loyda sita."
+    },
+    {
+      "key": "There cannot be more Stronghold than Bastion vessels",
+      "text": "There cannot be more Stronghold than Bastion vessels in the fleet.",
+      "page": 457,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. Aiempi puute: Kahden listarivin VERTAILU keskenaan. Moottori osaa laskea osioita ja nimella rajattuja joukkoja, mutta ei verrata kahta joukkoa toisiinsa.",
+      "kind": "compare",
+      "op": "<=",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Gravitic hooks on a Custodian battleship or Emissary starship cannot count toward this total",
+      "text": "Gravitic hooks on a Custodian battleship or Emissary starship cannot count toward this total.",
+      "page": 457,
+      "status": "enforced",
+      "why": "Valvottu 14.9.2026 (J95): Custodianin ja Emissaryn koukut ovat profiilissa Warden-kohtaisia ('Capacity: 3 Wardens', s.468; 'Capacity: 1 Warden', s.472), joten ne eivat kelpaa Orcille eivatka Dhowille.",
+      "kind": "hook_capacity",
+      "classified_on": "2026-09-14"
+    },
+    {
+      "key": "one Rogue Trader cruiser and its attendant escorts",
+      "text": "Up to one Rogue Trader cruiser and its attendant escorts may accompany the fleet for every 750 points of Tau ships in the fleet.",
+      "page": 457,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. of_pick: Tau-alusten pisteet; pick: Rogue Traders -osion risteilijat. Aiempi puute: Sama syy kuin Custodianilla: nimittaja on Tau-alusten pistemaara, ei laivaston pisteraja.",
+      "kind": "per_points",
+      "per": 750,
+      "each": 1,
+      "classified_on": "2026-09-09"
+    }
+  ],
+  "entries": [
+    {
+      "name": "Tau Kor'el (Ld 8)",
+      "pts": 50,
+      "page": null,
+      "sec": "Commander"
+    },
+    {
+      "name": "Tau Kor'O (Ld 9)",
+      "pts": 80,
+      "page": null,
+      "sec": "Commander"
+    },
+    {
+      "name": "Kor'O'Mesme* (Ld 9)",
+      "pts": 110,
+      "page": null,
+      "sec": "Commander"
+    },
+    {
+      "name": "Custodian class starship",
+      "pts": 330,
+      "page": 468,
+      "sec": "Battleships"
+    },
+    {
+      "name": "Castellan class starship",
+      "pts": 50,
+      "page": 474,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Messenger class starship",
+      "pts": 50,
+      "page": 465,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Defender class starship",
+      "pts": 45,
+      "page": 464,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Warden class gunship",
+      "pts": 30,
+      "page": 475,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Orca class gunship",
+      "pts": 25,
+      "page": 466,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Kroot Warsphere",
+      "pts": 145,
+      "page": 494,
+      "sec": "Kroot Vessels"
+    },
+    {
+      "name": "Nicassar Caravan",
+      "pts": 200,
+      "page": 492,
+      "sec": "Nicassar Vessels"
+    },
+    {
+      "name": "Nicassar Rig",
+      "pts": 40,
+      "page": 493,
+      "sec": "Nicassar Vessels"
+    },
+    {
+      "name": "Nicassar Dhow",
+      "pts": 45,
+      "page": 491,
+      "sec": "Nicassar Vessels"
+    },
+    {
+      "name": "Rogue Trader Cruiser",
+      "pts": 185,
+      "page": 180,
+      "sec": "Rogue Traders"
+    },
+    {
+      "name": "Dauntless Class Light Cruiser",
+      "pts": 125,
+      "page": 77,
+      "sec": "Rogue Traders"
+    },
+    {
+      "name": "Endeavour Class Light Cruiser",
+      "pts": 110,
+      "page": 181,
+      "sec": "Rogue Traders"
+    },
+    {
+      "name": "Cargo Vessel",
+      "pts": 20,
+      "page": 192,
+      "sec": "Rogue Traders"
+    }
+  ],
+  "notes": [
+    "Kirjan sivulla 456 rivi on 'Custodian class starship (pg. 440)... 330 pts', ja profiilia sivulla 440 ei ole - se on sivulla 468. Sovellus korjaa viitteen nimen perusteella.",
+    "Kor'O'Mesme on merkitty tahdella ja selitetty sivulla 457. Rivi on listalla sellaisenaan tahtineen.",
+    "Tama on kirjan ainoa lista jossa on kaksi eri pistemaaraan sidottua rajaa jotka lasketaan TAU-ALUSTEN pisteista eika laivaston pisterajasta (Custodian ja Rogue Trader -risteilija). Kumpaakaan ei voi valvoa oikein, joten kumpaakaan ei valvota.",
+    "Otsikko 'ALLIES, SUBJECTS & MERCENARIES' oli 7.9.2026 asti tavallista tekstia, ja palkkasoturikappale paatyi osioon jonka otsikoksi tuli sivun kylkeen painettu listan nimi 'COMMERCE PROTECTION FLEET LIS'."
+  ]
+}

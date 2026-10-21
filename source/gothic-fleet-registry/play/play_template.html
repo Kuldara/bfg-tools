@@ -1,0 +1,2623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Gothic Fleet Play</title>
+<meta name="description" content="Play Battlefleet Gothic with the fleet you built in Gothic Fleet Registry: hits, criticals, orders and braces recorded on your phone, rules derived from the book. Prototype v__VERSION__">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#0F151B">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='3' fill='%2314243F'/%3E%3Cpath d='M3 13 8 3l5 10z' fill='%23D1792A'/%3E%3C/svg%3E">
+<style>
+__FONTS__
+</style>
+<style>
+__TOKENS__
+
+/* ======================================================= PLAY LAYER ===== */
+/* Card identity tokens: the printed card is paper-coloured in both themes;
+   the phone card goes dark at a night table, so its surfaces are tokens. */
+:root{
+  --card:#FBF9F4; --card-ink:#211F20; --card-mute:#6B6769; --card-rule:#D8D3CB;
+  --acc:#D1792A; --cr:#F4E5E6; --cr-ink:#9A5F62; --brace:#2F6B48; --brace-wash:#DDEBE2;
+  --tap:44px; --big:56px;
+  /* squadron colours (user 30.9.2026): every squadron its own, strong
+     enough for a frame on either card colour and white tag text */
+  --sq1:#B97512; --sq2:#2C7FC4; --sq3:#8A4FC4; --sq4:#2E8A5E; --sq5:#C4492F; --sq6:#B8407E;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --card:#1B232C; --card-ink:#E4EAF0; --card-mute:#8F9CA9; --card-rule:#2C3945;
+    --acc:#E0955A; --cr:#3A2224; --cr-ink:#E5A2A6; --brace:#6FBF8E; --brace-wash:#162C21;
+  }
+}
+:root[data-theme="dark"]{
+  --card:#1B232C; --card-ink:#E4EAF0; --card-mute:#8F9CA9; --card-rule:#2C3945;
+  --acc:#E0955A; --cr:#3A2224; --cr-ink:#E5A2A6; --brace:#6FBF8E; --brace-wash:#162C21;
+}
+
+*{box-sizing:border-box}
+html{overscroll-behavior-y:none}
+body{margin:0;background:var(--ground);color:var(--ink);font:15px/1.4 var(--sans);-webkit-font-smoothing:antialiased;
+  padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:none;border:0;padding:0;margin:0;text-align:inherit;cursor:pointer;touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* Tap and click feedback (user 30.9.2026): every control answers the press
+   where the finger is - a short press-in and a darker fill. Only transform
+   and filter change, never the size, so nothing around the control moves.
+   Hover tints only on devices that really hover; the keyboard keeps the
+   focus ring; reduced motion keeps the tint and drops the movement. */
+:where(button,a.btn,a.tool,[role=button],[data-act]:not(.menu),summary){-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+:where(button,a.btn,a.tool,[role=button],[data-act]:not(.menu):not(span)){transition:transform .09s ease-out,filter .12s ease-out,background-color .15s,border-color .15s,color .15s}
+:where(button,a.btn,a.tool,[role=button],[data-act]:not(.menu):not(span)):not([disabled]):active{transform:scale(.96);filter:brightness(.82)}
+:where(summary):active{filter:brightness(.88)}
+@media (hover:hover){:where(button,a.btn,a.tool,[role=button]):not([disabled]):hover{filter:brightness(1.12)}}
+@media (prefers-reduced-motion:reduce){:where(button,a.btn,a.tool,[role=button],[data-act]):active{transform:none}}
+textarea,select{font-size:16px}
+h1,h2,h3{font-family:var(--disp);letter-spacing:.02em;margin:0}
+.mono{font-family:var(--mono)}
+small{font-size:12px}
+
+/* --- shell ------------------------------------------------------------ */
+.app{min-height:100vh;display:flex;flex-direction:column}
+@supports (min-height:100dvh){.app{min-height:100dvh}}
+.top{position:sticky;top:0;z-index:5;background:var(--panel);border-bottom:1px solid var(--line);
+  padding:max(8px,env(safe-area-inset-top)) 12px 8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.top h1{font-size:17px;text-transform:uppercase;flex:1 1 100%;white-space:nowrap;display:flex;align-items:baseline;gap:8px}
+.top h1 .lock{font:700 12px var(--mono);color:var(--bad);letter-spacing:.04em}
+.top h1 small{display:block;font:12px/1.2 var(--mono);color:var(--ink-3);text-transform:none;letter-spacing:0;white-space:normal}
+.pill{display:inline-flex;align-items:center;gap:4px;min-height:var(--tap);padding:0 9px;border-radius:8px;
+  border:1px solid var(--line);background:var(--sunk);font:600 12px/1 var(--sans);letter-spacing:.02em;color:var(--ink-2)}
+.pill.on{background:var(--accent-wash);border-color:var(--accent);color:var(--accent-ink)}
+.pill.bad{background:var(--bad-wash);border-color:var(--bad);color:var(--bad)}
+.pill.warn{background:var(--warn-wash);border-color:var(--warn);color:var(--warn)}
+.pill b{font-size:15px}
+.ico{min-width:var(--tap);min-height:var(--tap);display:inline-flex;align-items:center;justify-content:center;
+  border-radius:8px;border:1px solid var(--line);background:var(--sunk);font:600 12px var(--mono)}
+/* The top bar's own buttons (user 30.9.2026: they looked hand-drawn): one
+   family - a group of equal buttons, each an outline icon over nothing but
+   its word, the same ink; the state (Info on) is the only colour. */
+.tools{display:flex;gap:4px;margin-left:auto}
+.tool{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 10px;
+  border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--ink-2);
+  font:600 12px/1 var(--sans);letter-spacing:.02em;text-decoration:none;cursor:pointer}
+.tool svg{width:17px;height:17px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tool:hover{background:var(--sunk);color:var(--ink)}
+.tool.on{background:var(--accent-wash);border-color:var(--accent);color:var(--accent-ink)}
+.tool[disabled]{opacity:.35;cursor:default}
+.tool[disabled]:hover{background:transparent;color:var(--ink-2)}
+@media (max-width:420px){ .tool{padding:0 8px;gap:4px} .tool span{font-size:11px} }
+.main{flex:1;padding:8px 8px 96px}
+.bottom{position:sticky;bottom:0;z-index:5;background:var(--panel);border-top:1px solid var(--line);
+  padding:8px 12px max(8px,env(safe-area-inset-bottom));display:flex;gap:8px;align-items:center}
+.bottom .turnbtn{flex:1;min-height:var(--big);border-radius:10px;background:var(--accent);color:#fff;
+  font:700 16px/1 var(--disp);letter-spacing:.06em;text-transform:uppercase;text-align:center}
+.bottom .turnbtn.enemy{background:var(--ink-2)}
+.bottom .vp{font:12px/1.3 var(--mono);color:var(--ink-3);text-align:right;white-space:nowrap}
+.bottom .vp b{display:block;font-size:16px;color:var(--ink)}
+.note{margin:0 0 8px;padding:8px 12px;border-radius:8px;background:var(--warn-wash);color:var(--warn);font-size:13px}
+.note.bad{background:var(--bad-wash);color:var(--bad)}
+
+/* --- load & setup ----------------------------------------------------- */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin:0 0 12px;box-shadow:var(--shadow)}
+.card h2{font-size:18px;text-transform:uppercase;margin-bottom:6px}
+.card p{margin:4px 0;color:var(--ink-2);font-size:14px}
+.card ul{margin:6px 0;padding-left:18px;font-size:13px;color:var(--ink-2)}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:var(--big);padding:8px 14px;border-radius:10px;
+  background:var(--accent);color:#fff;font:700 15px/1.2 var(--disp);letter-spacing:.05em;text-transform:uppercase;width:100%;margin-top:8px}
+.btn.sec{background:var(--sunk);color:var(--ink);border:1px solid var(--line)}
+.btn.warn{background:var(--warn-wash);color:var(--warn);border:1px solid var(--warn)}
+.btn[disabled]{opacity:.45}
+.btn small{font:12px var(--mono);text-transform:none;letter-spacing:0;opacity:.85}
+textarea{width:100%;min-height:120px;border-radius:8px;border:1px solid var(--line);background:var(--sunk);padding:10px;color:var(--ink);font-family:var(--mono)}
+.setrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--line-soft)}
+.setrow .who{flex:1 1 140px;min-width:0}
+.setrow .who b{display:block;font-family:var(--disp);font-size:16px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.setrow .who small{color:var(--ink-3)}
+/* the ship's name, to type over (16 px: a smaller field zooms the page on iOS) */
+.setrow .who input.nm{display:block;width:100%;min-width:0;box-sizing:border-box;min-height:38px;padding:4px 2px;margin:0 0 2px;
+  font-family:var(--disp);font-size:16px;text-transform:uppercase;color:var(--ink);background:transparent;
+  border:0;border-bottom:1px dashed var(--ink-3);border-radius:0}
+.setrow .who input.nm::placeholder{color:var(--ink-3)}
+.setrow .who input.nm:focus{outline:none;border-bottom:2px solid var(--accent);background:var(--sunk)}
+.seg{display:flex;gap:4px}
+.seg button{min-width:var(--tap);min-height:var(--tap);border-radius:8px;border:1px solid var(--line);background:var(--sunk);
+  font:700 18px var(--mono);display:flex;align-items:center;justify-content:center}
+.seg button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.seg button.sq{font-size:14px;min-width:52px}
+/* six Ld tiles and SQN on one line of a phone: the tiles give way, not the row */
+.setrow .ctl{display:flex;gap:8px;flex:0 1 auto;min-width:0;max-width:100%}
+.seg.ld{flex:0 1 auto;min-width:0}
+.seg.ld button{flex:0 1 auto;width:var(--tap);min-width:30px}
+select{min-height:var(--tap);border-radius:8px;border:1px solid var(--line);background:var(--sunk);padding:0 8px;max-width:100%}
+
+/* --- roster rows ------------------------------------------------------ */
+.row{background:var(--card);color:var(--card-ink);border:1px solid var(--line);border-left:6px solid var(--kd);border-radius:10px;
+  margin:0 0 6px;padding:6px 8px 6px 10px;box-shadow:var(--shadow)}
+.row.pl2{opacity:.62}
+/* A wreck (p. 71): the name, what it is now and the table button stay
+   readable; the hit boxes go, the stats and weapons are not rendered. */
+.row.dead{border-left-color:var(--ink-3);background:var(--sunk)}
+.row.dead .r1 .name b{text-decoration:line-through;text-decoration-color:var(--ink-3)}
+.row.dead .r3 .hits{display:none}
+.row.dead .r4 button{min-height:40px;color:var(--ink-2)}
+.row.dead .r4 button small{color:var(--ink-3)}
+.row.dead.gone{opacity:.55}
+.row.ingrp{margin-left:10px}
+.r1{display:flex;align-items:center;gap:8px}
+.tag{flex:0 0 auto;min-width:34px;padding:3px 6px;border-radius:5px;background:var(--km);color:#fff;font:700 12px/1 var(--mono);text-align:center;letter-spacing:.04em}
+.tag.grp{background:var(--sq)}
+.tag.sq{background:var(--sq);min-width:26px}
+/* A squadron - capital ships under one header, or an escort squadron on
+   one card - is framed in its own colour: header, members and escort card
+   alike, so which ship flies with which reads at a glance. */
+.row.sqd{border-color:var(--sq);border-left-color:var(--sq);box-shadow:inset 0 0 0 1px var(--sq)}
+.row.ingrp{border-top:4px solid var(--sq)}
+.row.esc.sqd .tag:first-child{background:var(--sq)}
+.name{flex:1 1 auto;min-width:0;min-height:var(--tap);display:flex;flex-direction:column;justify-content:center}
+.name b{font:700 17px/1.1 var(--disp);text-transform:uppercase;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.name small{font:12px/1.2 var(--sans);color:var(--card-mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ldt{flex:0 0 auto;min-width:58px;min-height:var(--tap);border-radius:8px;border:1px solid var(--card-rule);background:var(--panel);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2px 6px;color:var(--ink)}
+.ldt b{font:700 20px/1 var(--mono)}
+.ldt small{font:600 12px/1.2 var(--mono);color:var(--ink-3);white-space:nowrap}
+.ldt.na b{color:var(--ink-3)}
+.played{flex:0 0 auto;min-width:66px;min-height:var(--tap);border-radius:8px;border:1px solid var(--card-rule);
+  font:700 12px/1.1 var(--mono);text-align:center;color:var(--card-mute);background:var(--panel)}
+.played.p1{background:var(--warn-wash);border-color:var(--warn);color:var(--warn)}
+.played.p2{background:var(--ok-wash);border-color:var(--ok);color:var(--ok)}
+.r2{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;margin:6px 0 0;font:600 13px/1.3 var(--mono)}
+.r2 .ac{white-space:nowrap}
+.r2 .ac s{opacity:.55}
+.r2 .ac em{font-style:normal;font-weight:400;color:var(--card-mute)}
+.w-wb{color:var(--w-wb)} .w-lan{color:var(--w-lan)} .w-nov{color:var(--w-nov)} .w-tor{color:var(--w-tor)}
+.w-bay{color:var(--w-bay)} .w-min{color:var(--w-min)} .w-pul{color:var(--w-pul)} .w-ram{color:var(--w-ram)} .w-hook{color:var(--w-hook)}
+.chip{display:inline-flex;align-items:center;min-height:24px;padding:0 7px;border-radius:12px;font:600 12px/1 var(--mono);
+  border:1px solid var(--card-rule);color:var(--card-mute);background:var(--panel)}
+.chip.crip{background:var(--cr);color:var(--cr-ink);border-color:var(--cr-ink)}
+.chip.br{background:var(--brace-wash);color:var(--brace);border-color:var(--brace)}
+.chip.ord{background:var(--accent-wash);color:var(--accent-ink);border-color:var(--accent)}
+.chip.crit{background:var(--bad-wash);color:var(--bad);border-color:var(--bad)}
+.chip.crit.fire{min-height:32px;padding:0 10px;cursor:pointer}
+.chip.lock{background:var(--warn-wash);color:var(--warn);border-color:var(--warn)}
+.r3{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:6px 0 0}
+/* the track fills its line: the boxes shrink to fit one line on a narrow
+   phone (360 px) rather than wrap a twelfth box onto a line of its own */
+.hits{display:flex;flex-wrap:wrap;gap:3px;flex:1 1 100%;min-width:0}
+.hits b{flex:1 1 0;min-width:18px;max-width:30px;height:44px;border:1px solid var(--card-mute);border-radius:4px;background:var(--panel);position:relative;
+  font:600 12px/42px var(--mono);text-align:center;color:var(--card-mute)}
+.hits.many b{max-width:22px;font-size:0}
+.hits b.cr{background:var(--cr);border-color:var(--cr-ink);color:var(--cr-ink)}
+.hits b.on{background:var(--card-ink);color:var(--card);border-color:var(--card-ink)}
+.hits b.on.cr{background:var(--cr-ink);border-color:var(--cr-ink);color:#fff}
+.hits b.first{border-left-width:3px}
+.stat{min-height:var(--tap);display:inline-flex;align-items:center;gap:4px;padding:0 8px;border-radius:6px;border:1px solid var(--card-rule);
+  background:var(--panel);font:600 12px/1 var(--mono);color:var(--card-mute)}
+.stat b{font-size:15px;color:var(--card-ink)}
+.stat.off b{color:var(--bad)}
+.stat.pill2{border-radius:22px}
+.stat.on{background:var(--ok-wash);border-color:var(--ok);color:var(--ok)}
+.stat.on b{color:var(--ok)}
+.stat.spent{opacity:.55;text-decoration:line-through}
+.mem{display:flex;flex-wrap:wrap;gap:6px}
+.mem button{min-width:var(--tap);min-height:var(--tap);border-radius:22px;border:2px solid var(--card-ink);background:var(--panel);
+  font:700 13px var(--mono);color:var(--card-ink)}
+.mem button.dead{background:var(--card-mute);border-color:var(--card-mute);color:var(--card);text-decoration:line-through}
+.r4{display:flex;gap:6px;margin:6px 0 0}
+.r4 button{flex:1 1 0;min-height:48px;border-radius:9px;border:1px solid var(--line);background:var(--sunk);
+  font:700 13px/1.1 var(--disp);letter-spacing:.04em;text-transform:uppercase;color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.r4 button small{font:12px/1.1 var(--mono);text-transform:none;letter-spacing:0;color:var(--ink-3)}
+.r4 button.hit{background:var(--bad-wash);border-color:var(--bad);color:var(--bad)}
+.r4 button.brace{background:var(--brace-wash);border-color:var(--brace);color:var(--brace)}
+.r4 button.brace.on{background:var(--brace);color:#fff}
+.r4 button.order.on{background:var(--accent-wash);border-color:var(--accent);color:var(--accent-ink)}
+.r4 button[disabled]{opacity:.4}
+.row .grpline{font:600 12px var(--mono);color:var(--acc);margin-top:4px}
+
+/* spec line and weapons table on the row */
+.stl{display:flex;flex-wrap:wrap;gap:2px 6px;margin:4px 0 0;font:600 12px/1.4 var(--mono);color:var(--card-mute)}
+.stl b{color:var(--card-ink);font-size:13px}
+.stl span.mod b{color:var(--cr-ink)}
+.stl em{font-style:normal;color:var(--card-rule)}
+.wt{width:100%;border-collapse:collapse;margin:6px 0 0;font-size:13px;table-layout:auto}
+.wt th{font:700 12px/1.2 var(--mono);color:var(--card-mute);text-align:left;padding:0 3px 2px;letter-spacing:.03em}
+.wt th.st,.wt th.hf{text-align:right}
+.wt th.rg{white-space:nowrap}
+.wt th.hf small{display:block;font-size:12px;font-weight:600;text-transform:none}
+.wt td{padding:3px 3px;border-top:1px solid var(--card-rule);vertical-align:middle}
+.row .wt .arcg{width:20px;height:20px}
+.wt td.bd{width:24px;padding-left:0}
+.wt .bg{display:inline-block;width:20px;height:20px;line-height:20px;text-align:center;border-radius:4px;background:var(--bd);color:#fff;font:700 12px var(--mono)}
+.wt td.nm{font-size:13.5px;line-height:1.2}
+.wt td.nm small{display:block;font-size:12px;color:var(--bad)}
+.wt td.rg{white-space:nowrap;font:12px var(--mono);color:var(--card-mute)}
+.wt td.st,.wt td.hf{text-align:right;font:700 16px/1.1 var(--mono);white-space:nowrap}
+.wt td.st small{display:block;font:600 12px var(--mono);color:var(--card-mute)}
+.wt td.st i.ea{display:block;font:600 11px/1.1 var(--mono);font-style:normal;color:var(--card-mute)}
+.wt td.hf{color:var(--card-mute)}
+.wt.crippled tr:not(.nohalf) td.st{opacity:.4;font-weight:600}
+.wt td.st.txt,.wt td.hf.txt{font:600 12px/1.2 var(--mono);white-space:normal;color:var(--card-mute);text-align:right}
+.wt td.nm{min-width:110px}
+.wt.crippled td.hf,.wt.crippled th.hf{color:var(--cr-ink)}
+.wt tr.silent td.nm,.wt tr.silent td.st,.wt tr.silent td.hf{text-decoration:line-through;color:var(--card-mute)}
+.wt tr.silent td.nm small{text-decoration:none}
+.wt td.ar{width:26px;text-align:right;padding-right:0}
+.sheet .wt{font-size:14px}
+.sheet .wt td.nm{font-size:14.5px}
+.hits.mem b.on{background:var(--card-mute);border-color:var(--card-mute);color:var(--card);text-decoration:line-through}
+.hits.mem{flex:0 1 auto}
+.hits.mem b{flex:0 0 36px;max-width:none}
+/* A star fort's four quadrants (Fleets p. 501): one is selected - its hit
+   track, shields, turrets and weapons are the ones the card shows, and the
+   next hit or critical goes to it. Each button carries its own hits left;
+   a crippled one is in the crippled colour, one at 0 is struck through. */
+.quads{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:6px 0 0}
+.quads button{min-height:var(--tap);border-radius:8px;border:1px solid var(--card-rule);background:var(--panel);color:var(--card-ink);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:2px 4px}
+.quads button b{font:700 14px/1 var(--mono)}
+.quads button small{font:600 11px/1.1 var(--mono);color:var(--card-mute);white-space:nowrap}
+.quads button.cr{background:var(--cr);border-color:var(--cr-ink)}
+.quads button.cr small{color:var(--cr-ink)}
+.quads button.gone{background:var(--sunk)}
+.quads button.gone b{text-decoration:line-through;color:var(--card-mute)}
+.quads button.on{border:2px solid var(--acc);box-shadow:inset 0 0 0 1px var(--acc)}
+.sheet .quads{margin:0 0 10px}
+/* the weapons table of a star fort: one heading per group (the selected
+   quadrant's own rows, the Basilica's); a Basilica row is not halved by
+   the quadrant's crippling, so it keeps its weight in a crippled table */
+.wt tr.zn td{padding:5px 3px 1px;font:700 11px/1.2 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--card-mute)}
+.wt.crippled tr.keep td.st{opacity:1;font-weight:700}
+.wt.crippled tr.keep td.hf{color:var(--card-mute)}
+/* a rule card (orbital mines, minefields, fire ships): what it is in one
+   line, then its steps - a heading and a sentence each */
+.lead{margin:4px 0 0;font:13px/1.35 var(--sans);color:var(--card-ink)}
+.steps{margin:6px 0 0;padding:0;list-style:none;font:13px/1.35 var(--sans);color:var(--card-ink)}
+.steps li{margin:0 0 4px}
+.steps li b{font:700 11px/1.2 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--km);margin-right:6px}
+.noarm{margin:6px 0 0;font:600 12px/1.3 var(--mono);color:var(--card-mute)}
+
+/* the wreck and the commander on the card */
+.chip.hulk{gap:4px;padding-left:5px}
+.chip.hulk svg{width:14px;height:14px;fill:currentColor}
+.chip.hulk.blazing{background:var(--bad-wash);color:var(--bad);border-color:var(--bad)}
+.chip.hulk.drifting{background:var(--sunk);color:var(--ink-2);border-color:var(--ink-3)}
+.chip.hulk.gone{background:var(--cr);color:var(--cr-ink);border-color:var(--cr-ink)}
+.hulkl{display:flex;align-items:flex-start;gap:6px;margin:6px 0 0;padding:6px 8px;border-radius:6px;background:var(--sunk);color:var(--ink-2);font:12.5px/1.35 var(--sans)}
+.hulkl svg{flex:0 0 auto;width:20px;height:20px;fill:currentColor;margin-top:1px}
+.hulkl b{font:700 12px var(--mono);letter-spacing:.04em;margin-right:4px}
+.hulkl.blazing{background:var(--bad-wash);color:var(--bad)}
+.hulkl.gone{background:var(--cr);color:var(--cr-ink)}
+.row.dead .hulkl{opacity:1}
+.band .hulkl{margin:0;background:none;padding:0;color:inherit}
+/* Re-roll boxes (user 5.10.2026): one per re-roll, tapped when it is used
+   and tapped again if that was a slip. The colour says where it came from
+   and the word under it says the same: with the price, bought, an open
+   option taken into use, or added on the counter. A dashed one is an open
+   option of the list - tap it if it was bought. */
+.rrb{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0 2px}
+.rrx{position:relative;min-width:56px;min-height:var(--tap);padding:3px 5px;border-radius:8px;border:2px solid var(--rrc);
+  background:color-mix(in srgb,var(--rrc) 16%,var(--panel));color:var(--card-ink);
+  display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.rrx b{font:700 14px/1 var(--mono)}
+.rrx small{font:600 9.5px/1 var(--sans);letter-spacing:0;color:var(--card-mute)}
+.rrx.included{--rrc:var(--brace)} .rrx.bought{--rrc:var(--acc)}
+.rrx.optional{--rrc:var(--sq2)} .rrx.added{--rrc:var(--sq3)}
+.rrx.open{--rrc:var(--card-mute);border-style:dashed;background:none}
+/* used: the colour stays as a faint frame so the kind still reads, the
+   cross says the rest */
+.rrx.used{background:var(--sunk);border-color:color-mix(in srgb,var(--rrc) 40%,var(--card-rule))}
+.rrx.used b,.rrx.used small{color:var(--card-mute);opacity:.55}
+.rrx.used::after{content:"";position:absolute;inset:6px;pointer-events:none;
+  background:
+    linear-gradient(to top right,transparent calc(50% - 1.25px),var(--card-mute) calc(50% - 1.25px),var(--card-mute) calc(50% + 1.25px),transparent calc(50% + 1.25px)),
+    linear-gradient(to bottom right,transparent calc(50% - 1.25px),var(--card-mute) calc(50% - 1.25px),var(--card-mute) calc(50% + 1.25px),transparent calc(50% + 1.25px))}
+.rrn{font:600 12px/1.25 var(--mono);color:var(--card-mute);flex:1 1 90px;min-width:0}
+.cmdl{display:flex;align-items:center;gap:6px;margin:4px 0 0;font:600 12.5px/1.2 var(--sans);color:var(--card-ink)}
+.cmdl .tag{min-width:30px}
+.cmdl small{color:var(--card-mute);font-family:var(--mono);font-size:12px}
+.pop.cata .tiles button{min-height:64px;align-items:flex-start;text-align:left}
+.pop.cata .tiles button small{white-space:normal}
+.pop.cata .hr{margin:10px 0 2px}
+.pop.cata ul.hulkrules{margin:0;padding-left:18px;font:12px/1.4 var(--sans);color:var(--ink-2)}
+.pop.cata ul.hulkrules li{margin:3px 0}
+.hulkl span{flex:1 1 auto;min-width:0}
+
+/* group header */
+.grp-hd{background:var(--panel);background:color-mix(in srgb,var(--sq) 12%,var(--panel));border:2px solid var(--sq);border-radius:10px;margin:0 0 6px;padding:8px 10px}
+.grp-hd .r1 .name b{color:var(--sq)}
+.grp-hd .r4 button{min-height:44px}
+/* the members line: a ship out of action is struck through with the
+   reason, a crippled one is marked (its values are already halved) */
+.grp-hd .name small{white-space:normal;overflow:visible;text-overflow:clip}
+.grp-hd .name small s{color:var(--ink-3)}
+.grp-hd .name small i{font:600 10px/1 var(--mono);font-style:normal;letter-spacing:.06em;text-transform:uppercase;color:var(--bad)}
+.grp-hd .name small i.cr{color:var(--ink-2)}
+.grp-hd .wt .nm small s{color:var(--bad)}
+
+/* --- popover (inline under the row) ---------------------------------- */
+.pop{margin:8px -8px -8px -10px;padding:10px;border-top:1px solid var(--line);background:var(--panel);border-radius:0 0 10px 10px;color:var(--ink)}
+.pop h4{margin:0 0 6px;font:700 12px/1.2 var(--mono);color:var(--ink-3);letter-spacing:.04em;text-transform:uppercase}
+.pop p{margin:4px 0 8px;font-size:13px;color:var(--ink-2)}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.tiles.c2{grid-template-columns:repeat(2,1fr)}
+.tiles.c4{grid-template-columns:repeat(4,1fr)}
+.tiles.c6{grid-template-columns:repeat(6,1fr)}
+.tiles button{min-height:52px;border-radius:8px;border:1px solid var(--line);background:var(--sunk);padding:4px 6px;
+  font:700 13px/1.15 var(--disp);letter-spacing:.03em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.tiles button small{font:11px/1.2 var(--mono);text-transform:none;letter-spacing:0;color:var(--ink-3)}
+.tiles button.on{background:var(--accent-wash);border-color:var(--accent);color:var(--accent-ink)}
+.tiles button.bad{background:var(--bad-wash);border-color:var(--bad);color:var(--bad)}
+.tiles button.warn{background:var(--warn-wash);border-color:var(--warn);color:var(--warn)}
+.tiles button.ok{background:var(--ok-wash);border-color:var(--ok);color:var(--ok)}
+.tiles button[disabled]{opacity:.4}
+.tiles button{position:relative}
+.tiles button .n{position:absolute;top:3px;right:4px;min-width:18px;padding:1px 4px;border-radius:9px;
+  background:var(--accent);color:#fff;font:700 11px/1.2 var(--mono);font-style:normal}
+/* A critical result is a pair (user 30.9.2026): the minus right beside the
+   plus. The minus takes a mis-tapped count off; with nothing to take off it
+   is plainly disabled - dashed, faded, not tappable. */
+.tiles .cp{display:flex;min-height:52px;border-radius:8px;border:1px solid var(--line);background:var(--sunk);overflow:hidden}
+.tiles .cp.has{border-color:var(--accent)}
+.tiles .cp>button{border:0;border-radius:0;min-height:52px;background:transparent}
+.tiles .cp>button.plus{flex:1 1 auto;min-width:0;padding-right:13px}
+.tiles .cp>button.minus{flex:0 0 34px;border-right:1px solid var(--line);font:700 20px/1 var(--mono);color:var(--ink);padding:0}
+.tiles .cp>button.minus[disabled]{opacity:1;color:var(--ink-3);background:repeating-linear-gradient(135deg,transparent 0 4px,var(--line-soft) 4px 5px);cursor:default}
+.tiles .cp>button.plus::after{content:"+";position:absolute;right:4px;bottom:3px;font:700 13px/1 var(--mono);color:var(--ink-3)}
+.tiles .cp.warn{background:var(--warn-wash);border-color:var(--warn)}
+.tiles .cp.warn>button.plus{color:var(--warn)}
+.tiles .cp.on{background:var(--accent-wash);border-color:var(--accent)}
+.tiles button.has{border-color:var(--accent)}
+.tiles button.just{animation:just .9s ease-out}
+@keyframes just{0%{background:var(--accent);color:#fff;box-shadow:0 0 0 3px var(--accent-wash)}100%{box-shadow:0 0 0 0 transparent}}
+.pop .last{min-height:2.6em;margin:0 0 8px;padding:6px 8px;border-radius:6px;background:var(--sunk);font:600 13px/1.35 var(--sans);color:var(--ink-3)}
+.pop .last.fresh{color:var(--ink);background:var(--accent-wash)}
+.pop .xrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 0;padding:8px;border-radius:8px;
+  border:1px solid var(--warn);background:var(--warn-wash);font:600 13px var(--sans);color:var(--ink)}
+.pop .xrow span{flex:1 1 100%}
+.pop .xrow button{min-width:56px;min-height:40px;border-radius:8px;border:1px solid var(--line);background:var(--panel);font:700 14px var(--mono);color:var(--ink)}
+.pop .xrow button.cx{font:600 12px var(--sans);color:var(--ink-3)}
+.tiles button b{font:700 16px var(--mono)}
+.steprow{display:flex;align-items:center;gap:8px}
+.steprow button{min-width:var(--big);min-height:48px;border-radius:8px;border:1px solid var(--line);background:var(--sunk);font:700 20px var(--mono)}
+.steprow .val{flex:1;text-align:center;font:700 22px var(--mono)}
+.steprow .val small{display:block;font:12px var(--mono);color:var(--ink-3)}
+.pop .close{margin-top:8px;width:100%;min-height:40px;border-radius:8px;border:1px solid var(--line);font:600 12px var(--mono);color:var(--ink-3)}
+
+/* --- sheet (the card) ------------------------------------------------- */
+.sheet{position:fixed;inset:0;z-index:20;background:var(--card);color:var(--card-ink);overflow:auto;overscroll-behavior:contain;
+  padding-bottom:max(16px,env(safe-area-inset-bottom))}
+.sh-hd{position:sticky;top:0;z-index:2;background:var(--kd);color:#fff;padding:max(10px,env(safe-area-inset-top)) 12px 10px;display:flex;gap:10px;align-items:center}
+.sh-hd .t{flex:1;min-width:0}
+.sh-hd h2{font-size:20px;line-height:1.1;text-transform:uppercase;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sh-hd p{margin:2px 0 0;font-size:12px;opacity:.85;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sh-hd .x{min-width:var(--tap);min-height:var(--tap);border-radius:8px;border:1px solid rgba(255,255,255,.45);font:700 18px var(--mono);color:#fff}
+.sh-hd .ldt{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.4);color:#fff}
+.sh-hd .ldt small{color:rgba(255,255,255,.8)}
+.sh-body{padding:10px 12px}
+.band{padding:8px 10px;border-radius:8px;margin:0 0 10px;font-size:13px;font-weight:600}
+.band.crip{background:var(--cr);color:var(--cr-ink)}
+.band.br{background:var(--brace-wash);color:var(--brace)}
+.band.dead{background:var(--sunk);color:var(--ink-2)}
+.band.lock{background:var(--warn-wash);color:var(--warn)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 10px}
+.stats div{background:var(--panel);border:1px solid var(--card-rule);border-radius:8px;padding:6px 8px;min-height:56px}
+.stats span{display:block;font:700 12px/1 var(--mono);color:var(--km);letter-spacing:.05em}
+.stats b{display:block;font:700 19px/1.2 var(--mono);color:var(--card-ink);white-space:nowrap}
+.stats b s{font-size:12px;color:var(--card-mute);margin-left:4px}
+.stats b i{display:block;font:600 12px/1.2 var(--mono);color:var(--bad);font-style:normal;white-space:normal}
+.stats div.tapp{border-color:var(--accent)}
+.stats button{width:100%;text-align:left}
+.sec{margin:0 0 12px}
+.sec h3{font:700 12px/1.2 var(--mono);color:var(--km);letter-spacing:.06em;text-transform:uppercase;margin:0 0 6px;padding-bottom:3px;border-bottom:1px solid var(--card-rule)}
+.sec h3 em{font-style:normal;font-weight:400;color:var(--card-mute);text-transform:none;letter-spacing:0;margin-left:6px}
+.arm{width:100%;border-collapse:collapse;font-size:13px}
+.arm td{padding:6px 4px;border-bottom:1px solid var(--card-rule);vertical-align:middle}
+.arm td.nm{width:auto}
+.arm td.rg{color:var(--card-mute);font-family:var(--mono);font-size:12px;overflow-wrap:anywhere}
+.arm td.st{white-space:nowrap;font:700 18px var(--mono);text-align:right}
+.arm td.st s{font-size:12px;color:var(--card-mute);margin-left:3px}
+.arm td.ar{width:30px;text-align:right}
+.arm tr.silent td.nm,.arm tr.silent td.st{text-decoration:line-through;color:var(--card-mute)}
+.arm tr.silent td.nm small{text-decoration:none;color:var(--bad)}
+.arm .bg{display:inline-block;width:20px;height:20px;line-height:20px;text-align:center;border-radius:4px;background:var(--bd);color:#fff;font:700 12px var(--mono);margin-right:6px;vertical-align:middle}
+.arm td.nm small{display:block;font-size:12px;color:var(--card-mute);margin-left:26px}
+.arcg{width:24px;height:24px;vertical-align:middle}
+.arcg path{fill:var(--panel);stroke:var(--card-mute);stroke-width:.5}
+.arcg path.on{fill:var(--card-ink)}
+.arcg path.pick{fill:var(--card-mute)}
+.arcg circle{fill:none;stroke:var(--card-mute);stroke-width:.5}
+.noarc{color:var(--card-mute)}
+.sheet .hits b{max-width:36px;height:44px;font-size:13px;line-height:42px}
+.sheet .hits.many b{max-width:26px;font-size:11px}
+.crline{font:600 12px var(--mono);color:var(--cr-ink);margin:6px 0 0}
+.rules{margin:0;padding-left:18px;font-size:13px;color:var(--card-ink)}
+.rules li{margin:0 0 4px}
+.rules li b.ast{font-style:normal;color:var(--ast);margin-right:3px}
+.crtab{width:100%;border-collapse:collapse;font-size:12.5px}
+.crtab td{padding:3px 4px;border-bottom:1px solid var(--card-rule)}
+.crtab td:first-child{font:700 13px var(--mono);width:30px}
+.crtab td:last-child{color:var(--card-mute)}
+.foot{font-size:12px;color:var(--card-mute);margin:4px 0 0}
+.sheet .r4{margin:10px 0}
+.sheet .tiles{margin-top:6px}
+.flags{display:flex;flex-wrap:wrap;gap:6px}
+.flags button{min-height:40px;padding:0 10px;border-radius:8px;border:1px solid var(--card-rule);background:var(--panel);font:600 12px var(--mono);color:var(--card-mute)}
+.flags button.on{background:var(--ok-wash);border-color:var(--ok);color:var(--ok)}
+.flags button.bad.on{background:var(--bad-wash);border-color:var(--bad);color:var(--bad)}
+.ordtab{width:100%;border-collapse:collapse;font-size:12.5px}
+.ordtab td{padding:4px;border-bottom:1px solid var(--card-rule);vertical-align:top}
+.ordtab td:first-child{font:700 12px var(--mono);white-space:nowrap}
+
+/* --- menu ------------------------------------------------------------- */
+.menu{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.45);display:flex;align-items:flex-end}
+.menu .box{width:100%;background:var(--panel);border-radius:14px 14px 0 0;padding:14px 14px max(14px,env(safe-area-inset-bottom));max-height:85vh;overflow:auto}
+.menu h2{font-size:17px;text-transform:uppercase;margin-bottom:8px}
+.menu .btn{margin-top:8px}
+.menu table{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0}
+.menu td{padding:4px 0;border-bottom:1px solid var(--line-soft)}
+.menu td:last-child{text-align:right;font-family:var(--mono)}
+
+/* --- tracking toggles ------------------------------------------------- */
+.togs{display:flex;flex-direction:column;gap:6px;margin:6px 0 10px}
+.togs button{min-height:var(--tap);display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:10px;padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:var(--sunk);font:600 13px/1.2 var(--mono);text-align:left}
+.togs button i{font-style:normal;font:700 12px var(--mono);color:var(--ink-3);text-transform:uppercase}
+.togs button small{grid-column:1 / -1;font:12px/1.3 var(--sans);color:var(--ink-3)}
+.togs button.on{background:var(--accent-wash);border-color:var(--accent);color:var(--accent-ink)}
+.togs button.on i{color:var(--accent-ink)}
+
+/* --- one-line top bar, bottom strip, End Phase (19.10.2026) ----------- */
+.top.one{flex-wrap:wrap}
+.top.one h1{flex:1 1 0;min-width:0;display:block;overflow:hidden}
+.top.one h1 small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top.one .tools{flex:0 0 auto}
+.bottom{flex-direction:column;align-items:stretch;gap:6px;padding-top:6px}
+.brow{display:flex;gap:8px;align-items:center}
+.bottom .turnbtn{min-height:48px}
+.endbtn{flex:0 1 auto;min-height:48px;min-width:96px;padding:2px 10px;border-radius:10px;border:1px solid var(--line);background:var(--sunk);color:var(--ink);
+  font:700 13px/1.1 var(--disp);letter-spacing:.04em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.endbtn small{font:600 11px/1.15 var(--mono);text-transform:none;letter-spacing:0;color:var(--warn)}
+.endbtn[disabled]{opacity:1;color:var(--ink-3)}
+.endbtn[disabled] small{color:var(--ink-3)}
+.jump{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}
+.jump::-webkit-scrollbar{display:none}
+.jump button{flex:0 0 auto;min-height:40px;padding:0 10px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--card-ink);
+  font:700 12px/1 var(--mono);white-space:nowrap;display:inline-flex;align-items:center;gap:3px}
+.jump button small{font:600 11px var(--mono);color:var(--card-mute)}
+.jump button.cr{background:var(--cr);color:var(--cr-ink);border-color:var(--cr-ink)}
+.jump button.dead{color:var(--ink-3);text-decoration:line-through;background:var(--sunk)}
+.jump button.done{opacity:.55}
+/* the P+S badge on a merged port / starboard row */
+/* v1.2 card style (J183, J188): a port / starboard pair shares one tall
+   badge, one range and one strength "each" (two rows high); no line between
+   the pair's own rows, so it reads as one weapon; the range in a frame of
+   its band's colour */
+.wt td.bd[rowspan]{position:relative}
+.wt .bg.tall{position:absolute;left:0;top:5px;bottom:5px;width:20px;height:auto;line-height:1;display:flex;align-items:center;justify-content:center}
+.wt tr[data-pair="2"] td{border-top-color:transparent}
+.wt .rp{display:inline-block;min-width:2.1em;text-align:center;border:2px solid var(--rb);border-radius:6px;padding:0 4px;margin:-2px 0;
+  background:var(--panel);color:var(--card-ink);font:700 14px/18px var(--mono)}
+.wt .rp.l{font-size:12px}
+.wc .rpc{display:inline-block;border:1.5px solid var(--rb);border-radius:4px;padding:0 3px;font:700 11px/14px var(--mono);color:var(--card-ink)}
+.wc .rpc.l{font-size:10px}
+/* the compact rows: CRIT in the name line, no weapons table */
+.r1 .cmini{flex:0 0 auto;min-width:58px;min-height:var(--tap);border-radius:8px;border:1px solid var(--bad);background:var(--bad-wash);color:var(--bad);
+  font:700 13px/1.05 var(--disp);letter-spacing:.04em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.r1 .cmini small{font:600 11px/1.1 var(--mono);text-transform:none;letter-spacing:0;color:var(--bad)}
+.r1 .cmini[disabled]{opacity:.4}
+.main.compact .r1{gap:6px}
+.main.compact .r1 .played{min-width:50px;padding:0 3px;font-size:10.5px}
+.main.compact .r1 .ldt{min-width:44px;padding:2px 4px}
+.main.compact .r1 .ldt small{font-size:10px;max-width:58px;overflow:hidden;text-overflow:ellipsis}
+.main.compact .r1 .cmini{min-width:50px}
+.main.compact .cmdl small,.main.compact .rrn{display:none}
+.main.compact .rrb{margin:4px 0 0}
+.wline{display:flex;flex-wrap:wrap;gap:3px 5px;margin:4px 0 0}
+.wc{display:inline-flex;align-items:center;gap:3px;padding:1px 4px 1px 1px;border-radius:5px;border:1px solid var(--card-rule);background:var(--panel)}
+.wc i{display:inline-block;width:17px;height:17px;line-height:17px;text-align:center;border-radius:4px;background:var(--bd);color:#fff;font:700 11px var(--mono);font-style:normal}
+.wc b{font:700 14px/1 var(--mono);color:var(--card-ink)}
+.wc em{font:600 11px/1 var(--mono);font-style:normal;color:var(--card-mute)}
+.wc .arcg{width:15px;height:15px}
+.wc.half b{color:var(--cr-ink)}
+.wc.off{opacity:.55}
+.wc.off b{text-decoration:line-through}
+.main.compact .row{padding-top:4px;padding-bottom:4px}
+.main.compact .r3{margin-top:4px}
+.main.compact .stl{margin-top:2px}
+/* the End Phase panel */
+.endp .eprow{border-left:5px solid var(--kd);border-radius:8px;background:var(--sunk);padding:8px 10px;margin:0 0 8px}
+.endp .ephd b{font:700 15px/1.1 var(--disp);text-transform:uppercase}
+.endp .ephd small{display:block;font:12px/1.3 var(--mono);color:var(--ink-3)}
+.endp .eprep{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.endp .eprep button{min-height:var(--tap);padding:4px 10px;border-radius:8px;border:1px solid var(--accent);background:var(--panel);font:600 13px/1.15 var(--sans);text-align:left}
+.endp .eprep button b{font:700 13px var(--mono)}
+.endp .eprep button small{display:block;font:11px var(--mono);color:var(--ink-3)}
+.endp .perm{font:600 12px/1.3 var(--mono);color:var(--ink-3);padding:6px 0}
+.endp .fireb{width:100%;margin-top:6px;min-height:var(--tap);border-radius:8px;border:1px solid var(--bad);background:var(--bad-wash);color:var(--bad);font:700 13px/1.15 var(--sans);text-align:left;padding:6px 10px}
+.endp .fireb small{display:block;font:11px var(--mono);color:var(--bad);opacity:.85}
+.endp .fireb.done{border-style:dashed}
+/* load screen: a fleet and its side button; the phone panel */
+.fl{display:flex;gap:6px;align-items:stretch}
+.fl .btn{flex:1 1 auto;min-width:0;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;text-align:left}
+.fl .side{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.fl .side .mini{margin-top:0;min-height:44px;flex:1 1 auto}
+.card > .btn.on{box-shadow:0 0 0 2px var(--accent)}
+.fl.fresh .btn{box-shadow:0 0 0 3px var(--accent-wash)}
+.mini{flex:0 0 auto;margin-top:8px;min-width:64px;min-height:var(--big);padding:0 8px;border-radius:10px;border:1px solid var(--line);background:var(--sunk);
+  font:600 12px/1.15 var(--mono);color:var(--ink-2);text-align:center}
+.mini.on{background:var(--accent-wash);border-color:var(--accent);color:var(--accent-ink)}
+.phone{margin:8px 0 4px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--sunk)}
+.phone .qr{background:#fff;border-radius:8px;padding:8px;max-width:min(520px,100%);margin:0 auto;cursor:zoom-in}
+.phone .qrsvg{display:block;width:100%;height:auto}
+.phone .link{width:100%;min-height:40px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink-2);font:12px var(--mono);padding:0 8px}
+.phone .r4 button{min-height:44px}
+label.btn{cursor:pointer}
+details.paste{margin-top:10px}
+details.paste summary{min-height:var(--tap);display:flex;align-items:center;font:600 13px var(--sans);color:var(--ink-2);cursor:pointer}
+/* the report in the menu */
+.fld{display:block;margin:6px 0;font:600 12px/1.3 var(--mono);color:var(--ink-3)}
+.fld input{display:block;width:100%;min-height:var(--tap);margin-top:3px;border-radius:8px;border:1px solid var(--line);background:var(--sunk);color:var(--ink);font:16px var(--sans);padding:0 10px}
+.seg.wins{margin-top:3px}
+.seg.wins button{flex:1 1 0;font:700 13px var(--sans)}
+textarea.rep{min-height:140px;font-size:12px;margin-top:6px}
+.menu .r4 button{min-height:44px}
+
+/* --- toast ------------------------------------------------------------ */
+#toast{position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom) + 84px);z-index:40;display:flex;flex-direction:column;gap:6px;pointer-events:none}
+#toast div{background:var(--ink);color:var(--ground);padding:10px 12px;border-radius:8px;font-size:13px;box-shadow:var(--shadow);animation:fade 4s forwards}
+#toast div.crip{background:var(--cr-ink);color:#fff}
+@keyframes fade{0%{opacity:0;transform:translateY(6px)}8%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0}}
+
+@media (hover:hover) and (pointer:fine){
+  button:hover{filter:brightness(1.06)}
+}
+.pager{display:flex;align-items:center;gap:6px}
+.pager b{font:700 13px var(--mono);min-width:44px;text-align:center}
+.pager.hide{display:none}
+.offpage{display:none}
+/* laptop: the fleet as a grid, pages instead of a scroll */
+@media (min-width:900px){
+  .main{display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:10px;align-items:start;padding:10px 16px 90px}
+  .row{margin:0}
+  .row.ingrp{margin-left:0}
+  .top{padding-left:20px;padding-right:20px}
+  .top h1{flex:0 1 auto;margin-right:auto}
+  .bottom{padding-left:20px;padding-right:20px}
+  .bottom .turnbtn{flex:0 0 260px}
+  .sheet{left:50%;right:auto;width:min(680px,100vw);transform:translateX(-50%);border-left:1px solid var(--line);border-right:1px solid var(--line)}
+  .card{max-width:720px;margin-left:auto;margin-right:auto}
+  /* mouse density: the 44 px tap targets are a phone need; a laptop fits
+     two rows of cards when the row is tighter */
+  .row{padding:6px 8px 6px 10px}
+  .r1 .name b{font-size:15px}
+  .ldt,.played{min-height:38px}
+  .stl{margin-top:2px}
+  .wt{margin-top:4px}
+  .wt td{padding:2px 3px}
+  .wt td.nm{font-size:13px}
+  .wt td.st,.wt td.hf{font-size:14px}
+  .wt .bg{width:18px;height:18px;line-height:18px}
+  .arcg{width:20px;height:20px}
+  .hits b{height:32px;line-height:30px}
+  .hits.mem b{width:32px}
+  .r3,.r4{margin-top:4px}
+  .r4 button{min-height:38px}
+  /* the whole fleet is on the screen (and the pager pages it): no strip */
+  .jump{display:none}
+}
+@media (max-width:360px){
+  .r4 button{font-size:12px}
+  .ldt{min-width:52px}
+}
+</style>
+</head>
+<body>
+<div id="app" class="app"></div>
+<div id="toast"></div>
+<script id="bfgdata" type="application/json">__DATA__</script>
+<script>
+"use strict";
+__DOMAIN__
+__PLAYRULES__
+const DATA = JSON.parse(document.getElementById("bfgdata").textContent);
+const SHIPS = DATA.ships, LISTS = DATA.lists;
+const uniqRefs = DOMAIN.uniqRefs, wepClass = DOMAIN.wepClass;
+__SHARED__
+
+/* ============================================================ STORAGE ===== */
+/* The builder's key is read and never written (LUEMINUT.md). */
+const KEY_BUILDER = "gothic-fleet-registry-v1";
+const KEY_PLAY = "gothic-fleet-play-v1";
+const KEY_INFO = "gothic-fleet-play-info";
+/* Tracking options: what the page records of the things tokens do on the
+   table. Per device, never in the game record. Default: nothing - the
+   spec + HP + crits row is the product; these are opt-in. */
+const KEY_TRACK = "gothic-fleet-play-track";
+const TRACK = [
+  ["orders",   "Special orders and Brace",   "order per ship, fleet lock after a failed check, brace timing (p. 46-48)"],
+  ["shields",  "Shields and blast markers",  "markers touching the base: shields up, -1 Ld, damage-control dice (p. 69-70, 48, 88)"],
+  ["ordnance", "Ordnance loaded",            "torpedoes and attack craft ready / launched (p. 73-74)"],
+  ["fleet",    "Fleet counters",             "the RR counter in the top bar (the re-roll boxes on the commander's card are always there), attack craft in play vs bays, enemy contacts +1, radiation (p. 48, 73, 115)"],
+];
+function loadOpts(){
+  const o = {};
+  let saved = null; try{ saved = JSON.parse(lsGet(KEY_TRACK) || "null"); }catch(e){}
+  TRACK.forEach(t => { o[t[0]] = !!(saved && saved[t[0]]); });
+  return o;
+}
+let OPT = loadOpts();
+function saveOpts(){ lsSet(KEY_TRACK, JSON.stringify(OPT)); }
+/* State the page does not track is cleared, so a switch turned off (or a
+   record from a device with other settings) cannot feed the numbers. */
+function normaliseUntracked(g){
+  (g.st || []).forEach(st => {
+    if(!OPT.orders){ st.order = null; st.braceTurn = 0; st.braceCarry = null; st.braceLock = false; st.boarding = false; st.noOrdersTurn = false; st.teleported = false; }
+    if(!OPT.shields) st.blast = 0;
+  });
+  if(g.fleet){ if(!OPT.orders) g.fleet.orderLock = false; if(!OPT.fleet){ g.fleet.enemyOrders = false; g.fleet.radiation = 0; } }
+}
+const PLAY_VERSION = "__VERSION__";
+function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+function lsSet(k, v){ try{ localStorage.setItem(k, v); return true; }catch(e){ return false; } }
+function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
+
+/* ============================================================ HELPERS ===== */
+function fnv(s){
+  let h = 0x811c9dc5;
+  for(let i = 0; i < s.length; i++){ h ^= s.charCodeAt(i); h = Math.imul(h, 0x01000193) >>> 0; }
+  return ("0000000" + h.toString(16)).slice(-8);
+}
+const clone = o => JSON.parse(JSON.stringify(o));
+const listByName = nm => LISTS.filter(x => x.nm === nm)[0] || null;
+const listOf = (u, L0) => (u && u.lst && listByName(u.lst)) || L0;
+const $ = s => document.querySelector(s);
+const EM = "\u2014", MID = "\u00b7", TIMES = "\u00d7";
+
+/* ================================================= THE FLEET DOCUMENT ===== */
+function parseDoc(raw){
+  let o = null;
+  try{ o = JSON.parse(raw); }catch(e){ return { error: "That is not a fleet document (JSON could not be read)." }; }
+  if(!o || typeof o !== "object" || !Array.isArray(o.units)) return { error: "The document has no fleet in it." };
+  if(typeof o.schemaVersion === "number" && o.schemaVersion > DOMAIN.SCHEMA_VERSION)
+    return { error: "The fleet was saved by a newer builder (schema " + o.schemaVersion + "); this page reads " + DOMAIN.SCHEMA_VERSION + "." };
+  return { o: o };
+}
+/* The open fleet and every stashed one (schema 4). */
+function fleetsIn(o){
+  const out = [];
+  if(o.units.length) out.push({ name: o.name || "", ln: o.ln, limit: o.limit, units: o.units, open: true });
+  (Array.isArray(o.fleets) ? o.fleets : []).forEach(f => {
+    if(f && typeof f === "object" && Array.isArray(f.units) && f.units.length)
+      out.push({ name: f.name || "", ln: f.ln, limit: f.limit, units: f.units, open: false });
+  });
+  return out;
+}
+/* Resolve exactly as the builder does: resolveSaved (by name, attachment
+   filter, one purchase one row) and then the domain. */
+function resolveFleet(f){
+  const L0 = listByName(f.ln);
+  if(!L0) return { error: "The fleet list \"" + f.ln + "\" is not in this build." };
+  const lost = [];
+  const kept = resolveSaved(clone(f.units), L0, lost);
+  const units = kept.map(u => {
+    const ctx = { list: listOf(u, L0), host: L0 };
+    const it = DOMAIN.fromLegacyUnit(u, ctx, DATA);
+    const R = DOMAIN.resolveUnit(it, ctx, DATA);
+    return R ? { u: u, R: R, it: it } : null;
+  }).filter(Boolean);
+  return { L0: L0, units: units, lost: lost,
+           fp: fnv(JSON.stringify([f.ln, f.units])),
+           doc: { ln: f.ln, limit: f.limit, units: f.units } };
+}
+function fleetPoints(units){ return units.reduce((a, x) => a + (x.R.points | 0), 0); }
+/* Fleet facts (J214): the attack rating, what the enemy gets for free and
+   victory points that are not a ship's cost - the builder's own resolveFleet
+   on the same units. */
+function fleetFactsNow(){
+  if(!L0 || !U.length) return [];
+  return DOMAIN.resolveFleet({ list: L0.nm, limit: G.limit | 0, units: U.map(x => x.it) }, DATA).facts || [];
+}
+
+/* ============================================================== STATE ===== */
+let G = null;      /* the game: persisted */
+let U = [];        /* resolved units, rebuilt from G.doc */
+let L0 = null;
+/* The view (user 19.10.2026): "full" rows carry the weapons table, the
+   compact rows only what a hit or a critical needs - the whole fleet on one
+   screen for the enemy's turn. Per device, never in the game record. */
+const KEY_VIEW = "gothic-fleet-play-view";
+/* Keep the screen on while a game is open (Screen Wake Lock); "0" = off. */
+const KEY_WAKE = "gothic-fleet-play-awake";
+/* Fleets that came by a link or a file: the page's own list, newest first
+   (the builder's key is never written). */
+const KEY_LINKED = "gothic-fleet-play-linked";
+let V = { screen: "load", sheet: null, pop: null, menu: false, info: lsGet(KEY_INFO) === "1", note: "", loadErr: "", saveErr: false,
+          compact: lsGet(KEY_VIEW) === "compact", endph: false, phone: null, guardUntil: 0, lastScreen: null, linkNew: null, copied: "" };
+/* The way back: the builder sits beside play/ (dev and the shared ZIP);
+   make_site.py rewrites this to the site root. */
+const BUILDER_URL = "../Gothic%20Fleet%20Registry.html";
+const builderLink = cls => `<a class="${cls}" href="${BUILDER_URL}" style="text-decoration:none" title="Back to the fleet builder">BUILDER</a>`;
+/* Outline icons for the top bar, one stroke weight. */
+const TOOL_ICON = {
+  info: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.01"/></svg>',
+  undo: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></svg>',
+  menu: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>',
+  back: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h4a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-4"/><path d="M10 16l-4-4 4-4M6 12h10"/></svg>',
+  view: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="5" rx="1"/><rect x="4" y="11" width="16" height="5" rx="1"/><path d="M4 20h16"/></svg>'
+};
+const toolBtn = (act, icon, word, extra) => `<button class="tool${extra && extra.on ? " on" : ""}" data-act="${act}"${extra && extra.off ? " disabled" : ""} title="${esc(extra && extra.tip || word)}">${TOOL_ICON[icon]}<span>${word}</span></button>`;
+const builderTool = () => `<a class="tool" href="${BUILDER_URL}" title="Back to the fleet builder">${TOOL_ICON.back}<span>Builder</span></a>`;
+let UNDO = [];
+
+function newGame(res){
+  const fleet = PLAY.freshFleet();
+  const st = res.units.map(x => PLAY.freshUnit(x.R));
+  /* The fleet commander is the commander that stands first in the fleet
+     LIST, whatever the roster's order (PLAY.fleetCommander): a Veteran
+     Captain added before the Admiral does not lead the fleet. */
+  const cmd = PLAY.fleetCommander(res.units.map(x => {
+    const si = x.R.entry ? res.L0.secs.findIndex(sec => sec.t === x.R.entry.section) : -1;
+    const ei = si >= 0 ? res.L0.secs[si].ents.findIndex(en => en.l === x.R.entry.label) : -1;
+    return { kind: x.R.kind, s: si < 0 ? 1e6 : si, e: ei < 0 ? 1e6 : ei };
+  }));
+  /* The commander's re-rolls, included and bought; without a commander the
+     fleet's own (Necrons p. 404, Demiurg p. 486). Abaddon's come back every
+     turn (Fleets p. 231). */
+  const crr = cmd >= 0 ? res.units[cmd].R.rerolls : null;
+  const frr0 = cmd < 0 ? DOMAIN.fleetRerolls(res.L0, res.units.map(x => x.R)) : null;
+  const pool0 = crr || frr0;
+  PLAY.setRerolls(fleet, pool0 ? pool0.total : 0, !!(crr && crr.unit === "per turn"), rrKinds(pool0));
+  /* a further commander's re-rolls are his own (a Veteran Captain's, a
+     Farseer's, a second Warlord's): they stay on his own row */
+  res.units.forEach((x, j) => {
+    if(x.R.kind === "commander" && j !== cmd && x.R.rerolls)
+      PLAY.setRerolls(st[j], x.R.rerolls.total, x.R.rerolls.unit === "per turn", rrKinds(x.R.rerolls));
+    /* a ship's own re-rolls (Scion of Prospero p. 258, a Mark of Tzeentch
+       p. 234, a fortress-monastery p. 111) stay on its own card */
+    if(x.R.kind === "ship" && x.R.rerolls)
+      PLAY.setRerolls(st[j], x.R.rerolls.total, false, rrKinds(x.R.rerolls));
+  });
+  /* the flagship defaults to the biggest capital ship; a platform, a
+     station or a defence vessel never carries the commander, a star fort
+     or a Haven only when there is no ship (PLAY.defaultFlagship) */
+  const flag0 = PLAY.defaultFlagship(res.units.map(x => x.R));
+  /* J215: the builder's placement when the book or the player decided it -
+     a Master of the Fleet on his battle barge, a Warmaster on the most
+     expensive ship that is no Daemonship, the ship picked in the builder */
+  const ab = cmd >= 0 ? (DOMAIN.resolveFleet({ list: res.L0.nm, limit: res.doc.limit | 0,
+    units: res.units.map(x => x.it) }, DATA).aboard || []).filter(a => a.unit === cmd)[0] : null;
+  const flag = ab && (ab.ruled || ab.chosen) && ab.ship != null && PLAY.mayCarryCommander(res.units[ab.ship].R)
+    ? ab.ship : flag0;
+  G = { v: 1, play: PLAY_VERSION, fp: res.fp, src: res.src || "builder", ln: res.doc.ln, limit: res.doc.limit, doc: res.doc,
+        fleet: fleet, st: st, grp: builderGroups(res.units), flag: cmd >= 0 ? flag : null, cmd: cmd >= 0 ? cmd : null, ac: 0 };
+  U = res.units; L0 = res.L0;
+  fixedLds();
+  applyCommanderLd();
+}
+/* The ships the SQN button is offered to: capital ships; a star fort
+   "cannot squadron with other orbital defences" (Rulebook p. 100). */
+function sqnShip(R){ return R.kind === "ship" && !PLAY.isEscort(R) && !PLAY.isFort(R); }
+/* J222: the builder's squadrons (u.sq, the same tag = one squadron, J216)
+   start the game squadroned. A tag shared by two or more such ships gets
+   an SQN letter, A to C in the builder's tag order; a tag on one ship alone
+   and a fourth squadron start free, as does an escort (LUEMINUT T42). The
+   SQN button changes it as before. */
+function builderGroups(units){
+  const tagOf = units.map(x => x.u && x.u.sq && sqnShip(x.R) ? String(x.u.sq) : null);
+  const tags = tagOf.filter((t, j) => t && tagOf.indexOf(t) === j && tagOf.filter(s => s === t).length >= 2).sort().slice(0, 3);
+  return tagOf.map(t => t && tags.indexOf(t) >= 0 ? "ABC"[tags.indexOf(t)] : null);
+}
+/* A unit whose Leadership is not rolled has it from the start: planetary
+   defences Ld 7 (Rulebook p. 100, Fleets p. 499), the Fortress-Monastery
+   Ld 10 (Fleets p. 111). A value the player tapped for such a unit in an
+   older record gives way to the book's. */
+function fixedLds(){
+  U.forEach((x, i) => {
+    const fx = PLAY.fixedLd(x.R), st = G.st[i];
+    if(!fx || st.ldFrom === "commander") return;
+    st.ld = fx.value; st.ldRoll = null; st.ldFrom = "fixed";
+  });
+}
+/* The Leadership a unit has without a commander: its fixed value, else
+   its roll (null until it is rolled). */
+function ownLd(i){
+  const fx = PLAY.fixedLd(U[i].R);
+  return fx ? fx.value : (G.st[i].ldRoll == null ? null : G.st[i].ldRoll);
+}
+/* The boxes a pool starts with: the re-rolls that are the fleet's as built
+   - the open options are not, until one is taken into use. */
+function rrKinds(rr){ return rr && rr.boxes ? rr.boxes.filter(k => k !== "optional") : []; }
+/* A game saved before the boxes existed gets them laid over its counts. */
+function adoptPools(){
+  const cr = G.cmd != null ? U[G.cmd].R.rerolls : null;
+  /* a fleet without a commander had no count at all before the boxes: its
+     boxes start free; the per-turn flag comes from the roster every time */
+  PLAY.adoptRerolls(G.fleet, rrKinds(cr || fleetRR()), { fresh: G.cmd == null, perTurn: !!(cr && cr.unit === "per turn") });
+  U.forEach((x, j) => {
+    if(x.R.kind === "commander" && j !== G.cmd && x.R.rerolls)
+      PLAY.adoptRerolls(G.st[j], rrKinds(x.R.rerolls), { perTurn: x.R.rerolls.unit === "per turn" });
+    if(x.R.kind === "ship" && x.R.rerolls) PLAY.adoptRerolls(G.st[j], rrKinds(x.R.rerolls), { fresh: true });
+  });
+}
+/* The commander's Leadership line (Fleets book, e.g. p. 35 "improves its
+   Leadership to the value shown"): a fixed value replaces the roll, a
+   modifier is added to it (LUEMINUT.md T8). */
+function applyCommanderLd(){
+  /* one flagship: a ship that carried the commander's line before gets its
+     own roll back (or nothing, until it rolls) */
+  G.st.forEach((s, j) => { if(j !== G.flag && s.ldFrom === "commander"){ s.ld = ownLd(j); s.ldFrom = PLAY.fixedLd(U[j].R) ? "fixed" : null; } });
+  if(G.cmd == null || G.flag == null) return;
+  const ld = U[G.cmd].R.leadership, st = G.st[G.flag];
+  if(!ld || ld.value == null) return;
+  /* aboard a star fort too "their own Leadership value is used by the
+     fort" (Fleets p. 503; the Fortress-Monastery "even if less!", p. 111) */
+  const own = ownLd(G.flag);
+  if(ld.kind === "fixed"){ st.ld = ld.value; st.ldFrom = "commander"; }
+  else if(own != null){ st.ld = Math.min(ld.max || 10, own + ld.value); st.ldFrom = "commander"; }
+}
+function setLd(i, v){
+  const st = G.st[i];
+  st.ldRoll = v; st.ld = v; st.ldFrom = null;
+  if(i === G.flag) applyCommanderLd();
+}
+
+function save(){
+  if(!G) return;
+  V.saveErr = !lsSet(KEY_PLAY, JSON.stringify(G));
+}
+function loadPlay(){
+  const raw = lsGet(KEY_PLAY);
+  if(!raw) return null;
+  try{ const g = JSON.parse(raw); return (g && g.v === 1 && g.doc && Array.isArray(g.st)) ? g : null; }catch(e){ return null; }
+}
+/* Open a saved game against its own roster copy. */
+function resumeGame(g){
+  const res = resolveFleet(g.doc);
+  if(res.error || res.units.length !== g.st.length) return false;
+  normaliseUntracked(g);
+  G = g; U = res.units; L0 = res.L0;
+  adoptPools();
+  /* a record from before the quadrant tracks, the member boxes of one-hit
+     defences or the unrolled Leaderships is brought up to them */
+  U.forEach((x, i) => PLAY.adoptUnit(x.R, G.st[i]));
+  fixedLds();
+  return true;
+}
+
+/* ============================================================ ACTIONS ===== */
+function snapshot(){ UNDO.push(JSON.stringify(G)); if(UNDO.length > 30) UNDO.shift(); }
+/* The Catastrophic Damage table is for a ship at 0 hits: after UNDO, or a
+   tap that took the ship back up, the open one is dropped. */
+function dropStalePop(){
+  if(V.pop && V.pop.kind === "hulk" && U[V.pop.i] && G.st[V.pop.i] && !PLAY.destroyed(U[V.pop.i].R, G.st[V.pop.i])) V.pop = null;
+}
+/* The CATASTROPHIC button's second line: the result taken, else the roll
+   this ship makes - or that it makes none. */
+function cataLabel(R, st){
+  if(st.hulkName) return esc(st.hulkName);
+  const c = PLAY.catastrophic(R);
+  return c.dice ? "roll " + c.dice : "no roll";
+}
+/* A critical result's name as the ship's own table prints it. */
+function critLabel(R, key){
+  const cm = R && R.damage && R.damage.critical;
+  const row = cm && cm.rows.find(r => String(r[0]) === String(key));
+  if(row) return String(key) + " " + row[1];
+  const d = PLAY.CRITS[String(key)];
+  return String(key) + (d ? " " + d.name : "");
+}
+function critCountText(tk, key){
+  const n = tk && tk.crits ? (tk.crits[String(key)] | 0) : 0;
+  return n > 1 ? " (now \u00d7" + n + ")" : "";
+}
+/* A star fort's selected quadrant, for the line that says where a hit or
+   a critical went ("NE quadrant"); nothing for any other unit. */
+function quadWord(R, st){ return PLAY.isFort(R) && st.quads ? PLAY.QUADS[st.qsel | 0] + " quadrant" : ""; }
+function toast(msg, cls){
+  const t = document.createElement("div");
+  if(cls) t.className = cls;
+  t.textContent = msg;
+  $("#toast").appendChild(t);
+  setTimeout(() => t.remove(), 4200);
+}
+function buzz(ms){ try{ if(navigator.vibrate) navigator.vibrate(ms || 60); }catch(e){} }
+
+/* Members of a unit's squadron (itself when it is not in one). */
+function members(i){
+  const g = G.grp[i];
+  if(!g) return [i];
+  return G.grp.map((x, j) => x === g ? j : -1).filter(j => j >= 0);
+}
+function groupUnits(letter){ return G.grp.map((x, j) => x === letter ? j : -1).filter(j => j >= 0); }
+
+function act(name, i, arg){
+  if(name === "undo"){
+    if(!UNDO.length) return;
+    G = JSON.parse(UNDO.pop());
+    const res = resolveFleet(G.doc); U = res.units; L0 = res.L0;
+    dropStalePop();
+    save(); render(); return;
+  }
+  if(name === "info"){ V.info = !V.info; lsSet(KEY_INFO, V.info ? "1" : "0"); render(); return; }
+  /* full rows or compact rows: a choice of view, not an event - the row at
+     the top of the screen stays where it was, so the eye keeps its place */
+  if(name === "view"){
+    const keep = topRow();
+    V.compact = !V.compact; lsSet(KEY_VIEW, V.compact ? "compact" : "full");
+    if(V.pop && V.pop.kind !== "hulk") V.pop = null;
+    render();
+    if(keep){ const el = document.querySelector('section.row[data-u="' + keep.u + '"]'); if(el) window.scrollBy(0, el.getBoundingClientRect().top - keep.top); }
+    return;
+  }
+  /* the strip of ships at the bottom: the user's own gesture moves the
+     screen to that ship (30.9.2026 allows that - only render never scrolls) */
+  if(name === "jump"){ jumpTo(i); return; }
+  if(name === "endph"){ V.endph = !V.endph; render(); return; }
+  /* the fleet list from the menu (user 19.10.2026: the "to phone" QR codes
+     are there): the game record stays, the list offers Resume */
+  if(name === "fleets"){ V.menu = false; V.sheet = null; V.pop = null; V.endph = false; V.phone = null; V.screen = "load"; render(); return; }
+  if(name === "wake"){ lsSet(KEY_WAKE, lsGet(KEY_WAKE) === "0" ? "1" : "0"); wake(); render(); return; }
+  if(name === "rwin"){ if(!G) return; repState().win = arg; save(); render(); return; }
+  if(name === "copyrep"){ copyText(reportText(), "report"); return; }
+  if(name === "sharerep"){ shareText("BFG game report", reportText()); return; }
+  if(name === "pop"){
+    V.pop = (V.pop && V.pop.i === i && V.pop.kind === arg) ? null : { i: i, kind: arg };
+    render();
+    if(V.pop) showPop();
+    return;
+  }
+  if(name === "closepop"){ V.pop = null; render(); return; }
+  if(name === "critpick"){ V.pop = { i: i, kind: "crit", x: arg ? String(arg) : null }; render(); return; }
+  if(name === "page"){
+    /* a page is a scroll position: jump there, nothing re-renders */
+    if(!V.pageTops) return;
+    const to = Math.max(0, Math.min(V.pages - 1, (V.page | 0) + arg));
+    window.scrollTo(0, V.pageTops[to]);
+    pageLabel();
+    return;
+  }
+  /* the card opens over the screen, under the finger: a double tap must
+     not land on it */
+  if(name === "sheet"){ V.sheetY = window.scrollY || 0; V.sheet = i; V.pop = null; render(); V.guardUntil = Date.now() + 350; return; }
+  /* back to the fleet where it was left (the card used to send the roster
+     to its top, and the ship had to be found again) */
+  if(name === "closesheet"){ V.sheet = null; V.pop = null; render(); if(V.sheetY != null) window.scrollTo(0, V.sheetY); return; }
+  if(name === "menu"){ V.menu = !V.menu; render(); return; }
+  if(name === "newgame"){
+    if(!confirm("Forget this game's record and go back to the fleet list?")) return;
+    lsDel(KEY_PLAY); G = null; U = []; UNDO = []; V = Object.assign(V, { screen: "load", sheet: null, pop: null, menu: false });
+    render(); return;
+  }
+  if(name === "track"){
+    if(arg === "all"){ const on = !TRACK.every(t => OPT[t[0]]); TRACK.forEach(t => { OPT[t[0]] = on; }); }
+    else OPT[arg] = !OPT[arg];
+    saveOpts();
+    if(G){ normaliseUntracked(G); save(); }
+    render(); return;
+  }
+  if(!G) return;
+  snapshot();
+  const st = G.st[i], R = U[i] && U[i].R, fleet = G.fleet;
+  const before = R && R.kind === "ship" ? PLAY.view(R, st, fleet) : null;
+  /* where this unit's hits and criticals are counted: on itself, or on a
+     star fort's selected quadrant (Fleets p. 501) */
+  const tk = R && st ? PLAY.track(R, st) : st;
+  switch(name){
+    case "ld": setLd(i, arg); break;
+    case "ldclear": st.ld = null; st.ldRoll = null; st.ldFrom = null; break;
+    case "flag": G.flag = arg; applyCommanderLd(); break;
+    case "grp": { const seq = [null, "A", "B", "C"]; G.grp[i] = seq[(seq.indexOf(G.grp[i]) + 1) % seq.length]; break; }
+    case "start": V.screen = "roster"; break;
+    /* which quadrant of a star fort the card shows and the next tap goes
+       to: a choice of view, not an event - nothing for UNDO to take back,
+       and an open table stays open and follows the quadrant */
+    case "quad": PLAY.selectQuad(st, arg); UNDO.pop(); save(); render(); return;
+    /* once a Catastrophic Damage result is on the card, its damage is
+       not edited by a tap - a wreck's hits are the wreck's; UNDO is the
+       way back */
+    case "hit": if(st.hulkName) break; PLAY.addHits(R, st, 1); break;
+    case "dmg": if(st.hulkName || st.destroyed) break; PLAY.tapHit(R, st, arg); break;
+    /* the fires burn in every End Phase - both players repair in it (p. 88),
+       so twice a round - and the button counts how many times this turn
+       they went on (J192's counter): a second tap is seen, not blocked */
+    case "fire": {
+      const n = Math.max(1, PLAY.fireDamage(R, st)); PLAY.addHits(R, st, n);
+      st.fireN = st.fireTurn === fleet.turn ? (st.fireN | 0) + 1 : 1; st.fireTurn = fleet.turn;
+      V.flash = { i: i, key: null, t: Date.now(), msg: "+" + n + " hit" + (n > 1 ? "s" : "") + " from " + (n > 1 ? n + " fires" : "the fire") + " (p. 67)" }; break; }
+    /* damage control in the End Phase (p. 88): one system repaired or one
+       fire out per 6; a result that may not be repaired (p. 67) stays */
+    case "repair": {
+      const key = String(arg);
+      if(!tk.crits || !(tk.crits[key] > 0) || !repairable(R, key)){ UNDO.pop(); return; }
+      PLAY.repairCrit(st, key, R); break;
+    }
+    case "crit": {
+      /* a quadrant at 0 takes no further damage (Fleets p. 501): nothing
+         is recorded and no UNDO step is spent */
+      if(PLAY.quadGone(R, st)){ UNDO.pop(); render(); return; }
+      /* p. 67: a location the ship does not have, or a repeated permanent
+         result, is applied as the next result; if that is 11 or 12 the
+         card asks for the D3/D6 first (LUEMINUT T4, T6) */
+      const tgt = PLAY.critTarget(st, String(arg), R);
+      const tdef = PLAY.standardCrits(R) ? PLAY.CRITS[tgt] : null;
+      if(tdef && typeof tdef.extra === "string"){
+        /* the table stays open and asks for the D3/D6 in place */
+        V.pop = { i: i, kind: "crit", x: tgt };
+        V.flash = { i: i, key: tgt, t: Date.now(), msg: String(arg) + " cannot be applied here, it counts as " + tgt + ": pick the " + tdef.extra + " roll below (p. 67)" };
+        UNDO.pop(); render(); return;
+      }
+      const k = PLAY.addCrit(st, arg, R);
+      const notes = [];
+      if(k !== String(arg)) notes.push(String(arg) + " cannot be applied here, it counts as " + k + " (p. 67)");
+      if(tdef && tdef.extra === 1){ PLAY.addHits(R, st, 1); notes.push("+1 hit (p. 67)"); }
+      if(k === "9" && PLAY.standardCrits(R) && i === G.flag && !fleet.rerollsLost){
+        PLAY.flagshipBridgeSmashed(fleet);
+        notes.push("flagship: Fleet Commander re-rolls lost for the battle (p. 67)");
+      }
+      /* the table stays open (user 30.9.2026): the tile flashes and the
+         line at the top says what went on the ship */
+      V.pop = { i: i, kind: "crit" };
+      V.flash = { i: i, key: k, t: Date.now(), msg: "Added " + critLabel(R, k) + critCountText(tk, k) + (notes.length ? " \u00b7 " + notes.join(" \u00b7 ") : "") };
+      break;
+    }
+    case "critx": {
+      if(PLAY.quadGone(R, st)){ UNDO.pop(); render(); return; }
+      const key = arg.split(":")[0], n = parseInt(arg.split(":")[1], 10) || 0;
+      PLAY.addCrit(st, key, R); PLAY.addHits(R, st, n);
+      V.pop = { i: i, kind: "crit" };
+      V.flash = { i: i, key: key, t: Date.now(), msg: "Added " + critLabel(R, key) + " \u00b7 +" + n + " hit" + (n > 1 ? "s" : "") + critCountText(tk, key) };
+      break;
+    }
+    case "critminus": {
+      /* The minus is the repair (damage control, p. 88) and the correction
+         of a mis-tap both: the count comes off, the damage stays - a repair
+         does not heal hits. A mis-tapped +1 hit (6 Engine, 8 Thrusters)
+         comes off with UNDO or on the hit track. */
+      const key = String(arg);
+      if(!tk.crits || !(tk.crits[key] > 0)){ UNDO.pop(); return; }
+      PLAY.removeCrit(st, key, R);
+      /* the flagship's last Bridge Smashed taken off again: the re-roll
+         boxes are back as they were (the 9 was a slip - it cannot be
+         repaired, p. 67) */
+      const rrBack = key === "9" && PLAY.standardCrits(R) && i === G.flag && fleet.rerollsLost && !((tk.crits || {})[key] > 0);
+      if(rrBack) PLAY.flagshipBridgeRestored(fleet);
+      V.pop = { i: i, kind: "crit", x: V.pop && V.pop.i === i ? V.pop.x : null };
+      V.flash = { i: i, key: null, t: Date.now(), msg: "Removed " + critLabel(R, key) + ((tk.crits[key] | 0) ? " (now \u00d7" + tk.crits[key] + ")" : "") + " \u00b7 hits stay" + (rrBack ? " \u00b7 re-rolls back" : "") };
+      break;
+    }
+    /* a unit that cannot move goes straight to SHOT (Rulebook p. 100) */
+    case "played": members(i).forEach(j => PLAY.cyclePlayed(G.st[j], U[j].R)); break;
+    case "kill": if(st.members[arg].dead) PLAY.reviveMember(st, arg); else PLAY.killMember(st, arg); break;
+    case "hulk": {
+      /* arg = index into PLAY.catastrophic(R).rows, or "boarded" (p. 90);
+         only a ship at 0 hits takes a result */
+      if(!PLAY.destroyed(R, st)) break;
+      const c = PLAY.catastrophic(R);
+      if(arg === "boarded" && !c.boarded) break;
+      const row = arg === "boarded" ? { kind: "drifting", name: c.rows[0].name, text: c.rows[0].text + " (boarded to 0: no roll, p. 90)" } : c.rows[arg];
+      if(!row) break;
+      if(row.kind === "gone"){ st.destroyed = true; st.hulk = null; } else { st.hulk = row.kind; }
+      st.hulkName = row.name; st.hulkText = row.text;
+      V.pop = null; break;
+    }
+    case "diseng": st.disengaged = !st.disengaged; break;
+    /* --- opt-in tracking (menu > Tracking); no button emits these when off --- */
+    case "brace": members(i).forEach(j => PLAY.setOrder(G.st[j], fleet, "BFI", true)); V.pop = null; break;
+    case "bracefail": members(i).forEach(j => PLAY.setOrder(G.st[j], fleet, "BFI", false)); V.pop = null;
+      toast("Brace failed: locked against this attacker (p. 47); no further orders this turn, brace excepted (p. 48)"); break;
+    case "bracelock": members(i).forEach(j => { G.st[j].braceLock = false; }); break;
+    case "order": members(i).forEach(j => PLAY.setOrder(G.st[j], fleet, arg, true)); V.pop = null; break;
+    case "orderfail": PLAY.setOrder(st, fleet, "LO", false); V.pop = null;
+      toast("Command check failed: no more special orders this turn except Brace (p. 48)"); break;
+    case "clearorder": members(i).forEach(j => { G.st[j].order = null; G.st[j].braceTurn = 0; G.st[j].braceCarry = null; }); V.pop = null; break;
+    case "boarding": st.boarding = !st.boarding; break;
+    case "nofire": st.noOrdersTurn = !st.noOrdersTurn; break;
+    case "torps": st.torps = !st.torps; break;
+    case "craft": st.craft = !st.craft; break;
+    case "blast": if(arg === 0) PLAY.clearBlast(st); else st.blast = Math.max(0, (st.blast | 0) + arg); break;
+    case "rr": PLAY.adjustRerolls(fleet, arg); break;
+    /* one box: that re-roll is used, or back if the tap was a slip */
+    case "rrbox": PLAY.toggleReroll(rrPool(i), arg); break;
+    /* an open option of the list, bought after all: a box of its own */
+    case "rropt": if(!rrOpen(i)){ UNDO.pop(); return; } PLAY.addReroll(rrPool(i), "optional"); break;
+    case "enemy": fleet.enemyOrders = !fleet.enemyOrders; break;
+    case "rad": fleet.radiation = Math.max(0, (fleet.radiation | 0) + arg); break;
+    case "ac": G.ac = Math.max(0, (G.ac | 0) + arg); break;
+    case "endturn": PLAY.endTurn(G.st, fleet); V.pop = null; V.endph = false; break;
+    /* the turn button: played marks off, turn counter up (orders, braces
+       and blast markers live on the table as tokens - not here) */
+    case "newturn": PLAY.newTurn(G.st, fleet); V.pop = null; V.endph = false; break;
+    default: UNDO.pop(); return;
+  }
+  dropStalePop();
+  if(before){
+    const after = PLAY.view(R, st, fleet);
+    const qw = quadWord(R, st);
+    if(!before.crippled && after.crippled){
+      buzz(120);
+      toast(unitName(i) + (qw ? " " + qw : "") + " CRIPPLED: " + crippledNow(R, st) + " (" + (after.fort ? "Fleets p. 501" : "p. 65") + ")", "crip");
+    }
+    /* a star fort's quadrant at 0 (Fleets p. 501); the fort itself stands
+       until all four are (p. 502) */
+    if(after.fort && !before.quadGone && after.quadGone && !after.destroyed){
+      buzz(160);
+      toast(unitName(i) + " " + qw + " is at 0: it takes no further damage, and that quarter of the base is an asteroid field from now on (Fleets p. 501)", "crip");
+    }
+    if(!before.destroyed && after.destroyed){
+      buzz(200);
+      const c = PLAY.catastrophic(R);
+      /* one-hit units make no Catastrophic Damage roll: an escort leaves a
+         Blast Marker (p. 71), a one-hit defence nothing the book names
+         (p. 101) - no table opens */
+      if(after.escort) toast(unitName(i) + ": " + (R.hulls > 1 ? "all " + R.hulls + " destroyed" : "destroyed") + ". " + c.rows[0].text, "crip");
+      else {
+        toast(unitName(i) + " is out of action: " + (c.dice ? "roll " + c.dice + " on the " + c.title + " table (" + (c.fleets ? "Fleets " : "") + "p. " + c.page + ")" : c.rows[0].text), "crip");
+        /* the table opens on the card by itself, with this ship's numbers */
+        V.pop = { i: i, kind: "hulk" }; save(); render(); showPop(); return;
+      }
+    }
+  }
+  save();
+  render();
+}
+
+/* ============================================================ DERIVED ===== */
+function baseName(i){ const R = U[i].R; return R.name || title(R.className || (R.entry && R.entry.label) || ""); }
+/* a name the player gave the ship at the set-up (user 19.10.2026: "voi myos
+   kirjoittaa laivoille viela uudet nimet") is this game's: G.nm, by row */
+function unitName(i){ const n = G && G.nm && G.nm[i]; return n || baseName(i); }
+function classTag(R){
+  const t = String(R.stats ? R.stats.type : "");
+  if(/grand/i.test(t)) return "GC";
+  if(/battleship/i.test(t)) return "BB";
+  if(/cruiser/i.test(t)) return "CR";
+  if(/escort/i.test(t)) return "ESC";
+  if(/defence/i.test(t)) return "DEF";
+  if(/ground/i.test(t)) return "GND";
+  return t.slice(0, 3).toUpperCase() || "?";
+}
+/* What the members of a member-model unit are called: ships for escorts,
+   units for platforms, silos and air bases ("grouped in up to six units",
+   Rulebook p. 100). */
+function memberWord(R, n){ return /escort/i.test(String(R.stats.type || "")) ? (n === 1 ? "ship" : "ships") : (n === 1 ? "unit" : "units"); }
+function crippledNow(R, st){
+  const v = PLAY.view(R, st, G.fleet);
+  const note = String(R.damage.note || "").replace(/^crippled:\s*/i, "").replace(/\s*no nova cannon\.?$/i, "");
+  const now = [];
+  /* a unit that does not move has no speed to lose (Rulebook p. 100-101) */
+  if(v.still){ /* nothing */ }
+  else if(v.speed.now != null) now.push("speed " + v.speed.now + " cm");
+  else if(v.speed.mods.length) now.push("speed " + v.speed.text + " " + v.speed.mods.map(m => m.v).join(""));
+  if(v.shields.now != null) now.push("shields " + v.shields.now);
+  if(v.turrets.now != null) now.push("turrets " + v.turrets.now);
+  /* a star fort: the crippled quadrant's own weapons and bays, never the
+     Basilica's (Fleets p. 501) */
+  if(v.fort) return "now " + now.join(", ") + " " + MID + " its own weapons and launch bays halved, the Basilica's not";
+  const nova = (R.weapons || []).some(w => w.state !== "offered" && /nova cannon/i.test(w.a[0]));
+  return (now.length ? "now " + now.join(", ") + " " + MID + " " : "") + note + (nova ? " No nova cannon." : "");
+}
+const ARM_CLS = { WB: "w-wb", LAN: "w-lan", NOVA: "w-nov", BOMB: "w-nov", TORP: "w-tor", BAYS: "w-bay", HOOK: "w-hook", MINES: "w-min", PULSE: "w-pul", RAM: "w-ram" };
+/* The row's armament line: current strengths by weapon group, in the
+   card's colours, a silenced row struck through. */
+
+
+
+
+function ldTile(i, extraCls, short){
+  const grp = G.grp[i];
+  const ms = grp ? groupUnits(grp) : [i];
+  const l = grp ? PLAY.squadronLd(ms.map(j => ({ R: U[j].R, st: G.st[j] })), G.fleet) : PLAY.leadership(U[i].R, G.st[i], G.fleet);
+  /* a squadron's tile edits the ship whose Leadership it shows (p. 95) */
+  const who = grp && l.idx != null ? ms[l.idx] : i;
+  const st = G.st[who];
+  const mods = l.mods.map(m => (m.v > 0 ? "+" : "") + m.v + " " + m.t.split(" ")[0]).join(" ");
+  /* short (the compact row): the big number is the value; the line under
+     it keeps only what qualifies it - "Ld 10 cmdr" cut to "Ld 10 cm..."
+     read as centimetres (19.10.2026) */
+  const qual = st.ldFrom === "commander" ? "cmdr" : st.ldFrom === "fixed" ? "fixed" : "";
+  const sub = l.now == null ? "set Ld" : (mods || (short && qual ? qual : "Ld " + l.base + (qual ? " " + qual : "")));
+  return `<button class="ldt ${l.now == null ? "na" : ""} ${extraCls || ""}" data-act="pop" data-i="${who}" data-arg="ld" aria-label="Leadership">
+    <b>${l.now == null ? "?" : l.now}</b><small>${sub}</small></button>`;
+}
+
+
+function ordChip(st){
+  if(st.order === "BFI" || st.braceTurn) return `<span class="chip br">BRACED</span>`;
+  if(st.order) return `<span class="chip ord">${esc(PLAY.ORDER_BY[st.order].name)}</span>`;
+  return "";
+}
+function ordnancePills(i, v){
+  const st = G.st[i];
+  const has = { torp: v.arms.some(a => a.torp), bays: v.arms.some(a => a.bays) };
+  let s = "";
+  if(has.torp) s += `<button class="stat pill2 ${st.torps ? "on" : "spent"}" data-act="torps" data-i="${i}">TORP <b>${st.torps ? "loaded" : "fired"}</b></button>`;
+  if(has.bays) s += `<button class="stat pill2 ${st.craft ? "on" : "spent"}" data-act="craft" data-i="${i}">AC <b>${st.craft ? "ready" : "launched"}</b></button>`;
+  return s;
+}
+function renderFleetPop(){
+  const fl = G.fleet;
+  const frr = fleetRR(), C = G.cmd != null ? U[G.cmd].R : null;
+  /* whose they are and what the price included, then the rule */
+  const rrHead = frr ? "Fleet re-rolls" : fl.rerollsPerTurn ? "Fleet Commander re-rolls " + MID + " per turn" : "Fleet Commander re-rolls";
+  const rrOwn = frr ? "The fleet's own: " + esc(frr.text) + " (Fleets p. " + frr.page + ")."
+    : C && C.rerolls && C.rerolls.text ? esc(unitName(G.cmd)) + ": " + esc(C.rerolls.text) + "." : "";
+  const rrRule = frr ? esc(frr.how || "") + " One re-roll per check at most (p. 48)."
+    : fl.rerollsPerTurn ? "One re-roll per check at most (p. 48). It is one per turn (Fleets p. 231), and the enemy's turn is a turn too: " +
+        (OPT.orders ? "the box comes back at the start of yours and of the enemy's." : "the box comes back at NEW TURN - tap it back yourself when the enemy's turn starts.") +
+        " Lost for the battle if the flagship's bridge is smashed (p. 67)."
+    : "One re-roll per check at most; lost for the battle if the flagship's bridge is smashed (p. 48, 67).";
+  if(V.pop.kind === "rr") return `<div class="pop"><h4>${rrHead}</h4><p>${rrOwn ? `<b>${rrOwn}</b> ` : ""}${rrRule}</p>
+    <div class="steprow"><button data-act="rr" data-i="-1" data-arg="-1" ${fl.rerollsLost ? "disabled" : ""}>&minus;</button><div class="val">${fl.rerolls | 0}<small>${fl.rerollsLost ? "lost: flagship bridge smashed (p. 67)" : "left"}</small></div><button data-act="rr" data-i="-1" data-arg="1" ${fl.rerollsLost ? "disabled" : ""}>+</button></div>
+    <button class="close" data-act="closepop">close</button></div>`;
+  if(V.pop.kind === "ac") return `<div class="pop"><h4>Attack craft in play</h4><p>No more attack craft markers in play than surviving launch bays, fleet-wide; crippled carriers count half (p. 73).</p>
+    <div class="steprow"><button data-act="ac" data-i="-1" data-arg="-1">&minus;</button><div class="val">${G.ac | 0}<small>markers on the table</small></div><button data-act="ac" data-i="-1" data-arg="1">+</button></div>
+    <button class="close" data-act="closepop">close</button></div>`;
+  return "";
+}
+function critChips(R, st, i){
+  const rows = (R.damage && R.damage.critical && R.damage.critical.rows) || [];
+  return PLAY.activeCrits(st, R).map(c => {
+    const row = rows.find(r => String(r[0]) === c.key);
+    const nm = row ? row[1] : (c.def ? c.def.name : c.key);
+    const fire = PLAY.standardCrits(R) && c.key === "7";
+    /* An unrepaired fire costs a hit each in the End Phase (p. 67): the
+       chip is the button that adds them. */
+    if(fire && !PLAY.destroyed(R, st)) return `<button class="chip crit fire" data-act="fire" data-i="${i}" title="End Phase: one hit per unrepaired fire (p. 67)">${esc(String(nm).split(/\s+\+/)[0])}${c.count > 1 ? " " + TIMES + c.count : ""} ${MID} +${c.count} hit${c.count > 1 ? "s" : ""}</button>`;
+    return `<span class="chip crit">${esc(String(nm).split(/\s+\+/)[0])}${c.count > 1 ? " " + TIMES + c.count : ""}</span>`;
+  }).join("");
+}
+
+/* The spec line under the name: the profile as it stands now, a value a
+   critical or crippling changed marked in the crippled colour. */
+function statsLine(v, R, esq){
+  const sp = v.speed.now != null ? v.speed.now + " cm" : v.speed.text + (v.speed.mods.length ? " " + v.speed.mods.map(m => m.v).join("") : "");
+  /* a unit that does not move (Rulebook p. 100) has one word where a ship
+     has its speed and turns */
+  const parts = (v.still ? [["", "STATIONARY", false]] : [
+    ["SPD", sp, v.speed.mods.length > 0],
+    [v.turns.none ? "TURNS" : "", v.turns.none ? "NONE" : v.turns.text, v.turns.none]]).concat([
+    ["SH", v.shields.now == null ? v.shields.text : v.shields.now, v.shields.now != null && v.shields.now !== v.shields.base],
+    ["ARM", shortArmour(R.stats.armour), false],
+    [/spore/i.test(R.stats.turretLabel || "") ? "SPORES" : "T", v.turrets.now == null ? v.turrets.text : v.turrets.now, v.turrets.now != null && v.turrets.now !== v.turrets.base],
+  ]);
+  if(esq) parts.push(["HITS", R.stats.hits + " each", false]);
+  return `<div class="stl">${parts.map(x => `<span class="${x[2] ? "mod" : ""}">${x[0] ? x[0] + " " : ""}<b>${esc(String(x[1]))}</b></span>`).join(`<em>${MID}</em>`)}</div>`;
+}
+/* The armament as a table: badge, name, range, strength, the halved value
+   (crippled p. 65, braced p. 47, All Ahead Full etc. p. 46 - whichever the
+   table says applies), arc. A location knocked out by a critical (p. 67)
+   is struck through. Escort squadrons show the per-ship value, the
+   squadron total (p. 99) and half of the total. */
+/* The range column: the builder's shortRange collapses "Furies: 30 cm /
+   Starhawks: 20 cm" to "30/20"; a single craft label ("Thunderhawk: 20 cm")
+   keeps only its number too - the craft is in the rules text. */
+function rangeText(t){
+  const r = shortRange(t);
+  const m = String(r).match(/(\d+)\s*cm/);
+  return /:/.test(r) && m ? m[1] : r;
+}
+/* The printed card's own rows (v1.2): the same filter and order as the
+   rules layer's armament and escortFire, so row k of the table is row k
+   here - and with it the card's range band (domain.js rangeCell, J183) and
+   port / starboard pair (domain.js pairRows, J188). The page computes
+   neither itself: it reads what the card prints. */
+function cardRows(R){ return (R.weapons || []).filter(w => w.state !== "offered"); }
+/* Which rows are a pair right now: the card's pair, held only while both
+   sides are the same in play - neither silenced, the same value now. A
+   critical on one side (p. 67) parts it, so the struck-through row shows
+   which side. 1 = upper row, 2 = lower, 0 = no pair. */
+function livePairs(R, rows, esq){
+  if(esq) return rows.map(() => 0);
+  const ws = cardRows(R);
+  const same = (p, q) => !p.silent && !q.silent && String(p.now) === String(q.now) && String(p.strength) === String(q.strength) && String(p.range) === String(q.range);
+  return rows.map((a, k) => {
+    const w = ws[k];
+    if(!w || !w.pair) return 0;
+    const m = w.pair === 1 ? k + 1 : k - 1, wm = ws[m];
+    if(!wm || wm.pair !== 3 - w.pair || !rows[m]) return 0;
+    return same(a, rows[m]) ? w.pair : 0;
+  });
+}
+/* The range as the card prints it (J183): one value in a frame of its
+   band's colour - 15, 30, 45, 60 cm and beyond - the unit in the heading;
+   a cell that is not one range (a launch bay's craft speeds, "Contact")
+   stays text. */
+function rangeHTML(R, a, k, cls){
+  const rc = cardRows(R)[k] && cardRows(R)[k].range;
+  if(rc) return `<span class="${cls}${rc.label.length > 3 ? " l" : ""}" style="--rb:${rc.color}">${esc(rc.label)}</span>`;
+  return esc(String(rangeText(a.range)).replace(/\s*cm\b/g, ""));
+}
+/* The compact row's armament: one chip per row of the table - the badge,
+   the strength in force now (halved when crippled or braced, struck through
+   when silenced), the range in its band's colour and the arc; a live pair
+   is one chip with both arcs. The names are on the card. */
+function weaponsLine(R, st, esq){
+  const v = PLAY.view(R, st, G.fleet);
+  const rows = esq ? PLAY.escortFire(R, st) : v.arms;
+  if(!rows.length) return `<p class="noarm">No armament</p>`;
+  const pairs = livePairs(R, rows, esq);
+  const cr = !esq && (v.crippled || (OPT.orders && (v.braced || (v.order && v.order.arm < 1))));
+  return `<div class="wline">${rows.map((a, k) => {
+    if(pairs[k] === 2) return "";
+    const ps = pairs[k] === 1;
+    const [letter, badge] = wepClass(a.name);
+    const n = PLAY.num(a.strength), alive = esq ? a.ships : 1;
+    const val = n == null ? String(a.strength).replace(/\s*squadrons?$/i, "") : esq ? n * alive : (cr && PLAY.num(a.now) != null ? PLAY.num(a.now) : n);
+    const glyph = ps ? arcGlyph("left right").replace(/class="pick"/g, 'class="on"') : arcGlyph(a.arc);
+    const title = ps ? a.name + " / " + rows[k + 1].name + ", each" : a.name;
+    return `<span class="wc${!esq && a.silent ? " off" : ""}${cr && n != null && !a.whole ? " half" : ""}" title="${esc(title)}"><i style="--bd:${badge}">${letter}</i><b>${esc(String(val))}</b>${rangeHTML(R, a, k, "rpc")}${glyph}</span>`;
+  }).join("")}</div>`;
+}
+/* The armament as a table, drawn the way the printed card is (v1.2): a
+   pair of port / starboard rows keeps both names and both arcs and shares
+   one tall badge, one range and one strength with "each" under it (the
+   user's choice C, 12.10.2026 - one merged row was turned down as busy); a
+   range in its band's frame. Then the play page's own: the halved value
+   (crippled p. 65, braced p. 47, All Ahead Full etc. p. 46 - whichever the
+   table says applies), a location knocked out by a critical (p. 67) struck
+   through, an escort squadron's per-ship value, total (p. 99) and half. */
+function weaponsTable(R, st, esq){
+  const v = PLAY.view(R, st, G.fleet);
+  const rows = esq ? PLAY.escortFire(R, st) : v.arms;
+  /* a fire ship has no armament at all (Fleets p. 516): say so rather
+     than show an empty table */
+  if(!rows.length) return `<p class="noarm">No armament</p>`;
+  /* "now" when something halves the armament: crippled always; an order
+     or brace only when the page tracks them */
+  const cr = v.crippled || (OPT.orders && !esq && (v.braced || (v.order && v.order.arm < 1)));
+  const pairs = livePairs(R, rows, esq);
+  let zone = null;
+  const trs = rows.map((a, k) => {
+    const [letter, badge] = wepClass(a.name);
+    const n = PLAY.num(a.strength);
+    const alive = esq ? a.ships : 1;
+    const full = n == null ? null : n * alive;
+    /* the halved value: the rules layer's own when the ship is crippled (a
+       Necron Portal rounds down, Fleets p. 401), else the generic ceil */
+    let half = full == null ? "" : PLAY.half(full);
+    /* a star fort's Basilica row is whole while the quadrant is crippled
+       (Fleets p. 501): its strength stays the value in force */
+    const keep = !esq && a.whole && !(OPT.orders && (v.braced || (v.order && v.order.arm < 1)));
+    if(!esq && cr && !keep && n != null && PLAY.num(a.now) != null) half = PLAY.num(a.now);
+    if(!esq && cr && !keep && n == null && a.now !== a.strength) half = esc(String(a.now));
+    const silent = !esq && !!a.silent;
+    const txt = n == null;
+    const pr = pairs[k];
+    /* one heading per group: the selected quadrant's rows, the Basilica's */
+    let head = "";
+    if(!esq && a.zone && a.zone !== zone){
+      zone = a.zone;
+      head = `<tr class="zn"><td colspan="6">${a.zone === "basilica" ? "Basilica " + MID + " the whole fort's" : esc(PLAY.QUADS[v.quad]) + " quadrant"}</td></tr>`;
+    }
+    const cls = `${silent ? "silent" : ""}${half === "" ? " nohalf" : ""}${keep ? " keep" : ""}`.trim();
+    /* the card's own shortening (v1.2 J186): a name that would wrap onto a
+       second line on a phone says Stbd - the full name is the tooltip */
+    const nm = String(a.name).length > 22 ? String(a.name).replace(/\bStarboard\b/, "Stbd") : String(a.name);
+    const name = `<td class="nm"${nm !== a.name ? ` title="${esc(a.name)}"` : ""}>${esc(nm)}${silent ? `<small>${esc(a.silent)}</small>` : ""}</td>`;
+    const arc = `<td class="ar">${arcGlyph(a.arc)}</td>`;
+    /* the lower row of a pair: its name and its arc - the badge, range,
+       strength and half are the upper row's, two rows high */
+    if(pr === 2) return `<tr class="${cls}" data-pair="2">${name}${arc}</tr>`;
+    const rs = pr === 1 ? ' rowspan="2"' : "";
+    return `${head}<tr class="${cls}"${pr ? ' data-pair="1"' : ""}>
+      <td class="bd"${rs}><span class="bg${pr ? " tall" : ""}" style="--bd:${badge}">${letter}</span></td>
+      ${name}
+      <td class="rg"${rs}>${rangeHTML(R, a, k, "rp")}</td>
+      <td class="st${txt ? " txt" : ""}"${rs}>${txt ? esc(a.strength) : n}${esq && alive !== 1 ? `<small>${TIMES}${alive}${a.nocombine ? " separate" : n != null ? " = " + full : ""}</small>` : pr ? `<i class="ea">each</i>` : ""}</td>
+      <td class="hf${txt ? " txt" : ""}"${rs}>${silent ? "" : half}</td>
+      ${arc}</tr>`;
+  }).join("");
+  return `<table class="wt${cr ? " crippled" : ""}"><thead><tr><th></th><th>Armament</th><th class="rg">Range cm</th><th class="st">Str</th><th class="hf">&frac12;${cr ? "<small>now</small>" : ""}</th><th></th></tr></thead><tbody>${trs}</tbody></table>`;
+}
+
+/* ============================================================= RENDER ===== */
+/* Scroll the open popover's anchor (the button line above it) to just
+   under the sticky bar - in the page or inside the sheet. */
+function showPop(){
+  /* No scrolling for a popover opened from a button: it opens right under
+     the button that was tapped (user 30.9.2026: the screen must not move).
+     Only a table that opened by itself with its top off the screen - the
+     Catastrophic table after a hit on the sheet - is brought into view. */
+  const pop = document.querySelector(".pop");
+  if(!pop) return;
+  const r = pop.getBoundingClientRect(), bar = document.querySelector(V.sheet != null ? ".sh-hd" : ".top");
+  const barH = bar ? bar.getBoundingClientRect().height : 0;
+  if(r.top >= barH && r.top < window.innerHeight - 60) return;
+  const anchor = pop.previousElementSibling || pop;
+  anchor.style.scrollMarginTop = (barH + 8) + "px";
+  anchor.scrollIntoView({ block: "start" });
+}
+/* The embarked commander's points ride with the flagship's VP (p. 123). */
+const cmdPts = i => (G && G.cmd != null && i === G.flag) ? (U[G.cmd].R.points | 0) : 0;
+/* Victory points conceded by the whole roster: ships (p. 123), planetary
+   defences one installation at a time (p. 123) and orbital mines bought
+   one by one (Fleets p. 512) - PLAY.conceded knows which row pays what;
+   a commander's own row and a minefield pay nothing. */
+const vpTotal = () => U.reduce((a, x, i) => a + PLAY.conceded(x.R, G.st[i], cmdPts(i)), 0);
+/* The selector that finds a control again after a render. */
+let TAP = null;
+function tapSel(el){
+  const a = ["data-act", "data-i", "data-arg"].filter(k => el.hasAttribute(k))
+    .map(k => "[" + k + '="' + String(el.getAttribute(k)).replace(/"/g, '\\"') + '"]').join("");
+  return (el.closest(".pop") ? ".pop " : el.closest(".sheet") ? ".sheet " : "") + a;
+}
+function render(){
+  const tap = TAP; TAP = null;
+  const top = document.scrollingElement ? document.scrollingElement.scrollTop : 0;
+  const sh0 = document.querySelector(".sheet"), shTop = sh0 ? sh0.scrollTop : 0;
+  /* a panel's own scroll (the menu, the End Phase) survives its re-render */
+  const bx0 = document.querySelector(".menu .box"), bxTop = bx0 ? bx0.scrollTop : 0;
+  let html = "";
+  if(V.screen === "load") html = renderLoad();
+  else if(V.screen === "setup") html = renderSetup();
+  else html = renderRoster();
+  if(V.sheet != null && G) html += renderSheet(V.sheet);
+  if(V.menu && G) html += renderMenu();
+  else if(V.endph && G && V.screen === "roster") html += renderEndPhase();
+  $("#app").innerHTML = html;
+  /* A new screen starts at its top, not at the old one's scroll (user
+     19.10.2026: the set-up opened half-way down, its first ship off the
+     screen), and taps are not taken for a moment (the click handler). */
+  const changed = V.lastScreen !== V.screen;
+  if(changed){
+    if(document.scrollingElement) document.scrollingElement.scrollTop = 0;
+    if(V.lastScreen != null) V.guardUntil = Date.now() + 400;
+    V.lastScreen = V.screen;
+  }
+  else if(V.sheet == null && document.scrollingElement) document.scrollingElement.scrollTop = top;
+  else { const sh1 = document.querySelector(".sheet"); if(sh1) sh1.scrollTop = shTop; }
+  const bx1 = document.querySelector(".menu .box"); if(bx1 && bx0) bx1.scrollTop = bxTop;
+  if(tap && !changed){
+    let el = null;
+    try{ el = document.querySelector(tap.sel); }catch(e){}
+    if(el){
+      const nr = el.getBoundingClientRect(), d = nr.top + nr.height / 2 - tap.top;
+      if(Math.abs(d) >= 1){
+        const sh2 = V.sheet != null ? document.querySelector(".sheet") : null;
+        if(sh2) sh2.scrollTop += d; else window.scrollBy(0, d);
+      }
+    }
+  }
+  if(V.screen === "roster") paginate();
+  wake();
+}
+
+/* ------------------------------------------------- screen wake lock --- */
+/* A phone locks its screen after half a minute; at the table every look
+   would then start with an unlock. While a game is open the page asks the
+   browser to keep the screen on (Screen Wake Lock); the browser lets it go
+   when the tab is hidden, and it is asked for again when the tab is back.
+   Menu > Keep the screen on turns it off for this device. */
+let WAKE = null, WAKING = false;
+const wakeOff = () => lsGet(KEY_WAKE) === "0";
+const wakeCan = () => typeof navigator !== "undefined" && !!navigator.wakeLock;
+function wakeWanted(){ return !!G && V.screen === "roster" && !wakeOff() && document.visibilityState !== "hidden"; }
+function wake(){
+  if(!wakeCan()) return;
+  if(wakeWanted()){
+    if(WAKE || WAKING) return;
+    WAKING = true;
+    navigator.wakeLock.request("screen").then(l => {
+      WAKING = false; WAKE = l;
+      l.addEventListener("release", () => { if(WAKE === l) WAKE = null; });
+      if(!wakeWanted()){ WAKE = null; l.release().catch(() => {}); }
+    }).catch(() => { WAKING = false; });
+  }else if(WAKE){ const l = WAKE; WAKE = null; l.release().catch(() => {}); }
+}
+document.addEventListener("visibilitychange", wake);
+
+/* ----------------------------------------------- the row at the top --- */
+/* The row whose top part is at the top of the screen, and where it is:
+   a change of view keeps it there. */
+function barBottom(){ const t = document.querySelector(".top"); return t ? t.getBoundingClientRect().bottom : 0; }
+function topRow(){
+  if(!document.querySelectorAll) return null;
+  const y = barBottom();
+  const rows = [...document.querySelectorAll("section.row[data-u]")];
+  for(const r of rows){ const b = r.getBoundingClientRect(); if(b.bottom > y + 8) return { u: r.getAttribute("data-u"), top: b.top }; }
+  return null;
+}
+/* The strip's tap: that ship's row just under the top bar. */
+function jumpTo(i){
+  const el = document.querySelector('section.row[data-u="' + i + '"]');
+  if(!el) return;
+  window.scrollBy(0, el.getBoundingClientRect().top - barBottom() - 6);
+}
+
+/* A laptop shows the fleet as a grid; what does not fit the screen goes
+   on a second page rather than below the fold. Rows of the grid are
+   measured after the render, so a card that grew (a popover) is counted. */
+/* A laptop shows the fleet as a grid that scrolls; the pager's pages are
+   the scroll positions at which a whole screenful of rows begins, so the
+   arrows jump a screen at a time and the wheel still works. Rows are
+   measured after the render, so a card that grew (a popover) is counted. */
+function paginate(){
+  const main = $(".main"), pager = $(".pager");
+  if(!main) return;
+  const cards = [...main.children];
+  V.pages = 1; V.pageTops = [0];
+  const desktop = window.matchMedia("(min-width:900px)").matches;
+  if(!desktop || !cards.length){ if(pager) pager.classList.add("hide"); return; }
+  const cols = Math.max(1, getComputedStyle(main).gridTemplateColumns.split(" ").filter(Boolean).length);
+  const topH = ($(".top") || { getBoundingClientRect: () => ({ height: 0 }) }).getBoundingClientRect().height;
+  const botH = ($(".bottom") || { getBoundingClientRect: () => ({ height: 0 }) }).getBoundingClientRect().height;
+  const avail = window.innerHeight - topH - botH - 24;
+  const gap = 10;
+  const heights = cards.map(c => c.getBoundingClientRect().height);
+  const tops = cards.map(c => c.getBoundingClientRect().top + window.scrollY - topH - 10);
+  const pageTops = [tops[0]]; let used = 0;
+  for(let r = 0; r * cols < cards.length; r++){
+    const idx = []; for(let k = r * cols; k < Math.min(cards.length, r * cols + cols); k++) idx.push(k);
+    const rh = Math.max.apply(null, idx.map(k => heights[k])) + gap;
+    if(used + rh > avail && used > 0){ pageTops.push(tops[idx[0]]); used = 0; }
+    used += rh;
+  }
+  V.pages = pageTops.length; V.pageTops = pageTops;
+  if(pager) pager.classList.toggle("hide", V.pages <= 1);
+  pageLabel();
+}
+/* Which page the window is on, from the scroll position. */
+function pageLabel(){
+  const pager = $(".pager"); if(!pager || !V.pageTops) return;
+  const y = window.scrollY, maxY = document.documentElement.scrollHeight - window.innerHeight;
+  let cur = 0; V.pageTops.forEach((t, k) => { if(y >= t - 2) cur = k; });
+  if(maxY > 0 && y >= maxY - 2) cur = V.pages - 1;
+  V.page = cur;
+  const lab = pager.querySelector("b"); if(lab) lab.textContent = (cur + 1) + " / " + V.pages;
+  const prev = pager.querySelector("[data-arg='-1']"), next = pager.querySelector("[data-arg='1']");
+  if(prev) prev.disabled = cur <= 0;
+  if(next) next.disabled = cur >= V.pages - 1;
+}
+window.addEventListener("scroll", () => { if(V.screen === "roster" && V.sheet == null) pageLabel(); }, { passive: true });
+window.addEventListener("resize", () => { if(V.screen === "roster" && V.sheet == null) paginate(); });
+
+function renderLoad(){
+  const raw = lsGet(KEY_BUILDER);
+  const g = loadPlay();
+  let cards = "";
+  if(g){
+    const res = resolveFleet(g.doc);
+    const same = !res.error && (g.src && g.src !== "builder" || (function(){ const p = raw ? parseDoc(raw) : null; if(!p || !p.o) return true;
+      return fleetsIn(p.o).some(f => fnv(JSON.stringify([f.ln, f.units])) === g.fp); })());
+    cards += `<div class="card"><h2>Game in progress</h2>
+      <p>${esc(g.ln)} ${MID} turn ${g.fleet.turn} ${MID} ${g.st.length} units${res.error ? "" : " " + MID + " " + fleetPoints(res.units) + " pts"}</p>
+      ${same ? "" : `<p class="note">The fleet in the builder has changed since this game began. Resume keeps playing with the roster as it was; a new game reads the current one.</p>`}
+      ${res.error ? `<p class="note bad">${esc(res.error)}</p>` : res.units.length !== g.st.length ? `<p class="note bad">The roster no longer resolves to the saved units (${res.units.length} of ${g.st.length}${res.lost.length ? ", " + res.lost.length + " could not be matched" : ""}). Start a new game.</p>` : `<button class="btn" data-act="resume">Resume game<small>turn ${g.fleet.turn}</small></button>`}
+    </div>`;
+  }
+  /* this device's own saved fleets - from links, QR codes and files (J208):
+     the newest ones are marked, and each keeps the name it was sent with */
+  const lk = linkedFleets();
+  const isNew = fp => Array.isArray(V.linkNew) && V.linkNew.indexOf(fp) >= 0;
+  if(lk.length){
+    cards += `<div class="card"><h2>Saved fleets</h2>` + lk.map((f, k) => {
+      const res = resolveFleet(f.doc);
+      return `<div class="fl${isNew(f.fp) ? " fresh" : ""}">${res.error ? `<p class="note bad">${esc(f.doc.name || f.doc.ln || "")}: ${esc(res.error)}</p>` :
+        `<button class="btn ${isNew(f.fp) || (!V.linkNew && k === 0) ? "" : "sec"}" data-act="linked" data-arg="${k}">${esc(f.doc.name || f.doc.ln)}<small>${f.doc.name ? esc(f.doc.ln) + " " + MID + " " : ""}${res.units.length} units ${MID} ${fleetPoints(res.units)} pts ${MID} ${f.how === "file" ? "file" : "link"} ${esc(f.date || "")}${isNew(f.fp) ? " " + MID + " new" : ""}</small></button>`}
+        <span class="side"><button class="mini${V.phone === "s:" + k ? " on" : ""}" data-act="phone" data-arg="s:${k}" aria-label="Send this fleet to another phone">to phone</button>
+        <button class="mini" data-act="unlink" data-arg="${k}" aria-label="Forget this fleet on this device">forget</button></span></div>
+        ${V.phone === "s:" + k ? phonePanel() : ""}`;
+    }).join("") + (lk.length > 1 ? `<button class="btn sec${V.phone === "all" ? " on" : ""}" data-act="phone" data-arg="all">All to phone<small>every saved fleet in one QR code</small></button>${V.phone === "all" ? phonePanel() : ""}` : "") + `</div>`;
+  }
+  /* the builder's own fleets on this device: its saved fleets by name, then
+     the fleet each list is editing; play one here, or send it to a phone (a
+     QR code of the link, under the tapped button) */
+  const bad = raw ? parseDoc(raw).error : "";
+  if(bad) cards += `<div class="card"><h2>Fleet in this browser</h2><p class="note bad">${esc(bad)}</p></div>`;
+  const bf = builderFleets();
+  if(bf.length){
+    cards += `<div class="card"><h2>Fleets from the builder</h2>` + bf.map((f, k) => {
+      const res = resolveFleet(f);
+      return res.error ? `<p class="note bad">${esc(f.name || f.ln)}: ${esc(res.error)}</p>` :
+        `<div class="fl"><button class="btn ${k ? "sec" : ""}" data-act="newfrom" data-arg="${k}">${esc(f.name || f.ln)}<small>${f.name ? esc(f.ln) + " " + MID + " " : ""}${res.units.length} units ${MID} ${fleetPoints(res.units)} pts${res.lost.length ? " " + MID + " " + res.lost.length + " could not be matched" : ""} ${MID} ${f.saved ? "saved" : f.open ? "being edited" : "being edited, kept"}</small></button>
+          <button class="mini${V.phone === "b:" + k ? " on" : ""}" data-act="phone" data-arg="b:${k}" aria-label="Send this fleet to a phone">to phone</button></div>
+        ${V.phone === "b:" + k ? phonePanel() : ""}`;
+    }).join("") + `</div>`;
+  }else if(!lk.length && !g && !bad){
+    cards += `<div class="card"><h2>No fleet on this device</h2><p>Three ways to bring one: open this page from the builder (its Play button) and its fleets are here by themselves; in the builder's <b>Saved fleets</b>, tap <b>To phone</b> and scan the code; or open a fleet file below.</p></div>`;
+  }
+  cards += `<div class="card"><h2>Open a fleet file</h2>
+    <p>The builder's <b>Saved fleets &rsaquo; Export</b> or <b>Export all as file</b>. On a phone it can come by mail or chat; its fleets go on this page's Saved fleets.</p>
+    <label class="btn sec">Open a fleet file<input type="file" id="fleetfile" accept=".json,application/json,text/plain" style="display:none"></label>
+    ${V.loadErr ? `<p class="note bad">${esc(V.loadErr)}</p>` : ""}
+    <details class="paste"><summary>or paste the file's text</summary>
+      <textarea id="paste" placeholder="Paste the fleet document (JSON) here"></textarea>
+      <button class="btn sec" data-act="paste">Load pasted fleet</button></details></div>`;
+  return `<div class="top"><h1 style="flex:1 1 auto">Gothic Fleet Play<small>prototype ${PLAY_VERSION}</small></h1><div class="tools">${builderTool()}</div></div>
+    <div class="main">${cards}
+    <p class="foot" style="padding:0 6px">Record, do not adjudicate: the page keeps what happened to each ship and shows what the rulebook makes of it. It never changes the fleet you built.</p></div>`;
+}
+/* The phone panel under a builder fleet: the QR code, the link, copy and
+   share. The fleet travels inside the link; nothing is uploaded. */
+function phonePanel(){
+  const canShare = typeof navigator !== "undefined" && !!navigator.share;
+  return `<div class="phone">
+    ${V.phoneErr ? `<p class="note bad">${esc(V.phoneErr)}</p>` : V.phoneSvg ? `<div class="qr" data-act="qrfull" title="Full screen">${V.phoneSvg}</div>` : `<p class="foot">Making the code&hellip;</p>`}
+    <p class="foot">Hold this screen up to the other phone's camera (brightness up helps), or ${canShare ? "Share the link to it" : "send it the link"}: ${V.phoneN > 1 ? "all " + V.phoneN + " fleets open" : "the fleet opens"} in Gothic Fleet Play there${V.phoneRemote ? ", on the published page (bfgtools.kuldare.com)," : ""} and stay${V.phoneN > 1 ? "" : "s"} on its Saved fleets. The fleet is inside the link itself; nothing is uploaded.</p>
+    <input class="link" readonly value="${esc(V.phoneUrl || "")}" aria-label="The link">
+    <div class="r4"><button data-act="qrfull" ${V.phoneSvg ? "" : "disabled"}>Full screen</button><button data-act="copylink" ${V.phoneUrl ? "" : "disabled"}>${V.copied === "link" ? "Copied" : "Copy link"}</button>${canShare ? `<button data-act="sharelink" ${V.phoneUrl ? "" : "disabled"}>Share</button>` : ""}</div>
+  </div>`;
+}
+
+function factsCard(){
+  const fs = fleetFactsNow();
+  return fs.length ? `<div class="card"><h2>Fleet facts</h2>${fs.map(f =>
+    `<div class="setrow"><div class="who"><b>${esc(f.t)}</b><small>${esc(f.s)}</small></div><span class="pill on"><b>${esc(f.v)}</b></span></div>`).join("")}</div>` : "";
+}
+function renderSetup(){
+  const rows = U.map((x, i) => {
+    const R = x.R, st = G.st[i];
+    if(R.kind === "commander"){
+      /* who he may board: a capital ship, a star fort (Fleets p. 503,
+         p. 111) or a Haven (p. 336) - never a platform, a station or a
+         defence vessel (PLAY.mayCarryCommander) */
+      const caps = U.map((y, j) => PLAY.mayCarryCommander(y.R) ? j : -1).filter(j => j >= 0);
+      const ld = R.leadership;
+      /* only the fleet commander (G.cmd) boards a flagship; a second
+         commander row is information */
+      return `<div class="setrow"><div class="who"><b>${esc(unitName(i))}</b><small>${ld ? (ld.kind === "fixed" ? "Ld " + ld.value + " for the flagship" : "+" + ld.value + " Ld for the flagship (max " + (ld.max || 10) + ")") : ""}${rrWords(R)}</small></div>
+        ${i === G.cmd && caps.length ? `<select data-sel="flag" aria-label="Aboard">${caps.map(j => `<option value="${j}" ${G.flag === j ? "selected" : ""}>aboard ${esc(unitName(j))}</option>`).join("")}</select>` : ""}</div>`;
+    }
+    if(R.kind !== "ship") return "";
+    const esq = PLAY.isEscort(R);
+    /* Ld 5 to Ld 10: the rulebook's table gives 6-9 (p. 45), the fleets'
+       own tables 5 (Orks, Fleets p. 358) to 10 (Space Marines, p. 94), and
+       a fleet may hold ships of another table (PLAY.LD_VALUES) */
+    const tiles = PLAY.LD_VALUES.map(v => `<button class="${st.ldRoll === v ? "on" : ""}" data-act="ld" data-i="${i}" data-arg="${v}">${v}</button>`).join("");
+    /* no roll: the commander's own line on the flagship, or a Leadership
+       the book fixes - the pill carries the value, the line the reason and
+       its page */
+    const fx = PLAY.fixedLd(R);
+    const fixed = (st.ldFrom === "commander" && st.ldRoll == null) || !!fx;
+    /* The page derives nothing of the ship's own into the value (user
+       decision 13.10.2026, LUEMINUT T40: no Leadership automation here, a
+       plain choice by the player) - the Emperor's +1 (Fleets p. 53) is the
+       player's to add before tapping. */
+    const why = st.ldFrom === "commander" ? " " + MID + " Ld " + st.ld + " from the commander"
+      : fx ? " " + MID + " " + esc(fx.note || "fixed") + (fx.page ? " (Fleets p. " + fx.page + ")" : "") : "";
+    const sqn = sqnShip(R);
+    return `<div class="setrow"><div class="who"><input class="nm" type="text" data-nm="${i}" value="${esc(unitName(i))}" placeholder="${esc(baseName(i))}" maxlength="40" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" aria-label="Name of this ship in the game"><small>${classTag(R)}${esq ? " " + TIMES + R.hulls + (fx ? "" : " " + MID + " one Ld for the squadron") : ""}${why}</small></div>
+      <div class="ctl">${fixed ? `<span class="pill on"><b>Ld ${st.ld}</b></span>` : `<div class="seg ld">${tiles}</div>`}
+      ${sqn ? `<div class="seg"><button class="sq ${G.grp[i] ? "on" : ""}" data-act="grp" data-i="${i}">SQN ${G.grp[i] || "-"}</button></div>` : ""}</div></div>`;
+  }).join("");
+  const ready = U.every((x, i) => x.R.kind !== "ship" || G.st[i].ld != null);
+  const anyFixed = U.some(x => PLAY.fixedLd(x.R) && PLAY.fixedLd(x.R).value === 7);
+  const frr = fleetRR();
+  const frrRow = frr ? `<div class="setrow"><div class="who"><b>Fleet re-rolls</b><small>${esc(frr.text)} ${MID} the fleet's own, no commander (Fleets p. ${frr.page})</small></div><span class="pill on">RR <b>${G.fleet.rerolls | 0}</b></span></div>` : "";
+  return `<div class="top"><h1>Set up<small>${esc(G.ln)} ${MID} ${fleetPoints(U)} pts</small></h1>
+      <button class="ico" data-act="newgame">EXIT</button></div>
+    <div class="main">${factsCard()}<div class="card"><h2>Leadership</h2>
+      <p>Roll a D6 per capital ship and per escort squadron before the game (p. 45): 1 = Ld 6, 2&ndash;3 = Ld 7, 4&ndash;5 = Ld 8, 6 = Ld 9. Fleets with a table of their own run from Ld 5 (Orks, Fleets p. 358) to Ld 10 (Space Marines, Fleets p. 94). Tap the value the ship fights on: a bonus of its own (an Emperor's +1, Fleets p. 53) is yours to add. SQN groups capital ships into a squadron: one Ld, one order, combined fire (p. 95, 99). Tap a ship's name to give it another one for this game.${anyFixed ? " Planetary defences do not roll: their checks are made on Ld 7 (Rulebook p. 100)." : ""}</p>
+      ${frrRow}${rows}
+      <button class="btn" data-act="start" ${ready ? "" : "disabled"}>Start the game</button></div></div>`;
+}
+
+function renderRoster(){
+  const fl = G.fleet;
+  const toPlay = U.filter((x, i) => x.R.kind === "ship" && !PLAY.destroyed(x.R, G.st[i]) && G.st[i].played < 2).length;
+  const vp = vpTotal();
+  const done = {}, out = [];
+  U.forEach((x, i) => {
+    if(done[i]) return;
+    const g = G.grp[i];
+    if(g && x.R.kind === "ship" && !PLAY.isEscort(x.R)){
+      const ms = groupUnits(g);
+      out.push(renderGroupHead(g, ms));
+      ms.forEach(j => { done[j] = 1; out.push(renderRow(j, true)); });
+    }else{ done[i] = 1; out.push(renderRow(i, false)); }
+  });
+  /* A fleet without a commander has no flagship card to carry its re-rolls:
+     they get a line of their own at the head of the roster. */
+  const frr = fleetRR();
+  if(frr) out.unshift(`<section class="row" style="--kd:${factionCols(G.ln, "")[0]};--km:${factionCols(G.ln, "")[1]};padding:6px 8px 6px 10px">
+      <div class="r1"><span class="tag">RR</span><div class="name" style="min-height:32px"><b>Fleet re-rolls</b><small style="white-space:normal">${esc(frr.text)} ${MID} Fleets p. ${frr.page}</small></div></div>${rrBoxesHTML(-1)}</section>`);
+  /* launch bays for the attack craft limit (p. 73): every survivor of a
+     one-hit squadron, all four quadrants of a star fort and a Ramilies
+     doubled (Fleets p. 502) - PLAY.launchBays */
+  let baysText = false;
+  const bays = !OPT.fleet ? 0 : U.reduce((a, x, i) => {
+    if(x.R.kind !== "ship") return a;
+    const b = PLAY.launchBays(x.R, G.st[i]);
+    if(b.text) baysText = true;
+    return a + b.n;
+  }, 0);
+  /* One line at the top (user 19.10.2026: the bar took two): the turn,
+     the view, UNDO and the menu - INFO and the way to the builder are in
+     the menu, they are not needed in the middle of a game. */
+  const pend = endPending();
+  return `<div class="top one">
+      <h1>Turn ${fl.turn}${OPT.orders && !fl.mine ? " " + MID + " enemy" : ""}${OPT.orders && fl.orderLock ? `<span class="lock">ORDERS LOCKED</span>` : `<small>${esc(G.ln)}</small>`}</h1>
+      ${OPT.fleet ? `<button class="pill ${fl.enemyOrders ? "on" : ""}" data-act="enemy" title="Enemy ships on special orders: +1 Ld (p. 48)">ENEMY+1</button>` : ""}
+      ${OPT.fleet && (G.cmd != null || fleetRR()) ? `<button class="pill ${fl.rerollsLost ? "bad" : fl.rerolls ? "on" : ""}" data-act="pop" data-i="-1" data-arg="rr">RR <b>${fl.rerolls | 0}</b></button>` : ""}
+      ${OPT.fleet && (bays || baysText) ? `<button class="pill ${G.ac > bays && !baysText ? "bad" : ""}" data-act="pop" data-i="-1" data-arg="ac">AC <b>${G.ac | 0}</b>/${bays}${baysText ? "+?" : ""}</button>` : ""}
+      <div class="tools">
+        ${toolBtn("view", "view", "Compact", { on: V.compact, tip: "Compact rows: hits and criticals of the whole fleet on one screen; the weapons are on the cards" })}
+        ${toolBtn("undo", "undo", "Undo", { off: !UNDO.length, tip: "Undo the last tap" })}
+        ${toolBtn("menu", "menu", "Menu", { tip: "Victory points, game report, rules text, tracking, new game" })}
+      </div>
+    </div>
+    ${V.saveErr ? `<p class="note bad" style="margin:8px">This browser would not store the game record; it lives only in this tab.</p>` : ""}
+    ${V.pop && V.pop.i === -1 ? renderFleetPop() : ""}
+    <div class="main${V.compact ? " compact" : ""}">${out.join("")}</div>
+    <div class="bottom">
+      ${V.compact ? "" : jumpStrip()}
+      <div class="brow">
+        <button class="endbtn" data-act="endph" ${pend.n ? "" : "disabled"}>End phase<small>${pend.n ? pend.crits + " to repair" + (pend.fires ? " " + MID + " " + pend.fires + " fire" + (pend.fires > 1 ? "s" : "") : "") : "nothing to repair"}</small></button>
+        ${OPT.orders ? `<button class="turnbtn ${fl.mine ? "" : "enemy"}" data-act="${fl.mine ? "endturn" : "newturn"}">${fl.mine ? "End turn " + fl.turn : "Start turn " + (fl.turn + 1)}</button>`
+                     : `<button class="turnbtn" data-act="newturn">New turn ${fl.turn + 1}</button>`}
+        <div class="pager hide"><button class="ico" data-act="page" data-arg="-1" aria-label="Previous page">&lsaquo;</button><b>1 / 1</b><button class="ico" data-act="page" data-arg="1" aria-label="Next page">&rsaquo;</button></div>
+        <div class="vp">${OPT.orders && !fl.mine ? "brace, hits, crits" : toPlay + " to play"}<b>VP ${vp}</b></div>
+      </div>
+    </div>`;
+}
+
+
+
+/* A squadron's own colour ties its header and its members together. */
+/* A squadron's colour: the capital squadrons A, B, C take the first three,
+   each escort squadron (a card of its own) the next in the fleet's order. */
+const SQ_COLS = ["var(--sq1)", "var(--sq2)", "var(--sq3)", "var(--sq4)", "var(--sq5)", "var(--sq6)"];
+function sqColor(letter){ return SQ_COLS[Math.max(0, "ABC".indexOf(letter))]; }
+function escColor(i){
+  const k = U.slice(0, i).filter(x => x.R.kind === "ship" && PLAY.isEscort(x.R)).length;
+  return SQ_COLS[(3 + k) % SQ_COLS.length];
+}
+function renderGroupHead(letter, ms){
+  const units = ms.map(j => ({ R: U[j].R, st: G.st[j] }));
+  const names = ms.map(j => unitName(j));
+  const st0 = G.st[ms[0]];
+  const [kd, km] = factionCols(G.ln, "");
+  const from = PLAY.squadronLd(units, G.fleet);
+  /* who is still on the table: a member out of action is struck through
+     with the reason, a crippled one marked (its values are halved already) */
+  const status = PLAY.squadronStatus(units);
+  const members = ms.map((j, k) => {
+    const o = status.out.find(x => x.idx === k);
+    if(o) return `<s>${esc(names[k])}</s> <i>${o.why}</i>`;
+    return esc(names[k]) + (status.crippled.indexOf(k) >= 0 ? ` <i class="cr">crippled</i>` : "");
+  }).join(", ");
+  return `<section class="row grp-hd" data-g="${letter}" style="--kd:${kd};--km:${km};--sq:${sqColor(letter)}">
+    <div class="r1"><span class="tag grp">SQN ${letter}</span>
+      <div class="name"><b>Squadron ${letter}</b><small>${members}${from.idx != null ? " " + MID + " Ld of " + esc(names[from.idx]) + " (p. 95)" : ""}</small></div>
+      ${ldTile(ms[0])}
+      <button class="played p${st0.played}" data-act="played" data-i="${ms[0]}">${["TO PLAY", "MOVED", "SHOT"][st0.played]}</button></div>
+    ${V.compact ? "" : squadronTable(units, names)}
+    ${OPT.orders && ordChip(st0) ? `<div class="r2">${ordChip(st0)}</div>` : ""}
+    ${OPT.orders ? `<div class="r4">
+      <button class="brace ${PLAY.braced(st0) ? "on" : ""}" data-act="brace" data-i="${ms[0]}" ${PLAY.canOrder(st0, G.fleet, "BFI") ? "" : "disabled"}>Brace<small>all ${ms.length}</small></button>
+      <button class="order ${st0.order && st0.order !== "BFI" ? "on" : ""}" data-act="pop" data-i="${ms[0]}" data-arg="order">${st0.order && st0.order !== "BFI" ? esc(PLAY.ORDER_BY[st0.order].name) : "Order"}<small>squadron</small></button>
+    </div>` : ""}
+    ${V.pop && ms.indexOf(V.pop.i) >= 0 && /^(ld|order)$/.test(V.pop.kind) && V.sheet == null ? renderPop(V.pop.i) : ""}
+  </section>`;
+}
+
+/* The squadron's combined fire as the same table the ships use: only the
+   systems that add up (weapons batteries' Firepower, lances' Strength,
+   p. 99), by arc and range; each ship's value is already its own current
+   one (crippled ships halve individually, p. 99). Dice strengths (Ork
+   gunz) cannot be added and stay on the ships' own rows. */
+function squadronTable(units, names){
+  /* the sum follows the ships: a destroyed, hulked or disengaged member
+     is out of it, a silenced weapon (critical) is struck under its row */
+  const status = PLAY.squadronStatus(units);
+  const who = k => (names && names[k]) || ("ship " + (k + 1));
+  const firing = status.out.length ? " " + MID + " " + status.firing.length + " of " + units.length + " firing" : "";
+  if(!status.firing.length) return `<p class="foot">No ship left firing: ${status.out.map(o => esc(who(o.idx)) + " " + o.why).join(", ")}.</p>`;
+  const all = PLAY.squadronFire(units);
+  const SUMS = /^(battery|lance|torpedoes|launch bays|heavy gunz|bombardment cannon)$/;
+  const rows = all.filter(r => SUMS.test(r.kind) && (r.total > 0 || (r.silent || []).some(s => typeof s.now === "number")));
+  /* a dice strength (Ork gunz) is rolled ship by ship and stays on the
+     ships' cards (T13): the table says so rather than dropping it */
+  const diceRows = all.filter(r => SUMS.test(r.kind) && !(r.total > 0) && (r.dice || []).length);
+  const diceFoot = diceRows.length ? `<p class="foot">Rolled ship by ship, not summed: ${diceRows.map(r => esc(r.kind) + " " + r.dice.map(d => esc(d)).join(", ")).join("; ")} (Fleets p. 360).</p>` : "";
+  if(!rows.length) return `<p class="foot">No combined fire: nothing with a number to add (p. 99).${firing}</p>${diceFoot}`;
+  const trs = rows.map(r => {
+    const name = r.kind === "battery" ? "Weapons batteries" : r.kind === "lance" ? "Lances" : r.kind === "torpedoes" ? "Torpedoes, one salvo" : r.kind === "launch bays" ? "Launch bays, one wave" :
+                 r.kind === "heavy gunz" ? "Heavy gunz, 2 hits each (Fleets p. 360)" : "Bombardment cannons";
+    const [letter, badge] = wepClass(r.kind === "lance" ? "lance battery" : r.kind === "torpedoes" ? "torpedoes" : r.kind === "launch bays" ? "launch bays" : "weapons battery");
+    const nums = r.parts.filter(p => PLAY.num(p.now) != null);
+    const half = nums.reduce((a, p) => a + PLAY.half(PLAY.num(p.now)), 0);
+    const dice = (r.dice || []).length;
+    /* several ranges in one row: what the sum is at each distance */
+    const bands = (r.bands || []).length > 1 ? r.bands.map((b, k) => b.total + (k === 0 ? " within " : " to ") + b.range).join(" " + MID + " ") : "";
+    /* what a critical took out of this row, struck through, and why */
+    const struck = (r.silent || []).filter(s => typeof s.now === "number");
+    const lost = struck.length ? (nums.length || bands ? " + " : "") + struck.map(s => `<s>${s.now}</s>`).join(" + ") : "";
+    const why = struck.length ? " " + MID + " " + struck.map(s => esc(who(s.ship)) + ": " + esc(String(s.name).toLowerCase()) + " " + esc(s.why)).join("; ") : "";
+    return `<tr>
+      <td class="bd"><span class="bg" style="--bd:${badge}">${letter}</span></td>
+      <td class="nm">${name}<small style="color:var(--card-mute)">${bands ? bands + " cm" : nums.map(p => PLAY.num(p.now)).join(" + ")}${lost}${dice ? " + dice on " + dice + (dice > 1 ? " rows" : " row") : ""}${r.contact ? " " + MID + " base contact (p. 99)" : ""}${why}</small></td>
+      <td class="rg">${esc(shortRange(r.range))}</td>
+      <td class="st">${r.total}</td>
+      <td class="hf">${half}</td>
+      <td class="ar">${arcGlyph(r.arc)}</td></tr>`;
+  }).join("");
+  return `<table class="wt"><thead><tr><th></th><th>Combined fire${firing}</th><th>Range</th><th class="st">Str</th><th class="hf">&frac12;</th><th></th></tr></thead><tbody>${trs}</tbody></table>${diceFoot}`;
+}
+
+/* The commander's line on the flagship's card. */
+function cmdLine(){
+  const C = U[G.cmd].R, ld = C.leadership;
+  return `<div class="cmdl"><span class="tag">CMD</span><b>${esc(unitName(G.cmd))}</b><small>${ld ? (ld.kind === "fixed" ? "Ld " + ld.value : "+" + ld.value + " Ld") : ""}${rrWords(C)}</small></div>${rrBoxesHTML(G.cmd)}`;
+}
+/* A ship's own re-rolls on its card: the sentence and the boxes. */
+function shipRRLine(i){
+  const rr = U[i].R.rerolls;
+  if(!rr) return "";
+  /* A star fort with the fleet commander aboard: its re-rolls are his and
+     the whole fleet's (J168 b) - the boxes stay here, the words say so. */
+  if(PLAY.rerollsJoinFleet(U[i].R, i === G.flag && G.cmd != null))
+    return `<div class="cmdl"><span class="tag">RR</span><b>Fleet re-rolls from the fort</b><small>${esc(rr.head || rr.text || "")} \u00b7 commander aboard: any ship may use them (Fleets p. ${rr.joins.page})</small></div>${rrBoxesHTML(i)}`;
+  return `<div class="cmdl"><span class="tag">RR</span><b>Ship's own re-rolls</b><small>${esc(rr.head || rr.text || "")}</small></div>${rrBoxesHTML(i)}`;
+}
+/* Whose re-rolls a box belongs to: the fleet's pool - its commander's, or
+   the fleet's own without one (i = -1) - or a further commander's own. */
+function rrPool(i){ return i === -1 || i === G.cmd ? G.fleet : G.st[i]; }
+const RR_WORD = { included: "included", bought: "bought", optional: "option", added: "added" };
+const RR_TIP = { included: "included in the points cost", bought: "bought with the fleet",
+                 optional: "an open option of the list, taken into use at the table",
+                 added: "added on the counter" };
+/* Open options of the list still on offer to this pool: not in the fleet's
+   points, and none once the bridge is smashed. */
+function rrOpen(i){
+  const pool = rrPool(i), src = i >= 0 ? U[i] && U[i].R.rerolls : fleetRR();
+  if(!pool || !src || pool.rerollsLost) return 0;
+  return Math.max(0, (src.optional | 0) - PLAY.rerollBoxes(pool).filter(b => b.kind === "optional").length);
+}
+/* The boxes of one pool (user 5.10.2026): a tap uses that re-roll, a second
+   tap gives it back. Dashed ones are the list's open options, not in the
+   fleet's points: tapped, one becomes a box of its own. */
+function rrBoxesHTML(i){
+  const pool = rrPool(i), src = i >= 0 ? U[i].R.rerolls : fleetRR();
+  if(!pool || !src) return "";
+  const boxes = PLAY.rerollBoxes(pool);
+  const open = rrOpen(i);
+  if(!boxes.length && !open) return "";
+  const left = boxes.filter(b => !b.used).length;
+  /* Abaddon's one comes back every turn (Fleets p. 231). Without the
+     orders track the page has no enemy turn to start, so it says who
+     brings the box back then. */
+  const perTurn = !pool.rerollsPerTurn ? "" : OPT.orders ? " " + MID + " back every turn (Fleets p. 231)"
+    : " " + MID + " 1 per turn (Fleets p. 231): back at NEW TURN - tap it back yourself for the enemy's turn";
+  const note = pool.rerollsLost ? "lost: flagship bridge smashed (p. 67)"
+    : (left + " of " + boxes.length + " left") + perTurn + (open ? " " + MID + " + open option: tap if bought" : "");
+  return `<div class="rrb">${boxes.map((b, k) =>
+      `<button class="rrx ${b.kind}${b.used ? " used" : ""}" data-act="rrbox" data-i="${i}" data-arg="${k}" aria-pressed="${b.used}"${b.lost ? " disabled" : ""} aria-label="${esc("Re-roll " + (k + 1) + " of " + boxes.length + ", " + (RR_TIP[b.kind] || "") + ": " + (b.lost ? "lost" : b.used ? "used" : "free"))}" title="${esc(RR_TIP[b.kind] || "")}"><b>RR</b><small>${RR_WORD[b.kind] || ""}</small></button>`).join("")}${
+    Array.from({ length: open }, () =>
+      `<button class="rrx open" data-act="rropt" data-i="${i}" aria-label="Open option of the fleet list, not in the fleet's points: tap if this re-roll was bought" title="An open option of the fleet list, not in the fleet's points: tap if you bought it"><b>+</b><small>option</small></button>`).join("")}<span class="rrn">${note}</span></div>`;
+}
+/* A commander's re-rolls in the builder's own words (DOMAIN.rerollText):
+   what the price includes, what was bought, and the book's limit on them. */
+function rrWords(R){ return R.rerolls && R.rerolls.text ? " " + MID + " " + esc(R.rerolls.text) : ""; }
+/* A fleet without a commander: its own re-rolls (Necrons p. 404, Demiurg p. 486). */
+function fleetRR(){ return G.cmd == null && L0 && L0.frr ? DOMAIN.fleetRerolls(L0, U.map(x => x.R)) : null; }
+/* The wreck: what it is now and what it still does (p. 71 / Fleets p. 423). */
+const ICON = {
+  drifting: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15l4-2 3 2 4-3 3 2 4-2v4H3z"/><path d="M8 13l1-6 3 1-1 5zM14 12l2-5 2 1-2 4z" opacity=".7"/></svg>',
+  blazing: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22c-4 0-7-3-7-7 0-3 2-5 3-7 0 2 1 3 2 3 0-4 2-6 5-8 0 3 1 4 3 6 2 2 3 4 3 6 0 4-3 7-7 7zm0-2c2 0 3-1 3-3 0-1-1-2-2-3 0 1-1 2-2 2 0-2-1-3-1-4-1 1-2 2-2 4 0 2 1 4 4 4z"/></svg>',
+  gone: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2l2 5 5-2-2 5 5 2-5 2 2 5-5-2-2 5-2-5-5 2 2-5-5-2 5-2-2-5 5 2z"/></svg>'
+};
+function hulkChip(st){
+  const kind = st.hulk || (st.destroyed ? "gone" : "");
+  const name = st.hulkName || (st.hulk ? PLAY.HULKS[st.hulk] : "DESTROYED");
+  return `<span class="chip hulk ${kind}">${ICON[kind] || ""}${esc(name)}</span>`;
+}
+function hulkLine(R, st){
+  const c = PLAY.catastrophic(R);
+  if(!st.hulkName){
+    return `<div class="hulkl"><b>OUT OF ACTION</b> ${c.dice ? "roll " + c.dice + " on the " + esc(c.title) + " table (" + (c.fleets ? "Fleets " : "") + "p. " + c.page + ") - tap CATASTROPHIC" : esc(c.rows[0].text)}</div>`;
+  }
+  /* a hulk's line carries what the table needs: armour, no shields, and
+     the roll every attacker forces (p. 71); the full list is under
+     CATASTROPHIC */
+  const kind = st.hulk || "gone";
+  return `<div class="hulkl ${kind}">${ICON[kind] || ""}<span><b>${esc(st.hulkName).toUpperCase()}</b> ${esc(st.hulkText || "")}${st.hulk ? " " + MID + " " + esc(c.hulk.brief) : ""}</span></div>`;
+}
+function playedBtn(i){
+  const p = G.st[i].played | 0;
+  return `<button class="played p${p}" data-act="played" data-i="${i}">${["TO PLAY", "MOVED", "SHOT"][p]}</button>`;
+}
+/* A star fort's quadrant selector (Fleets p. 501): four buttons, each with
+   its own hits left; the selected one is the track, the shields, the
+   turrets and the quadrant weapons the card shows, and where the next hit
+   or critical goes. The names are the printed card's (LUEMINUT T29). */
+function quadSelector(i, v){
+  return `<div class="quads" role="group" aria-label="Quadrant">${v.quads.map(q =>
+    `<button class="${q.i === v.quad ? "on" : ""}${q.gone ? " gone" : q.crippled ? " cr" : ""}" data-act="quad" data-i="${i}" data-arg="${q.i}" aria-pressed="${q.i === v.quad}" aria-label="${q.name} quadrant: ${q.gone ? "at 0, an asteroid field" : q.remaining + " of " + q.max + " hits left" + (q.crippled ? ", crippled" : "")}"><b>${q.name}</b><small>${q.gone ? "at 0" : q.remaining + "/" + q.max + (q.crippled ? " crip." : "")}</small></button>`).join("")}</div>`;
+}
+/* A rule card's steps (R.ruleCard, from the builder): heading and sentence. */
+function ruleSteps(R){
+  return `<ul class="steps">${R.ruleCard.steps.map(s => `<li><b>${esc(s.h)}</b>${esc(s.t)}</li>`).join("")}</ul>`;
+}
+/* What a rule card tracks: orbital mines one box each - ticked when that
+   mine has left play, however it went (it then counts for victory points,
+   Fleets p. 512); a minefield only its size, rolled at set-up (p. 513). */
+function ruleTrack(i){
+  const R = U[i].R, st = G.st[i], rc = R.ruleCard;
+  const label = `<p class="noarm">${esc(rc.track.label || "")}</p>`;
+  if(!PLAY.tickUnit(R)) return label;
+  return `${label}<div class="r3"><div class="hits mem">${st.members.map((m, k) => `<b class="${m.dead ? "on" : ""}" data-act="kill" data-i="${i}" data-arg="${k}" role="button" aria-label="${esc(rc.each)} ${k + 1}">${k + 1}</b>`).join("")}</div>
+    <span class="stat">${PLAY.alive(st)} of ${st.members.length} in play</span><span class="stat" title="${esc(PLAY.concededPage(R))}">VP <b>${PLAY.conceded(R, st, 0)}</b></span></div>`;
+}
+const ruleCount = R => (R.hulls | 0) + " " + R.ruleCard.each + ((R.hulls | 0) === 1 ? "" : "s");
+/* A rule card without a profile (orbital mines Fleets p. 512, minefields
+   p. 513): a row of its own - how many were bought, their points, what
+   the thing is in one line and what it tracks. The steps are on its card
+   (the name opens it), and on the row when INFO is on. */
+function renderRuleRow(i){
+  const R = U[i].R, rc = R.ruleCard;
+  const [kd, km] = factionCols(G.ln, "");
+  return `<section class="row" data-u="${i}" style="--kd:${kd};--km:${km}">
+    <div class="r1"><span class="tag">DEF${TIMES}${PLAY.tickUnit(R) ? PLAY.alive(G.st[i]) : (R.hulls | 0)}</span>
+      <button class="name" data-act="sheet" data-i="${i}"><b>${esc(unitName(i))}</b><small>${esc(ruleCount(R))} ${MID} ${R.points | 0} pts ${MID} Fleets p. ${rc.page}</small></button></div>
+    <p class="lead">${esc(rc.lead || "")}</p>
+    ${ruleTrack(i)}
+    ${V.info && !V.compact ? ruleSteps(R) : ""}
+  </section>`;
+}
+/* ... and its card: the same, with every step. */
+function renderRuleSheet(i){
+  const R = U[i].R, st = G.st[i], rc = R.ruleCard;
+  const [kd, km] = factionCols(G.ln, "");
+  return `<div class="sheet" style="--kd:${kd};--km:${km}">
+    <div class="sh-hd"><div class="t"><h2>${esc(unitName(i))}</h2><p>${esc(ruleCount(R))} | pg. ${rc.page} | ${R.points | 0} pts</p></div><button class="x" data-act="closesheet" aria-label="Close">&#215;</button></div>
+    <div class="sh-body"><p class="lead">${esc(rc.lead || "")}</p>
+      <div class="sec">${ruleTrack(i)}</div>
+      <div class="sec"><h3>${esc(rc.title)}<em>Fleets p. ${rc.page}</em></h3>${ruleSteps(R)}</div>
+      <button class="btn sec" data-act="closesheet">Back to the fleet</button>
+    </div></div>`;
+}
+function renderRow(i, inGroup){
+  const R = U[i].R, st = G.st[i];
+  if(R.kind === "commander"){
+    /* aboard a flagship the commander rides on that card */
+    if(G.flag != null && i === G.cmd) return "";
+    return `<section class="row" style="--kd:${factionCols(G.ln, "")[0]};--km:${factionCols(G.ln, "")[1]};padding:6px 8px 6px 10px">
+      <div class="r1"><span class="tag">CMD</span><div class="name" style="min-height:32px"><b>${esc(unitName(i))}</b><small style="white-space:normal">${esc(R.rerolls && R.rerolls.text || "")}</small></div></div>${rrBoxesHTML(i)}</section>`;
+  }
+  if(R.kind !== "ship" && R.ruleCard) return renderRuleRow(i);
+  if(R.kind !== "ship") return `<section class="row" style="--kd:var(--line);--km:var(--ink-3);padding:6px 8px 6px 10px"><div class="r1"><span class="tag">+</span><div class="name" style="min-height:32px"><b>${esc(unitName(i))}</b><small>fleet entry, ${R.points | 0} pts</small></div></div></section>`;
+  const v = PLAY.view(R, st, G.fleet);
+  const [kd, km] = factionCols(R.entry ? R.entry.list : G.ln, R.source.faction || "");
+  const esq = v.escort;
+  const sqc = inGroup ? sqColor(G.grp[i]) : esq ? escColor(i) : null;
+  const cls = ["row", esq ? "esc" : "cap", v.crippled ? "crippled" : "", v.destroyed ? "dead" : "", v.destroyed && !esq && !st.hulk && st.hulkName ? "gone" : "", "pl" + st.played, inGroup ? "ingrp" : "", sqc ? "sqd" : ""].join(" ");
+  const sub = [R.name ? title(R.className) : "", R.stats.type, esq ? R.hulls + " " + memberWord(R, R.hulls) : (R.points | 0) + " pts"].filter(Boolean).join(" " + MID + " ");
+  /* a star fort's chips are the selected quadrant's, and say which */
+  const qn = v.fort ? PLAY.QUADS[v.quad] + " " : "";
+  const chips = (OPT.orders && !inGroup ? ordChip(st) : "") + (v.crippled ? `<span class="chip crip">${qn}CRIPPLED</span>` : "") +
+    (v.quadGone && !v.destroyed ? `<span class="chip crip">${qn}AT 0 ${MID} ASTEROID FIELD</span>` : "") +
+    (v.destroyed ? hulkChip(st) : "") +
+    critChips(R, st, i) + (st.disengaged ? `<span class="chip">disengaged</span>` : "") +
+    (OPT.orders ? (st.braceLock ? `<span class="chip lock">brace locked</span>` : "") + (st.boarding ? `<span class="chip lock">boarding</span>` : "") + (st.noOrdersTurn ? `<span class="chip lock">no fire/orders</span>` : "") : "");
+  let r3;
+  if(esq){
+    /* one box per ship, filled when it is gone (p. 66: one hit or any
+       critical destroys an escort) */
+    r3 = `<div class="hits mem">${st.members.map((m, k) => `<b class="${m.dead ? "on" : ""}" data-act="kill" data-i="${i}" data-arg="${k}" role="button" aria-label="${memberWord(R, 1)} ${k + 1}">${k + 1}</b>`).join("")}</div>
+      <span class="stat">${v.alive} of ${R.hulls}</span>` +
+      (OPT.shields ? `<button class="stat ${st.blast ? "off" : ""}" data-act="blast" data-i="${i}" data-arg="${st.blast ? 0 : 1}">UNDER FIRE <b>${st.blast ? "-1 Ld" : "no"}</b></button>` : "");
+  }else{
+    r3 = hitsTrack(i, v, false) +
+      (OPT.shields ? `<button class="stat ${v.shields.now != null && v.shields.up < v.shields.now ? "off" : ""}" data-act="pop" data-i="${i}" data-arg="blast">SH <b>${v.shields.now == null ? esc(v.shields.text) : v.shields.up + "/" + v.shields.now}</b>${st.blast ? "<small>BM " + st.blast + "</small>" : ""}</button>` : "") +
+      (OPT.ordnance ? ordnancePills(i, v) : "");
+  }
+  const orderBtns = !OPT.orders || inGroup ? "" : `<button class="brace ${v.braced ? "on" : ""}" data-act="brace" data-i="${i}" ${PLAY.canOrder(st, G.fleet, "BFI", R) ? "" : "disabled"}>Brace</button>
+      <button class="order ${st.order && st.order !== "BFI" ? "on" : ""}" data-act="pop" data-i="${i}" data-arg="order">${st.order && st.order !== "BFI" ? esc(PLAY.ORDER_BY[st.order].name) : "Order"}</button>`;
+  /* a star fort's HIT and CRIT go to the selected quadrant; one at 0
+     takes no further damage (Fleets p. 501) */
+  const critLine = (v.quadGone ? qn + "at 0" : (v.crits.length ? v.crits.length + " active" : "2D6") + (qn && v.crits.length ? " " + qn.trim() : ""));
+  /* The compact row (user 19.10.2026): what a hit or a critical needs and
+     nothing else - the name, Ld, CRIT, the spec line the enemy asks about
+     (armour, shields), the track and the chips. The track takes a hit in
+     one tap, so HIT +1 is not repeated; the weapons are on the card (the
+     name). Brace and orders stay when they are tracked: they are the enemy
+     turn's own taps. */
+  const compact = V.compact;
+  const r4 = v.destroyed ? (esq ? "" : `<div class="r4"><button data-act="pop" data-i="${i}" data-arg="hulk">Catastrophic<small>${cataLabel(R, st)}</small></button></div>`)
+    : esq || compact ? (orderBtns ? `<div class="r4">${orderBtns}</div>` : "") : `<div class="r4">
+      <button class="hit" data-act="hit" data-i="${i}" ${v.quadGone ? "disabled" : ""}>Hit<small>${v.quadGone ? qn + "at 0" : "+1" + (qn ? " " + qn.trim() : "")}</small></button>
+      ${orderBtns}
+      <button class="crit" data-act="pop" data-i="${i}" data-arg="crit" ${v.quadGone ? "disabled" : ""}>Crit<small>${critLine}</small></button>
+    </div>`;
+  const r1tail = compact
+    ? (v.destroyed ? "" : (inGroup ? "" : ldTile(i, "", true)) + (esq ? "" : `<button class="crit cmini" data-act="pop" data-i="${i}" data-arg="crit" ${v.quadGone ? "disabled" : ""}>Crit<small>${critLine}</small></button>`) + (inGroup ? "" : playedBtn(i, v)))
+    : (inGroup || v.destroyed ? "" : ldTile(i) + playedBtn(i, v));
+  return `<section class="${cls}" data-u="${i}" style="--kd:${kd};--km:${km}${sqc ? ";--sq:" + sqc : ""}">
+    <div class="r1"><span class="tag">${classTag(R)}${esq ? TIMES + v.alive : ""}</span>${inGroup ? `<span class="tag sq" title="Squadron ${G.grp[i]}">SQN ${G.grp[i]}</span>` : ""}
+      <button class="name" data-act="sheet" data-i="${i}"><b>${esc(unitName(i))}</b><small>${esc(sub)}</small></button>
+      ${r1tail}</div>
+    ${i === G.flag && G.cmd != null ? cmdLine() : ""}${shipRRLine(i)}
+    ${v.fort && !v.destroyed ? quadSelector(i, v) : ""}
+    ${v.destroyed && !esq ? hulkLine(R, st) : statsLine(v, R, esq)}
+    ${v.destroyed && !esq ? "" : compact ? weaponsLine(R, st, esq) : weaponsTable(R, st, esq)}
+    ${R.ruleCard && !v.destroyed && !compact ? ruleSteps(R) : ""}
+    <div class="r3">${r3}${chips}</div>
+    ${r4}
+    ${V.pop && V.pop.i === i && V.sheet == null && !(inGroup && /^(ld|order)$/.test(V.pop.kind)) ? renderPop(i) : ""}
+  </section>`;
+}
+
+function hitsTrack(i, v, big){
+  const max = v.max, at = v.crippledAt;
+  let s = `<div class="hits ${max > 16 ? "many" : ""}">`;
+  for(let n = 1; n <= max; n++){
+    const cr = v.crippledAt && n >= at && v.max > 1;
+    s += `<b class="${n <= v.hits ? "on" : ""} ${cr ? "cr" : ""} ${n === at ? "first" : ""}" data-act="dmg" data-i="${i}" data-arg="${n}" role="button" aria-label="hits ${n}">${n}</b>`;
+  }
+  return s + "</div>";
+}
+
+
+function renderPop(i){
+  const R = U[i].R, st = G.st[i], fl = G.fleet, kind = V.pop.kind;
+  const v = PLAY.view(R, st, fl);
+  /* the unit's own rule line for a slot ("orders", "blast"), as the builder
+     wrote it with its page: the page shows it, it does not retell it */
+  const slotRule = slot => { const r = (R.rules || []).find(x => x.slot === slot); return r ? String(r.t).replace(/^\*\s*/, "") : ""; };
+  if(kind === "ld"){
+    const l = PLAY.leadership(R, st, fl);
+    const others = G.grp[i] ? groupUnits(G.grp[i]).filter(j => j !== i) : [];
+    /* a Leadership the book fixes (planetary defences Ld 7, Rulebook
+       p. 100; the Fortress-Monastery Ld 10, Fleets p. 111) is not rolled:
+       no dice tiles, the reason instead */
+    const fx = PLAY.fixedLd(R);
+    const others2 = others.length ? `<p>Squadron: the highest surviving Leadership counts (p. 95). ${others.map(j => esc(unitName(j)) + " Ld " + (G.st[j].ld == null ? "?" : G.st[j].ld)).join(", ")} ${MID} ${others.map(j => `<button class="chip" data-act="pop" data-i="${j}" data-arg="ld">set ${esc(unitName(j)).slice(0, 12)}</button>`).join(" ")}</p>` : "";
+    if(fx) return `<div class="pop"><h4>Leadership ${G.grp[i] ? MID + " " + esc(unitName(i)) + " " : ""}${MID} Ld ${fx.value}, not rolled${fx.page ? " " + MID + " Fleets p. " + fx.page : ""}</h4>
+      ${others2}
+      <p>${esc(slotRule("orders") || ("Ld " + fx.value + ": " + (fx.note || "fixed") + "."))}</p>
+      ${st.ldFrom === "commander" ? `<p>The commander aboard: his own Leadership is used instead (Fleets p. 111).</p>` : ""}
+      <button class="close" data-act="closepop">close</button></div>`;
+    return `<div class="pop"><h4>Leadership ${G.grp[i] ? MID + " " + esc(unitName(i)) + " " : ""}${MID} rolled ${l.base == null ? "?" : l.base}${st.ldPerm ? " " + MID + " bridge smashed " + st.ldPerm : ""}</h4>
+      ${others2}
+      <p>${l.base == null ? "Roll a D6 (p. 45): 1 = 6, 2-3 = 7, 4-5 = 8, 6 = 9 - or on the fleet's own table: Ld 5 (Orks, Fleets p. 358) to Ld 10 (Space Marines, Fleets p. 94)." : "Command checks: 2D6 equal to or under Ld; -1 under fire, +1 enemy contacts, never above 10 (p. 48) - count those from the table."}</p>
+      <div class="tiles c6">${PLAY.LD_VALUES.map(n => `<button class="${st.ldRoll === n ? "on" : ""}" data-act="ld" data-i="${i}" data-arg="${n}"><b>${n}</b></button>`).join("")}</div>
+      ${st.ldFrom === "commander" ? `<p>The commander's Leadership line applies to this flagship: a fixed value stands in for the roll, a bonus is added to it.</p>` : ""}
+      <button class="close" data-act="closepop">close</button></div>`;
+  }
+  if(kind === "blast"){
+    return `<div class="pop"><h4>Blast markers touching the base</h4>
+      <p>One is placed per hit the shields block (p. 70); each one in contact takes a shield off when fired upon (p. 69), -1 Ld (p. 48) and halves damage-control dice (p. 88). Shields come back when the ship moves clear (p. 70).</p>
+      ${slotRule("blast") ? `<p>${esc(slotRule("blast"))}</p>` : ""}
+      <div class="steprow"><button data-act="blast" data-i="${i}" data-arg="-1">&minus;</button><div class="val">${st.blast | 0}<small>shields up ${v.shields.up == null ? "-" : v.shields.up + " of " + v.shields.now}</small></div><button data-act="blast" data-i="${i}" data-arg="1">+</button></div>
+      <button class="btn sec" data-act="blast" data-i="${i}" data-arg="0">${v.still ? "All removed" : "Moved clear"} ${MID} shields up</button>
+      <button class="close" data-act="closepop">close</button></div>`;
+  }
+  if(kind === "order"){
+    const l = G.grp[i] ? PLAY.squadronLd(groupUnits(G.grp[i]).map(j => ({ R: U[j].R, st: G.st[j] })), fl) : PLAY.leadership(R, st, fl);
+    /* only the orders this unit may take at all (R.orders): a planetary
+       defence Reload Ordnance and Brace (Rulebook p. 100), a star fort and
+       a Haven Lock On as well (Fleets p. 503, 111, 336) - its own rule
+       line says which and where */
+    const tiles = PLAY.ordersFor(R).filter(o => o.id !== "BFI").map(o =>
+      `<button class="${st.order === o.id ? "on" : ""}" data-act="order" data-i="${i}" data-arg="${o.id}" ${PLAY.canOrder(st, fl, o.id, R) || st.order === o.id ? "" : "disabled"}>${esc(o.name)}${V.info ? `<small>${esc(o.line)}</small>` : ""}</button>`).join("");
+    const only = R.orders ? slotRule("orders") : "";
+    return `<div class="pop"><h4>Special orders ${MID} check vs Ld ${l.now == null ? "?" : l.now}</h4>
+      <p>${fl.orderLock ? "A check failed this turn: no more orders except Brace (p. 48)." : st.braceTurn ? "Braced: no other orders this turn (p. 47)." : "Tap an order = declared and passed. One per ship or squadron per turn (p. 46, 95)."}</p>
+      ${only ? `<p>${esc(only)}</p>` : ""}
+      <div class="tiles">${tiles}
+        <button class="bad" data-act="orderfail" data-i="${i}" ${fl.orderLock ? "disabled" : ""}>Check failed<small>locks the fleet</small></button>
+        <button class="warn" data-act="bracefail" data-i="${i}" ${st.braceLock ? "disabled" : ""}>Brace failed<small>p. 47</small></button>
+        ${st.braceLock ? `<button class="ok" data-act="bracelock" data-i="${i}">Attacker done<small>brace again</small></button>` : ""}
+        <button class="${st.boarding ? "on" : ""}" data-act="boarding" data-i="${i}">Boarding<small>no fire this turn p. 89</small></button>
+        ${v.still ? "" : `<button class="${st.noOrdersTurn ? "on" : ""}" data-act="nofire" data-i="${i}">Disengage failed<small>no fire/orders p. 57</small></button>
+        <button class="${st.disengaged ? "on" : ""}" data-act="diseng" data-i="${i}">Disengaged<small>left the table p. 57</small></button>`}
+        ${st.order || st.braceTurn ? `<button data-act="clearorder" data-i="${i}">Clear order</button>` : ""}
+      </div>
+      <button class="close" data-act="closepop">close</button></div>`;
+  }
+  if(kind === "crit"){
+    const cm = R.damage.critical;
+    const std = PLAY.standardCrits(R);
+    const fl = V.flash && V.flash.i === i && Date.now() - V.flash.t < 1500 ? V.flash : null;
+    /* a star fort: the selected quadrant's criticals (Fleets p. 501) */
+    const tk = PLAY.track(R, st);
+    const cnt = key => (tk.crits && tk.crits[String(key)]) | 0;
+    const badge = key => cnt(key) ? `<i class="n">${cnt(key) > 1 ? TIMES + cnt(key) : "on"}</i>` : "";
+    const tcls = key => [cnt(key) ? "has" : "", fl && String(fl.key) === String(key) ? "just" : ""].join(" ").trim();
+    /* each result: the minus right beside the plus; the minus is disabled
+       when there is nothing of it on the ship */
+    const minus = key => `<button class="minus" data-act="critminus" data-i="${i}" data-arg="${esc(String(key))}"${cnt(key) ? "" : " disabled"} aria-label="${esc("Take one " + critLabel(R, key) + " off")}">\u2212</button>`;
+    const pair = (key, cls, plusAttrs, inner) => `<div class="cp ${cls}">${minus(key)}<button class="plus ${tcls(key)}" ${plusAttrs} aria-label="${esc("Add " + critLabel(R, key))}">${badge(key)}${inner}</button></div>`;
+    const tiles = cm.rows.map(r => pair(r[0], cnt(r[0]) ? "has" : "", `data-act="crit" data-i="${i}" data-arg="${esc(String(r[0]))}"`,
+      `<b>${esc(String(r[0]))}</b>${esc(r[1])}${r[2] ? `<small>${esc(r[2])}</small>` : ""}`)).join("");
+    const wide = (cm.wide || []).map(w => {
+      const m = String(w).match(/^(\d+)\s+(.*?)\s*\+D(\d)$/);
+      const k0 = String(w).split(" ")[0];
+      if(!m) return pair(k0, cnt(k0) ? "has" : "", `data-act="crit" data-i="${i}" data-arg="${esc(k0)}"`, esc(w));
+      const open = V.pop.x === m[1];
+      return pair(m[1], "warn" + (open ? " on" : "") + (cnt(m[1]) ? " has" : ""), `data-act="critpick" data-i="${i}" data-arg="${open ? "" : m[1]}"`,
+        `<b>${m[1]}</b>${esc(m[2])}<small>+D${m[3]}: pick the roll</small>`);
+    }).join("");
+    /* the D3/D6 for 11 or 12, in place - nothing above it moves */
+    let xrow = "";
+    if(V.pop.x){
+      const n = V.pop.x === "12" ? 6 : 3;
+      const bs = []; for(let k = 1; k <= n; k++) bs.push(`<button data-act="critx" data-i="${i}" data-arg="${esc(V.pop.x)}:${k}">+${k}</button>`);
+      xrow = `<div class="xrow"><span>${esc(critLabel(R, V.pop.x))}: roll the D${n} and tap the result - the hits go on at once (p. 67)</span>${bs.join("")}<button class="cx" data-act="critpick" data-i="${i}" data-arg="">cancel</button></div>`;
+    }
+    /* The order is for the finger: the status line (always there, so it
+       never pushes anything), then the tiles - each with its own minus, so
+       the table itself says what is on the ship (user 30.9.2026: the
+       summary list and its REPAIR buttons went). */
+    return `<div class="pop"><h4>${esc(cm.title)}${v.fort ? " " + MID + " " + PLAY.QUADS[v.quad] + " quadrant" : ""} ${MID} ${R.damage.triggerHint}</h4>
+      <p class="last ${fl ? "fresh" : ""}">${fl ? esc(fl.msg) : (V.flash && V.flash.i === i ? esc(V.flash.msg) : "Tap a result to add it; the table stays open until you close it.")}</p>
+      <div class="tiles">${tiles}${wide}</div>
+      ${xrow}
+      <p>Damage control: <b>${v.repairDice}D6</b> (half with blast markers in contact), each 6 repairs one system or puts out one fire (p. 88).${R.damage.repair ? " " + esc(R.damage.repair) : ""}</p>
+      ${V.info && cm.foot ? `<p class="foot">${esc(cm.foot)}</p>` : ""}
+      <button class="close" data-act="closepop">close</button></div>`;
+  }
+  if(kind === "hulk"){
+    const c = PLAY.catastrophic(R);
+    const tiles = c.rows.map((r, k) => `<button class="${r.kind === "gone" ? "bad" : (st.hulk === r.kind && st.hulkName === r.name ? "on" : "")}" data-act="hulk" data-i="${i}" data-arg="${k}"><b>${esc(r.roll)}</b>${esc(r.name)}<small>${r.extra ? esc(r.extra) + " " + MID + " " : ""}${esc(r.text)}</small></button>`).join("");
+    return `<div class="pop cata"><h4>${esc(c.title)}${c.dice ? " " + MID + " roll " + c.dice : ""} ${MID} ${c.fleets ? "Fleets" : "Rulebook"} p. ${c.page}</h4>
+      <p>${esc(unitName(i))} ${v.fort ? "has all four quadrants at 0 hits (" + R.stats.hits + " each to start)" : "is at 0 hits (" + R.stats.hits + " to start)"}. ${esc(c.note)}</p>
+      <div class="tiles c2">${tiles}
+        ${c.boarded ? `<button data-act="hulk" data-i="${i}" data-arg="boarded">Boarded to 0<small>no roll: a drifting hulk (p. 90)</small></button>` : ""}
+      </div>
+      <p class="hr"><b>While it is a hulk</b></p><ul class="hulkrules">${c.hulk.list.map(t => `<li>${esc(t)}</li>`).join("")}</ul>
+      ${c.explode ? `<p class="hr">${esc(c.explode)}</p>` : ""}
+      <button class="close" data-act="closepop">close</button></div>`;
+  }
+  return "";
+}
+
+/* The card: the same blocks as the printed one, current values first. */
+function renderSheet(i){
+  const R = U[i].R, st = G.st[i], fl = G.fleet;
+  if(R.kind !== "ship") return R.ruleCard ? renderRuleSheet(i) : "";
+  const v = PLAY.view(R, st, fl);
+  const [kd, km] = factionCols(R.entry ? R.entry.list : G.ln, R.source.faction || "");
+  const esq = v.escort;
+  const sub = [title(R.className), R.source.faction ? title(R.source.faction) : "", R.stats.type, "pg. " + R.source.page, (R.points | 0) + " pts", i === G.flag && G.cmd != null ? unitName(G.cmd) + " aboard" : ""].filter(Boolean).join(" | ");
+  /* a star fort: the band, the track and the criticals are the selected
+     quadrant's (Fleets p. 501) */
+  const qn = v.fort ? PLAY.QUADS[v.quad] + " quadrant" : "";
+  const band = v.destroyed ? `<div class="band dead">${esq ? (memberWord(R, 2) === "ships" ? "SQUADRON DESTROYED" : "ALL DESTROYED") : hulkLine(R, st)}</div>` :
+    v.quadGone ? `<div class="band dead">${esc(qn.toUpperCase())} AT 0 ${MID} it takes no further damage; that quarter of the base is an asteroid field from now on (Fleets p. 501)</div>` :
+    (v.crippled ? `<div class="band crip">${qn ? esc(qn.toUpperCase()) + " " : ""}CRIPPLED ${MID} ${esc(crippledNow(R, st))} (${v.fort ? "Fleets p. 501" : "p. 65"})</div>` : "");
+  const stat = (label, now, base, extra, tap) => `<div class="${tap ? "tapp" : ""}">${tap ? `<button data-act="pop" data-i="${i}" data-arg="${tap}">` : ""}<span>${label}</span><b>${now}${base != null && String(base) !== String(now) ? `<s>${esc(String(base))}</s>` : ""}${extra ? `<i>${esc(extra)}</i>` : ""}</b>${tap ? "</button>" : ""}</div>`;
+  const stats = `<div class="stats">
+    ${stat("SPEED", v.speed.now != null ? v.speed.now + " cm" : esc(v.speed.text), v.speed.now != null ? v.speed.base + " cm" : null, v.speed.mods.map(m => m.t).join(", "))}
+    ${stat("TURNS", esc(v.turns.text), null, v.turns.none ? "NONE (crit 6)" : "")}
+    ${esq || !OPT.shields ? stat("SHIELDS", v.shields.now == null ? esc(v.shields.text) : v.shields.now, v.shields.now == null ? null : v.shields.base, esq ? "per ship" : "")
+      : stat("SHIELDS", v.shields.now == null ? esc(v.shields.text) : v.shields.up + "/" + v.shields.now, v.shields.now == null ? null : v.shields.base, st.blast ? "BM " + st.blast + (v.shields.up < v.shields.now ? ": tap when moved clear" : "") : "up", "blast")}
+    ${stat("ARMOUR", esc(shortArmour(R.stats.armour)), null, "")}
+    ${stat(esc(R.stats.turretLabel || "TURRETS"), v.turrets.now == null ? esc(v.turrets.text) : v.turrets.now, v.turrets.now == null ? null : v.turrets.text, "")}
+    ${stat("LEADERSHIP", v.ld.now == null ? "?" : v.ld.now, v.ld.base, v.ld.mods.map(m => (m.v > 0 ? "+" : "") + m.v + " " + m.t).join(", "), "ld")}
+  </div>`;
+  const cm = R.damage.critical;
+  const crits = esq ? "" : `<div class="sec"><h3>Criticals<em>${qn ? qn + " " + MID + " " : ""}${v.crits.length ? v.crits.length + " active" : "none"} ${MID} damage control ${v.repairDice}D6 (p. 88)</em></h3>
+    ${v.crits.length ? `<div class="r3">${critChips(R, st, i)}</div>` : ""}
+    <div class="r4"><button class="crit" data-act="pop" data-i="${i}" data-arg="crit">Criticals<small>${R.damage.triggerHint}</small></button></div>
+    ${V.pop && V.pop.i === i && /^crit/.test(V.pop.kind) ? renderPop(i) : ""}
+  </div>`;
+  const damage = esq ? `<div class="sec"><h3>Squadron<em>${v.alive} of ${R.hulls} ${MID} ${R.squadron ? "squadron " + R.squadron.min + "-" + R.squadron.max : ""}</em></h3>
+      <div class="hits mem">${st.members.map((m, k) => `<b class="${m.dead ? "on" : ""}" data-act="kill" data-i="${i}" data-arg="${k}" role="button">${esc(R.members[k] || String(k + 1))}</b>`).join("")}</div>
+      ${OPT.orders ? `<div class="r4"><button class="brace ${v.braced ? "on" : ""}" data-act="brace" data-i="${i}" ${PLAY.canOrder(st, fl, "BFI", R) ? "" : "disabled"}>Brace</button>
+        <button class="order ${st.order && st.order !== "BFI" ? "on" : ""}" data-act="pop" data-i="${i}" data-arg="order">${st.order && st.order !== "BFI" ? esc(PLAY.ORDER_BY[st.order].name) : "Order"}</button></div>
+      ${V.pop && V.pop.i === i && V.pop.kind === "order" ? renderPop(i) : ""}` : ""}
+      <p class="foot">${esc(R.damage.note)} ${MID} VP conceded ${PLAY.conceded(R, st, cmdPts(i))} (${PLAY.concededPage(R)})</p></div>`
+    : `<div class="sec"><h3>Damage<em>${qn ? qn + " " + MID + " " : ""}${v.hits} of ${v.max} ${MID} crippled from box ${v.crippledAt}</em></h3>
+      ${v.destroyed ? "" : hitsTrack(i, v, true)}
+      <p class="crline">${esc(R.damage.note)}</p>
+      <div class="r4">${v.destroyed ? "" : `<button class="hit" data-act="hit" data-i="${i}" ${v.quadGone ? "disabled" : ""}>Hit<small>${v.quadGone ? "at 0" : "+1"}</small></button>`}
+        ${v.destroyed ? `<button data-act="pop" data-i="${i}" data-arg="hulk">Catastrophic<small>${cataLabel(R, st)}</small></button>`
+          : OPT.orders ? `<button class="brace ${v.braced ? "on" : ""}" data-act="brace" data-i="${i}" ${PLAY.canOrder(st, fl, "BFI", R) ? "" : "disabled"}>Brace</button>
+        <button class="order ${st.order && st.order !== "BFI" ? "on" : ""}" data-act="pop" data-i="${i}" data-arg="order">${st.order && st.order !== "BFI" ? esc(PLAY.ORDER_BY[st.order].name) : "Order"}</button>` : ""}</div>
+      ${V.pop && V.pop.i === i && /^(hulk|order)$/.test(V.pop.kind) ? renderPop(i) : ""}
+      <p class="foot">${v.boarding.fort ? "Only a space hulk may board it: it defends with " + v.boarding.defend + ", all four quadrants' hits left and this quadrant's turrets (Fleets p. 502)"
+        : "Boarding value " + v.boarding.attack + ", defending " + v.boarding.defend + " (p. 89)"} ${MID} VP conceded ${PLAY.conceded(R, st, cmdPts(i))}${cmdPts(i) ? " incl. the commander" : ""} (${PLAY.concededPage(R)})</p></div>`;
+  /* a unit that cannot move cannot leave the table either (p. 56: the
+     test is made "at the end of its Movement Phase"; p. 101: defences
+     "always remain in place"): no disengage switches for it */
+  const flagBtns = [
+      OPT.ordnance && !esq ? ordnancePills(i, v) : "",
+      OPT.shields && esq ? `<button class="${st.blast ? "on bad" : ""}" data-act="blast" data-i="${i}" data-arg="${st.blast ? 0 : 1}">under fire: -1 Ld (p. 48, 95)</button>` : "",
+      OPT.orders ? `<button class="${st.boarding ? "on" : ""}" data-act="boarding" data-i="${i}">boarding declared</button>` : "",
+      OPT.orders && !v.still ? `<button class="${st.noOrdersTurn ? "on bad" : ""}" data-act="nofire" data-i="${i}">disengage failed</button>` : "",
+      OPT.orders && st.braceLock ? `<button class="on bad" data-act="bracelock" data-i="${i}">brace locked: attacker done</button>` : "",
+      v.still ? "" : `<button class="${st.disengaged ? "on" : ""}" data-act="diseng" data-i="${i}">disengaged (VP, p. 57)</button>`
+    ].join("");
+  const flags = flagBtns ? `<div class="sec"><h3>Status</h3><div class="flags">${flagBtns}</div></div>` : "";
+  const rules = R.rules.slice();
+  if(R.damage.trigger) rules.push({ t: R.damage.trigger, ast: false, refs: [] });
+  if(R.damage.repair) rules.push({ t: R.damage.repair, ast: false, refs: [] });
+  /* the orders this unit may take at all (R.orders; its own rule line
+     above says which and where) */
+  const info = !V.info ? "" : `<div class="sec"><h3>Special rules</h3><ul class="rules">${rules.map(r => `<li>${starHTML(r.refs)}${esc(r.t.replace(/^\*\s*/, ""))}</li>`).join("")}</ul></div>
+    ${!esq ? `<div class="sec"><h3>${esc(cm.title)}<em>${R.damage.triggerHint}</em></h3><table class="crtab">${cm.rows.map(r => `<tr><td>${esc(String(r[0]))}</td><td>${esc(r[1])}</td><td>${esc(r[2] || "")}</td></tr>`).join("")}${(cm.wide || []).map(w => `<tr><td colspan="3">${esc(w)}</td></tr>`).join("")}</table><p class="foot">${esc(cm.foot || "")}</p></div>` : ""}
+    <div class="sec"><h3>Special orders<em>${R.orders ? "the only ones this unit may take " + MID + " " : ""}p. 46-48, tracked with dice on the table</em></h3><table class="ordtab">${PLAY.ordersFor(R).map(o => `<tr><td>${esc(o.name)}</td><td>${esc(o.line)} (p. ${o.page})</td></tr>`).join("")}</table>
+      <p class="foot">Command check: 2D6 equal to or under Ld. -1 under fire (blast markers), +1 enemy contacts (enemy on orders). 11 or 12 always fails. One failure ends the fleet's orders this turn, Brace excepted (p. 48).</p></div>`;
+  /* a ship that is a rule (the fire ship, Fleets p. 516): its steps are
+     its armament, always on the card */
+  const ruleSec = R.ruleCard ? `<div class="sec"><h3>${esc(R.ruleCard.title)}<em>Fleets p. ${R.ruleCard.page}</em></h3><p class="lead">${esc(R.ruleCard.lead || "")}</p>${ruleSteps(R)}</div>` : "";
+  return `<div class="sheet" style="--kd:${kd};--km:${km}">
+    <div class="sh-hd"><div class="t"><h2>${esc(unitName(i))}</h2><p>${esc(sub)}</p></div>${ldTile(i)}<button class="x" data-act="closesheet" aria-label="Close">&#215;</button></div>
+    <div class="sh-body">${band}${i === G.flag && G.cmd != null ? cmdLine() : ""}${shipRRLine(i)}${v.fort && !v.destroyed ? quadSelector(i, v) : ""}${stats}
+      ${V.pop && V.pop.i === i && /^(ld|blast)$/.test(V.pop.kind) ? renderPop(i) : ""}
+      <div class="sec"><h3>Armament<em>Str as printed ${MID} &frac12; when halved</em></h3>${weaponsTable(R, st, esq)}</div>
+      ${ruleSec}${damage}${crits}${flags}${info}
+      <button class="btn sec" data-act="closesheet">Back to the fleet</button>
+    </div></div>`;
+}
+
+/* The game report in the menu: the opponent, the result and the
+   scenario are typed or tapped; the rest comes from the record. */
+function reportSection(){
+  const r = repState();
+  const names = [...new Set(LISTS.map(L => String(L.nm).split(/\s+[\u2013\u2014-]\s+/)[0]))].sort();
+  const win = (k, t) => `<button class="${r.win === k ? "on" : ""}" data-act="rwin" data-arg="${k}">${t}</button>`;
+  return `<h2>Game report</h2>
+    <p class="foot">For the BFG Meta Almanac (bfgtools.meta.kuldare.com): the fleets, the result and the ships, no names. Post it where your group collects reports. Fleet A is this one.</p>
+    <label class="fld">Opponent's fleet (B)<input data-rep="opp" list="gfp-fleets" value="${esc(r.opp)}" autocomplete="off"></label>
+    <datalist id="gfp-fleets">${names.map(n => `<option value="${esc(n)}">`).join("")}</datalist>
+    <div class="fld">Winner<div class="seg wins">${win("A", "This fleet")}${win("B", "Opponent")}${win("D", "Draw")}</div></div>
+    <label class="fld">Scenario<input data-rep="scen" list="gfp-scen" value="${esc(r.scen)}" autocomplete="off"></label>
+    <datalist id="gfp-scen">${SCENARIOS.map(n => `<option value="${esc(n)}">`).join("")}</datalist>
+    <label class="fld">Notes<input data-rep="notes" value="${esc(r.notes)}" autocomplete="off"></label>
+    <textarea id="reptext" class="rep" readonly>${esc(reportText())}</textarea>
+    <div class="r4"><button data-act="copyrep">${V.copied === "report" ? "Copied" : "Copy report"}</button>${typeof navigator !== "undefined" && navigator.share ? `<button data-act="sharerep">Share</button>` : ""}</div>`;
+}
+function renderMenu(){
+  /* every row that can concede points: ships, and orbital mines bought one
+     by one (Fleets p. 512) */
+  const rows = U.map((x, i) => x.R.kind === "ship" || PLAY.tickUnit(x.R) ? `<tr><td>${esc(unitName(i))}${cmdPts(i) ? " + " + esc(unitName(G.cmd)) : ""}${G.st[i].disengaged ? " (disengaged)" : ""}</td><td>${PLAY.conceded(x.R, G.st[i], cmdPts(i))}</td></tr>` : "").join("");
+  const vp = vpTotal();
+  return `<div class="menu" data-act="menu"><div class="box">
+    <h2>Fleet</h2>
+    <p class="foot">${esc(G.ln)} ${MID} ${G.limit} pts limit ${MID} turn ${G.fleet.turn}</p>
+    <table>${rows}<tr><td><b>Victory points conceded (p. 123${U.some(u => u.R && u.R.source && /NECRON/i.test(String(u.R.source.faction || ""))) ? "; Necrons Fleets p. 402" : ""})</b></td><td><b>${vp}</b></td></tr></table>
+    ${OPT.fleet ? `<div class="steprow" style="margin:8px 0"><button data-act="rad" data-i="-1" data-arg="-1">&minus;</button><div class="val">${G.fleet.radiation | 0}<small>radiation burst: -Ld this turn (p. 115)</small></div><button data-act="rad" data-i="-1" data-arg="1">+</button></div>` : ""}
+    <div class="togs">
+      <button class="${V.info ? "on" : ""}" data-act="info">Rules text on the cards<i>${V.info ? "on" : "off"}</i><small>special rules, the critical table and the orders on every card</small></button>
+      <button class="${wakeOff() || !wakeCan() ? "" : "on"}" data-act="wake" ${wakeCan() ? "" : "disabled"}>Keep the screen on<i>${!wakeCan() ? "n/a" : wakeOff() ? "off" : "on"}</i><small>${wakeCan() ? "while a game is open, so the phone does not lock between looks" : "this browser cannot keep the screen on"}</small></button>
+    </div>
+    ${reportSection()}
+    <h2>Tracking</h2>
+    <p class="foot">What the page records of the things tokens do on the table. Off by default: the row is the ship's spec, hits and criticals. Saved on this device only.</p>
+    <div class="togs">
+      <button class="${TRACK.every(t => OPT[t[0]]) ? "on" : ""}" data-act="track" data-arg="all">Track everything<i>${TRACK.every(t => OPT[t[0]]) ? "on" : TRACK.some(t => OPT[t[0]]) ? "some" : "off"}</i></button>
+      ${TRACK.map(t => `<button class="${OPT[t[0]] ? "on" : ""}" data-act="track" data-arg="${t[0]}">${esc(t[1])}<i>${OPT[t[0]] ? "on" : "off"}</i><small>${esc(t[2])}</small></button>`).join("")}
+    </div>
+    <button class="btn sec" data-act="menu">Close</button>
+    <button class="btn sec" data-act="fleets">Fleets and phone link<small>the game stays: Resume on the list</small></button>
+    ${builderLink("btn sec")}
+    <button class="btn warn" data-act="newgame">New game (forget this record)</button>
+    <p class="foot">Prototype ${PLAY_VERSION}. The record lives in this browser only (<span class="mono">${KEY_PLAY}</span>); the builder's fleet is never written.</p>
+  </div></div>`;
+}
+
+/* ========================================== FLEETS BY LINK OR FILE ===== */
+/* PHONE_LINK, b64url, packFleet, QR and qrSvg come from app_template.html
+   (play/build_play.py copies them): the builder's Saved fleets make the
+   same links. */
+/* A phone has no builder save of its own. A fleet comes to it inside a
+   link (#fleet=..., the fleet document deflated and base64url'd - nothing
+   is uploaded anywhere, the link IS the fleet) or as the builder's export
+   file. Either way it goes on the page's own list (KEY_LINKED), never into
+   the builder's key. */
+function linkedFleets(){
+  let a = null; try{ a = JSON.parse(lsGet(KEY_LINKED) || "[]"); }catch(e){}
+  return Array.isArray(a) ? a.filter(f => f && f.doc && Array.isArray(f.doc.units) && f.doc.units.length) : [];
+}
+function addLinked(doc, how){
+  const d = { name: doc.name || "", ln: doc.ln, limit: doc.limit, units: doc.units };
+  const fp = fnv(JSON.stringify([d.ln, d.units]));
+  const now = new Date(), pad = n => (n < 10 ? "0" : "") + n;
+  const all = linkedFleets().filter(f => f.fp !== fp);
+  all.unshift({ fp: fp, how: how, date: now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate()), doc: d });
+  lsSet(KEY_LINKED, JSON.stringify(all.slice(0, 40)));
+  return fp;
+}
+function forgetLinked(k){ const all = linkedFleets(); all.splice(k, 1); lsSet(KEY_LINKED, JSON.stringify(all)); }
+/* A fleet document as text (a file, a pasted one, a link's content): every
+   fleet in it goes on the list, the first one is marked new. */
+function takeFleetText(text, how){
+  const p = parseDoc(text);
+  if(p.error){ V.loadErr = p.error; render(); return false; }
+  const fs = fleetsIn(p.o);
+  if(!fs.length){ V.loadErr = "The document has no ships in it."; render(); return false; }
+  const bad = fs.map(f => resolveFleet(f)).find(r => r.error);
+  if(bad && fs.length === 1){ V.loadErr = bad.error; render(); return false; }
+  const fresh = [];
+  fs.slice().reverse().forEach(f => { fresh.push(addLinked(f, how)); });
+  V.loadErr = ""; V.linkNew = fresh; V.screen = "load";
+  render();
+  return true;
+}
+/* The builder's fleets on this device, the named library first (J208,
+   gothic-fleet-registry-saves-v1) and then the fleet each list is editing
+   (gothic-fleet-registry-v1). Read, never written. */
+const KEY_LIB_BUILDER = "gothic-fleet-registry-saves-v1";
+function builderFleets(){
+  const out = [];
+  let lib = null; try{ lib = JSON.parse(lsGet(KEY_LIB_BUILDER) || "null"); }catch(e){}
+  (lib && Array.isArray(lib.saves) ? lib.saves : []).forEach(f => {
+    if(f && Array.isArray(f.units) && f.units.length) out.push({ name: f.name || "", ln: f.ln, limit: f.limit, units: f.units, saved: true });
+  });
+  const p = parseDoc(lsGet(KEY_BUILDER) || "");
+  if(p.o) fleetsIn(p.o).forEach(f => out.push(Object.assign({ saved: false }, f)));
+  return out;
+}
+/* Where the phone opens the link: this page when it is on the web, the
+   published page when this one runs from a disk or from localhost (a phone
+   cannot reach either). */
+function playBase(){
+  const loc = typeof location !== "undefined" ? location : null;
+  const local = !loc || loc.protocol !== "https:" || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(loc.hostname);
+  return local ? { url: PHONE_LINK.play, remote: true } : { url: loc.origin + loc.pathname, remote: false };
+}
+/* What a "to phone" sends: "b:<k>" a builder fleet on this device, "s:<k>"
+   one of this page's own saved fleets, "all" every one of them - from phone
+   to phone too (user 19.10.2026: "QR koodi ... pitaisi onnistua myos
+   kannykalle. etta saa esim kannykasta kannykkaan"). Names travel along. */
+function phoneDoc(key){
+  const one = f => ({ name: f.name || undefined, ln: f.ln, limit: f.limit, units: f.units });
+  if(key === "all"){
+    const lk = linkedFleets().map(f => f.doc);
+    if(!lk.length) return null;
+    const d = Object.assign({ schemaVersion: DOMAIN.SCHEMA_VERSION }, one(lk[0]));
+    if(lk.length > 1) d.fleets = lk.slice(1).map(one);
+    return d;
+  }
+  const m = /^([bs]):(\d+)$/.exec(String(key));
+  const f = !m ? null : m[1] === "b" ? builderFleets()[+m[2]] : (linkedFleets()[+m[2]] || {}).doc;
+  return f ? Object.assign({ schemaVersion: DOMAIN.SCHEMA_VERSION }, one(f)) : null;
+}
+async function phoneLink(key){
+  V.phoneUrl = ""; V.phoneSvg = ""; V.phoneErr = ""; V.phoneN = 0;
+  try{
+    const d = phoneDoc(key);
+    if(!d) throw new Error("the fleet is no longer here");
+    const base = playBase();
+    V.phoneUrl = base.url + "#" + await packFleet(d); V.phoneRemote = base.remote;
+    V.phoneN = 1 + (d.fleets || []).length;
+    try{ V.phoneSvg = qrSvg(V.phoneUrl); }
+    catch(e){ V.phoneErr = V.phoneN + " fleets are too long a link for one QR code (" + V.phoneUrl.length + " characters). Share or copy the link instead - a phone opens it all the same - or send the fleets one by one."; }
+  }catch(e){ V.phoneErr = String(e && e.message || e); }
+  if(V.phone === key) render();
+}
+/* Copy and share answer in place: the button says "Copied" (no toast). */
+function copyText(text, what){
+  const done = () => { V.copied = what; render(); };
+  try{
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text) && done()); return; }
+  }catch(e){}
+  if(fallbackCopy(text)) done();
+}
+function fallbackCopy(text){
+  const t = document.createElement("textarea"); t.value = text; t.setAttribute("readonly", ""); t.style.position = "fixed"; t.style.opacity = "0";
+  document.body.appendChild(t); t.select(); let ok = false; try{ ok = document.execCommand("copy"); }catch(e){} t.remove(); return ok;
+}
+function shareText(title, text){
+  if(navigator.share){ navigator.share(/^https?:/.test(text) ? { title: title, url: text } : { title: title, text: text }).catch(() => {}); }
+  else copyText(text, /^https?:/.test(text) ? "link" : "report");
+}
+
+
+/* ------------------------------------------------------ the End Phase --- */
+/* p. 88: in every End Phase - both players' - capital ships roll 1D6 per
+   hit left (half with blast markers), each 6 repairs one system or puts out
+   one fire; p. 67: a fire not put out costs a hit. The page rolls nothing:
+   it lists the ships with something to repair and takes the results. */
+function repairable(R, key){
+  const cm = R.damage && R.damage.critical;
+  if(cm && /cannot repair any critical/i.test(String(cm.foot || ""))) return false;
+  const row = cm && cm.rows.find(r => String(r[0]) === String(key));
+  if(row && (/\*\s*$/.test(String(row[1])) || /\*\s*$/.test(String(row[2] || "")))) return false;
+  if(PLAY.standardCrits(R) && PLAY.CRITS[key] && PLAY.CRITS[key].perm) return false;
+  return true;
+}
+function endPending(){
+  let fires = 0, crits = 0;
+  U.forEach((x, i) => {
+    const R = x.R, st = G.st[i];
+    if(R.kind !== "ship" || PLAY.isEscort(R) || PLAY.isFort(R) || PLAY.destroyed(R, st)) return;
+    PLAY.activeCrits(st, R).forEach(c => {
+      if(PLAY.standardCrits(R) && c.key === "7") fires += c.count;
+      if(repairable(R, c.key)) crits += c.count;
+    });
+  });
+  return { fires: fires, crits: crits, n: crits };
+}
+function renderEndPhase(){
+  const fl = G.fleet;
+  const rows = U.map((x, i) => {
+    const R = x.R, st = G.st[i];
+    if(R.kind !== "ship" || PLAY.isEscort(R) || PLAY.isFort(R)) return "";
+    const v = PLAY.view(R, st, fl);
+    if(v.destroyed) return "";
+    const crits = PLAY.activeCrits(st, R);
+    if(!crits.length) return "";
+    const nm = c => { const cm = R.damage.critical, row = cm && cm.rows.find(r => String(r[0]) === c.key); return String(row ? row[1] : (c.def ? c.def.name : c.key)).replace(/\s*\*\s*$/, ""); };
+    const reps = crits.map(c => repairable(R, c.key)
+      ? `<button data-act="repair" data-i="${i}" data-arg="${esc(c.key)}"><b>${esc(c.key)}</b> ${esc(nm(c))}${c.count > 1 ? " " + TIMES + c.count : ""}<small>tap when repaired</small></button>`
+      : `<span class="perm"><b>${esc(c.key)}</b> ${esc(nm(c))} ${MID} no repair (p. 67)</span>`).join("");
+    const fire = PLAY.standardCrits(R) && crits.some(c => c.key === "7");
+    const n = fire ? Math.max(1, PLAY.fireDamage(R, st)) : 0;
+    const times = st.fireTurn === fl.turn ? st.fireN | 0 : 0;
+    const fireBtn = fire ? `<button class="fireb${times ? " done" : ""}" data-act="fire" data-i="${i}">Fire not put out: +${n} hit${n > 1 ? "s" : ""}<small>${times ? "added " + times + TIMES + " this turn" : "after the repair rolls (p. 67)"}</small></button>` : "";
+    return `<div class="eprow" style="--kd:${factionCols(R.entry ? R.entry.list : G.ln, R.source.faction || "")[0]}"><div class="ephd"><b>${esc(unitName(i))}</b><small>damage control ${v.repairDice}D6${R.damage.repair && R.damage.repair !== DOMAIN.REPAIR_LINE ? " " + MID + " " + esc(R.damage.repair) : ", a 6 repairs one (p. 88)"}</small></div>
+      <div class="eprep">${reps}</div>${fireBtn}</div>`;
+  }).join("");
+  return `<div class="menu endp" data-act="endph"><div class="box">
+    <h2>End phase</h2>
+    <p class="foot">Both players repair in every End Phase (p. 88): roll the dice shown, tap what was repaired; then a fire still burning costs a hit (p. 67). Halve the dice with blast markers in contact.</p>
+    ${rows || `<p class="foot">Nothing to repair.</p>`}
+    <button class="btn sec" data-act="endph">Done</button>
+  </div></div>`;
+}
+
+/* ------------------------------------------------- the strip of ships --- */
+/* The bottom strip (full view): one chip per unit in the roster's order,
+   its state in its colour - crippled, out of action, played. A tap moves
+   the screen to that row. */
+function shortName(i){
+  const w = unitName(i).split(/\s+/).filter(Boolean);
+  if(w.length > 1 && w[w.length - 1].length <= 3) return w[0].slice(0, 8) + " " + w[w.length - 1];
+  return w.join(" ").length <= 10 ? w.join(" ") : w[0].slice(0, 9);
+}
+function jumpStrip(){
+  const chips = U.map((x, i) => {
+    const R = x.R, st = G.st[i];
+    if(R.kind !== "ship" && !R.ruleCard) return "";
+    const v = R.kind === "ship" ? PLAY.view(R, st, G.fleet) : null;
+    const cls = v ? (v.destroyed ? "dead" : v.crippled ? "cr" : "") + (st.played >= 2 ? " done" : "") : "";
+    return `<button class="${cls.trim()}" data-act="jump" data-i="${i}">${esc(shortName(i))}${v && v.escort ? `<small>${TIMES}${v.alive}</small>` : ""}</button>`;
+  }).join("");
+  return `<div class="jump" role="navigation" aria-label="Go to a ship">${chips}</div>`;
+}
+
+/* ------------------------------------------------------- game report --- */
+/* The BFG Meta Almanac's report (meta-tietokanta/lisaa dataa/
+   FLEET_REPORT_TEMPLATE.md): the first four lines are what counts, the rest
+   is welcome. Fleets, the result and the ships - no names. */
+const SCENARIOS = ["Cruiser Clash", "Fleet Engagement", "Planetary Assault", "Convoy", "Surprise Attack", "Raiders", "Blockade Run", "Exterminatus", "Escalating Engagement", "Bait and Trap", "Hunt the Hunter", "Pirate Hunt", "Breakout"];
+function repState(){
+  if(!G.report){ const d = new Date(), pad = n => (n < 10 ? "0" : "") + n; G.report = { opp: "", win: "", scen: "", notes: "", date: d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) }; }
+  return G.report;
+}
+function reportText(){
+  const r = repState();
+  const lost = [], crip = [];
+  U.forEach((x, i) => {
+    const R = x.R, st = G.st[i];
+    if(R.kind !== "ship") return;
+    const v = PLAY.view(R, st, G.fleet);
+    if(v.escort){ const dead = R.hulls - v.alive; if(dead) lost.push(unitName(i) + (R.hulls > 1 ? " " + dead + "/" + R.hulls : "")); }
+    else if(v.destroyed) lost.push(unitName(i) + (st.hulkName ? " (" + st.hulkName.toLowerCase() + ")" : ""));
+    else if(v.crippled) crip.push(unitName(i));
+    if(st.disengaged) lost.push(unitName(i) + " disengaged");
+  });
+  const auto = "Recorded with Gothic Fleet Play: turn " + G.fleet.turn + "; fleet A lost " + (lost.join(", ") || "nothing") +
+    (crip.length ? "; crippled " + crip.join(", ") : "") + "; VP conceded by fleet A " + vpTotal() + ".";
+  const win = r.win === "A" ? "A" : r.win === "B" ? "B" : r.win === "D" ? "Draw" : "";
+  const lines = U.map(x => listLineOf(x.R));
+  return ["Fleet A: " + G.ln, "Fleet B: " + (r.opp || ""), "Winner: " + win, "Scenario: " + (r.scen || ""), "",
+          "Points: " + (G.limit || fleetPoints(U)), "Date: " + r.date, "Notes: " + (r.notes ? r.notes.trim() + " " : "") + auto, "",
+          "List A:", G.ln + " \u2014 " + fleetPoints(U) + "/" + (G.limit | 0) + " pts"].concat(lines).concat(["", "List B:", ""]).join("\n");
+}
+/* typing in the report: kept at once, the text below follows, no re-render
+   (the field keeps its focus) */
+document.addEventListener("input", ev => {
+  const k = ev.target && ev.target.getAttribute && ev.target.getAttribute("data-rep");
+  if(!k || !G) return;
+  repState()[k] = ev.target.value; save();
+  const t = $("#reptext"); if(t) t.value = reportText();
+});
+/* a ship's name at the set-up: kept as it is typed, no re-render (the field
+   keeps its focus); an empty field or the old name is the old name again.
+   The flagship choice beside it follows at once. */
+document.addEventListener("input", ev => {
+  const a = ev.target && ev.target.getAttribute && ev.target.getAttribute("data-nm");
+  if(a == null || !G) return;
+  const i = parseInt(a, 10);
+  if(!U[i]) return;
+  const v = String(ev.target.value || "").replace(/\s+/g, " ").trim();
+  G.nm = G.nm || {};
+  if(!v || v === baseName(i)) delete G.nm[i]; else G.nm[i] = v;
+  save();
+  document.querySelectorAll('select[data-sel="flag"] option[value="' + i + '"]').forEach(o => { o.textContent = "aboard " + unitName(i); });
+});
+/* Enter (the keyboard's Done) puts the keyboard away */
+document.addEventListener("keydown", ev => {
+  if(ev.key === "Enter" && ev.target && ev.target.getAttribute && ev.target.getAttribute("data-nm") != null){ ev.preventDefault(); ev.target.blur(); }
+});
+
+/* ============================================================== EVENTS ===== */
+document.addEventListener("touchstart", () => {}, { passive: true });   /* :active on iOS */
+document.addEventListener("click", ev => {
+  const el = ev.target.closest("[data-act]");
+  if(!el || el.disabled) return;
+  /* a new screen just came up under the finger (user 19.10.2026: a second
+     tap on "nothing happened" landed on the next screen and picked an Ld):
+     taps in the first moments after a screen change are not taken */
+  if(Date.now() < V.guardUntil){ ev.preventDefault(); return; }
+  const name = el.getAttribute("data-act");
+  /* The tapped control stays where the finger is (user 30.9.2026: the screen
+     must not move). render() finds the same control again and shifts the
+     scroll by however far it moved - a chip line or a band appearing above
+     it no longer pushes it away. */
+  const tr = el.getBoundingClientRect();
+  TAP = { sel: tapSel(el), top: tr.top + tr.height / 2 };
+  /* a tap inside the menu box is not a tap on the backdrop */
+  if((name === "menu" || name === "endph") && el.classList.contains("menu") && ev.target.closest(".box")) return;
+  const i = el.hasAttribute("data-i") ? parseInt(el.getAttribute("data-i"), 10) : null;
+  let arg = el.hasAttribute("data-arg") ? el.getAttribute("data-arg") : undefined;
+  if(arg != null && /^-?\d+$/.test(arg)) arg = parseInt(arg, 10);
+  if(name === "resume"){ const g = loadPlay(); if(g && resumeGame(g)){ V.screen = "roster"; } else { V.loadErr = "The saved game could not be resumed against this roster."; } render(); return; }
+  if(name === "newfrom"){
+    const f = builderFleets()[arg]; if(!f) return;
+    const res = resolveFleet(f); if(res.error) return;
+    if(loadPlay() && !confirm("A game is in progress. Start a new one and forget its record?")) return;
+    newGame(res); V.screen = "setup"; save(); render(); return;
+  }
+  /* a fleet that came by a link or a file (the page's own list) */
+  if(name === "linked"){
+    const f = linkedFleets()[arg]; if(!f) return;
+    const res = resolveFleet(f.doc); if(res.error){ V.loadErr = res.error; render(); return; }
+    if(loadPlay() && !confirm("A game is in progress. Start a new one and forget its record?")) return;
+    res.src = "link"; newGame(res); V.screen = "setup"; save(); render(); return;
+  }
+  if(name === "unlink"){ forgetLinked(arg); render(); return; }
+  /* the QR code and the link for a builder fleet: open under its button */
+  if(name === "phone"){ V.phone = V.phone === arg ? null : arg; V.copied = ""; render(); if(V.phone != null) phoneLink(arg); return; }
+  if(name === "qrfull"){ if(V.phoneSvg) qrFull(V.phoneSvg); return; }
+  if(name === "copylink"){ copyText(V.phoneUrl || "", "link"); return; }
+  if(name === "sharelink"){ shareText("Gothic Fleet Play", V.phoneUrl || ""); return; }
+  if(name === "pickfile"){ const f = $("#fleetfile"); if(f){ f.value = ""; f.click(); } return; }
+  if(name === "paste"){
+    const p = parseDoc(($("#paste") && $("#paste").value) || "");
+    if(p.error){ V.loadErr = p.error; render(); return; }
+    const fs = fleetsIn(p.o); if(!fs.length){ V.loadErr = "The document has no ships in it."; render(); return; }
+    const res = resolveFleet(fs[0]); if(res.error){ V.loadErr = res.error; render(); return; }
+    V.loadErr = ""; res.src = "paste"; newGame(res); V.screen = "setup"; save(); render(); return;
+  }
+  act(name, i, arg);
+});
+/* A fleet file (the builder's Export file, or any fleet document): it goes
+   on the page's own list of fleets, the same as a link. */
+document.addEventListener("change", ev => {
+  const inp = ev.target;
+  if(!inp || inp.id !== "fleetfile" || !inp.files || !inp.files[0]) return;
+  const rd = new FileReader();
+  rd.onload = () => { takeFleetText(String(rd.result || ""), "file"); };
+  rd.onerror = () => { V.loadErr = "The file could not be read."; render(); };
+  rd.readAsText(inp.files[0]);
+});
+document.addEventListener("change", ev => {
+  const el = ev.target.closest("[data-sel]");
+  if(!el) return;
+  if(el.getAttribute("data-sel") === "flag") act("flag", null, parseInt(el.value, 10));
+});
+
+/* ================================================================ BOOT ===== */
+(function boot(){
+  const g = loadPlay();
+  if(g && resumeGame(g)){
+    /* the game continues where it was unless the builder's fleet changed */
+    const raw = lsGet(KEY_BUILDER);
+    const p = raw ? parseDoc(raw) : null;
+    const same = (g.src && g.src !== "builder") || !p || !p.o || fleetsIn(p.o).some(f => fnv(JSON.stringify([f.ln, f.units])) === g.fp);
+    V.screen = same ? "roster" : "load";
+  }
+  /* opened from a link with a fleet in it (the "to phone" QR code): the
+     fleet goes on the page's own list and the list is shown, the new one
+     on top; the address loses the fleet so a reload does not add it again */
+  const loc = typeof location !== "undefined" ? location : null;
+  const frag = loc && /^#fleetj?=/.test(loc.hash || "") ? loc.hash.slice(1) : "";
+  if(frag){
+    try{ history.replaceState(null, "", loc.pathname + loc.search); }catch(e){}
+    V.screen = "load";
+    unpackFleet(frag).then(text => { takeFleetText(text, "link"); },
+                           e => { V.loadErr = "The fleet in the link could not be read: " + (e && e.message || e) + "."; render(); });
+  }
+  render();
+})();
+</script>
+</body>
+</html>

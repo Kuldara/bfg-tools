@@ -1,0 +1,60 @@
+{"id": "S0901", "l": "KUVAUS", "a": "drop", "f": "row_desc_dup", "p": "F369", "pok": "ok", "n": "Sama teksti on jo klaanirivin kuvauksena (upgrades.py:212)."}
+{"id": "S0902", "l": "ROSKA", "a": "fix", "f": "table_merge", "p": "F369", "pok": "ok", "x": "table", "n": "'/Red' + Evil Sunz -kerronta."}
+{"id": "S0903", "l": "KUVAUS", "a": "drop", "f": "row_desc_dup", "p": "F369", "pok": "ok", "n": "Rivin kuvauksena ja mod sp=5 (upgrades.py:214)."}
+{"id": "S0904", "l": "ROSKA", "a": "fix", "f": "table_merge", "p": "F369", "pok": "ok", "x": "table", "n": "'/Yellow' + kerronta."}
+{"id": "S0905", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F369", "pok": "ok", "n": "Kerronta."}
+{"id": "S0906", "l": "ROSKA", "a": "fix", "f": "table_merge", "p": "F369", "pok": "ok", "x": "table", "n": "'/Blue' + kerronta."}
+{"id": "S0907", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F369", "pok": "ok", "n": "Kerronta."}
+{"id": "S0908", "l": "KUVAUS", "a": "drop", "f": "row_desc_dup", "p": "F369", "pok": "ok", "n": "Blood Axes -rivin kuvauksessa (upgrades.py:220)."}
+{"id": "S0909", "l": "OMINAISUUS", "a": "feature", "f": "lend_route", "p": "F369", "pok": "ok", "n": "Blood Axe -tiddla (vähintään 6) saa ottaa enintään kolme IN- tai Chaos-saattajaa listahintaan. Vain rivin kuvauksessa; ei lainausreittiä eikä laskentaa."}
+{"id": "S0910", "l": "TARKISTA", "a": "keep", "f": "modelling", "p": "F369", "pok": "ok", "n": "Orkkiväritys lainasaattajille."}
+{"id": "S0911", "l": "ROSKA", "a": "fix", "f": "table_merge", "p": "F369", "pok": "ok", "x": "table", "n": "'/Brown' + kerronta."}
+{"id": "S0912", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F369", "pok": "ok", "n": "Snakebites-rivin ehto ty escort|defence (upgrades.py:223); hulkki ja Rok eivät ole capital-tyyppiä (J189).", "vk": "ajo ok"}
+{"id": "S0913", "l": "LASKETTAVA", "a": "roster", "f": "attack_rating", "p": "F400", "pok": "osittain", "x": "heading", "n": "Necrons 4; kolme otsikkoa liimattuna."}
+{"id": "S0914", "l": "VALVOTTU", "a": "checked", "f": "row_limit", "p": "F400", "pok": "ok", "n": "Sepulchre mx=1 tombshipille (ENTRY_LIMITS, referenssi 26 #222); Ld 10 kortilla.", "vk": "ajo ok"}
+{"id": "S0915", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F400", "pok": "ok", "n": "Sepulchre."}
+{"id": "S0916", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F400", "pok": "ok", "n": "Sepulchre."}
+{"id": "S0917", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F400", "pok": "ok", "n": "Sepulchre."}
+{"id": "S0918", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F400", "pok": "ok", "n": "Sepulchre."}
+{"id": "S0919", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F400", "pok": "ok", "n": "Sepulchre."}
+{"id": "S0920", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F400", "pok": "ok", "n": "Sepulchre."}
+{"id": "S0921", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F400", "pok": "ok", "n": "Sepulchre."}
+{"id": "S0922", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F400", "pok": "ok", "n": "Gauss/lightning arc."}
+{"id": "S0923", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F400", "pok": "ok", "n": "Star Pulse."}
+{"id": "S0924", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F400", "pok": "ok", "n": "Star Pulse."}
+{"id": "S0925", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F400", "pok": "ok", "n": "Star Pulse."}
+{"id": "S0926", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F400", "pok": "ok", "n": "Star Pulse."}
+{"id": "S0927", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F400", "pok": "ok", "n": "Star Pulse."}
+{"id": "S0928", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F400", "pok": "ok", "n": "Particle whip."}
+{"id": "S0929", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F401", "pok": "ok", "n": "Portals."}
+{"id": "S0930", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F401", "pok": "ok", "n": "Portals."}
+{"id": "S0931", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F401", "pok": "ok", "n": "Portals."}
+{"id": "S0932", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F401", "pok": "ok", "n": "Portals."}
+{"id": "S0933", "l": "PELI", "a": "play", "f": "crit_table", "p": "F401", "pok": "ok", "x": "heading", "n": "Necron-kriittitaulukko; kuuluu kortille."}
+{"id": "S0934", "l": "PELI", "a": "play", "f": "crit_table", "p": "F401", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0935", "l": "PELI", "a": "play", "f": "crit_table", "p": "F401", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0936", "l": "PELI", "a": "play", "f": "crit_table", "p": "F401", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0937", "l": "PELI", "a": "play", "f": "crit_table", "p": "F401", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0938", "l": "PELI", "a": "play", "f": "crit_table", "p": "F401", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0939", "l": "PELI", "a": "play", "f": "crit_table", "p": "F401", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0940", "l": "PELI", "a": "play", "f": "crit_table", "p": "F401", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0941", "l": "PELI", "a": "play", "f": "crit_table", "p": "F401", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0942", "l": "PELI", "a": "play", "f": "crit_table", "p": "F401", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0943", "l": "PELI", "a": "play", "f": "crit_table", "p": "F401", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0944", "l": "PELI", "a": "play", "f": "crit_table", "p": "F401", "pok": "ok", "n": "Kriittitaulukko."}
+{"id": "S0945", "l": "PELI", "a": "play", "f": "card_rule", "p": "F402", "pok": "ok", "n": "Reactive hull; kortilla (domain.js:3038)."}
+{"id": "S0946", "l": "PELI", "a": "play", "f": "card_rule", "p": "F402", "pok": "ok", "n": "Reactive hull."}
+{"id": "S0947", "l": "PELI", "a": "play", "f": "card_rule", "p": "F402", "pok": "ok", "n": "Reactive hull."}
+{"id": "S0948", "l": "PELI", "a": "play", "f": "card_rule", "p": "F402", "pok": "ok", "n": "Reactive hull."}
+{"id": "S0949", "l": "PELI", "a": "play", "f": "card_rule", "p": "F402", "pok": "ok", "n": "Reactive hull."}
+{"id": "S0950", "l": "PELI", "a": "play", "f": "card_rule", "p": "F402", "pok": "ok", "n": "Reactive hull."}
+{"id": "S0951", "l": "PELI", "a": "play", "f": "card_rule", "p": "F402", "pok": "ok", "n": "Inertialess drive."}
+{"id": "S0952", "l": "PELI", "a": "play", "f": "victory_points", "p": "F402", "pok": "ok", "x": "heading", "n": "Disengage ja VP."}
+{"id": "S0953", "l": "PELI", "a": "play", "f": "victory_points", "p": "F402", "pok": "ok", "n": "Fade out; kortilla (domain.js:2918)."}
+{"id": "S0954", "l": "PELI", "a": "play", "f": "victory_points", "p": "F402", "pok": "ok", "n": "Necron-VP."}
+{"id": "S0955", "l": "PELI", "a": "play", "f": "victory_points", "p": "F402", "pok": "ok", "n": "Necron-VP."}
+{"id": "S0956", "l": "PELI", "a": "play", "f": "victory_points", "p": "F402", "pok": "ok", "n": "Necron-VP."}
+{"id": "S0957", "l": "PELI", "a": "play", "f": "victory_points", "p": "F402", "pok": "ok", "n": "Necron-VP."}
+{"id": "S0958", "l": "PELI", "a": "play", "f": "victory_points", "p": "F402", "pok": "ok", "n": "Necron-VP."}
+{"id": "S0959", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F402", "pok": "ok", "n": "Hylkyjen ampuminen."}
+{"id": "S0960", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F402", "pok": "ok", "x": "heading", "n": "Kampanjan korjauspisteet."}

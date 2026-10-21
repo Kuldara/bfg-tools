@@ -1,0 +1,28 @@
+"use strict";
+const H = require("./harness.js");
+const { fleet, ups, opts, bad, warns, chk, card, tryit, api } = H;
+const L = nm => api.LISTS[H.li(nm)];
+const rowsOf = (nm, re) => L(nm).secs.flatMap(s => s.ents.map(e => s.t + " :: " + e.l)).filter(x => new RegExp(re, "i").test(x));
+const all = () => api.checks().map(c => (c.ok ? (c.warn ? "WARN " : "ok ") : "BAD ") + c.t + " [" + c.v + "]");
+
+// reservit
+tryit("S0072 Armageddon: SM-listan alus reserviksi?", () => { try { fleet("Armageddon Sector", 2000).add("Lunar").add("Lunar").add("Lunar").add("Strike Cruiser", { from: "Codex Astartes" }); return bad(); } catch (e) { return e.message; } });
+tryit("S0095 Bakka: 12 omaa + 1 reservicruiser", () => { const b = fleet("Bakka", 3000); for (let i = 0; i < 12; i++) b.add("Lunar|Gothic|Dominator"); b.add("Lunar|Gothic", { from: "Imperial Navy — Gothic Sector" }); return chk("cruiser"); });
+tryit("S0084 Bakka: reservi-GC battleship-suhteessa", () => { const b = fleet("Bakka", 3000).add("Lunar").add("Lunar").add("Lunar").add("Vengeance|Avenger|Exorcist", { from: "Bastion Fleets" }).add("Retribution|Oberon|Apocalypse"); return chk("battleship|grand"); });
+tryit("S0092 Bakka: 3 omaa cruiseria + 2 reservicruiseria", () => { const b = fleet("Bakka", 3000).add("Lunar").add("Lunar").add("Lunar").add("Lunar|Gothic", { from: "Imperial Navy — Gothic Sector" }).add("Lunar|Gothic", { from: "Imperial Navy — Gothic Sector" }); return bad().concat(chk("reserve")); });
+tryit("S0106 Bakka: lainatulle alukselle Bakka-refit?", () => { const b = fleet("Bakka", 3000).add("Lunar").add("Lunar").add("Lunar").add("Lunar|Gothic", { from: "Imperial Navy — Gothic Sector" }); return ups(b.last).filter(x => /bakka|turret/i.test(x)); });
+tryit("S0106b Gothic: Bakka-alus reservinä vie refitin?", () => { const b = fleet("Imperial Navy — Gothic Sector", 3000).add("Lunar").add("Lunar").add("Lunar").add("Lunar|Gothic", { from: "Bakka" }); return ups(b.last).filter(x => /bakka|turret/i.test(x)); });
+tryit("S0163 Dominion: lainattu IN-alus + SM-paivitykset?", () => { const b = fleet("Dominion", 3000).add("Strike Cruiser").add("Strike Cruiser").add("Strike Cruiser").add("Lunar|Gothic", { from: "Imperial Navy — Gothic Sector" }); return ups(b.last).filter(x => /honour|terminator|captain|thunderhawk|space marine/i.test(x)); });
+tryit("S0246 AdMech: 3 capital + 2 eri tyypin reservia", () => { const b = fleet("Explorator", 3000).add("Gothic").add("Gothic").add("Lunar").add("Lunar|Dominator", { from: "Imperial Navy — Gothic Sector" }).add("Overlord|Mars|Dictator", { from: "Imperial Navy — Gothic Sector" }); return bad().concat(chk("reserve")); });
+tryit("S0249 AdMech: SM-reservi ja IN-capital samaan", () => { const b = fleet("Explorator", 3000).add("Gothic").add("Gothic").add("Gothic").add("Lunar", { from: "Imperial Navy — Gothic Sector" }).add("Strike Cruiser", { from: "Codex Astartes" }); return bad().concat(chk("space marine|strike")); });
+tryit("S0255 AdMech: 1 capital + 4 IN-reservisaattajaa", () => { const b = fleet("Explorator", 3000).add("Gothic").add("Sword", { from: "Imperial Navy — Gothic Sector", n: 4 }); return bad().concat(chk("escort|reserve")); });
+tryit("S0298 Gothic: RT-risteilija + RT-saattajat tarjolla?", () => rowsOf("Imperial Navy — Gothic Sector", "rogue trader|xenos|transport"));
+tryit("S0300 Codex + Inquisitor Lord + xenos (Ordo Xenos ally)", () => rowsOf("Codex Astartes", "inquisit"));
+tryit("S0351 RT: SM-reservi + xenos-alus", () => { try { const b = fleet("Rogue Traders", 2000).add("Rogue Trader Cruiser").add("Rogue Trader Cruiser").add("Rogue Trader Cruiser").add("Strike Cruiser", { from: "Codex Astartes" }).add("Xenos"); return bad(); } catch (e) { return e.message + " | rivit: " + rowsOf("Rogue Traders", "xenos").join(" ; "); } });
+tryit("S0379 Exploration: liittolaisristeilija", () => { try { const b = fleet("Rogue Traders — Exploration", 2000).add("Rogue Trader Cruiser").add("Rogue Trader Cruiser").add("Rogue Trader Cruiser").add("Lunar", { from: "Imperial Navy — Gothic Sector", role: "ally" }); return bad().concat(chk("all")); } catch (e) { return e.message; } });
+tryit("S0396 Pirates: liittolainen", () => { try { const b = fleet("Pirates", 2000).add("Lunar").add("Iconoclast|Sword|Idolator", { n: 3 }).add("Murder", { from: "Chaos — Incursion", role: "ally" }); return bad(); } catch (e) { return e.message; } });
+tryit("S0622 Corsairs+Hero: 3 cruiseria + 2 Craftworld-alusta", () => { try { const b = fleet("Eldar Corsairs — Gothic Sector", 2000).add("Eldar Hero").add("Eclipse|Shadow|Hellebore|Aconite").add("Eclipse|Shadow|Hellebore|Aconite").add("Eclipse|Shadow|Hellebore|Aconite").add("Dragonship", { from: "Iyanden" }).add("Wraithship", { from: "Iyanden" }); return bad(); } catch (e) { return e.message; } });
+tryit("S0650 Iyanden+Hero: 3 Dragonship + 1 Corsair cruiser", () => { try { const b = fleet("Iyanden", 2000).add("Eldar Hero").add("Dragonship").add("Dragonship").add("Dragonship").add("Eclipse|Shadow", { from: "Eldar Corsairs — Gothic Sector" }); return bad().concat(chk("reserve|corsair|three")); } catch (e) { return e.message; } });
+tryit("S0651 Iyanden+Hero: 3 Shadowhunter + 1 Corsair escort", () => { try { const b = fleet("Iyanden", 2000).add("Eldar Hero").add("Dragonship").add("Shadowhunter", { n: 3 }).add("Hemlock|Nightshade|Aconite", { from: "Eldar Corsairs — Gothic Sector" }); return bad().concat(chk("escort|reserve")); } catch (e) { return e.message; } });
+tryit("S0084b Bakka GC-rivit?", () => rowsOf("Bakka", "grand"));
+tryit("S0085 Bakka Endurance-raja?", () => { const b = fleet("Bakka", 3000).add("Endurance").add("Endurance").add("Endurance"); return bad().concat(chk("endurance")); });

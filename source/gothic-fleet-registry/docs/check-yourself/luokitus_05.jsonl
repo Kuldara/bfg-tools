@@ -1,0 +1,60 @@
+{"id": "S0241", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F121", "pok": "ok", "n": "'+1 turret (escort squadron)' per hull, cond esc (upgrades.py:622)."}
+{"id": "S0242", "l": "RAKENNE", "a": "guaranteed", "f": "squadron_unit", "p": "F121", "pok": "ok", "n": "Laivue on yksi yksikkö ja hinta on per runko, joten koko laivue ottaa refitin."}
+{"id": "S0243", "l": "TARKISTA", "a": "keep", "f": "modelling", "p": "F121", "pok": "ok", "n": "Maalaussääntö (Mechanicus-värit); pelaajien välinen."}
+{"id": "S0244", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F121", "pok": "ok", "x": "heading", "n": "AdMech-lainat IN- ja SM-listoille (build_data.py:5527)."}
+{"id": "S0245", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F121", "pok": "ok", "n": "Sama rotu (imperial navy), 1.1-reservit."}
+{"id": "S0246", "l": "OMINAISUUS", "a": "feature", "f": "reserve_special", "p": "F121", "pok": "ok", "n": "AdMechin oma yläraja: enintään yksi reservi kolmea capital shipiä kohden (koko laivasto), tiukempi kuin yleinen tyypeittäinen 1:3. Varmista, valvooko 1.1-moottori tätä. Ajo 20.10.: moottori soveltaa yleistä tyyppikohtaista 1:3:ta; AdMechin oma 'yksi kolmea capital shipiä kohden' eroaa vain reunatapauksissa (esim. 2 cruiseria + 1 battleship).", "vk": "osittain"}
+{"id": "S0247", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F121", "pok": "ok", "n": "Yleinen tyyppikohtainen 1:3 (s.14), 1.1.", "vk": "ajo ok"}
+{"id": "S0248", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F121", "pok": "ok", "n": "Sama, battleshipit.", "vk": "ajo ok"}
+{"id": "S0249", "l": "OMINAISUUS", "a": "feature", "f": "reserve_special", "p": "F121", "pok": "ok", "n": "SM-reservit AdMech-laivastoon vain, jos laivastossa ei ole tavallisia IN-capital shipejä eikä xenos-aluksia. Koodista ei löytynyt. Ajo 20.10.: AdMech + kolme Gothicia + SM-strike cruiser ilman IN-capitalia -> 'Reserve needs an Inquisitor Lord'. Sovellus hylkää kirjan s.121 sallimat SM-reservit (väärä punainen).", "vk": "VIRHE ajossa"}
+{"id": "S0250", "l": "OMINAISUUS", "a": "feature", "f": "reserve_special", "p": "F121", "pok": "ok", "n": "SM-reservien suhteet: strike cruiser per 3 Mechanicus capital shipiä, battle barge per 3 strike cruiseria. SM-reservit AdMechissa kaatuvat aina inkvisiittorivaatimukseen (ks. S0249), joten suhteita ei voi edes kokeilla.", "vk": "aukko ajossa"}
+{"id": "S0251", "l": "PELI", "a": "play", "f": "card_rule", "p": "F121", "pok": "ok", "n": "Kortin sääntö mechanicus_guest (domain.js:3028); laivueeseen ei voi sekoittaa, koska yksi rivi = yksi laivue."}
+{"id": "S0252", "l": "PELI", "a": "play", "f": "card_rule", "p": "F121", "pok": "ok", "n": "Re-rollien käyttö; kortilla (domain.js:3036)."}
+{"id": "S0253", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F121", "pok": "ok", "n": "AdMech-komentaja vain Mechanicus-alukselle. Merkitsevä vain, kun laivastossa on lainattuja aluksia."}
+{"id": "S0254", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F122", "pok": "ok", "n": "Kerronta."}
+{"id": "S0255", "l": "OMINAISUUS", "a": "feature", "f": "reserve_special", "p": "F122", "pok": "ok", "n": "Reservisaattajat ilman 1:3-rajaa, kun xenos-aluksia ja SM-reservejä ei ole samassa laivastossa. 1.1-moottori laskee saattajillekin 1:3:n; tarkista. Ajo 20.10.: AdMech + 1 capital + 4 IN-saattajaa -> 'Reserves (escorts) 4 / 0' punaisena, vaikka s.122 sanoo 'no restrictions' (väärä punainen).", "vk": "VIRHE ajossa"}
+{"id": "S0256", "l": "OMINAISUUS", "a": "feature", "f": "reserve_special", "p": "F122", "pok": "ok", "n": "Reservisaattajat samalta listalta kuin reservi-capital shipit. Ajo 20.10.: reservisaattajan listaa ei verrata reservi-capital shipin listaan.", "vk": "aukko ajossa"}
+{"id": "S0257", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F122", "pok": "ok", "n": "Kampanjan refitit."}
+{"id": "S0258", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F122", "pok": "ok", "n": "Kampanja."}
+{"id": "S0259", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F122", "pok": "ok", "n": "Kampanja."}
+{"id": "S0260", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F122", "pok": "ok", "n": "Kampanjan korjauspisteet."}
+{"id": "S0261", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F122", "pok": "ok", "n": "Kerronta."}
+{"id": "S0262", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F122", "pok": "ok", "n": "Kampanja."}
+{"id": "S0263", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F122", "pok": "ok", "n": "Kampanja."}
+{"id": "S0264", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F122", "pok": "ok", "n": "Kampanja."}
+{"id": "S0265", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F122", "pok": "ok", "n": "Kampanja."}
+{"id": "S0266", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F122", "pok": "osittain", "x": "table", "n": "Promotions-taulukko yhdeksi lauseeksi."}
+{"id": "S0267", "l": "VALVOTTU", "a": "checked", "f": "commander_count", "p": "F124", "pok": "ok", "n": "Määrä 1 osion rajana; 'assigned to a capital ship' = sijoitus; Ld komentajakortilla.", "vk": "ajo ok"}
+{"id": "S0268", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F124", "pok": "ok", "n": "Archmagos Veneratus Ark Mechanicukselle (Omnissiah's Victory, s.126), jos se on mukana."}
+{"id": "S0269", "l": "PELI", "a": "play", "f": "gifts", "p": "F124", "pok": "ok", "n": "Archmagosin aluksen Gifts-valinta ennen peliä; komentajakortille."}
+{"id": "S0270", "l": "PELI", "a": "play", "f": "gifts", "p": "F124", "pok": "ok", "n": "Gifts."}
+{"id": "S0271", "l": "PELI", "a": "play", "f": "gifts", "p": "F124", "pok": "ok", "n": "Gifts."}
+{"id": "S0272", "l": "KUVAUS", "a": "row", "f": "reroll_price", "p": "F124", "pok": "ok", "n": "Re-rollit maksetaan riveinä."}
+{"id": "S0273", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F125", "pok": "ok", "n": "Listan rivit ovat juuri nämä luokat."}
+{"id": "S0274", "l": "PELI", "a": "play", "f": "gifts", "p": "F125", "pok": "ok", "n": "Omnissiah's Victory ei heitä Gifts-taulukolta; aluksen kortille."}
+{"id": "S0275", "l": "PELI", "a": "play", "f": "ordnance_choice", "p": "F125", "pok": "ok", "n": "Ordnance pelissä."}
+{"id": "S0276", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F125", "pok": "ok", "n": "Emperorin ja Oberonin Shark-optio suljettu AdMech-listalla (build_data.py:3626)."}
+{"id": "S0277", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F125", "pok": "ok", "n": "Torpedo bombers -rivi (upgrades.py:453)."}
+{"id": "S0278", "l": "KUVAUS", "a": "row", "f": "special_torpedoes", "p": "F125", "pok": "osittain", "n": "Tavalliset torpedot, ei boarding-torpedoja; refitted torpedoes s.19. Varmista, onko erikoistorpedoille rivi.", "vk": "ajo ok"}
+{"id": "S0279", "l": "TAUSTA", "a": "drop", "f": "intro", "p": "F138", "pok": "ok", "n": "Johdanto."}
+{"id": "S0280", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F138", "pok": "ok", "n": "Kerronta."}
+{"id": "S0281", "l": "OMINAISUUS", "a": "feature", "f": "hull_choice", "p": "F138", "pok": "ok", "n": "Inquisitorial cruiser voi olla mikä tahansa Imperial cruiser-luokan alus ('it can be any Imperial cruiser-class vessel'). Runkovalinta kuten Venerable battle bargella."}
+{"id": "S0282", "l": "VALVOTTU", "a": "checked", "f": "row_limit", "p": "F138", "pok": "ok", "n": "0-1 rivirajana."}
+{"id": "S0283", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F138", "pok": "ok", "n": "Kerronta."}
+{"id": "S0284", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F138", "pok": "ok", "n": "Kerronta."}
+{"id": "S0285", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F138", "pok": "ok", "n": "Kerronta."}
+{"id": "S0286", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F138", "pok": "ok", "n": "Inquisitor Lord Inquisitorial Cruiserille, muuten Blackshipille."}
+{"id": "S0287", "l": "LASKETTAVA", "a": "roster", "f": "attack_rating", "p": "F139", "pok": "ok", "n": "Inquisitor Lordin johtama IN tai AdMech = 2."}
+{"id": "S0288", "l": "LASKETTAVA", "a": "roster", "f": "attack_rating", "p": "F139", "pok": "ok", "n": "SM 3, Blackshipin kanssa 2."}
+{"id": "S0289", "l": "VALVOTTU", "a": "checked", "f": "aboard_row", "p": "F139", "pok": "ok", "n": "0 pts rivi 'Embarks the Inquisitor: Thunderhawks, launch bays halved' (upgrades.py:642) on jo aboard-merkintä riviksi tehtynä. Malli yleistettäväksi."}
+{"id": "S0290", "l": "PELI", "a": "play", "f": "card_rule", "p": "F139", "pok": "ok", "n": "Torpedot ja Exterminatus; kortilla (domain.js:2667)."}
+{"id": "S0291", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F139", "pok": "ok", "n": "Skenaariot."}
+{"id": "S0292", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F139", "pok": "ok", "n": "Convoy Run."}
+{"id": "S0293", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F139", "pok": "ok", "n": "Convoy Run."}
+{"id": "S0294", "l": "TAUSTA", "a": "drop", "f": "intro", "p": "F139", "pok": "ok", "n": "Johdanto alajuoniin."}
+{"id": "S0295", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F139", "pok": "ok", "n": "Secret Ploys -alajuoni."}
+{"id": "S0296", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F139", "pok": "ok", "n": "Inkvisiittorin reservilupa (build_data.py:5503)."}
+{"id": "S0297", "l": "VALVOTTU", "a": "checked", "f": "rt174", "p": "F139", "pok": "ok", "n": "IN- ja AdMech-listat saavat RT-risteilijän jo s.174:n säännöllä (yksi per 750 pistettä)."}
+{"id": "S0298", "l": "OMINAISUUS", "a": "feature", "f": "rt_escorts", "p": "F139", "pok": "ok", "n": "RT-risteilijän mukana saa tulla RT-saattajalaivue ilman xenos-aluksia. Isäntälistojen ROGUE TRADERS -osiossa on vain risteilijärivi (build_data.py:5700); 'attendant escorts' puuttuvat. Ajo 20.10.: Gothic-listan ROGUE TRADERS -osiossa on vain Rogue Trader Cruiser.", "vk": "aukko ajossa"}
+{"id": "S0299", "l": "ROSKA", "a": "fix", "f": "section_title_fragment", "p": "F139", "pok": "ok", "x": "split", "n": "Osion otsikoksi on poimittu lauseen alku 'Space Marine Chapters are fiercely'; tämä on jatko."}
+{"id": "S0300", "l": "VALVOTTU", "a": "checked", "f": "ally_matrix", "p": "F139", "pok": "ok", "n": "Liittolaismatriisi estää xenos-liittolaiset SM-laivastolta ('Never allies: space marines and corsair eldar', ajo 20.10.). Renegade-puolta ei ajettu erikseen.", "vk": "ajo ok"}

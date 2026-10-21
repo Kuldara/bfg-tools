@@ -1,0 +1,60 @@
+{"id": "S0361", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F175", "pok": "ok", "n": "'Choose the Xenotech System' -rivi (upgrades.py:512)."}
+{"id": "S0362", "l": "OMINAISUUS", "a": "feature", "f": "squadron_group", "p": "F175", "pok": "ok", "n": "Apualus RT-laivueessa saa Xenotechin vain, jos laivueessa on vähintään kolme RT-saattajaa. Vaatii sekalaivueen (apualus + RT-saattajat) ryhmänä."}
+{"id": "S0363", "l": "PELI", "a": "play", "f": "xenotech", "p": "F175", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0364", "l": "PELI", "a": "play", "f": "xenotech", "p": "F175", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0365", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F197", "pok": "ok", "n": "Stryxis enintään neljä (J31, build_data.py:3136); 'ei risteilijöinä' ja 'ei re-rolleja' kortilla.", "vk": "ajo ok"}
+{"id": "S0366", "l": "LASKETTAVA", "a": "roster", "f": "attack_rating", "p": "F176", "pok": "ok", "n": "Exploration 3."}
+{"id": "S0367", "l": "KAMPANJA", "a": "campaign", "f": "subplot", "p": "F176", "pok": "ok", "n": "Pakollinen alajuoni; kirjan sivuviitteet '[???]'."}
+{"id": "S0368", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F176", "pok": "ok", "n": "Xenotech vain RT-risteilijöille ja -saattajille (_XENO_NOT, upgrades.py:330, J36)."}
+{"id": "S0369", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F176", "pok": "ok", "n": "Kampanja."}
+{"id": "S0370", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F176", "pok": "ok", "n": "Kampanja."}
+{"id": "S0371", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F176", "pok": "ok", "n": "ratio samassa osiossa, yhdistelmä-src."}
+{"id": "S0372", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F176", "pok": "ok", "n": "mandatory_at samassa osiossa; 'assigned to a Rogue Trader cruiser' = sijoitus."}
+{"id": "S0373", "l": "OMINAISUUS", "a": "feature", "f": "auxiliary", "p": "F177", "pok": "ok", "n": "Apualukset vain yhdeltä rodulta. Sovellus tarjoaa 'Auxiliary vessels' -rivin ilman valintaa (referenssi 11 #97); apualukset toisilta listoilta puuttuvat. Ajo 20.10.: Exploration-listalla ei ole yhtään apualusriviä (Auxiliary vessels -rivit poistettiin, build_data.py:2632).", "vk": "aukko ajossa"}
+{"id": "S0374", "l": "OMINAISUUS", "a": "feature", "f": "auxiliary", "p": "F177", "pok": "ok", "n": "Apualusten rotukielto (Orks, Dark Eldar, Necrons, Tyranids)."}
+{"id": "S0375", "l": "OMINAISUUS", "a": "feature", "f": "auxiliary", "p": "F177", "pok": "ok", "n": "Ei xenos-aluksia, jos SM-saattajia on apualuksina."}
+{"id": "S0376", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F177", "pok": "ok", "n": "Cargo-laivuesääntö samassa osiossa (J61)."}
+{"id": "S0377", "l": "RAKENNE", "a": "guaranteed", "f": "squadron_unit", "p": "F177", "pok": "ok", "n": "Heavy transportit omalla rivillään = oma laivue."}
+{"id": "S0378", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F177", "pok": "ok", "n": "Kuljetukset skenaarioissa."}
+{"id": "S0379", "l": "VALVOTTU", "a": "checked", "f": "allies", "p": "F177", "pok": "ok", "n": "Yksi risteilijä mistä tahansa listasta (paitsi Orks, Necrons, Tyranids) kolmea RT-risteilijää kohden. Varmista 1.1:n ally_rule.", "vk": "ajo ok"}
+{"id": "S0380", "l": "OMINAISUUS", "a": "feature", "f": "allies", "p": "F177", "pok": "ok", "n": "Lainatut capital shipit laskevat risteilijärajaan, vain yhdeltä listalta ja samalta kuin apualukset. Ajo 20.10.: kaksi liittolaista eri listoilta (IN ja Chaos) menee läpi.", "vk": "aukko ajossa"}
+{"id": "S0381", "l": "OMINAISUUS", "a": "feature", "f": "allies", "p": "F177", "pok": "ok", "n": "0-1 liittolais-battleship, kun kolme lainattua capital shipiä on otettu; ei laske risteilijärajaan. Ajo 20.10.: liittolais-battleship ilman kolmea liittolaista on punainen (Allied vessels (battleships) 1 / 0); laillista polkua kolmen liittolaisen kanssa ei ajettu.", "vk": "osittain"}
+{"id": "S0382", "l": "OMINAISUUS", "a": "feature", "f": "allies", "p": "F177", "pok": "ok", "n": "Liittolainen saa ostaa yhden oman listansa erikoishahmon (1.1 kieltää erikoishahmot reservilistoilta; tämä on liittolaisten poikkeus). Re-roll-osuus on pelin aikaista. Ajo 20.10.: liittolaisen Admiral hylätään ('Not a reserve type'), vaikka s.177 sallii liittolaiselle yhden erikoishahmon.", "vk": "aukko ajossa"}
+{"id": "S0383", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F177", "pok": "ok", "n": "Demiurg lasketaan 12 risteilijän rajaan ja enintään yksi Stronghold (build_data.py:4231). Varmista molemmat.", "vk": "ajo ok"}
+{"id": "S0384", "l": "OMINAISUUS", "a": "feature", "f": "ally_ban", "p": "F177", "pok": "ok", "n": "Ei Demiurgia, jos SM-aluksia on reserveinä, liittolaisina tai apualuksina. Ajo 20.10.: Exploration + SM-liittolainen + Demiurg menee läpi.", "vk": "aukko ajossa"}
+{"id": "S0385", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F177", "pok": "ok", "n": "Kroot Warsphere ei laske 12 risteilijän rajaan (oma osio).", "vk": "koodi luettu"}
+{"id": "S0386", "l": "OMINAISUUS", "a": "feature", "f": "ally_ban", "p": "F177", "pok": "ok", "n": "Ei Warsphereä, jos SM-aluksia on mukana."}
+{"id": "S0387", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F178", "pok": "ok", "n": "Kerronta."}
+{"id": "S0388", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F178", "pok": "ok", "n": "Kerronta."}
+{"id": "S0389", "l": "PELI", "a": "play", "f": "card_rule", "p": "F178", "pok": "ok", "n": "-1 Ld kortilla (domain.js:2999)."}
+{"id": "S0390", "l": "LASKETTAVA", "a": "roster", "f": "attack_rating", "p": "F178", "pok": "ok", "n": "Pirates 3."}
+{"id": "S0391", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F178", "pok": "ok", "n": "Skenaario."}
+{"id": "S0392", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F178", "pok": "ok", "n": "Kampanja."}
+{"id": "S0393", "l": "KUVAUS", "a": "row", "f": "reroll_price", "p": "F178", "pok": "ok", "n": "Re-rollit riveinä."}
+{"id": "S0394", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F178", "pok": "ok", "n": "Pirate Captain kalleimmalle alukselle (useampi kapteeni = useampi kallein). Sovellus voisi nimetä aluksen."}
+{"id": "S0395", "l": "PELI", "a": "play", "f": "reroll_use", "p": "F178", "pok": "ok", "n": "Re-rollien käyttö."}
+{"id": "S0396", "l": "VALVOTTU", "a": "checked", "f": "allies", "p": "F178", "pok": "ok", "n": "Merirosvot eivät liittoudu. Varmista, ettei Pirates-listalle tarjota liittolaisia.", "vk": "ajo ok"}
+{"id": "S0397", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F178", "pok": "ok", "n": "Merirosvoristeilijät riveinä (J30, build_data.py:3101)."}
+{"id": "S0398", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F178", "pok": "ok", "n": "SM Strike Cruiser mx=1 (build_data.py:3103)."}
+{"id": "S0399", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F178", "pok": "ok", "n": "noopt kaikilla merirosvoristeilijöillä."}
+{"id": "S0400", "l": "RAKENNE", "a": "guaranteed", "f": "no_limit", "p": "F178", "pok": "ok", "n": "Ei lisärajaa."}
+{"id": "S0401", "l": "RAKENNE", "a": "guaranteed", "f": "ship_type", "p": "F178", "pok": "ok", "n": "Lasketaan per_points-risteilijäsääntöön."}
+{"id": "S0402", "l": "KUVAUS", "a": "row", "f": "row_offered", "p": "F179", "pok": "ok", "n": "Kuljetukset maksavat kuten rivillä."}
+{"id": "S0403", "l": "TAUSTA", "a": "drop", "f": "intro", "p": "F179", "pok": "ok", "n": "Johdanto seuraavaan."}
+{"id": "S0404", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F179", "pok": "ok", "n": "compare samassa osiossa, yhdistelmä-src (build_data.py:3130)."}
+{"id": "S0405", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F179", "pok": "ok", "n": "Sama compare."}
+{"id": "S0406", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F179", "pok": "ok", "n": "points_share 10 % (build_data.py:1600); src päättyy ennen esimerkkiä 'such as Nicassar Dhows or Tau Orcas'."}
+{"id": "S0407", "l": "VALVOTTU", "a": "checked", "f": "squadron_rule", "p": "F179", "pok": "ok", "n": "Laivuekoko 2–6; rotujen sekoitus ei ole mahdollista (yksi rivi = yksi laivue). Varmista kokosääntö.", "vk": "ajo ok"}
+{"id": "S0408", "l": "TAUSTA", "a": "drop", "f": "example", "p": "F179", "pok": "ok", "n": "Esimerkki."}
+{"id": "S0409", "l": "OMINAISUUS", "a": "feature", "f": "squadron_group", "p": "F179", "pok": "ok", "n": "Poikkeus: RT Xenos Vessels saavat liittyä muiden laivueisiin. Sekalaivue vaatii laivueen ryhmänä."}
+{"id": "S0410", "l": "OMINAISUUS", "a": "feature", "f": "squadron_group", "p": "F179", "pok": "ok", "n": "Edellisen jatko."}
+{"id": "S0411", "l": "PELI", "a": "play", "f": "card_rule", "p": "F179", "pok": "ok", "n": "Xenos-saattajat eivät käytä kapteenin re-rolleja ja disengage crippled-tilassa; kortille."}
+{"id": "S0412", "l": "PELI", "a": "play", "f": "card_rule", "p": "F179", "pok": "ok", "n": "Xenosten oma Ld (domain.js:3003)."}
+{"id": "S0413", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F226", "pok": "ok", "n": "Kerronta."}
+{"id": "S0414", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F226", "pok": "ok", "n": "Kerronta."}
+{"id": "S0415", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F226", "pok": "ok", "n": "Kerronta."}
+{"id": "S0416", "l": "TAUSTA", "a": "drop", "f": "modelling", "p": "F227", "pok": "ok", "n": "Mallinnus: Daemonship-osat eivät muuta profiilia."}
+{"id": "S0417", "l": "ROSKA", "a": "fix", "f": "table_merge", "p": "F227", "pok": "osittain", "x": "table", "n": "Hintalista pistejonoineen ja komentajakielto yhdessä. Hinnat ovat riveinä; komentajakielto (Warmaster/Lord ei Daemonshipillä) = aboard."}
+{"id": "S0418", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F227", "pok": "ok", "n": "noup chaos space marine crew (upgrades.py:1280)."}
+{"id": "S0419", "l": "RAKENNE", "a": "guaranteed", "f": "no_limit", "p": "F227", "pok": "ok", "n": "Ei yleistä rajaa; jumalalistojen osuudet ovat upgrade_ratio-sääntöinä."}
+{"id": "S0420", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F227", "pok": "ok", "n": "Exterminatus ja planetary assault."}

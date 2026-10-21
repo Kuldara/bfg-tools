@@ -1,0 +1,388 @@
+{
+  "list": "Chaos — Slaanesh",
+  "book_page": 248,
+  "read_pages": [
+    248,
+    249
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Chaos Warmaster",
+      "text": "0-1 Chaos Warmaster of Slaanesh",
+      "page": 248,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "must be taken in fleets of 750 points or more",
+      "text": "A Chaos Warmaster (and their required capital ship) must be taken in fleets of 750 points or more.",
+      "page": 248,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "over": false,
+      "why": "Kirjan sanamuoto on 'in fleets of 750 points or more', ei 'worth ... or more'. MAND_GE laajennettiin 7.9.2026, ja samalla vartija vaihdettiin: se vertaa nyt lauseen sanoja OSION otsikkoon eika etsi johtamiseen viittaavaa sanaa. Ilman muutosta tama saanto puuttui viidesta listasta."
+    },
+    {
+      "key": "You can only include a Chaos Warmaster in your fleet if it includes any capital ships",
+      "text": "You can only include a Chaos Warmaster in your fleet if it includes any capital ships.",
+      "page": 248,
+      "status": "manual",
+      "why": "Ehto riippuu siita onko laivastossa runkoaluksia; moottorissa ei ole ehdollisia komentajarajoja."
+    },
+    {
+      "key": "Any capital ship can be designated as having",
+      "text": "Any capital ship can be designated as having a Emperor's Children Chaos Space Marine crew at +35 points.",
+      "page": 248,
+      "status": "manual",
+      "why": "Hinnoiteltu optio; rivi on valittavissa."
+    },
+    {
+      "key": "battleships and grand cruisers with Chaos Space Marine",
+      "text": "For +10 points, battleships and grand cruisers with Chaos Space Marine Warmasters, Lords or crews may include Chosen Terminators.",
+      "page": 248,
+      "status": "manual",
+      "why": "Hinnoiteltu optio, jonka ehto koskee aluksen tyyppia ja miehistoa."
+    },
+    {
+      "key": "A fleet of 1,000 points or more may include the Planet Killer",
+      "text": "A fleet of 1,000 points or more may include the Planet Killer.",
+      "page": 249,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. allowed_at: Planet Killer sallitaan vain 1000 pisteen rajasta. Aiempi puute: Pisterajaan sidottu LUPA, ei pakko. Sama puuttuva saantotyyppi kuin Space Marinesin Fortress-Monasteryssa ja Inkvisition Inquisitor Lordissa.",
+      "kind": "allowed_at",
+      "points": 1000,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "0-1 Planet Killer",
+      "text": "0-1 Planet Killer",
+      "page": 249,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "You may include up to one Space Hulk in the fleet",
+      "text": "You may include up to one Space Hulk in the fleet. See its profile for restrictions and how to include it.",
+      "page": 249,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1,
+      "why": "Kirja kirjoittaa taman rajan kahdesti: otsikkona ja lauseena. Sovellus naytti niista kaksi identtista riviä, kunnes ne yhdistettiin 7.9.2026. Jaljelle jaa yksi tarkistus, jonka lahdelause on kirjan taysi virke."
+    },
+    {
+      "key": "one battleship in your fleet for every three cruisers or heavy cruisers",
+      "text": "You may include up to one battleship in your fleet for every three cruisers or heavy cruisers.",
+      "page": 249,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 3,
+      "per_types": [
+        "cruisers",
+        "heavy cruisers"
+      ],
+      "why": "Nimittaja kattaa molemmat tyypit vasta 7.9.2026 jalkeen; ennen sita 'or heavy cruisers' typistyi pois ja tarkistus oli liian tiukka."
+    },
+    {
+      "key": "one grand cruiser in your fleet for every three cruisers or heavy cruisers",
+      "text": "You may include up to one grand cruiser in your fleet for every three cruisers or heavy cruisers.",
+      "page": 249,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 3,
+      "per_types": [
+        "cruisers",
+        "heavy cruisers"
+      ]
+    },
+    {
+      "key": "one heavy cruiser in your fleet for every two cruisers",
+      "text": "You may include up to one heavy cruiser in your fleet for every two cruisers.",
+      "page": 249,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 2,
+      "per_types": [
+        "cruisers"
+      ]
+    },
+    {
+      "key": "0-12 Cruisers",
+      "text": "0-12 Cruisers",
+      "page": 249,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 12
+    },
+    {
+      "key": "escorts in your fleet in squadrons of 2",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "page": 249,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "Ships with launch bays can have a mixture",
+      "text": "Ships with launch bays can have a mixture of Swiftdeath fighters, Doomfire bombers and Dreadclaw assault craft. Ships with torpedo tubes are armed with normal and boarding torpedoes.",
+      "page": 249,
+      "status": "manual",
+      "why": "Kirjan lause nakyy osion tekstina. Ordnance-tyyppi valitaan pelin aikana, joten valvottavaa ei ole. (Aiemmin 'not_shown': RULEY ei tuntenut sanaa 'can', 7.9.2026 korjattu.)"
+    },
+    {
+      "key": "Up to half of the capital ships (not the Wage of Sin or the flagship) ",
+      "text": "Up to half of the capital ships (not the Wage of Sin or the flagship) in a Pleasurefleet may be upgraded to Daemonships at the additional points cost shown, based upon the type of vessel chosen.",
+      "page": 249,
+      "status": "manual",
+      "why": "Lause nakyy; osuutta ei valvota, koska lippulaiva ei ole mallinnettu. Pelaajan vastuu.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "A Daemonship may not be commanded by a Warmaster or a Chaos Lord",
+      "text": "A Daemonship may not be commanded by a Warmaster or a Chaos Lord, even if it is the largest ship in the fleet ... A Daemonship may not have a Chaos Space Marine crew.",
+      "page": 249,
+      "status": "manual",
+      "why": "Sovellus ei sido komentajaa yksittaiseen alukseen, joten kieltoa ei voi valvoa."
+    },
+    {
+      "key": "may not have a Chaos Space Marine crew",
+      "text": "A Daemonship may not be commanded by a Warmaster or a Chaos Lord, even if it is the largest ship in the fleet ... A Daemonship may not have a Chaos Space Marine crew.",
+      "page": 249,
+      "status": "manual",
+      "why": "Kaksi paivitysta jotka sulkevat toisensa pois. Molemmat ovat listariveina, mutta poissulkevuus jaa pelaajalle: ne ovat eri osioissa eivatka jaa samaan ryhmaan."
+    },
+    {
+      "key": "Up to two capital ships with the Mark of Slaanesh",
+      "text": "Up to two capital ships with the Mark of Slaanesh (including the flagship) may take the Siren’s Summon.",
+      "page": 249,
+      "status": "manual",
+      "why": "Valvottu rivikohtaisena rajana (mx=2): laskenta kayy lapi kaikki alukset ja katsoo montako on ottanut taman paivityksen. Kirja ei kirjoita rivin eteen '0-2', joten raja on asetettu kasin."
+    },
+    {
+      "key": "A fleet 1,000 points or more may include the Wage of Sin",
+      "text": "A fleet 1,000 points or more may include the Wage of Sin as one of its battleships, subject to normal restrictions.",
+      "page": 249,
+      "status": "enforced",
+      "kind": "allowed_at",
+      "points": 1000,
+      "why": "Valvottu 10.9.2026 (laivastopistokoe, raportti 17): lause oli pelkkana tekstina, saannoksi build_data.py:n RULE_PICKS-taulussa; resolveFleet tarkistaa sen (allowed_at).",
+      "classified_on": "2026-09-10"
+    },
+    {
+      "key": "one cruiser from any Imperial Navy fleet list up to 185 points",
+      "text": "For every 1,500 points in a Chaos fleet, one cruiser from any Imperial Navy fleet list up to 185 points and/or up to six Imperial Navy escorts may be taken. Special weapon rules, Nova Cannon, Chaos Lords, Chaos Space Marines, Chaos ordnance or Daemonship upgrades may not be taken for Imperial Navy vessels used in this manner, and cruisers suffer -1Ld for going renegade. Imperial Navy escorts need not be in a single squadron and may be interspersed within other Chaos escort squadrons if desired. These vessels may not take any upgrade listed in their profile and do not count as reserves; they count as Chaos vessels in all respects.",
+      "page": 222,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "chaos-renegade-cruiser-per-1500-points",
+        "chaos-renegade-cruiser-under-1500-points",
+        "chaos-renegade-escorts-seven-is-too-many",
+        "chaos-renegade-cruiser-fills-the-chaos-limit"
+      ],
+      "why": "1.1 (14.9.2026): oma osio RENEGADE IMPERIAL VESSELS, jossa Imperiumin rungot (risteilijat enintaan 185 p ja saattajat) ilman profiilipaivityksia (noopt). Kaksi per_points-saantoa: yksi risteilija ja kuusi saattajaa per TAYSI 1500 pistetta (lause ei sano 'or part thereof'). Lauseen loppu 'they count as Chaos vessels in all respects' toteutuu silla, etta listan oma 0-12 Cruisers ja saattajalaivuesaanto laskevat nama mukaan (section_count.pick). Sivu 222 ei mahdu listojen saantoikkunaan (lists.py rules_pages, kuusi sivua), joten osion teksti kantaa lauseen pelaajalle."
+    },
+    {
+      "key": "Abaddon can be chosen to act as fleet commander in any game in which the Chaos fleet is worth 1,000 points or more",
+      "text": "Abaddon can be chosen to act as fleet commander in any game in which the Chaos fleet is worth 1,000 points or more.",
+      "page": 231,
+      "status": "enforced",
+      "kind": "allowed_at",
+      "points": 1000,
+      "why": "Kayttajan paatos 13.10.2026 (BACKLOG J162): Abaddonin yleissaanto s.231 koskee mita tahansa Chaos-laivastoa. Listan Fleet Commander -osio ei luettele hanta, mutta listan oma Planet Killer -rivi (s.249: 'If Abaddon is present, he must be aboard the Planet Killer') ja jumalan bargen profiili varautuvat haneen. Sama lause kantaa rajan Warmaster tai Abaddon (cap 1), ja pakollinen Warmaster tayttyy hanella. Rivi on kopio Black Crusaden rivista.",
+      "classified_on": "2026-10-13"
+    }
+  ],
+  "entries": [
+    {
+      "name": "Chaos Warmaster (Ld +2)",
+      "pts": 100,
+      "page": null
+    },
+    {
+      "name": "Chaos Lord (Ld +1)",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Wage of Sin",
+      "pts": 430,
+      "page": 260,
+      "mx": 1,
+      "why": "Kirja kirjoittaa rivin muodossa '0-1 Nimi' ILMAN sulkeita. Jasennin tunsi vain muodon '(0-1) Nimi', joten '0-1' jai osaksi nimea ja maararaja jai valvomatta. Korjattu 7.9.2026; koski yhdeksaa rivia viidessa listassa."
+    },
+    {
+      "name": "Veil of Lust",
+      "pts": 20,
+      "page": null
+    },
+    {
+      "name": "Siren's Summon",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Chaos Space Hulk",
+      "pts": 650,
+      "page": 286
+    },
+    {
+      "name": "Chaos battle barge",
+      "pts": 410,
+      "page": 255
+    },
+    {
+      "name": "Despoiler class battleship",
+      "pts": 400,
+      "page": 266
+    },
+    {
+      "name": "Desolator class battleship",
+      "pts": 300,
+      "page": 267
+    },
+    {
+      "name": "Repulsive class grand cruiser",
+      "pts": 230,
+      "page": 269
+    },
+    {
+      "name": "Styx class heavy cruiser",
+      "pts": 260,
+      "page": 272
+    },
+    {
+      "name": "Hecate class heavy cruiser",
+      "pts": 230,
+      "page": 273
+    },
+    {
+      "name": "Hades class heavy cruiser",
+      "pts": 200,
+      "page": 274
+    },
+    {
+      "name": "Acheron class heavy cruiser",
+      "pts": 190,
+      "page": 275
+    },
+    {
+      "name": "Devastation class cruiser",
+      "pts": 190,
+      "page": 276
+    },
+    {
+      "name": "Carnage class cruiser",
+      "pts": 180,
+      "page": 277
+    },
+    {
+      "name": "Inferno class cruiser",
+      "pts": 180,
+      "page": 278
+    },
+    {
+      "name": "Murder class cruiser",
+      "pts": 170,
+      "page": 279
+    },
+    {
+      "name": "Slaughter class cruiser",
+      "pts": 165,
+      "page": 280
+    },
+    {
+      "name": "Idolator class raider",
+      "pts": 45,
+      "page": 281
+    },
+    {
+      "name": "Infidel class raider",
+      "pts": 40,
+      "page": 282
+    },
+    {
+      "name": "Iconoclast class destroyer",
+      "pts": 30,
+      "page": 283
+    },
+    {
+      "name": "Retaliator class grand cruiser",
+      "pts": 260,
+      "page": 268
+    },
+    {
+      "name": "Vengeance class grand cruiser",
+      "pts": 230,
+      "page": 270
+    },
+    {
+      "name": "Executor class grand cruiser",
+      "pts": 210,
+      "page": 271
+    },
+    {
+      "name": "Planet Killer",
+      "pts": 505,
+      "page": 252
+    },
+    {
+      "name": "Daemonship: Battleship",
+      "pts": 75,
+      "page": null,
+      "sec": "DAEMONSHIPS",
+      "grp": "daemon"
+    },
+    {
+      "name": "Daemonship: Grand cruiser",
+      "pts": 55,
+      "page": null,
+      "sec": "DAEMONSHIPS",
+      "grp": "daemon"
+    },
+    {
+      "name": "Daemonship: Heavy cruiser",
+      "pts": 50,
+      "page": null,
+      "sec": "DAEMONSHIPS",
+      "grp": "daemon"
+    },
+    {
+      "name": "Daemonship: Cruiser",
+      "pts": 45,
+      "page": null,
+      "sec": "DAEMONSHIPS",
+      "grp": "daemon"
+    },
+    {
+      "name": "Siren’s Summon",
+      "pts": null,
+      "page": null,
+      "sec": "FORCES OF CHAOS",
+      "mx": 2
+    },
+    {
+      "name": "Abaddon (Ld 10)",
+      "pts": 195,
+      "page": null
+    }
+  ],
+  "notes": [
+    "Pleasurefleet.",
+    "Runko on sama kuin Chaos Incursionissa: sama Space Hulk -raja, samat kolme suhdelukua ja sama 0-12 risteilijaa.",
+    "Daemonship-hinnasto on kirjassa oma taulukkonsa; sovellus tarjoaa rivit 'Battleship / Grand cruiser / Heavy cruiser / Cruiser' omassa DAEMONSHIPS-osiossaan.",
+    "DAEMON SHIPS -hinnasto on kirjassa pelkkina alusluokkina, koska osion otsikko kertoo mita ostetaan: 'Battleship +50 / Grand cruiser +30 / Heavy cruiser +25 / Cruiser +20'. Sovelluksessa rivi nakyi 7.9.2026 asti nimella 'Grand Cruiser +50', joka ei kerro mitaan - ja koska osiossa ei ole yhtaan alusta, rivit tarjottiin JOKAISELLE alukselle. Grand cruiserille tarjottiin siis yhta aikaa kolmea eri hintaa. Nyt rivi on 'Daemonship: <luokka>' ja kiinnitetty siihen osioon jonka otsikko on sama luokka monikossa.",
+    "13.10.2026 (J162): Abaddon lisatty kayttajan paatoksella s.231:n yleissaannon perusteella; hinta 195 on painettu vain Black Crusade -listaan (s.234)."
+  ]
+}

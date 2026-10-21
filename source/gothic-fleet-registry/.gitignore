@@ -1,0 +1,40 @@
+# Periaate: versionhallintaan tulee kaikki, minkä ihminen on kirjoittanut tai
+# kirjasta lukenut. Ulos jää se, minkä build tuottaa uudelleen.
+#
+# Poikkeuksia periaatteeseen on kaksi, molemmat tarkoituksellisia:
+#   bfg_data.json   on generoitu, mutta sen diff on luettavaa JSONia ja se on
+#                   ainoa paikka, jossa jäsentimen hiljainen muutos näkyy.
+#   SAANTOAUDIT.md  on generoitu, mutta sen diff kertoo mitä sääntöjä
+#                   valvotaan ja mitä ei.
+# Molemmat siis seurataan, jotta muutos näkyy eikä vain tapahdu.
+
+# --- Windows / Google Drive -metatieto ---
+desktop.ini
+Thumbs.db
+
+# --- Python ---
+__pycache__/
+*.pyc
+
+# --- buildin tuotokset (build.py, make_site.py) ---
+Gothic Fleet Registry.html
+julkaisu/site/
+
+# --- esimerkkikorttien generoitu HTML (make_fleet_cards.js) ---
+# PNG-kuvat seurataan, koska ne ovat julkaisun visuaalinen tallenne.
+julkaisu/esimerkkikortit/*.html
+
+# --- acceptance.py:n mittausraportti ---
+# Generoitu ja aikaleimattu, joten se likaisi git-tilan jokaisella ajolla.
+# Luodaan komennolla: python acceptance.py
+docs/DEVELOPMENT_STATUS.md
+
+# --- jakelupaketti pakataan käsin, eikä git hallitse sitä ---
+share version/
+
+# --- layout_check.js:n mittaussivut ja raportti (--keep, --dump) ---
+_layout_*.html
+_layout_report.json
+
+# --- pelikortin build (play/build_play.py) ---
+play/Gothic Fleet Play.html

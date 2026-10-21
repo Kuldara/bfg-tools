@@ -1,0 +1,60 @@
+{"id": "S0061", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F39", "pok": "osittain", "n": "Bastionin Chaos-reservit ja 1:3-suhde on toteutettu (build_data.py:4688–4714). Lauseeseen on liimattu viiden rungon luettelomerkit sivuviitteineen.", "vk": "ajo ok"}
+{"id": "S0062", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F39", "pok": "ok", "n": "Varianttikielto on noopt-ehtona (build_data.py:4712). Ordnance-osuus on pelin aikaista."}
+{"id": "S0063", "l": "PELI", "a": "play", "f": "strange_happenings", "p": "F39", "pok": "ok", "n": "Strange happenings; reservi-Chaos-runkojen kortilla (J153).", "vk": "ajo ok"}
+{"id": "S0064", "l": "PELI", "a": "play", "f": "strange_happenings", "p": "F39", "pok": "ok", "n": "Strange happenings."}
+{"id": "S0065", "l": "PELI", "a": "play", "f": "strange_happenings", "p": "F39", "pok": "ok", "n": "Strange happenings; kortin teksti domain.js:2889."}
+{"id": "S0066", "l": "VALVOTTU", "a": "checked", "f": "commander_count", "p": "F40", "pok": "ok", "n": "Komentajan määrä on osion rajana; sijoitus alukselle tehdään pöydällä; Ld on komentajakortilla. Sama lausetyyppi kuin S0020.", "vk": "ajo ok"}
+{"id": "S0067", "l": "KUVAUS", "a": "row", "f": "rerolls_included", "p": "F40", "pok": "ok", "n": "Sisältyvä re-roll; komentajakortille."}
+{"id": "S0068", "l": "RAKENNE", "a": "guaranteed", "f": "row_attach", "p": "F40", "pok": "ok", "n": "Admiral Re-rolls -rivit tarjotaan vain amiraalille ja MoF-rivit vain MoF:lle (ajo 20.10.).", "vk": "ajo ok"}
+{"id": "S0069", "l": "VALVOTTU", "a": "checked", "f": "other_section", "p": "F40", "pok": "ok", "n": "requires-sääntö Fleet Commander -osiossa (build_data.py:4294), lause on Master of the Fleet Re-rolls -osiossa. 'Always assigned to a Battle barge' on sijoitus, jota ei mallinneta (J8)."}
+{"id": "S0070", "l": "VALVOTTU", "a": "checked", "f": "other_section", "p": "F40", "pok": "ok", "n": "requires-sääntö Fleet Commander -osiossa (build_data.py:4298), lause on toisessa osiossa."}
+{"id": "S0071", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F41", "pok": "ok", "n": "Reservit toteutettu 1.1:ssä."}
+{"id": "S0072", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F41", "pok": "ok", "n": "Rotuportti (1.1): Imperial Navy -rodun lista ottaa reservit vain saman rodun listoista.", "vk": "ajo ok"}
+{"id": "S0073", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F41", "pok": "ok", "n": "LEND_BANS (build_data.py:5436) ja domain.js:4703."}
+{"id": "S0074", "l": "VALVOTTU", "a": "checked", "f": "squadron_rule", "p": "F41", "pok": "ok", "n": "split_fl laivuesäännössä (build_data.py:4087, domain.js:4199)."}
+{"id": "S0075", "l": "KUVAUS", "a": "row", "f": "rerolls_included", "p": "F48", "pok": "ok", "n": "Sisältyvät re-rollit (Rath kaksi); komentajakortille."}
+{"id": "S0076", "l": "KUVAUS", "a": "row", "f": "reroll_price", "p": "F48", "pok": "ok", "n": "Lisä-re-rollit riveinä."}
+{"id": "S0077", "l": "KUVAUS", "a": "row", "f": "rerolls_included", "p": "F48", "pok": "ok", "n": "Rathin Ld 10 ja kaksi re-rollia; komentajarivin kuvaus."}
+{"id": "S0078", "l": "PELI", "a": "play", "f": "commander_effect", "p": "F48", "pok": "ok", "n": "Rathin miehistön boarding-puolustus +1; komentajakortille."}
+{"id": "S0079", "l": "PELI", "a": "play", "f": "random_refit", "p": "F48", "pok": "ok", "n": "Lippulaiva saa yhden ship refitin ja weapon refitin arvottuna ennen peliä; komentajakortille."}
+{"id": "S0080", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F48", "pok": "ok", "n": "Kampanjasääntö."}
+{"id": "S0081", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F48", "pok": "ok", "n": "Dominus Astran tarina."}
+{"id": "S0082", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F48", "pok": "ok", "n": "Tarina."}
+{"id": "S0083", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F48", "pok": "ok", "n": "0-1 on rivirajana ja 'vain reservinä, ellei Rath johda' requires-sääntönä s.49:n sanamuodolla (build_data.py:1527). Avoin osa: 'must be his flagship' = sijoitus (J8)."}
+{"id": "S0084", "l": "VALVOTTU", "a": "checked", "f": "ratio_base", "p": "F49", "pok": "ok", "n": "Reservinä otettu grand cruiser ei laske Bakan taistelulaivasuhteeseen. Varmista: Bakan omalla listalla ei ole GC:itä, joten koskee vain lainattuja.", "vk": "ajo ok"}
+{"id": "S0085", "l": "RAKENNE", "a": "guaranteed", "f": "no_limit", "p": "F49", "pok": "ok", "n": "Ei rajaa = ei valvottavaa. Varmista, ettei Bakalle ole periytynyt Endurance-rajaa.", "vk": "ajo ok"}
+{"id": "S0086", "l": "PELI", "a": "play", "f": "ordnance_choice", "p": "F49", "pok": "ok", "n": "Ordnance valitaan pelissä."}
+{"id": "S0087", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F49", "pok": "ok", "n": "Torpedo bombers -rivin hinta (upgrades.py:453)."}
+{"id": "S0088", "l": "KUVAUS", "a": "drop", "f": "ship_option_pointer", "p": "F49", "pok": "ok", "n": "Sama osto kuin Emperorin oma optio s.53, jonka sovellus myy kerran (pistokoe 15)."}
+{"id": "S0089", "l": "OMINAISUUS", "a": "feature", "f": "lend_route", "p": "F49", "pok": "ok", "n": "AdMech-risteilijät Bakan battlecruiser-paikoille (lasketaan battlecruisereiksi). Koodista ei löytynyt tätä reittiä."}
+{"id": "S0090", "l": "OMINAISUUS", "a": "feature", "f": "lend_route", "p": "F49", "pok": "ok", "n": "Edellisen reitin säännöt: ei reservejä (ei 1:3-kiintiötä), ei disengagea crippled-tilassa, saa käyttää komentajan re-rolleja. Osa pelin aikaista (kortille)."}
+{"id": "S0091", "l": "OMINAISUUS", "a": "feature", "f": "lend_route", "p": "F49", "pok": "ok", "n": "Archmagos-kielto, kun AdMech-risteilijät otetaan battlecruisereina."}
+{"id": "S0092", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F50", "pok": "ok", "n": "build_data.py:1532 rakensi tästä ratio-säännön keep_text-lipulla, mutta src ei ole enää datassa; 1.1:n reservimoottori voi kattaa saman. Varmista kumpi valvoo.", "vk": "ajo ok"}
+{"id": "S0093", "l": "VALVOTTU", "a": "checked", "f": "other_section", "p": "F50", "pok": "ok", "n": "per_points ROGUE TRADERS -osiossa (SRC-osuma), lause on RESERVES-osiossa."}
+{"id": "S0094", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F50", "pok": "ok", "n": "Bakka lainaa aluksia muille Imperial-listoille 1.1-mekanismilla; refitit kulkevat lahjoittajan päivityksinä.", "vk": "ajo ok"}
+{"id": "S0095", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F50", "pok": "ok", "n": "Lainatut alukset lasketaan isännän rajoihin (s.14 'fleet as a whole', 1.1).", "vk": "ajo ok"}
+{"id": "S0096", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F50", "pok": "ok", "n": "Reservin reservi -kielto domain.js:425."}
+{"id": "S0097", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F50", "pok": "ok", "n": "Sama kielto, kirjan esimerkki (Jovian)."}
+{"id": "S0098", "l": "TAUSTA", "a": "drop", "f": "modelling", "p": "F50", "pok": "ok", "n": "Mallinrakennusvinkki."}
+{"id": "S0099", "l": "TAUSTA", "a": "drop", "f": "modelling", "p": "F50", "pok": "ok", "n": "Mallinrakennusvinkki."}
+{"id": "S0100", "l": "TAUSTA", "a": "drop", "f": "modelling", "p": "F50", "pok": "ok", "n": "Mallien esittäminen."}
+{"id": "S0101", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F50", "pok": "ok", "n": "Kerronta."}
+{"id": "S0102", "l": "OMINAISUUS", "a": "feature", "f": "lend_route", "p": "F50", "pok": "ok", "n": "Bakkaan tuotu AdMech-runkoalus saa Fleet Defence Turrets -refitin Gifts-heiton sijaan. Varmista, tarjotaanko refit lainatulle AdMech-rungolle. Ajo 20.10.: Bakkaan lainatulle AdMech-alukselle ei tarjota Fleet Defence Turret -refitiä.", "vk": "aukko ajossa"}
+{"id": "S0103", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F50", "pok": "ok", "n": "Fleet Defence Turretsin vaikutus; rivin kuvaukseksi ja kortille."}
+{"id": "S0104", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F50", "pok": "ok", "n": "+1 turret -rivin ehto cap=1 (upgrades.py:482)."}
+{"id": "S0105", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F50", "pok": "ok", "n": "Ei lasketa refitiksi (kampanja); rivin kuvaukseksi."}
+{"id": "S0106", "l": "OMINAISUUS", "a": "feature", "f": "lend_upgrade_ban", "p": "F50", "pok": "ok", "n": "Bakan +1 turret -refit tarjotaan Bakkaan lainatulle alukselle (Gothic-listan Lunar, ajo 20.10.), vaikka s.50 sanoo 'Reserve vessels may not be given this upgrade'. Toinen puoli toimii: Bakka-alus muualla reservinä saa refitin.", "vk": "VIRHE ajossa"}
+{"id": "S0107", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F91", "pok": "ok", "n": "Kerronta."}
+{"id": "S0108", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F91", "pok": "ok", "n": "Kerronta."}
+{"id": "S0109", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F91", "pok": "ok", "n": "Kerronta."}
+{"id": "S0110", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F91", "pok": "ok", "n": "Kerronta."}
+{"id": "S0111", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F91", "pok": "ok", "n": "Sitaatti."}
+{"id": "S0112", "l": "TAUSTA", "a": "drop", "f": "heading_merge", "p": "F94", "pok": "osittain", "n": "Kolme otsikkoa liimattuna kerrontavirkkeeseen."}
+{"id": "S0113", "l": "PELI", "a": "play", "f": "leadership_roll", "p": "F94", "pok": "ok", "n": "SM:n Ld-taulukko; kortille tai Play-sivun muistutukseksi (ei automatiikkaa, J198)."}
+{"id": "S0114", "l": "ROSKA", "a": "fix", "f": "table_merge", "p": "F94", "pok": "ok", "n": "Ld-taulukko ja ATTACK RATING -kappale samassa lauseessa. Jaettava: taulukko = PELI, attack rating 3 = LASKETTAVA."}
+{"id": "S0115", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F94", "pok": "ok", "n": "SM boarding +2 / hit and run +1; kortilla astartes_core-sääntönä.", "vk": "ajo ok"}
+{"id": "S0116", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F94", "pok": "ok", "n": "Exterminatus-skenaario."}
+{"id": "S0117", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F95", "pok": "ok", "n": "Boarding torpedoes; kortilla Astartes Torpedoes.", "vk": "ajo ok"}
+{"id": "S0118", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F95", "pok": "ok", "n": "Thunderhawkin säännöt; kortilla laukaisukuilun viitteenä."}
+{"id": "S0119", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F95", "pok": "osittain", "n": "Thunderhawk; sulkeen sisältö on katkennut ('( However')."}
+{"id": "S0120", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F95", "pok": "ok", "n": "Thunderhawk."}

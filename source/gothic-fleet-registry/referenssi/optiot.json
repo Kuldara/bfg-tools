@@ -1,0 +1,377 @@
+{
+  "_lue": "Aluksen optioiden vaikutukset, luettu kirjasta. audit_effects.py tuottaa tarkistusjonon niista optioista, joiden teksti lupaa profiilimuutosta mutta joilla ei ole rakenteista vaikutusta; tama tiedosto on se, mihin paatos kirjataan. Kuitattu rivi poistuu jonosta.",
+  "_saanto": "Kuittaus ilman sivunumeroa ei kelpaa. Vaikutus toteutetaan build_data.py:n OPT_EFFECTS-tauluun - se on ainoa paikka, jossa vaikutus saa syntya. Ala paattele vaikutusta tekstista ajonaikaisesti.",
+  "_avaimet": {
+    "ship": "aluksen nimi tasmalleen kuten bfg_data.jsonissa",
+    "text": "option teksti (riittaa alku, tasmays tehdaan 120 merkin tarkkuudella)",
+    "page": "kirjan sivu, jolta paatos on luettu",
+    "effect": "rakenteinen vaikutus, tai null jos optio EI muuta profiilia",
+    "why": "yhdella lauseella: mita sivulla lukee ja mita siita seuraa",
+    "verified": "true vasta kun sivu on todella luettu"
+  },
+  "_esimerkki": {
+    "ship": "MARS CLASS BATTLECRUISER",
+    "text": "May purchase a third turret for an additional +10 points.",
+    "page": 61,
+    "effect": { "mod": { "tu": 1 } },
+    "why": "Kirja: kolmas torni +10 pts. Perusarvo 2, joten lisays on +1 eika asetus 3 - lisays kestaa paremmin datan muutoksen.",
+    "verified": true
+  },
+  "_esimerkki_ei_vaikutusta": {
+    "ship": "INQUISITORIAL CRUISER",
+    "text": "If the torpedo refit is taken, the ship does not have to be modified",
+    "page": 150,
+    "effect": null,
+    "why": "Lause koskee pienoismallin rakentamista, ei pelin profiilia. Ei mallinneta.",
+    "verified": true
+  },
+
+  "options": [
+    {
+      "ship": "MARS CLASS BATTLECRUISER",
+      "text": "May purchase a third turret for an additional +10 points.",
+      "page": 61,
+      "effect": { "mod": { "tu": 1 } },
+      "why": "Kirja s.61: kolmas torni +10 pts. Statsirivi TURRETS 2, joten lisays +1 antaa 3. Toteutettu OPT_EFFECTS (P1-2).",
+      "verified": true
+    },
+    {
+      "ship": "OVERLORD CLASS BATTLECRUISER",
+      "text": "Can have its turret array upgraded from 2 to 3",
+      "page": 66,
+      "effect": { "mod": { "tu": 1 } },
+      "why": "Kirja s.66: 'turret array upgraded from 2 to 3 at an additional cost of +10 pts'. Perus 2, lisays +1. Toteutettu OPT_EFFECTS (P1-2).",
+      "verified": true
+    },
+    {
+      "ship": "STRIKE CRUISER",
+      "text": "May take an additional shield for +15 points.",
+      "page": 105,
+      "effect": { "mod": { "sh": 1 } },
+      "why": "Kirja s.105: 'May take an additional shield for +15 points.' Statsirivi SHIELDS 1, joten lisays +1 antaa 2. Toteutettu OPT_EFFECTS (P1-2).",
+      "verified": true
+    },
+    {
+      "ship": "REPULSIVE CLASS GRAND CRUISER",
+      "text": "May have a third shield for +15 pts",
+      "page": 269,
+      "effect": { "mod": { "sh": 1 } },
+      "why": "Kirja s.269: 'May have a third shield for +15 pts, when modelled on a large 60 mm base.' Perus 2, lisays +1. Mallinnusehto ei ole pelisaanto. Toteutettu OPT_EFFECTS (P1-2).",
+      "verified": true
+    },
+    {
+      "ship": "HAMMER CLASS BATTLEKROOZER",
+      "text": "May be equipped with boarding torpedoes for +5 pts",
+      "page": 374,
+      "effect": null,
+      "why": "Rulebook s.78: 'Boarding torpedoes are launched like ordinary torpedoes' - optio antaa aluksen omille torpedoputkille toisen ammuksen, ei uutta aserivia (kayttaja 12.10.2026, J190: 'boarding torb ostos vain sinne optio riviin, ei aseisiin'). Nopeus ja vahvuus lukevat option tekstissa. Aiempi kirjaus: Kirja s.374: '(speed 20 cm; strength D6+2)'. Optio kantaa oman profiilinsa; rivi on kortilla vain valittuna. Kaari on keulaputkien (Front). Keulan launchat ovat aina aluksella (s.374 \"In each turn, these launchas can either fire torpedoes or be used as a bombardment cannon\"), joten optio ei riipu keulavalinnasta. Toteutettu OPT_EFFECTS add (P1-3).",
+      "verified": true
+    },
+    {
+      "ship": "GORBAG’S REVENGE BATTLESHIP",
+      "text": "May be equipped with boarding torpedoes for +5 pts",
+      "page": 377,
+      "effect": null,
+      "why": "Rulebook s.78: 'Boarding torpedoes are launched like ordinary torpedoes' - optio antaa aluksen omille torpedoputkille toisen ammuksen, ei uutta aserivia (kayttaja 12.10.2026, J190: 'boarding torb ostos vain sinne optio riviin, ei aseisiin'). Nopeus ja vahvuus lukevat option tekstissa. Aiempi kirjaus: Kirja s.377: '(speed 20 cm; strength D6+2)'. Aluksella on keulatorpedot (Front). Toteutettu OPT_EFFECTS add (P1-3).",
+      "verified": true
+    },
+    {
+      "ship": "TERROR SHIP",
+      "text": "If fitted with a torpedo launcha, it may carry boarding torpedoes",
+      "page": 380,
+      "effect": null,
+      "why": "Rulebook s.78: 'Boarding torpedoes are launched like ordinary torpedoes' - optio antaa aluksen omille torpedoputkille toisen ammuksen, ei uutta aserivia (kayttaja 12.10.2026, J190: 'boarding torb ostos vain sinne optio riviin, ei aseisiin'). Nopeus ja vahvuus lukevat option tekstissa. Aiempi kirjaus: Kirja s.380: '(Speed 20 cm, Strength D6+2) at a cost of +5'. Edellyttaa torpedo launchaa (datassa dep). Toteutettu OPT_EFFECTS add (P1-3).",
+      "verified": true
+    },
+    {
+      "ship": "KILL KROOZER",
+      "text": "If fitted with a torpedo launcha, it may carry boarding torpedoes",
+      "page": 382,
+      "effect": null,
+      "why": "Rulebook s.78: 'Boarding torpedoes are launched like ordinary torpedoes' - optio antaa aluksen omille torpedoputkille toisen ammuksen, ei uutta aserivia (kayttaja 12.10.2026, J190: 'boarding torb ostos vain sinne optio riviin, ei aseisiin'). Nopeus ja vahvuus lukevat option tekstissa. Aiempi kirjaus: Kirja s.382: '(Speed 20 cm, Strength D6+2) at a cost of +5'. Edellyttaa torpedo launchaa (datassa dep). Toteutettu OPT_EFFECTS add (P1-3).",
+      "verified": true
+    },
+    {
+      "ship": "ORK HULK",
+      "text": "May be equipped with boarding torpedoes for +15 pts",
+      "page": 389,
+      "effect": null,
+      "why": "Rulebook s.78: 'Boarding torpedoes are launched like ordinary torpedoes' - optio antaa aluksen omille torpedoputkille toisen ammuksen, ei uutta aserivia (kayttaja 12.10.2026, J190: 'boarding torb ostos vain sinne optio riviin, ei aseisiin'). Nopeus ja vahvuus lukevat option tekstissa. Aiempi kirjaus: Kirja s.389: '+15 pts (speed 20 cm; strength D6+2)'. HUOM: hulkin omat putket ovat 2D6, mutta rynnakkotorpedot ovat D6+2 - optio kantaa oman profiilinsa. Putkia on keula, vasen ja oikea, joten kaari on Left/front/right. Toteutettu OPT_EFFECTS add (P1-3).",
+      "verified": true
+    },
+    {
+      "ship": "STRIKE CRUISER",
+      "text": "May replace its launch bays for strength-6, speed: 30 cm torpedo tubes",
+      "page": 105,
+      "effect": { "swp": { "f": "launch bay", "rg": "30 cm", "st": "6" } },
+      "modelled_by": "sw",
+      "why": "Kirja s.105: launch bayt korvataan torpedoputkilla (str 6, speed 30 cm). Vaikutus on datassa sw-vaihtoehtona; 'speed: 30 cm' on torpedon nopeus, ei aluksen - auditin statsiosuma on vaara. Golden: hive/strike-tapaukset kayttavat sw-riveja.",
+      "verified": true
+    },
+    {
+      "ship": "INQUISITORIAL CRUISER",
+      "text": "An Inquisitorial cruiser may replace its launch bays for strength-6, Speed: 30 cm torpedo tubes",
+      "page": 150,
+      "effect": { "swp": { "f": "launch bay", "rg": "30 cm", "st": "6" } },
+      "modelled_by": "sw",
+      "why": "Kirja s.150: sama torpedorefit kuin Strike Cruiserilla, 'for no change in cost'. Datassa sw-vaihtoehtona; 'Speed: 30 cm' on torpedon nopeus.",
+      "verified": true
+    },
+    {
+      "ship": "GREY KNIGHTS STRIKE CRUISER",
+      "text": "May replace launch bays for strength-6, Speed: 30 cm torpedo tubes",
+      "page": 151,
+      "effect": { "swp": { "f": "launch bay", "rg": "30 cm", "st": "6" } },
+      "modelled_by": "sw",
+      "why": "Kirja s.151: sama torpedorefit, 'for no change in cost'. Datassa sw-vaihtoehtona; 'Speed: 30 cm' on torpedon nopeus.",
+      "verified": true
+    },
+    {
+      "ship": "WARSPHERE",
+      "text": "Warspheres 10HP or greater may +1 turret strength for +10 points",
+      "page": 494,
+      "effect": { "mod": { "tu": 1 } },
+      "modelled_by": "mod",
+      "why": "Kirja s.494: '+1 turret strength' on tornien lukumaara (statsi), ei aseen vahvuus - auditin aseosuma sanasta 'strength' on vaara. Toteutettu OPT_EFFECTS mod; golden warsphere-extra-turret (155 pts, tornit 4).",
+      "verified": true
+    },
+    {
+      "ship": "EXORCIST CLASS GRAND CRUISER",
+      "text": "Can be fitted with shorter range but more powerful weapons batteries",
+      "page": 59,
+      "effect": { "swp": { "f": "weapons battery", "rg": "30 cm", "st": "10" } },
+      "why": "Kirja s.59: 'Reduce the range of the weapons batteries to 30 cm and increase their firepower to 10, at no extra points.' Perus 45 cm / 8 molemmilla kyljilla. Toteutettu OPT_EFFECTS swp (kohta 7, era 2).",
+      "verified": true
+    },
+    {
+      "ship": "MERCURY CLASS BATTLECRUISER",
+      "text": "Can be refitted with improved weapons batteries",
+      "page": 64,
+      "effect": { "swp": { "f": "weapons battery", "onlyrg": "45 cm", "rg": "60 cm" } },
+      "why": "Kirja s.64: 'Its 45 cm weapons batteries increase their range to 60 cm for +10 points.' Vain 45 cm:n patterit (FP 4) muuttuvat; 60 cm:n patterit (FP 6) pysyvat - siksi onlyrg. Toteutettu OPT_EFFECTS swp (kohta 7, era 2).",
+      "verified": true
+    },
+    {
+      "ship": "REPULSIVE CLASS GRAND CRUISER",
+      "text": "Can be equipped with ancient targeting systems",
+      "page": 269,
+      "effect": { "swp": { "f": "dorsal lance", "rg": "45 cm" } },
+      "why": "Kirja s.269: 'increases the range of its dorsal lances to 45 cm at an additional cost of +10 pts'. Perus dorsal lance battery 30 cm / 3. Toteutettu OPT_EFFECTS swp (kohta 7, era 2).",
+      "verified": true
+    },
+    {
+      "ship": "ENDEAVOUR CLASS LIGHT CRUISER",
+      "text": "May increase the prow armour to 6+ for no additional cost.",
+      "page": 72,
+      "effect": { "set": { "ar": "6+ front / 5+", "tn": "45°" } },
+      "why": "Kirja s.72 (sama teksti s.73 ja s.181): 'May increase the prow armour to 6+ for no additional cost. However, if this option is taken, the turning radius of these vessels is reduced to 45 degrees.' Perus 5+ / 90°. Kaksi vaikutusta samasta optiosta: panssari JA kaanto. Toteutettu OPT_EFFECTS set (kohta 7, era 3).",
+      "verified": true
+    },
+    {
+      "ship": "ENDURANCE CLASS LIGHT CRUISER",
+      "text": "May increase the prow armour to 6+ for no additional cost.",
+      "page": 74,
+      "effect": { "set": { "ar": "6+ front / 5+", "tn": "45°" } },
+      "why": "Kirja s.74 (sama s.75): sama optio kuin Endeavourilla - Endurance on sen variantti. Perus 5+ / 90°. Toteutettu OPT_EFFECTS set (kohta 7, era 3).",
+      "verified": true
+    },
+    {
+      "ship": "DEFIANT CLASS LIGHT CRUISER",
+      "text": "May increase the prow armour to 6+ for no additional cost.",
+      "page": 76,
+      "effect": { "set": { "ar": "6+ front / 5+", "tn": "45°" } },
+      "why": "Kirja s.76: sama optio kuin Endeavourilla - Defiant on sen variantti. Perus 5+ / 90°. Toteutettu OPT_EFFECTS set (kohta 7, era 3).",
+      "verified": true
+    },
+    {
+      "ship": "IL’PORRUI (EMISSARY) CLASS ENVOY SHIP — DAL’YTH CONFIGURATION",
+      "text": "Emissary class cruisers can be equipped with a deflector that raises its prow armour to 6+",
+      "page": 472,
+      "effect": { "set": { "ar": "6+ front / 5+" } },
+      "why": "Kirja s.472: 'a deflector that raises its prow armour to 6+ for +10 points. This is disabled whenever the vessel suffers a prow critical hit (repairable normally).' Perus 5+. Toteutettu OPT_EFFECTS set (kohta 7, era 4).",
+      "verified": true
+    },
+    {
+      "ship": "IL’PORRUI (EMISSARY) CLASS ENVOY SHIP — BORK’AN CONFIGURATION",
+      "text": "Emissary class cruisers can be equipped with a deflector that raises its prow armour to 6+",
+      "page": 472,
+      "effect": { "set": { "ar": "6+ front / 5+" } },
+      "why": "Kirja s.472: sama deflektori toisella konfiguraatiolla (sivuavain 472b). Perus 5+. Toteutettu OPT_EFFECTS set (kohta 7, era 4).",
+      "verified": true
+    },
+    {
+      "ship": "IL’PORRUI (EMISSARY) CLASS ENVOY SHIP — SA’CEA CONFIGURATION",
+      "text": "Emissary class cruisers can be equipped with a deflector that raises its prow armour to 6+",
+      "page": 473,
+      "effect": { "set": { "ar": "6+ front / 5+" } },
+      "why": "Kirja s.473: sama deflektori kolmannella konfiguraatiolla (sivuavain 472c). Perus 5+. Toteutettu OPT_EFFECTS set (kohta 7, era 4).",
+      "verified": true
+    },
+    {
+      "ship": "HAMMER CLASS BATTLEKROOZER",
+      "text": "May be equipped with torpedo bommas for +40 pts.",
+      "page": 374,
+      "effect": { "swp": { "f": "launch bay", "rgadd": "Torpedo-Bommas: 20 cm" } },
+      "why": "Kirja s.374 optio; s.359: 'Torpedo-bommas only move 20 cm' ja 'an additional ordnance choice available to the carrier and do not replace fighta-bommas'. Launch bay -rivin kantamasolu saa uuden tyypin. Toteutettu OPT_EFFECTS swp rgadd (kohta 7, era 4).",
+      "verified": true
+    },
+    {
+      "ship": "DETHDEALA BATTLESHIP",
+      "text": "May be equipped with torpedo bommas for +40 pts.",
+      "page": 376,
+      "effect": { "swp": { "f": "launch bay", "rgadd": "Torpedo-Bommas: 20 cm" } },
+      "why": "Kirja s.376 optio; ordnance-saanto s.359 (20 cm, lisatyyppi). Toteutettu OPT_EFFECTS swp rgadd (kohta 7, era 4).",
+      "verified": true
+    },
+    {
+      "ship": "GORBAG’S REVENGE BATTLESHIP",
+      "text": "May be equipped with torpedo bommas for +80 pts.",
+      "page": 377,
+      "effect": { "swp": { "f": "launch bay", "rgadd": "Torpedo-Bommas: 20 cm" } },
+      "why": "Kirja s.377 optio +80 (kolme launch bay -rivia: dorsal, port, starboard - kaikki saavat tyypin); ordnance-saanto s.359. Toteutettu OPT_EFFECTS swp rgadd (kohta 7, era 4).",
+      "verified": true
+    },
+    {
+      "ship": "SLAMBLASTA BATTLESHIP",
+      "text": "May be equipped with torpedo bommas for +40 pts.",
+      "page": 378,
+      "effect": { "swp": { "f": "launch bay", "rgadd": "Torpedo-Bommas: 20 cm" } },
+      "why": "Kirja s.378 optio; ordnance-saanto s.359. Toteutettu OPT_EFFECTS swp rgadd (kohta 7, era 4).",
+      "verified": true
+    },
+    {
+      "ship": "KROOLBOY BATTLESHIP",
+      "text": "May be equipped with torpedo bommas for +40 pts.",
+      "page": 379,
+      "effect": { "swp": { "f": "launch bay", "rgadd": "Torpedo-Bommas: 20 cm" } },
+      "why": "Kirja s.379 optio; ordnance-saanto s.359. Toteutettu OPT_EFFECTS swp rgadd (kohta 7, era 4).",
+      "verified": true
+    },
+    {
+      "ship": "ENDEAVOUR CLASS LIGHT CRUISER (BAKKA)",
+      "text": "May increase the prow armour to 6+",
+      "page": 73,
+      "effect": { "set": { "ar": "6+ front / 5+", "tn": "45°" } },
+      "why": "Kirja s.73: Bakka-listan oma painos samasta aluksesta, sama optio kuin s.72. Toteutettu OPT_EFFECTS set (kohta 7, era 3).",
+      "verified": true
+    },
+    {
+      "ship": "ENDURANCE CLASS LIGHT CRUISER (BAKKA)",
+      "text": "May increase the prow armour to 6+",
+      "page": 75,
+      "effect": { "set": { "ar": "6+ front / 5+", "tn": "45°" } },
+      "why": "Kirja s.75: Bakka-listan oma painos, sama optio kuin s.74. Toteutettu OPT_EFFECTS set (kohta 7, era 3).",
+      "verified": true
+    },
+    {
+      "ship": "TERROR SHIP",
+      "text": "May replace its prow heavy gun battery with a torpedo launcha",
+      "page": 380,
+      "effect": { "swp": { "f": "prow heavy gun", "rg": "30 cm", "st": "D6+2" } },
+      "modelled_by": "sw",
+      "why": "Kirja s.380: '(Speed 30 cm, Strength D6+2) at no extra points'. Datassa sw-vaihtoehtona (swaps.py); 'Speed 30 cm' on torpedon nopeus, ei aluksen - auditin statsiosuma on vaara.",
+      "verified": true
+    },
+    {
+      "ship": "KILL KROOZER",
+      "text": "May replace its prow heavy gun battery with a torpedo launcha",
+      "page": 382,
+      "effect": { "swp": { "f": "prow heavy gun", "rg": "30 cm", "st": "D6+2" } },
+      "modelled_by": "sw",
+      "why": "Kirja s.382: sama vaihto kuin Terror shipilla. Datassa sw-vaihtoehtona; 'Speed 30 cm' on torpedon nopeus.",
+      "verified": true
+    },
+    {
+      "ship": "ORBITALS",
+      "text": "Ion Cannon Turret +15 pts",
+      "page": 480,
+      "effect": { "add": ["Ion cannon", "30 cm", "1", "All round"] },
+      "modelled_by": "aws",
+      "why": "Kirja s.480, security-moduulin puolustusjarjestelmat: 'Ion Cannon Turret +15 pts'. Asema on kokonaan valintoja: jokainen perusrivi on optio-omisteinen (aws, ryhma 480_defence, gmax 1) ja tikataan kun se ostetaan. Ensimmainen versio lisasi add-rivin, joka tuplasi tornin - ajuri nappasi sen (5 rivia, 0 voimassa). Ei uutta koodia.",
+      "verified": true
+    },
+    {
+      "ship": "WAYSTATION",
+      "text": "Ion Cannon Turret: 35 pts",
+      "page": 481,
+      "effect": { "add": ["Ion cannon", "30 cm", "1", "All round"] },
+      "modelled_by": "aws",
+      "why": "Kirja s.481: 'Ion Cannon Turret: 35 pts'. Sama aws-malli kuin Orbitalsilla (481_defence). Ei uutta koodia.",
+      "verified": true
+    },
+    {
+      "ship": "LITE KROOZER",
+      "text": "If fitted with a torpedo launcha, it may carry boarding torpedoes",
+      "page": 383,
+      "effect": null,
+      "why": "Rulebook s.78: 'Boarding torpedoes are launched like ordinary torpedoes' - optio antaa aluksen omille torpedoputkille toisen ammuksen, ei uutta aserivia (kayttaja 12.10.2026, J190: 'boarding torb ostos vain sinne optio riviin, ei aseisiin'). Nopeus ja vahvuus lukevat option tekstissa. Aiempi kirjaus: Kirja s.383: '(Speed 20 cm, Strength D6) at a cost of +5 pts' - Lite Kroozerin rynnakkotorpedot ovat D6, ei D6+2 kuten isommilla. Edellyttaa launchaa (datassa dep=0). Toteutettu OPT_EFFECTS add (kohta 7, era 6).",
+      "verified": true
+    },
+    {
+      "ship": "OMNISSIAH'S VICTORY, ARK MECHANICUS",
+      "text": "The Omnissiah’s Victory represents only one of several unique Arks Mechanicus",
+      "page": 126,
+      "effect": { "sw": { "f": [2, 3], "t": [["Port launch bays", "Furies: 30 cm / Starhawks: 20 cm", "2", "–"], ["Starboard launch bays", "Furies: 30 cm / Starhawks: 20 cm", "2", "–"]] } },
+      "why": "Kirja s.126: 'an Ark Mechanicus may exchange its broadside lance batteries for strength-2 launch bays for +10 points.' Kylkilanssit (rivit 2-3) korvautuvat launch bayilla; attack craft ovat Fury/Starhawk (s.125, ei assault boateja), nopeudet Imperial-profiilien mukaan 30/20 cm. Toteutettu OPT_EFFECTS sw (kohta 7, era 6).",
+      "verified": true
+    },
+    {
+      "ship": "MURDER CLASS CRUISER",
+      "text": "Can replace its Firepower 10 weapons batteries with Firepower 4 weapons batteries and Strength 2 lance batteries",
+      "page": 279,
+      "effect": { "swp": { "f": "weapons battery", "st": "4" }, "add": [["Port lance battery", "45 cm", "2", "Left"], ["Starboard lance battery", "45 cm", "2", "Right"]] },
+      "why": "Kirja s.279: '(all 45 cm range, with port and starboard arcs each) for no extra points'. Patterit 45 cm/10 -> 45 cm/4 (swp) ja kaksi lanssiriivia lisaa (add-lista). Toteutettu OPT_EFFECTS (kohta 7, era 7).",
+      "verified": true
+    },
+    {
+      "ship": "COBRA CLASS DESTROYER",
+      "text": "Squadrons can carry experimental long range detection gear.",
+      "page": 84,
+      "effect": { "del": "weapons battery" },
+      "why": "Kirja s.84: 'doubles the Leadership test bonus for enemy contacts ... from +1 to +2 but removes the squadron's weapons batteries'. Patterit poistuvat (del); Ld-bonus on pelisaanto, joka tulostuu optiotekstina. Rajoitukset (yli puolet Cobria, kaikki ottavat, vain Imperial) ovat listasaantoja. Toteutettu OPT_EFFECTS del (kohta 7, era 7).",
+      "verified": true
+    },
+    {
+      "ship": "LITE KROOZER",
+      "text": "Prow — torpedo launcha instead of heavy gunz",
+      "page": 383,
+      "effect": { "sw": { "f": [3], "t": [["Prow torpedo launcha", "30 cm", "D6", "Front"]] } },
+      "why": "Kirja s.383: 'For no change in cost, they may exchange their prow heavy gunz for a torpedo launcha (Speed 30 cm, Strength D6) or additional D6 gunz (for D6+2 in total).' Yksi lause, kaksi poissulkevaa vaihtoa - jaettu kahdeksi optioksi (ryhma lite_prow, gmax 1) build_data.py:ssa. Tama on ensimmainen: launcha korvaa keulan heavy gunzin (rivi 3).",
+      "verified": true
+    },
+    {
+      "ship": "LITE KROOZER",
+      "text": "Prow — additional D6 gunz",
+      "page": 383,
+      "effect": { "swp": { "f": "prow heavy gunz", "st": "D6+2" } },
+      "why": "Kirja s.383, saman lauseen toinen vaihtoehto: keulan heavy gunz 4 -> D6+2 'in total'. Poissulkeva launchan kanssa (lite_prow).",
+      "verified": true
+    },
+    {
+      "ship": "XENOS VESSEL",
+      "text": "Xenotech system (free, choose one) — Long Range Sensors",
+      "page": 175,
+      "effect": null,
+      "why": "Kirja s.175/184: '+1 to its base leadership (max. of Ld 10)'. Leadership ei ole aluskortin statsi (heitetaan pelin alussa); option teksti tulostuu kortille. Auditin 'range'-osuma on sanasta 'Long Range'.",
+      "verified": true
+    },
+    {
+      "ship": "XENOS VESSEL",
+      "text": "Xenotech system (free, choose one) — Advanced Shielding",
+      "page": 175,
+      "effect": { "mod": { "sh": 1 } },
+      "modelled_by": "mod",
+      "why": "Kirja s.175: 'increases the strength of its shields by +1'. Toteutettu build_data.py:n s.184-lohkossa (mod sh +1); auditin 'strength'-osuma tarkoittaa kilpea, ei asetta.",
+      "verified": true
+    },
+    {
+      "ship": "XENOS VESSEL",
+      "text": "Xenotech system (free, choose one) — Ship Defense Grid",
+      "page": 175,
+      "effect": { "mod": { "tu": 1 } },
+      "modelled_by": "mod",
+      "why": "Kirja s.175: 'increases the strength of its turrets by +1'. Toteutettu (mod tu +1); auditin 'strength'-osuma tarkoittaa torneja.",
+      "verified": true
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{"id": "S0001", "l": "LASKETTAVA", "a": "roster", "f": "attack_rating", "p": "F32", "pok": "ok", "n": "Faktion vakio attack rating 2. Ei laillisuutta; näytä rosterin yhteenvedossa ja Play-sivulla."}
+{"id": "S0002", "l": "PELI", "a": "play", "f": "ordnance_speed", "p": "F32", "pok": "ok", "n": "Taulukon otsikko ja rivit yhdeksi lauseeksi liimattuna. Nopeudet ovat korteilla laukaisukuilun kantamana (J152); loppuosa 'no separate points value' on itsestäänselvä.", "vk": "ajo ok"}
+{"id": "S0003", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F32", "pok": "ok", "n": "Power Ram -rivin kelpoisuusehto (capital, 6+ prow, ei Nova Cannonia) on toteutettu upgrades.py:583-598; lause on samalla rivin kuvaus.", "vk": "ajo ok"}
+{"id": "S0004", "l": "KUVAUS", "a": "row", "f": "power_ram", "p": "F32", "pok": "ok", "n": "Power Ram -rivin selite: saatavilla kaikille Imperial-listoille, ei lasketa refitiksi (kampanja). Rivin kuvaukseksi."}
+{"id": "S0005", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F33", "pok": "osittain", "n": "Space Marine Appeals -taulukon otsikko ja rivi 2 liimattuna (rivinumero puuttuu). Kampanjasääntö."}
+{"id": "S0006", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F33", "pok": "ok", "n": "Appeals-taulukon tulos (seuraava peli). Koodiosuma build_data.py:1367 on eri lause (Codex Astartes per_points)."}
+{"id": "S0007", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F33", "pok": "ok", "n": "Appeals-taulukon tulos."}
+{"id": "S0008", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F33", "pok": "ok", "n": "Appeals-taulukon tulos."}
+{"id": "S0009", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F33", "pok": "ok", "n": "Appeals-taulukon tulos."}
+{"id": "S0010", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F33", "pok": "ok", "n": "Appeals-taulukon tulos."}
+{"id": "S0011", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F33", "pok": "ok", "n": "Appeals-taulukon tulos."}
+{"id": "S0012", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F33", "pok": "ok", "n": "Appeals-taulukon tulos."}
+{"id": "S0013", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F33", "pok": "ok", "n": "Appeals-taulukon tulos."}
+{"id": "S0014", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F33", "pok": "ok", "n": "Appeals-taulukon tulos."}
+{"id": "S0015", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F33", "pok": "ok", "n": "Appeals-taulukon tulos."}
+{"id": "S0016", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F33", "pok": "ok", "n": "Appeals-taulukon tulos (koulutus pelien välissä)."}
+{"id": "S0017", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F33", "pok": "ok", "n": "Appeals-taulukon tulos. Koodiosumat ovat eri re-roll-lauseita."}
+{"id": "S0018", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F33", "pok": "ok", "n": "Appeals-taulukon tulos (vastustajan pisteet)."}
+{"id": "S0019", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F33", "pok": "ok", "n": "Appeals-taulukon tulos."}
+{"id": "S0020", "l": "VALVOTTU", "a": "checked", "f": "commander_count", "p": "F35", "pok": "ok", "n": "Määrä 1 Admiral on todennäköisesti osion raja; 'assigned to a ship' = lippulaivan valinta pöydällä; Ld-arvo on komentajakortilla. Sama lausetyyppi toistuu jokaisella listalla.", "vk": "ajo ok"}
+{"id": "S0021", "l": "KUVAUS", "a": "row", "f": "rerolls_included", "p": "F35", "pok": "ok", "n": "Hintaan sisältyvä re-roll; sanotaan komentajakortilla ja rivillä (J160).", "vk": "ajo ok"}
+{"id": "S0022", "l": "PELI", "a": "play", "f": "ordnance_choice", "p": "F35", "pok": "ok", "n": "Ordnance-tyyppi valitaan pelissä."}
+{"id": "S0023", "l": "KUVAUS", "a": "drop", "f": "ship_option_pointer", "p": "F35", "pok": "ok", "n": "Viittaus alusten omiin optioihin (Emperor s.53, Oberon s.56, Exorcist s.59), jotka ovat jo aluksen optioina. Osion tekstinä turha."}
+{"id": "S0024", "l": "VALVOTTU", "a": "checked", "f": "inquisition_attach", "p": "F138", "pok": "ok", "n": "Inkvisitio-liiteosio on toteutettu kahdeksalle listalle (build_data.py:4548). Avoin: RT-risteilijän reitti ('embarked on a single Rogue Trader cruiser') — tarkista onko mallinnettu. Ajo 20.10.: liiteosio toimii; RT-risteilijän reitti puuttuu (RT-listalla ei inkvisiittoririvejä).", "vk": "osittain"}
+{"id": "S0025", "l": "VALVOTTU", "a": "checked", "f": "inquisition_attach", "p": "F138", "pok": "ok", "n": "0-1 ja 'takes the place of a battlecruiser or strike cruiser' toteutettu J148:ssa; lause on eri osiossa kuin sääntö.", "vk": "ajo ok"}
+{"id": "S0026", "l": "VALVOTTU", "a": "checked", "f": "inquisition_attach", "p": "F138", "pok": "ok", "n": "Blackship 0-1 ja 'ei lasketa rajoihin' toteutettu (J148).", "vk": "ajo ok"}
+{"id": "S0027", "l": "KUVAUS", "a": "row", "f": "rerolls_included", "p": "F138", "pok": "ok", "n": "Komentajan sisältyvä re-roll; komentajakortille."}
+{"id": "S0028", "l": "KUVAUS", "a": "row", "f": "reroll_price", "p": "F138", "pok": "ok", "n": "Toisen re-rollin hinta; rivi on olemassa (upgrades.py:539)."}
+{"id": "S0029", "l": "PELI", "a": "play", "f": "commander_effect", "p": "F142", "pok": "ok", "n": "Ordo Malleus -inkvisiittorin aluksen Ld- ja boarding-bonus; komentajakortille.", "vk": "ajo ok"}
+{"id": "S0030", "l": "PELI", "a": "play", "f": "commander_effect", "p": "F142", "pok": "ok", "n": "Hit and Run -muokkaimet; build_data.py:4781 vie sen kortille.", "vk": "ajo ok"}
+{"id": "S0031", "l": "PELI", "a": "play", "f": "commander_effect", "p": "F142", "pok": "ok", "n": "Hexagrammic wards; komentajakortille."}
+{"id": "S0032", "l": "PELI", "a": "play", "f": "commander_effect", "p": "F142", "pok": "ok", "n": "Edellisen lauseen esimerkit; komentajakortille."}
+{"id": "S0033", "l": "PELI", "a": "play", "f": "commander_effect", "p": "F142", "pok": "ok", "n": "Wardsin raja; build_data.py:4786 vie kortille."}
+{"id": "S0034", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F142", "pok": "ok", "n": "Kerronta, joka johdattaa seuraavaan lauseeseen."}
+{"id": "S0035", "l": "TARKISTA", "a": "keep", "f": "opponent_bonus", "p": "F142", "pok": "ok", "n": "Vastustajan Chaos-laivasto saa ilmaisen Markin tai Daemonshipin. Builder ei tunne vastustajaa; voisi näkyä rosterin yhteenvedossa muistutuksena."}
+{"id": "S0036", "l": "VALVOTTU", "a": "checked", "f": "rt174", "p": "F174", "pok": "ok", "n": "750 pisteen listoilla sääntö on B-lauseesta (per_points), joten A-lause jää näkyviin, vaikka sisältyy saman osion sääntöön (SRC-osuma).", "vk": "ajo ok"}
+{"id": "S0037", "l": "VALVOTTU", "a": "checked", "f": "rt174", "p": "F174", "pok": "ok", "n": "Liimattu Cruisers-osion section_count-säännön src:hen (build_data.py:5713), mutta lause on ROGUE TRADERS -osiossa.", "vk": "ajo ok"}
+{"id": "S0038", "l": "VALVOTTU", "a": "checked", "f": "domain_check", "p": "F498", "pok": "ok", "n": "Kolmanneksen raja on varoituksena domain.js:4544 (oma s-teksti); UI ei tiedä tätä, koska tarkistus ei ole sec.rules-rivi."}
+{"id": "S0039", "l": "RAKENNE", "a": "guaranteed", "f": "defence_points", "p": "F498", "pok": "ok", "n": "Puolustukset lasketaan laivaston pisterajaan (domain.js:3973)."}
+{"id": "S0040", "l": "KAMPANJA", "a": "campaign", "f": "scenario_defences", "p": "F499", "pok": "ok", "n": "Planeetan koon mukainen määräraja 4/5/6. Koko on skenaariotieto, eikä kirja määrittele 'yhtä' puolustusta (laivue vai kappale)."}
+{"id": "S0041", "l": "KAMPANJA", "a": "campaign", "f": "scenario_defences", "p": "F499", "pok": "ok", "n": "Neuvo, ei sääntö ('for example ... perhaps 10 %')."}
+{"id": "S0042", "l": "PELI", "a": "play", "f": "deployment", "p": "F498", "pok": "ok", "n": "Pöydälle asettelu."}
+{"id": "S0043", "l": "PELI", "a": "play", "f": "deployment", "p": "F498", "pok": "ok", "n": "Pöydälle asettelu."}
+{"id": "S0044", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F500", "pok": "ok", "n": "Ramilies-rivi lisätään vain Imperial- ja Chaos-roduille (build_data.py:6049)."}
+{"id": "S0045", "l": "VALVOTTU", "a": "checked", "f": "ratio_base", "p": "F37", "pok": "ok", "n": "Grand cruiserit eivät ole taistelulaivasäännön nimittäjässä (build_data.py:4896 ja reference #4).", "vk": "ajo ok"}
+{"id": "S0046", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F37", "pok": "ok", "n": "compare-sääntö build_data.py:1411; tekstissä on alussa '* ', joten tarkka vertailu ei osu."}
+{"id": "S0047", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F38", "pok": "ok", "n": "Cadian kerronta."}
+{"id": "S0048", "l": "PELI", "a": "play", "f": "leadership_roll", "p": "F38", "pok": "ok", "n": "Cadian Ld-heitto (kaksi noppaa, pienempi). Play-sivulla ei Ld-automatiikkaa (J198), mutta kortille muistutukseksi."}
+{"id": "S0049", "l": "PELI", "a": "play", "f": "commander_assign", "p": "F38", "pok": "ok", "n": "Veteran Captain sijoitetaan vasta Ld-heiton jälkeen (S0050), joten builder ei voi sitoa."}
+{"id": "S0050", "l": "PELI", "a": "play", "f": "commander_assign", "p": "F38", "pok": "ok", "n": "Sijoitus Ld-heiton jälkeen."}
+{"id": "S0051", "l": "TARKISTA", "a": "keep", "f": "squadron_tabletop", "p": "F38", "pok": "ok", "n": "Veteran Captainin alus on oltava laivueessa; laivueet muodostetaan pöydällä."}
+{"id": "S0052", "l": "PELI", "a": "play", "f": "commander_assign", "p": "F38", "pok": "ok", "n": "Laivueen Ld-bonus."}
+{"id": "S0053", "l": "KUVAUS", "a": "row", "f": "rerolls_included", "p": "F38", "pok": "ok", "n": "Sisältyvä re-roll ja sen käyttöalue; komentajakortille.", "vk": "koodi luettu"}
+{"id": "S0054", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F39", "pok": "ok", "n": "Reservilaivastojen kerronta."}
+{"id": "S0055", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F39", "pok": "ok", "n": "Kerronta."}
+{"id": "S0056", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F39", "pok": "ok", "n": "Kerronta."}
+{"id": "S0057", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F39", "pok": "ok", "n": "Kerronta."}
+{"id": "S0058", "l": "OMINAISUUS", "a": "feature", "f": "list_variant", "p": "F39", "pok": "ok", "n": "Battlefleet Obscura Reserve Fleet = Gothic-lista (s.34), jossa Strange happenings koskee kaikkia aluksia. Sovelluksessa ei ole tätä listavarianttia; J153 rajasi Strange happeningsin reservinä otettuihin Chaos-runkoihin."}
+{"id": "S0059", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F39", "pok": "ok", "n": "Reservit toisilta Imperial-listoilta on toteutettu 1.1:ssä (lainalaivat)."}
+{"id": "S0060", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F39", "pok": "ok", "n": "Bastionin Chaos-reservit toteutettu (build_data.py:4688)."}

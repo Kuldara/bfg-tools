@@ -1,0 +1,197 @@
+{
+  "list": "Adeptus Mechanicus — Explorator",
+  "book_page": 124,
+  "read_pages": [118, 119, 120, 122, 124, 125],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Mechanicus Archmagos",
+      "text": "0-1 Mechanicus Archmagos",
+      "page": 124,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "worth 1,000 points or more, a Mechanicus Archmagos must be included",
+      "text": "If the fleet is worth 1,000 points or more, a Mechanicus Archmagos must be included to lead it.",
+      "page": 124,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 1000,
+      "over": false,
+      "why": "Huomaa: tassa listassa sanamuoto on 'or more', ei 'over'. Raja on siis 1 000 pisteesta ylospain, toisin kuin Imperial-listojen 'over 750'."
+    },
+    {
+      "key": "An Archmagos Veneratus must be embarked on an Ark Mechanicus",
+      "text": "An Archmagos Veneratus must be embarked on an Ark Mechanicus if one is included in the fleet.",
+      "page": 124,
+      "status": "manual",
+      "why": "Sijoittelu tehdaan poydalla. 'Ark Mechanicus' tarkoittaa Omnissiah's Victorya (s. 126)."
+    },
+    {
+      "key": "Mechanicus Archmagos can elect up to any one desired item from the Adeptus Mechanicus refit table",
+      "text": "A Mechanicus Archmagos can elect up to any one desired item from the Adeptus Mechanicus refit table for their own ship as part of their point cost, in addition to (and before) the refit the ship rolls for normally.",
+      "page": 124,
+      "status": "manual",
+      "why": "Refit valitaan Mechanicus Gifts -taulukosta, jota sovellus ei mallinna valintana."
+    },
+    {
+      "key": "You may include 1 battleship for every three cruisers in the fleet",
+      "text": "You may include 1 battleship for every three cruisers in the fleet.",
+      "page": 125,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 3,
+      "per_types": ["cruisers"]
+    },
+    {
+      "key": "Omnissiah’s Victory may not take any Mechanicus Gifts refits",
+      "text": "The Omnissiah's Victory may not take any Mechanicus Gifts refits, as its Mechanicus Gifts are already included in its point cost and special rules.",
+      "page": 125,
+      "status": "manual",
+      "why": "Gifts-taulukkoa ei mallinneta valintana, joten poikkeusta ei tarvitse valvoa."
+    },
+    {
+      "key": "escorts in your fleet in squadrons of 2",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13), taken from both the Imperial Navy and Space Marines fleet lists for the point costs listed below but otherwise unmodified from their normal profiles.",
+      "page": 125,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "Attack carriers may use any combination of Fury interceptors and Starhawk bombers",
+      "text": "Attack carriers may use any combination of Fury interceptors and Starhawk bombers. They may not use assault boats, even if their Imperial Navy counterparts may have access to this type of ordnance (such as Emperor battleships).",
+      "page": 125,
+      "status": "manual",
+      "why": "Ordnance-valinta pelin aikana. Tarkea poikkeus: AdMech-Emperor EI saa rynnakkoveneita, vaikka Imperial-Emperor saa."
+    },
+    {
+      "key": "may also take torpedo bombers for +10 points per launch bay",
+      "text": "Mechanicus vessels equipped with launch bays may also take torpedo bombers for +10 points per launch bay.",
+      "page": 125,
+      "status": "manual",
+      "why": "Hinnoiteltu optio; rivi 'Torpedo bombers 10 pts' on valittavissa."
+    },
+    {
+      "key": "The Adeptus Mechanicus have a starting attack or initiative rating of 2",
+      "text": "ATTACK RATING The Adeptus Mechanicus have a starting attack or initiative rating of 2.",
+      "page": 118,
+      "status": "manual",
+      "why": "Jaettu saanto. Nakyy 7.9.2026 jalkeen."
+    },
+    {
+      "key": "To determine base leadership for a given vessel, roll a D6",
+      "text": "To determine base leadership for a given vessel, roll a D6 against the following table: D6 ROLL LEADERSHIP 1 Ld 7 2-3 Ld 8 4-6 Ld 9",
+      "page": 118,
+      "status": "manual",
+      "why": "Johtajuus arvotaan pelin alussa. AdMechilla oma taulukkonsa, eri kuin Imperial Navylla."
+    },
+    {
+      "key": "This option cannot be used if the vessel embarks a Mechanicus Archmagos",
+      "text": "Any vessel that rolls a 6 when determining base leadership may select any one desired refit from the Mechanicus Gifts table instead of rolling for it randomly (this does not mean you get an extra one!). This option cannot be used if the vessel embarks a Mechanicus Archmagos.",
+      "page": 118,
+      "status": "manual",
+      "why": "Refit-valinta pelin alussa."
+    },
+    {
+      "key": "The Imperial Power Ram may be taken by any Mechanicus capital ship",
+      "text": "The Imperial Power Ram may be taken by any Mechanicus capital ship with a 6+ prow for +5 points unless it has a Nova Cannon.",
+      "page": 118,
+      "status": "manual",
+      "why": "Hinnoiteltu optio; rivi 'Imperial Power Ram 5 pts' on valittavissa. Ehto 6+ keula ja ei nova cannonia on toteutettu rivin kelpoisuusehtona."
+    },
+    {
+      "key": "The Adeptus Mechanicus does not utilize any battlecruisers in their own fleets",
+      "text": "To avoid raising the concern of the Imperial Navy, The Adeptus Mechanicus does not utilize any battlecruisers in their own fleets, though they still produce them for the Imperial Navy as required.",
+      "page": 118,
+      "status": "manual",
+      "why": "Selittaa miksi listalla ei ole battlecruisereita. Ei rajoita mitaan, koska rivia ei ole."
+    },
+    {
+      "key": "Every Mechanicus cruiser (not light cruiser) is equipped with a single 60 cm range dorsal lance battery",
+      "text": "Every Mechanicus cruiser (not light cruiser) is equipped with a single 60 cm range dorsal lance battery firing left/front/right.",
+      "page": 118,
+      "status": "manual",
+      "why": "Sovellus tarjoaa taman rivina 'Mechanicus dorsal lance battery 0 pts'."
+    },
+    {
+      "key": "All Mechanicus capital ships add +1 to a given vessel's original turret value",
+      "text": "All Mechanicus capital ships add +1 to a given vessel's original turret value.",
+      "page": 119,
+      "status": "manual",
+      "why": "Sovellus tarjoaa taman rivina 'Mechanicus turret refit (+1 turret) 0 pts'."
+    },
+    {
+      "key": "Mechanicus capital ships must also roll a D6 once against the Mechanicus Gifts table",
+      "text": "Mechanicus capital ships must also roll a D6 once against the Mechanicus Gifts table. These improvements are already included in the point cost assigned in the Adeptus Mechanicus Fleet List.",
+      "page": 119,
+      "status": "manual",
+      "why": "Refit arvotaan pelin alussa; hinta sisaltyy jo alusten pistehintoihin."
+    },
+    {
+      "key": "No more than one reserve vessel can be taken for every three capital ships",
+      "text": "No more than one reserve vessel can be taken for every three capital ships in the fleet.",
+      "page": 122,
+      "status": "manual",
+      "why": "Reserve-saanto: alukset tulevat toisista listoista, joita tama lista ei sisalla."
+    },
+    {
+      "key": "There are no restrictions on how many reserve Imperial Navy, Space Marine or Rogue Trader escorts",
+      "text": "There are no restrictions on how many reserve Imperial Navy, Space Marine or Rogue Trader escorts are included in an Adeptus Mechanicus fleet, as long as Xenos vessels and reserve Space Marine vessels are not included in the same fleet.",
+      "page": 122,
+      "status": "manual",
+      "why": "Reserve-saanto."
+    },
+    {
+      "key": "Mechanicus vessels can only earn additional refits from the standard Imperial Navy refit table",
+      "text": "In the course of a campaign, Mechanicus vessels can only earn additional refits from the standard Imperial Navy refit table or the Space Marines reinforcement table.",
+      "page": 122,
+      "status": "manual",
+      "why": "Kampanjasaanto."
+    }
+  ],
+  "entries": [
+    {"name": "Archmagos Explorator (Ld 8)", "pts": 50, "page": null},
+    {"name": "Archmagos Veneratus (Ld 9)", "pts": 100, "page": null},
+    {"name": "One re-roll", "pts": 50, "page": null},
+    {"name": "Two re-rolls", "pts": 125, "page": null},
+    {"name": "Omnissiah’s Victory", "pts": 415, "page": 126},
+    {"name": "Emperor class battleship", "pts": 400, "page": 53},
+    {"name": "Retribution class battleship", "pts": 380, "page": 54},
+    {"name": "Oberon class battleship", "pts": 370, "page": 56},
+    {"name": "Dictator class cruiser", "pts": 255, "page": 67},
+    {"name": "Tyrant class cruiser", "pts": 220, "page": 69},
+    {"name": "Gothic class cruiser", "pts": 215, "page": 70},
+    {"name": "Lunar class cruiser", "pts": 215, "page": 71},
+    {"name": "Endeavour class light cruiser", "pts": 125, "page": 72},
+    {"name": "Endurance class light cruiser", "pts": 125, "page": 74},
+    {"name": "Defiant class light cruiser", "pts": 130, "page": 76},
+    {"name": "Nova Class Frigate", "pts": 45, "page": 107},
+    {"name": "Firestorm Class Frigate", "pts": 40, "page": 79},
+    {"name": "Gladius Class Frigate", "pts": 40, "page": 108},
+    {"name": "Sword Class Frigate", "pts": 35, "page": 82},
+    {"name": "Falchion Class Frigate", "pts": 35, "page": 80},
+    {"name": "Hunter Class Destroyer", "pts": 35, "page": 109},
+    {"name": "Cobra Class Destroyer", "pts": 30, "page": 84}
+  ],
+  "extra_entries": [
+    {"name": "Torpedo bombers", "pts": 10, "why": "s.125 ORDNANCE"},
+    {"name": "Mechanicus turret refit (+1 turret)", "pts": 0, "why": "s.119, sisaltyy hintaan"},
+    {"name": "Mechanicus dorsal lance battery", "pts": 0, "why": "s.118, sisaltyy hintaan"},
+    {"name": "Imperial Power Ram", "pts": 5, "why": "s.118"},
+    {"name": "Nova Cannon instead of prow torpedoes", "pts": 20, "why": "s.121 refit-saannoista"},
+    {"name": "Plasma-boosted batteries", "pts": 10, "why": "s.121 refit-saannoista"},
+    {"name": "+1 turret (escort squadron)", "pts": 5, "why": "s.121: saattajat eivat saa +1 tornia hintaan sisaltyvana"}
+  ],
+  "notes": [
+    "Cruisers-osiossa EI ole maararajaa. Kirja ei anna sellaista (vertaa Imperial-listojen '0-12 Cruisers'), joten sovellus on oikeassa kun se ei valvo mitaan.",
+    "AdMechin alukset maksavat enemman kuin samat rungot Imperial Navyssa (esim. Dictator 255 vs 220). Ero on kirjassa: Mechanicus Gifts ja +1 torni sisaltyvat hintaan.",
+    "Sivut 119-122 ovat pitkalti taulukoita: Mechanicus Gifts (D6), Quest for Knowledge (D6), Improvement/Alteration -taulukot ja Mechanicus Promotions. Ne ovat pelin- tai kampanjanaikaisia arvontoja eivatka laivastonrakennusta, joten ne jaavat pelaajalle.",
+    "Sivu 123 on tyhja."
+  ]
+}

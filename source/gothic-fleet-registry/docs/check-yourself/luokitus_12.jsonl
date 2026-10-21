@@ -1,0 +1,60 @@
+{"id": "S0661", "l": "PELI", "a": "play", "f": "impaler", "p": "F346", "pok": "ok", "n": "Impaler-säännöt; kortille."}
+{"id": "S0662", "l": "PELI", "a": "play", "f": "impaler", "p": "F346", "pok": "ok", "n": "Impaler."}
+{"id": "S0663", "l": "PELI", "a": "play", "f": "impaler", "p": "F346", "pok": "ok", "n": "Impaler."}
+{"id": "S0664", "l": "PELI", "a": "play", "f": "impaler", "p": "F346", "pok": "ok", "n": "Impaler."}
+{"id": "S0665", "l": "PELI", "a": "play", "f": "impaler", "p": "F346", "pok": "osittain", "n": "Pelkkä 'Roll a D6.' – liian lyhyt haettavaksi; kuuluu Impalerin hyökkäykseen s.346."}
+{"id": "S0666", "l": "PELI", "a": "play", "f": "impaler", "p": "F346", "pok": "ok", "n": "Impaler."}
+{"id": "S0667", "l": "PELI", "a": "play", "f": "impaler", "p": "F346", "pok": "ok", "n": "Impaler."}
+{"id": "S0668", "l": "PELI", "a": "play", "f": "impaler", "p": "F346", "pok": "ok", "n": "Impaler."}
+{"id": "S0669", "l": "PELI", "a": "play", "f": "impaler", "p": "F346", "pok": "ok", "n": "Impaler."}
+{"id": "S0670", "l": "PELI", "a": "play", "f": "impaler", "p": "F346", "pok": "ok", "n": "Impaler."}
+{"id": "S0671", "l": "PELI", "a": "play", "f": "impaler", "p": "F346", "pok": "ok", "n": "Impaler."}
+{"id": "S0672", "l": "PELI", "a": "play", "f": "impaler", "p": "F346", "pok": "ok", "n": "Impaler."}
+{"id": "S0673", "l": "PELI", "a": "play", "f": "impaler", "p": "F346", "pok": "ok", "n": "Impaler."}
+{"id": "S0674", "l": "PELI", "a": "play", "f": "impaler", "p": "F346", "pok": "ok", "n": "Impaler."}
+{"id": "S0675", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F347", "pok": "ok", "x": "heading", "n": "Leech torpedoes -rivi 0 pts (upgrades.py:657)."}
+{"id": "S0676", "l": "PELI", "a": "play", "f": "leech", "p": "F347", "pok": "ok", "n": "Leech-lataus."}
+{"id": "S0677", "l": "PELI", "a": "play", "f": "leech", "p": "F347", "pok": "ok", "n": "Leech."}
+{"id": "S0678", "l": "PELI", "a": "play", "f": "leech", "p": "F347", "pok": "ok", "n": "Leech."}
+{"id": "S0679", "l": "PELI", "a": "play", "f": "leech", "p": "F347", "pok": "ok", "n": "Leech."}
+{"id": "S0680", "l": "PELI", "a": "play", "f": "leech", "p": "F347", "pok": "ok", "n": "Leech."}
+{"id": "S0681", "l": "PELI", "a": "play", "f": "leech", "p": "F347", "pok": "ok", "n": "Leech."}
+{"id": "S0682", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F347", "pok": "ok", "n": "Eldar-torpedojen uusinta."}
+{"id": "S0683", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F347", "pok": "ok", "x": "heading", "n": "Kuljetukset skenaarioissa."}
+{"id": "S0684", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F347", "pok": "osittain", "x": "heading", "n": "Haven on Dark Eldarin puolustusosiossa asevaihdoin (domain.js:3214)."}
+{"id": "S0685", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F348", "pok": "ok", "x": "heading", "n": "Kampanja."}
+{"id": "S0686", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F348", "pok": "ok", "x": "heading", "n": "Crew skills -johdanto."}
+{"id": "S0687", "l": "KAMPANJA", "a": "campaign", "f": "crew_skills", "p": "F348", "pok": "ok", "n": "Taulukon rivi."}
+{"id": "S0688", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F348", "pok": "osittain", "x": "table", "n": "Promotions-taulukko ja crew skill -lause yhdessä."}
+{"id": "S0689", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F348", "pok": "ok", "n": "Kampanjan refitit."}
+{"id": "S0690", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F348", "pok": "ok", "n": "Kampanja."}
+{"id": "S0691", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F349", "pok": "osittain", "x": "table", "n": "Taulukon otsikko ja rivi 'Roll again'."}
+{"id": "S0692", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F349", "pok": "ok", "n": "Refit-taulukon rivi."}
+{"id": "S0693", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F349", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0694", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F349", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0695", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F349", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0696", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F349", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0697", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F349", "pok": "osittain", "x": "table", "n": "Ship Refit -taulukon otsikko ja rivi."}
+{"id": "S0698", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F349", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0699", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F349", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0700", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F349", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0701", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F349", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0702", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F349", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0703", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F350", "pok": "osittain", "x": "table", "n": "Weapons Refit -taulukon otsikko ja rivi."}
+{"id": "S0704", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F350", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0705", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F350", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0706", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F350", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0707", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F350", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0708", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F350", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0709", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F350", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0710", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F350", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0711", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F350", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0712", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F350", "pok": "ok", "n": "Refit-taulukko."}
+{"id": "S0713", "l": "VALVOTTU", "a": "checked", "f": "commander_count", "p": "F351", "pok": "ok", "n": "1 Dread Archon osion rajana; +2 Ld kortilla.", "vk": "ajo ok"}
+{"id": "S0714", "l": "KUVAUS", "a": "row", "f": "reroll_price", "p": "F351", "pok": "ok", "n": "Re-rollit riveinä."}
+{"id": "S0715", "l": "ROSKA", "a": "fix", "f": "table_merge", "p": "F351", "pok": "osittain", "x": "table", "n": "Hintalistan katkelma ja Mimic Engines -otsikko. Optiot ovat Torturen profiilissa toisensa poissulkevina (referenssi 22 #170)."}
+{"id": "S0716", "l": "KUVAUS", "a": "drop", "f": "ship_option_pointer", "p": "F351", "pok": "ok", "x": "split", "n": "Mimic Engines -luettelon otsikko ilman luetteloa. Varmista, että Mimic Engines on Corsair-saattajan optiona.", "vk": "ajo ok"}
+{"id": "S0717", "l": "PELI", "a": "play", "f": "ordnance_choice", "p": "F351", "pok": "ok", "n": "Ordnance pelissä."}
+{"id": "S0718", "l": "PELI", "a": "play", "f": "card_rule", "p": "F351", "pok": "ok", "n": "Eldar- ja Leech-torpedot; kortilla (domain.js:2667)."}
+{"id": "S0719", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F359", "pok": "ok", "x": "heading", "n": "Boarding torpedoes +5 Ork capital shipeille (upgrades.py:681; J189: Rok ja hulk eivät capital)."}
+{"id": "S0720", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F359", "pok": "ok", "n": "Space Hulk boarding torpedoes +15 (upgrades.py:685)."}

@@ -1,0 +1,118 @@
+[
+ {
+  "base": "01 - COBRA CLASS DESTROYER (pg 84)",
+  "nm": "COBRA CLASS DESTROYER",
+  "pg": 84,
+  "list": "Imperial Navy — Gothic Sector",
+  "why": "Escort squadron. Its one option is left open, so the card prints an empty box for the squadron to tick at the table.",
+  "li": 0,
+  "si": 5,
+  "ei": 2,
+  "n": 4,
+  "opt": {}
+ },
+ {
+  "base": "02 - STRIKE CRUISER (pg 105)",
+  "nm": "STRIKE CRUISER",
+  "pg": 105,
+  "list": "Space Marines — Codex Astartes",
+  "why": "Launch bays swapped for a bombardment cannon battery and an extra shield bought. The torpedo alternative stays on the card as the other half of the same choice.",
+  "li": 4,
+  "si": 3,
+  "ei": 0,
+  "n": 1,
+  "opt": {
+   "1": "take",
+   "2": "off",
+   "3": "take"
+  }
+ },
+ {
+  "base": "03 - CHAOS BATTLE BARGE (pg 255)",
+  "nm": "CHAOS BATTLE BARGE",
+  "pg": 255,
+  "list": "Chaos — Incursion",
+  "why": "Marines embarked, broadsides exchanged for 45 cm, dorsal lance upgraded. The Chaos Lord and the Terminators are left open.",
+  "li": 12,
+  "si": 4,
+  "ei": 0,
+  "n": 1,
+  "opt": {
+   "0": "off",
+   "2": "take",
+   "4": "take",
+   "5": "off",
+   "6": "off",
+   "7": "take"
+  }
+ },
+ {
+  "base": "04 - ORK HULK (pg 389)",
+  "nm": "ORK HULK",
+  "pg": 389,
+  "list": "Orks — Waaagh!",
+  "why": "Forty hits: the damage track prints as two bands and the crippled half is labelled.",
+  "li": 22,
+  "si": 2,
+  "ei": 0,
+  "n": 1,
+  "opt": {
+   "0": "take"
+  }
+ },
+ {
+  "base": "05 - VOID STALKER CLASS BATTLESHIP (pg 320)",
+  "nm": "VOID STALKER CLASS BATTLESHIP",
+  "pg": 320,
+  "list": "Eldar Corsairs",
+  "why": "No options at all. Eldar stat line, holofields and their own critical damage table.",
+  "li": 18,
+  "si": 9,
+  "ei": 0,
+  "n": 1,
+  "opt": {}
+ },
+ {
+  "base": "06 - HIVE SHIP (pg 432)",
+  "nm": "HIVE SHIP",
+  "pg": 432,
+  "list": "Tyranids — Hive Fleet",
+  "why": "Sixteen options, eleven hidden. Built as a full carrier — boarding torpedoes on the prow, launch bays everywhere else. Nobody prints all sixteen.",
+  "li": 26,
+  "si": 1,
+  "ei": 0,
+  "n": 1,
+  "opt": {
+   "0": "off",
+   "1": "off",
+   "2": "off",
+   "3": "take",
+   "4": "off",
+   "5": "off",
+   "6": "take",
+   "7": "off",
+   "8": "off",
+   "9": "take",
+   "10": "off",
+   "11": "off",
+   "12": "take",
+   "13": "off",
+   "14": "off",
+   "15": "take"
+  }
+ },
+ {
+  "base": "07 - CAIRN CLASS TOMBSHIP (pg 405)",
+  "nm": "CAIRN CLASS TOMBSHIP",
+  "pg": 405,
+  "list": "Necrons — Harvest Fleet",
+  "why": "Sepulchre taken. Necrons have their own critical damage and repair table, and every arc is all-round.",
+  "li": 24,
+  "si": 4,
+  "ei": 0,
+  "n": 1,
+  "opt": {
+   "0": "take"
+  }
+ }
+]

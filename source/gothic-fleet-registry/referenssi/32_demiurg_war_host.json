@@ -1,0 +1,257 @@
+{
+  "list": "Demiurg — War Host",
+  "book_page": 486,
+  "read_pages": [
+    482,
+    483,
+    484,
+    485,
+    486,
+    487
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "The Demiurg fleet has an Attack or Initiative rating of 2",
+      "text": "The Demiurg fleet has an Attack or Initiative rating of 2.",
+      "page": 486,
+      "status": "manual",
+      "why": "Skenaariotieto."
+    },
+    {
+      "key": "They cannot use Demiurg fleet re-rolls",
+      "text": "Vessels allied with the Demiurg rely on the basic leadership applicable to their fleets. They cannot use Demiurg fleet re-rolls, but if available they may purchase special characters with any re-rolls they come with to lead their ships.",
+      "page": 486,
+      "status": "manual",
+      "why": "Ensimmainen virke ei nay (ei saantosanaa), toinen nakyy. Pelinaikainen saanto."
+    },
+    {
+      "key": "These re-rolls can only be used for Demiurg vessels",
+      "text": "These re-rolls can only be used for Demiurg vessels and not with other starships they may take as allies in their war host.",
+      "page": 486,
+      "status": "manual",
+      "why": "Merkittava: listalla on paljon liittolaisaluksia, eivatka ostetut re-rollit koske niita."
+    },
+    {
+      "key": "Demiurg vessels used with this fleet list do not attempt to disengage",
+      "text": "Demiurg vessels used with this fleet list do not attempt to disengage unless they have 2Hp or less remaining.",
+      "page": 486,
+      "status": "manual",
+      "why": "Pelinaikainen saanto."
+    },
+    {
+      "key": "Strongholds are worth 400 points, Bastions are worth 300",
+      "text": "Though their point cost remains unchanged, Strongholds are worth 400 points, Bastions are worth 300 points and Citadels are worth 200 points when determining Victory Points.",
+      "page": 486,
+      "status": "manual",
+      "why": "Voittopisteet, ei listan hinta. Rivien hinnat pysyvat kirjan mukaisina (350/255/185)."
+    },
+    {
+      "key": "one battleship for every two cruiser-class vessels",
+      "text": "Your fleet may include one battleship for every two cruiser-class vessels in the fleet.",
+      "page": 487,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 2,
+      "why": "Kirjoitettu kasin: 'cruiser-class vessels' ei vastaa osion otsikkoa 'Cruisers'."
+    },
+    {
+      "key": "no more than twelve cruisers",
+      "text": "Your fleet may include no more than twelve cruisers.",
+      "page": 487,
+      "status": "enforced",
+      "kind": "cap",
+      "max": 12,
+      "why": "Kirja kirjoittaa katon muodossa 'no more than', jota kattokaava ei tuntenut, ja lukusana 'twelve' puuttui lukusanataulusta. Molemmat lisattiin 7.9.2026."
+    },
+    {
+      "key": "Demiurg Commerce Vessels must outnumber all non-Demiurg cruisers combined",
+      "text": "Demiurg Commerce Vessels must outnumber all non-Demiurg cruisers combined.",
+      "page": 487,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. compare: Bastion+Citadel > muut Cruisers-osion alukset; tyhja vastapuoli hyvaksytaan. Aiempi puute: Kahden joukon VERTAILU saman osion sisalla. Tama on listan tarkein rakenteellinen rajoite - ilman sita listan voisi rakentaa lahes kokonaan Tau- ja Rogue Trader",
+      "kind": "compare",
+      "op": ">",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Kroot Vessels (0",
+      "text": "Kroot Vessels (0-3)",
+      "page": 487,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 3,
+      "why": "Kirjan valiotsikko jossa maararaja on NIMEN PERASSA sulkeissa. Otsikkokaava tunsi vain muodon '0-3 Kroot Vessels', joten Warsphere valui Cruisers-osioon - jossa se olisi laskettu risteilijakattoon, vaikka kirja sanoo nimenomaan etteivat Warspheret laske siihen."
+    },
+    {
+      "key": "one Kroot Warsphere in the fleet for every 750 points",
+      "text": "The fleet may have one Kroot Warsphere in the fleet for every 750 points in the fleet or portion thereof.",
+      "page": 487,
+      "status": "enforced",
+      "kind": "per_points",
+      "each": 1,
+      "per": 750,
+      "why": "Kirjoitettu kasin: lause alkaa sanoilla 'may have' eika 'may include', ja osoittaja on alusluokka."
+    },
+    {
+      "key": "These do not count against the number of cruisers",
+      "text": "These do not count against the number of cruisers in the fleet.",
+      "page": 487,
+      "status": "manual",
+      "why": "Toteutuu rakenteesta: Kroot Vessels on nyt oma osionsa, ja risteilijakatto laskee vain Cruisers-osion."
+    },
+    {
+      "key": "For every three Demiurg capital ships in the fleet, it may include one squadron",
+      "text": "For every three Demiurg capital ships in the fleet, it may include one squadron of up to six Tau or Rogue Trader escorts.",
+      "page": 487,
+      "status": "enforced",
+      "why": "Valvottu 9.9.2026 (kohta 8): kirjasta luettu saanto lisatty build_data.py:n RULE_PICKS-tauluun; resolveFleet tarkistaa sen. ratio units=True: osoittaja laskee skwadroneja (yksikoita), nimittaja Stronghold/Bastion/Citadel. Aiempi puute: Suhdeluku jonka osoittaja on SKWADRONIEN maara, ei alusten. Sovellus laskee runkoja. Lisaksi nimittaja on 'Demiurg capital ships', eli osa Cruisers-osiota - Tau",
+      "kind": "ratio",
+      "per": 3,
+      "allow": 1,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Nicassar Dhows, Tau Wardens or Orcas can be taken for every starship in the fleet equipped with gravitic hooks",
+      "text": "Nicassar Dhows, Tau Wardens or Orcas can be taken for every starship in the fleet equipped with gravitic hooks.",
+      "page": 487,
+      "status": "out_of_scope",
+      "why": "Kapasiteetti luetaan profiileista - v1.1.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Tau, Nicassar and Rogue Trader escorts may not be mixed in the same squadrons",
+      "text": "Tau, Nicassar and Rogue Trader escorts may not be mixed in the same squadrons.",
+      "page": 487,
+      "status": "manual",
+      "why": "Sovelluksen skwadron on yksi listarivi kerrottuna aluslukumaaralla, joten sekaskwadronia ei voi edes tehda vahingossa - eri rivit ovat eri skwadroneja."
+    },
+    {
+      "key": "They do not have access to boarding torpedoes but may use torpedo bombers",
+      "text": "Demiurg ships utilize highly automated versions of torpedoes, fighters, bombers and assault boats. They do not have access to boarding torpedoes but may use torpedo bombers for +10 points per launch bay.",
+      "page": 487,
+      "status": "manual",
+      "why": "Torpedo bombers on rivina hintoineen; boarding torpedo -rivia ei talla listalla ole lainkaan, mika vastaa kieltoa."
+    }
+  ],
+  "entries": [
+    {
+      "name": "One extra re-roll",
+      "pts": 25,
+      "page": null,
+      "sec": "Re-rolls",
+      "grp": "rr"
+    },
+    {
+      "name": "Two extra re-rolls",
+      "pts": 75,
+      "page": null,
+      "sec": "Re-rolls",
+      "grp": "rr"
+    },
+    {
+      "name": "Stronghold Commerce Vessel",
+      "pts": 350,
+      "page": 488,
+      "sec": "Battleships"
+    },
+    {
+      "name": "Bastion Commerce Vessel",
+      "pts": 255,
+      "page": 489,
+      "sec": "Cruisers"
+    },
+    {
+      "name": "Citadel Commerce Vessel",
+      "pts": 185,
+      "page": 490,
+      "sec": "Cruisers"
+    },
+    {
+      "name": "Rogue Trader Cruiser",
+      "pts": 185,
+      "page": 180,
+      "sec": "Cruisers"
+    },
+    {
+      "name": "Dauntless Class Light Cruiser",
+      "pts": 125,
+      "page": 77,
+      "sec": "Cruisers"
+    },
+    {
+      "name": "Endeavour Class Light Cruiser",
+      "pts": 110,
+      "page": 181,
+      "sec": "Cruisers"
+    },
+    {
+      "name": "Kroot Warsphere",
+      "pts": 145,
+      "page": 494,
+      "sec": "Kroot Vessels"
+    },
+    {
+      "name": "Castellan class starship",
+      "pts": 50,
+      "page": 474,
+      "sec": "Tau Escorts"
+    },
+    {
+      "name": "Defender class starship",
+      "pts": 45,
+      "page": 464,
+      "sec": "Tau Escorts"
+    },
+    {
+      "name": "Warden class gunship",
+      "pts": 30,
+      "page": 475,
+      "sec": "Tau Escorts"
+    },
+    {
+      "name": "Orca class gunship",
+      "pts": 25,
+      "page": 466,
+      "sec": "Tau Escorts"
+    },
+    {
+      "name": "Nicassar Dhow",
+      "pts": 45,
+      "page": 491,
+      "sec": "Nicassar Escorts"
+    },
+    {
+      "name": "Recommissioned Escort",
+      "pts": 30,
+      "page": 189,
+      "sec": "Rogue Trader Escorts"
+    },
+    {
+      "name": "Iconoclast Destroyer",
+      "pts": 30,
+      "page": 190,
+      "sec": "Rogue Trader Escorts"
+    },
+    {
+      "name": "Cargo Vessel",
+      "pts": 20,
+      "page": 192,
+      "sec": "Rogue Trader Escorts"
+    },
+    {
+      "name": "Torpedo bombers",
+      "pts": 10,
+      "page": null,
+      "sec": "ORDNANCE"
+    }
+  ],
+  "notes": [
+    "Tama on kirjan viimeinen lista ja rakenteeltaan poikkeuksellinen: runkoalusosiossa on kolmen faktion aluksia (Demiurg, Tau, Rogue Trader) ja saattajat on jaettu kolmeen alaosioon alkuperan mukaan.",
+    "Listalla ei ole komentajaa lainkaan, kuten ei necroneillakaan. Re-rollit ostaa laivasto kokonaisuutena, eivatka ne koske liittolaisaluksia.",
+    "Kirjan valiotsikko 'Kroot Vessels (0-3)' on koko kirjan ainoa jossa maararaja on nimen perassa sulkeissa. Ilman sen tunnistamista Warsphere olisi laskettu risteilijakattoon, jota kirja nimenomaan kieltaa.",
+    "Listan tarkein rajoite - 'Demiurg Commerce Vessels must outnumber all non-Demiurg cruisers combined' - on kahden joukon vertailu eika sita voi valvoa. Ilman sita listan voisi rakentaa lahes kokonaan muiden faktioiden aluksista."
+  ]
+}
