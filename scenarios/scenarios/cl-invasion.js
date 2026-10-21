@@ -19,6 +19,34 @@
   /* opposite long-edge zones of the given depth, drawn for edges chosen by the players */
   const zones = (W, H, d, la, lb) => [R(0, 0, W, d, "b", lb), R(0, H - d, W, d, "a", la)];
   /* Deadline: does the Macro Cannon fire on turn T? Generators destroyed on 40K turns g1..g3 (0 = survived) */
+  /* 40K ↔ BFG -rajapinnat kuvina (21.10.): Deadlinen aikajana ja Boarding Partyn kulkukaavio */
+  const tlSVG = st => {
+    const N = 8, cw = 38, x0 = 30, ev = [1, 2, 3].map(i => [i, get(st, "g" + i, 0)]).filter(x => x[1] > 0);
+    const cell = (x, y, l, o) => "<rect x='" + x + "' y='" + y + "' width='" + (cw - 4) + "' height='24' rx='4' fill='" + (o.fill || "var(--panel-2)") + "' stroke='" + (o.stroke || "var(--line)") + "' stroke-width='" + (o.sw || 1) + "'/><text x='" + (x + (cw - 4) / 2) + "' y='" + (y + 12.5) + "' text-anchor='middle' dominant-baseline='middle' font-size='11' font-weight='700' fill='" + (o.c || "var(--ink-2)") + "'>" + l + "</text>";
+    let g = "<text x='0' y='22' font-size='11' font-weight='800' fill='var(--ink-2)'>40K</text><text x='0' y='112' font-size='11' font-weight='800' fill='var(--ink-2)'>BFG</text>";
+    for (let t = 1; t <= N; t++) {
+      const x = x0 + (t - 1) * cw, falls = ev.filter(e => e[1] === t).map(e => "G" + e[0]);
+      g += cell(x, 10, t, falls.length ? { fill: "var(--warn-soft)", stroke: "var(--warn)", c: "var(--warn)" } : {});
+      if (falls.length) g += "<text x='" + (x + (cw - 4) / 2) + "' y='46' text-anchor='middle' font-size='9.5' font-weight='700' fill='var(--warn)'>" + falls.join(" ") + " falls</text>" +
+        "<line x1='" + (x + (cw - 4) / 2) + "' y1='52' x2='" + (x + (cw - 4) / 2) + "' y2='94' stroke='var(--warn)' stroke-width='1.2' stroke-dasharray='3 2'/>";
+      const c = cannon(t, st), dead = /No generators left|cannot fire/.test(c[1]), mark = c[0] ? "●" : dead ? "×" : "○";
+      g += cell(x, 100, t + " " + mark, { fill: c[0] ? "var(--b-soft)" : "var(--panel-2)", stroke: st.turn === t ? "var(--ink)" : c[0] ? "var(--b)" : "var(--line)", sw: st.turn === t ? 2 : 1, c: c[0] ? "var(--b)" : "var(--ink-3)" });
+    }
+    return "<svg viewBox='0 0 " + (x0 + N * cw) + " 140' role='img' aria-label='40K turns and BFG turns' style='width:100%;max-width:420px;display:block'>" + g +
+      "<text x='" + x0 + "' y='138' font-size='10' fill='var(--ink-3)'>● the Macro Cannon fires · ○ recharges · × cannot fire</text></svg>";
+  };
+  const TIMELINE = { k: "info", html: st => "<h3>From the 40K game to the BFG turns</h3><div class='sub'>A generator that falls on 40K turn N takes effect on BFG turn N (the booklet’s example). Enter the turns above; the frame marks the current BFG turn.</div>" + tlSVG(st) };
+  const flowSVG = st => {
+    const r = get(st, "brd", -1), box = (x, y, w, h, t, on) => "<rect x='" + x + "' y='" + y + "' width='" + w + "' height='" + h + "' rx='8' fill='" + (on ? "var(--b-soft)" : "var(--panel-2)") + "' stroke='" + (on ? "var(--b)" : "var(--line)") + "' stroke-width='" + (on ? 2 : 1) + "'/>" +
+      t.split("\n").map((l, i, a) => "<text x='" + (x + w / 2) + "' y='" + (y + h / 2 + (i - (a.length - 1) / 2) * 13) + "' text-anchor='middle' dominant-baseline='middle' font-size='11' font-weight='" + (i ? 500 : 750) + "' fill='var(--ink-2)'>" + l + "</text>").join("");
+    const arr = (x1, y1, x2, y2) => "<line x1='" + x1 + "' y1='" + y1 + "' x2='" + x2 + "' y2='" + (y2 - 6) + "' stroke='var(--ink-3)' stroke-width='1.5'/><path d='M" + x2 + " " + y2 + " l-4 -7 h8 z' fill='var(--ink-3)'/>";
+    return "<svg viewBox='0 0 340 270' role='img' aria-label='From BFG to Warhammer 40,000 and back' style='width:100%;max-width:420px;display:block'>" +
+      box(20, 6, 300, 44, "BFG: a boarding action\nagainst the defender’s flagship", false) + arr(170, 50, 170, 74) +
+      box(20, 76, 300, 52, "Pause: play the 40K boarding game\nboarders up to 500 pts · defenders up to 250 pts", r === 0) + arr(110, 128, 90, 158) + arr(230, 128, 250, 158) +
+      box(10, 160, 160, 62, "Boarders win\ncharges detonate:\nflagship takes D6+2", r === 1) + box(176, 160, 154, 62, "Boarders fail\nno boarding damage;\nthe battle goes on", r === 2) +
+      "<text x='170' y='250' text-anchor='middle' font-size='10.5' fill='var(--ink-3)'>Back to BFG — record the result below</text></svg>";
+  };
+  const FLOW = { k: "info", html: st => "<h3>BFG → Warhammer 40,000 → BFG</h3>" + flowSVG(st) };
   const cannon = (T, st) => {
     const ev = [get(st, "g1", 0), get(st, "g2", 0), get(st, "g3", 0)].filter(x => x > 0).sort((a, b) => a - b);
     const lost = ev.filter(x => x <= T).length, g = 3 - lost;
@@ -376,7 +404,7 @@
       { w: "Boarding the flagship", s: "b", t: "If you start a boarding action against the defender’s flagship, do not roll for it: stop and play the Warhammer 40,000 boarding scenario, then come back." },
       { w: "The charges", s: "b", t: "If the boarders win the 40K game, the flagship’s ordnance goes up: D6+2 damage to it (tool below)." }
     ],
-    tools: [
+    tools: [FLOW,
       { k: "ending", id: "brd", l: "The 40K boarding action", rows: [["Not played yet", "draw", "—"], ["The boarders won: charges detonated", "b"], ["The boarders failed", "a"]] },
       { k: "val", id: "boom", l: "The flagship takes D6+2 damage", opts: [3, 4, 5, 6, 7, 8], roll: () => d6() + 2, unit: " damage" }
     ],
@@ -411,7 +439,7 @@
     stools: [
       { k: "counter", id: "g1", l: "First generator destroyed on 40K turn (0 = survived)", max: 8 },
       { k: "counter", id: "g2", l: "Second generator destroyed on 40K turn (0 = survived)", max: 8 },
-      { k: "counter", id: "g3", l: "Third generator destroyed on 40K turn (0 = survived)", max: 8 },
+      { k: "counter", id: "g3", l: "Third generator destroyed on 40K turn (0 = survived)", max: 8 }, TIMELINE,
       { k: "html", html: "<h3>The Warhammer 40,000 half (play it first)</h3><ul class='plain'><li>The attackers have 50% more points than the defenders.</li><li>Three bunkers in the defenders’ zone house the generators; the attackers start within 12″ of the south edge, the defenders within 18″ of the north edge.</li><li>8 turns. All three generators destroyed in turns 1–6: attacker wins; in turn 7 or 8: draw; any generator left: defender wins.</li></ul>" }
     ],
     notes: [OLD + "The booklet’s Scenario Seven (old p. 76) is Planetary Assault, RB p. 136–137. " + VPOLD,
@@ -423,7 +451,7 @@
       { w: "Generators", t: "Three generators: it fires every turn. Two: every other turn. One: every third turn. None: never. On the turn a generator falls it cannot fire. The turn track shows when it fires." }
     ],
     fx: (T, st) => { const c = cannon(T, st); return [["b", c[1]]]; },
-    tools: [],
+    tools: [TIMELINE],
     rtools: [
       { k: "num", id: "av", l: "Attacker: victory points", s: "a", after: v => v + " VP" },
       { k: "num", id: "bv", l: "Defender: victory points", s: "b", after: v => v + " VP" }

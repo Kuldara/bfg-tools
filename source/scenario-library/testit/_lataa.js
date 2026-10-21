@@ -52,7 +52,7 @@ function lataa(dir, opts) {
   for (const f of files) src += "\n;" + fs.readFileSync(path.join(dir, f), "utf8");
   src += "\n;wrInit();\n" + (opts.extra || "") +
     "\n;globalThis.__L = { SC, MAPS, FITS, mapOf, mapFn, fitOf, tableWH, get DB() { return DB; }, set DB(x) { DB = x; }, val, vis, pickV, agV, tpl, stOf, TABLES, mapSVG, gridOf" +
-    (/battlezone-core/.test(html) ? ", BZ, TERRAIN, bzRun, bzSpec, bzBox, bzCtl, bzPlay, bzEvTool, bzFixed, bzChoices, bzZone, bzIsPlanet, bzItems" : "") + (opts.names ? ", " + opts.names : "") + " };";
+    (/battlezone-core/.test(html) ? ", BZ, TERRAIN, bzRun, bzSpec, bzBox, bzCtl, bzPlay, bzEvTool, bzFixed, bzChoices, bzZone, bzIsPlanet, bzItems, terrHit, terrPop" : "") + (opts.names ? ", " + opts.names : "") + " };";
   vm.runInContext(src, ctx, { filename: "library.js" });
   return ctx.__L;
 }

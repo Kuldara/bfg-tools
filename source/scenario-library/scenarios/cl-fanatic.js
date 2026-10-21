@@ -424,7 +424,9 @@
       const nu = (d, l) => d >= 10 ? l : "";
       if (x0 > 0) out.push(R(0, 0, x0, H, "n", nu(x0, "not used"), { rot: -90 }), R(W - x0, 0, x0, H, "n", nu(x0, "not used"), { rot: 90 }));
       if (y0 > 0) out.push(R(x0, 0, A, y0, "n", nu(y0, "not used")), R(x0, H - y0, A, y0, "n", nu(y0, "not used")));
-      out.push({ z: "ring", cx, cy, r: 33, s: "a" }, { z: "planet", cx, cy, r: 8, l: "Medusa V" },
+      out.push({ z: "ring", cx, cy, r: 33, s: "a" }, { z: "ring", cx, cy, r: 10, s: "n", nr: 1 }, { z: "planet", cx, cy, r: 8, l: "Medusa V" },
+      /* artikkelin oma "low orbit": 2 cm planeetasta pääpöydällä, ei kirjan low orbit -pöytä (21.10.); selitys renkaan selitteessä (0.13) */
+      { z: "text", x: cx, y: cy + 8 + mapFont(W) * 2.45, l: "low orbit: 2 cm" },
         { z: "text", x: cx, y: cy - 38, l: "Imperial: within 25 cm", s: "a" },
         { z: "text", x: x0 + A * .22, y: y0 + A * .88, l: "dust clouds: 30+ cm\nfrom the planet" });
       const ar = { Top: [cx + 25, y0 + 2, cx + 25, y0 + 20], Bottom: [cx + 25, y0 + A - 2, cx + 25, y0 + A - 20], Left: [x0 + 2, cy + 25, x0 + 20, cy + 25], Right: [x0 + A - 2, cy + 25, x0 + A - 20, cy + 25] }[e];

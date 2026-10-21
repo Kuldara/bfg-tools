@@ -108,7 +108,10 @@ for (const sc of L.SC) {
     /* teksti */
     const txt = L.bzCtl(sc, st, v, m) + L.bzBox(sc, st, v, m) + L.mapSVG(m) + JSON.stringify(L.bzPlay(sc, st)) + L.bzEvTool(sc, st) + m.bz.log.map(l => l.text).join(" ");
     if (BAD.test(txt)) fail(key, "tekstissä " + txt.match(BAD)[0]);
-    for (const sel of ["zone", "sun"].concat(ps.map(t => t.id), [...new Set(ps.map(t => "k:" + t.kind))])) { st.bz.sel = sel; const h = L.bzBox(sc, st, v, m); if (BAD.test(h) || !/bzrules/.test(h)) fail(key, "säännöt: " + sel); }
+    for (const sel of ["zone", "sun"].concat([...new Set(ps.map(t => "k:" + t.kind))])) { st.bz.sel = sel; const h = L.bzBox(sc, st, v, m); if (BAD.test(h) || !/bzrules/.test(h)) fail(key, "säännöt: " + sel); }
+    /* palan säännöt ovat kartan selitteessä (0.13, terrPop); myös skenaarion omat maastot (TERR_INFO) ja kirjan maastot kartalla */
+    const own = m.items.map(it => L.terrHit(it)).filter(Boolean).map(h => h.id); /* m.items: korvatut esineet (drop) ovat jo poissa */
+    for (const sel of ps.map(t => t.id).concat([...new Set(own)])) { const h = L.terrPop(Object.assign({}, m, { sel })); if (BAD.test(h) || !/tpop/.test(h) || !/<li>/.test(h)) fail(key, "selite: " + sel); }
     st.bz.sel = "";
   }
 }

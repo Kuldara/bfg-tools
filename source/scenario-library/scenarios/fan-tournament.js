@@ -77,7 +77,7 @@
   const CLOCK = { k: "timer", id: "clk", l: "Game clock", min: 120 };
   const LAST8 = T => T === 8 ? [[null, "Last turn"]] : [];
   const zones = (W, H, d) => [R(0, 0, W, d, "a", "Fleet A: " + d + " cm"), R(0, H - d, W, d, "b", "Fleet B: " + d + " cm")];
-  const rift = (cx, cy, l) => [{ z: "circ", cx, cy, r: 5, s: "c", l: "", nr: 1 }, l ? { z: "text", x: cx, y: cy + 10, l, s: "c" } : null];
+  const rift = (cx, cy, l) => [{ z: "circ", cx, cy, r: 5, s: "c", l: "", nr: 1, tk: "rift" }, l ? { z: "text", x: cx, y: cy + 10, l, s: "c" } : null]; /* tk: klikattava warp rift (0.13) */
   const REF_VP = [["Victory points", "RB p. 122"], ["Attack ratings", "RB p. 120"]];
 
   /* secondary tables */

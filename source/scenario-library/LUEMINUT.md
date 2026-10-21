@@ -223,7 +223,20 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
   battle -arvontaan tulee toinen valikko "vs …" (`f.sug2`, `p.sug2`). Kumpikin on vapaaehtoinen. Kun molemmat on valittu,
   suosituksen pitää sisältää kumpikin laivasto, ja "any fleets" -skenaariot pysyvät mukana kuten ennenkin.
   Orks vs Imperial Navy: arvontapooli 70 (52 any fleets + 18 suositeltua), etusivu 72 (osittainen osuma, esim. Orks-alaryhmät).
-- **Saapumisheitot nopalla (21.10. ilta, 0.12.1).** Käyttäjä Exterminatuksesta: *"ei voi vissiin rollata tuota patrol saapuu"*.
+- **Low orbit -pöytä karttakuvaan (21.10. ilta).** Käyttäjä: *"teeppäs tuonne joku havainnollistava kuva tuosta low orbit
+  pöydästä ja normi pöydän ja sen rajapinnasta"* ja *"paras tietty jos saa samaan kartta kuvaan ne jotenkin mutta mieti
+  miten olisi paras"*. Valinta: ei erillistä kaaviota, vaan low orbit -pöytä piirretään skenaarion karttaan pääpöydän alle
+  samassa mittakaavassa (`mapSVG`, `m.lo`).
+  - **Kaista:** 60 × 120 cm (kirja: 45–60 × 90–135 cm, RB s. 116). Sisääntuloreuna ylhäällä ①, 45 cm:n vetoalue nuolineen ②
+    (vetomatka 5/8/10 cm, tai tarkka luku, kun Planet size on heitetty), planeettareuna alhaalla ③ ja paluu
+    pääpöydälle ④.
+  - **Yhteys:** katkoviivanuoli lähtee skenaarion planeetasta (suurin planeetta), ja se piirretään tekstien alle.
+  - **Selite:** kartan alla on "Low orbit table" -lohko, jossa samat numerot ①–④ ovat sääntölistana. Play-välilehdellä
+    lohko on piilotettava, ja low orbit -kartta saa enemmän korkeutta (62 / 78 vh).
+  - **Mukana** `LOW_ORBIT`-joukon 20 skenaariota. Pois jätetyt ja perusteet on kirjattu koodiin: Siege of Fularis, Planet
+    Fall, Kravertus, Spirit ja Abhorrence. Abhorrencen kartta on jo itsessään low orbit -pöytä vetoalueineen.
+  - **Testi:** karttatesti tarkistaa kaistan tekstit kaikilla pöydillä ja puhelimen fontilla (0 + 0).
+- **Saapumisheitot nopalla (21.10. ilta, 0.12.1; julkaistu, GitHub 408cb6d. Ennen julkaisua selaintesti leveä ja kapea 0 virhettä, sisältötesti 0 + 0, kuvakierros 1 854 sivua 0).** Käyttäjä Exterminatuksesta: *"ei voi vissiin rollata tuota patrol saapuu"*.
   - **Mitä muuttui:** neljässä skenaariossa oli pelkkä nopeustaulukko (pick). Tilalle tuli `ARRIVAL`-noppa: D6 jokaiselle
     laivalle, laivueelle tai merkille, ja tulos kertoo suoraan, mille nopeuksille se riittää (RB s. 139, 141). Exterminatuksessa ja Siege of
     Fularisissa sama nappi heittää myös saapumisreunan.
