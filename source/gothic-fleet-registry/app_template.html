@@ -629,6 +629,10 @@ details.rules.auto[open]>summary::after{content:" \2013"}
 .chk.warn .dot{background:var(--warn);box-shadow:0 0 0 3px var(--warn-wash)}
 .chk .src{display:block;color:var(--ink-3);font-size:11px;line-height:1.45;margin-top:2px}
 .chk .val{font:500 11px/1 var(--mono);color:var(--ink-3);white-space:nowrap}
+/* every squadron of one rule on one row (J228) */
+.chk .sqs{display:flex;flex-wrap:wrap;gap:2px 12px;margin-top:3px;color:var(--ink-2);font-size:12px}
+.chk .sqs i{font:500 11px var(--mono);font-style:normal;color:var(--ink-3)}
+.chk .sqs .sq.bad,.chk .sqs .sq.bad i{color:var(--bad);font-weight:600}
 /* Fleet facts (J214): worked out for the player, not checked - a hollow dot */
 .facts:empty{display:none}
 .facts{border-top:1px solid var(--line)}
@@ -3940,21 +3944,44 @@ function renderChecks(){
   $("#chkmeta").innerHTML = bad
     ? bad + " problem" + (bad > 1 ? "s" : "")
     : "machine checks clear" + (manual ? " &middot; " + manual + " not checked" : "");
-  $("#checks").innerHTML = cs.map(c =>
-    `<div class="chk ${c.ok ? (c.warn ? "warn" : "") : "bad"}">
+  /* One row per squadron rule, not one per squadron (J228, user 21.10.2026:
+     "onko jarkea etta omat rivit kaikilla"). domain.js still checks every
+     squadron on its own; the row names each with its size, a wrong one in
+     red, and the book's sentence is printed once. */
+  const rows = [];
+  cs.forEach(c => {
+    const g = /^Squadrons of \d/.test(String(c.s || "")) ? c.s : null;
+    const r = g ? rows.find(x => x.g === g) : null;
+    if(r) r.cs.push(c); else rows.push({ g: g, cs: [c] });
+  });
+  rows.forEach(r => {
+    const c = r.cs[0];
+    r.k = r.cs.length > 1 ? "squadrons|" + r.g : c.t + "|" + c.s;
+    r.side = r.cs.some(x => !x.ok) ? "bad" : r.cs.every(x => x.warn) ? "warn" : "ok";
+  });
+  const sqSize = v => String(v).replace(/^(\d+) (ships?|defences?)\b\s*/, "\u00d7$1 ");
+  $("#checks").innerHTML = rows.map(r => {
+    const c = r.cs[0], cls = r.side === "bad" ? "bad" : r.side === "warn" ? "warn" : "";
+    if(r.cs.length < 2) return `<div class="chk ${cls}">
       <span class="dot"></span>
       <span><b>${esc(c.t)}</b><span class="src">${esc(c.s)}</span></span>
-      <span class="val">${esc(c.v)}</span></div>`).join("");
+      <span class="val">${esc(c.v)}</span></div>`;
+    const m = /^Squadrons of (\d+\u2013\d+)\./.exec(r.g);
+    return `<div class="chk ${cls}">
+      <span class="dot"></span>
+      <span><b>Escort squadrons${m ? " of " + m[1] : ""}</b><span class="sqs">${r.cs.map(x =>
+        `<span class="sq${x.ok ? "" : " bad"}">${esc(x.t)} <i>${esc(sqSize(x.v).trim())}</i></span>`).join("")}</span><span class="src">${esc(r.g)}</span></span>
+      <span class="val">${r.side === "bad" ? r.cs.filter(x => !x.ok).length + " of " + r.cs.length + " wrong" : r.cs.length + " squadrons"}</span></div>`;
+  }).join("");
   /* A check that changed sides since the last render - went red, or came
      clear - is washed, so the eye lands on what the last tap did to the
      list. A count that only moved (1 / 12 to 2 / 12) is not a change of
      sides and stays quiet. */
   const seen = LAST_CHK && LAST_CHK.nm === L().nm ? LAST_CHK.map : null, map = {};
   const chks = $("#checks").querySelectorAll(".chk");
-  cs.forEach((c, i) => {
-    const k = c.t + "|" + c.s, side = c.ok ? (c.warn ? "warn" : "ok") : "bad";
-    if(seen && seen[k] && seen[k] !== side && chks[i]) chks[i].classList.add("chg");
-    map[k] = side;
+  rows.forEach((r, i) => {
+    if(seen && seen[r.k] && seen[r.k] !== r.side && chks[i]) chks[i].classList.add("chg");
+    map[r.k] = r.side;
   });
   LAST_CHK = { nm: L().nm, map: map };
   const n = manual;
