@@ -183,7 +183,33 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
   RB s. 138 (v1.10 ja v1.11); horizon muisti 30 cm, mutta se on etäisyys reunoista. Muutos koskee myös
   Ahriman's Arrivalia, joka lainaa kartan (`cl-mag-a.js`: P1/P2-nimeäminen poistettu). Karttatesti 0 + 0,
   maastotesti 0. Script-tagit `?v=0.9.2`.
-- **0.10 (21.10.2026 ilta): kartta Play-välilehdelle.** Käyttäjä: *"esim tuossa escalating engagement
+- **Kahden laivaston suodatin (21.10. ilta):** käyttäjä: *"tuohon voi tietty laittaa kahden eri fleetin suosituksen. esim jos
+  haluaa ork vs imperium niin suoraan suodattaa"* ja *"ettei ole pakko valita kahta"*. Etusivun Filtersiin ja Before the
+  battle -arvontaan tulee toinen valikko "vs …" (`f.sug2`, `p.sug2`). Kumpikin on vapaaehtoinen. Kun molemmat on valittu,
+  suosituksen pitää sisältää kumpikin laivasto, ja "any fleets" -skenaariot pysyvät mukana kuten ennenkin.
+  Orks vs Imperial Navy: arvontapooli 70 (52 any fleets + 18 suositeltua), etusivu 72 (osittainen osuma, esim. Orks-alaryhmät).
+- **0.10.7 (21.10.2026 ilta): ei oletuksia kartalle eikä maastoa ilman nappia.** Käyttäjä: *"älä näytä esim
+  fleet engagment deployment karttaa avatessa kun sitä ei ole vielä päätetty. pitäisi varmaan olla tyhjä ja lukea
+  jotain että to be desided jne. ja kaikkiin vastaaviin sama"* ja *"ei kannata laittaa terrainia defaulttina. vasta
+  jos painetaan sitä nappia. monet ei edes halua arpia sitä mun sivulla"*.
+  - **Asettelu, joka päätetään pöydässä** (`PENDING_VAR`, `varPending`): Fleet Engagement ja The Art of Command 1
+    (asettelu A–D muodostelmista ja heitosta). Kun asettelua ei ole valittu, kartta on tyhjä pöytä tekstillä "Set-up
+    to be decided", rivin otsikko on "Set-up: to be decided" eikä yksikään A–D-nappi ole valittuna. Valinta
+    (`st.vSet`) tulee versionapista tai Formations-työkalun "Show set-up X" -napista. New game nollaa valinnan,
+    koska asettelu päätetään joka peliin erikseen. Testit (`mapOf`) piirtävät yhä kaikki A–D.
+  - **Heitosta riippuvat kartan osat piirretään vasta heiton jälkeen** (ennen heittoa näkyi oletus):
+    - Lachlonin kuut ja asema: "Moons and station: roll them below".
+    - Craftworld Assaultin gravity well: "craftworld: roll its size below".
+    - No Way Outin pyrstö: "tail: 3D6 cm, roll below".
+    - Shadow of the Cometin komeetta ja hyökkääjien laatikko: "roll which end it starts from". Myös
+      pelikartassa, joka ennen oletti alapään.
+    - Wolf Packsin saattueen tuloreuna ja pakoreuna: "Convoy entry edge: roll it below".
+  - Sovittavien kohtien (`{a:…}`) oletukset jäivät ennalleen: ne ovat ehdotuksia, jotka näkyvät "Agreed before the
+    game" -laatikossa, eivät arvauksia.
+  - **Maasto:** sitä ei arvottu koskaan ilman nappia (190 koskematonta skenaariota tarkistettu, maastoa ei
+    yhdessäkään). Ennen arvontaa Set-upissa näkyy nyt vain pieni "Generate terrain" -nappi ja yksi rivi, eikä
+    otsikkoa, battlezone-valikkoa tai selityslaatikkoa. Ne tulevat näkyviin arvonnan jälkeen.
+- **0.10 (21.10.2026 ilta): kartta Play-välilehdelle (julkaistu klo 16.30: Worker 82db3901, GitHub 39a144a; ennen julkaisua selaintesti leveä + kapea 15 184 näkymää 0 virhettä, karttatesti 4 020 karttaa 0 + 0, sisältötesti 0 + 0, mittatesti 0, maastotesti 0, kuvakierros 1 850 sivua 0; live tarkistettu: The Bait vuoro 4 = 90 cm kuten kirjan esimerkki).** Käyttäjä: *"esim tuossa escalating engagement
   scenaariossa olisi hyötyä että kartta edelleen näkyvissä play välilehdessä. ainakin pienempänä (ja siinä on
   sit vähän eri kartta piirto kuin vuoro 0) ja mieti muut scenaariot myös missä tämä parannus relevantti ja
   toteuta ja julkaise"*.

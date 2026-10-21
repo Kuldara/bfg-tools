@@ -439,6 +439,8 @@ html.short .mapwrap svg { max-height: 78vh; }
 /* celestial phenomena (0.9): paneeli kartan alla */
 .bzbox { margin-top: 8px; background: var(--panel-2); border: 1px solid var(--line-soft); border-radius: 12px; padding: 10px 12px; }
 .bzhead { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 10px; margin: 0 0 10px; }
+.bzoff .btn { padding: 6px 12px; font-size: 13px; }
+.bzhint { font-size: 12.5px; color: var(--ink-3); }
 .bzbox > .bzwhy:first-child { margin-top: 0; }
 .bzt { font-weight: 750; font-size: 14.5px; }
 .bzzc { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 14px; min-width: 0; flex-basis: 100%; }
@@ -530,7 +532,7 @@ html.wide:not(.short) .mapstick > .col:last-child { max-height: calc(100vh - var
   <p class="kbd">Keyboard: <b>1</b>–<b>4</b> switch a scenario’s tabs · <b>←</b> <b>→</b> change the turn on Play.</p>
 </footer>
 
-<script src="battlezone-core.js?v=0.10.5"></script>
+<script src="battlezone-core.js?v=0.10.7"></script>
 <script>
 "use strict";
 /* ---------------------------------------------------------------- data */
@@ -2581,6 +2583,8 @@ function bzCtl(sc, st, v, m) {
   const zc = (ch.length > 1 ? "<select data-a='bzz' aria-label='Battlezone'>" + ch.map(c => "<option value='" + c + "'" + (String(c) === String(z) ? " selected" : "") + ">" + esc(bzZoneLabel(c)) + "</option>").join("") + "</select>"
     : "<b>" + esc(bzZoneLabel(z)) + "</b>") +
     (pk ? "<select data-a='bzp' aria-label='" + esc(pk.label) + "'>" + pk.opts.map(([k, l]) => "<option value='" + k + "'" + ((b.p || pk.def) === k ? " selected" : "") + ">" + esc(l) + "</option>").join("") + "</select>" : "");
+  /* ennen arvontaa vain nappi (käyttäjä 21.10.: "vasta jos painetaan sitä nappia. monet ei edes halua arpia sitä") */
+  if (!res) return "<div class='bzhead bzoff'><button class='btn' data-a='bzgo'>Generate terrain</button><span class='bzhint'>Optional: rolls the celestial phenomena onto this map.</span></div>";
   return "<div class='bzhead'><span class='bzt'>Celestial phenomena</span><span class='bzbtn'>" +
     (res ? "<button class='btn primary' data-a='bzgo'>Reroll</button><button class='btn' data-a='bzclr'>Clear</button>" : "<button class='btn primary' data-a='bzgo'>Generate terrain</button>") + "</span>" +
     "<span class='bzzc'>" + zc + "</span></div>";
@@ -2589,7 +2593,7 @@ function bzCtl(sc, st, v, m) {
 function bzBox(sc, st, v, m) {
   const sp = bzSpec(sc, v), res = m.bz, b = st.bz || {}, z = bzZone(sp, st);
   let h = "<div class='bzbox'><p class='bzwhy'><b>Battlezone.</b> " + bzWhy(sc, sp, z) + "</p>" + (sp.warn ? "<p class='bzwarn'>" + fmt(sp.warn) + "</p>" : "");
-  if (!res) return h + "<p class='bzwhy'>" + (sp.note ? esc(sp.note) + " " : "") + "Rolls the phenomena by the rulebook (RB p. 104–116) and draws them on the map above, around what the scenario places itself.</p></div>";
+  if (!res) return "";
   const me = res.meta, ps = bzPieces(res), ev = me.events, n = ps.length;
   const zs = me.zone ? me.zone.name + (me.zoneDie ? " (D" + (z && z.die === 3 ? 3 : 6) + " = " + me.zoneDie + ")" : "") : "No battlezone";
   const ss = me.sunEdge === "none" ? "no sunward edge" : "sunward: " + me.sunEdge + (me.sunDie ? " (D6 = " + me.sunDie + ")" : "");
@@ -2738,7 +2742,7 @@ function lf() {
   return DB.lf;
 }
 function lfActive(f) {
-  return Object.values(f.trust || {}).filter(Boolean).length + Object.values(f.book || {}).filter(Boolean).length + (f.fits ? 1 : 0) + (f.pl ? 1 : 0) + (f.sug ? 1 : 0);
+  return Object.values(f.trust || {}).filter(Boolean).length + Object.values(f.book || {}).filter(Boolean).length + (f.fits ? 1 : 0) + (f.pl ? 1 : 0) + (f.sug ? 1 : 0) + (f.sug2 ? 1 : 0);
 }
 function hay(sc) {
   const i = sc.info || INFO[sc.id];
@@ -2752,7 +2756,8 @@ function listMatches(cat) {
     (!q || q.split(/\s+/).every(w => hay(sc).includes(w))) &&
     (!tr.length || tr.includes(sc.trust)) && (!bk.length || bk.includes(sc.book)) &&
     (!f.fits || fitsTable(sc)) && (!f.pl || [].concat(sc.players || 2).some(n => f.pl === "3" ? n >= 3 : String(n) === f.pl)) &&
-    (!f.sug || !sc.suggest || sc.suggest.some(x => x.includes(f.sug))));
+    /* kaksi laivastoa (käyttäjä 21.10.: "ork vs imperium"): suosituksessa molemmat; any fleets -skenaariot pysyvät mukana */
+    (!sc.suggest || [f.sug, f.sug2].every(g => !g || sc.suggest.some(x => x.includes(g)))));
 }
 function listZone(cat) {
   const list = listMatches(cat), q = (DB.lq || "").trim();
@@ -2783,6 +2788,7 @@ function filterPanel() {
     "<div class='flrow'><span class='flbl'>Rules</span>" + Object.keys(BOOK).filter(k => SC.some(s => s.book === k) || (f.book && f.book[k])).map(k => chip("lfb", k, BOOK[k], f.book && f.book[k])).join("") + "</div>" +
     "<div class='flrow'><span class='flbl'>Players</span>" + PLAYERS.map(([k, l]) => chip("lfp", k, l, f.pl === k)).join("") + chip("lff", "", "Fits my table (" + W + " × " + H + ")", f.fits) + "</div>" +
     "<div class='flrow'><select data-a='lsug' aria-label='Suggested for'><option value=''>Suggested for: any fleet</option>" + facs.map(x => "<option value='" + esc(x) + "'" + (f.sug === x ? " selected" : "") + ">Suggested for: " + esc(x) + "</option>").join("") + "</select>" +
+    "<select data-a='lsug2' aria-label='Against'><option value=''>vs any fleet</option>" + facs.map(x => "<option value='" + esc(x) + "'" + (f.sug2 === x ? " selected" : "") + ">vs " + esc(x) + "</option>").join("") + "</select>" +
     (lfActive(f) ? "<button class='btn' data-a='lfclr'>Clear filters</button>" : "") + "</div></div>";
 }
 
@@ -2825,7 +2831,8 @@ function renderSc() {
     (sc.rate ? "<span class='rate'><b>Our note:</b> " + esc(sc.rate) + "</span>" : "") + "</div>" +
     "<button class='btn infobtn' data-a='info' aria-expanded='" + !!(DB.info && DB.info[sc.id]) + "'>ⓘ Background & credits</button>" + (DB.info && DB.info[sc.id] ? infoPanel(sc) : "") + "</div>";
   if (!topTabs) h += "<nav class='tabs'>" + tabsIn + "</nav>";
-  if (sc.variants) h += "<div class='varrow'><span>Version</span><div class='seg' role='group'>" + sc.variants.map(([id, l]) => "<button data-a='var' data-v='" + id + "' aria-pressed='" + (v === id) + "'>" + esc(l) + "</button>").join("") + "</div></div>";
+  const vp = varPending(sc, st);
+  if (sc.variants) h += "<div class='varrow'><span>" + (vp ? "Set-up: to be decided" : "Version") + "</span><div class='seg' role='group'>" + sc.variants.map(([id, l]) => "<button data-a='var' data-v='" + id + "' aria-pressed='" + (!vp && v === id) + "'>" + esc(l) + "</button>").join("") + "</div></div>";
   if (tab === "setup") h += setupView(sc, st, v, steps, nd);
   else if (tab === "subplots") h += subplotsView(sc, st, v);
   else if (tab === "play") h += playView(sc, st, v);
@@ -2852,8 +2859,18 @@ function bzLegend(m) {
   const me = m.bz.meta;
   return "<span><i class='bzsw'></i>Rolled phenomena</span>" + (!m.bz.sunMap && me.sunEdge !== "none" ? "<span><i style='background:var(--sun)'></i>Sunward" + (me.sunDie ? " (rolled)" : "") + "</span>" : "");
 }
+/* asettelu, joka selviää vasta pöydässä (muodostelmat ja heitto): ennen valintaa kartta on tyhjä (käyttäjä 21.10.) */
+const PENDING_VAR = {
+  "fleet-engagement": "Enter both formations in the\nFormations tool and roll off (step 3)",
+  "fan-p-art-command-1": "Enter both formations in the\nFormations tool and roll off (step 3)"
+};
+function varPending(sc, st) { return !!PENDING_VAR[sc.id] && !(st.vSet || (st.v && st.v !== v0(sc))); }
 function mapBlock(sc, v) {
-  const [W, H] = tableWH(), fit = fitOf(sc, v), src = sc.srcTable || SRC_TABLE[sc.id], m = mapOf(sc, v), st = stOf(sc);
+  const [W, H] = tableWH(), fit = fitOf(sc, v), src = sc.srcTable || SRC_TABLE[sc.id], st = stOf(sc), m = mapOf(sc, v);
+  if (varPending(sc, st)) {
+    const e = Object.assign({}, m, { items: [{ z: "text", x: W / 2, y: H / 2, l: "Set-up to be decided\n" + PENDING_VAR[sc.id] }] });
+    return bzCtl(sc, st, v, e) + "<div class='mapwrap'>" + mapSVG(e) + "<div class='legend'>" + bzLegend(e) + "<span class='msize'>" + mapSize(W, H) + "</span></div></div>" + bzBox(sc, st, v, e);
+  }
   if (!mapFn(sc)) return bzCtl(sc, st, v, m) + "<div class='mapwrap'>" + (m.bz ? mapSVG(m) + "<div class='legend'>" + bzLegend(m) + "<span class='msize'>" + mapSize(W, H) + "</span></div>" : "") + "<div class='mapnote' style='padding:10px 6px'>" + esc(val(sc.noMap, v) || "This scenario has no fixed table layout.") + "</div></div>" + bzBox(sc, st, v, m);
   let h = bzCtl(sc, st, v, m) + "<div class='mapwrap'>" + mapSVG(m) + "<div class='legend'>" + (sc.legend || Object.keys(sc.sides).map(k => [k, sc.sides[k].n])).map(([k, n]) => "<span><i style='background:var(--" + k + ")'></i>" + esc(n) + "</span>").join("") + bzLegend(m) + "<span class='msize'>" + mapSize(W, H) + "</span></div>" +
     (val(sc.mapNote, v) ? "<div class='mapnote'>" + esc(tpl(val(sc.mapNote, v), sc, stOf(sc))) + "</div>" : "") +
@@ -2948,7 +2965,7 @@ function fitsTable(sc) {
 }
 function poolFiltered(p) {
   /* p.src.wr === false on 0.6:n tallenteista (yksi Warp Rift -nappi): koskee kaikkia WR-skenaarioita */
-  return SC.filter(sc => !(p.src && (p.src[srcOf(sc)] === false || (p.src.wr === false && WR_GRPS.includes(sc.grp)))) && !(p.bookOnly && sc.book !== "K") && !(p.fits && !fitsTable(sc)) && !(p.sug && sc.suggest && !sc.suggest.includes(p.sug)));
+  return SC.filter(sc => !(p.src && (p.src[srcOf(sc)] === false || (p.src.wr === false && WR_GRPS.includes(sc.grp)))) && !(p.bookOnly && sc.book !== "K") && !(p.fits && !fitsTable(sc)) && !(sc.suggest && [p.sug, p.sug2].some(g => g && !sc.suggest.includes(g))));
 }
 function poolEligible(p) { return poolFiltered(p).filter(sc => !(p.excl && p.excl[sc.id])); }
 function rollPool(p) {
@@ -2996,7 +3013,8 @@ function renderPrep() {
       "<div class='poolf'><div class='filters' role='group' aria-label='Sources'>" + POOL_SRC.map(([k, l]) => "<button class='fbtn' data-a='psrc' data-k='" + k + "' aria-pressed='" + !(p.src && p.src[k] === false) + "'>" + l + " <span class='n'>" + SC.filter(x => srcOf(x) === k).length + "</span></button>").join("") + "</div>" +
       "<div class='filters' role='group' aria-label='Filters'><button class='fbtn' data-a='pbook' aria-pressed='" + !!p.bookOnly + "'>Book rules only</button>" +
       "<button class='fbtn' data-a='pfits' aria-pressed='" + !!p.fits + "'>Fits my table (" + W + " × " + H + ")</button></div>" +
-      "<div class='tblctl'><select data-a='psug' aria-label='Suggested for'><option value=''>Suggested for: any fleet</option>" + facs.map(f => "<option value='" + esc(f) + "'" + (p.sug === f ? " selected" : "") + ">Suggested for: " + esc(f) + "</option>").join("") + "</select></div></div>" +
+      "<div class='tblctl'><select data-a='psug' aria-label='Suggested for'><option value=''>Suggested for: any fleet</option>" + facs.map(f => "<option value='" + esc(f) + "'" + (p.sug === f ? " selected" : "") + ">Suggested for: " + esc(f) + "</option>").join("") + "</select>" +
+      "<select data-a='psug2' aria-label='Against'><option value=''>vs any fleet</option>" + facs.map(f => "<option value='" + esc(f) + "'" + (p.sug2 === f ? " selected" : "") + ">vs " + esc(f) + "</option>").join("") + "</select></div></div>" +
       "<div class='poolhead'>Pool: <b>" + el.length + "</b> of " + SC.length + (fl.length > el.length ? " · " + (fl.length - el.length) + " left out" : "") + "</div>" +
       "<div class='poolchips'>" + fl.map(x => "<button class='pchip' data-a='pex' data-id='" + x.id + "' aria-pressed='" + !(p.excl && p.excl[x.id]) + "'>" + esc(x.name) + "</button>").join("") + "</div>" +
       "<div class='rollrow' style='margin-top:10px'><button class='btn primary' data-a='plroll'" + (el.length ? "" : " disabled") + ">" + (p.lpick ? "Reroll" : "Roll a scenario") + "</button>" +
@@ -3270,7 +3288,7 @@ document.addEventListener("click", e => {
   else if (a === "trc") { st.w[id] = null; }
   else if (a === "tmr") { st.w[id] = get(st, id, 0) ? 0 : Date.now(); }
   else if (a === "rr") { const n = get(st, id + "_n", 4), u = new Uint32Array(1); crypto.getRandomValues(u); st.w[id] = 1 + (u[0] % n); }
-  else if (a === "var") { st.v = el.dataset.v; }
+  else if (a === "var") { st.v = el.dataset.v; st.vSet = 1; }
   else if (a === "cnt") { const cur = get(st, id, t.start || 0), nv = cur + (+el.dataset.d); st.w[id] = Math.max(t.min || 0, t.max !== undefined ? Math.min(t.max, nv) : nv); }
   else if (a === "tog") { st.w[id] = !get(st, id, false); }
   else if (a === "obj") { st.w[id] = get(st, id, "") === el.dataset.val ? "" : el.dataset.val; }
@@ -3306,7 +3324,9 @@ document.addEventListener("change", e => {
     st.bz[el.dataset.a === "bzz" ? "z" : "p"] = el.value; save(); render(true); return;
   }
   if (el.dataset.a === "psug" && route.view === "prep") { prep().sug = el.value; save(); render(true); return; }
+  if (el.dataset.a === "psug2" && route.view === "prep") { prep().sug2 = el.value; save(); render(true); return; }
   if (el.dataset.a === "lsug" && route.view === "list") { lf().sug = el.value; save(); render(true); return; }
+  if (el.dataset.a === "lsug2" && route.view === "list") { lf().sug2 = el.value; save(); render(true); return; }
   if (el.dataset.a !== "tblsel") return;
   if (el.value === "custom") {
     const [W, H] = tableWH(); DB.table = { w: W, h: H, c: true }; save();
@@ -3396,31 +3416,31 @@ let lastMapNarrow = null;
 window.addEventListener("resize", () => { const n = mapNarrow(); if (lastMapNarrow !== null && n !== lastMapNarrow) render(true); lastMapNarrow = n; });
 </script>
 <!-- scenario files: each adds its scenarios with addScenarios([...]) -->
-<script src="scenarios/blackcrusade.js?v=0.10.5"></script>
-<script src="scenarios/fleets.js?v=0.10.5"></script>
-<script src="scenarios/cl-early.js?v=0.10.5"></script>
-<script src="scenarios/cl-mag-a.js?v=0.10.5"></script>
-<script src="scenarios/cl-mag-b.js?v=0.10.5"></script>
-<script src="scenarios/cl-mag-c.js?v=0.10.5"></script>
-<script src="scenarios/cl-mag-d.js?v=0.10.5"></script>
-<script src="scenarios/cl-fanatic.js?v=0.10.5"></script>
-<script src="scenarios/cl-invasion.js?v=0.10.5"></script>
-<script src="scenarios/_wr.js?v=0.10.5"></script>
-<script src="scenarios/wr-committee.js?v=0.10.5"></script>
-<script src="scenarios/wr-community-a.js?v=0.10.5"></script>
-<script src="scenarios/wr-spreading-war.js?v=0.10.5"></script>
-<script src="scenarios/wr-community-l4a.js?v=0.10.5"></script>
-<script src="scenarios/wr-community-l4b.js?v=0.10.5"></script>
-<script src="scenarios/wr-community-l4c.js?v=0.10.5"></script>
-<script src="scenarios/wr-community-l4d.js?v=0.10.5"></script>
-<script src="scenarios/fan-tournament.js?v=0.10.5"></script>
-<script src="scenarios/fan-nemesis.js?v=0.10.5"></script>
-<script src="scenarios/fan-pdd.js?v=0.10.5"></script>
-<script src="scenarios/fan-starblade.js?v=0.10.5"></script>
-<script src="scenarios/terrain-map.js?v=0.10.5"></script>
-<script src="scenarios/open-points.js?v=0.10.5"></script>
-<script src="scenarios/wr-rating.js?v=0.10.5"></script>
-<script src="scenarios/play-maps.js?v=0.10.5"></script>
+<script src="scenarios/blackcrusade.js?v=0.10.7"></script>
+<script src="scenarios/fleets.js?v=0.10.7"></script>
+<script src="scenarios/cl-early.js?v=0.10.7"></script>
+<script src="scenarios/cl-mag-a.js?v=0.10.7"></script>
+<script src="scenarios/cl-mag-b.js?v=0.10.7"></script>
+<script src="scenarios/cl-mag-c.js?v=0.10.7"></script>
+<script src="scenarios/cl-mag-d.js?v=0.10.7"></script>
+<script src="scenarios/cl-fanatic.js?v=0.10.7"></script>
+<script src="scenarios/cl-invasion.js?v=0.10.7"></script>
+<script src="scenarios/_wr.js?v=0.10.7"></script>
+<script src="scenarios/wr-committee.js?v=0.10.7"></script>
+<script src="scenarios/wr-community-a.js?v=0.10.7"></script>
+<script src="scenarios/wr-spreading-war.js?v=0.10.7"></script>
+<script src="scenarios/wr-community-l4a.js?v=0.10.7"></script>
+<script src="scenarios/wr-community-l4b.js?v=0.10.7"></script>
+<script src="scenarios/wr-community-l4c.js?v=0.10.7"></script>
+<script src="scenarios/wr-community-l4d.js?v=0.10.7"></script>
+<script src="scenarios/fan-tournament.js?v=0.10.7"></script>
+<script src="scenarios/fan-nemesis.js?v=0.10.7"></script>
+<script src="scenarios/fan-pdd.js?v=0.10.7"></script>
+<script src="scenarios/fan-starblade.js?v=0.10.7"></script>
+<script src="scenarios/terrain-map.js?v=0.10.7"></script>
+<script src="scenarios/open-points.js?v=0.10.7"></script>
+<script src="scenarios/wr-rating.js?v=0.10.7"></script>
+<script src="scenarios/play-maps.js?v=0.10.7"></script>
 <!--SCENARIO-FILES-->
 <script>wrInit(); document.getElementById("scn").textContent = SC.length; render(false);</script>
 </body>

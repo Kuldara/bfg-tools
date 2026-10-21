@@ -70,8 +70,10 @@
         R(0, 0, W, 45, "b", ""), R(0, H - 45, W, 45, "b", ""),
         R(30, 30, W - 60, 15, "b", "markers 30–45 cm from the edge", { dash: 1 }), R(30, H - 45, W - 60, 15, "b", "markers 30–45 cm from the edge", { dash: 1 }),
         { z: "text", x: W / 2, y: 14, l: "Wolf Pack deployment zone (magazine’s map)", s: "b" },
-        { z: "arrow", x1: left ? 2 : W - 2, y1: y, x2: left ? 34 : W - 34, y2: y, s: "a", l: f ? "convoy enters" : "convoy enters (roll)" },
-        { z: "edge", e: left ? "r" : "l", s: "a", dash: 1, l: "Convoy escapes here" }
+        /* tuloreuna heitetään: ennen heittoa ei nuolta eikä pakoreunaa (käyttäjä 21.10.: ei oletuksia) */
+        ...(f ? [{ z: "arrow", x1: left ? 2 : W - 2, y1: y, x2: left ? 34 : W - 34, y2: y, s: "a", l: "convoy enters" },
+          { z: "edge", e: left ? "r" : "l", s: "a", dash: 1, l: "Convoy escapes here" }]
+          : [{ z: "text", x: W / 2, y, l: "Convoy entry edge: roll it below\n(it escapes by the opposite short edge)", s: "a" }])
       ];
     },
     fit: () => [120, 100],
@@ -216,19 +218,21 @@
     },
     draw: (v, W, H, st) => {
       const r = 8, px = W - r, py = H - r;
+      /* kuu piirretään vasta, kun sen etäisyys ja suunta on heitetty; asema vasta, kun molemmat (käyttäjä 21.10.: ei oletuspaikkoja) */
       const moon = i => {
-        const d = get(st, "m" + i + "d", 0), z = get(st, "m" + i + "z", 0), dd = d || 50, zz = z || (i === 1 ? 1 : 6), a = (zz - .5) * 15 * Math.PI / 180;
-        return { x: px - dd * Math.cos(a), y: py - dd * Math.sin(a) };
+        const d = get(st, "m" + i + "d", 0), z = get(st, "m" + i + "z", 0), a = (z - .5) * 15 * Math.PI / 180;
+        return d && z ? { x: px - d * Math.cos(a), y: py - d * Math.sin(a) } : null;
       };
-      const m1 = moon(1), m2 = moon(2), sx = (m1.x + m2.x) / 2, sy = (m1.y + m2.y) / 2;
+      const m1 = moon(1), m2 = moon(2), sx = m1 && m2 ? (m1.x + m2.x) / 2 : 0, sy = m1 && m2 ? (m1.y + m2.y) / 2 : 0;
       return [
         { z: "line", x1: W / 2, y1: 0, x2: W / 2, y2: H }, { z: "line", x1: 0, y1: H / 2, x2: W, y2: H / 2 },
         { z: "hatch", x: W / 2, y: 0, w: W / 2, h: 18, l: "asteroid field", free: "y" },
         R(0, 0, 15, H / 2, "a", "Imperial: 15 cm", { rot: -90 }), R(W - 15, 0, 15, H / 2, "b", "Chaos: 15 cm", { rot: 90 }),
         { z: "text", x: W / 4, y: H / 4 + 4, l: "SW quadrant" }, { z: "text", x: W * .62, y: H / 4 + 10, l: "NW quadrant" }, { z: "text", x: W / 4, y: H * .75, l: "SE quadrant" },
         { z: "planet", cx: px, cy: py, r, l: "", free: 1 },
-        { z: "planet", cx: m1.x, cy: m1.y, r: 2.5, l: "", free: 1 }, { z: "planet", cx: m2.x, cy: m2.y, r: 2.5, l: "", free: 1 },
-        { z: "mark", x: sx, y: sy, s: "a", l: "", free: 1 }, { z: "text", x: sx, y: sy + mapFont(W) * 1.6, l: "space station", s: "a" },
+        m1 ? { z: "planet", cx: m1.x, cy: m1.y, r: 2.5, l: "", free: 1 } : null, m2 ? { z: "planet", cx: m2.x, cy: m2.y, r: 2.5, l: "", free: 1 } : null,
+        m1 && m2 ? { z: "mark", x: sx, y: sy, s: "a", l: "", free: 1 } : null, m1 && m2 ? { z: "text", x: sx, y: sy + mapFont(W) * 1.6, l: "space station", s: "a" } : null,
+        m1 && m2 ? null : { z: "text", x: W * .7, y: H * .7, l: "Moons and station:\nroll them below", s: "n" },
         { z: "sun", e: "l", l: "south: sunward edge" }, { z: "edge", e: "r", l: "north edge" }
       ];
     },

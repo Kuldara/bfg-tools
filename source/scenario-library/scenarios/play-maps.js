@@ -98,15 +98,16 @@ const PLAYMAP_OFF = new Set([
     /* Shadow of the Comet: komeetta liikkuu jokaisen vuoron alussa 10 cm radallaan; lähtöpää heitetään (Set-up) */
     "fan-n-comet": {
       draw: (v, W, H, st, sc, base) => {
-        const line = base.find(i => i.z === "line"), x = line ? line.x1 : W / 2, top = get(st, "end", 0) >= 4, moved = 10 * st.turn;
+        const line = base.find(i => i.z === "line"), x = line ? line.x1 : W / 2, end = get(st, "end", 0), top = end >= 4, moved = 10 * st.turn;
         const y = top ? moved : H - moved, gone = y < 0 || y > H;
+        if (!end) return keep(base, i => i.z === "planet" || i.z === "line").concat([{ z: "text", x: W / 2 + 20, y: H / 2, l: "Roll the comet’s starting end\non the Set-up tab", s: "n" }]);
         return keep(base, i => i.z === "planet" || i.z === "line").concat(gone ? [{ z: "text", x: W / 2, y: H / 2, l: "Turn " + st.turn + ": the comet has left the table", s: "n" }] : [
           { z: "dim", x1: x + 8, y1: top ? 0 : H, x2: x + 8, y2: y, l: moved + " cm", keep: 1 },
           { z: "mark", x, y, s: "n", l: "comet", free: 1 },
           { z: "text", x: Math.min(W - 30, x + 46), y: Math.max(12, Math.min(H - 12, top ? y + 16 : y - 16)), l: "Attackers hidden\nwithin 10 cm", s: "a" }
         ]);
       },
-      note: st => "The comet after its move at the start of turn " + st.turn + ": 10 cm a turn along its path, from the " + (get(st, "end", 0) >= 4 ? "top" : "bottom") + " end" + (get(st, "end", 0) ? "" : " (roll the end on the Set-up tab; the map assumes the bottom)") + "."
+      note: st => get(st, "end", 0) ? "The comet after its move at the start of turn " + st.turn + ": 10 cm a turn along its path, from the " + (get(st, "end", 0) >= 4 ? "top" : "bottom") + " end." : "The comet moves 10 cm a turn along its path."
     },
     /* Solblade 2: aalto tulee Tyranidien takaa vuorosta 2, 15 cm joka liikevaiheessa (molempien) */
     "wr-solblade-2": {

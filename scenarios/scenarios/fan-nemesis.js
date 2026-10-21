@@ -100,11 +100,15 @@
     glance: [["Points", "500 each + defences"], ["Table", "Not given — the map is square"], ["Battlezone", "A large planet and two moons on one edge; a comet"], ["First turn", "Attackers"], ["Game ends", "After 6 turns"]],
     bring: ["A large planet and two moons", "A comet: a small model with a teardrop tail about 20 × 5 cm", "Defences: a command centre, 2 orbital weapons platforms, a flak platform, 2 orbital torpedo launchers"],
     forces: { a: ["500 pts."], b: ["500 pts.", "In high orbit around the second moon: an Orbital Command Center, 2 Orbital Weapons Platforms (FL p. 511), an Orbital Flak Platform and 2 Orbital Torpedo Launchers (FL p. 510)."] },
-    draw: (v, W, H) => { const mx = 34, my = H / 2 + 8, cx = Math.min(W - 10, mx + 45); return [R(20, 20, W - 40, H - 40, "b", "", { dash: 1 }), { z: "planet", cx: 4, cy: H / 2 - 6, r: 14, free: 1 }, { z: "planet", cx: 30, cy: H / 2 - 30, r: 3, free: 1 }, { z: "planet", cx: mx, cy: my, r: 3, l: "moon 2", free: 1 },
-      { z: "line", x1: cx, y1: 0, x2: cx, y2: H }, { z: "dim", x1: mx, y1: my - 9, x2: cx, y2: my - 9, l: "45 cm" }, R(cx - 10, H - 20, 20, 20, "a", "", { free: 1 }), { z: "mark", x: cx, y: H - 4, s: "n", free: 1 },
-      { z: "text", x: cx + 26, y: H - 28, l: "Attackers:\nwithin 10 cm\nof the comet", s: "a" }, { z: "text", x: Math.min(W - 26, cx + 30), y: 30, l: "comet path", s: "n" }, { z: "text", x: W / 2 + 18, y: H / 2 - 18, l: "Defenders", s: "b" }]; },
+    draw: (v, W, H, st) => { const mx = 34, my = H / 2 + 8, cx = Math.min(W - 10, mx + 45), end = get(st, "end", 0), top = end >= 4;
+      /* komeetan lähtöpää heitetään (Set-up tools): ennen heittoa ei komeettaa eikä hyökkääjien laatikkoa (käyttäjä 21.10.) */
+      const comet = end ? [R(cx - 10, top ? 0 : H - 20, 20, 20, "a", "", { free: 1 }), { z: "mark", x: cx, y: top ? 4 : H - 4, s: "n", free: 1 }, { z: "text", x: cx + 26, y: top ? 28 : H - 28, l: "Attackers:\nwithin 10 cm\nof the comet", s: "a" }]
+        : [{ z: "text", x: cx + 30, y: H - 24, l: "Comet and attackers:\nroll which end\nit starts from", s: "a" }];
+      return [R(20, 20, W - 40, H - 40, "b", "", { dash: 1 }), { z: "planet", cx: 4, cy: H / 2 - 6, r: 14, free: 1 }, { z: "planet", cx: 30, cy: H / 2 - 30, r: 3, free: 1 }, { z: "planet", cx: mx, cy: my, r: 3, l: "moon 2", free: 1 },
+      { z: "line", x1: cx, y1: 0, x2: cx, y2: H }, { z: "dim", x1: mx, y1: my - 9, x2: cx, y2: my - 9, l: "45 cm" }, ...comet,
+      { z: "text", x: Math.min(W - 26, cx + 30), y: 30, l: "comet path", s: "n" }, { z: "text", x: W / 2 + 18, y: H / 2 - 18, l: "Defenders", s: "b" }]; },
     fit: () => [110, 90],
-    mapNote: "The comet starts at a random end of its path (the map shows the bottom) and moves 10 cm a turn toward the far edge. The large planet and its moons sit on the left edge.",
+    mapNote: "The comet starts at a random end of its path (roll it below) and moves 10 cm a turn toward the far edge. The large planet and its moons sit on the left edge.",
     steps: [
       { t: "Place a large planet on one table edge and its two moons next to it." },
       { t: "Mark the comet’s path, 45 cm from the second moon and across the table (map). Roll which end it starts from (tool below) and place the comet there, its tail pointing away from the sunward edge." },

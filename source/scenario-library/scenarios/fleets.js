@@ -459,8 +459,9 @@
       return [
         R(30, 30, W - 60, H - 60, "a", "", { dash: 1 }),
         { z: "text", x: W / 2 + 10, y: 38, l: "Eldar patrols: 30 cm+ from edges", s: "a" },
-        { z: "ring", cx, cy, r: well, s: "a", free: 1 }, { z: "planet", cx, cy, r: body, l: "", free: 1 },
-        { z: "text", x: cx, y: cy + well + 7, l: "craftworld, gravity well " + well + " cm", s: "a" },
+        /* koko heitetään: ennen heittoa ei gravity wellin rengasta (käyttäjä 21.10.: ei oletuksia) */
+        sz ? { z: "ring", cx, cy, r: well, s: "a", free: 1 } : null, { z: "planet", cx, cy, r: body, l: "", free: 1 },
+        { z: "text", x: cx, y: cy + well + 7, l: sz ? "craftworld, gravity well " + well + " cm" : "craftworld: roll its size below", s: "a" },
         R(W - 15, 0, 15, H, "b", "Attacker: 15 cm", { rot: 90 }),
         { z: "dim", x1: cx, y1: H - 14, x2: W, y2: H - 14, l: "up to 150 cm" }
       ];

@@ -544,8 +544,8 @@
     glance: [["Points", "Fixed forces"], ["Table", "180 × 120 cm"], ["Battlezone", "Deep space: a comet in the centre, other phenomena as usual"], ["First turn", "Nua’ta"], ["Game ends", "Both Tau ships are gone, or a Tau ship or the flotilla is destroyed"]],
     bring: ["A light cruiser for the Marauder", "A Tau Merchant class cruiser and a contact marker", "A Dauntless light cruiser and 4 Sword frigates", "A moon for the comet and a dust cloud for its tail"],
     forces: { a: ["The Marauder, an Emissary with advanced missiles, commanded by Kor’vre Nua’ta: Ld 8, 1 re-roll (tools).", "Merchant class starship (FL p. 462) in the Dal’yth configuration, with the stronger hull (6 hits), hidden as a contact marker."], b: ["Dauntless class light cruiser (FL p. 77).", "4 Sword class frigates (FL p. 82).", "Leadership as rolled (RB p. 45)."] },
-    draw: (v, W, H, st) => { const cx = W / 2, cy = H / 2, tl = (st && st.w && st.w.tail) || 10;
-      return [{ z: "sun", e: "t" }, R(cx - 4, cy + 2, 8, tl, "n", "", { dash: 1, free: 1 }), { z: "ring", cx, cy, r: 8, s: "n" }, { z: "planet", cx, cy, r: 3 },
+    draw: (v, W, H, st) => { const cx = W / 2, cy = H / 2, tl = st && st.w && st.w.tail; /* pyrstö 3D6 cm vasta heiton jälkeen */
+      return [{ z: "sun", e: "t" }, tl ? R(cx - 4, cy + 2, 8, tl, "n", "", { dash: 1, free: 1 }) : { z: "text", x: cx, y: cy + 24, l: "tail: 3D6 cm, roll below", s: "n" }, { z: "ring", cx, cy, r: 8, s: "n" }, { z: "planet", cx, cy, r: 3 },
         { z: "text", x: cx - 11 - textLen("comet", W) / 2, y: cy, l: "comet", s: "n" },
         { z: "mark", x: cx, y: cy + 6, s: "a", l: "", free: 1 }, { z: "text", x: cx + 11 + textLen("Merchant", W) / 2, y: cy + 8, l: "Merchant", s: "a" },
         { z: "edge", e: "l", s: "a", l: "Nua’ta: the Marauder" }, { z: "edge", e: "r", s: "b", l: "Imperial flotilla" }]; },
