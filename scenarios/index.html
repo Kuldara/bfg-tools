@@ -13,7 +13,7 @@
 :root {
   color-scheme: light;
   --void: #e7ecf2; --panel: #f4f7fa; --panel-2: #ffffff; --line: #c3cfdd; --line-soft: #d9e2ec;
-  --ink: #16202e; --ink-2: #4a5a6e; --ink-3: #7b8b9f;
+  --ink: #16202e; --ink-2: #4a5a6e; --ink-3: #5a6a7f;
   --chart-bg: #e3eaf2; --chart-grid: #c8d5e3; --chart-frame: #445871; --chart-label: #4a5a6e;
   --a: #2f6fb5; --a-soft: rgba(47,111,181,.16);
   --b: #b5452f; --b-soft: rgba(181,69,47,.15);
@@ -31,7 +31,7 @@
   :root:not([data-theme="light"]) {
     color-scheme: dark;
     --void: #070a11; --panel: #0d131e; --panel-2: #121a27; --line: #24314a; --line-soft: #1a2436;
-    --ink: #dfe7f2; --ink-2: #9aabc2; --ink-3: #6b7c93;
+    --ink: #dfe7f2; --ink-2: #9aabc2; --ink-3: #7a8ba2;
     --chart-bg: #05070d; --chart-grid: #16203a; --chart-frame: #3f5480; --chart-label: #9aabc2;
     --a: #6fa3e0; --a-soft: rgba(111,163,224,.18);
     --b: #e07a5f; --b-soft: rgba(224,122,95,.17);
@@ -47,7 +47,7 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
   --void: #070a11; --panel: #0d131e; --panel-2: #121a27; --line: #24314a; --line-soft: #1a2436;
-  --ink: #dfe7f2; --ink-2: #9aabc2; --ink-3: #6b7c93;
+  --ink: #dfe7f2; --ink-2: #9aabc2; --ink-3: #7a8ba2;
   --chart-bg: #05070d; --chart-grid: #16203a; --chart-frame: #3f5480; --chart-label: #9aabc2;
   --a: #6fa3e0; --a-soft: rgba(111,163,224,.18); --b: #e07a5f; --b-soft: rgba(224,122,95,.17);
   --c: #a985e0; --c-soft: rgba(169,133,224,.17); --n-soft: rgba(140,155,180,.14);
@@ -175,6 +175,27 @@ details.fixed .sides { margin-top: 8px; }
 .mapwrap svg { display: block; width: 100%; height: auto; }
 /* maaston selite (0.13): kartan maastot klikattavia (vain .hit ottaa osumia), selite kartan päällä, kapealla kartan alla */
 .mapfig { position: relative; }
+/* UX-katselmus (0.13.1, 22.10.): klikattavuus näkyy hoverissa ja selitteen rivillä */
+.mapfig svg .hit:not(.hs):hover { stroke: var(--sun); stroke-width: .8; stroke-dasharray: 2 1.5; }
+.mapfig svg .hit.hs:hover { stroke: var(--sun); stroke-opacity: .3; }
+.mapfig svg g.hit:hover { filter: brightness(1.3); }
+.legend .thint { color: var(--ink-3); }
+.bzmini { font-size: 12.5px; color: var(--ink-2); }
+/* leveä Set-up: kartan palsta vierii sisäisesti; merkki kertoo, että alla on lisää (moreCue) */
+.mapstick > .col:last-child.more::after { content: "More below ▾"; position: sticky; bottom: 6px; display: block; width: max-content; margin: 8px auto 0; padding: 4px 12px; border-radius: 999px; background: var(--panel); border: 1px solid var(--line); color: var(--ink-2); font-size: 12.5px; font-weight: 650; pointer-events: none; box-shadow: var(--shadow); }
+/* puhelimen etusivu: lista ensin */
+.quick { display: flex; gap: 8px; margin: 10px 0 2px; }
+.qlink { flex: 1; display: flex; align-items: center; justify-content: center; min-height: 42px; padding: 6px 10px; border: 1px dashed var(--line); border-radius: 10px; background: var(--panel-2); color: var(--ink); font-weight: 700; text-decoration: none; }
+.tbldet > summary { cursor: pointer; padding: 10px 0 6px; color: var(--ink-2); font-weight: 600; }
+.tbldet[open] > summary { margin-bottom: 6px; }
+/* napautuskoot: vähintään 36–40 px */
+.hidebtn { min-height: 36px; }
+html:not(.wide) .seg button, html:not(.wide) .fbtn, html:not(.wide) .bzpc { min-height: 38px; }
+html:not(.wide) .catseg button { min-height: 42px; }
+/* Sub-plots on valinnainen: välilehti hiljaisempi, kunnes jokin on arvottu */
+.tabs a.opt:not([aria-current]) { font-weight: 600; color: var(--ink-3); }
+footer details { margin: 0 0 6px; }
+footer summary { cursor: pointer; }
 .mapfig svg * { pointer-events: none; }
 .mapfig svg .hit, .mapfig svg g.hit * { pointer-events: all; cursor: pointer; }
 .mapfig svg .hit.hs { pointer-events: stroke; }
@@ -556,13 +577,13 @@ html.wide:not(.short) .mapstick > .col:last-child { max-height: calc(100vh - var
 </header>
 <main id="app"></main>
 <footer>
-  <p><b>Scenario Library</b> · version 0.13 · <span id="scn">204</span> scenarios. Unofficial fan-made tool, not affiliated with Games Workshop.</p>
-  <p>Every scenario here is summarised in our own words for play at the table; “Playing with other fleets” notes marked as suggestions are ours, not the source’s. Credit belongs to the original authors; the page references point to the sources: the BFG Remastered <i>Rulebook v1.10</i> and <i>Fleets v0.36</i>, the classic Games Workshop and Fanatic publications (<i>Warp Storm</i>, <i>Planet Killer</i>, <i>Battlefleet Gothic Magazine</i>, <i>Invasion</i>, <i>Fanatic Magazine</i>, <i>Fanatic Online</i>) the fan magazine <a href="https://specialist-arms.com/bfg/warprift/" target="_blank" rel="noopener">Warp Rift</a>, and the fan supplements <i>Book of Nemesis</i>, <i>Project Distant Darkness</i>, <i>Starblade</i>, the <i>BFG Tournament Mission Pack</i> and <i>BFG Advanced Scenarios</i>.</p>
-  <p>RB = Rulebook v1.10, FL = Fleets v0.36. Progress is saved in this browser only.</p>
+  <p><b>Scenario Library</b> · version 0.13.1 · <span id="scn">204</span> scenarios · unofficial fan-made tool, not affiliated with Games Workshop · progress is saved in this browser only · <a href="#/sources">sources</a></p>
+  <details><summary>About the texts and abbreviations</summary><p>Every scenario here is summarised in our own words for play at the table; “Playing with other fleets” notes marked as suggestions are ours, not the source’s. Credit belongs to the original authors; the page references point to the sources: the BFG Remastered <i>Rulebook v1.10</i> and <i>Fleets v0.36</i>, the classic Games Workshop and Fanatic publications (<i>Warp Storm</i>, <i>Planet Killer</i>, <i>Battlefleet Gothic Magazine</i>, <i>Invasion</i>, <i>Fanatic Magazine</i>, <i>Fanatic Online</i>) the fan magazine <a href="https://specialist-arms.com/bfg/warprift/" target="_blank" rel="noopener">Warp Rift</a>, and the fan supplements <i>Book of Nemesis</i>, <i>Project Distant Darkness</i>, <i>Starblade</i>, the <i>BFG Tournament Mission Pack</i> and <i>BFG Advanced Scenarios</i>.</p>
+  <p>RB = Rulebook v1.10, FL = Fleets v0.36.</p></details>
   <p class="kbd">Keyboard: <b>1</b>–<b>4</b> switch a scenario’s tabs · <b>←</b> <b>→</b> change the turn on Play.</p>
 </footer>
 
-<script src="battlezone-core.js?v=0.13"></script>
+<script src="battlezone-core.js?v=0.13.1"></script>
 <script>
 "use strict";
 /* ---------------------------------------------------------------- data */
@@ -1726,7 +1747,7 @@ function playMapBlock(sc, st, v) {
   /* asettelu päätetään pöydässä (Fleet Engagement): sama "to be decided" kuin Set-upissa */
   if (varPending(sc, st)) m = Object.assign({}, m, { items: [{ z: "text", x: W / 2, y: H / 2, l: "Set-up to be decided\n" + PENDING_VAR[sc.id] }] });
   return hsec("map", "On the table" + (pm && pm.draw ? " · turn " + st.turn : ""), "<div class='mapwrap playmap" + (m.lo ? " lomap" : "") + "'>" + mapFig(m) + "<div class='legend'>" +
-    (sc.legend || Object.keys(sc.sides).map(k => [k, sc.sides[k].n])).map(([k, n]) => "<span><i style='background:var(--" + k + ")'></i>" + esc(n) + "</span>").join("") + bzLegend(m) + "<span class='msize'>" + mapSize(W, H) + "</span></div>" +
+    (sc.legend || Object.keys(sc.sides).map(k => [k, sc.sides[k].n])).map(([k, n]) => "<span><i style='background:var(--" + k + ")'></i>" + esc(n) + "</span>").join("") + bzLegend(m) + terrHint(m) + "<span class='msize'>" + mapSize(W, H) + "</span></div>" +
     (note ? "<div class='mapnote'>" + esc(tpl(note, sc, st)) + "</div>" : "") + "</div>");
 }
 
@@ -2807,7 +2828,7 @@ function terrPop(m) {
   const sel = m.sel;
   if (!sel || sel === "zone" || sel === "sun" || /^k:/.test(sel)) return "";
   const sc = m.sc, st = sc ? stOf(sc) : {}, v = m.v, sub = [];
-  let x, y, title, cite = "", own = [], k = null, lede = "", more = "";
+  let x, y, title, cite = "", own = [], k = null, lede = "", more = "", col = null;
   if (/^m:/.test(sel)) {
     const it = m.items.find(i => { const h = terrHit(i); return h && h.id === sel; });
     if (!it) return "";
@@ -2826,7 +2847,7 @@ function terrPop(m) {
   } else {
     const t = m.bz && bzPieces(m.bz).find(p => p.id === sel);
     if (!t) return "";
-    x = t.x; y = t.y; title = t.id + " · " + bzName(t);
+    x = t.x; y = t.y; title = t.id + " · " + bzName(t); col = bzCol(t);
     sub.push(esc(t.dims) + (t.gravity ? ", gravity well " + t.gravity + " cm" : "") + ". Centre " + Math.round(t.x) + " cm from the left edge, " + Math.round(t.y) + " cm from the top" + (t.host ? " — the scenario’s planet" : "") + ".");
     if (t.rings) { sub.push("Rings: " + t.rings.map((r, i) => (i + 1) + ") " + (r.kind === "gas" ? "gas and dust" : "asteroids") + ", " + r.wide + " cm wide, " + r.gap + " cm out").join("; ") + "."); more = bzRuleHtml(BZ.RULES.ring); }
     if (t.sk) {
@@ -2840,7 +2861,8 @@ function terrPop(m) {
   /* low orbit -skenaarioissa planeetan selite kertoo, mistä low orbit -pöytä löytyy */
   if (m.lo && k === "planet") own.push("<li>A ship in its gravity well may enter low orbit: the low orbit table is drawn under the map (RB p. 116).</li>");
   const R = k && BZ.RULES[k];
-  let h = "<div class='tpop " + (x / m.w < .5 ? "r" : "l") + "' role='dialog' aria-label='" + esc(title) + "'><button class='tpx' data-a='bzsel' data-id='" + esc(sel) + "' aria-label='Close'>×</button>" +
+  col = col || (k && BZ_COL[k]) || "var(--sun)";
+  let h = "<div class='tpop " + (x / m.w < .5 ? "r" : "l") + "' style='border-color:" + col + "' role='dialog' aria-label='" + esc(title) + "'><button class='tpx' data-a='bzsel' data-id='" + esc(sel) + "' aria-label='Close'>×</button>" +
     "<h4>" + esc(title) + (cite ? " <span class='bzcite'>" + esc(cite) + "</span>" : R && !own.length ? " <span class='bzcite'>RB " + esc(R.page) + "</span>" : "") + "</h4>" + sub.map(p => "<p class='tpsub'>" + p + "</p>").join("");
   if (own.length) h += (R ? "<p class='tpgrp'>In this scenario</p>" : "") + "<ul>" + own.join("") + "</ul>";
   if (R) {
@@ -2851,6 +2873,11 @@ function terrPop(m) {
   return h + "</div>";
 }
 function mapFig(m) { return "<div class='mapfig'>" + mapSVG(m) + terrPop(m) + "</div>"; }
+/* UX-katselmus 22.10.: klikattavuudesta ei kertonut mikään. Kiinteä rivi selitteessä, ei ponnahtavaa ohjetta. */
+function terrHint(m) {
+  const any = m.items.some(i => terrHit(i)) || (m.bz && bzPieces(m.bz).length > 0);
+  return any ? "<span class='thint'>" + (window.matchMedia && matchMedia("(hover: hover)").matches ? "Click" : "Tap") + " a feature for its rules</span>" : "";
+}
 /* ohjausrivi kartan yläpuolella (kuten pöydän koko): battlezone, Generate / Reroll / Clear */
 function bzCtl(sc, st, v, m) {
   const sp = bzSpec(sc, v), res = m.bz, b = st.bz || {}, ch = bzChoices(sp, st), z = bzZone(sp, st), pk = sp.pick;
@@ -2862,7 +2889,8 @@ function bzCtl(sc, st, v, m) {
   if (!res) return "<div class='bzhead bzoff'><button class='btn' data-a='bzgo'>Generate terrain</button><span class='bzhint'>Optional: rolls the celestial phenomena onto this map.</span></div>";
   return "<div class='bzhead'><span class='bzt'>Celestial phenomena</span><span class='bzbtn'>" +
     (res ? "<button class='btn primary' data-a='bzgo'>Reroll</button><button class='btn' data-a='bzclr'>Clear</button>" : "<button class='btn primary' data-a='bzgo'>Generate terrain</button>") + "</span>" +
-    "<span class='bzzc'>" + zc + "</span></div>";
+    "<span class='bzzc'>" + zc + "</span><span class='bzmini'>" + bzPieces(res).length + " piece" + (bzPieces(res).length === 1 ? "" : "s") +
+    (res.meta.sunEdge && res.meta.sunEdge !== "none" ? " · sunward: " + res.meta.sunEdge : "") + "</span></div>";
 }
 /* tiedot kartan alla: peruste, maininta, yhteenveto, palat, säännöt ja heittoloki */
 function bzBox(sc, st, v, m) {
@@ -2944,6 +2972,7 @@ function render(keepScroll) {
   if (keepScroll) window.scrollTo(0, y);
   const stick2 = document.querySelector(".mapstick > .col:last-child");
   if (keepScroll && stick2 && sy) stick2.scrollTop = sy;
+  if (stick2) moreCue(stick2);
 }
 
 const CATS = [["core", "Core 10"], ["campaign", "Books"], ["classic", "Classic GW"], ["wr", "Warp Rift"], ["fan", "Fan supplements"], ["all", "All"]];
@@ -3052,10 +3081,12 @@ function listZone(cat) {
     if (g === "wr") gl.sort((a, b) => wrIssue(a) - wrIssue(b));
     if (!gl.length) continue;
     h += "<div class='group-h'><h2>" + esc(title) + "</h2><span>" + esc(sub) + "</span></div><div class='cardgrid'>";
+    /* UX-katselmus 22.10.: ryhmän otsikko nimeää jo lähteen (ja joskus "any fleets"), joten korttiin ei toisteta samaa */
+    const oneSrc = gl.every(x => x.trust === gl[0].trust), anyHead = /any fleets/.test(sub) && !/suggested/.test(sub);
     for (const s of gl) {
       const st = DB.s && DB.s[s.id], prog = st && (Object.keys(st.done || {}).some(k => st.done[k]) || st.turn > 1) ? "<span class='prog'>· game in progress, turn " + st.turn + "</span>" : "";
-      h += "<a class='card' href='#/s/" + s.id + "/setup'><div class='card-t'><h3>" + esc(s.name) + "</h3><span class='badge t-" + s.trust + "'>" + TRUST[s.trust].l + "</span></div>" +
-        "<div class='series'>" + esc(s.series) + "</div><div class='chips'><span class='chip" + (s.suggest ? "" : " any") + "'>" + esc(sugText(s)) + "</span>" +
+      h += "<a class='card' href='#/s/" + s.id + "/setup'><div class='card-t'><h3>" + esc(s.name) + "</h3>" + (oneSrc ? "" : "<span class='badge t-" + s.trust + "'>" + TRUST[s.trust].l + "</span>") + "</div>" +
+        "<div class='series'>" + esc(s.series) + "</div><div class='chips'>" + (anyHead && !s.suggest ? "" : "<span class='chip" + (s.suggest ? "" : " any") + "'>" + esc(sugText(s)) + "</span>") +
         (s.type ? "<span class='chip'>" + esc(s.type) + "</span>" : "") + (plChip(s) ? "<span class='chip'>" + plChip(s) + "</span>" : "") + tagChips(s) + "</div>" +
         "<p class='pitch'>" + esc(val(s.pitch, v0(s))) + "</p><div class='meta'>" + esc(val(s.glance, v0(s))[0][1]) + " · " + esc(BOOK[s.book]) + " " + prog + "</div></a>";
     }
@@ -3086,16 +3117,27 @@ function renderList() {
   side += "<div class='homecards'><a class='card prepcard' href='#/prep'><div class='card-t'><h3>Before the battle</h3><span class='badge t-rulebook'>Rulebook</span></div><p class='pitch'>Pick a scenario at random or with attack ratings, decide who attacks, and the pre-battle order (RB p. 120–123).</p></a>" +
     "<a class='card prepcard' href='#/subplots'><div class='card-t'><h3>Sub-plots</h3><span class='badge t-rulebook'>Rulebook</span></div><p class='pitch'>Roll a secret second goal for each player, see what to do and when, and browse all 18 (RB p. 124–127).</p></a></div>";
   side += "<h2 style='margin:18px 0 8px'>Your table</h2>" + tableCtl() + "<p class='small muted' style='margin:2px 0 0'>Every scenario map is drawn on this table. Rule distances stay as written; centre lines, thirds and far edges follow your table.</p>";
-  let h = "<div class='varrow' style='margin:16px 0 8px'><div class='seg catseg' role='group' aria-label='Category'>" + CATS.map(([id, l]) => "<button data-a='cat' data-v='" + id + "' aria-pressed='" + (cat === id) + "'>" + esc(l) + " <span class='n'>" + SC.filter(s => inCat(s, id)).length + "</span></button>").join("") + "</div></div>";
+  let h = "<div class='varrow' style='margin:" + (layout() === "narrow" || SHORT_Q.matches ? "10px" : "16px") + " 0 8px'><div class='seg catseg' role='group' aria-label='Category'>" + CATS.map(([id, l]) => "<button data-a='cat' data-v='" + id + "' aria-pressed='" + (cat === id) + "'>" + esc(l) + " <span class='n'>" + SC.filter(s => inCat(s, id)).length + "</span></button>").join("") + "</div></div>";
   h += "<div class='searchrow'><input type='search' data-a='lq' value='" + esc(DB.lq || "") + "' placeholder='Search names, fleets, authors…' aria-label='Search scenarios'>" +
     "<button class='btn' data-a='lfo' aria-expanded='" + !!DB.fopen + "'>Filters" + (nf ? " (" + nf + ")" : "") + "</button></div>";
   if (DB.fopen) h += filterPanel();
+  /* puhelimella lista ensin (UX-katselmus 22.10.: kategoriat olivat 768 px:n ja haku 869 px:n kohdalla): lyhyt johdanto,
+     kategoriat ja haku, Before the battle ja Sub-plots linkkirivinä, pöytä avattavana rivinä (auki/kiinni muistissa) */
+  if (layout() === "narrow" || SHORT_Q.matches) {
+    const [W, H] = tableWH();
+    app.innerHTML = "<h1>Battlefleet Gothic scenarios</h1><p class='intro'>Every BFG scenario laid out for the table: what to bring, a map, set-up steps, turn reminders, dice and a victory check. <a href='#/sources'>Where do these come from?</a></p>" +
+      h + "<div class='quick'><a class='qlink' href='#/prep'>Before the battle ›</a><a class='qlink' href='#/subplots'>Sub-plots ›</a></div>" +
+      "<details class='tbldet' data-k='tblopen'" + (DB.tblopen ? " open" : "") + "><summary>Your table: <b>" + W + " × " + H + " cm</b></summary>" + tableCtl() +
+      "<p class='small muted' style='margin:2px 0 0'>Every scenario map is drawn on this table. Rule distances stay as written; centre lines, thirds and far edges follow your table.</p></details>" +
+      "<div id='listzone'>" + listZone(cat) + "</div>";
+    return;
+  }
   h += "<div id='listzone'>" + listZone(cat) + "</div>";
-  app.innerHTML = layout() === "narrow" || SHORT_Q.matches ? side + h : "<div class='homecols'><aside class='homeside'>" + side + "</aside><div class='homemain'>" + h + "</div></div>";
+  app.innerHTML = "<div class='homecols'><aside class='homeside'>" + side + "</aside><div class='homemain'>" + h + "</div></div>";
 }
 
-function tabLink(sc, tab, label, cur, extra) {
-  return "<a href='#/s/" + sc.id + "/" + tab + "'" + (cur === tab ? " aria-current='page'" : "") + ">" + label + (extra || "") + "</a>";
+function tabLink(sc, tab, label, cur, extra, cls, title) {
+  return "<a href='#/s/" + sc.id + "/" + tab + "'" + (cls ? " class='" + cls + "'" : "") + (title ? " title='" + title + "'" : "") + (cur === tab ? " aria-current='page'" : "") + ">" + label + (extra || "") + "</a>";
 }
 function stepKey(sc, x) { return x.k || String(sc.steps.indexOf(x)); }
 
@@ -3106,7 +3148,7 @@ function renderSc() {
   const v = st.v, tab = route.tab;
   document.title = sc.name + " · Scenario Library";
   const steps = allSteps(sc, st, v), nd = steps.filter(x => st.done[stepKey(sc, x)]).length, nsp = spSides(sc).filter(x => spOf(st, x)).length;
-  const tabsIn = "<div class='tabs-in'>" + tabLink(sc, "setup", "Set-up", tab, "<span class='n'>" + nd + "/" + steps.length + "</span>") + tabLink(sc, "subplots", "Sub-plots", tab, nsp ? "<span class='n'>" + nsp + "</span>" : "") + tabLink(sc, "play", "Play", tab, "<span class='n'>T" + st.turn + "</span>") + tabLink(sc, "result", "Result", tab) + "</div>";
+  const tabsIn = "<div class='tabs-in'>" + tabLink(sc, "setup", "Set-up", tab, "<span class='n'>" + nd + "/" + steps.length + "</span>") + tabLink(sc, "subplots", "Sub-plots", tab, nsp ? "<span class='n'>" + nsp + "</span>" : "", nsp ? "" : "opt", "Optional: a secret second goal for each player (RB p. 124)") + tabLink(sc, "play", "Play", tab, "<span class='n'>T" + st.turn + "</span>") + tabLink(sc, "result", "Result", tab) + "</div>";
   /* leveällä välilehdet ovat yläpalkissa: yksi tarttuva rivi takaisin-linkin ja BFG Toolsin välissä */
   const topTabs = layout() !== "narrow";
   nav.innerHTML = "<a class='back' href='#/'>‹ Scenarios</a>" + (topTabs ? "<nav class='tabs toptabs' aria-label='Scenario tabs'>" + tabsIn + "</nav>" : "");
@@ -3158,8 +3200,8 @@ function mapBlock(sc, v) {
     const e = Object.assign({}, m, { items: [{ z: "text", x: W / 2, y: H / 2, l: "Set-up to be decided\n" + PENDING_VAR[sc.id] }] });
     return bzCtl(sc, st, v, e) + "<div class='mapwrap'>" + mapFig(e) + "<div class='legend'>" + bzLegend(e) + "<span class='msize'>" + mapSize(W, H) + "</span></div></div>" + bzBox(sc, st, v, e);
   }
-  if (!mapFn(sc)) return bzCtl(sc, st, v, m) + "<div class='mapwrap'>" + (m.bz ? mapFig(m) + "<div class='legend'>" + bzLegend(m) + "<span class='msize'>" + mapSize(W, H) + "</span></div>" : "") + "<div class='mapnote' style='padding:10px 6px'>" + esc(val(sc.noMap, v) || "This scenario has no fixed table layout.") + "</div></div>" + bzBox(sc, st, v, m);
-  let h = bzCtl(sc, st, v, m) + "<div class='mapwrap'>" + mapFig(m) + "<div class='legend'>" + (sc.legend || Object.keys(sc.sides).map(k => [k, sc.sides[k].n])).map(([k, n]) => "<span><i style='background:var(--" + k + ")'></i>" + esc(n) + "</span>").join("") + bzLegend(m) + "<span class='msize'>" + mapSize(W, H) + "</span></div>" +
+  if (!mapFn(sc)) return bzCtl(sc, st, v, m) + "<div class='mapwrap'>" + (m.bz ? mapFig(m) + "<div class='legend'>" + bzLegend(m) + terrHint(m) + "<span class='msize'>" + mapSize(W, H) + "</span></div>" : "") + "<div class='mapnote' style='padding:10px 6px'>" + esc(val(sc.noMap, v) || "This scenario has no fixed table layout.") + "</div></div>" + bzBox(sc, st, v, m);
+  let h = bzCtl(sc, st, v, m) + "<div class='mapwrap'>" + mapFig(m) + "<div class='legend'>" + (sc.legend || Object.keys(sc.sides).map(k => [k, sc.sides[k].n])).map(([k, n]) => "<span><i style='background:var(--" + k + ")'></i>" + esc(n) + "</span>").join("") + bzLegend(m) + terrHint(m) + "<span class='msize'>" + mapSize(W, H) + "</span></div>" +
     (val(sc.mapNote, v) ? "<div class='mapnote'>" + esc(tpl(val(sc.mapNote, v), sc, stOf(sc))) + "</div>" : "") +
     (src && (src[0] !== W || src[1] !== H) ? "<div class='mapnote'>The source plays on " + src[0] + " × " + src[1] + " cm.</div>" : "") + "</div>";
   if (W < fit[0] || H < fit[1]) h += "<div class='note' style='margin-top:8px'><b>Small table.</b> This scenario’s distances need at least " + fit[0] + " × " + fit[1] + " cm. On " + W + " × " + H + " cm some zones overlap or run off the table.</div>";
@@ -3169,10 +3211,13 @@ function mapBlock(sc, v) {
 function setupView(sc, st, v, steps, nd) {
   const pitch = "<p class='pitch' style='margin-top:14px'>" + esc(val(sc.pitch, v)) + "</p>";
   const glance = "<div class='glance'>" + val(sc.glance, v).map(([k, x]) => "<div class='gl'><b>" + esc(k) + "</b><span>" + esc(x) + "</span></div>").join("") + "</div>";
-  const bring = "<h2>Bring to the table</h2><div class='bring'>" + val(sc.bring, v).map(x => "<span>" + fmt(x) + "</span>").join("") + "</div>";
-  let forces = "<h2>Forces</h2>" + sideCards(sc, val(sc.forces, v));
-  if (val(sc.fixed, v)) forces += "<details class='fixed'><summary>Or use the published fixed forces</summary>" + sideCards(sc, val(sc.fixed, v)) + "</details>";
-  const others = "<div class='others'><b>" + (sc.suggest ? "Playing with other fleets" : "Fleets") + "</b> " + fmt(val(sc.others, v)) + "</div>";
+  /* UX-katselmus 22.10.: Set-up oli puhelimella 5 300 px ja askeleet alkoivat vasta noin 1 500 px:n kohdalla. Tuttua
+     skenaariota pelaava piilottaa luettavat osiot (Hide), valinta pätee kaikkiin skenaarioihin kuten Playssa. */
+  const bring = hsec("bring", "Bring to the table", "<div class='bring'>" + val(sc.bring, v).map(x => "<span>" + fmt(x) + "</span>").join("") + "</div>");
+  let forcesB = sideCards(sc, val(sc.forces, v));
+  if (val(sc.fixed, v)) forcesB += "<details class='fixed'><summary>Or use the published fixed forces</summary>" + sideCards(sc, val(sc.fixed, v)) + "</details>";
+  forcesB += "<div class='others'><b>" + (sc.suggest ? "Playing with other fleets" : "Fleets") + "</b> " + fmt(val(sc.others, v)) + "</div>";
+  const forces = hsec("forces", "Forces", forcesB), others = "";
   const stools = (sc.stools || []).filter(x => vis(x, v)), stH = stools.length ? "<h2>Set-up tools</h2>" + stools.map(t => widget(sc, st, v, t)).join("") : "";
   const table = "<h2>Table</h2>" + tableCtl() + "<div id='mapzone'>" + mapBlock(sc, v) + "</div>";
   let stepsH = "<h2>Set-up, step by step</h2><div class='donebar'>" + nd + " of " + steps.length + " done · tap a step when it is done</div><ol class='steps'>";
@@ -3182,11 +3227,11 @@ function setupView(sc, st, v, steps, nd) {
   });
   stepsH += "</ol>";
   const notes = val(sc.notes, v), refs = val(sc.refs, v);
-  const notesH = notes && notes.length ? "<h2>Source notes</h2>" + notes.map(n => "<div class='note'><b>Note.</b> " + fmt(n) + "</div>").join("") : "";
-  const refsH = refs && refs.length ? "<h2>Rules you will need</h2><div class='refs'>" + refs.map(([a, b]) => "<span>" + esc(a) + "</span><span>" + esc(b) + "</span>").join("") + "</div>" : "";
-  const foot = "<p class='small muted' style='margin-top:18px'>Sub-plots and the pre-battle order are on the <a href='#/prep'>Before the battle</a> page.</p>";
+  const notesH = notes && notes.length ? hsec("notes", "Source notes", notes.map(n => "<div class='note'><b>Note.</b> " + fmt(n) + "</div>").join("")) : "";
+  const refsH = refs && refs.length ? hsec("refs", "Rules you will need", "<div class='refs'>" + refs.map(([a, b]) => "<span>" + esc(a) + "</span><span>" + esc(b) + "</span>").join("") + "</div>") : "";
+  const foot = "<p class='small muted' style='margin-top:18px'>Optional sub-plots: the <a href='#/s/" + sc.id + "/subplots'>Sub-plots</a> tab. The pre-battle order: the <a href='#/prep'>Before the battle</a> page.</p>";
   const pre = (sc.stoolsFirst ? stH : "") + agreeBlock(sc, st), post = sc.stoolsFirst ? "" : stH, L = layout();
-  const lo = lowOrbitBlock(sc, st), loH = lo ? "<h2>Low orbit table <span class='bzcite'>RB p. 116</span></h2>" + lo : "";
+  const lo = lowOrbitBlock(sc, st), loH = lo ? hsec("lowo", "Low orbit table <span class='bzcite'>RB p. 116</span>", lo) : "";
   if (L === "narrow") return pitch + glance + bring + forces + others + pre + table + loH + stepsH + post + notesH + refsH + foot;
   /* käännetty puhelin: tiedot | kartta + askeleet. Leveä: teksti, askeleet ja työkalut vasemmalla, kartta
      tarttuu oikealle (näkyy askelia ja karttaa muuttavia työkaluja käytettäessä). xwide: askeleet omaan palstaan. */
@@ -3669,9 +3714,13 @@ document.addEventListener("input", e => {
   const vd = document.querySelector(".verdict");
   if (vd) { const r = verdict(sc, st, st.v); vd.className = "verdict " + (r[0] || ""); vd.innerHTML = "<span class='k'>Result</span>" + esc(r[1]) + "<small>" + esc(r[2]) + "</small>"; }
 });
+/* leveän Set-upin karttapalsta vierii sisäisesti: "More below" näkyy, kun alla on vielä sisältöä (UX-katselmus 22.10.) */
+function moreCue(c) { c.classList.toggle("more", c.scrollHeight - c.scrollTop - c.clientHeight > 12); }
+document.addEventListener("scroll", e => { const c = e.target; if (c && c.matches && c.matches(".mapstick > .col:last-child")) moreCue(c); }, true);
 /* rullausloki: auki/kiinni muistiin (ei sulkeudu itsestään uudelleenpiirrossa) */
 document.addEventListener("toggle", e => {
   const el = e.target;
+  if (el.dataset && el.dataset.k === "tblopen") { if (!!DB.tblopen !== el.open) { DB.tblopen = el.open; save(); } return; }
   if (!el.dataset || (el.dataset.k !== "bzlog" && el.dataset.k !== "bzfull") || route.view !== "sc") return;
   const st = stOf(SC.find(x => x.id === route.id)), key = el.dataset.k === "bzlog" ? "log" : "full"; if (!st.bz) st.bz = {};
   if (st.bz[key] !== el.open) { st.bz[key] = el.open; save(); }
@@ -3709,33 +3758,33 @@ let lastMapNarrow = null;
 window.addEventListener("resize", () => { const n = mapNarrow(); if (lastMapNarrow !== null && n !== lastMapNarrow) render(true); lastMapNarrow = n; });
 </script>
 <!-- scenario files: each adds its scenarios with addScenarios([...]) -->
-<script src="scenarios/blackcrusade.js?v=0.13"></script>
-<script src="scenarios/fleets.js?v=0.13"></script>
-<script src="scenarios/cl-early.js?v=0.13"></script>
-<script src="scenarios/cl-mag-a.js?v=0.13"></script>
-<script src="scenarios/cl-mag-b.js?v=0.13"></script>
-<script src="scenarios/cl-mag-c.js?v=0.13"></script>
-<script src="scenarios/cl-mag-d.js?v=0.13"></script>
-<script src="scenarios/cl-fanatic.js?v=0.13"></script>
-<script src="scenarios/cl-invasion.js?v=0.13"></script>
-<script src="scenarios/_wr.js?v=0.13"></script>
-<script src="scenarios/wr-committee.js?v=0.13"></script>
-<script src="scenarios/wr-community-a.js?v=0.13"></script>
-<script src="scenarios/wr-spreading-war.js?v=0.13"></script>
-<script src="scenarios/wr-community-l4a.js?v=0.13"></script>
-<script src="scenarios/wr-community-l4b.js?v=0.13"></script>
-<script src="scenarios/wr-community-l4c.js?v=0.13"></script>
-<script src="scenarios/wr-community-l4d.js?v=0.13"></script>
-<script src="scenarios/fan-tournament.js?v=0.13"></script>
-<script src="scenarios/fan-nemesis.js?v=0.13"></script>
-<script src="scenarios/fan-pdd.js?v=0.13"></script>
-<script src="scenarios/fan-starblade.js?v=0.13"></script>
-<script src="scenarios/terrain-map.js?v=0.13"></script>
-<script src="scenarios/terrain-info.js?v=0.13"></script>
-<script src="scenarios/open-points.js?v=0.13"></script>
-<script src="scenarios/wr-rating.js?v=0.13"></script>
-<script src="scenarios/play-maps.js?v=0.13"></script>
-<script src="scenarios/sizes.js?v=0.13"></script>
+<script src="scenarios/blackcrusade.js?v=0.13.1"></script>
+<script src="scenarios/fleets.js?v=0.13.1"></script>
+<script src="scenarios/cl-early.js?v=0.13.1"></script>
+<script src="scenarios/cl-mag-a.js?v=0.13.1"></script>
+<script src="scenarios/cl-mag-b.js?v=0.13.1"></script>
+<script src="scenarios/cl-mag-c.js?v=0.13.1"></script>
+<script src="scenarios/cl-mag-d.js?v=0.13.1"></script>
+<script src="scenarios/cl-fanatic.js?v=0.13.1"></script>
+<script src="scenarios/cl-invasion.js?v=0.13.1"></script>
+<script src="scenarios/_wr.js?v=0.13.1"></script>
+<script src="scenarios/wr-committee.js?v=0.13.1"></script>
+<script src="scenarios/wr-community-a.js?v=0.13.1"></script>
+<script src="scenarios/wr-spreading-war.js?v=0.13.1"></script>
+<script src="scenarios/wr-community-l4a.js?v=0.13.1"></script>
+<script src="scenarios/wr-community-l4b.js?v=0.13.1"></script>
+<script src="scenarios/wr-community-l4c.js?v=0.13.1"></script>
+<script src="scenarios/wr-community-l4d.js?v=0.13.1"></script>
+<script src="scenarios/fan-tournament.js?v=0.13.1"></script>
+<script src="scenarios/fan-nemesis.js?v=0.13.1"></script>
+<script src="scenarios/fan-pdd.js?v=0.13.1"></script>
+<script src="scenarios/fan-starblade.js?v=0.13.1"></script>
+<script src="scenarios/terrain-map.js?v=0.13.1"></script>
+<script src="scenarios/terrain-info.js?v=0.13.1"></script>
+<script src="scenarios/open-points.js?v=0.13.1"></script>
+<script src="scenarios/wr-rating.js?v=0.13.1"></script>
+<script src="scenarios/play-maps.js?v=0.13.1"></script>
+<script src="scenarios/sizes.js?v=0.13.1"></script>
 <!--SCENARIO-FILES-->
 <script>wrInit(); document.getElementById("scn").textContent = SC.length; render(false);</script>
 </body>

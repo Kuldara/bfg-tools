@@ -223,7 +223,61 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
   battle -arvontaan tulee toinen valikko "vs …" (`f.sug2`, `p.sug2`). Kumpikin on vapaaehtoinen. Kun molemmat on valittu,
   suosituksen pitää sisältää kumpikin laivasto, ja "any fleets" -skenaariot pysyvät mukana kuten ennenkin.
   Orks vs Imperial Navy: arvontapooli 70 (52 any fleets + 18 suositeltua), etusivu 72 (osittainen osuma, esim. Orks-alaryhmät).
-- **Low orbit -pöytä karttakuvaan (21.10. ilta).** Käyttäjä: *"teeppäs tuonne joku havainnollistava kuva tuosta low orbit
+- **0.13.1 (22.10.2026): UX- ja design-katselmuksen korjaukset** (ei vielä julkaistu. Testit: selaintesti leveä ja kapea 15 184 näkymää 0 virhettä, karttatesti 4 020 karttaa 0 + 0, sisältötesti 0, mittatesti 0, maastotesti 0, kuvakierros 0 löydöstä). Katselmus
+  tehtiin 1440 px:n ja 375 px:n leveydellä; käyttäjä: *"korjaa kaikki"*. Kymmenen löydöstä ja ratkaisut:
+  1. **Puhelimen etusivu alkoi johdannolla** (kategoriat 768 px:n, haku 869 px:n kohdalla). Nyt kapealla: otsikko,
+     yhden lauseen johdanto, kategoriat (172 px) ja haku (282 px), sitten Before the battle / Sub-plots linkkirivinä ja
+     pöytä avattavana rivinä "Your table: 180 × 120 cm" (`details.tbldet`, auki/kiinni `DB.tblopen`). Leveä ennallaan.
+  2. **Klikattavasta maastosta ei kertonut mikään.** Kartan selitteeseen kiinteä rivi "Click/Tap a feature for its
+     rules" (`terrHint`, vain kun kartalla on klikattavaa; hover-laitteilla Click) ja hover-korostus osuma-alueille.
+  3. **Set-up oli puhelimella 5 300 px.** Bring to the table, Forces (+ fleets-laatikko), Low orbit table, Source notes
+     ja Rules you will need ovat nyt piilotettavia (`hsec`, sama Hide kuin Playssa, valinta `DB.ph`:ssä kaikille
+     skenaarioille). Oletus on auki. Exterminatus puhelimella: askeleet 3 296 px:n kohdalla, kun Bring ja Forces on piilotettu.
+  4. **Leveän Set-upin karttapalsta vierii sisäisesti, eikä sitä huomannut.** Yhteenveto (palat · sunward) on nyt kartan
+     yläpuolella ohjausrivillä (`.bzmini`), ja palstan alareunassa näkyy "More below ▾", kun alla on lisää (`moreCue`,
+     scroll-kuuntelija; ei näy, kun palsta mahtuu). Sisäistä vieritystä ei poistettu: kartta pysyy näkyvissä askelia luettaessa.
+  5. **Napautuskoot:** Hide-napit 26 → 36 px, kategoriavälilehdet kapealla 34 → 42 px, suodatin- ja palanapit sekä
+     versiovalinta kapealla vähintään 38 px.
+  6. **Kontrasti:** `--ink-3` tummassa #6b7c93 → #7a8ba2 (4,1 → 5,0:1 paneelilla), vaaleassa #7b8b9f → #5a6a7f
+     (2,9–3,5 → 4,65–5,5:1). Vaikuttaa kaikkeen vaimeaan tekstiin ja kartan neutraaleihin viivoihin.
+  7. **Alatunniste** oli 4–5 riviä joka sivulla: nyt yksi rivi (versio, määrä, epävirallisuus, tallennus selaimeen,
+     sources-linkki), krediittiteksti ja lyhenteet "About the texts and abbreviations" -laskoksen takana, näppäinvihje vain leveällä.
+  8. **Korttien toisto:** lähdeleima pois korteista, kun ryhmän otsikko nimeää lähteen (kaikki ryhmät ovat
+     yksilähteisiä), ja "Any fleets" pois, kun ryhmän otsikko sanoo "any fleets" (Core ja turnausmissiot).
+  9. **Sub-plots päävälilehtenä:** välilehti näkyy hiljaisempana, kunnes jokin sub-plot on arvottu, ja sen title kertoo
+     "Optional: a secret second goal for each player". Set-upin loppurivi osoittaa nyt Sub-plots-välilehteen. Välilehteä ei
+     siirretty eikä yhdistetty (reitit `#/s/id/subplots`, näppäimet 1–4 ja testit nojaavat neljään välilehteen): tietoinen rajaus.
+  10. **Selitteen reunaväri** on palan oma väri (asteroidi, kaasu, planeetta, rift, skinin väri), omat maastot `--sun`.
+- **0.13 (22.10.2026): maaston selite kartalla** (julkaistu yhdessä alla olevien low orbit-, Planet Fall-, Deadline- ja Boarding Party -muutosten kanssa: Worker-versio a8476492, GitHub Kuldara/bfg-tools 8f79410. Ennen julkaisua selaintesti leveä ja kapea 15 184 näkymää 0 virhettä, karttatesti 0 + 0, sisältötesti 0 + 0, mittatesti 0, maastotesti 0, kuvakierros 0 löydöstä; live tarkistettu). Käyttäjä: *"terrain click saisi tuoda
+  esiin jonkun selvennuksen että mikä terrain ja vaikka tiiviisti sen säännöt. eräänlainen popup. tämä siis kaikissa.
+  sulkee uudestaan kilkkaamalla tai sulje X tms"* ja *"tuo sama terrain selitys sitten skenaarioiden custom terrainille
+  kanssa samaan tyyliin"*.
+  - **Mikä on klikattavaa:** arvotut palat (ennenkin), ja nyt myös kartan omat planeetat, kuut, asteroidikentät ja
+    kaasu-/asteroidirenkaat (`terrHit`: lajin päättelee esineen tyyppi ja nimi, `tk` pakottaa lajin) sekä skenaarioiden
+    omat maastot (`scenarios/terrain-info.js`, `TERR_INFO`). Kartan muu sisältö ei ota osumia (`pointer-events: none`),
+    joten tekstit ja merkit eivät peitä klikkausta. Osuma-alueet ovat läpinäkyviä kuvioita arvottujen palojen alla.
+  - **Selite** (`terrPop`, `.tpop`): otsikko, sijainti ja mitat, skenaarion omat säännöt otsikolla "In this scenario"
+    (luetaan Play-välilehden riveiltä otsikon mukaan, ei kopioina), kirjan maaston tiivistelmä (`TERR_SHORT`) ja
+    "Full rules" -laskos, jonka takana on ytimen koko sääntöteksti. Low orbit -skenaarioissa planeetan selite sanoo,
+    mistä low orbit -pöytä löytyy. Leveällä näytöllä selite on kartan päällä sillä puolella, jolla pala ei ole; kapealla
+    kartan alla. Se ei sulkeudu itsestään: X tai uusi napautus samaan palaan sulkee. Valinta on `st.bz.sel` kuten ennen,
+    joten kartan alla olevat nappulat (chips) avaavat saman selitteen. Battlezonen ja aurinkoreunan säännöt pysyvät
+    kartan alla (`bzBox`), koska niillä ei ole paikkaa kartalla.
+  - **Skenaarioiden omat maastot** (39 selitettä, 28 skenaariota): komeetat (Shadow of the Comet, No Way Out), musta
+    aukko, neutronitähti ja hylky, anomalia, syöksyvät asteroidit, hylyt, salvage-merkit, rengasmateriaali ja paimenkuu,
+    Hyra ja sen romukentät, ruumis, pesä, webway-portti, läpipääsemättömät asteroidit ja miinakentät, Fannonin suuri
+    asteroidikenttä, warp-portti, räjähdykset, piraattien piilo, hulkit (3), Corribran kenttä, Naravonan sivukaistat,
+    Rising Shadow'n warp rift -laatikko, Planet Fallin oma 2 cm:n "low orbit" ja Hunter-Preyn sumupilvet (arvotut palat).
+    Kun lähde ei anna sääntöä (Hyran romukentät, Fannonin kaasuplaneetan koko, neutronitähden koko), selite sanoo sen.
+  - **Testit:** `maastotesti.js` tarkistaa jokaisen arvotun palan ja jokaisen kartan oman maaston selitteen (ei
+    undefinedia, selite ja vähintään yksi sääntörivi). `_lataa.js` vie `terrHit` ja `terrPop`.
+- **Vertailukelpoiset rajapinnat (21.10. ilta, "joo, tee ja julkaise"):** low orbit -kaistan rinnalle kolme kuvaa
+  samaan tapaan. **Planet Fall:** artikkelin oma "low orbit" on 2 cm planeetasta pääpöydällä, ei kirjan pöytä: kartalla
+  2 cm:n rengas ja teksti. **Invasion Deadline:** aikajana 40K-vuoroista BFG-vuoroihin (`tlSVG`): generaattorien
+  kaatumisvuorot katkoviivoin, Macro Cannonin tila joka BFG-vuorolla (● ampuu, ○ latautuu, × ei voi), nykyinen vuoro
+  kehystettynä. Set-up-työkaluissa ja Play-välilehdellä. **Boarding Party:** kulkukaavio BFG → 40K → BFG (`flowSVG`),
+  jossa pelattu lopputulos korostuu.
+- **Low orbit -pöytä karttakuvaan (21.10. ilta; julkaistu 0.13:n kanssa, ks. yllä).** Käyttäjä: *"teeppäs tuonne joku havainnollistava kuva tuosta low orbit
   pöydästä ja normi pöydän ja sen rajapinnasta"* ja *"paras tietty jos saa samaan kartta kuvaan ne jotenkin mutta mieti
   miten olisi paras"*. Valinta: ei erillistä kaaviota, vaan low orbit -pöytä piirretään skenaarion karttaan pääpöydän alle
   samassa mittakaavassa (`mapSVG`, `m.lo`).
@@ -231,6 +285,9 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
     (vetomatka 5/8/10 cm, tai tarkka luku, kun Planet size on heitetty), planeettareuna alhaalla ③ ja paluu
     pääpöydälle ④.
   - **Yhteys:** katkoviivanuoli lähtee skenaarion planeetasta (suurin planeetta), ja se piirretään tekstien alle.
+    Käyttäjä kysyi, onko pöytä oikeassa suunnassa pääpöytään nähden: kirja ei anna suuntaa (erillinen pöytä, jonka
+    yksi pitkä reuna on planeetta, RB s. 116), joten selite sanoo nyt, ettei kaista liity pääpöydän mihinkään reunaan
+    ja että paluu on planeetan viereen.
   - **Selite:** kartan alla on "Low orbit table" -lohko, jossa samat numerot ①–④ ovat sääntölistana. Play-välilehdellä
     lohko on piilotettava, ja low orbit -kartta saa enemmän korkeutta (62 / 78 vh).
   - **Mukana** `LOW_ORBIT`-joukon 20 skenaariota. Pois jätetyt ja perusteet on kirjattu koodiin: Siege of Fularis, Planet
