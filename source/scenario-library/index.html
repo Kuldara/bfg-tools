@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="description" content="Every Battlefleet Gothic scenario from the rulebook and Warp Rift, laid out for the table: set-up checklist, map, turn reminders, dice tables and a victory check.">
+<meta name="description" content="Every Battlefleet Gothic scenario from the rulebook, the classic publications, Warp Rift and five fan supplements, laid out for the table: set-up checklist, map, turn reminders, dice tables and a victory check.">
 <title>Scenario Library</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Crect%20width='32'%20height='32'%20rx='6'%20fill='%23070a11'/%3E%3Crect%20x='5'%20y='7'%20width='22'%20height='18'%20rx='1.5'%20fill='none'%20stroke='%2394a9c4'%20stroke-width='1.6'/%3E%3Crect%20x='5'%20y='7'%20width='5'%20height='18'%20fill='%236fa3e0'/%3E%3Crect%20x='22'%20y='7'%20width='5'%20height='18'%20fill='%23e07a5f'/%3E%3Ccircle%20cx='16'%20cy='16'%20r='3.2'%20fill='%23e8a33d'/%3E%3C/svg%3E">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -93,6 +93,7 @@ p { margin: 0 0 10px; }
 .t-fleets { background: var(--good-soft); color: var(--good); }
 .t-classic { background: var(--c-soft); color: var(--c); }
 .t-wr { background: var(--a-soft); color: var(--a); }
+.t-fan { background: var(--warn-soft); color: var(--warn); }
 .chip.tag { border-style: dashed; }
 .agrbox { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; background: var(--panel); margin-bottom: 6px; }
 .agr { display: grid; grid-template-columns: minmax(0, 1fr); gap: 3px; padding: 8px 0; border-top: 1px solid var(--line); }
@@ -483,8 +484,8 @@ html.short .mapwrap svg { max-height: 78vh; }
 </header>
 <main id="app"></main>
 <footer>
-  <p><b>Scenario Library</b> · version 0.7 · <span id="scn">137</span> scenarios. Unofficial fan-made tool, not affiliated with Games Workshop.</p>
-  <p>Every scenario here is summarised in our own words for play at the table; “Playing with other fleets” notes marked as suggestions are ours, not the source’s. Credit belongs to the original authors; the page references point to the sources: the BFG Remastered <i>Rulebook v1.10</i> and <i>Fleets v0.36</i>, the classic Games Workshop and Fanatic publications (<i>Warp Storm</i>, <i>Planet Killer</i>, <i>Battlefleet Gothic Magazine</i>, <i>Invasion</i>, <i>Fanatic Magazine</i>, <i>Fanatic Online</i>) and the fan magazine <a href="https://specialist-arms.com/bfg/warprift/" target="_blank" rel="noopener">Warp Rift</a>.</p>
+  <p><b>Scenario Library</b> · version 0.8 · <span id="scn">192</span> scenarios. Unofficial fan-made tool, not affiliated with Games Workshop.</p>
+  <p>Every scenario here is summarised in our own words for play at the table; “Playing with other fleets” notes marked as suggestions are ours, not the source’s. Credit belongs to the original authors; the page references point to the sources: the BFG Remastered <i>Rulebook v1.10</i> and <i>Fleets v0.36</i>, the classic Games Workshop and Fanatic publications (<i>Warp Storm</i>, <i>Planet Killer</i>, <i>Battlefleet Gothic Magazine</i>, <i>Invasion</i>, <i>Fanatic Magazine</i>, <i>Fanatic Online</i>) the fan magazine <a href="https://specialist-arms.com/bfg/warprift/" target="_blank" rel="noopener">Warp Rift</a>, and the fan supplements <i>Book of Nemesis</i>, <i>Project Distant Darkness</i>, <i>Starblade</i>, the <i>BFG Tournament Mission Pack</i> and <i>BFG Advanced Scenarios</i>.</p>
   <p>RB = Rulebook v1.10, FL = Fleets v0.36. Progress is saved in this browser only.</p>
   <p class="kbd">Keyboard: <b>1</b>–<b>4</b> switch a scenario’s tabs · <b>←</b> <b>→</b> change the turn on Play.</p>
 </footer>
@@ -497,7 +498,8 @@ const TRUST = {
   rulebook:  { l: "Rulebook",      d: "Printed in the BFG Remastered Rulebook v1.10." },
   fleets:    { l: "Fleets book",   d: "Printed in the BFG Remastered Fleets book v0.36." },
   classic:   { l: "Classic GW",    d: "Published by Games Workshop or its Fanatic imprint, 1999–2008, for the original rules." },
-  wr:        { l: "Warp Rift",     d: "From the Warp Rift fan magazine. Everything in it is fan work, whoever wrote it." }
+  wr:        { l: "Warp Rift",     d: "From the Warp Rift fan magazine. Everything in it is fan work, whoever wrote it." },
+  fan:       { l: "Fan supplement", d: "From a fan-made supplement or tournament pack outside Warp Rift. Fan work, like Warp Rift." }
 };
 /* Warp Rift on yksi kategoria (käyttäjä 21.10.: ei laatuluokittelua sivulle); Warp Riftin vanha jako löytyy tageista.
    Tagit näkyvät kortissa ja löytyvät haulla; alias = hakusanat, jotka eivät näy. */
@@ -510,7 +512,9 @@ const TAG_ALIAS = {
   "Fan rules optional": "fan rules fan-made fleet",
   "Linked games optional": "kill team one page rules linked games warhammer 40,000 40k",
   "Community": "community scenario reader-written",
-  "Agree first": "agree victory open unclear"
+  "Agree first": "agree victory open unclear",
+  "Tournament": "tournament adepticon competitive event battle points",
+  "Fixed forces": "historical fixed fleets named ships narrative story"
 };
 const BOOK = { K: "Book rules only", O: "Book + scenario rules", E: "Needs fan rules", W: "Needs Warhammer 40,000" };
 /* Planetary Assault -perhe: tuomio on väliaikainen, kunnes VP:t on syötetty tai 10 assault pointia täynnä (ks. verdict) */
@@ -523,7 +527,11 @@ const GROUPS = [
   ["cl-mag",    "Classic · Planet Killer and BFG Magazine", "Fanatic Press, 2000–2004 · written for the original rules"],
   ["cl-inv",    "Classic · Invasion and the 2002 Annual", "Games Workshop, 2002 · written for the original rules"],
   ["cl-fan",    "Classic · Fanatic Magazine and Fanatic Online", "Games Workshop’s Fanatic, 2004–2008 · written for Armada-era rules"],
-  ["wr",        "Warp Rift", "The fan magazine, 2004–2026, in issue order · tags show who wrote a scenario, whether it was played, and what to agree"]
+  ["wr",        "Warp Rift", "The fan magazine, 2004–2026, in issue order · tags show who wrote a scenario, whether it was played, and what to agree"],
+  ["fan-tour",  "Fan · Tournament missions", "AdeptiCon 2007–2016, collected and revised by Paolo Barbero · any fleets, equal points"],
+  ["fan-nem",   "Fan · Book of Nemesis", "Cypra Probatii, Poland, 2007 · campaign, historical, tournament and special scenarios"],
+  ["fan-pdd",   "Fan · Project Distant Darkness", "Tau narrative scenarios with fixed forces · any fleets can play"],
+  ["fan-sb",    "Fan · Starblade", "Craftworld Eldar narrative series with fixed forces · any fleets can play"]
 ];
 /* scenario files in scenarios/ add themselves here */
 function addScenarios(list) {
@@ -1843,6 +1851,13 @@ function renderSources() {
     "<p>A free fan magazine for Battlefleet Gothic, published as PDF since April 2004 — 49 issues by June 2026. It is put together by a small team of players: founded by Cybershadow and edited by Roy “horizon” Amkreutz, who is also one of the Remastered authors. Issues carry fleet lists, scenarios, campaigns, tactics, painting and fiction.</p>" +
     "<p>Being a fan magazine, Warp Rift is <b>not</b> an official rules source: its articles are written by whoever submits one, and they all have the same fan-work status. On the scenario list Warp Rift is one category, in issue order. Tags add what the source says: <b>Rules writer</b> (the author also writes the rules), <b>Lore competition</b>, <b>Community</b>, <b>Played</b> and <b>Play both sides</b> — search for any of them. The one exception to fan-work status is issue 48’s <i>Armada Indomitus: Codex Orks</i>, which the magazine credits to the BFG Rules Review Committee; it reprints and updates the Armageddon scenarios.</p>" +
     "<p class='small muted'>All issues can be downloaded free from <a href='" + WR + "' target='_blank' rel='noopener'>specialist-arms.com/bfg/warprift</a>. Page numbers here are PDF pages (in issues 1–10 the printed number is one lower).</p>");
+  h += sec("Fan supplements <span class='badge t-fan'>Fan supplement</span>",
+    "<p>Players have also written whole supplements of their own. Like Warp Rift, they are fan work, not official rules. Most of the ships they name are now in the Fleets book; where a scenario needs something the books do not have, its page gives the source’s profile and a book alternative.</p>" +
+    "<ul class='plain'><li><b>Tournament Mission Pack</b> and <b>Advanced Scenarios</b>: the missions of the AdeptiCon Battlefleet Gothic tournaments (2007–2016), collected by Paolo Barbero for the Babafleet Gothic group of the Baba Yaga Dungeon Club (Alessandria, Italy). <i>Advanced Scenarios</i> revises six of them; each of those six appears here once, with both versions.</li>" +
+    "<li><b>Book of Nemesis</b> (2007): rules and scenarios of the Polish Cypra Probatii community, edited by Marcin “MKG” Gerkowicz — the Gehenna campaign’s special scenarios and the historical, tournament and special scenarios.</li>" +
+    "<li><b>Project Distant Darkness</b> and its <b>Chapter II: Distant Sun</b>: Tau narrative scenarios by Roy “horizon” Amkreutz and Chris “Zhai Morenn” Lautermilch. Chapter I, <i>The Art of Command</i>, is not in this library.</li>" +
+    "<li><b>Starblade</b>: a nine-scenario Craftworld Eldar series by Roy “horizon” Amkreutz.</li></ul>" +
+    "<p class='small muted'>The supplements circulate as free PDFs; the community’s <i>BFG Scenario Listing</i> links them. Page numbers are PDF pages. " + SC.filter(s => FAN_GRPS.includes(s.grp)).length + " fan supplement scenarios in this app.</p>");
   h += sec("The High Admiralty",
     "<p>The volunteer rules committee for Battlefleet Gothic, responsible for the 2010 FAQ/Compendium (written by Bob Henderson, Ray Bell and Nate Montes, RB p. 3). Warp Rift 48 names the BFG Rules Review Committee as Bob Henderson, Ray Bell, Nate Montes and Roy Amkreutz. Rules questions are still answered, most recently in the <i>Collected FAQ 2026</i> by Simon Saier and Roy Amkreutz.</p>");
   h += sec("What the sources leave open",
@@ -1853,6 +1868,7 @@ function renderSources() {
     "<tr><td><span class='badge t-fleets'>Fleets book</span></td><td>Printed in the BFG Remastered Fleets book v0.36, the rulebook’s companion.</td></tr>" +
     "<tr><td><span class='badge t-classic'>Classic GW</span></td><td>Published by Games Workshop or its Fanatic imprint between 1999 and 2008, for the original rules.</td></tr>" +
     "<tr><td><span class='badge t-wr'>Warp Rift</span></td><td>From the Warp Rift fan magazine. Everything in it is fan work, whoever wrote it.</td></tr>" +
+    "<tr><td><span class='badge t-fan'>Fan supplement</span></td><td>From a fan-made supplement or tournament pack outside Warp Rift. Fan work, like Warp Rift.</td></tr>" +
     "<tr><td><span class='chip tag'>Agree first</span></td><td>Tag: the victory condition, or the scenario as a whole, depends on something the source leaves open — settle it before you start.</td></tr>" +
     "<tr><td><span class='chip tag'>Linked games optional</span></td><td>Tag: written to be linked with another game (Warhammer 40,000, Kill Team…); the page says how to play the space battle on its own.</td></tr>" +
     "<tr><td><span class='chip tag'>Community</span></td><td>Tag: written by a Warp Rift reader; Played when the source mentions playing it.</td></tr>" +
@@ -1860,6 +1876,8 @@ function renderSources() {
     "<tr><td><span class='chip tag'>Rules writer</span></td><td>Tag: the author also writes the rules (a High Admiralty / rules committee member or a Remastered author). Still a personal article, not a committee release.</td></tr>" +
     "<tr><td><span class='chip tag'>Played</span></td><td>Tag: the source mentions a battle report, play-testing or a club that played it.</td></tr>" +
     "<tr><td><span class='chip tag'>Lore competition</span></td><td>Tag: from Warp Rift’s Shadowsun competition, built on published background.</td></tr>" +
+    "<tr><td><span class='chip tag'>Tournament</span></td><td>Tag: written for tournament play — equal fleets, a time limit and battle points. The page also gives the plain victory point result.</td></tr>" +
+    "<tr><td><span class='chip tag'>Fixed forces</span></td><td>Tag: the source lists the exact ships, often named; the page says how to play it with your own fleets.</td></tr>" +
     "<tr><td><span class='chip tag'>Play both sides</span></td><td>Tag: lopsided on purpose — the author suggests playing it twice, swapping sides, and comparing victory points.</td></tr>" +
     "<tr><td><span class='badge bk'>Book rules only</span></td><td>Needs nothing beyond the Rulebook and Fleets books.</td></tr>" +
     "<tr><td><span class='badge bk'>Book + scenario rules</span></td><td>Also uses special rules written into the scenario itself — all of them are on its page here.</td></tr>" +
@@ -2092,6 +2110,8 @@ function mapSVG(m) {
       const cx = it.x + it.w / 2, cy = it.y + it.h / 2;
       if (it.l) { const turned = it.rot && Math.abs(it.rot) === 90, [lab, f] = fitBox(it.l, turned ? it.h : it.w, turned ? it.w : it.h);
         over += T(cx, cy, lab, s, it.rot ? " transform='rotate(" + it.rot + " " + cx + " " + cy + ")'" : "", f); }
+    } else if (it.z === "poly") {
+      body += "<polygon points='" + it.pts.map(p => p[0] + "," + p[1]).join(" ") + "' fill='" + soft(s) + "' stroke='" + col(s) + "' stroke-width='.8'" + (it.dash ? " stroke-dasharray='3 2'" : "") + " clip-path='url(#tbl)'/>";
     } else if (it.z === "circ") {
       body += "<circle cx='" + it.cx + "' cy='" + it.cy + "' r='" + it.r + "' fill='" + soft(s) + "' stroke='" + col(s) + "' stroke-width='.8' clip-path='url(#tbl)'/>";
       if (it.l) over += T(it.cx, it.cy, it.l, s);
@@ -2183,11 +2203,13 @@ function render(keepScroll) {
   if (keepScroll) window.scrollTo(0, y);
 }
 
-const CATS = [["core", "Core 10"], ["campaign", "Books"], ["classic", "Classic GW"], ["wr", "Warp Rift"], ["all", "All"]];
+const CATS = [["core", "Core 10"], ["campaign", "Books"], ["classic", "Classic GW"], ["wr", "Warp Rift"], ["fan", "Fan supplements"], ["all", "All"]];
 const CL_GRPS = ["cl-ws", "cl-mag", "cl-inv", "cl-fan"];
 const WR_GRPS = ["committee", "lore", "community", "untested"];
+/* fanilisäosat (21.10.): Tournament Mission Pack + Advanced Scenarios, Book of Nemesis, Project Distant Darkness, Starblade */
+const FAN_GRPS = ["fan-tour", "fan-nem", "fan-pdd", "fan-sb"];
 /* Warp Rift on yksi kategoria, numerojärjestyksessä (secOf, wrIssue). wro/comm = 0.7:n tallenteet */
-const CAT_GRPS = { campaign: ["campaign", "fleets"], classic: CL_GRPS, wr: WR_GRPS };
+const CAT_GRPS = { campaign: ["campaign", "fleets"], classic: CL_GRPS, wr: WR_GRPS, fan: FAN_GRPS };
 const CAT_OLD = { wro: "wr", comm: "wr" };
 function secOf(s) { return WR_GRPS.includes(s.grp) ? "wr" : s.grp; }
 function wrIssue(s) { const m = /Warp Rift (\d+)/.exec(s.src || ""); return m ? +m[1] : 99; }
@@ -2307,7 +2329,7 @@ function renderList() {
   document.title = "Scenario Library";
   if (CAT_OLD[DB.cat]) DB.cat = CAT_OLD[DB.cat];
   const cat = CATS.some(c => c[0] === DB.cat) ? DB.cat : "core", nf = lfActive(lf());
-  let side = "<h1>Battlefleet Gothic scenarios</h1><p class='intro'>The scenarios of the BFG Remastered books, the classic Games Workshop and Fanatic publications, and every scenario from the Warp Rift fan magazine, laid out for the table: what to bring, a map, a set-up checklist, turn reminders, dice tables and a victory check. Every scenario can be played with any fleets; some suggest the fleets they were written for. <a href='#/sources'>Where do these come from?</a></p>";
+  let side = "<h1>Battlefleet Gothic scenarios</h1><p class='intro'>The scenarios of the BFG Remastered books, the classic Games Workshop and Fanatic publications, every scenario from the Warp Rift fan magazine and five fan supplements, laid out for the table: what to bring, a map, a set-up checklist, turn reminders, dice tables and a victory check. Every scenario can be played with any fleets; some suggest the fleets they were written for. <a href='#/sources'>Where do these come from?</a></p>";
   side += "<div class='homecards'><a class='card prepcard' href='#/prep'><div class='card-t'><h3>Before the battle</h3><span class='badge t-rulebook'>Rulebook</span></div><p class='pitch'>Pick a scenario at random or with attack ratings, decide who attacks, and the pre-battle order (RB p. 120–123).</p></a>" +
     "<a class='card prepcard' href='#/subplots'><div class='card-t'><h3>Sub-plots</h3><span class='badge t-rulebook'>Rulebook</span></div><p class='pitch'>Roll a secret second goal for each player, see what to do and when, and browse all 18 (RB p. 124–127).</p></a></div>";
   side += "<h2 style='margin:18px 0 8px'>Your table</h2>" + tableCtl() + "<p class='small muted' style='margin:2px 0 0'>Every scenario map is drawn on this table. Rule distances stay as written; centre lines, thirds and far edges follow your table.</p>";
@@ -2445,8 +2467,8 @@ function resultView(sc, st, v) {
 
 /* ---------------------------------------------------------------- before the battle */
 /* the scenario pool for rolling from the whole library */
-const POOL_SRC = [["core", "Core 10"], ["campaign", "Books"], ["classic", "Classic GW"], ["wr", "Warp Rift"]];
-function srcOf(sc) { return sc.grp === "core" ? "core" : sc.grp === "campaign" || sc.grp === "fleets" ? "campaign" : CL_GRPS.includes(sc.grp) ? "classic" : secOf(sc); }
+const POOL_SRC = [["core", "Core 10"], ["campaign", "Books"], ["classic", "Classic GW"], ["wr", "Warp Rift"], ["fan", "Fan supplements"]];
+function srcOf(sc) { return sc.grp === "core" ? "core" : sc.grp === "campaign" || sc.grp === "fleets" ? "campaign" : CL_GRPS.includes(sc.grp) ? "classic" : FAN_GRPS.includes(sc.grp) ? "fan" : secOf(sc); }
 function fitsTable(sc) {
   const [W, H] = tableWH(), vs = sc.variants ? sc.variants.map(x => x[0]) : ["std"];
   return vs.some(v => { const f = fitOf(sc, v); return W >= f[0] && H >= f[1]; });
@@ -2878,25 +2900,29 @@ let lastMapNarrow = null;
 window.addEventListener("resize", () => { const n = mapNarrow(); if (lastMapNarrow !== null && n !== lastMapNarrow) render(true); lastMapNarrow = n; });
 </script>
 <!-- scenario files: each adds its scenarios with addScenarios([...]) -->
-<script src="scenarios/blackcrusade.js?v=0.7.68"></script>
-<script src="scenarios/fleets.js?v=0.7.68"></script>
-<script src="scenarios/cl-early.js?v=0.7.68"></script>
-<script src="scenarios/cl-mag-a.js?v=0.7.68"></script>
-<script src="scenarios/cl-mag-b.js?v=0.7.68"></script>
-<script src="scenarios/cl-mag-c.js?v=0.7.68"></script>
-<script src="scenarios/cl-mag-d.js?v=0.7.68"></script>
-<script src="scenarios/cl-fanatic.js?v=0.7.68"></script>
-<script src="scenarios/cl-invasion.js?v=0.7.68"></script>
-<script src="scenarios/_wr.js?v=0.7.68"></script>
-<script src="scenarios/wr-committee.js?v=0.7.68"></script>
-<script src="scenarios/wr-community-a.js?v=0.7.68"></script>
-<script src="scenarios/wr-spreading-war.js?v=0.7.68"></script>
-<script src="scenarios/wr-community-l4a.js?v=0.7.68"></script>
-<script src="scenarios/wr-community-l4b.js?v=0.7.68"></script>
-<script src="scenarios/wr-community-l4c.js?v=0.7.68"></script>
-<script src="scenarios/wr-community-l4d.js?v=0.7.68"></script>
-<script src="scenarios/open-points.js?v=0.7.68"></script>
-<script src="scenarios/wr-rating.js?v=0.7.68"></script>
+<script src="scenarios/blackcrusade.js?v=0.8.0"></script>
+<script src="scenarios/fleets.js?v=0.8.0"></script>
+<script src="scenarios/cl-early.js?v=0.8.0"></script>
+<script src="scenarios/cl-mag-a.js?v=0.8.0"></script>
+<script src="scenarios/cl-mag-b.js?v=0.8.0"></script>
+<script src="scenarios/cl-mag-c.js?v=0.8.0"></script>
+<script src="scenarios/cl-mag-d.js?v=0.8.0"></script>
+<script src="scenarios/cl-fanatic.js?v=0.8.0"></script>
+<script src="scenarios/cl-invasion.js?v=0.8.0"></script>
+<script src="scenarios/_wr.js?v=0.8.0"></script>
+<script src="scenarios/wr-committee.js?v=0.8.0"></script>
+<script src="scenarios/wr-community-a.js?v=0.8.0"></script>
+<script src="scenarios/wr-spreading-war.js?v=0.8.0"></script>
+<script src="scenarios/wr-community-l4a.js?v=0.8.0"></script>
+<script src="scenarios/wr-community-l4b.js?v=0.8.0"></script>
+<script src="scenarios/wr-community-l4c.js?v=0.8.0"></script>
+<script src="scenarios/wr-community-l4d.js?v=0.8.0"></script>
+<script src="scenarios/fan-tournament.js?v=0.8.0"></script>
+<script src="scenarios/fan-nemesis.js?v=0.8.0"></script>
+<script src="scenarios/fan-pdd.js?v=0.8.0"></script>
+<script src="scenarios/fan-starblade.js?v=0.8.0"></script>
+<script src="scenarios/open-points.js?v=0.8.0"></script>
+<script src="scenarios/wr-rating.js?v=0.8.0"></script>
 <!--SCENARIO-FILES-->
 <script>wrInit(); document.getElementById("scn").textContent = SC.length; render(false);</script>
 </body>

@@ -198,12 +198,12 @@
   /* ------------------------------------------------------------ COMMERCE RAIDERS */
   {
     id: "wr-commerce-raiders", grp: "community", name: "Commerce Raiders", series: "Moose Musings", trust: "community",
-    why: "Community scenario, play-tested and updated by its author (Warp Rift 40, p. 47) and reused in later Warp Rift campaigns. Book rules only.", src: "Warp Rift 38, pp. 29–31 · update Warp Rift 40, p. 47", book: "K", suggest: null,
+    why: "Community scenario, play-tested and updated by its author (Warp Rift 40, p. 47) and reused in later Warp Rift campaigns. Book rules only.", src: "Warp Rift 38, pp. 29–31 · update Warp Rift 40, p. 47 · version 0.5 (the author’s online document)", book: "K", suggest: null,
     others: "Written for any fleets: roving capital squadrons against a big convoy. Fleets with their own cargo ships may mix them in (see Forces).",
     sides: { a: { n: "Raiders" }, b: { n: "Convoy" } },
-    variants: [["orig", "WR38 original"], ["upd", "WR40 update"]],
+    variants: [["v05", "Version 0.5 (newest)"], ["orig", "WR38 original"], ["upd", "WR40 update"]],
     pitch: "Capital ship squadrons fall on a large convoy. Every transport that dies or gets out is worth 100 VP — and the raiders score nothing else.",
-    glance: [["Points", "Equal + 1 transport per 100 pts"], ["Table", "180 × 120 cm (WR40: better on 6 × 4)"], ["Battlezone", "D6: 1–3 Outer Reaches, 4–6 Deep Space"], ["First turn", "Raiders"], ["Game ends", "Transports through, dead, or raiders gone"]],
+    glance: v => [["Points", "Equal + 1 transport per 100 pts"], ["Table", v === "v05" ? "180 × 120 cm; rules for smaller tables" : "180 × 120 cm (WR40: better on 6 × 4)"], ["Battlezone", "D6: 1–3 Outer Reaches, 4–6 Deep Space"], ["First turn", "Raiders"], ["Game ends", "Transports through, dead, or raiders gone"]],
     bring: ["Transports: points ÷ 100, rounded up (e.g. 15 for 1500 pts)"],
     forces: {
       a: ["Up to the agreed points."],
@@ -211,17 +211,23 @@
     },
     draw: (v, W, H) => {
       const sh = v === "upd" ? 30 : 0, cy = H / 2;
-      return [R(sh, cy - 7.5, 30, 15, "b", "Convoy"), R(sh + 30, cy - 7.5, 30, 15, "b", "Leaders"),
+      /* v0.5: Rearguard, Convoy, Convoy Leaders 30 cm each from the convoy edge; shorter tables compress them (150: rearguard 15, 120: convoy 15 too) */
+      const rg = W <= 150 ? 15 : 30, cv = W <= 120 ? 15 : 30;
+      const zones = v === "v05" ? [R(0, cy - 7.5, rg, 15, "b", "Rear"), R(rg, cy - 7.5, cv, 15, "b", "Convoy"), R(rg + cv, cy - 7.5, 30, 15, "b", "Leaders")]
+        : [R(sh, cy - 7.5, 30, 15, "b", "Convoy"), R(sh + 30, cy - 7.5, 30, 15, "b", "Leaders")];
+      return [...zones,
         R(W - 6, 30, 6, Math.max(4, H - 60), "b", ""), { z: "edge", e: "r", s: "b", l: "Escape corridor (30 cm from each long edge)" },
         { z: "tick", e: "t", list: [1, 2, 3, 4, 5, 6].map(t => [W - 30 * t, "T" + t]).filter(t => t[0] > 4) }, { z: "tick", e: "b", list: [1, 2, 3, 4, 5, 6].map(t => [W - 30 * t, "T" + t]).filter(t => t[0] > 4) },
         { z: "text", x: W / 2, y: 33, l: "raiders enter: corridor edge (turn 1)\nor along the long edges", s: "a" },
-        { z: "edge", e: "l", s: "b", dash: 1, l: "rearguard enters turn 2" }];
+        v === "v05" ? null : { z: "edge", e: "l", s: "b", dash: 1, l: "rearguard enters turn 2" }];
     },
     fit: () => [120, 75], srcTable: [180, 120],
-    mapNote: v => v === "upd" ? "WR40 update: the convoy zones are moved 30 cm up the board to shorten the run. The update’s other “little tweaks” to deployment are not printed." : "Ticks mark how far along the long edges the raiders may enter each turn (30 cm per turn from the corridor end).",
+    mapNote: v => v === "v05" ? "Version 0.5’s map: Rearguard, Convoy and Convoy Leaders, 30 × 15 cm each, from the convoy’s short edge; ticks mark how far along the long edges the raiders may enter each turn. On tables under 180 cm the zones shrink as the rules say." : v === "upd" ? "WR40 update: the convoy zones are moved 30 cm up the board to shorten the run. The update’s other “little tweaks” to deployment are not printed." : "Ticks mark how far along the long edges the raiders may enter each turn (30 cm per turn from the corridor end).",
     steps: [
       { t: "Agree a points total. Roll a D6 for the battlezone: 1–3 Outer Reaches, 4–6 Deep Space, and set it up with that generator." },
-      { s: "b", t: "Set up first. The Convoy Leaders zone may hold up to a third of your warships’ points; the Convoy zone holds the rest and the transports. Any warships may be kept back as a rearguard." },
+      { s: "b", t: "Set up first. The Convoy Leaders zone may hold up to a third of your warships’ points; the Convoy zone holds the rest and the transports. Any warships may be kept back as a rearguard.", not: ["v05"] },
+      { s: "b", t: "Set up first, in three zones. Convoy Leaders: up to half of your warships’ points. Convoy: up to a third, plus all the transports. Rearguard: any number of warships.", only: ["v05"] },
+      { t: "Smaller tables: on a 150 cm table the Rearguard zone is 15 cm long; on 120 cm the Convoy zone too. On a table narrower than 120 cm, raider ships move 15 cm less on the turn they arrive for every 30 cm of width missing (at 0 they arrive touching the edge and do not move that turn).", only: ["v05"] },
       { s: "b", t: "Convoy zones moved 30 cm up the board (WR40 update).", only: ["upd"] },
       { s: "a", t: "No deployment. You move on from the corridor edge or along the long edges (tool in Play), and you go first. At least one unit must come on in turn 1." }
     ],
@@ -229,22 +235,24 @@
     refs: [["Convoy (the book’s smaller version)", "RB p. 134"], ["Heavy transports", "FL p. 182"], ["Battlezone generators", "RB p. 107–108"]],
     play: [
       { w: "Raider entry", s: "a", t: "Turn 1: from the escape corridor edge, or up to 30 cm along either long edge from that end. Each later turn: 30 cm further along the long edges (not the corridor edge). Units never brought on count as disengaged." },
-      { w: "Turn 2", s: "b", t: "The rearguard moves on from the convoy’s board edge." },
-      { w: "Scoring", t: "Raiders score only for transports: 100 VP each (plus upgrade points). Escaped transports score the same for the convoy, which also scores normally for raider ships damaged, destroyed or disengaged." }
+      { w: "Turn 2", s: "b", t: "The rearguard moves on from the convoy’s board edge.", not: ["v05"] },
+      { w: "Scoring", t: "Raiders score only for transports: 100 VP each (plus upgrade points). Escaped transports score the same for the convoy, which also scores normally for raider ships damaged, destroyed or disengaged.", not: ["v05"] },
+      { w: "Scoring", t: "Raiders score only for transports: 100 VP per point of transport capacity destroyed, plus its upgrade points. The convoy scores 100 VP per point of capacity through the corridor — upgrades are a sunk cost — plus standard VP for raider ships damaged, destroyed or disengaged.", only: ["v05"] }
     ],
-    fx: T => [["a", T === 1 ? "Entry: corridor edge, or up to 30 cm along the long edges" : "Entry: up to " + 30 * T + " cm along the long edges"]].concat(T === 2 ? [["b", "Rearguard moves on from the convoy edge"]] : []),
+    fx: (T, st, v) => [["a", T === 1 ? "Entry: corridor edge, or up to 30 cm along the long edges" : "Entry: up to " + 30 * T + " cm along the long edges"]].concat(T === 2 && v !== "v05" ? [["b", "Rearguard moves on from the convoy edge"]] : []),
     tools: [
-      { k: "counter", id: "dead", l: "Transports destroyed", s: "a", res: 1 },
-      { k: "counter", id: "out", l: "Transports through the corridor", s: "b", res: 1 },
+      { k: "counter", id: "dead", l: "Transports destroyed (points of capacity in version 0.5)", s: "a", res: 1 },
+      { k: "counter", id: "out", l: "Transports through the corridor (points of capacity in version 0.5)", s: "b", res: 1 },
       { k: "num", id: "ext", l: "Convoy VP from raider ships (standard)", s: "b", after: v => "" }
     ],
     end: ["Every transport has escaped or been destroyed.", "Or the raiders are destroyed or driven off — transports still on the table then count for the convoy."],
-    win: ["Raiders: 100 VP per transport destroyed (plus its upgrade points). Nothing for warships.", "Convoy: 100 VP per transport through the escape corridor (plus upgrades), plus standard VP for raider ships.", "Higher total wins."],
+    win: v => v === "v05" ? ["Raiders: 100 VP per point of transport capacity destroyed (plus its upgrade points). Nothing for warships.", "Convoy: 100 VP per point of capacity through the escape corridor (no upgrade points), plus standard VP for raider ships.", "Higher total wins."]
+      : ["Raiders: 100 VP per transport destroyed (plus its upgrade points). Nothing for warships.", "Convoy: 100 VP per transport through the escape corridor (plus upgrades), plus standard VP for raider ships.", "Higher total wins."],
     result(st) {
       const a = get(st, "dead", 0) * 100, b = get(st, "out", 0) * 100 + num(st, "ext");
       return [a === b ? (a ? "draw" : null) : a > b ? "a" : "b", a === b ? (a ? "Level" : "Battle in progress") : (a > b ? "Raiders lead" : "Convoy leads"), "Raiders " + a + " VP – Convoy " + b + " VP (add upgrade points by hand)."];
     },
-    info: { bg: "The book’s Convoy is a small affair; this one is about roving capital squadrons hitting commercial traffic — at its most extreme, a planetary assault fleet caught off guard in the outer reaches.", cr: [wrCredit(38, "Italianmoose"), "Update in their “Moose Musings”, Warp Rift 40 (July 2023), after play-tests showed the convoy needed 11–12 turns on a 6 × 4 table.", "Drawing by Christian Schwager; artwork by John “Magelord” Reed."] }
+    info: { bg: "The book’s Convoy is a small affair; this one is about roving capital squadrons hitting commercial traffic — at its most extreme, a planetary assault fleet caught off guard in the outer reaches.", cr: [wrCredit(38, "Italianmoose"), "Update in their “Moose Musings”, Warp Rift 40 (July 2023), after play-tests showed the convoy needed 11–12 turns on a 6 × 4 table.", "Version 0.5 (changelog v0.1–v0.5, after suggestions by horizon): the author’s online document, linked from the community’s BFG Scenario Listing.", "Drawing by Christian Schwager; artwork by John “Magelord” Reed."] }
   },
   /* ------------------------------------------------------------ NEST RAID */
   {

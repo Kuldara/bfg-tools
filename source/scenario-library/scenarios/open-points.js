@@ -8,6 +8,16 @@ const OA = {
   first: { id: "first", l: "First turn", d: "Roll off; the higher roll chooses who goes first", s: "RB p. 128, 133, 143" },
   len: { id: "len", l: "Game length", d: "Until one fleet disengages or is destroyed", s: "RB p. 130, 132, 139, 143" }
 };
+/* fanilisäosat (21.10.2026): yhteiset kohdat */
+const FA = {
+  terr: { id: "terr", l: "Where the celestial phenomena go", d: "Take turns placing them, the higher roll-off placing first", s: "Tournament Mission Pack p. 4–6 (the 2007 missions)" },
+  dep: { id: "dep", l: "Deployment order", d: "Roll off; the lower roll places a ship or squadron first, then take turns", s: "RB p. 143 (Fleet Engagement)" },
+  aux: { id: "aux", l: "Your “Auxiliary Fleet” (the pack does not explain it)", d: "One squadron or capital ship you name before deployment", o: 1 },
+  fb: { id: "fb", l: "“First Blood”", d: "Destroying the battle’s first ship or escort", o: 1 },
+  len8: { id: "len", l: "Game length", d: "8 turns or 2 hours, as the pack’s other missions", s: "Tournament Mission Pack p. 4–6" },
+  dis: { id: "dis", l: "If the Tau disengage", d: "A draw", s: "Distant Sun p. 9 (Into the Claw: the Tau disengaging is a draw)", v: 1 }
+};
+const fo = (v, x) => Object.assign({ only: v }, x);
 const OPEN = {
   /* --- Rulebook --- */
   "the-raiders": { a: [{ id: "ldroll", l: "When to roll the D6 for the defenders’ −1 Leadership turns", d: "Before the first turn", o: 1 }] },
@@ -79,5 +89,70 @@ const OPEN = {
   "cl-inv-boarding": { t: ["Linked games optional"],
     a: [{ id: "solo", l: "Without a Warhammer 40,000 game", d: "Resolve the station assault as a normal boarding action; if the attackers win, the charges go off", s: "Our suggestion, using RB p. 89–90", o: 1 }] },
   "cl-inv-deadline": { t: ["Linked games optional"],
-    a: [{ id: "solo", l: "Without a Warhammer 40,000 game: the turn each generator falls", d: "Roll D6+2 for each generator", o: 1 }] }
+    a: [{ id: "solo", l: "Without a Warhammer 40,000 game: the turn each generator falls", d: "Roll D6+2 for each generator", o: 1 }] },
+  /* --- Fan supplements (21.10.2026): tournament missions --- */
+  "fan-t-manna": { t: ["Tournament"], a: [fo(["s10"], FA.terr), { id: "crip", l: "When a ship must be uncrippled to earn the bonus", d: "Through the whole game turn that earns it", o: 1, only: ["s10"] }] },
+  "fan-t-road-to-hell": { t: ["Tournament"], a: [fo(["adv"], FA.terr), { id: "planet", l: "“Protect the Planet” — this mission has no planet", d: "Read it as the warp rift in the centre", o: 1, only: ["ac"] }] },
+  "fan-t-space-power": { t: ["Tournament"] },
+  "fan-t-edge-of-warp": { t: ["Tournament"], a: [FA.terr, OA.first, FA.len8] },
+  "fan-t-scavenger": { t: ["Tournament"], a: [FA.terr, OA.first, FA.len8] },
+  "fan-t-black-hole": { t: ["Tournament"], a: [FA.terr] },
+  "fan-t-bismark": { t: ["Tournament"], a: [FA.terr] },
+  "fan-t-unexpected": { t: ["Tournament"], a: [FA.terr, fo(["adv"], FA.fb)] },
+  "fan-t-derelict-base": { t: ["Tournament"], a: [FA.terr] },
+  "fan-t-station": { t: ["Tournament"], a: [FA.terr, fo(["ac"], FA.dep)] },
+  "fan-t-retrieve-salvage": { t: ["Tournament"], a: [FA.terr, FA.dep, { id: "tr", l: "Transports in each fleet", d: "Four each, at no points cost", o: 1, v: 1 },
+    { id: "vals", l: "The ten markers’ hidden values", d: "three 0s, four 1s and three 2s, shuffled", o: 1, v: 1 }, { id: "lines", l: "Where the two lines of markers go", d: "five on each line, 15 cm either side of the long centre line, evenly spaced", o: 1 }] },
+  "fan-t-protect-salvage": { t: ["Tournament"], a: [FA.terr, FA.dep, { id: "tr", l: "Transports in each fleet", d: "Four each, at no points cost, deployed with the fleet", o: 1 }] },
+  "fan-t-brace": { t: ["Tournament"], a: [FA.terr, fo(["ac"], FA.dep), fo(["ac"], FA.aux), fo(["ac"], FA.fb)] },
+  "fan-t-wrecks": { t: ["Tournament"], a: [FA.terr, fo(["ac"], FA.dep), fo(["ac"], FA.aux)] },
+  "fan-t-neutron": { t: ["Tournament"], a: [{ id: "side", l: "Which side of the star the wreck starts", d: "roll off: the winner picks", o: 1 }, { id: "size", l: "Size of the neutron star’s base", d: "A large flying base, about 6 cm across", o: 1 }, FA.terr, FA.dep, FA.aux, FA.fb] },
+  "fan-t-shepard": { t: ["Tournament"], a: [{ id: "rings", l: "What the two rings are", d: "bands of gas and dust 10 cm wide along both centre lines", s: "RB p. 113 (planetary rings are gas, dust or asteroid bands)" },
+    { id: "moon", l: "Where the shepherd moon is", d: "where the rings cross, in the centre", o: 1 }, { id: "board", l: "How the moon defends against boarding", d: "as an 8-hit cruiser with 2 turrets", s: "Tournament Mission Pack p. 14 (the 2013 research platform)", v: 1 }, FA.terr, FA.dep, FA.aux] },
+  "fan-t-hide": { t: ["Tournament"], a: [FA.terr, FA.dep, { id: "who", l: "Whose ships check the anomaly", d: "the moving player’s ships, after that player’s movement phase", o: 1 }, { id: "last", l: "How long the Leadership penalty lasts", d: "until the end of that player turn", o: 1 }, FA.aux, FA.fb] },
+  /* --- Book of Nemesis --- */
+  "fan-n-governor": { a: [{ id: "where", l: "Where the palace can be attacked from", d: "the low orbit table, as any hit-and-run attack (teleport or assault boats)", s: "RB p. 91 and 116", v: 1 }] },
+  "fan-n-naravona": { t: ["Fan rules optional"], a: [{ id: "pass", l: "Width of the clear passage", d: 60, u: "cm", max: 120, o: 1 }, { id: "dep", l: "Depth of each deployment zone", d: 20, u: "cm", max: 40, s: "the book’s map: 80 cm between the zones on a 120 cm table" },
+    { id: "once", l: "How many defending ships the attackers may place", d: "one roll: on a 4+, one ship or squadron of the attackers’ choice", o: 1 }] },
+  "fan-n-comet": { t: ["Fan rules optional"], a: [{ id: "dep", l: "Where each side sets up", d: "attackers within 10 cm of the comet at its starting end; defenders anywhere at least 20 cm from the table edges", s: "the book’s map (p. 44)" }] },
+  "fan-n-line": { t: ["Fan rules optional"], a: [{ id: "orbit", l: "Where “planetary orbit” ends", d: "at the edge of the planet’s gravity well, 15 cm from a medium planet", s: "RB p. 113" }, { id: "planet", l: "Where the planet goes", d: "against the middle of a short edge", s: "the book’s map (p. 45)" }] },
+  "fan-n-kravertus": { t: ["Fixed forces"], a: [{ id: "edge", l: "The Event Horizon’s edge for disengaging", d: "a short edge chosen by the Chaos player before deployment", o: 1 }] },
+  "fan-n-armada": { t: ["Fan rules optional"] },
+  "fan-n-longest": { a: [{ id: "place", l: "How revealed markers are deployed (the book’s text breaks off)", d: "as in Convoy: escorts on the marker in formation, a capital ship on it facing any way", s: "RB p. 135 (Convoy)" },
+    { id: "other", l: "If the Fynd’yon leaves by another edge", d: "a raiders’ marginal victory: it lives, but the envoys never arrive", o: 1, v: 1 }] },
+  "fan-n-recon": { t: ["Tournament"] },
+  "fan-n-flanks": { t: ["Tournament"] },
+  "fan-n-titan": { t: ["Tournament"] },
+  "fan-n-hulk": { t: ["Tournament"], a: [{ id: "dep", l: "Deployment order", d: "the roll-off winner deploys the whole fleet first", s: "Book of Nemesis p. 55–56 (Tearing the Flanks, Titan Clash)" }] },
+  "fan-n-ambush": { a: [{ id: "zone", l: "Size of the corner zones", d: 30, u: "cm", max: 50, s: "the book’s map (p. 58)" }, OA.len] },
+  "fan-n-gunnery": { a: [{ id: "move", l: "The 4D6 asteroid move", d: "one roll for each asteroid", o: 1 }] },
+  /* --- Project Distant Darkness --- */
+  "fan-p-hunter-prey": { t: ["Fixed forces", "Fan rules optional"], a: [{ id: "face", l: "Which way the ships face at the start", d: "each player chooses", o: 1 }, { id: "hr", l: "Does a successful hit-and-run or boarding action end the game?", d: "Yes: the Novamarines have what they came for", o: 1, v: 1 }] },
+  "fan-p-light-dark": { t: ["Fixed forces", "Fan rules optional"], a: [{ id: "entry", l: "Size of the Tau entry zone around the middle of the bottom edge", d: 20, u: "cm", max: 30, o: 1 }, { id: "edge", l: "Where the freighters escape", d: "off the right short edge, as the map shows (the text says a long edge)", o: 1, v: 1 }] },
+  "fan-p-stolen-goods": { t: ["Fixed forces", "Fan rules optional"], a: [{ id: "table", l: "Table and phenomena", d: "120 × 120 cm, as the square map; inner biosphere phenomena placed as usual", o: 1 }, { id: "enter", l: "How the Tau patrol arrives", d: "moving on from the entry point in its first turn", o: 1 }] },
+  "fan-p-barrage": { t: ["Fixed forces", "Fan rules optional"], a: [{ id: "dep", l: "The Tau deployment", d: "set up within 20 cm of the Tau edge", o: 1 }, { id: "how", l: "How the reliquary is attacked", d: "from the low orbit table, as a 4-hit target with armour 6+", s: "RB p. 116", v: 1 }] },
+  "fan-p-crossfire": { t: ["Fixed forces", "Fan rules optional"], a: [{ id: "ecf", l: "Where the Tau ECF starts", d: "entering from the Tau entry zone in its first turn", o: 1 }, { id: "order", l: "Turn order with three fleets", d: "Tas’ka, then the Orks, then the Tau ECF", o: 1 },
+    { id: "found", l: "The result if Tas’ka is discovered", d: "Tas’ka loses; between the Orks and the ECF, whoever destroyed the other wins, otherwise neither", o: 1, v: 1 }] },
+  "fan-p-silent-strike": { t: ["Fan rules optional"], a: [{ id: "hulk", l: "Depots destroyed, but a Tau hulk left behind", d: "A draw: the raid worked, the secret did not", o: 1, v: 1 }] },
+  "fan-p-hunter-cadre": { t: ["Fixed forces", "Fan rules optional"], a: [{ id: "bz", l: "Battlezone (“outer biosphere” is not a rulebook zone)", d: "the primary biosphere generator (RB p. 107)", o: 1 }] },
+  "fan-p-another-day": { t: ["Fixed forces", "Fan rules optional"], a: [{ id: "mid", l: "If Ly’tan or Sheva’s is lost but not every Tau ship", d: "The Corsairs win", o: 1, v: 1 }] },
+  "fan-p-into-darkness": { t: ["Fixed forces", "Fan rules optional"], a: [{ id: "who", l: "Who plays Nua’ta", d: "the Tau player plays both ships; once the Dark Eldar are gone, Nua’ta must head for low orbit at once and bomb the city", o: 1 },
+    { id: "len", l: "Game length", d: "Until Nua’ta stands down, the city or a Tau ship is destroyed, or both Tau ships are gone", o: 1 }] },
+  "fan-p-claw": { t: ["Fixed forces", "Played", "Fan rules optional"] },
+  "fan-p-supply": { t: ["Fixed forces", "Played", "Fan rules optional"], a: [{ id: "box", l: "Where the convoy’s box goes", d: "30 × 30 cm, 10 cm in from the edge beside the hunters, its near side 20 cm from the asteroid field", o: 1 }] },
+  "fan-p-nightmares": { t: ["Fixed forces", "Played", "Fan rules optional"], a: [FA.dis] },
+  "fan-p-spirit": { t: ["Fixed forces", "Played", "Fan rules optional"], a: [FA.dis] },
+  "fan-p-rising-shadow": { t: ["Fixed forces", "Played", "Fan rules optional"], a: [{ id: "rift", l: "Which short edge gets the warp rift", d: "roll for it: D6 1–3 left, 4–6 right", o: 1 }, FA.dis] },
+  "fan-p-abandon": { t: ["Fixed forces", "Played", "Fan rules optional"], a: [{ id: "range", l: "How close Nua’ta must launch (special rules 10 cm, victory conditions 15 cm)", d: 15, u: "cm", max: 30, o: 1, v: 1 }] },
+  "fan-p-ever-dream": { t: ["Fixed forces", "Played", "Fan rules optional"], a: [{ id: "rescue", l: "How the rescue teleport works", d: "one roll for every Tau ship within 10 cm of the Eldar ship, using their shields (2+ if all are down, else 4+); the Tau win if Ry’zon and L’ikei are both rescued", o: 1, v: 1 }] },
+  /* --- Starblade --- */
+  "fan-s-crescent": { t: ["Fixed forces"] },
+  "fan-s-veil": { t: ["Fixed forces"] },
+  "fan-s-path": { t: ["Fixed forces"], a: [{ id: "leave", l: "How the Spirit of Arina leaves", d: "off any table edge, or by disengaging", o: 1 }] },
+  "fan-s-grace": { t: ["Fixed forces"], a: [{ id: "win", l: "Who wins", d: "The Eldar if the Spirit of Arina leaves by the sunward edge; the Imperials if it is destroyed; otherwise victory points", o: 1, v: 1 }] },
+  "fan-s-tragedy": { t: ["Fixed forces"], a: [{ id: "win", l: "Who wins", d: "Victory points decide, but if the Spirit of Arina is destroyed the Tau win", o: 1, v: 1 }] },
+  "fan-s-visions": { t: ["Fixed forces"], a: [{ id: "zone", l: "The Eldar deployment zone", d: "within 15 cm of the long edge opposite the patrol’s, from 30 to 60 cm from the far short edge", o: 1 }] },
+  "fan-s-prophecy": { t: ["Fixed forces"], a: [{ id: "who", l: "Which ships must escape", d: "the Cerysheal with Eriel aboard; the Destiny too if it can", o: 1, v: 1 }] },
+  "fan-s-tears": { t: ["Fixed forces"], a: [{ id: "len", l: "Game length", d: "Until all four grand cruisers are destroyed, or the Eldar are destroyed or disengage", o: 1 }] },
+  "fan-s-starblade": { t: ["Fixed forces"], a: [{ id: "defeat", l: "What “defeat Barha’desh” means", d: "destroy Mortharion’s Blight", o: 1, v: 1 }, { id: "len", l: "Game length", d: "Until Mortharion’s Blight or the Spirit of Arina is destroyed, or the Eldar disengage", o: 1 }] }
 };

@@ -103,7 +103,7 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
   - Kirjoittajan omat skenaariot eivät saa ansioperusteella erityisasemaa. Eisner Incident
     ja Depth of Space ovat Agree first, Solbladet ja Diversions Needs fan rules. Tämä on
     tarkoitus, älä "korjaa".
-- **Aukot kirjoituskentiksi, lähteet uudelleen ja laatututkimus (21.10., EI vielä julkaistu):**
+- **Aukot kirjoituskentiksi, lähteet uudelleen ja laatututkimus (21.10., julkaistu):**
   Käyttäjä: *"lue org lähteet uudestaan … kun on epäselviä mittoja yms niin laita niihin
   kirjoituskenttä ja jos voit niin laita default arvo … virallisissa vähän vastaavissa
   tapauksissa … oma sanity check"* ja *"ei tarvi olla needs fan rules jos on selkeä vaihtoehto"*.
@@ -165,6 +165,26 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
     - Falling Down: kartan alkuperä (Ar'Cianr, WR20) karttahuomautukseen.
     - Kirjastossa ei ole enää E- eikä W-skenaarioita; tyhjät sääntöluokat piilotetaan
       suodattimista.
+- **BFG Scenario Listing -vertailu (21.10., EI vielä julkaistu):** ElectricFan127 jakoi Discordissa
+  yhteisön skenaarioluettelon (152 riviä). Lähes kaikki rivit ovat jo kirjastossa, ks.
+  `../tulosteet/ref/bfg_julkaisut/Fanilisaosat/LUEMINUT.md`. Puuttuvat viisi fanilisäosaa
+  (Advanced Scenarios, Book of Nemesis, Project Distant Darkness, Starblade ja Tournament Mission
+  Pack, noin 50 skenaariota) ladattiin käyttäjän luvalla samaan kansioon. Niiden skenaariot
+  lisättiin versiossa 0.8 (alla).
+  - **Commerce Raiders:** kirjoittajan uusin versio 0.5 (online-dokumentti) on uusi oletusversio.
+    Siinä on kolme asettelualuetta (Rearguard, Convoy ja Convoy Leaders, 30 × 15 cm), pienten
+    pöytien sääntö (kartta kutistaa alueet) ja pisteytys kuljetuskapasiteetin mukaan, jossa
+    parannukset eivät tuota pisteitä saattueelle.
+- **0.8 (21.10.2026): fanilisäosat (EI vielä julkaistu, odottaa käyttäjän lupaa).** Viiden
+  fanilisäosan skenaariot, 137 → **192 skenaariota** (+55). Yksityiskohdat: luku "Fanilisäosat (0.8)".
+  - Uusi kategoria **Fan supplements** etusivulle, Sources-sivulle ja koko kirjaston arvontaan, merkki
+    **Fan supplement** (`trust: "fan"`) ja neljä ryhmää: `fan-tour`, `fan-nem`, `fan-pdd`, `fan-sb`.
+  - Uudet tagit **Tournament** ja **Fixed forces** (hakusanoineen, Sources-sivun merkintätaulukossa).
+  - Karttoihin monikulmio `{ z: "poly", pts }` (kolmiovyöhykkeet: Influence of Space Power, Recon in Force).
+  - Alatunniste "version 0.8 · 192 scenarios" ja krediitteihin fanilisäosat; meta description mainitsee
+    ne. Skenaariotiedostojen `?v=0.8.0`.
+  - Testit: selaintesti leveä 1440 ja kapea 375, karttatesti (myös arvottu maasto ja numerokentät
+    maksimissa), sisältötesti, sivuviiteauditointi ja kuvakierros: kaikista 0 löydöstä (ks. Testaus).
 - **Leveät näytöt (20.10. yö, julkaistu):** käyttäjän pyyntö parantaa käyttöä PC:llä,
   tabletilla ja käännetyllä puhelimella ("paljon tyhjää sivuille ja silti paljon
   vieritettävää"). Esittelyn jälkeen käyttäjä: "ihan ok näyttää", lisää optimointia, sitten
@@ -190,6 +210,10 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
 | `scenarios/cl-mag-a…d.js` | BFG Magazine 4–19 ja Fanatic Magazine 1: Treasure Fleet … Damocles Gulf 1–4. |
 | `scenarios/cl-fanatic.js` | Fanatic Magazine 7 (Privateer I–II) ja Fanatic Online (Daemon Run, Lachlon II, Port Maw Blockade, Abhorrence, Planet Fall, Battle over Kotol). |
 | `scenarios/cl-invasion.js` | Invasion (GW US 2002): 7 yleisskenaariota + 2 40K-kytkettyä. |
+| `scenarios/fan-tournament.js` | Fanilisäosat (0.8): AdeptiConin turnaustehtävät 2007–2016 (Tournament Mission Pack) ja kuusi niistä Advanced Scenarios -versioina, 17 skenaariota. Yhteiset apurit: battle pointit (`tpResult`, `advResult`), anti-disengage-bonus (`cowTool`), sivutavoitteet (`secRoll`, `secTools`, `ptsTools`). |
+| `scenarios/fan-nemesis.js` | Book of Nemesis (2007): Gehennan 4 erikoisskenaariota, 3 historiallista, 4 turnaus- ja 2 erikoisskenaariota (13). Gehennan omat puolustukset (`DEF_PROFILES`) työkaluissa. |
+| `scenarios/fan-pdd.js` | Project Distant Darkness: Revival 9 + Distant Sun 7 (16). Lisäosan omat profiilit (Mantis, Marauder, hahmot, Tigershark) työkaluissa ja huomautuksissa kirjan vaihtoehdon kanssa. |
+| `scenarios/fan-starblade.js` | Starblade (9). Arvottu asteroidiruudukko piirtyy karttaan (`squares`). |
 | `testit/sisaltotesti.js` | Sisältötesti selaimessa: karttojen puolivärit, askelten puolet, tulosfunktiot satunnaissyötteillä, verbin taipuminen ja WR-luokitus (ARVIO). |
 | `testit/leveat.js` | Leveiden näyttöjen mittari: näytöllisiä, leveys ja ensimmäisen näytön sisältö viidellä näytöllä (ks. Leveät näytöt). |
 | `testit/sivuaudit.py` | Sääntöviitteiden auditointi RB/FL-tekstidumppeja vasten (otsikkotaso), käsin tarkistetut poikkeukset listassa. |
@@ -201,7 +225,8 @@ eikä luettavassa. Pelaajan ei tarvitse selata kirjaa eikä tavata sääntölaus
 | `julkaisu/discord-2026-10-v07/` | 0.7:n iso dia (2560 × 1440) ja postausteksti (20.10.). Ei julkaistava osa sovellusta. |
 
 Esikatselu: Browser-paneelin konfiguraatio `scenario-library` (portti 8781)
-juuren `.claude/launch.json`:ssa.
+juuren `.claude/launch.json`:ssa. Jos toinen istunto pitää porttia 8781, käytä `scenario-library-2`
+(portti 8783, lisätty 21.10.).
 
 ## Testaus
 
@@ -255,6 +280,17 @@ yleissivut kuvataan aina).
   ennen vuoroa 8) lisää "— if it ended now".
 - 20.10.: 0 virhettä, 0 varoitusta.
 
+**0.8 (21.10.2026), 192 skenaariota:** selaintesti leveänä (1440) ja kapeana (375) 14 284 näkymää,
+192 erillistä otsikkoa, 0 virhettä; karttatesti 2 930 karttaa, 14 244 tekstiä, 0 + 0, lisäksi arvottu
+maasto piirrettynä (sumu- ja asteroidiruudut) 0 + 0 ja numerokentät maksimissaan 0 + 0; sisältötesti
+0 + 0 (14 280 tulosfunktiokutsua, 289 sovittavaa kohtaa); sivuviiteauditointi 290 viitettä, 0
+tarkistamatta; kuvakierros koko kirjastosta 1 742 sivua, 0 löydöstä, ja uusista sivuista kuvina 494
+sivua, 0 löydöstä. Ensimmäinen karttatestiajo löysi 15 + 16 (lähinnä 244 × 122 -pöytä puhelinfontilla,
+jossa fontti on lähes 9 cm), kuvakierros 19 (taulukon `nowrap`-ensimmäinen sarake ja liian pitkä
+tulosnapin oikea teksti); kaikki korjattu. Lisäksi kaikki 63 fanikarttaa (versioineen) katsottiin silmin
+rinnakkain 180 × 120 -pöydällä: kolme ahdasta kohtaa, joita karttatesti ei mittaa (nuoli tekstin
+alussa, teksti kiinni vyöhykkeen reunassa), korjattiin.
+
 **Sivuviiteauditointi** (`python -X utf8 "scenario library/testit/sivuaudit.py"`):
 jokainen refs-pari tarkistetaan RB/FL-tekstidumppien (`simulaattorit yms/simulaattori/
 saannot_txt/`) otsikoita vasten. 0.7:ssä löytyi 37 väärää viitettä, jotka olivat
@@ -296,6 +332,7 @@ Warp Rift on etusivulla ja arvonnassa yksi kategoria (21.10. ilta), ja lista on 
 (`wrIssue`). Vanha jako löytyy tageista ja haulla (käyttäjä 21.10.).
 | `fleets` / `fleets` | Fleets book | Fleets v0.36:n skenaariot (etusivulla Books-kategoriassa) |
 | `cl-ws`, `cl-mag`, `cl-inv`, `cl-fan` / `classic` | Classic GW | Warp Storm; Planet Killer + BFG Magazine; Invasion + 2002 Annual; Fanatic Magazine + Fanatic Online |
+| `fan-tour`, `fan-nem`, `fan-pdd`, `fan-sb` / `fan` | Fan supplement | Fanilisäosat (0.8): turnaustehtävät, Book of Nemesis, Project Distant Darkness, Starblade. Etusivulla kategoria Fan supplements, arvonnassa oma lähde. |
 
 `book`: K = pelkkä kirja, O = kirja + skenaarion omat säännöt, E = "Needs fan rules"
 (profiilit on annettu sovelluksessa, kun lähde ne antaa), W = "Needs Warhammer 40,000"
@@ -352,6 +389,7 @@ alkuun.
 | **Warp Rift · L3** (0.6) | 8 yhteisön pelattua + The Spreading War (11) | WR14–49 |
 | **Books · Fleets** (0.7) | Merchantmen's Folly, The Hunter and the Prey, The Gauntlet (Rogue Traders), Explorer's Prize, Space Hulk!, The Void Malevolent, Craftworld Assault | FL s. 200–211, 312–315 |
 | **Classic GW** (0.7) | Warp Storm: Callavell, Torpedo Run · Planet Killer 1: Space Hulk Convoy, Phillipa II · BFG Magazine 1–19: Corribra II 1–4, Pirates, Treasure Fleet, Evacuation, Cadian Line, Ahriman's Arrival, Rath's Last Stand, Antioc 1/3/4, Execution Hour, The Siege, Defence of Macragge, Numitor, Cold Passage, They Come Only to Murder, Cerberus 1–4, Belis Corona 1–4, Damocles 1–2 · Fanatic Magazine: Damocles 3–4, Wolf Packs, Tau Space Tau Trade · Fanatic Online: Daemon Run, Lachlon II, Port Maw Blockade, Abhorrence, Planet Fall, Kotol (5) · Invasion: The Chart, Conquest, Breakthrough, Head of the Snake, Retrieval, Defensive Ring, Port Maw, Boarding Party, Deadline | BFG Magazine, Fanatic, Invasion |
+| **Fan supplements** (0.8) | Turnaus 17: Manna from the Heaven (+ Supply Run), The Road to Hell, The Influence of Space Power, Battle on the Edge of the Warp, Scavenger Hunt, The Black Hole, Sink the Bismark, An Unexpected Encounter, Battle in the Derelict Base, Capture the Station, Retrieve the Salvage, Protect the Salvage, Brace for Impact, Wrecks O’Plenty, Neutron Star, Shepard Moon, Hide N’ Seek · Book of Nemesis 13: Death of the Governor, Guns of Naravona, Shadow of the Comet, Line of Gehenna, Incident at Kravertus II, The Fall of Great Armada, The Longest Travel, Recon in Force, Tearing the Flanks, Titan Clash, Capture the Hulk, Ambush, Gunnery Practice · Project Distant Darkness 16: Hunter-Prey, Light and Darkness, Stolen Goods, Barrage, Crossfire, Silent Strike, Hunter Cadre, Another Day Another Plan, Into Darkness; Distant Sun: Into the Claw, Supply and Demand, Nightmares, Spirit Within Spirit Without, Rising Shadow, Abandon All Hope, Ever Dream · Starblade 9: Dark Crescent Moon … Starblade | `../tulosteet/ref/bfg_julkaisut/Fanilisaosat/` |
 | **Warp Rift · L4** (0.6) | 24: Mobeel Narrows, Choir of a Thousand Voices, Wolf Hunt, Hunter Hunted, Cat and Mouse, Solar Collectors, Hunt for the Eldar 1–2, Convoy Battle, Contact!, Falling Down, Darkening Technology Raid, Stygies-kampanjapuu, Looting the Hulk, Pirate Bases, Battles in the Warp, Fleet Engagement Variant, Solitaire Campaign, The Trap, Hive Ship Pirate Base, Norduun, Fall of Hyra, Shattered Gate, Srinagar | WR5–48 |
 
 Kaikki tulkinnat ja ristiriidat ovat skenaarioiden "Source notes" -laatikoissa
@@ -365,7 +403,7 @@ ja Cruiser Clashin. Ne tehtiin ensimmäisinä ja huolellisimmin.
 
 ## Rakenne
 
-- **Etusivu.** Kategoriavalinta: Core 10 (oletus), Books, Classic GW, Warp Rift, All (21.10.; ennen Rules writers + Community, sitä ennen WR official + Community).
+- **Etusivu.** Kategoriavalinta: Core 10 (oletus), Books, Classic GW, Warp Rift, Fan supplements (0.8), All (21.10.; ennen Rules writers + Community, sitä ennen WR official + Community).
   Muissa kuin Corella on "Suggested for" -faktiosuodatin, joka näyttää myös "any
   fleets" -skenaariot. Keskeneräisen pelin kortissa näkyy vuoro. Ylimpänä on
   linkki Before the battle -sivulle.
@@ -497,7 +535,7 @@ hyötyisi omasta erikoistyökalusta, tehdään se.
     yleisskenaariota), ja tuloksen jälkeen Reroll.
   - **Whole library:** tämän sovelluksen oma lisäys, joka ei tule kirjasta.
     Arvonta on tasainen koko kirjastosta. Suodattimet: lähde (Core 10 /
-    Books / Classic GW / Warp Rift, 21.10. illasta), "Book rules only", "Fits my table" (`FITS`
+    Books / Classic GW / Warp Rift, 21.10. illasta; Fan supplements 0.8:sta), "Book rules only", "Fits my table" (`FITS`
     nykyisellä pöydällä; jos jokin versio mahtuu, skenaario kelpaa) ja "Suggested
     for" -faktio (any-fleet-skenaariot pysyvät mukana). Altaan sirun napautus
     jättää skenaarion pois. Reroll arpoo eri skenaarion kuin edellinen.
@@ -682,6 +720,79 @@ Yksityiskohdat ovat skenaarioiden Source notes -laatikoissa. Periaatteet:
   Impact (Q&A), War over Calydon (taisteluraportti), BFG Magazine 18 Elaysion Crusade
   (kampanjaraportti), 2002 Annual (uusintapainoksia ja ideoita).
 
+## Fanilisäosat (0.8, 21.10.2026)
+
+Lähteet ja puretut tekstit: `../tulosteet/ref/bfg_julkaisut/Fanilisaosat/` (oma LUEMINUT). Sivunumerot
+ovat PDF-sivuja; Book of Nemesiksessä myös painettu sivu ("p. 42 (printed 40)").
+
+| Lisäosa | Skenaariot | Tiedosto |
+|---|---|---|
+| BFG Tournament Mission Pack (AdeptiConin tehtävät 2007–2016, vihkon koonnut Paolo Barbero) + BFG Advanced Scenarios (Paolo Barbero) | 18 tehtävää → 17 skenaariota | `fan-tournament.js` |
+| Book of Nemesis (Cypra Probatii -portaali, päätoimittaja Marcin K. Gerkowicz, 2007) | 13 | `fan-nemesis.js` |
+| Project Distant Darkness: Revival + Chapter II Distant Sun (horizon & Zhai Morenn) | 9 + 7 | `fan-pdd.js` |
+| Starblade (horizon) | 9 | `fan-starblade.js` |
+
+**Päällekkäisyydet (kerran kirjastossa, toinen lähde krediiteissä ja versiona):** Advanced Scenariosin
+kuusi tehtävää ovat AdeptiCon-tehtävien uudistettuja versioita: The Road to Hell (A2), The Black Hole
+(A6), An Unexpected Encounter (B3), Capture the Station (B5 Capture the Research Platform), Brace for
+Impact (C2) ja Wrecks O’Plenty (C3). Jokaisessa on versiot *Advanced Scenarios* (oletus) ja *AdeptiCon
+vuosi*. Lisäksi Manna from the Heaven (2007) ja Supply Run (2010) ovat sama tehtävä, joten ne ovat yksi
+skenaario kahtena versiona. Turnauspaketissa on 18 tehtävää (A1–C6), joista sivut 9–11 (A6, B1, B2)
+ovat pelkkinä kuvina; ne ja koko Advanced Scenarios luettiin tekstintunnistuksella
+(`../tulosteet/ref/bfg_julkaisut/_tyokalut/winocr.ps1`, renderöinti `renderoi_ocr.py` samassa kansiossa),
+ja tekstit tallennettiin lähdekansion `_teksti/`-tiedostoihin. Kuvien kartat ja taulukot luettiin
+kuvasta.
+
+**Pisteytys:** turnaustehtävien Result-välilehti laskee paketin battle pointit. Tournament Mission
+Pack: VP-ero → 9/9, 11/7, 14/3 tai 17/0 (s. 2) sekä "You cowards!" -bonus (+1000/750/500/250, kun
+vastustajalla ei ole laivoja vuoron 2–5 lopussa). Advanced Scenarios: VP-ero → 7/7, 9/5, 11/3 tai 13/1
+ja kolme tavoitetta +4/+2/+2 BP (s. 5), sekä "Admirals, beware!" (+1000/800/600/400, vuorot 1–4).
+AdeptiConin D6-sivutavoitteet arvotaan Set-upissa ja merkitään Resultissa (full/partial/failed); paketti
+ei kerro niiden arvoa, joten tuomio tulee VP:istä ja sivutavoitteet näkyvät tuomion selitteessä.
+2013–2016-tehtävien sivutavoitteiden pisteet (esim. 5/3/1) lasketaan selitteeseen.
+
+**Sääntöluokka:** kaikki lisäosat ovat O (tai K, kun skenaariossa on vain asettelu ja VP: Tearing the
+Flanks, Titan Clash, Ambush). E-luokkaa ei tarvittu, koska Fleets v0.36 sisältää lähes kaiken:
+Starbladen Craftworld Eldar -alukset (Flame of Asuryan = Spirit of Arina ilman Aspect Warrior -miehistöä,
+FL s. 329–332), Distant Darknessin Tau-alukset (Kor’or’vesh, FL s. 456–478), Tyranidien vanguard ja
+evoluutiot, Chaos Space Hulk, puolustukset. Lisäosien omat lisät (PDD:n hahmot, Mantis, Marauder,
+Tigershark, Ly’tanin Explorer, Gehennan puolustukset, Naravona, WR17:n Rogue Trader -alukset) annetaan
+sivulla lähteen profiileina ja kirjan vaihtoehdolla → tagi **Fan rules optional**.
+
+**Tagit:** Tournament (turnaus + Nemesiksen turnausskenaariot), Fixed forces (PDD, Starblade,
+Kravertus), Played (Distant Sun: lähde nimeää pelitestaajat), Fan rules optional, Agree first (kun
+oletus ratkaisee voiton, `v: 1`).
+
+**Tulkinnat ja rajaukset** (kaikki näkyvät Source notes -laatikoissa ja Agree before you start
+-kentissä; mitään ei valittu hiljaa):
+- AdeptiConin 2014–2016 "Auxiliary Fleet" ja "First Blood" eivät ole paketissa selitetty → kentät
+  oletuksineen. Supply Runin 5–6-sivutavoite on otsikoitu Disgraced Ship mutta tekstiltään Protect the
+  Flag → teksti voittaa. Road to Hellin (2007) Protect the Planet viittaa planeettaan, jota ei ole →
+  luetaan warp riftiksi (kenttä). Wrecks O’Plentyn ja Neutron Starin "11 markers 2–12" on Brace for
+  Impactista jäänyt rivi.
+- Retrieve the Salvage: merkkien arvojakauma, kuljetusten määrä ja rivien paikka puuttuvat → kentät
+  (`v: 1`). Shepard Moon: renkaat, kuun paikka ja abordauksen vaikeus (oletus 2013-tehtävän 8 hitin
+  alusta, TMP s. 14).
+- Influence of Space Power: paketin kartta on luonnos; vyöhykkeet piirretään samankokoisina kolmioina
+  (viivat alkavat 45 cm samasta kulmasta).
+- Book of Nemesis: Shadow of the Cometin komeettasäännöt ovat SG-artikkelissa; sama komeetta on
+  Fanatic Onlinen New Celestial Phenomena -artikkelissa, jota käytetään. Gehennan erikoispuolustusten
+  profiilit (s. 26–27; OCR:ssä komentokeskuksen ja flak-alustan profiilit olivat sekaisin, korjattu
+  kuvasta). Ambushin Game Length -kappale toistaa voittoehdot → pituus kenttänä. Gehennan puukampanjaa
+  ei tehty omaksi skenaarioksi (rinnakkaisia taisteluita joukkueittain, ei sovi `tree`-työkaluun);
+  vaikutukset kampanjaan ovat huomautuksissa.
+- Project Distant Darkness: Light and Darknessin pakoreuna (teksti: pitkä reuna, kartta: lyhyt) ja Into
+  Darknessin pelaajajako ja pituus → kentät. Supply and Demandin saattueen laatikko on mahdoton
+  sellaisenaan → oma luenta kenttänä. Silent Strike mainitsee vuoron 6, vaikka peli on 8 vuoroa → 8.
+  Abandon All Hopen miinat 10 vai 15 cm → kenttä (oletus 15, voittoehto). "Outer biosphere" ei ole
+  kirjan vyöhyke → primary biosphere. Chapter I (The Art of Command) puuttuu: taulukossa ei linkkiä.
+- Starblade: alukset kirjasta suoraan; "phantom lances" = Shadowhunterin shadow lance. Voiton
+  muoto Gracessa, Tragedyssä ja finaalissa ("defeat Barha’desh") → kentät. Visionsin Eldar-vyöhyke
+  luettu kulmavyöhykkeeksi pitkän reunan varrella.
+
+**Kuvakierros:** `node "scenario library/testit/kuvakierros.js" <ulos> --vain=fan-`; uudet sivut
+ja kaikki versiot, puhelin 390 ja työpöytä 1200. Kuvat käytiin läpi arkkeina (ks. Testaus).
+
 ## Julkaisu (20.10.2026)
 
 - Osoite **https://scenario-library.kuldare.com**, Cloudflare Worker
@@ -697,6 +808,7 @@ Yksityiskohdat ovat skenaarioiden Source notes -laatikoissa. Periaatteet:
 - Leveät näytöt julkaistu 20.10. klo 20 (versio f2952393, 0.7.53) käyttäjän hyväksynnällä ("tarkasta ja julkaise"): live-sivu tarkistettu selaimella 1366 × 768:ssa, ja index.html on tavu tavulta sama kuin paikallinen. Samalla GitHub-peili (commit 96d6dd4) ja uusi lappu, jossa on GitHub-rivi.
 - Warp Riftin sanamuotokorjaus julkaistu 20.10. illalla (versio d37cd2e4, 0.7.55, GitHub 47f1d40) käyttäjän hyväksynnällä ("julkaiset sit samalla kun on oikeat sanamuodot").
 - Warp Riftin laatuluokitus julkaistu 21.10. (versio 0341316c, 0.7.56, GitHub 0c13f8b). Live-sivu tarkistettu: 58/58 luokiteltu, Rules writer -tagi näkyy.
+- Kirjoituskentät kaikkiin skenaarioihin, Warp Rift yhdeksi kategoriaksi ja tutkimuksen suositukset julkaistu 21.10. (versio a07a4db8, 0.7.68, GitHub Kuldara/bfg-tools 9eaed6b) käyttäjän luvalla ("julkaise"). Samalla lapun GitHub-linkki Kuldara-käyttäjänimeen.
 - Lähdeteksteistä ja tekijänoikeudesta ks. "Sisältö ja tekijänoikeus": horizonille
   (Warp Riftin toimittaja) kannattaa yhä kertoa sovelluksesta.
 
