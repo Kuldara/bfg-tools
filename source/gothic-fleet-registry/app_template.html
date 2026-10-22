@@ -2704,15 +2704,27 @@ const CLAN_FX = {
   "Blood Axes": ["Warlord: random IN refit, +20", "tiddla of 6+: 3 IN/Chaos escorts"],
   "Snakebites": ["+1 to Brace", "!capital ships: hulks / roks only"]
 };
-/* The Ork fleet-list upgrades as game effects, one tag each (J229, user
-   21.10.2026: "naissa saisi lukea tiivistetysti etta mita kyseinen tekee").
-   Read from the books' rows: Gubbins Fleets p. 370-371, the Waaagh! and
-   Cyclops Warlord's own upgrades p. 365-366 (their Mega-armoured Boarding
-   Parties is "+1 modifier on boarding" only), Torpedo-bommas p. 359,
-   boarding torpedoes p. 360 and Rulebook p. 78, special torpedoes p. 19,
-   orbital mines p. 23. "!" marks a drawback. First match wins; the row's
-   book text and note stay in its tooltip. Ork lists only for now. */
+/* The fleet-list upgrades as game effects, one tag each (J229 Orks, J230
+   every fleet; user 21.10.2026: "naissa saisi lukea tiivistetysti etta mita
+   kyseinen tekee", 22.10. "tee loppuun"). A row whose label already says it
+   ("+1 turret", "Increase to Ld 9", re-rolls, Tyranid weapons) gets none.
+   [label, list or null, tags, the unit's own entry or omitted]; "!" marks a
+   drawback; first match wins; the book's text and the row's note stay in
+   its tooltip. Pages (Fleets unless said): Ork Gubbins 370-371, Waaagh! and
+   Cyclops Warlord 365-366 (their Mega-armoured Boarding Parties is "+1
+   modifier on boarding" only), Torpedo-bommas 359, boarding torpedoes 360
+   and Rulebook 78, special torpedoes 19, torpedo bombers 22, orbital mines
+   23, power ram 32 (FAQ 2026 Power ram), Fleet Defence Turrets 50, Shark
+   assault boats 49, plasma-boosted batteries 121, Honour Guard and
+   Terminator boarding parties 99 and 145, Rogue Traders 175, Chaos Space
+   Marines 224, Daemonships 227-228, Marks of Chaos 232 and 234 (the
+   Incursion Warmaster's Khorne also +1 to boarding critical rolls), Legion
+   gifts 236, 240, 244, 248, Thunderhawks 235-250 (bays halved), Aspect
+   Warriors 305, Ghostships 307, Webway Portal 337, Leech torpedoes 347,
+   Mimic Engines 351, Sepulchre 404, bio-enhancements 426-427, Hive Mind
+   430, Improved Logic Engines 453. */
 const UP_FX = [
+  // Orks
   [/^Soopa Boostas/, null, ["+5cm speed", "4D6 on All Ahead Full"]],
   [/^Extra Power Fields/, null, ["+1 shield"]],
   [/^Extra Turrets \(escorts/, null, ["+1 turret"]],
@@ -2731,16 +2743,76 @@ const UP_FX = [
   [/^Shokk-Attack Lance/, null, ["replaces prow heavy gunz", "shields down: 4+ at 30cm", "D3+1 snotling hordes: +D6 to its Ld"]],
   [/^Assault Karrier/, null, ["free boarding torpedoes", "+1 assault boat per launch", "!assault boats only"]],
   [/^Torpedo-bommas/i, null, ["20cm bombers, no fighter role", "later turns: S2 torpedo salvo each", "added to fighta-bommas"]],
+  [/^Boarding torpedoes/, /^Orks/, ["torpedo hits are hit-and-run attacks"]],
+  // every fleet's ordnance
   [/^Orbital mines/i, null, ["mines instead of attack craft", "!bay critical: +D3 damage"]],
-  [/^Boarding torpedoes/, null, ["torpedo hits are hit-and-run attacks"]],
-  [/^Special torpedoes \(Looted/, null, ["D6: one special torpedo type"]]
+  [/^Special torpedoes/, null, ["D6: one special torpedo type"]],
+  [/^Torpedo bombers/, null, ["20cm bombers", "later turns: S2 torpedo salvo", "added to bombers"]],
+  // Imperial
+  [/^Imperial Power Ram/, null, ["+1 hit when ramming"]],
+  [/^Fleet Defence Turrets/, null, ["+2 turrets to itself or a ship within 15cm"]],
+  [/^Shark assault boats/, null, ["Shark assault boats, 30cm"]],
+  [/^Plasma-boosted batteries/, null, ["batteries 30cm \u2192 45cm"]],
+  [/^Terminator boarding party|^Grey Knights Terminators/, null, ["extra teleport attack", "2 dice, both count"]],
+  [/^(Grey Knights )?Honour Guard/, null, ["extra teleport attack", "2 dice, pick one"]],
+  [/^Crew skill, rolled randomly/, null, ["random crew skill (D6)"]],
+  [/^Xenotech System, rolled randomly/, null, ["random Xenotech system (D6)"]],
+  // Chaos
+  [/^(The )?Mark of Khorne/, /Incursion/, ["double boarding value", "+1 to boarding critical rolls"], /Warmaster/],
+  [/^(The )?Mark of Khorne/, null, ["double boarding value"]],
+  [/^(The )?Mark of Slaanesh/, null, ["enemies within 15cm: -2 Ld"]],
+  [/^(The )?Mark of Tzeentch/, null, ["+1 re-roll"]],
+  [/^(The )?Mark of Nurgle/, null, ["+1 Hit", "cannot be boarded"]],
+  [/Chaos Space Marine crew$/, null, ["+1 Ld, max 10", "+2 boarding", "own hit-and-run +1, enemy's -1"]],
+  [/Chosen Terminators/, null, ["teleport hit-and-run: 2 dice, pick one"]],
+  [/^Thunderhawk Gunships/, null, ["Thunderhawks only", "!launch bays halved"]],
+  [/^Daemonship:/, null, ["can start in the Warp", "disengages without a roll", "!no squadrons, Lords or CSM crew"]],
+  [/^Warp Beasts/, null, ["once per battle: D6 hits on a ship within 15cm, no shields"]],
+  [/^Strand of Fortune/, null, ["once per battle: auto-pass a Command check or Ld test"]],
+  [/^Hives of Nurgle/, null, ["ships within 15cm get no left shift against it"]],
+  [/^Ark of Pestilence/, null, ["ships it boards also take a Fire critical"]],
+  [/^Berzerker Tide/, null, ["boarding: +D3 critical rolls, then no orders next turn", "carriers: +D3 attack craft under 20cm, then reload"]],
+  [/^Veil of Lust/, null, ["gunnery against it: right column shift"]],
+  [/^Siren.s Summon/, null, ["enemies within 15cm: no special orders or Ld tests"]],
+  // Eldar and Dark Eldar
+  [/^Aspect Warrior Host/, null, ["+2 boarding", "+1 hit-and-run"]],
+  [/^Ghostship/, null, ["criticals only on a 6", "!failed order: only moves", "!cannot board or hit-and-run", "!enemy +1 to board or hit-and-run it"]],
+  [/^Summoned through the Webway Portal/, null, ["starts off the table", "turn 2+: arrives on a 5+"]],
+  [/^Leech torpedoes/, null, ["hit: one critical instead of damage", "-10cm speed, no All Ahead Full"]],
+  [/^Mimic Engines/, null, ["free move after deployment", "turn 1: untargetable beyond 30cm"]],
+  // Necrons, Tau
+  [/^Sepulchre/, null, ["Ld 10", "20cm: enemy Ld test or -1 Ld and no orders", "ordnance within 20cm: destroyed on 4+"]],
+  [/^Improved Logic Engines/, null, ["ignores Blast Marker Ld penalties"]],
+  // Tyranids
+  [/^Accelerated Healing/, null, ["+2 dice to repair criticals"]],
+  [/^Adrenaline Sacs/, null, ["+1D6 on All Ahead Full"]],
+  [/^Drone Link/, null, ["pyro-acid: left shift within 15cm of a Vanguard drone"]],
+  [/^Extra Spore Cysts \(each/, null, ["+1 spore cyst (shield and turret)"]],
+  [/^Extra Spore Cysts/, null, ["+2 spore cysts (shields and turrets)"]],
+  [/^Mega-Spore Mines/, null, ["bays launch mega-spore mines", "their hits are Fire criticals"]],
+  [/^More Discharge Vents/, null, ["-5cm before turning"]],
+  [/^Mucous Membrane/, null, ["bombers and assault boats -1 attack", "torpedoes need +1 to hit it"]],
+  [/^Psychic Scream/, null, ["enemies within 15cm: -2 Ld"]],
+  [/^Reinforced Carapace \(each/, null, ["+1 Hit"]],
+  [/^Solar Vanes/, null, ["+5cm speed"]],
+  [/^Tenacity/, null, ["weapons unaffected by AAF, Burn Retros, New Heading"]],
+  [/^Hive Mind Imperative/, null, ["auto-pass one Command check or Ld test"]],
+  [/^Hive Mind Influence/, null, ["+1 fleet re-roll"]]
 ];
-function upFx(up){
-  if(!/^Orks/.test(String(up.list || ""))) return null;
-  const lab = String(up.label || ""), cm = /^Clan: (.+?) \(/.exec(lab);
+function upFx(up, who){
+  const lab = String(up.label || ""), list = String(up.list || ""), cm = /^Clan: (.+?) \(/.exec(lab);
   if(cm && CLAN_FX[cm[1]]) return { tags: CLAN_FX[cm[1]], color: CLAN_COLOR[cm[1]] };
-  const hit = UP_FX.find(x => x[0].test(lab) && (!x[1] || x[1].test(up.list)));
+  const hit = UP_FX.find(x => x[0].test(lab) && (!x[1] || x[1].test(list)) && (!x[3] || x[3].test(String(who || ""))));
   return hit ? { tags: hit[2], color: null } : null;
+}
+/* A ship option whose book sentence only gives the price ("May add Mimic
+   engines for +20 pts", Fleets p. 351; the Sepulchre, p. 404) takes the
+   upgrade row's tags (J230). */
+const OPT_FX = [[/\bmimic engines\b/i, "Mimic Engines"], [/\bSepulchre\b/, "Sepulchre"]];
+function optFxHTML(text, list){
+  const o = OPT_FX.find(x => x[0].test(String(text || "")));
+  const fx = o ? upFx({ label: o[1], list: list || "" }) : null;
+  return fx ? `<span class="upfx">${fxTagsHTML(fx.tags)}</span>` : "";
 }
 const fxTagsHTML = tags => tags.map(t => t[0] === "!" ? `<span class="fx lim">${esc(t.slice(1))}</span>` : `<span class="fx">${esc(t)}</span>`).join("");
 function clanLineHTML(c, I){
@@ -3567,7 +3639,7 @@ function unitHTML(R, ui, st){
       <span class="tri">${b("take","Take")}${b("opt","Option")}${b("off","Hide","off")}</span>
       <span>${esc(o.text)}${qty}</span><span class="c">${
         c}${o.max > 1 && st2 === "take" && o.qty > 1
-            ? " \u00d7" + o.qty : ""}</span></div>`;
+            ? " \u00d7" + o.qty : ""}</span>${optFxHTML(o.text, R.entry && R.entry.list)}</div>`;
   }).join("") : "";
   const upRow = up => {
     const [si, ei] = up.key.split(":");
@@ -3581,7 +3653,7 @@ function unitHTML(R, ui, st){
             : "Left off the card entirely"}">${lab}</button>`;
     /* J229: game effects as tags in place of the source note; the book's
        text and the note go to the tooltip */
-    const fx = upFx(up);
+    const fx = upFx(up, R.entry && R.entry.label);
     return `<div class="opt${up.required ? " req" : ""}">
       <span class="tri">${b("take","Take")}${b("opt","Option")}${b("off","Hide","off")}</span>
       <span${fx ? ` title="${esc([up.description, up.note].filter(Boolean).join(" "))}"` : ""}>${esc(title(up.label))}${up.included ? " \u2014 included, no cost"
