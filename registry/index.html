@@ -707,6 +707,13 @@ details.rules.auto[open]>summary::after{content:" \2013"}
 .wlclans .fxs{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
 .wlclans .fx{padding:1px 7px;border:1px solid var(--wl);border-radius:3px;background:var(--sunk);color:var(--ink);font-weight:700}
 .wlclans .fx.lim{font-weight:400;color:var(--ink-2);border-style:dashed}
+/* upgrade rows' game effects (J229) */
+.upfx{--wl:var(--line);display:flex;flex-wrap:wrap;gap:3px 4px;grid-column:2/4;margin-top:-6px}
+/* a per-bay or per-ship price ("+5 x 4 bays = +20") takes two lines on a
+   phone instead of squeezing the row's name and effects into a column */
+@media (max-width:640px){.opt .c{white-space:normal;max-width:84px;text-align:right}}
+.upfx .fx{padding:0 6px;border:1px solid var(--wl,var(--line));border-radius:3px;background:var(--sunk);color:var(--ink);font-size:11.5px;font-weight:600;line-height:1.6}
+.upfx .fx.lim{font-weight:400;color:var(--ink-2);border-style:dashed}
 /* Aboard line of a commander (J215) */
 .uctl.aboard{align-items:center}
 .uctl.aboard .abl{font:500 11px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
@@ -8962,6 +8969,45 @@ const CLAN_FX = {
   "Blood Axes": ["Warlord: random IN refit, +20", "tiddla of 6+: 3 IN/Chaos escorts"],
   "Snakebites": ["+1 to Brace", "!capital ships: hulks / roks only"]
 };
+/* The Ork fleet-list upgrades as game effects, one tag each (J229, user
+   21.10.2026: "naissa saisi lukea tiivistetysti etta mita kyseinen tekee").
+   Read from the books' rows: Gubbins Fleets p. 370-371, the Waaagh! and
+   Cyclops Warlord's own upgrades p. 365-366 (their Mega-armoured Boarding
+   Parties is "+1 modifier on boarding" only), Torpedo-bommas p. 359,
+   boarding torpedoes p. 360 and Rulebook p. 78, special torpedoes p. 19,
+   orbital mines p. 23. "!" marks a drawback. First match wins; the row's
+   book text and note stay in its tooltip. Ork lists only for now. */
+const UP_FX = [
+  [/^Soopa Boostas/, null, ["+5cm speed", "4D6 on All Ahead Full"]],
+  [/^Extra Power Fields/, null, ["+1 shield"]],
+  [/^Extra Turrets \(escorts/, null, ["+1 turret"]],
+  [/^Extra Turrets/, null, ["+2 turrets"]],
+  [/^Maniac Turrets/, null, ["turrets become D3"]],
+  [/^Looted Lances \(escorts/, null, ["heavy gunz \u2192 S2 lance, 15cm"]],
+  [/^Looted Lances/, null, ["heavy gunz \u2192 S2 lance, 30cm"]],
+  [/^Looted Torpedoes/, null, ["re-roll torpedo strength"]],
+  [/^Mad Meks/, null, ["re-roll damage control"]],
+  [/^Maniac Gunners/, null, ["re-roll gunz firepower"]],
+  [/^Mega-armoured Boarding Parties/i, /Clanz/, ["+1 boarding", "+1 hit-and-run"]],
+  [/^Mega-armoured Boarding Parties/i, null, ["+1 boarding"]],
+  [/^Prow Ram/, null, ["+1 Ld to ram", "+1 hit when ramming"]],
+  [/^Tellyporta/, null, ["teleport hit-and-run to 30cm"]],
+  [/^Klaws/, null, ["base contact: 2D6, each 4+ hits past shields", "both hit: latched on"]],
+  [/^Shokk-Attack Lance/, null, ["replaces prow heavy gunz", "shields down: 4+ at 30cm", "D3+1 snotling hordes: +D6 to its Ld"]],
+  [/^Assault Karrier/, null, ["free boarding torpedoes", "+1 assault boat per launch", "!assault boats only"]],
+  [/^Torpedo-bommas/i, null, ["20cm bombers, no fighter role", "later turns: S2 torpedo salvo each", "added to fighta-bommas"]],
+  [/^Orbital mines/i, null, ["mines instead of attack craft", "!bay critical: +D3 damage"]],
+  [/^Boarding torpedoes/, null, ["torpedo hits are hit-and-run attacks"]],
+  [/^Special torpedoes \(Looted/, null, ["D6: one special torpedo type"]]
+];
+function upFx(up){
+  if(!/^Orks/.test(String(up.list || ""))) return null;
+  const lab = String(up.label || ""), cm = /^Clan: (.+?) \(/.exec(lab);
+  if(cm && CLAN_FX[cm[1]]) return { tags: CLAN_FX[cm[1]], color: CLAN_COLOR[cm[1]] };
+  const hit = UP_FX.find(x => x[0].test(lab) && (!x[1] || x[1].test(up.list)));
+  return hit ? { tags: hit[2], color: null } : null;
+}
+const fxTagsHTML = tags => tags.map(t => t[0] === "!" ? `<span class="fx lim">${esc(t.slice(1))}</span>` : `<span class="fx">${esc(t)}</span>`).join("");
 function clanLineHTML(c, I){
   const fx = CLAN_FX[c] || [I.desc];
   return `<li style="--wl:${CLAN_COLOR[c] || "var(--ink-3)"}" title="${esc(I.desc + " (" + clanCost(I) + ", Fleets p. 369)")}"><b>${esc(c)}<span class="wlhint">${I.p ? "+" + I.p + " pts" : "free"}</span></b><span class="fxs">${
@@ -9798,12 +9844,16 @@ function unitHTML(R, ui, st){
       title="${v==="take" ? "Counted in the points and printed ticked"
             : v==="opt" ? "Printed on the card as an empty box, not counted"
             : "Left off the card entirely"}">${lab}</button>`;
+    /* J229: game effects as tags in place of the source note; the book's
+       text and the note go to the tooltip */
+    const fx = upFx(up);
     return `<div class="opt${up.required ? " req" : ""}">
       <span class="tri">${b("take","Take")}${b("opt","Option")}${b("off","Hide","off")}</span>
-      <span>${esc(title(up.label))}${up.included ? " \u2014 included, no cost"
+      <span${fx ? ` title="${esc([up.description, up.note].filter(Boolean).join(" "))}"` : ""}>${esc(title(up.label))}${up.included ? " \u2014 included, no cost"
         : up.required ? " \u2014 required by the fleet list" : ""}
-        ${up.note ? `<span class="src">${esc(up.note)}</span>` : ""}</span>
-      <span class="c">${c}</span></div>`;
+        ${!fx && up.note ? `<span class="src">${esc(up.note)}</span>` : ""}</span>
+      <span class="c">${c}</span>${fx ? `
+      <span class="upfx"${fx.color ? ` style="--wl:${fx.color}"` : ""}>${fxTagsHTML(fx.tags)}</span>` : ""}</div>`;
   };
   /* Rows the fleet pane leaves out (Clanz, J226: clanzHiddenUps) */
   const hideKeys = (st.ab && st.ab.hide) || [];
