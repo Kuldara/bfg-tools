@@ -1497,6 +1497,9 @@ Muissa sovelluksissa ei ole tekijäkrediittejä (Remastered mainitaan vain läht
   Live: `index.html` (307 → `/`) on tavu tavulta sama kuin paikallinen (beacon-skriptiä ei ollut), samoin
   `fleet-rules.js` ja `battlezone-core.js`; "version 0.14". Huom.: wrangler sanoo "No targets deployed", koska
   `wrangler.json`:ssa ei ole reittejä; dashboardissa liitetty domain säilyy.
+- 0.14.1 julkaistu 23.10. käyttäjän luvalla ("toteuta"). Worker-versio 5bee0e8e, GitHub Kuldara/bfg-tools f655233.
+  Mukana horizonin linjan krediitit (ks. "Krediitit horizonin linjalla"); wrangler latasi `index.html`:n ja
+  `scenarios/fleets.js`:n. Live: molemmat tavu tavulta samat kuin paikalliset, "version 0.14.1", "Saier" ei esiinny sivulla.
 - Lähdeteksteistä ja tekijänoikeudesta ks. "Sisältö ja tekijänoikeus": horizonille
   (Warp Riftin toimittaja) kannattaa yhä kertoa sovelluksesta.
 
