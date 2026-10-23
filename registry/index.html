@@ -12674,11 +12674,11 @@ function renderSaves(){
   const changed = openUnsaved(lib);
   const saved = lib.saves.map(s => {
     const isOpen = s.id === openId && s.ln === L().nm;
-    const meta = [esc(s.ln), (s.pts | 0) + " pts", esc(s.saved || ""), s.from === "link" ? "from a link" : s.from === "file" ? "from a file" : "",
+    const meta = [esc(s.ln), (s.pts | 0) + " pts", esc(s.saved || ""), s.from === "link" ? "from a link" : s.from === "file" ? "from a file" : s.from === "paste" ? "pasted" : "",
                   isOpen ? (changed ? "open, changed" : "open") : ""].filter(Boolean).join(" &middot; ");
     return `<div class="rowf${isOpen ? " open" : ""}${LIB_NEW.indexOf(s.id) >= 0 ? " fresh" : ""}"><span class="nm"><b>${esc(s.name)}</b><i>${meta}</i></span>${
       isOpen ? "" : `<button class="go" data-libopen="${esc(s.id)}" title="${esc("Open " + s.name + " on the " + s.ln + " list")}">Open</button>`
-    }<button class="go" data-libexport="${esc(s.id)}" title="${esc("Save " + s.name + " as a file")}">Export</button><button class="go" data-copytext="${esc(s.id)}" title="${esc("Copy " + s.name + " as text: paste it into Gothic Fleet Play, a message, or Import")}">Copy</button><button class="go${PHONE.key === s.id ? " on" : ""}" data-phone="${esc(s.id)}" title="${esc("A QR code of " + s.name + " for Gothic Fleet Play on a phone")}">To phone</button><button class="del" data-libdel="${esc(s.id)}" title="${esc("Delete the saved fleet " + s.name)}">Delete</button></div>${
+    }<button class="go" data-libexport="${esc(s.id)}" title="${esc("Save " + s.name + " as a file")}">Export</button><button class="go" data-copytext="${esc(s.id)}" title="${esc("Copy " + s.name + " as text: paste it into Gothic Fleet Play, a message, or Paste text here")}">Copy</button><button class="go${PHONE.key === s.id ? " on" : ""}" data-phone="${esc(s.id)}" title="${esc("A QR code of " + s.name + " for Gothic Fleet Play on a phone")}">To phone</button><button class="del" data-libdel="${esc(s.id)}" title="${esc("Delete the saved fleet " + s.name)}">Delete</button></div>${
       COPYBOX && COPYBOX.key === s.id ? copyBoxHTML() : ""}${PHONE.key === s.id ? phonePanelHTML() : ""}`;
   }).join("");
   const kept = Object.keys(stashAll()).filter(nm => stashUnits(nm).length).sort();
@@ -12695,10 +12695,19 @@ function renderSaves(){
   sb.innerHTML = `<div class="sh">Saved</div>` +
     (saved || `<div class="empty">No saved fleets yet. Save keeps the open fleet here under a name; a file or a QR code adds fleets here too.</div>`) +
     (editing ? `<div class="sh">Being edited, one per list</div>` + editing : "") +
-    `<div class="rowf tools"><span class="nm"><i>Export makes a file and Copy the same as text; To phone is a QR code of it for Gothic Fleet Play. Import adds the fleets in a file here.</i></span>${
+    `<div class="rowf tools"><span class="nm"><i>Export makes a file and Copy the same as text; To phone is a QR code of it for Gothic Fleet Play. Import file and Paste text add them back here.</i></span>${
       lib.saves.length ? `<button class="go" data-libexport="all" title="Every saved fleet in one file">Export all as file</button><button class="go" data-copytext="all" title="Every saved fleet as one text">Copy all</button><button class="go${PHONE.key === "all" ? " on" : ""}" data-phone="all" title="Every saved fleet in one QR code for Gothic Fleet Play on a phone">All to phone</button>` : ""
-    }<button class="go" data-import title="Add the fleets in a file saved with Export">Import file</button></div>${
-      COPYBOX && COPYBOX.key === "all" ? copyBoxHTML() : ""}${PHONE.key === "all" ? phonePanelHTML() : ""}`;
+    }<button class="go" data-import title="Add the fleets in a file saved with Export">Import file</button><button class="go${PASTEBOX ? " on" : ""}" data-pasteopen title="Add fleets from text made with Copy">Paste text</button></div>${
+      COPYBOX && COPYBOX.key === "all" ? copyBoxHTML() : ""}${PHONE.key === "all" ? phonePanelHTML() : ""}${PASTEBOX ? pasteBoxHTML() : ""}`;
+}
+/* Paste text: Copy's text back into Saved fleets (user 23.10.2026: "miten
+   tuon copy homman saa pastettua takaisin fleetiksi?"). The same reader as
+   Import file and a link, so a pasted text adds what the file would. */
+let PASTEBOX = false, PASTE_TEXT = "";
+function pasteBoxHTML(){
+  return `<div class="phonebox"><p>Paste the text from Copy or Copy all (the same as an exported file) and add it to Saved fleets.</p>
+    <textarea id="pastebox" class="plink" rows="5" aria-label="Fleet text to add" placeholder="Paste the copied fleet here">${esc(PASTE_TEXT)}</textarea>
+    <div class="pbtns"><button class="go" data-pasteadd>Add to Saved fleets</button><button class="go" data-pasteclose>Cancel</button></div></div>`;
 }
 
 /* ------------------------------------------------- fleets to a phone ---- */
@@ -13117,6 +13126,20 @@ $("#saves").onclick = e => {
   if(sl){ if(PHONE.url && navigator.share) navigator.share({ title: "Gothic Fleet Play", url: PHONE.url }).catch(() => {}); return; }
   const im = e.target.closest ? e.target.closest("button[data-import]") : null;
   if(im){ const inp = $("#importfile"); if(inp) inp.click(); return; }
+  const po = e.target.closest ? e.target.closest("button[data-pasteopen]") : null;
+  if(po){ PASTEBOX = !PASTEBOX; renderTop(); const t = $("#pastebox"); if(t) t.focus(); return; }
+  const pc = e.target.closest ? e.target.closest("button[data-pasteclose]") : null;
+  if(pc){ PASTEBOX = false; PASTE_TEXT = ""; renderTop(); return; }
+  const pa = e.target.closest ? e.target.closest("button[data-pasteadd]") : null;
+  if(pa){
+    const t = $("#pastebox"), text = t ? String(t.value || "").trim() : "";
+    if(!text){ if(t) t.focus(); return; }
+    const r = libAddText(text, "paste");
+    /* a text that adds nothing stays in the box, to fix or replace */
+    if(r.ids.length){ PASTEBOX = false; PASTE_TEXT = ""; } else PASTE_TEXT = text;
+    afterAdd(r, "the pasted text");
+    return;
+  }
   const go = e.target.closest ? e.target.closest("button[data-open]") : null;
   if(go){
     const li = LISTS.findIndex(l => l.nm === go.dataset.open);
