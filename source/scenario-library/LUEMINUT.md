@@ -1422,6 +1422,20 @@ vasempaan reunaan kuten muissa sovelluksissa.
 - Rajaus: vain kirjan 10 yleisskenaariota ja Craftworld Assault (Tyranidit). Muiden lähteiden
   saattue- ja maihinnoususkenaarioihin ei ole kytketty rivejä.
 
+## Krediitit horizonin linjalla (0.14.1, 23.10.2026)
+
+horizon (Discord 23.10.): "since remastered = official/original ... I would not give credits to Simon or me. Just fold
+those credits together and add Nate, Ray and Bob to the list of names." Käyttäjä: korjataan sivujen credit-kohdat yleisesti.
+Muissa sovelluksissa ei ole tekijäkrediittejä (Remastered mainitaan vain lähteenä), joten muutokset koskevat vain tätä:
+
+- `GW_CREDIT` on yksi yhdistetty rivi: alkuperäiset tekijät + Bob Henderson, Ray Bell ja Nate Montes (RB s. 3).
+- `RB_CREDIT` ja `FL_CREDIT` ovat pelkkä lähde ja sivu ("BFG Remastered Rulebook v1.10, p. …"), ilman "created by" -nimiä
+  (myös Fleetsin toimittajat poistettu, jotta rivit ovat yhdenmukaiset).
+- Sources-sivu: Battlefleet Gothic -osion nimilistassa samat 11 nimeä; Remastered on "the current edition of the rules,
+  used today as the official rules", ei "unofficial fan project created by Simon Saier"; FAQ-kierroksista ja Collected
+  FAQ 2026:sta ei nimetä tekijöitä. Roy säilyy Warp Riftin toimittajana ja omien skenaarioidensa kirjoittajana.
+- Savutesti selaimessa: "Saier" ei esiinny missään krediitissä eikä Sources-sivulla, 204 skenaariota, ei konsolivirheitä.
+
 ## Julkaisu (20.10.2026)
 
 - Osoite **https://scenario-library.kuldare.com**, Cloudflare Worker

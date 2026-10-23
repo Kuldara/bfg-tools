@@ -4,7 +4,7 @@
    The Fleets book still has unresolved cross-references ("[???]", old rulebook and
    Armada pages); the scenarios give their Remastered places and say so in a note. */
 (function () {
-  const FL_CREDIT = "BFG Remastered Fleets v0.36, created by Simon Saier, edited by Christopher Griffiths and Robert C.M. Passovoy";
+  const FL_CREDIT = "BFG Remastered Fleets v0.36";
   const RT_CREDIT = "Rogue Trader scenarios, Fleets v0.36 p. 198–211. The Fleets book does not name their author.";
   const XREF = "The Fleets book’s cross-references in this scenario read “[???]” or point to page numbers in the old rulebook and Armada. They are given here as their Remastered places.";
 

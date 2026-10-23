@@ -586,13 +586,13 @@ html.wide:not(.short) .mapstick > .col:last-child { max-height: calc(100vh - var
 </header>
 <main id="app"></main>
 <footer>
-  <p><b>Scenario Library</b> · version 0.14 · <span id="scn">204</span> scenarios · unofficial fan-made tool, not affiliated with Games Workshop · progress is saved in this browser only · <a href="#/sources">sources</a></p>
+  <p><b>Scenario Library</b> · version 0.14.1 · <span id="scn">204</span> scenarios · unofficial fan-made tool, not affiliated with Games Workshop · progress is saved in this browser only · <a href="#/sources">sources</a></p>
   <details><summary>About the texts and abbreviations</summary><p>Every scenario here is summarised in our own words for play at the table; “Playing with other fleets” notes marked as suggestions are ours, not the source’s. Credit belongs to the original authors; the page references point to the sources: the BFG Remastered <i>Rulebook v1.10</i> and <i>Fleets v0.36</i>, the classic Games Workshop and Fanatic publications (<i>Warp Storm</i>, <i>Planet Killer</i>, <i>Battlefleet Gothic Magazine</i>, <i>Invasion</i>, <i>Fanatic Magazine</i>, <i>Fanatic Online</i>) the fan magazine <a href="https://specialist-arms.com/bfg/warprift/" target="_blank" rel="noopener">Warp Rift</a>, and the fan supplements <i>Book of Nemesis</i>, <i>Project Distant Darkness</i>, <i>Starblade</i>, the <i>BFG Tournament Mission Pack</i> and <i>BFG Advanced Scenarios</i>.</p>
   <p>RB = Rulebook v1.10, FL = Fleets v0.36.</p></details>
   <p class="kbd">Keyboard: <b>1</b>–<b>4</b> switch a scenario’s tabs · <b>←</b> <b>→</b> change the turn on Play.</p>
 </footer>
 
-<script src="battlezone-core.js?v=0.14"></script>
+<script src="battlezone-core.js?v=0.14.1"></script>
 <script>
 "use strict";
 /* ---------------------------------------------------------------- data */
@@ -2015,16 +2015,16 @@ function renderSources() {
   let h = "<div class='shead'><div class='series'>Where the scenarios come from</div><h1>Sources</h1></div>";
   h += "<p class='intro'>Battlefleet Gothic is no longer published, so its rules and scenarios now live in community documents. Every scenario here names its source and page, and this page explains what those sources are and how far to trust them.</p>";
   h += "<div class='srcgrid'>";
-  h += sec("Battlefleet Gothic", "<p>Games Workshop’s game of fleet battles in the 41st millennium, first released in 1999. The Remastered rulebook credits its original design to Andy Chambers, Gavin Thorpe, Jervis Johnson, Matt Keefe, Andy Hall, Pete Haines, Tim Adcock and Warwick Kinrade (RB p. 3). The supplement <i>Armada</i> followed in 2004 and a digital rulebook in 2007. Games Workshop no longer supports the game; the community keeps it alive.</p>");
+  h += sec("Battlefleet Gothic", "<p>Games Workshop’s game of fleet battles in the 41st millennium, first released in 1999. The rulebook credits the game to Andy Chambers, Gavin Thorpe, Jervis Johnson, Matt Keefe, Andy Hall, Pete Haines, Tim Adcock, Warwick Kinrade, Bob Henderson, Ray Bell and Nate Montes (RB p. 3). The supplement <i>Armada</i> followed in 2004 and a digital rulebook in 2007. Games Workshop no longer supports the game; the community keeps it alive.</p>");
   h += sec("BFG Remastered — Rulebook v1.10 and Fleets v0.36 <span class='badge t-rulebook'>RB · FL</span>",
-    "<p>The community edition of the rules: an unofficial fan project created by Simon “Hanskrampf” Saier, with feedback from the BFG Discord community. It combines the 2007 digital rulebook, the campaigns of <i>Armada</i> and the 2010 Compendium into two free PDFs, the <b>Rulebook</b> (RB) and the <b>Fleets</b> book (FL). Unclear rules are settled in FAQ runs maintained by Roy “horizon” Amkreutz (RB p. 4). The 2026 FAQ names v1.10 and v0.36 as the current versions, and every page number in this app refers to them.</p>" +
+    "<p>The current edition of the rules, used today as the official rules of the game. It combines the 2007 digital rulebook, the campaigns of <i>Armada</i> and the 2010 Compendium into two free PDFs, the <b>Rulebook</b> (RB) and the <b>Fleets</b> book (FL). Unclear rules are settled in FAQ runs (RB p. 4). The 2026 FAQ names v1.10 and v0.36 as the current versions, and every page number in this app refers to them.</p>" +
     "<p class='small muted'>From the rulebook: the " + cnt("core") + " core scenarios (RB p. 128–143), the three Third Armageddon War scenarios (RB p. 178–181), which first appeared in <i>Armada</i>, and the seven 13th Black Crusade scenarios (RB p. 191–199). From the Fleets book: the six Rogue Trader scenarios and their convoy threat tables (FL p. 198–211) and Craftworld Assault (FL p. 312–315). On the scenario list the campaigns and the Fleets book scenarios share the <b>Books</b> category.</p>");
   h += sec("Classic Games Workshop publications <span class='badge t-classic'>Classic GW</span>",
     "<p>Between 1999 and 2008 Games Workshop published a steady stream of Battlefleet Gothic scenarios outside the rulebooks: in <i>White Dwarf</i> (collected in <i>Warp Storm</i>, 2000), in the <i>Planet Killer</i> fanzine and <i>Battlefleet Gothic Magazine</i> from Fanatic Press (2000–2004), in the <i>Invasion</i> booklet and the <i>2002 Annual</i>, and finally in <i>Fanatic Magazine</i> and on the <i>Fanatic Online</i> website (2004–2008). Many were written by players, several of whom later joined the rules committee.</p>" +
     "<p>They were official publications in their day, but they were written for the original 1999 rules or for <i>Armada</i>, not for Remastered. Where a rule has since changed or moved, the scenario page says so in a source note, and page references to old books are given as their Remastered equivalents where one exists. Scenarios that were later reprinted in the Remastered books (the Armageddon scenarios, Craftworld Assault, Hunter and the Prey) appear only once, under the book. The <i>2002 Annual</i> reprinted earlier material, so it adds no scenarios of its own.</p>" +
     "<p class='small muted'>Page numbers are PDF pages of the scans in circulation. " + SC.filter(s => CL_GRPS.includes(s.grp)).length + " classic scenarios in this app.</p>");
   h += sec("Warp Rift <span class='badge bk'>WR</span>",
-    "<p>A free fan magazine for Battlefleet Gothic, published as PDF since April 2004 — 49 issues by June 2026. It is put together by a small team of players: founded by Cybershadow and edited by Roy “horizon” Amkreutz, who also maintains the Remastered FAQ runs (RB p. 4). Issues carry fleet lists, scenarios, campaigns, tactics, painting and fiction.</p>" +
+    "<p>A free fan magazine for Battlefleet Gothic, published as PDF since April 2004 — 49 issues by June 2026. It is put together by a small team of players: founded by Cybershadow and edited by Roy “horizon” Amkreutz. Issues carry fleet lists, scenarios, campaigns, tactics, painting and fiction.</p>" +
     "<p>Being a fan magazine, Warp Rift is <b>not</b> an official rules source: its articles are written by whoever submits one, and they all have the same fan-work status. On the scenario list Warp Rift is one category, in issue order. Tags add what the source says: <b>Rules writer</b> (the author also writes the rules), <b>Lore competition</b>, <b>Community</b>, <b>Played</b> and <b>Play both sides</b> — search for any of them. The one exception to fan-work status is issue 48’s <i>Armada Indomitus: Codex Orks</i>, which the magazine credits to the BFG Rules Review Committee; it reprints and updates the Armageddon scenarios.</p>" +
     "<p class='small muted'>All issues can be downloaded free from <a href='" + WR + "' target='_blank' rel='noopener'>specialist-arms.com/bfg/warprift</a>. Page numbers here are PDF pages (in issues 1–10 the printed number is one lower).</p>");
   h += sec("Fan supplements <span class='badge t-fan'>Fan supplement</span>",
@@ -2036,7 +2036,7 @@ function renderSources() {
     "<p>Project Distant Darkness and Starblade carry the <b>Rules writer</b> tag, as horizon also writes the rules; the tag says who wrote a scenario, not where it was published.</p>" +
     "<p class='small muted'>The supplements circulate as free PDFs; the community’s <i>BFG Scenario Listing</i> links them. Page numbers are PDF pages. " + SC.filter(s => FAN_GRPS.includes(s.grp)).length + " fan supplement scenarios in this app.</p>");
   h += sec("The High Admiralty",
-    "<p>The volunteer rules committee for Battlefleet Gothic, responsible for the 2010 FAQ/Compendium (written by Bob Henderson, Ray Bell and Nate Montes, RB p. 3). Warp Rift 48 names the BFG Rules Review Committee as Bob Henderson, Ray Bell, Nate Montes and Roy Amkreutz. Rules questions are still answered, most recently in the <i>Collected FAQ 2026</i> by Simon Saier and Roy Amkreutz.</p>");
+    "<p>The volunteer rules committee for Battlefleet Gothic, responsible for the 2010 FAQ/Compendium (written by Bob Henderson, Ray Bell and Nate Montes, RB p. 3). Warp Rift 48 names the BFG Rules Review Committee as Bob Henderson, Ray Bell, Nate Montes and Roy Amkreutz. Rules questions are still answered, most recently in the <i>Collected FAQ 2026</i>.</p>");
   h += sec("What the sources leave open",
     "<p>Many scenarios leave something out: who goes first, how long the game lasts, how deep the deployment zones are. Their Set-up tab lists these under <i>Agree before you start</i>, each with a default you can change. Where the books have a matching case, the default comes from it with its page (for example, the first turn is rolled off as in RB p. 143); otherwise it is marked <i>Our suggestion</i>. The agreed values show up in the steps, on the map and on the Play tab.</p>");
   h += sec("Badges in this app",
@@ -2145,8 +2145,10 @@ function spResultBlock(sc, st, v, main) {
 /* ---------------------------------------------------------------- background & credits
    Behind the ⓘ button on each scenario. Backgrounds are short summaries in our own
    words; credits name the authors and where the scenario was published. */
-const GW_CREDIT = "Original game design: Andy Chambers, Gavin Thorpe, Jervis Johnson, Matt Keefe, Andy Hall, Pete Haines, Tim Adcock and Warwick Kinrade (Games Workshop; RB p. 3).";
-const RB_CREDIT = "BFG Remastered Rulebook v1.10, created by Simon Saier.";
+const GW_CREDIT = "Battlefleet Gothic by Andy Chambers, Gavin Thorpe, Jervis Johnson, Matt Keefe, Andy Hall, Pete Haines, Tim Adcock, Warwick Kinrade, Bob Henderson, Ray Bell and Nate Montes (RB p. 3).";
+/* Remastered on virallinen sääntöversio, ei erillinen tekijäkrediitti (horizon 23.10.: "I would not give credits
+   to Simon or me. Just fold those credits together and add Nate, Ray and Bob"). */
+const RB_CREDIT = "BFG Remastered Rulebook v1.10,";
 const ARMADA = "First published in Battlefleet Gothic: Armada (Games Workshop, 2004), Third Armageddon War campaign.";
 const AI_CREDIT = "Reprinted by the BFG Rules Review Committee in Armada Indomitus: Codex Orks, a supplement in Warp Rift 48 (February 2026).";
 const INFO = {
@@ -3810,34 +3812,34 @@ let lastMapNarrow = null;
 window.addEventListener("resize", () => { const n = mapNarrow(); if (lastMapNarrow !== null && n !== lastMapNarrow) render(true); lastMapNarrow = n; });
 </script>
 <!-- scenario files: each adds its scenarios with addScenarios([...]) -->
-<script src="scenarios/blackcrusade.js?v=0.14"></script>
-<script src="scenarios/fleets.js?v=0.14"></script>
-<script src="scenarios/cl-early.js?v=0.14"></script>
-<script src="scenarios/cl-mag-a.js?v=0.14"></script>
-<script src="scenarios/cl-mag-b.js?v=0.14"></script>
-<script src="scenarios/cl-mag-c.js?v=0.14"></script>
-<script src="scenarios/cl-mag-d.js?v=0.14"></script>
-<script src="scenarios/cl-fanatic.js?v=0.14"></script>
-<script src="scenarios/cl-invasion.js?v=0.14"></script>
-<script src="scenarios/_wr.js?v=0.14"></script>
-<script src="scenarios/wr-committee.js?v=0.14"></script>
-<script src="scenarios/wr-community-a.js?v=0.14"></script>
-<script src="scenarios/wr-spreading-war.js?v=0.14"></script>
-<script src="scenarios/wr-community-l4a.js?v=0.14"></script>
-<script src="scenarios/wr-community-l4b.js?v=0.14"></script>
-<script src="scenarios/wr-community-l4c.js?v=0.14"></script>
-<script src="scenarios/wr-community-l4d.js?v=0.14"></script>
-<script src="scenarios/fan-tournament.js?v=0.14"></script>
-<script src="scenarios/fan-nemesis.js?v=0.14"></script>
-<script src="scenarios/fan-pdd.js?v=0.14"></script>
-<script src="scenarios/fan-starblade.js?v=0.14"></script>
-<script src="scenarios/terrain-map.js?v=0.14"></script>
-<script src="scenarios/terrain-info.js?v=0.14"></script>
-<script src="scenarios/open-points.js?v=0.14"></script>
-<script src="scenarios/wr-rating.js?v=0.14"></script>
-<script src="scenarios/play-maps.js?v=0.14"></script>
-<script src="scenarios/sizes.js?v=0.14"></script>
-<script src="scenarios/fleet-rules.js?v=0.14"></script>
+<script src="scenarios/blackcrusade.js?v=0.14.1"></script>
+<script src="scenarios/fleets.js?v=0.14.1"></script>
+<script src="scenarios/cl-early.js?v=0.14.1"></script>
+<script src="scenarios/cl-mag-a.js?v=0.14.1"></script>
+<script src="scenarios/cl-mag-b.js?v=0.14.1"></script>
+<script src="scenarios/cl-mag-c.js?v=0.14.1"></script>
+<script src="scenarios/cl-mag-d.js?v=0.14.1"></script>
+<script src="scenarios/cl-fanatic.js?v=0.14.1"></script>
+<script src="scenarios/cl-invasion.js?v=0.14.1"></script>
+<script src="scenarios/_wr.js?v=0.14.1"></script>
+<script src="scenarios/wr-committee.js?v=0.14.1"></script>
+<script src="scenarios/wr-community-a.js?v=0.14.1"></script>
+<script src="scenarios/wr-spreading-war.js?v=0.14.1"></script>
+<script src="scenarios/wr-community-l4a.js?v=0.14.1"></script>
+<script src="scenarios/wr-community-l4b.js?v=0.14.1"></script>
+<script src="scenarios/wr-community-l4c.js?v=0.14.1"></script>
+<script src="scenarios/wr-community-l4d.js?v=0.14.1"></script>
+<script src="scenarios/fan-tournament.js?v=0.14.1"></script>
+<script src="scenarios/fan-nemesis.js?v=0.14.1"></script>
+<script src="scenarios/fan-pdd.js?v=0.14.1"></script>
+<script src="scenarios/fan-starblade.js?v=0.14.1"></script>
+<script src="scenarios/terrain-map.js?v=0.14.1"></script>
+<script src="scenarios/terrain-info.js?v=0.14.1"></script>
+<script src="scenarios/open-points.js?v=0.14.1"></script>
+<script src="scenarios/wr-rating.js?v=0.14.1"></script>
+<script src="scenarios/play-maps.js?v=0.14.1"></script>
+<script src="scenarios/sizes.js?v=0.14.1"></script>
+<script src="scenarios/fleet-rules.js?v=0.14.1"></script>
 <!--SCENARIO-FILES-->
 <script>wrInit(); document.getElementById("scn").textContent = SC.length; render(false);</script>
 </body>
