@@ -1473,6 +1473,16 @@ vasempaan reunaan kuten muissa sovelluksissa.
   - kokotesti 0, selaintesti leveänä ja kapeana 15 184 näkymää 0 virhettä, sisältötesti 0 + 0, mittatesti 0
   - kuvakierros 1 854 sivua 0 löydöstä, korjauksen jälkeen yleissivut 26 sivua 0 löydöstä
   Live: `sizes.js` on tavulleen sama kuin paikallinen, "version 0.12", 204 skenaariota, Small/Medium/Large 131/109/119.
+- 0.14 julkaistu 23.10. käyttäjän pyynnöstä ("Julkaise Scenario Library 0.14 Cloudflareen"). Worker-versio 25ffbc2b,
+  GitHub Kuldara/bfg-tools eaed1e6. Mukana ovat laivastojen skenaariosäännöt (`scenarios/fleet-rules.js`) ja BFG Tools
+  -valikko vasemmassa yläkulmassa. Koottu `kokoa.py`:n tavoin käsin (`public/` = `scenarios/`-kansion `index.html`,
+  kuvakkeet, `battlezone-core.js` ja `scenarios/*.js`, sama `wrangler.json`) ja julkaistu `npx wrangler deploy`:lla;
+  wrangler latasi muuttuneet `index.html` ja `scenarios/fleet-rules.js`. Tarkistukset:
+  - kaikki JS-tiedostot `node --check`, `battlezone-core.js`:n BZCORE-lohko sama kuin generaattorissa
+  - `scenarios/` ja `source/scenario-library/` samat
+  Live: `index.html` (307 → `/`) on tavu tavulta sama kuin paikallinen (beacon-skriptiä ei ollut), samoin
+  `fleet-rules.js` ja `battlezone-core.js`; "version 0.14". Huom.: wrangler sanoo "No targets deployed", koska
+  `wrangler.json`:ssa ei ole reittejä; dashboardissa liitetty domain säilyy.
 - Lähdeteksteistä ja tekijänoikeudesta ks. "Sisältö ja tekijänoikeus": horizonille
   (Warp Riftin toimittaja) kannattaa yhä kertoa sovelluksesta.
 
