@@ -1512,6 +1512,9 @@ Suggested for- tai vs-laivasto on valittu:
 - 0.14.1 julkaistu 23.10. käyttäjän luvalla ("toteuta"). Worker-versio 5bee0e8e, GitHub Kuldara/bfg-tools f655233.
   Mukana horizonin linjan krediitit (ks. "Krediitit horizonin linjalla"); wrangler latasi `index.html`:n ja
   `scenarios/fleets.js`:n. Live: molemmat tavu tavulta samat kuin paikalliset, "version 0.14.1", "Saier" ei esiinny sivulla.
+- 0.15 julkaistu 23.10. käyttäjän luvalla ("julkaise"). Worker-versio 0b77ede9, GitHub Kuldara/bfg-tools 40b3896.
+  Mukana "Ignore any fleets" (ks. oma osio); wrangler latasi vain `index.html`:n. Live: index.html tavu tavulta sama
+  kuin paikallinen, "version 0.15".
 - Lähdeteksteistä ja tekijänoikeudesta ks. "Sisältö ja tekijänoikeus": horizonille
   (Warp Riftin toimittaja) kannattaa yhä kertoa sovelluksesta.
 
