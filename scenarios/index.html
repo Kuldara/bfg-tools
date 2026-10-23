@@ -586,13 +586,13 @@ html.wide:not(.short) .mapstick > .col:last-child { max-height: calc(100vh - var
 </header>
 <main id="app"></main>
 <footer>
-  <p><b>Scenario Library</b> · version 0.14.1 · <span id="scn">204</span> scenarios · unofficial fan-made tool, not affiliated with Games Workshop · progress is saved in this browser only · <a href="#/sources">sources</a></p>
+  <p><b>Scenario Library</b> · version 0.15 · <span id="scn">204</span> scenarios · unofficial fan-made tool, not affiliated with Games Workshop · progress is saved in this browser only · <a href="#/sources">sources</a></p>
   <details><summary>About the texts and abbreviations</summary><p>Every scenario here is summarised in our own words for play at the table; “Playing with other fleets” notes marked as suggestions are ours, not the source’s. Credit belongs to the original authors; the page references point to the sources: the BFG Remastered <i>Rulebook v1.10</i> and <i>Fleets v0.36</i>, the classic Games Workshop and Fanatic publications (<i>Warp Storm</i>, <i>Planet Killer</i>, <i>Battlefleet Gothic Magazine</i>, <i>Invasion</i>, <i>Fanatic Magazine</i>, <i>Fanatic Online</i>) the fan magazine <a href="https://specialist-arms.com/bfg/warprift/" target="_blank" rel="noopener">Warp Rift</a>, and the fan supplements <i>Book of Nemesis</i>, <i>Project Distant Darkness</i>, <i>Starblade</i>, the <i>BFG Tournament Mission Pack</i> and <i>BFG Advanced Scenarios</i>.</p>
   <p>RB = Rulebook v1.10, FL = Fleets v0.36.</p></details>
   <p class="kbd">Keyboard: <b>1</b>–<b>4</b> switch a scenario’s tabs · <b>←</b> <b>→</b> change the turn on Play.</p>
 </footer>
 
-<script src="battlezone-core.js?v=0.14.1"></script>
+<script src="battlezone-core.js?v=0.15"></script>
 <script>
 "use strict";
 /* ---------------------------------------------------------------- data */
@@ -3067,7 +3067,7 @@ function lf() {
   return DB.lf;
 }
 function lfActive(f) {
-  return Object.values(f.trust || {}).filter(Boolean).length + Object.values(f.book || {}).filter(Boolean).length + (f.fits ? 1 : 0) + (f.pl ? 1 : 0) + (f.size ? 1 : 0) + (f.sug ? 1 : 0) + (f.sug2 ? 1 : 0);
+  return Object.values(f.trust || {}).filter(Boolean).length + Object.values(f.book || {}).filter(Boolean).length + (f.fits ? 1 : 0) + (f.pl ? 1 : 0) + (f.size ? 1 : 0) + (f.sug ? 1 : 0) + (f.sug2 ? 1 : 0) + (f.noany && (f.sug || f.sug2) ? 1 : 0);
 }
 function hay(sc) {
   const i = sc.info || INFO[sc.id];
@@ -3081,8 +3081,9 @@ function listMatches(cat) {
     (!q || q.split(/\s+/).every(w => hay(sc).includes(w))) &&
     (!tr.length || tr.includes(sc.trust)) && (!bk.length || bk.includes(sc.book)) &&
     (!f.fits || fitsTable(sc)) && (!f.pl || [].concat(sc.players || 2).some(n => f.pl === "3" ? n >= 3 : String(n) === f.pl)) && sizeOk(sc, f.size) &&
-    /* kaksi laivastoa (käyttäjä 21.10.: "ork vs imperium"): suosituksessa molemmat; any fleets -skenaariot pysyvät mukana */
-    (!sc.suggest || [f.sug, f.sug2].every(g => !g || sc.suggest.some(x => x.includes(g)))));
+    /* kaksi laivastoa (käyttäjä 21.10.: "ork vs imperium"): suosituksessa molemmat; any fleets -skenaariot pysyvät mukana,
+       ellei "Ignore any fleets" ole päällä (käyttäjä 23.10.: "voisi lisätä rastiruutuun ignore any valinnan") */
+    (!sc.suggest ? !(f.noany && (f.sug || f.sug2)) : [f.sug, f.sug2].every(g => !g || sc.suggest.some(x => x.includes(g)))));
 }
 function listZone(cat) {
   const list = listMatches(cat), q = (DB.lq || "").trim();
@@ -3117,6 +3118,7 @@ function filterPanel() {
     "<div class='flrow'><span class='flbl'>Size</span>" + SIZES.map(([k, l]) => chip("lfs", k, l, f.size === k)).join("") + "</div>" +
     "<div class='flrow'><select data-a='lsug' aria-label='Suggested for'><option value=''>Suggested for: any fleet</option>" + facs.map(x => "<option value='" + esc(x) + "'" + (f.sug === x ? " selected" : "") + ">Suggested for: " + esc(x) + "</option>").join("") + "</select>" +
     "<select data-a='lsug2' aria-label='Against'><option value=''>vs any fleet</option>" + facs.map(x => "<option value='" + esc(x) + "'" + (f.sug2 === x ? " selected" : "") + ">vs " + esc(x) + "</option>").join("") + "</select>" +
+    (f.sug || f.sug2 ? chip("lfa", "", "Ignore any fleets", f.noany) : "") +
     (lfActive(f) ? "<button class='btn' data-a='lfclr'>Clear filters</button>" : "") + "</div></div>";
 }
 
@@ -3344,7 +3346,7 @@ function fitsTable(sc) {
 }
 function poolFiltered(p) {
   /* p.src.wr === false on 0.6:n tallenteista (yksi Warp Rift -nappi): koskee kaikkia WR-skenaarioita */
-  return SC.filter(sc => !(p.src && (p.src[srcOf(sc)] === false || (p.src.wr === false && WR_GRPS.includes(sc.grp)))) && !(p.bookOnly && sc.book !== "K") && !(p.fits && !fitsTable(sc)) && sizeOk(sc, p.size) && !(sc.suggest && [p.sug, p.sug2].some(g => g && !sc.suggest.includes(g))));
+  return SC.filter(sc => !(p.src && (p.src[srcOf(sc)] === false || (p.src.wr === false && WR_GRPS.includes(sc.grp)))) && !(p.bookOnly && sc.book !== "K") && !(p.fits && !fitsTable(sc)) && sizeOk(sc, p.size) && (sc.suggest ? ![p.sug, p.sug2].some(g => g && !sc.suggest.includes(g)) : !(p.noany && (p.sug || p.sug2))));
 }
 function poolEligible(p) { return poolFiltered(p).filter(sc => !(p.excl && p.excl[sc.id])); }
 function rollPool(p) {
@@ -3394,7 +3396,8 @@ function renderPrep() {
       "<button class='fbtn' data-a='pfits' aria-pressed='" + !!p.fits + "'>Fits my table (" + W + " × " + H + ")</button></div>" +
       "<div class='filters' role='group' aria-label='Size'>" + SIZES.map(([k, l]) => "<button class='fbtn' data-a='psize' data-k='" + k + "' aria-pressed='" + (p.size === k) + "'>" + l + "</button>").join("") + "</div>" +
       "<div class='tblctl'><select data-a='psug' aria-label='Suggested for'><option value=''>Suggested for: any fleet</option>" + facs.map(f => "<option value='" + esc(f) + "'" + (p.sug === f ? " selected" : "") + ">Suggested for: " + esc(f) + "</option>").join("") + "</select>" +
-      "<select data-a='psug2' aria-label='Against'><option value=''>vs any fleet</option>" + facs.map(f => "<option value='" + esc(f) + "'" + (p.sug2 === f ? " selected" : "") + ">vs " + esc(f) + "</option>").join("") + "</select></div></div>" +
+      "<select data-a='psug2' aria-label='Against'><option value=''>vs any fleet</option>" + facs.map(f => "<option value='" + esc(f) + "'" + (p.sug2 === f ? " selected" : "") + ">vs " + esc(f) + "</option>").join("") + "</select>" +
+      (p.sug || p.sug2 ? "<button class='fbtn' data-a='pnoany' aria-pressed='" + !!p.noany + "'>Ignore any fleets</button>" : "") + "</div></div>" +
       "<div class='poolhead'>Pool: <b>" + el.length + "</b> of " + SC.length + (fl.length > el.length ? " · " + (fl.length - el.length) + " left out" : "") + "</div>" +
       "<div class='poolchips'>" + fl.map(x => "<button class='pchip' data-a='pex' data-id='" + x.id + "' aria-pressed='" + !(p.excl && p.excl[x.id]) + "'>" + esc(x.name) + "</button>").join("") + "</div>" +
       "<div class='rollrow' style='margin-top:10px'><button class='btn primary' data-a='plroll'" + (el.length ? "" : " disabled") + ">" + (p.lpick ? "Reroll" : "Roll a scenario") + "</button>" +
@@ -3593,13 +3596,14 @@ document.addEventListener("click", e => {
   const a = el.dataset.a;
   if (a === "filter") { DB.filter = el.dataset.f; save(); render(true); return; }
   if (a === "cat") { DB.cat = el.dataset.v; save(); render(true); return; }
-  if (route.view === "list" && ["lfo", "lft", "lfb", "lfp", "lff", "lfs", "lfclr"].includes(a)) {
+  if (route.view === "list" && ["lfo", "lft", "lfb", "lfp", "lff", "lfs", "lfa", "lfclr"].includes(a)) {
     const f = lf(), k = el.dataset.k;
     if (a === "lfo") DB.fopen = !DB.fopen;
     else if (a === "lft") { if (!f.trust) f.trust = {}; f.trust[k] = !f.trust[k]; }
     else if (a === "lfb") { if (!f.book) f.book = {}; f.book[k] = !f.book[k]; }
     else if (a === "lfp") f.pl = f.pl === k ? "" : k;
     else if (a === "lff") f.fits = !f.fits;
+    else if (a === "lfa") f.noany = !f.noany;
     else if (a === "lfs") f.size = f.size === k ? "" : k;
     else if (a === "lfclr") DB.lf = {};
     save(); render(true); return;
@@ -3616,6 +3620,7 @@ document.addEventListener("click", e => {
       p.src[el.dataset.k] = p.src[el.dataset.k] === false; }
     else if (a === "pbook") p.bookOnly = !p.bookOnly;
     else if (a === "pfits") p.fits = !p.fits;
+    else if (a === "pnoany") p.noany = !p.noany;
     else if (a === "psize") p.size = p.size === el.dataset.k ? "" : el.dataset.k;
     else if (a === "pex") { if (!p.excl) p.excl = {}; p.excl[el.dataset.id] = !p.excl[el.dataset.id]; }
     else if (a === "plroll") rollPool(p);
@@ -3812,34 +3817,34 @@ let lastMapNarrow = null;
 window.addEventListener("resize", () => { const n = mapNarrow(); if (lastMapNarrow !== null && n !== lastMapNarrow) render(true); lastMapNarrow = n; });
 </script>
 <!-- scenario files: each adds its scenarios with addScenarios([...]) -->
-<script src="scenarios/blackcrusade.js?v=0.14.1"></script>
-<script src="scenarios/fleets.js?v=0.14.1"></script>
-<script src="scenarios/cl-early.js?v=0.14.1"></script>
-<script src="scenarios/cl-mag-a.js?v=0.14.1"></script>
-<script src="scenarios/cl-mag-b.js?v=0.14.1"></script>
-<script src="scenarios/cl-mag-c.js?v=0.14.1"></script>
-<script src="scenarios/cl-mag-d.js?v=0.14.1"></script>
-<script src="scenarios/cl-fanatic.js?v=0.14.1"></script>
-<script src="scenarios/cl-invasion.js?v=0.14.1"></script>
-<script src="scenarios/_wr.js?v=0.14.1"></script>
-<script src="scenarios/wr-committee.js?v=0.14.1"></script>
-<script src="scenarios/wr-community-a.js?v=0.14.1"></script>
-<script src="scenarios/wr-spreading-war.js?v=0.14.1"></script>
-<script src="scenarios/wr-community-l4a.js?v=0.14.1"></script>
-<script src="scenarios/wr-community-l4b.js?v=0.14.1"></script>
-<script src="scenarios/wr-community-l4c.js?v=0.14.1"></script>
-<script src="scenarios/wr-community-l4d.js?v=0.14.1"></script>
-<script src="scenarios/fan-tournament.js?v=0.14.1"></script>
-<script src="scenarios/fan-nemesis.js?v=0.14.1"></script>
-<script src="scenarios/fan-pdd.js?v=0.14.1"></script>
-<script src="scenarios/fan-starblade.js?v=0.14.1"></script>
-<script src="scenarios/terrain-map.js?v=0.14.1"></script>
-<script src="scenarios/terrain-info.js?v=0.14.1"></script>
-<script src="scenarios/open-points.js?v=0.14.1"></script>
-<script src="scenarios/wr-rating.js?v=0.14.1"></script>
-<script src="scenarios/play-maps.js?v=0.14.1"></script>
-<script src="scenarios/sizes.js?v=0.14.1"></script>
-<script src="scenarios/fleet-rules.js?v=0.14.1"></script>
+<script src="scenarios/blackcrusade.js?v=0.15"></script>
+<script src="scenarios/fleets.js?v=0.15"></script>
+<script src="scenarios/cl-early.js?v=0.15"></script>
+<script src="scenarios/cl-mag-a.js?v=0.15"></script>
+<script src="scenarios/cl-mag-b.js?v=0.15"></script>
+<script src="scenarios/cl-mag-c.js?v=0.15"></script>
+<script src="scenarios/cl-mag-d.js?v=0.15"></script>
+<script src="scenarios/cl-fanatic.js?v=0.15"></script>
+<script src="scenarios/cl-invasion.js?v=0.15"></script>
+<script src="scenarios/_wr.js?v=0.15"></script>
+<script src="scenarios/wr-committee.js?v=0.15"></script>
+<script src="scenarios/wr-community-a.js?v=0.15"></script>
+<script src="scenarios/wr-spreading-war.js?v=0.15"></script>
+<script src="scenarios/wr-community-l4a.js?v=0.15"></script>
+<script src="scenarios/wr-community-l4b.js?v=0.15"></script>
+<script src="scenarios/wr-community-l4c.js?v=0.15"></script>
+<script src="scenarios/wr-community-l4d.js?v=0.15"></script>
+<script src="scenarios/fan-tournament.js?v=0.15"></script>
+<script src="scenarios/fan-nemesis.js?v=0.15"></script>
+<script src="scenarios/fan-pdd.js?v=0.15"></script>
+<script src="scenarios/fan-starblade.js?v=0.15"></script>
+<script src="scenarios/terrain-map.js?v=0.15"></script>
+<script src="scenarios/terrain-info.js?v=0.15"></script>
+<script src="scenarios/open-points.js?v=0.15"></script>
+<script src="scenarios/wr-rating.js?v=0.15"></script>
+<script src="scenarios/play-maps.js?v=0.15"></script>
+<script src="scenarios/sizes.js?v=0.15"></script>
+<script src="scenarios/fleet-rules.js?v=0.15"></script>
 <!--SCENARIO-FILES-->
 <script>wrInit(); document.getElementById("scn").textContent = SC.length; render(false);</script>
 </body>

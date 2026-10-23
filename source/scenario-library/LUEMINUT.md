@@ -1436,6 +1436,18 @@ Muissa sovelluksissa ei ole tekijäkrediittejä (Remastered mainitaan vain läht
   FAQ 2026:sta ei nimetä tekijöitä. Roy säilyy Warp Riftin toimittajana ja omien skenaarioidensa kirjoittajana.
 - Savutesti selaimessa: "Saier" ei esiinny missään krediitissä eikä Sources-sivulla, 204 skenaariota, ei konsolivirheitä.
 
+## Ignore any fleets (0.15, 23.10.2026)
+
+Käyttäjä: "kun voi suodattaa esim ork ja ad mech skenaarioita kuuluuko siihen sitten ns. any scenaariot? voisi siinä
+tapauksessa lisätä rastiruutuun ignore any valinnan". Kuuluu: laivastosuodatin päästää any fleets -skenaariot (`suggest`
+puuttuu) aina läpi (päätös 21.10.). Nyt molemmissa suodattimissa on "Ignore any fleets" -nappi, joka näkyy vain, kun
+Suggested for- tai vs-laivasto on valittu:
+
+- Lista: `lf().noany` (toiminto `lfa`), lasketaan aktiivisiin suodattimiin vain laivaston kanssa; Clear filters nollaa.
+- Before the battle → Whole library: `prep().noany` (toiminto `pnoany`).
+- Testattu selaimessa 390 px: Orks + Ignore any → poolissa 22 / 204 (ilman 74), listalla ei yhtään any-skenaariota;
+  Orks vs Adeptus Mechanicus → 52 ilman valintaa ja 0 valinnalla (yksikään skenaario ei nimeä tätä paria). Ei konsolivirheitä.
+
 ## Julkaisu (20.10.2026)
 
 - Osoite **https://scenario-library.kuldare.com**, Cloudflare Worker
