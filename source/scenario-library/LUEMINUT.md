@@ -1395,6 +1395,33 @@ Orks vs Imperial Navy (etusivu 72) + Small 49, + Medium 54, + Large 50.
   vajaana (All 77 / 204), vaikka load-tapahtuma tuli. Kuvaa omalla Node-palvelimella kuten `kuvakierros.js` ja tarkista
   `SC.length` ennen kuvaa.
 
+## Laivastojen skenaariosäännöt (0.14, 23.10.2026)
+
+Käyttäjä: "tyranidit saa +1 escalating engagementin laivojen saapumisrolleihin ... huomaako skenaario
+tietokanta tämän ja kertooko? muita faction kohtaisia tälläsiiä?" Lisäksi BFG Tools -lappu yläpalkin
+vasempaan reunaan kuten muissa sovelluksissa.
+
+- Data `scenarios/fleet-rules.js` (`FLEET_LIST`, `FLEET_RULES`). Jokainen rivi tarkistettu Fleets v0.36:n
+  tekstistä (`../gothic-fleet-registry/lists_raw.json`, sivut `bfg_data.json`:n `cpg`-kentistä).
+- **Set-up:** "Fleet rules for this scenario" (piilotettava `hsec`) Forcesin jälkeen. Kummallekin puolelle
+  valinnainen laivastovalinta (`st.fl`, New game säilyttää sen). Valitulle laivastolle näytetään säännöt,
+  jotka koskevat sen puolta; "Not allowed" -varoitus, jos laivasto ei voi pelata sitä puolta (Tyranidit
+  Convoyna tai Exterminatuksen hyökkääjänä). Muiden laivastojen säännöt ovat avattavassa `details`-lohkossa
+  (yksi rivi laivastojen nimineen), jotta Set-up ei pitene puhelimella; "No changes" -rivit (`ok`) näkyvät vain
+  valitulle laivastolle. Yleiset (`sc: "*"`, esim. Necronien VP:t) vain valitulle laivastolle.
+- Käytettävyystarkistus 23.10. (käyttäjän pyynnöstä): puhelin ja leveä näyttö, vaalea ja tumma tila, ei
+  vaakavuotoa; valikko aukeaa näytön sisään (x 16–316 px). Selaintesti ajettu myös laivastot valittuina.
+- **Play:** valitun laivaston säännöt muistutuksina. Escalating Engagementin saapumistyökalu kertoo
+  Tyranidien +1:n tuloksen erikseen (ja aina alaotsikossa).
+- **Before the battle:** "Fleet rules for scenarios" laivastoittain linkkeineen.
+- **Geminin yhteenvedosta poikkeavat (tarkistettu lähteestä, älä "korjaa"):** Tau saa käyttää
+  puolustuspisteet *vain* orbitaaleihin (FL s. 451–452), ei "vapaasti". Kaaoksen Space Hulk saattueena
+  (10 rahtialusta), Inkvisition 3+ ilman torpedorefittiä ja "Necronit eivät puolusta saattueita" eivät
+  löydy kirjasta. Eldarin ja Taun kuljetus = 2 assault pointia on tavallinen kuljetuksen arvo, ei poikkeus.
+  Necronien fade out *ei* poista VP:itä vaan antaa 10 %/25 % (FL s. 402).
+- Rajaus: vain kirjan 10 yleisskenaariota ja Craftworld Assault (Tyranidit). Muiden lähteiden
+  saattue- ja maihinnoususkenaarioihin ei ole kytketty rivejä.
+
 ## Julkaisu (20.10.2026)
 
 - Osoite **https://scenario-library.kuldare.com**, Cloudflare Worker
