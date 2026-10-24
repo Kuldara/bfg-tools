@@ -1,7 +1,7 @@
 /* Gothic Fleet Play: offline at the table (julkaisu/make_site.py). The page
    is fetched from the network first - a fix shows at once - and the saved
    copy is used only when there is no network. */
-const CACHE = "gfp-b32303f93be0";
+const CACHE = "gfp-227737debb3c";
 const FILES = ["./Gothic%20Fleet%20Play.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
