@@ -2228,7 +2228,7 @@ for Lx in L:
                     "by itself.")
                 notes.append(
                     "Skwadron size, not a fleet total: the book prints "
-                    "\u201c%s\u201d as the size of one skwadron (pg. 373)."
+                    "\u201c%s\u201d as the size of one skwadron (pg. 372)."
                     % (s.get("head", "") or s["title"]))
             else:
                 rules.append(dict(kind="section_count", min=s["lo"], max=s["hi"],
@@ -6732,7 +6732,10 @@ _CZ_CITE = lambda s, pg: _cite(s, pg)
 _CZL["clanz"] = dict(
     warlord="^ork warlord",
     tiddla="^tiddla skwadron$", big="^big ship skwadron$", uge="uge ship skwadron$", hulk="^space hulks$", rok="^roks$",
-    clan_sec="^clan upgrades$", gub_sec="^gubbins$", gub_re=r"^(?!Klaws|Shokk-Attack Lance|Assault Karrier)",
+    # gub_re: Gubbins-kiintioon (s.372) eivat kuulu More Gubbins (s.371 "any number of capital ships") eika
+    # Deathskullzin ilmainen looted-kopio (J7, s.369: klaanin etu jokaiselle Deathskullz-skwadronille, J232)
+    clan_sec="^clan upgrades$", gub_sec="^gubbins$",
+    gub_re=r"^(?!Klaws|Shokk-Attack Lance|Assault Karrier|.*\(Deathskullz: free\))",
     sk=_cite("For every re-roll a Warlord has (including the first one for free), the Warlord must be in command of "
              "one tiddla skwadron of at least three escorts and one other skwadrons.", 372),
     sk_interp="Open interpretation T52: read as exactly one tiddla and one other skwadron per re-roll, as the "
@@ -6750,9 +6753,16 @@ _CZL["clanz"] = dict(
     clan_sq=_cite("If taken, every capital ship in the skwadron must separately take and pay for the clan upgrade, not "
                   "just individual ships.", 369),
     gub=_cite("A Warlord may choose for his own ship or escort skwadron one upgrade from the Gubbins list for every "
-              "re-roll he has at its listed cost.", 372))
+              "re-roll he has at its listed cost.", 372),
+    # J232: skwadron on yhden Warlordin, eika sita jaeta (s.373)
+    split=_cite("Each skwadron must be fielded with the number of ships chosen for it in this list; you can\u2019t "
+                "split up skwadrons or add more ships to them.", 373))
 _CZL["sqx"] = [dict(sec="^big ship skwadron$", min=1, max=2, only=True, name="kroozers",
-                    cite=_cite("1-2 Kroozers, chosen from the following list:", 372))]
+                    cite=_cite("1-2 Kroozers, chosen from the following list:", 372)),
+                # J232 (kayttaja 24.10.2026: "toimiiko rok sqadron kuten kapital ship?", "korjaa"):
+                # Rok skwadron on 1-4 Rokia kuten Big ship skwadron 1-2 kroozeria. Kirja painaa
+                # koon osion otsikkona (s.372 "Rok skwadron / 1-4 Roks"), joten lause on otsikko.
+                dict(sec="^roks$", min=1, max=4, only=True, name="Roks", cite=_cite("1\u20134 Roks", 372))]
 # Warlord kalleimmalle alukselle OMASSA komennossaan (s.372), ei koko laivaston.
 _CZL["place"] = [dict(cmd="^ork warlord", dearest=dict(own=True, cite=_cite(
     "He must be embarked on the most expensive ship under his own command (as opposed to the whole fleet), even if it "
@@ -6775,13 +6785,17 @@ for _L in (_CZL, _WAL):
         assert sum(1 for _s in _L["secs"] if re.search(_x["sec"], _s["t"].strip(), re.I)) == 1, (_L["nm"], _x["sec"])
 for _k in ("tiddla", "big", "uge", "hulk", "rok", "clan_sec", "gub_sec"):
     assert sum(1 for _s in _CZL["secs"] if re.search(_CZL["clanz"][_k], _s["t"].strip(), re.I)) == 1, _k
+# J232: osion otsikko ("1-4 Roks", s.372) on kirjan tekstia, vaikka poiminta ei vie sita osion tekstiin
+_RAW_HEADS = set(_text_key(_s.get("head") or "") for _Lx in json.load(io.open("lists_raw.json", encoding="utf-8"))
+                 for _s in _Lx.get("sections") or [])
 for _L in lists_out:
     for _x in (_L.get("sqx") or []) + (_L.get("sq_noup") or []) + (_L.get("sq_need") or []):
-        assert _text_key(_x["cite"]["s"]) in _all_text, "J216: lause ei ole kirjan tekstissa: %s" % _x["cite"]["s"]
+        assert _text_key(_x["cite"]["s"]) in _all_text or _text_key(_x["cite"]["s"]) in _RAW_HEADS, \
+            "J216: lause ei ole kirjan tekstissa: %s" % _x["cite"]["s"]
 for _k, _c in _CZL["clanz"].items():
     if isinstance(_c, dict):
         assert _text_key(_c["s"]) in _all_text, "J216: lause ei ole kirjan tekstissa: %s" % _c["s"]
-print("J216: laivuepoikkeukset 2 listalla, Daemonship-kielto %d listalla, Clanzin komento" % _nsq)
+print("J216: laivuepoikkeukset 2 listalla (Clanzissa kroozerit ja Rokit, J232), Daemonship-kielto %d listalla, Clanzin komento" % _nsq)
 
 # J224: Waaagh!-listan hulkin Warlord maksaa Extra Power Fieldsista +50
 # (s.390). Rivi "Extra Power Fields (Space Hulk)" tulee upgrades.py:sta;

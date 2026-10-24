@@ -4084,8 +4084,8 @@ function fleetFacts(L, members){
    Capital ships with the same intent.sq are one squadron. Fleets p. 13:
    cruisers of every kind two to four and mixed, grand cruisers and
    battleships two to three and never together. A list's own squadron
-   (L.sqx: Clanz big ship skwadron 1-2, Waaagh Roks up to four and only
-   Roks) replaces it. */
+   (L.sqx: Clanz big ship skwadron 1-2 and Rok skwadron 1-4 (J232), Waaagh
+   Roks up to four and only Roks) replaces it. */
 var SQ_CR = { min: 2, max: 4, cite: { s: "Cruisers, heavy cruisers and battlecruisers may be formed into squadrons of "
   + "two to four ships. Battlecruisers, heavy cruisers and cruisers may be mixed together in the same squadron.", pg: 13 } };
 var SQ_BIG = { min: 2, max: 3, cite: { s: "Grand cruisers and battleships may be formed into squadrons of two to three "
@@ -5343,8 +5343,11 @@ function resolveFleet(fleetIntent, catalog){
     sqOf[tag] = ms;
     var n = ms.reduce(function(a, m){ return a + Math.max(1, m.hulls); }, 0);
     var nTxt = n + (n === 1 ? " ship" : " ships");
-    var X = (L.sqx || []).filter(function(x){
-      return ms.some(function(m){ return m.own && L.secs[m.si] && new RegExp(x.sec, "i").test(String(L.secs[m.si].t).trim()); }); })[0];
+    /* the list's own squadron kind: the first ship's, else any ship's (a Rok
+       with a kroozer is "not only Roks", J232) */
+    var inX = function(m, x){ return m.own && L.secs[m.si] && new RegExp(x.sec, "i").test(String(L.secs[m.si].t).trim()); };
+    var X = (L.sqx || []).filter(function(x){ return ms.length && inX(ms[0], x); })[0] ||
+      (L.sqx || []).filter(function(x){ return ms.some(function(m){ return inX(m, x); }); })[0];
     if(X){
       var outside = X.only && ms.some(function(m){
         return !(m.own && L.secs[m.si] && new RegExp(X.sec, "i").test(String(L.secs[m.si].t).trim())); });
@@ -5560,7 +5563,9 @@ function resolveFleet(fleetIntent, catalog){
         var groups = {};
         mine.forEach(function(m){
           if(inSec(m, C.tiddla)) return;
-          var g = inSec(m, C.big) && m.intent && m.intent.sq ? "sq:" + m.intent.sq : "u:" + members.indexOf(m);
+          /* a big ship skwadron (1-2 kroozers) and a Rok skwadron (1-4 Roks,
+             Fleets p. 372, J232) are one skwadron by their tag */
+          var g = (inSec(m, C.big) || inSec(m, C.rok)) && m.intent && m.intent.sq ? "sq:" + m.intent.sq : "u:" + members.indexOf(m);
           groups[g] = 1; });
         var total = tid + Object.keys(groups).length, t1 = Math.min(tid, rr);
         S1.tiddla = tid; S1.total = total;
@@ -5600,6 +5605,14 @@ function resolveFleet(fleetIntent, catalog){
       if(sets.some(function(x){ return x; }) && sets.some(function(x){ return x !== sets[0]; }))
         out.push({ ok: false, t: "Squadron " + tag + ": the clan on every capital ship",
           v: sets.map(function(x){ return x || "none"; }).join(" / "), s: citeText(C.clan_sq) });
+    });
+    /* a skwadron is one Warlord's (J232, Fleets p. 373: "you can't split up
+       skwadrons"); a tag across two Warlords is a split skwadron */
+    if(C.split) sqTags.forEach(function(tag){
+      var wl = [];
+      sqOf[tag].forEach(function(m){ var w = CZ.of[members.indexOf(m)]; if(w >= 0 && wl.indexOf(w) < 0) wl.push(w); });
+      if(wl.length > 1) out.push({ ok: false, t: "Squadron " + tag + ": one Warlord",
+        v: wl.map(function(w){ return "Warlord " + (CZ.warlords.indexOf(members[w]) + 1); }).join(" + "), s: citeText(C.split) });
     });
   }
   /* A Warlord aboard a space hulk: "Extra Powerfields costs +50 pts instead

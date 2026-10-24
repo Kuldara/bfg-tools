@@ -5970,6 +5970,205 @@
       "why": "s.372: \"1-2 Kroozers, chosen from the following list:\" (S0826)"
     },
     {
+      "id": "clanz-rok-skwadron-of-four-is-one-skwadron",
+      "page": 372,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 500,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Ravager attack ship",
+            "n": 3
+          },
+          {
+            "entry": "^Rok",
+            "sq": "A",
+            "repeat": 4
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Warlord 1: skwadrons",
+            "ok": true,
+            "v": "1 tiddla + 1 other / 1 + 1"
+          },
+          {
+            "label": "^Squadron A$",
+            "ok": true,
+            "v": "4 ships"
+          }
+        ]
+      },
+      "why": "s.372: \"Rok skwadron / 1–4 Roks / Rok (pg. 392) ... 80 pts\" - Rok skwadron on 1-4 Rokia, ja se on yksi skwadron kuten Big ship skwadron (1-2 kroozeria). s.373: \"Each skwadron must be fielded with the number of ships chosen for it in this list; you can't split up skwadrons or add more ships to them.\" Nelja samaan skwadroniin merkittya Rokia on yksi 'other' skwadron, ei nelja (J232)."
+    },
+    {
+      "id": "clanz-rok-skwadron-at-most-four",
+      "page": 372,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Ravager attack ship",
+            "n": 3
+          },
+          {
+            "entry": "^Rok",
+            "sq": "A",
+            "repeat": 5
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Squadron A$",
+            "ok": false,
+            "v": "5 ships"
+          }
+        ]
+      },
+      "why": "s.372: \"Rok skwadron / 1–4 Roks / Rok (pg. 392) ... 80 pts\" - Rok skwadron on 1-4 Rokia, ja se on yksi skwadron kuten Big ship skwadron (1-2 kroozeria). s.373: \"Each skwadron must be fielded with the number of ships chosen for it in this list; you can't split up skwadrons or add more ships to them.\" Viides Rok ei mahdu samaan skwadroniin (J232)."
+    },
+    {
+      "id": "clanz-rok-skwadron-only-roks",
+      "page": 372,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 500,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Ravager attack ship",
+            "n": 3
+          },
+          {
+            "entry": "^Rok",
+            "sq": "A"
+          },
+          {
+            "entry": "^Lite kroozer",
+            "sq": "A"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Squadron A$",
+            "ok": false,
+            "v": "not only Roks"
+          }
+        ]
+      },
+      "why": "s.372: \"Rok skwadron / 1–4 Roks / Rok (pg. 392) ... 80 pts\" - Rok skwadron on 1-4 Rokia, ja se on yksi skwadron kuten Big ship skwadron (1-2 kroozeria). s.373: \"Each skwadron must be fielded with the number of ships chosen for it in this list; you can't split up skwadrons or add more ships to them.\" Rok skwadronissa on vain Rokeja, kuten Big ship skwadronissa vain kroozereita (J232)."
+    },
+    {
+      "id": "clanz-deathskullz-free-looted-are-not-gubbins",
+      "page": 369,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 500,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Kill kroozer",
+            "ups": [
+              {
+                "upgrade": "^Clan: Deathskullz"
+              }
+            ]
+          },
+          {
+            "entry": "^Ravager attack ship",
+            "n": 3,
+            "ups": [
+              {
+                "upgrade": "^Clan: Deathskullz"
+              },
+              {
+                "upgrade": "^Looted Torpedoes \\(Deathskullz: free\\)"
+              }
+            ]
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Warlord 1: Gubbins",
+            "absent": true
+          },
+          {
+            "label": "^Warlord 1: skwadrons",
+            "ok": true
+          }
+        ]
+      },
+      "why": "s.369: \"Deathskullz capital ships and/or tiddla skwadrons have 'looted' upgrades (torpedoes and/or lances) for no additional cost.\" ja \"Clan upgrades are different from Gubbins and may be taken (and paid for) in addition to Gubbins by individual skwadrons.\" Klaanin ilmainen looted-rivi kuuluu jokaiselle Deathskullz-skwadronille, ei Warlordin Gubbins-kiintioon (s.372 \"his own ship or escort skwadron\"). Warlord on Kill kroozerilla, tiddla saa ilmaiset Looted Torpedoesit (J7, J232)."
+    },
+    {
+      "id": "clanz-skwadron-not-split-between-warlords",
+      "page": 373,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Ravager attack ship",
+            "n": 3,
+            "cmd": 0
+          },
+          {
+            "entry": "^Terror ship",
+            "sq": "A",
+            "cmd": 0
+          },
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Ravager attack ship",
+            "n": 3,
+            "cmd": 1
+          },
+          {
+            "entry": "^Kill kroozer",
+            "sq": "A",
+            "cmd": 1
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Squadron A: one Warlord",
+            "ok": false,
+            "v": "Warlord 1 + Warlord 2"
+          }
+        ]
+      },
+      "why": "s.373: \"Each skwadron must be fielded with the number of ships chosen for it in this list; you can't split up skwadrons or add more ships to them.\" ja s.372 \"A Warlord's re-rolls only count for the skwadrons under his command\" - skwadron on yhden Warlordin. Sama tunniste kahden Warlordin kroozereilla on jaettu skwadron (J232)."
+    },
+    {
       "id": "clanz-largest-warlord-three-rerolls",
       "page": 373,
       "fleet": {

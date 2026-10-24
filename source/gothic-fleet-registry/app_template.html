@@ -659,6 +659,21 @@ details.rules.auto[open]>summary::after{content:" \2013"}
 .wlpanel{border-left:4px solid var(--wl)}
 .wlpanel.on{border-color:var(--wl);box-shadow:0 0 0 1px var(--wl) inset}
 .unit.wlc{box-shadow:inset 5px 0 0 var(--wl)}
+/* J232: Send to beside the grip, the skwadrons in the Warlord block, the
+   Ork words in plain English */
+.uhead .wlsend{max-width:11em;min-height:26px;padding:0 4px;border:1px solid var(--line);border-left:5px solid var(--wl);
+  border-radius:var(--r);background:var(--panel);color:var(--ink);font:500 12px/1.2 var(--sans);cursor:pointer}
+.wlsk{flex:1 1 260px;margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px;font-size:12.5px;line-height:1.35}
+.wlsk li{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}
+.wlsk .skk{flex:0 0 auto;min-width:9.5em;padding-left:7px;box-shadow:inset 3px 0 0 var(--wl);color:var(--ink-2);font-size:11.5px}
+.wlsk .skn{font-weight:600}
+.wlsk select{max-width:100%;min-height:28px;font:500 12px/1.2 var(--sans)}
+/* the gloss on a line of its own under the section's name, so the chips
+   beside the name keep their width on a phone */
+.sec>summary:has(.gloss){flex-wrap:wrap;row-gap:2px}
+.sec summary .gloss{order:9;flex:1 0 100%;margin-left:22px;font:400 11.5px/1.3 var(--sans);color:var(--ink-3);text-transform:none;letter-spacing:0}
+.limitchip.wlto{white-space:nowrap}
+.segb[disabled]{opacity:.45;cursor:default}
 .unit.wlhead{margin-top:10px}
 .wlbar{position:sticky;top:0;z-index:15;display:flex;flex-direction:column;gap:6px;padding:8px 12px;
   background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
@@ -2656,6 +2671,188 @@ function freeSqTag(){
   const used = S.units.map(u => u.sq).filter(Boolean);
   return "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").filter(c => used.indexOf(c) < 0)[0] || "Z";
 }
+/* J232 (user 24.10.2026: "aina kun on tiddla jne voisi olla heti
+   selkokielella esim tiddla(escort) skwadrons"): the book's Ork words with
+   plain English beside them. On screen only - the book's section names, the
+   domain's check rows and the saved fleet keep the book's words (Fleets
+   pp. 359-360, 370, 372, 392). */
+const ORK_SEC_GLOSS = [
+  [/^tiddla skwadron$/i, "escorts \u00b7 3\u201310 in a skwadron"],
+  [/^big ship skwadron$/i, "kroozers = cruisers \u00b7 1\u20132 in a skwadron"],
+  [/uge ship skwadron$/i, "one battleship or battlekroozer"],
+  [/^roks$/i, "hollowed-out asteroids \u00b7 1\u20134 in a skwadron"],
+  [/^ork roks$/i, "hollowed-out asteroids \u00b7 up to 4 in a squadron"],
+  [/^space hulks$/i, "one Warlord's whole command"],
+  [/^gubbins$/i, "upgrades \u00b7 Warlord's own ship, one per re-roll"],
+  [/^clan upgrades$/i, "his clan on every skwadron"],
+  [/^mob rule$/i, "+1 Ld with 6+ escorts"],
+  [/^young gunz$/i, "a free escort at Ld 5\u20136"]
+];
+function orkSecGloss(SL, sec){
+  if(!/^Orks/.test(String(SL && SL.nm))) return "";
+  const g = ORK_SEC_GLOSS.find(x => x[0].test(String(sec.t).trim()));
+  return g ? g[1] : "";
+}
+/* The same in a sentence the builder or the domain wrote: the first of each
+   word gets its English in brackets. */
+const ORK_WORDS = [[/\btiddla\b(?!\s*\()/i, "escort"], [/\bkroozers\b(?!\s*\()/i, "cruisers"],
+                   [/\bkroozer\b(?!\s*\()/i, "cruiser"], [/[\u2019']Uge ship\b(?!\s*\()/i, "battleship"]];
+function orkPlain(s){
+  s = String(s == null ? "" : s);
+  ORK_WORDS.forEach(([re, en]) => { s = s.replace(re, m => m + " (" + en + ")"); });
+  return s;
+}
+/* J232: a Warlord's skwadrons as the book counts them (Fleets p. 372): a
+   tiddla, an 'Uge ship and a hulk each by itself, 1-2 kroozers and 1-4 Roks
+   by their tag (the domain reads them the same way). */
+const SKW_MAX = { kroozer: 2, rok: 4 };
+const SKW_LABEL = { tiddla: "tiddla (escorts)", kroozer: "kroozers (cruisers)", uge: "'Uge ship (battleship)", rok: "Roks", hulk: "Space Hulk" };
+function skwKind(u){
+  const C = L().clanz;
+  if(!C || !u || u.lst) return "";
+  return clanzIn(u.s, C.tiddla) ? "tiddla" : clanzIn(u.s, C.big) ? "kroozer" : clanzIn(u.s, C.uge) ? "uge"
+    : clanzIn(u.s, C.rok) ? "rok" : clanzIn(u.s, C.hulk) ? "hulk" : "";
+}
+function warlordSkwadrons(RF, wi){
+  const out = [], byTag = {};
+  S.units.forEach((u, i) => {
+    if(!RF.command || RF.command[i] !== wi) return;
+    const k = skwKind(u);
+    if(!k) return;
+    const h = RF.units[i] ? Math.max(1, RF.units[i].hulls | 0) : 1;
+    const key = SKW_MAX[k] && u.sq ? k + ":" + u.sq : "";
+    if(key && byTag[key]){ byTag[key].units.push(i); byTag[key].hulls += h; return; }
+    const g = { kind: k, units: [i], tag: key ? u.sq : "", hulls: h };
+    if(key) byTag[key] = g;
+    out.push(g);
+  });
+  return out;
+}
+/* two skwadrons of his that would make one, in words for Needs */
+function skwJoinable(RF, wi){
+  const gs = warlordSkwadrons(RF, wi);
+  for(const k of ["kroozer", "rok"]){
+    const of = gs.filter(g => g.kind === k).sort((a, b) => a.hulls - b.hulls);
+    if(of.length >= 2 && of[0].hulls + of[1].hulls <= SKW_MAX[k]) return k === "kroozer" ? "two kroozers" : "the Roks";
+  }
+  return "";
+}
+const skwNames = (RF, g) => g.units.map(i => shipCall(RF.units[i]) + (RF.units[i].hulls > 1 ? " \u00d7" + RF.units[i].hulls : "")).join(" + ");
+/* The Warlord block's Skwadrons (J232, user 24.10.2026: "kun warbossille
+   laittaa capital ships niin nehan pitaisi voida jo tuossa laittaa
+   squadroniin ... sama rok yksikoille"): one line per skwadron, and on a
+   kroozer or Rok skwadron a menu of the moves the book allows - split it, or
+   join one of his own of the same kind that has room. Pair with / Split on
+   the kroozer's row (J226) is this menu now. */
+function skwadronsHTML(RF, wi){
+  const gs = warlordSkwadrons(RF, wi);
+  if(!gs.length) return `<span class="abv">nothing yet</span>`;
+  return `<ol class="wlsk">${gs.map(g => {
+    const max = SKW_MAX[g.kind];
+    let pick = "";
+    if(max){
+      const opts = [`<option value="" selected>${g.units.length > 1 ? "in one skwadron" : "on its own"}</option>`];
+      if(g.units.length > 1 || g.tag) opts.push(`<option value="split">split into single ships</option>`);
+      gs.forEach(h => { if(h !== g && h.kind === g.kind && g.hulls + h.hulls <= max)
+        opts.push(`<option value="join:${h.units[0]}">join ${esc(skwNames(RF, h))}</option>`); });
+      if(opts.length > 1) pick = `<select class="wlsq" data-wlsq="${g.units.join(",")}" aria-label="${esc("Skwadron of " + skwNames(RF, g))}"
+        title="${esc(g.kind === "kroozer" ? "A big ship skwadron is 1-2 kroozers (Fleets p. 372)" : "A Rok skwadron is 1-4 Roks (Fleets p. 372)")}">${opts.join("")}</select>`;
+    }
+    return `<li><span class="skk">${esc(SKW_LABEL[g.kind])}${max ? " " + g.hulls + "/" + max : ""}</span><span class="skn">${esc(skwNames(RF, g))}</span>${pick}</li>`;
+  }).join("")}</ol>`;
+}
+/* J232: ships handed to a Warlord are his (u.cmd) with his clan - the one
+   chosen for him, or the one all his skwadrons already wear (Fleets p. 369:
+   "A Warlord and his skwadrons may only be from one clan"). */
+function handToWarlord(us, to, RF){
+  const w = S.units[to], W = (RF.warlords || []).filter(x => x.unit === to)[0];
+  const clan = w.clan || (W && W.clans && W.clans.length === 1 ? W.clans[0] : "");
+  us.forEach(x => { x.cmd = w.uid; if(clan) setClan(x, clan); });
+}
+/* Every Warlord's skwadrons right under him, in his order; a row no Warlord
+   leads keeps its place (J232). order: the Warlords' unit indexes in the
+   order wanted, else as they stand. */
+function clanzRegroup(order){
+  const RF = fleetResolved(), ws = warlordIdx(RF);
+  if(!ws.length || !RF.command) return;
+  const slots = [], seq = [];
+  S.units.forEach((u, i) => { if(ws.indexOf(i) >= 0 || RF.command[i] >= 0) slots.push(i); });
+  (order || ws).forEach(w => { seq.push(S.units[w]); S.units.forEach((u, i) => { if(RF.command[i] === w) seq.push(u); }); });
+  if(seq.length !== slots.length) return;
+  const next = S.units.slice();
+  slots.forEach((p, k) => { next[p] = seq[k]; });
+  S.units.splice(0, S.units.length, ...next);
+}
+/* Send to (J232, user 24.10.2026: "drag napin vieressa ... send to
+   alasveto"): the whole skwadron - his ships of its tag (Fleets p. 373:
+   "you can't split up skwadrons") - goes to the other Warlord, with his
+   clan, to the end of his group. */
+function sendSkwadron(u, uid){
+  const RF = fleetResolved(), ws = warlordIdx(RF), i = S.units.indexOf(u);
+  const to = ws.filter(w => S.units[w].uid === uid)[0];
+  if(to == null || i < 0 || !RF.command) return false;
+  const from = RF.command[i], k = skwKind(u);
+  if(to === from || !k) return false;
+  const group = SKW_MAX[k] && u.sq ? S.units.filter((x, j) => x.sq === u.sq && RF.command[j] === from && skwKind(x) === k) : [u];
+  handToWarlord(group, to, RF);
+  group.forEach(x => { S.units.splice(S.units.indexOf(x), 1); S.units.push(x); });
+  clanzRegroup();
+  NOTICE = { u: u, items: [{ message: group.map(x => shipCall(resolveUnit(x))).join(" + ") + " sent to Warlord " + (ws.indexOf(to) + 1) }] };
+  JUST = { unit: u };
+  return true;
+}
+/* Drag (J232, user 24.10.2026: "noiden laivojen raahaaminen toisen warbos
+   alle saisi vaihtaa tuon varin ja kelle kuuluu"): a skwadron row moved
+   under another Warlord is his from then on - the nearest Warlord above it,
+   the domain's own reading of a row without one (J216) - with his clan; it
+   leaves a skwadron whose other ships stay behind. A Warlord moved takes his
+   skwadrons along. */
+function clanzAfterMove(u){
+  const RF = fleetResolved(), ws = warlordIdx(RF), i = S.units.indexOf(u);
+  if(!ws.length || i < 0 || !RF.command) return;
+  if(ws.indexOf(i) < 0 && skwKind(u) && RF.command[i] >= 0){
+    const above = ws.filter(w => w < i), to = above.length ? above[above.length - 1] : ws[0], from = RF.command[i];
+    if(to !== from){
+      const left = u.sq && S.units.some((x, j) => x !== u && x.sq === u.sq && RF.command[j] === from);
+      if(left) delete u.sq;
+      handToWarlord([u], to, RF);
+      NOTICE = { u: u, items: [{ message: shipCall(resolveUnit(u)) + " is now Warlord " + (ws.indexOf(to) + 1) + "'s" +
+        (left ? " (it left its skwadron)" : "") }] };
+    }
+  }
+  clanzRegroup();
+}
+/* A Warlord's arrow key moves his whole group past the next one. */
+function clanzMoveBlock(u, dir){
+  const RF = fleetResolved(), ws = warlordIdx(RF), k = ws.indexOf(S.units.indexOf(u));
+  if(k < 0) return false;
+  const j = k + dir;
+  if(j < 0 || j >= ws.length) return true;
+  const order = ws.slice();
+  order[k] = ws[j]; order[j] = ws[k];
+  clanzRegroup(order);
+  JUST = { unit: u };
+  save();
+  return true;
+}
+/* J232: an Ork hulk with a Warlord aboard (Fleets p. 390, in every Ork list
+   that has one) and what a clan gives the hulk (p. 369 read with p. 390:
+   "Hulks cannot take any upgrade that improves Boarding Value, Turning or
+   Speed"). */
+const isOrkHulkUnit = R => !!R && /\bork hulk\b/i.test(String((R.entry && R.entry.label) || R.className || ""));
+const HULK_FX = [
+  [/^Maniac Gunners/, ["re-roll gunz firepower", "hulk: one battery per turn"]],
+  [/^Looted Torpedoes/, ["re-roll torpedo strength", "hulk: one salvo per turn"]],
+  [/^Mad Meks/, ["hulk: ignore a critical on a 6"]]
+];
+const HULK_CLAN_FX = {
+  "Goffs": ["+1 to boarding rolls, not boarding value", "+1 Ld to ram"],
+  "Evil Sunz": ["!not for a hulk: speed (p. 390)"],
+  "Bad Moonz": ["Maniac Gunners: one battery per turn"],
+  "Deathskullz": ["free looted torps / lances"],
+  "Blood Axes": ["Warlord: random IN refit, +20"],
+  "Snakebites": ["+1 to Brace"]
+};
 /* Take one clan's row on a unit, where the unit is offered it; "" takes
    none of them (the rows go back to their open state). */
 function setClan(u, name){
@@ -2690,7 +2887,7 @@ function clanInfo(){
   }));
   return out;
 }
-const clanCost = c => c && c.p ? "+" + c.p + " pts per capital ship, per tiddla skwadron" : "free";
+const clanCost = c => c && c.p ? "+" + c.p + " pts per capital ship, once per tiddla (escort) skwadron" : "free";
 /* The same as game effects only, one tag each (user 20.10.2026: "korostaen
    jotenkin etta heti huomaa ... ei tarvi sanallista kuvausta ollenkaan, vain
    ne pelivaikutukset"). Read from the clan rows' text, Fleets p. 369; a "!"
@@ -2701,7 +2898,7 @@ const CLAN_FX = {
   "Evil Sunz": ["+5cm speed"],
   "Bad Moonz": ["re-roll gunz firepower"],
   "Deathskullz": ["free looted torps / lances"],
-  "Blood Axes": ["Warlord: random IN refit, +20", "tiddla of 6+: 3 IN/Chaos escorts"],
+  "Blood Axes": ["Warlord: random IN refit, +20", "tiddla (escort) skwadron of 6+: up to 3 IN/Chaos escorts"],
   "Snakebites": ["+1 to Brace", "!capital ships: hulks / roks only"]
 };
 /* The fleet-list upgrades as game effects, one tag each (J229 Orks, J230
@@ -2799,9 +2996,12 @@ const UP_FX = [
   [/^Hive Mind Imperative/, null, ["auto-pass one Command check or Ld test"]],
   [/^Hive Mind Influence/, null, ["+1 fleet re-roll"]]
 ];
-function upFx(up, who){
+function upFx(up, who, hulk){
   const lab = String(up.label || ""), list = String(up.list || ""), cm = /^Clan: (.+?) \(/.exec(lab);
-  if(cm && CLAN_FX[cm[1]]) return { tags: CLAN_FX[cm[1]], color: CLAN_COLOR[cm[1]] };
+  /* J232: on an Ork hulk, or a Warlord aboard one (Fleets p. 390) */
+  const onHulk = !!hulk || /\bork hulk\b/i.test(String(who || ""));
+  if(cm && CLAN_FX[cm[1]]) return { tags: (onHulk && HULK_CLAN_FX[cm[1]]) || CLAN_FX[cm[1]], color: CLAN_COLOR[cm[1]] };
+  if(onHulk || /\(Space Hulk/.test(lab)){ const h = HULK_FX.find(x => x[0].test(lab)); if(h) return { tags: h[1], color: null }; }
   const hit = UP_FX.find(x => x[0].test(lab) && (!x[1] || x[1].test(list)) && (!x[3] || x[3].test(String(who || ""))));
   return hit ? { tags: hit[2], color: null } : null;
 }
@@ -2815,8 +3015,8 @@ function optFxHTML(text, list){
   return fx ? `<span class="upfx">${fxTagsHTML(fx.tags)}</span>` : "";
 }
 const fxTagsHTML = tags => tags.map(t => t[0] === "!" ? `<span class="fx lim">${esc(t.slice(1))}</span>` : `<span class="fx">${esc(t)}</span>`).join("");
-function clanLineHTML(c, I){
-  const fx = CLAN_FX[c] || [I.desc];
+function clanLineHTML(c, I, hulk){
+  const fx = (hulk && HULK_CLAN_FX[c]) || CLAN_FX[c] || [I.desc];
   return `<li style="--wl:${CLAN_COLOR[c] || "var(--ink-3)"}" title="${esc(I.desc + " (" + clanCost(I) + ", Fleets p. 369)")}"><b>${esc(c)}<span class="wlhint">${I.p ? "+" + I.p + " pts" : "free"}</span></b><span class="fxs">${
     fx.map(t => t[0] === "!" ? `<span class="fx lim">${esc(t.slice(1))}</span>` : `<span class="fx">${esc(t)}</span>`).join("")
   }</span></li>`;
@@ -2835,19 +3035,23 @@ function setWarlordRerolls(u, n){
 function warlordNeeds(W, RF){
   if(!W) return { ok: true, text: "" };
   if(W.hulk) return W.units.length === 1 ? { ok: true, text: "the Space Hulk is all his skwadrons" }
-    : { ok: false, text: "a hulk's Warlord leads only the hulk: move the other ships to another Warlord" };
+    : { ok: false, text: "a hulk's Warlord leads only the hulk: send the other ships to another Warlord" };
   const rr = W.rr, tid = W.tiddla || 0, total = W.total || 0, oth = total - Math.min(tid, rr);
-  const say = [];
-  if(tid < rr) say.push("add " + (rr - tid) + " tiddla skwadron" + (rr - tid > 1 ? "s" : "") + " (3 or more escorts)");
-  if(oth < rr) say.push("add " + (rr - oth) + " other skwadron" + (rr - oth > 1 ? "s" : "") + " (a kroozer or two, an 'Uge ship or a Rok)");
-  if(oth > rr) say.push((oth - rr) + " skwadron" + (oth - rr > 1 ? "s" : "") + " too many: " +
-    (W.lone && W.lone.length >= 2 ? "pair two kroozers, " : "") + "buy a re-roll or give one to another Warlord");
-  if(W.uge && W.kro < 2) say.push("an 'Uge ship needs two kroozers");
-  if(W.uge > 1) say.push("only one 'Uge ship");
+  const say = [], s = n => n > 1 ? "s" : "";
+  /* J232: the Ork words with their English */
+  if(tid < rr) say.push("add " + (rr - tid) + " tiddla (escort) skwadron" + s(rr - tid) + " of 3 or more escorts");
+  if(oth < rr) say.push("add " + (rr - oth) + " other skwadron" + s(rr - oth) + ": 1\u20132 kroozers (cruisers), an 'Uge ship (battleship) or 1\u20134 Roks");
+  if(oth > rr){
+    const join = skwJoinable(RF, W.unit);
+    say.push((oth - rr) + " skwadron" + s(oth - rr) + " too many: " + (join ? "put " + join + " in one skwadron, " : "") +
+      "buy a re-roll or send one to another Warlord");
+  }
+  if(W.uge && W.kro < 2) say.push("an 'Uge ship (battleship) needs two kroozers (cruisers)");
+  if(W.uge > 1) say.push("only one 'Uge ship (battleship)");
   if(W.clans && W.clans.length > 1) say.push("one clan only");
-  if(W.gubOff) say.push("Gubbins only on his own ship");
+  if(W.gubOff) say.push("Gubbins (his upgrades) only on his own ship");
   return say.length ? { ok: false, text: say.join("; ") }
-    : { ok: true, text: rr + " tiddla + " + rr + " other skwadron" + (rr > 1 ? "s" : "") + " \u2014 complete" };
+    : { ok: true, text: rr + " tiddla (escort) + " + rr + " other skwadron" + s(rr) + " \u2014 complete" };
 }
 /* Clanz (J226): the upgrade rows the fleet pane leaves out, by unit index.
    The Warlord's re-rolls are his block's 1-2-3, and the Gubbins his re-rolls
@@ -2922,53 +3126,55 @@ function fleetControlsHTML(RF){
   }
   const ws = warlordIdx(RF), wa = activeWarlordIdx(RF), CI = ws.length ? clanInfo() : {};
   ws.forEach((wi, k) => {
-    const tx = leadsText(RF, wi), W = (RF.warlords || []).filter(x => x.unit === wi)[0];
-    const need = warlordNeeds(W, RF), rr = W ? W.rr : 1;
+    const W = (RF.warlords || []).filter(x => x.unit === wi)[0];
+    const need = warlordNeeds(W, RF), rr = W ? W.rr : 1, hulk = !!(W && W.hulk);
     const clan = S.units[wi].clan || (W && W.clans && W.clans.length === 1 ? W.clans[0] : "");
     const ship = W && W.ship != null ? shipCall(RF.units[W.ship]) : "";
-    const seg = (attr, val, lab, on, tip) => `<button type="button" class="segb${on ? " on" : ""}" ${attr}="${wi}" ${val}
-      aria-pressed="${on}"${tip ? ` title="${esc(tip)}"` : ""}>${esc(lab)}</button>`;
+    const seg = (attr, val, lab, on, tip, off) => `<button type="button" class="segb${on ? " on" : ""}" ${attr}="${wi}" ${val}
+      aria-pressed="${on}"${tip ? ` title="${esc(tip)}"` : ""}${off ? " disabled" : ""}>${esc(lab)}</button>`;
     add(wi, `<div class="wlpanel${wi === wa ? " on" : ""}" style="--wl:${warlordColor(S.units[wi], k)}">
       <div class="wlrow"><b class="wlname">Warlord ${k + 1}</b>${ws.length > 1 || wi !== wa
         ? `<button type="button" class="wlact${wi === wa ? " on" : ""}" data-wlactive="${wi}" aria-pressed="${wi === wa}">${
             wi === wa ? "New skwadrons come here" : "Add skwadrons here"}</button>` : `<span class="wlhint">new skwadrons come here</span>`}</div>
       <div class="wlrow"><span class="abl">Re-rolls</span><span class="seg">${[1, 2, 3].map(n =>
         seg("data-wlrr", `data-n="${n}"`, String(n), rr === n, n === 1 ? "One re-roll, included" : (n - 1) + " extra")).join("")}</span>
-        <span class="wlhint">one tiddla + one other skwadron per re-roll</span></div>
+        <span class="wlhint">each re-roll: one tiddla (escort) skwadron + one other skwadron</span></div>
       <div class="wlrow"><span class="abl">Clan</span><span class="seg wrap">${seg("data-wlclan", `data-c=""`, "None", !clan && !(W && W.clans && W.clans.length > 1))}${
         CLANS.map(c => seg("data-wlclan", `data-c="${esc(c)}"`, c, clan === c,
-          (CI[c] ? CI[c].desc + " (" + clanCost(CI[c]) + ")" : "") + " Every skwadron of his takes the clan (Fleets p. 369).")).join("")}</span></div>
+          hulk && c === "Evil Sunz" ? "Not for a hulk: it gives speed (Fleets p. 390)"
+            : (CI[c] ? CI[c].desc + " (" + clanCost(CI[c]) + ")" : "") + " Every skwadron of his takes the clan (Fleets p. 369).",
+          hulk && c === "Evil Sunz" && clan !== c)).join("")}</span></div>
       <div class="wlrow"><span class="abl"></span><ul class="wlclans">${(clan && CI[clan] ? [clan] : CLANS.filter(c => CI[c]))
-        .map(c => clanLineHTML(c, CI[c])).join("")}</ul></div>
-      <div class="wlrow"><span class="abl">Leads</span><span class="abv">${esc(tx || "nothing yet")}</span></div>
+        .map(c => clanLineHTML(c, CI[c], hulk)).join("")}</ul></div>
+      <div class="wlrow"><span class="abl">Skwadrons</span>${skwadronsHTML(RF, wi)}</div>
       <div class="wlrow"><span class="abl">${need.ok ? "Done" : "Needs"}</span><span class="wlneed ${need.ok ? "ok" : "bad"}">${esc(need.text)}</span></div>
-      ${ship ? `<div class="wlrow"><span class="abl">Gubbins</span><span class="wlhint">${W.gub || 0} / ${rr}, on his own ship: ${esc(ship)}</span></div>` : ""}
+      ${ship ? `<div class="wlrow"><span class="abl">Gubbins</span><span class="wlhint">upgrades on his own ship only: ${W.gub || 0} / ${rr}, ${esc(ship)}${
+        hulk ? " \u00b7 double cost, none for speed, turning or boarding value (Fleets pp. 372, 390)" : ""} \u00b7 Klaws, Shokk-Attack Lance and Assault Karrier on any capital ship (p. 371)</span></div>` : ""}
     </div>`);
   });
-  /* Kroozers pair by a tap (Fleets p. 372: a big ship skwadron is one or
-     two kroozers) */
-  if(L().clanz) (RF.warlords || []).forEach(W => {
-    (W.units || []).forEach(i => {
-      const u = S.units[i];
-      if(!u || u.lst || !clanzIn(u.s, L().clanz.big)) return;
-      const mate = u.sq ? S.units.filter((x, j) => j !== i && x.sq === u.sq && W.units.indexOf(j) >= 0)[0] : null;
-      if(mate) add(i, `<div class="uctl aboard"><span class="abl">Skwadron</span><span class="abv">with ${esc(shipCall(RF.units[S.units.indexOf(mate)]))}</span>
-        <button type="button" class="segb" data-wlsplit="${i}">Split</button></div>`);
-      else {
-        const j = (W.lone || []).filter(x => x !== i)[0];
-        if(j != null) add(i, `<div class="uctl aboard"><span class="abl">Skwadron</span><span class="abv">on its own</span>
-          <button type="button" class="segb" data-wlpair="${i}" data-with="${j}">Pair with ${esc(shipCall(RF.units[j]))}</button></div>`);
-      }
-    });
-  });
+  /* Send to (J232, user 24.10.2026: "saisi myos olla drag napin vieressa
+     ... send to alasveto"): beside the grip, the Warlord whose skwadron
+     this is; another one sends the whole skwadron to him (sendSkwadron).
+     It replaces the Warlord menu under the row (J216) and keeps its class,
+     so the old drivers still find it. A hulk's Warlord leads only the hulk
+     (Fleets p. 373). */
+  const send = out.send = [];
   if(ws.length >= 2) S.units.forEach((u, i) => {
-    const w = RF.command[i];
-    if(w == null || w < 0) return;
-    const auto = !u.cmd || ws.every(wi => S.units[wi].uid !== u.cmd);
-    add(i, `<div class="uctl aboard"><span class="abl">Warlord</span><select class="wlin" data-u="${i}"
-      title="The Warlord whose skwadron this is (Fleets p. 372)">
-      <option value=""${auto ? " selected" : ""}>Automatic${auto ? ": Warlord " + (ws.indexOf(w) + 1) : ""}</option>${
-      ws.map((wi, k) => `<option value="${esc(S.units[wi].uid)}"${!auto && S.units[wi].uid === u.cmd ? " selected" : ""}>Warlord ${k + 1}</option>`).join("")}</select></div>`);
+    const w = RF.command && RF.command[i];
+    if(w == null || w < 0 || !skwKind(u)) return;
+    send[i] = `<select class="wlin wlsend" data-u="${i}" style="--wl:${warlordColor(S.units[w], ws.indexOf(w))}"
+      aria-label="Warlord of this skwadron" title="The Warlord whose skwadron this is - pick another to send the whole skwadron to him, with his clan (Fleets pp. 369, 372-373)">${
+      ws.map((wi, k) => {
+        const W2 = (RF.warlords || []).filter(x => x.unit === wi)[0], cl = S.units[wi].clan || "", off = wi !== w && !!(W2 && W2.hulk);
+        return `<option value="${esc(S.units[wi].uid)}"${wi === w ? " selected" : ""}${off ? " disabled" : ""}>${wi === w ? "" : "\u2192 "}Warlord ${k + 1}${
+          cl ? " \u00b7 " + esc(cl) : ""}${off ? " (leads his hulk only)" : ""}</option>`; }).join("")}</select>`;
+  });
+  /* A Warlord aboard an Ork hulk (J232, Fleets p. 390) - Da Ork Clanz and
+     Waaagh! alike */
+  (RF.aboard || []).forEach(a => {
+    const cm = RF.units[a.unit], sh = a.ship != null ? RF.units[a.ship] : null;
+    if(!cm || !sh || !/warlord/i.test(String((cm.entry && cm.entry.label) || "")) || !isOrkHulkUnit(sh)) return;
+    add(a.unit, `<div class="uctl aboard"><span class="abl">On the hulk</span><span class="wlhint">no doubled boarding value; Maniac Gunners and Looted Torpedoes one weapon system per turn; Extra Powerfields +50; Mad Meks ignore a critical on a 6 (Fleets p. 390)</span></div>`);
   });
   return out;
 }
@@ -3487,7 +3693,7 @@ function renderCatalogue(){
     /* Clanz (J226): which Warlord a + here adds to */
     const wlTo = WL_TO && SL === L() && clanzSkwadronSec(L().secs.indexOf(sec)) ? WL_TO : "";
     return `<details class="sec${pick ? "" : " ref"}" data-fold="${esc(fk)}"${open ? " open" : ""}>
-      <summary>${esc(title(sec.t))}${hdr ? `<span class="limitchip">max ${hdr.max}</span>` : ""}${
+      <summary>${esc(title(sec.t))}${orkSecGloss(SL, sec) ? `<span class="gloss">${esc(orkSecGloss(SL, sec))}</span>` : ""}${hdr ? `<span class="limitchip">max ${hdr.max}</span>` : ""}${
         wlTo ? `<span class="limitchip wlto" style="--wl:${WL_TO_COLOR}" title="The catalogue's + adds a skwadron to this Warlord; pick another one in Buying for">for ${esc(wlTo)}</span>` : ""}${
         frr ? `<span class="limitchip" title="${esc(frr.source + " (Fleets p. " + frr.page + ")")}">${esc("fleet: " + frr.text)}</span>` : ""}
       ${pick ? `<span class="n">${
@@ -3653,7 +3859,7 @@ function unitHTML(R, ui, st){
             : "Left off the card entirely"}">${lab}</button>`;
     /* J229: game effects as tags in place of the source note; the book's
        text and the note go to the tooltip */
-    const fx = upFx(up, R.entry && R.entry.label);
+    const fx = upFx(up, R.entry && R.entry.label, st.ab && st.ab.hulk);
     return `<div class="opt${up.required ? " req" : ""}">
       <span class="tri">${b("take","Take")}${b("opt","Option")}${b("off","Hide","off")}</span>
       <span${fx ? ` title="${esc([up.description, up.note].filter(Boolean).join(" "))}"` : ""}>${esc(title(up.label))}${up.included ? " \u2014 included, no cost"
@@ -3703,7 +3909,7 @@ function unitHTML(R, ui, st){
   return `<div class="unit${st.lst ? " borrowed" : ""}" data-ui="${ui}">
     <div class="uhead">
       <button type="button" class="grip" data-grip="${ui}" draggable="true" aria-label="Move this unit"
-        title="Drag to reorder, or move it a step with the arrow keys">${GRIP}</button>
+        title="Drag to reorder, or move it a step with the arrow keys">${GRIP}</button>${st.ab && st.ab.send || ""}
       <span class="cls">${esc(title(R.className))}</span>${role}
       ${R.entry && R.entry.badRef ? '<span class="ty" style="color:var(--bad)">source page ref wrong</span>' : ""}
       <span class="ty">${esc(ship ? R.stats.type
@@ -3881,8 +4087,12 @@ function renderFleet(){
   const wlOf = i => wsC.indexOf(i) >= 0 ? i : (RF.command && RF.command[i] >= 0 ? RF.command[i] : -1);
   (RF.aboard || []).forEach(a => { abOf[a.unit] = a; });
   const hideOf = clanzHiddenUps(RF);
+  /* J232: Send to beside the grip; a Warlord aboard an Ork hulk shows his
+     upgrades as they work there (Fleets p. 390) */
+  const sendOf = extra.send || [];
+  const onHulk = ui => { const a = abOf[ui]; return !!(a && a.ship != null && isOrkHulkUnit(RF.units[a.ship])); };
   box.innerHTML = S.units.map((u, ui) => unitRowHTML(u, ui,
-    { a: abOf[ui] || null, RF: RF, extra: extra[ui] || "", hide: hideOf[ui] || [] })).join("");
+    { a: abOf[ui] || null, RF: RF, extra: extra[ui] || "", hide: hideOf[ui] || [], send: sendOf[ui] || "", hulk: onHulk(ui) })).join("");
   if(wsC.length) box.querySelectorAll(".unit").forEach(row => {
     const i = +row.dataset.ui, w = wlOf(i);
     if(w < 0) return;
@@ -3901,7 +4111,22 @@ function renderFleet(){
   box.querySelectorAll(".wlin").forEach(sel => sel.onchange = () => {
     const u = S.units[+sel.dataset.u];
     if(!u) return;
-    if(sel.value) u.cmd = sel.value; else delete u.cmd;
+    if(sel.value) sendSkwadron(u, sel.value);
+    render();
+  });
+  /* J232: the Warlord block's skwadron menu - split, or join another of his
+     of the same kind */
+  box.querySelectorAll(".wlsq").forEach(sel => sel.onchange = () => {
+    const us = sel.dataset.wlsq.split(",").map(i => S.units[+i]).filter(Boolean), v = sel.value;
+    if(!us.length || !v) return;
+    if(v === "split") us.forEach(u => { delete u.sq; });
+    else if(/^join:/.test(v)){
+      const t2 = S.units[+v.slice(5)];
+      if(!t2) return;
+      const tag = t2.sq || freeSqTag();
+      t2.sq = tag; us.forEach(u => { u.sq = tag; });
+    }
+    JUST = { unit: us[0] };
     render();
   });
   /* The Warlord block (J226): one tap each - the Warlord new skwadrons go
@@ -3918,12 +4143,6 @@ function renderFleet(){
     if(b.dataset.c) w.clan = b.dataset.c; else delete w.clan;
     W.units.forEach(i => setClan(S.units[i], b.dataset.c));
     render(); });
-  box.querySelectorAll("[data-wlpair]").forEach(b => b.onclick = () => {
-    const u = S.units[+b.dataset.wlpair], v = S.units[+b.dataset.with]; if(!u || !v) return;
-    const tag = v.sq || u.sq || freeSqTag(); u.sq = tag; v.sq = tag; render(); });
-  box.querySelectorAll("[data-wlsplit]").forEach(b => b.onclick = () => {
-    const u = S.units[+b.dataset.wlsplit]; if(!u) return;
-    delete u.sq; render(); });
   /* Aboard (J215): the player's pick is the ship's uid; Automatic drops it. */
   box.querySelectorAll(".abin").forEach(sel => sel.onchange = () => {
     const u = S.units[+sel.dataset.u];
@@ -3978,10 +4197,16 @@ function renderFleet(){
     g.onkeydown = e => {
       if(e.key !== "ArrowUp" && e.key !== "ArrowDown") return;
       e.preventDefault();
-      const from = +g.dataset.grip, to = from + (e.key === "ArrowUp" ? -1 : 1);
-      if(!moveUnit(from, to)) return;
+      const from = +g.dataset.grip, dir = e.key === "ArrowUp" ? -1 : 1, mu = S.units[from];
+      /* J232: a Warlord's arrow moves his whole group; a row that crosses
+         a Warlord becomes his */
+      if(L().clanz && clanzMoveBlock(mu, dir)){ /* nothing else moves */ }
+      else {
+        if(!moveUnit(from, from + dir)) return;
+        if(L().clanz) clanzAfterMove(mu);
+      }
       render();
-      const ng = $("#fleet").querySelector(`.grip[data-grip="${to}"]`);
+      const ng = $("#fleet").querySelector(`.grip[data-grip="${S.units.indexOf(mu)}"]`);
       if(ng) ng.focus();
     };
   });
@@ -4003,7 +4228,9 @@ function renderFleet(){
       dragScrollStop();
       let to = half(e) ? idx : idx + 1;
       if(to > from) to--;                 /* the row leaves its old slot first */
-      if(moveUnit(from, to)) render(); else clearMarks();
+      const mu = S.units[from];
+      /* J232: under another Warlord it is his (clanzAfterMove) */
+      if(moveUnit(from, to)){ if(L().clanz) clanzAfterMove(mu); render(); } else clearMarks();
     };
   });
   box.querySelectorAll(".rolebtn").forEach(b => b.onclick = () =>
@@ -4082,12 +4309,14 @@ function renderChecks(){
     r.side = r.cs.some(x => !x.ok) ? "bad" : r.cs.every(x => x.warn) ? "warn" : "ok";
   });
   const sqSize = v => String(v).replace(/^(\d+) (ships?|defences?)\b\s*/, "\u00d7$1 ");
+  /* J232: a Da Ork Clanz row in plain English beside the Ork words */
+  const pl = L().clanz ? orkPlain : (x => x);
   $("#checks").innerHTML = rows.map(r => {
     const c = r.cs[0], cls = r.side === "bad" ? "bad" : r.side === "warn" ? "warn" : "";
     if(r.cs.length < 2) return `<div class="chk ${cls}">
       <span class="dot"></span>
-      <span><b>${esc(c.t)}</b><span class="src">${esc(c.s)}</span></span>
-      <span class="val">${esc(c.v)}</span></div>`;
+      <span><b>${esc(pl(c.t))}</b><span class="src">${esc(c.s)}</span></span>
+      <span class="val">${esc(pl(c.v))}</span></div>`;
     const m = /^Squadrons of (\d+\u2013\d+)\./.exec(r.g);
     return `<div class="chk ${cls}">
       <span class="dot"></span>
@@ -4173,9 +4402,12 @@ function addUnitFrom(li2, si, ei, role){
       /* only the clan chosen for him: a clan bought on one skwadron is that
          skwadron's own choice */
       if(S.units[wa].clan) setClan(u, S.units[wa].clan);
-      if(W && !W.hulk && clanzIn(si, CZ.big) && (W.lone || []).length){
+      /* J232: a Rok joins his Rok skwadron the same way (1-4, Fleets p. 372) */
+      const kk = clanzIn(si, CZ.big) ? "kroozer" : clanzIn(si, CZ.rok) ? "rok" : "";
+      if(W && !W.hulk && kk){
         const others = (W.total || 0) - Math.min(W.tiddla || 0, W.rr);
-        if(others + 1 > W.rr){ const p = S.units[W.lone[0]]; const tag = p.sq || freeSqTag(); p.sq = tag; u.sq = tag; }
+        const g = others + 1 > W.rr ? warlordSkwadrons(RF0, wa).filter(x => x.kind === kk && x.hulls + 1 <= SKW_MAX[kk])[0] : null;
+        if(g){ const tag = S.units[g.units[0]].sq || freeSqTag(); g.units.forEach(j => { S.units[j].sq = tag; }); u.sq = tag; }
       }
     }
   }
