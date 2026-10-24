@@ -5546,6 +5546,13 @@ function resolveFleet(fleetIntent, catalog){
     var clanRows = upRows(secIx(C.clan_sec)), gubRows = upRows(secIx(C.gub_sec), new RegExp(C.gub_re, "i"));
     var clansOf = function(m){ return clanRows.filter(function(x){ return tookUp(m, x[0], x[1]); })
       .map(function(x){ return String(x[2].l).replace(/^clan:\s*/i, "").replace(/\s*\(.*$/, ""); }); };
+    /* a ship of one clan by itself (J232): "(0-1) Zukov's Klaw (Goff only)"
+       (Fleets p. 372) is a Goff with no clan row to buy; his Warlord's one
+       clan counts it */
+    var clanNames = clanRows.map(function(x){ return String(x[2].l).replace(/^clan:\s*/i, "").replace(/\s*\(.*$/, ""); });
+    var bornClan = function(m){
+      var o = /\(([a-z][a-z ]*?) only\)/i.exec(String((m.en && m.en.l) || ""));
+      return o ? clanNames.filter(function(c){ return c.toLowerCase().indexOf(o[1].toLowerCase()) === 0; }).slice(0, 1) : []; };
     CZ.warlords.forEach(function(w, k){
       var wi = members.indexOf(w), tag = "Warlord " + (k + 1) + ": ";
       var mine = members.filter(function(m, i){ return CZ.of[i] === wi; });
@@ -5587,7 +5594,7 @@ function resolveFleet(fleetIntent, catalog){
         v: uge + " / 1, " + kro + (kro === 1 ? " kroozer" : " kroozers"),
         s: citeText(C.uge1) + " " + citeText(C.uge2) });
       var clans = [];
-      mine.concat([w]).forEach(function(m){ clansOf(m).forEach(function(c){ if(clans.indexOf(c) < 0) clans.push(c); }); });
+      mine.concat([w]).forEach(function(m){ clansOf(m).concat(bornClan(m)).forEach(function(c){ if(clans.indexOf(c) < 0) clans.push(c); }); });
       if(clans.length) out.push({ ok: clans.length <= 1, t: tag + "one clan", v: clans.join(", "), s: citeText(C.clan) });
       S1.clans = clans;
       var ab = aboard.filter(function(a){ return a.unit === wi; })[0];

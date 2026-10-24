@@ -6169,6 +6169,91 @@
       "why": "s.373: \"Each skwadron must be fielded with the number of ships chosen for it in this list; you can't split up skwadrons or add more ships to them.\" ja s.372 \"A Warlord's re-rolls only count for the skwadrons under his command\" - skwadron on yhden Warlordin. Sama tunniste kahden Warlordin kroozereilla on jaettu skwadron (J232)."
     },
     {
+      "id": "clanz-deathskullz-two-free-looted-fleet-gubbins",
+      "page": 369,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 500,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Kill kroozer",
+            "ups": [
+              {
+                "upgrade": "^Clan: Deathskullz"
+              },
+              {
+                "upgrade": "^Looted Lances \\(Deathskullz: free\\)$"
+              }
+            ]
+          },
+          {
+            "entry": "^Ravager attack ship",
+            "n": 3,
+            "ups": [
+              {
+                "upgrade": "^Clan: Deathskullz"
+              },
+              {
+                "upgrade": "^Looted Torpedoes \\(Deathskullz: free\\)"
+              }
+            ]
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Gubbins \\(one per Warlord re-roll\\)",
+            "ok": true,
+            "v": "0 / 1"
+          },
+          {
+            "label": "^Warlord 1: Gubbins",
+            "absent": true
+          }
+        ]
+      },
+      "why": "s.369: \"Deathskullz capital ships and/or tiddla skwadrons have 'looted' upgrades (torpedoes and/or lances) for no additional cost.\" ja \"Clan upgrades are different from Gubbins\". Kaksi ilmaista looted-rivia ei kuluta yhden re-rollin Gubbins-kiintiota myoskaan laivastotason tarkistuksessa (s.370 up_budget, J71). J232-katselmointi."
+    },
+    {
+      "id": "clanz-zukovs-klaw-is-a-goff",
+      "page": 372,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 500,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Ravager attack ship",
+            "n": 3,
+            "ups": [
+              {
+                "upgrade": "^Clan: Evil Sunz"
+              }
+            ]
+          },
+          {
+            "entry": "^Zukov"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Warlord 1: one clan",
+            "ok": false,
+            "v": "Evil Sunz, Goffs"
+          }
+        ]
+      },
+      "why": "s.372: \"(0–1) Zukov's Klaw (Goff only)\" ja s.369: \"A Warlord and his skwadrons may only be from one clan\". Zukov's Klaw on Goff ilman ostettavaa klaanirivia, joten Evil Sunz -tiddlan Warlord ei voi johtaa sita (J232-katselmointi)."
+    },
+    {
       "id": "clanz-largest-warlord-three-rerolls",
       "page": 373,
       "fleet": {

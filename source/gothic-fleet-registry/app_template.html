@@ -2286,7 +2286,8 @@ function applyTransition(u, action){
   const back = DOMAIN.toLegacyUnit(r.intent, ctx, DATA).unit;
   u.os = back.os; u.oq = back.oq; u.opts = back.opts; u.ups = back.ups; u.upn = back.upn;
   if(action.type === "hull"){ u.ref = back.ref; u.hn = back.hn; }
-  if(r.notices.length) NOTICE = { u: u, items: r.notices };
+  /* J232: one action may change several ships (Send to): every notice stays */
+  if(r.notices.length) NOTICE = { u: u, items: (NOTICE ? NOTICE.items : []).concat(r.notices) };
   return r;
 }
 
@@ -2682,7 +2683,7 @@ const ORK_SEC_GLOSS = [
   [/uge ship skwadron$/i, "one battleship or battlekroozer"],
   [/^roks$/i, "hollowed-out asteroids \u00b7 1\u20134 in a skwadron"],
   [/^ork roks$/i, "hollowed-out asteroids \u00b7 up to 4 in a squadron"],
-  [/^space hulks$/i, "one Warlord's whole command"],
+  [/^space hulks$/i, "one Warlord's whole command", "clanz"],
   [/^gubbins$/i, "upgrades \u00b7 Warlord's own ship, one per re-roll"],
   [/^clan upgrades$/i, "his clan on every skwadron"],
   [/^mob rule$/i, "+1 Ld with 6+ escorts"],
@@ -2690,7 +2691,7 @@ const ORK_SEC_GLOSS = [
 ];
 function orkSecGloss(SL, sec){
   if(!/^Orks/.test(String(SL && SL.nm))) return "";
-  const g = ORK_SEC_GLOSS.find(x => x[0].test(String(sec.t).trim()));
+  const g = ORK_SEC_GLOSS.find(x => x[0].test(String(sec.t).trim()) && (!x[2] || !!SL.clanz));
   return g ? g[1] : "";
 }
 /* The same in a sentence the builder or the domain wrote: the first of each
@@ -2761,13 +2762,13 @@ function skwadronsHTML(RF, wi){
     return `<li><span class="skk">${esc(SKW_LABEL[g.kind])}${max ? " " + g.hulls + "/" + max : ""}</span><span class="skn">${esc(skwNames(RF, g))}</span>${pick}</li>`;
   }).join("")}</ol>`;
 }
-/* J232: ships handed to a Warlord are his (u.cmd) with his clan - the one
-   chosen for him, or the one all his skwadrons already wear (Fleets p. 369:
-   "A Warlord and his skwadrons may only be from one clan"). */
-function handToWarlord(us, to, RF){
-  const w = S.units[to], W = (RF.warlords || []).filter(x => x.unit === to)[0];
-  const clan = w.clan || (W && W.clans && W.clans.length === 1 ? W.clans[0] : "");
-  us.forEach(x => { x.cmd = w.uid; if(clan) setClan(x, clan); });
+/* J232: ships handed to a Warlord are his (u.cmd) with the clan chosen for
+   him, as addUnitFrom does: a clan bought on one skwadron is that
+   skwadron's own choice, so nothing is bought for the player. A clan that
+   then differs turns "one clan" red (Fleets p. 369). */
+function handToWarlord(us, to){
+  const w = S.units[to];
+  us.forEach(x => { x.cmd = w.uid; if(w.clan) setClan(x, w.clan); });
 }
 /* Every Warlord's skwadrons right under him, in his order; a row no Warlord
    leads keeps its place (J232). order: the Warlords' unit indexes in the
@@ -2775,9 +2776,15 @@ function handToWarlord(us, to, RF){
 function clanzRegroup(order){
   const RF = fleetResolved(), ws = warlordIdx(RF);
   if(!ws.length || !RF.command) return;
+  /* Blood Axe commandeered escorts ride with the tiddla of their tag (Fleets
+     p. 369, J220) */
+  const BA = L().bloodaxe;
+  const ride = S.units.map((u, i) => !BA || !u.sq || u.lst || RF.command[i] >= 0 || ws.indexOf(i) >= 0 || !clanzIn(u.s, BA.sec) ? -1 :
+    S.units.findIndex((x, j) => x.sq === u.sq && RF.command[j] >= 0 && skwKind(x) === "tiddla"));
   const slots = [], seq = [];
-  S.units.forEach((u, i) => { if(ws.indexOf(i) >= 0 || RF.command[i] >= 0) slots.push(i); });
-  (order || ws).forEach(w => { seq.push(S.units[w]); S.units.forEach((u, i) => { if(RF.command[i] === w) seq.push(u); }); });
+  S.units.forEach((u, i) => { if(ws.indexOf(i) >= 0 || RF.command[i] >= 0 || ride[i] >= 0) slots.push(i); });
+  (order || ws).forEach(w => { seq.push(S.units[w]); S.units.forEach((u, i) => { if(RF.command[i] !== w) return;
+    seq.push(u); S.units.forEach((x, j) => { if(ride[j] === i) seq.push(x); }); }); });
   if(seq.length !== slots.length) return;
   const next = S.units.slice();
   slots.forEach((p, k) => { next[p] = seq[k]; });
@@ -2794,10 +2801,12 @@ function sendSkwadron(u, uid){
   const from = RF.command[i], k = skwKind(u);
   if(to === from || !k) return false;
   const group = SKW_MAX[k] && u.sq ? S.units.filter((x, j) => x.sq === u.sq && RF.command[j] === from && skwKind(x) === k) : [u];
-  handToWarlord(group, to, RF);
+  handToWarlord(group, to);
   group.forEach(x => { S.units.splice(S.units.indexOf(x), 1); S.units.push(x); });
   clanzRegroup();
-  NOTICE = { u: u, items: [{ message: group.map(x => shipCall(resolveUnit(x))).join(" + ") + " sent to Warlord " + (ws.indexOf(to) + 1) }] };
+  /* what setClan had to say (a clan or a free Deathskullz row dropped) stays */
+  NOTICE = { u: u, items: [{ message: group.map(x => shipCall(resolveUnit(x))).join(" + ") + " sent to Warlord " + (ws.indexOf(to) + 1) }]
+    .concat(NOTICE ? NOTICE.items : []) };
   JUST = { unit: u };
   return true;
 }
@@ -2815,19 +2824,39 @@ function clanzAfterMove(u){
     if(to !== from){
       const left = u.sq && S.units.some((x, j) => x !== u && x.sq === u.sq && RF.command[j] === from);
       if(left) delete u.sq;
-      handToWarlord([u], to, RF);
+      handToWarlord([u], to);
       NOTICE = { u: u, items: [{ message: shipCall(resolveUnit(u)) + " is now Warlord " + (ws.indexOf(to) + 1) + "'s" +
-        (left ? " (it left its skwadron)" : "") }] };
+        (left ? " (it left its skwadron)" : "") }].concat(NOTICE ? NOTICE.items : []) };
     }
   }
   clanzRegroup();
 }
-/* A Warlord's arrow key moves his whole group past the next one. */
+/* Before a move (J232): every row the domain reads as a Warlord's by its
+   place alone (no u.cmd: bought before the first Warlord, an older save) is
+   written down as his, so the move knows where it came from and a Warlord
+   moved takes it along. */
+function clanzPin(){
+  const RF = fleetResolved(), ws = warlordIdx(RF);
+  if(!ws.length || !RF.command) return;
+  S.units.forEach((x, j) => { const w = RF.command[j]; if(w >= 0 && !x.cmd && S.units[w].uid) x.cmd = S.units[w].uid; });
+}
+/* A Warlord's arrow key moves his whole group past the next Warlord's, or
+   past the next row no Warlord leads. */
 function clanzMoveBlock(u, dir){
   const RF = fleetResolved(), ws = warlordIdx(RF), k = ws.indexOf(S.units.indexOf(u));
   if(k < 0) return false;
   const j = k + dir;
-  if(j < 0 || j >= ws.length) return true;
+  if(j < 0 || j >= ws.length){
+    const cm = RF.command || [], mine = [];
+    S.units.forEach((x, i) => { if(i === ws[k] || cm[i] === ws[k]) mine.push(i); });
+    const lo = mine[0], hi = mine[mine.length - 1], o = dir < 0 ? lo - 1 : hi + 1;
+    if(o < 0 || o >= S.units.length) return true;
+    const x = S.units.splice(o, 1)[0];
+    S.units.splice(dir < 0 ? hi : lo, 0, x);
+    JUST = { unit: u };
+    save();
+    return true;
+  }
   const order = ws.slice();
   order[k] = ws[j]; order[j] = ws[k];
   clanzRegroup(order);
@@ -3040,7 +3069,14 @@ function warlordNeeds(W, RF){
   const say = [], s = n => n > 1 ? "s" : "";
   /* J232: the Ork words with their English */
   if(tid < rr) say.push("add " + (rr - tid) + " tiddla (escort) skwadron" + s(rr - tid) + " of 3 or more escorts");
-  if(oth < rr) say.push("add " + (rr - oth) + " other skwadron" + s(rr - oth) + ": 1\u20132 kroozers (cruisers), an 'Uge ship (battleship) or 1\u20134 Roks");
+  if(oth < rr){
+    /* a second tiddla is an other skwadron too (Fleets p. 373: "two tiddla
+       skwadrons"); an 'Uge ship needs two kroozers of his and is one per
+       Warlord (p. 373) */
+    const need = rr - oth, opts = ["another tiddla (escorts)", "1\u20132 kroozers (cruisers)"]
+      .concat(!W.uge && ((W.kro || 0) >= 2 || need >= 2) ? ["an 'Uge ship (battleship)"] : [], ["1\u20134 Roks"]);
+    say.push("add " + need + " other skwadron" + s(need) + ": " + opts.slice(0, -1).join(", ") + " or " + opts[opts.length - 1]);
+  }
   if(oth > rr){
     const join = skwJoinable(RF, W.unit);
     say.push((oth - rr) + " skwadron" + s(oth - rr) + " too many: " + (join ? "put " + join + " in one skwadron, " : "") +
@@ -4200,6 +4236,7 @@ function renderFleet(){
       const from = +g.dataset.grip, dir = e.key === "ArrowUp" ? -1 : 1, mu = S.units[from];
       /* J232: a Warlord's arrow moves his whole group; a row that crosses
          a Warlord becomes his */
+      if(L().clanz) clanzPin();
       if(L().clanz && clanzMoveBlock(mu, dir)){ /* nothing else moves */ }
       else {
         if(!moveUnit(from, from + dir)) return;
@@ -4230,6 +4267,7 @@ function renderFleet(){
       if(to > from) to--;                 /* the row leaves its old slot first */
       const mu = S.units[from];
       /* J232: under another Warlord it is his (clanzAfterMove) */
+      if(L().clanz) clanzPin();
       if(moveUnit(from, to)){ if(L().clanz) clanzAfterMove(mu); render(); } else clearMarks();
     };
   });

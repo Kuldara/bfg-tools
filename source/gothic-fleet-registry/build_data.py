@@ -4296,11 +4296,15 @@ _EX["secs"][_exd]["rules"] = [dict(
 # kaksi lisaa (s.372). Sidontaa ei mallinneta (J8), joten laivastotasolla:
 # Gubbinseja enintaan Warlordien re-rollien summa (up_budget).
 _czg, _czw = _p18_sec(_CZ, "GUBBINS"), _p18_sec(_CZ, "WARLORD")
+# Mika Gubbins-osion rivi kuluttaa re-roll-kiintiota: ei More Gubbins (s.371 "any number of capital ships",
+# T31) eika Deathskullzin ilmainen looted-kopio (s.369, J7: klaanin etu, ei Gubbin - J232). Sama lauseke
+# Warlordin omassa tarkistuksessa (clanz.gub_re alempana), jotta ne eivat erkane.
+_CZ_GUB_RE = r"^(?!Klaws|Shokk-Attack Lance|Assault Karrier|.*\(Deathskullz: free\))"
 _CZ["secs"][_czg].setdefault("rules", []).append(dict(
     kind="up_budget", ok=True, up_sec=_czg, label="Gubbins (one per Warlord re-roll)",
     # s.371 MORE GUBBINS: "The following gubbins can be taken by any number of
     # capital ships in the fleet" - ne eivat kuluta re-roll-budjettia (T31).
-    up_re=r"^(?!Klaws|Shokk-Attack Lance|Assault Karrier)",
+    up_re=_CZ_GUB_RE,
     budget=[dict(pick=[dict(sec=_czw, _t="warlord")], units=1),
             dict(up_sec=_czw, up_re="^One extra re-roll", weight=1),
             dict(up_sec=_czw, up_re="^Two extra re-rolls", weight=2)],
@@ -6735,7 +6739,7 @@ _CZL["clanz"] = dict(
     # gub_re: Gubbins-kiintioon (s.372) eivat kuulu More Gubbins (s.371 "any number of capital ships") eika
     # Deathskullzin ilmainen looted-kopio (J7, s.369: klaanin etu jokaiselle Deathskullz-skwadronille, J232)
     clan_sec="^clan upgrades$", gub_sec="^gubbins$",
-    gub_re=r"^(?!Klaws|Shokk-Attack Lance|Assault Karrier|.*\(Deathskullz: free\))",
+    gub_re=_CZ_GUB_RE,
     sk=_cite("For every re-roll a Warlord has (including the first one for free), the Warlord must be in command of "
              "one tiddla skwadron of at least three escorts and one other skwadrons.", 372),
     sk_interp="Open interpretation T52: read as exactly one tiddla and one other skwadron per re-roll, as the "
