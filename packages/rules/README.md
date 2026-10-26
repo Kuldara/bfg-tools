@@ -21,7 +21,12 @@ src/crits.js          critical hit tables, crippled, repair and trigger lines
 src/special-rules.js  the special weapon and hull rules and which apply to a unit
 src/commanders.js     commander rules
 src/validation.js     validateIntent, transition
-src/fleet.js          resolveFleet: facts, squadrons, who is aboard, every check
+src/resolve-fleet.js  resolveFleet: the members, then every check in the order its rows appear
+src/fleet-sections.js  the list's own section rules (the rule kinds) and row limits
+src/fleet-purchases.js the Warmaster's Mark, a commander's price, defences, required weapons
+src/fleet-reserves.js  reserves and allies: types, races, bans, sources (Fleets pp. 14-16)
+src/fleet-specials.js  squadrons and single lists' rules: Demiurg, Rogue Traders, Clanz ...
+src/fleet.js          the helpers they share: facts, squadron classes, who is aboard
 src/unit.js           resolveUnit: everything a card or a play page shows
 src/index.js          the public object DOMAIN, the same keys as the one-file engine
 build.js              makes domain.js from src/ (npm run build; --check in npm test)
@@ -31,7 +36,7 @@ domain.js             GENERATED, committed: the engine as one UMD file
 `domain.js` is generated but committed, because three kinds of readers load it
 as one file: the apps through esbuild (an import of a CommonJS module), the
 Node tests with `require`, and a private battle simulator that reads the file
-directly. `extractor/audit_upgrades.py` also reads its text. Edit `src/`, never
+directly. `extractor/audit_upgrades.py` reads the text of `src/`. Edit `src/`, never
 `domain.js`; `npm test` fails when the file is not what `src/` makes.
 
 ## Tests

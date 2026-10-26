@@ -11,7 +11,7 @@ import { isStationaryDefence, defenceOwnPoints, rowPurchase, rowStep, CRIP_LINE,
 import { ownedText, starsForRow, hullOptionsOf, wepKey, SPECIAL_WEAPON_RULES, SPECIAL_HULL_RULES, fleetMatches, defMatches, defOptionMatches, uniqRefs, sourceStarDef, weaponMentioned, localRef, specialModel, specialLines, starredKeys, optStars } from "./special-rules.js";
 import { commanderRules } from "./commanders.js";
 import { validateIntent, transition } from "./validation.js";
-import { resolveFleet } from "./fleet.js";
+import { resolveFleet } from "./resolve-fleet.js";
 import { weaponState, optionsOf, upgradesOf, resolveUnit, RULE_CARDS, ruleCardOf, shipLeadership, rerollText, commanderRerollOffer, fleetRerolls, rerollBoxes, openRerolls, shipRerolls } from "./unit.js";
 
 const DOMAIN = {

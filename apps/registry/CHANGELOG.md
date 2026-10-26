@@ -9,7 +9,10 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 - The rules engine is ES modules in `packages/rules/src/` (ids and the saved
   unit, lending, upgrades, pricing, weapons, the card's arms, criticals, special
   rules, commanders, validation, resolveFleet, resolveUnit); `domain.js` is
-  built from them and checked in `npm test`. Every Registry result is the same:
+  built from them and checked in `npm test`. `resolveFleet` itself (1 420
+  lines) is a short list of named checks in four modules (section rules,
+  purchases, reserves and allies, single lists' rules), each with the old text.
+  Every Registry result is the same:
   4,162 cases (every row, every option and upgrade, 300 random fleets) match
   the one-file engine, as do the golden cases, Play and the simulator.
 

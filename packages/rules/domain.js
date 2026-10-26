@@ -566,757 +566,6 @@ var __rules = (() => {
     });
   }
 
-  // packages/rules/src/pricing.js
-  function upCost(sel, en) {
-    if (en.pct) return Math.ceil(pctBase(sel) * en.pct / 100);
-    if (en.p == null) return 0;
-    if (en.per === "hull") return en.p * sel.hulls;
-    if (en.per === "bay") return en.p * bayStrength(sel.sh, sel).n * (sel.escort ? sel.hulls : 1);
-    return en.p;
-  }
-  function upgradePts(sel) {
-    var p = 0;
-    var ups = upgradesFor(sel);
-    ups.own.concat(ups.other).forEach(function(x) {
-      if (upState(sel, x[0], x[1]) === "take") p += upCost(sel, x[2]);
-    });
-    return p;
-  }
-  function hullPts(sel, en) {
-    var sh = sel.sh;
-    if (!sh) return 0;
-    var crew = !sh.ven && /SPACE MARINES/i.test(String(sh.fl || "")) ? 0 : en.hcp || 0;
-    return (sh.bp || 0) + crew;
-  }
-  function hullOptionPts(sel) {
-    var en = sel.en, sh = sel.sh;
-    var p = (en.hc ? hullPts(sel, en) : en.p == null ? sel.custom | 0 : en.p) * sel.hulls;
-    if (sh) sh.ol.forEach(function(o, i) {
-      if (o.c != null && optState(sel, i) === "take")
-        p += o.c * optCount(sel, i) * (sel.escort ? sel.hulls : 1);
-    });
-    return p;
-  }
-  function pointsOf(sel) {
-    if (!sel.en) return null;
-    return hullOptionPts(sel) + upgradePts(sel) + (sel.adjust | 0);
-  }
-  function pctBase(sel) {
-    if (!sel.en) return 0;
-    var p = hullOptionPts(sel);
-    var ups = upgradesFor(sel);
-    ups.own.concat(ups.other).forEach(function(x) {
-      if (!x[2].pct && upState(sel, x[0], x[1]) === "take") p += upCost(sel, x[2]);
-    });
-    return p;
-  }
-  function flatMaxPointsOf(sel) {
-    var sh = sel.sh;
-    var p = pointsOf(sel);
-    if (p == null) return null;
-    var seen = {}, decided = {};
-    var blockedOpt = optionsOf(sel).map(function(o) {
-      return o.blockedBy.length > 0;
-    });
-    if (sh) sh.ol.forEach(function(o, i) {
-      if (o.grp && optState(sel, i) === "take") decided["opt:" + o.grp] = 1;
-    });
-    if (sel.list) upSecs(sel).forEach(function(sec, si) {
-      sec.ents.forEach(function(en, ei) {
-        if (isUpgradeEnt(en) && en.grp && upState(sel, si, ei) === "take") decided[en.grp] = 1;
-      });
-    });
-    var optCost = function(o) {
-      return o.c * (o.qty ? o.qty.max || 1 : 1) * (sel.escort ? sel.hulls : 1);
-    };
-    var depAdd = {};
-    if (sh) sh.ol.forEach(function(o, i) {
-      if (o.dep == null || !(o.c > 0) || optState(sel, i) !== "opt" || blockedOpt[i]) return;
-      var d = o.dep, pre = sh.ol[d];
-      if (!pre) return;
-      var ds = optState(sel, d);
-      if (ds === "take") {
-        p += optCost(o);
-        return;
-      }
-      if (ds !== "opt" || blockedOpt[d] || pre.grp && decided["opt:" + pre.grp]) return;
-      depAdd[d] = (depAdd[d] || 0) + optCost(o);
-    });
-    if (sh) sh.ol.forEach(function(o, i) {
-      if (o.dep != null || optState(sel, i) !== "opt" || blockedOpt[i]) return;
-      var c = (o.c > 0 ? optCost(o) : 0) + (depAdd[i] || 0);
-      if (!(c > 0)) return;
-      if (o.grp) {
-        if (!decided["opt:" + o.grp]) seen["opt:" + o.grp] = Math.max(seen["opt:" + o.grp] || 0, c);
-      } else p += c;
-    });
-    if (sel.list) upSecs(sel).forEach(function(sec, si) {
-      sec.ents.forEach(function(en, ei) {
-        if (!isUpgradeEnt(en) || upState(sel, si, ei) !== "opt") return;
-        if (en.grp) {
-          if (!decided[en.grp]) seen[en.grp] = Math.max(seen[en.grp] || 0, upCost(sel, en), 0);
-          return;
-        }
-        p += Math.max(0, upCost(sel, en));
-      });
-    });
-    Object.keys(seen).forEach(function(g) {
-      p += seen[g];
-    });
-    return p;
-  }
-  var MAX_SEARCH_NODES = 600;
-  var MAXPTS = {};
-  var MAXPTS_N = 0;
-  function maxPointsOf(sel) {
-    var sig = JSON.stringify([
-      sel.list && sel.list.nm,
-      sel.host && sel.host.nm,
-      sel.si,
-      sel.ei,
-      sel.sh && [sel.sh.nm, sel.sh.pg],
-      sel.ost,
-      sel.oqty,
-      sel.ups,
-      sel.hulls,
-      sel.adjust,
-      sel.custom,
-      sel.escort
-    ]);
-    if (Object.prototype.hasOwnProperty.call(MAXPTS, sig)) return MAXPTS[sig];
-    var v = maxPointsSearch(sel);
-    if (++MAXPTS_N > 3e3) {
-      MAXPTS = {};
-      MAXPTS_N = 1;
-    }
-    MAXPTS[sig] = v;
-    return v;
-  }
-  function maxPointsSearch(sel) {
-    var base = pointsOf(sel);
-    if (base == null) return null;
-    var sh = sel.sh, ol = sh && sh.ol || [];
-    var escortMul = sel.escort ? sel.hulls : 1;
-    var bioCap = (function() {
-      var t = String(sh && sh.ty || "");
-      return /escort/i.test(t) ? 1 : /battleship/i.test(t) ? 3 : 2;
-    })();
-    var isBio = function(s, si) {
-      var sec = secOf(s, si);
-      return !!sec && String(sec.t).trim().toUpperCase() === "BIO-ENHANCEMENTS";
-    };
-    var take = function(s, items) {
-      var ost = Object.assign({}, s.ost), oqty = Object.assign({}, s.oqty), ups = Object.assign({}, s.ups);
-      items.forEach(function(it) {
-        if (it.i != null) {
-          ost[it.i] = "take";
-          var q = ol[it.i].qty;
-          if (q && q.max > 1) oqty[it.i] = q.max;
-        } else ups[it.key] = "take";
-      });
-      return Object.assign({}, s, { ost, oqty, ups });
-    };
-    var behind = {};
-    for (var pass = 0; pass < ol.length; pass++) {
-      var next = {};
-      ol.forEach(function(o, j) {
-        if (o.dep == null || !ol[o.dep]) return;
-        next[o.dep] = (next[o.dep] || 0) + (o.c > 0 ? o.c * (o.qty ? o.qty.max || 1 : 1) * escortMul : 0) + (behind[j] || 0);
-      });
-      if (JSON.stringify(next) === JSON.stringify(behind)) break;
-      behind = next;
-    }
-    var OPEN = typeof WeakMap === "function" ? /* @__PURE__ */ new WeakMap() : null;
-    var open = function(s) {
-      var hit = OPEN && OPEN.get(s);
-      if (hit) return hit;
-      var out = [], opts = optionsOf(s);
-      ol.forEach(function(o, i) {
-        if (optState(s, i) !== "opt" || !(o.c > 0 || behind[i] > 0)) return;
-        if (s.en && s.en.optno && new RegExp(s.en.optno, "i").test(String(o.t || ""))) return;
-        if (o.dep != null && optState(s, o.dep) !== "take") return;
-        if (opts[i] && opts[i].blockedBy.length) return;
-        out.push({ k: "o" + i, i, c: (o.c > 0 ? o.c : 0) * (o.qty ? o.qty.max || 1 : 1) * escortMul, o });
-      });
-      if (s.list) {
-        var u = upgradesFor(s), bio = {};
-        u.own.concat(u.other).forEach(function(x) {
-          if (isBio(s, x[0]) && upState(s, x[0], x[1]) === "take") bio[x[2].grp || x[2].l] = 1;
-        });
-        var bioFull = Object.keys(bio).length >= bioCap;
-        u.own.concat(u.other).forEach(function(x) {
-          if (x[2].req || upState(s, x[0], x[1]) !== "opt") return;
-          var b = isBio(s, x[0]);
-          if (b && (bioFull || bio[x[2].grp || x[2].l])) return;
-          var c = x[2].pct ? Math.ceil(base * x[2].pct / 100) + 1 : Math.max(0, upCost(s, x[2]));
-          if (c > 0) out.push({ k: "u" + upgradeKey(x[0], x[1]), key: upgradeKey(x[0], x[1]), c, pct: !!x[2].pct, bio: b ? x[2].grp || x[2].l : null, en: x[2] });
-        });
-      }
-      if (OPEN) OPEN.set(s, out);
-      return out;
-    };
-    var keys = function(list) {
-      return list.map(function(it) {
-        return it.k;
-      });
-    };
-    var root = open(sel);
-    if (!root.length) return base;
-    var named = [];
-    upSecs(sel).forEach(function(sec) {
-      (sec.ents || []).forEach(function(e2) {
-        if (isUpgradeEnt(e2) && e2.cond) {
-          if (e2.cond.up) named.push(new RegExp(e2.cond.up, "i"));
-          if (e2.cond.noup) named.push(new RegExp(e2.cond.noup, "i"));
-        }
-      });
-    });
-    var depOn = {};
-    ol.forEach(function(o) {
-      if (o.dep != null) depOn[o.dep] = 1;
-    });
-    var active = function(a) {
-      if (a.o) return !!(a.o.sw || a.o.add || a.o.del || a.o.mod || a.o.cov || a.o.grp || a.o.swp || depOn[a.i]);
-      var e = a.en;
-      return !!(e.grp || e.swp || e.add || e.mod || e.cond && e.cond.no || named.some(function(rx) {
-        return rx.test(String(e.l || ""));
-      }));
-    };
-    var rootKeys = keys(root), inter = {};
-    root.forEach(function(a) {
-      if (a.bio || !active(a)) return;
-      var aft = keys(open(take(sel, [a])));
-      var lost = rootKeys.filter(function(k) {
-        return k !== a.k && aft.indexOf(k) < 0;
-      });
-      var gained = aft.filter(function(k) {
-        return rootKeys.indexOf(k) < 0;
-      });
-      if (lost.length || gained.length) {
-        inter[a.k] = 1;
-        lost.forEach(function(k) {
-          inter[k] = 1;
-        });
-      }
-    });
-    var indep = root.filter(function(a) {
-      return !inter[a.k] && !a.bio;
-    });
-    var indepKey = {};
-    indep.forEach(function(a) {
-      indepKey[a.k] = 1;
-    });
-    var value = function(s) {
-      var op = open(s), o = keys(op);
-      var add = indep.filter(function(a) {
-        return o.indexOf(a.k) >= 0;
-      });
-      var kinds = {}, taken = {};
-      if (s.list) {
-        var u = upgradesFor(s);
-        u.own.concat(u.other).forEach(function(x) {
-          if (isBio(s, x[0]) && upState(s, x[0], x[1]) === "take") taken[x[2].grp || x[2].l] = 1;
-        });
-      }
-      op.forEach(function(it) {
-        if (it.bio && !taken[it.bio] && (!kinds[it.bio] || kinds[it.bio].c < it.c)) kinds[it.bio] = it;
-      });
-      var room = Math.max(0, bioCap - Object.keys(taken).length);
-      add = add.concat(Object.keys(kinds).map(function(k) {
-        return kinds[k];
-      }).sort(function(p, q) {
-        return q.c - p.c;
-      }).slice(0, room));
-      return pointsOf(add.length ? take(s, add) : s);
-    };
-    var best = base, nodes = 0, capped = false;
-    var walk = function(s, skipped) {
-      if (++nodes > MAX_SEARCH_NODES) {
-        capped = true;
-        return;
-      }
-      var v = value(s);
-      if (v > best) best = v;
-      var items = open(s).filter(function(it2) {
-        return !indepKey[it2.k] && !it2.bio && !skipped[it2.k];
-      });
-      if (!items.length) return;
-      var sum = 0, pct = 0, grp = {};
-      items.forEach(function(it2) {
-        var g = it2.o && it2.o.grp ? "o:" + it2.o.grp : it2.en && it2.en.grp ? "u:" + it2.en.grp : null;
-        var c = it2.c + (it2.i != null ? behind[it2.i] || 0 : 0);
-        if (g) {
-          (grp[g] = grp[g] || { n: it2.o ? Math.max(1, it2.o.gmax || 1) : 1, c: [] }).c.push(c);
-          return;
-        }
-        if (it2.pct) pct += it2.c;
-        else sum += c;
-      });
-      Object.keys(grp).forEach(function(g) {
-        grp[g].c.sort(function(p, q) {
-          return q - p;
-        }).slice(0, grp[g].n).forEach(function(c) {
-          sum += c;
-        });
-      });
-      if (v + sum + pct * 2 <= best) return;
-      items.sort(function(p, q) {
-        return q.c - p.c;
-      });
-      var it = items[0];
-      walk(take(s, [it]), skipped);
-      if (capped) return;
-      var sk = Object.assign({}, skipped);
-      sk[it.k] = 1;
-      walk(s, sk);
-    };
-    walk(sel, {});
-    if (capped) return Math.max(best, flatMaxPointsOf(sel));
-    return best;
-  }
-  function timesStrength(txt, n) {
-    var t = String(txt == null ? "" : txt);
-    if (n <= 1) return t;
-    if (!/^\s*\d+(\s*\/\s*\d+)*(\s*squadrons?)?\s*$/i.test(t)) return t + " \xD7" + n;
-    var out = t.replace(/\d+/g, function(m) {
-      return String(parseInt(m, 10) * n);
-    });
-    if (/squadron/i.test(out) && !/squadrons/i.test(out)) out = out.replace(/squadron/i, "squadrons");
-    return out;
-  }
-  function swapRuledOutByUp(sel, o) {
-    if (!sel.list || !sel.sh) return false;
-    var names = (o.sw.t || []).map(function(t) {
-      return String(t[0] || "");
-    }), hit = false;
-    upSecs(sel).forEach(function(sec, si) {
-      (sec.ents || []).forEach(function(en, ei) {
-        if (hit || !isUpgradeEnt(en) || sel.ups[upgradeKey(si, ei)] !== "take") return;
-        if (en.cond && en.cond.no) {
-          var rx = new RegExp(String(en.cond.no).split("@")[0], "i");
-          if (names.some(function(nm) {
-            return rx.test(nm);
-          })) hit = true;
-        }
-        if (!hit && en.swp) {
-          var rx2 = new RegExp(en.swp.f, "i");
-          if ((o.sw.f || []).some(function(fi) {
-            return sel.sh.aw[fi] && rx2.test(String(sel.sh.aw[fi][0]));
-          })) hit = true;
-        }
-      });
-    });
-    return hit;
-  }
-
-  // packages/rules/src/validation.js
-  function issue(code, severity, path, message, page) {
-    return { code, severity, path, message, sourcePage: page == null ? null : page };
-  }
-  function shortText(t) {
-    var s = String(t || "");
-    return s.length > 48 ? s.slice(0, 45) + "..." : s;
-  }
-  function validateIntent(intent, ctx, catalog) {
-    var out = [];
-    var L = listOfIntent(intent, ctx, catalog);
-    var at = intent.entry && L ? findEntry(L, intent.entry.section, intent.entry.label) : null;
-    if (intent.entry && !at) out.push(issue("entry.unknown", "error", "entry", "list row not found: " + intent.entry.label));
-    var en = at ? L.secs[at.si].ents[at.ei] : null;
-    var sh = shipFor(intent.ref, en, catalog);
-    if (intent.ref != null && !sh) out.push(issue("ship.unknown", "error", "ref", "profile not found: " + intent.ref));
-    if (en && en.hc && sh && (en.hulls || []).map(String).indexOf(String(intent.ref)) < 0)
-      out.push(issue("hull.unknown", "error", "hull", "hull " + intent.ref + " is not one this row offers", sh.pg));
-    var sel = selectionOf(intent, ctx, catalog);
-    var ol = sh && sh.ol || [];
-    Object.keys(intent.options || {}).forEach(function(id) {
-      if (optionIndex(sh, id, null) < 0)
-        out.push(issue("option.unknown_id", "error", "options." + id, "option id not in profile " + intent.ref, sh ? sh.pg : null));
-    });
-    var seenGrp = {};
-    ol.forEach(function(o, i) {
-      if (optState(sel, i) !== "take") return;
-      var path = "options." + o.id;
-      if (o.dep != null && ol[o.dep] && optState(sel, o.dep) !== "take")
-        out.push(issue(
-          "option.dependency",
-          "error",
-          path,
-          "'" + shortText(o.t) + "' needs '" + shortText(ol[o.dep].t) + "' taken first",
-          sh.pg
-        ));
-      if (o.grp && !seenGrp[o.grp]) {
-        var max = Math.max(1, o.gmax || 1);
-        var taken = ol.filter(function(p, j) {
-          return p.grp === o.grp && optState(sel, j) === "take";
-        });
-        if (taken.length > max) {
-          seenGrp[o.grp] = 1;
-          out.push(issue(
-            "option.exclusive",
-            "error",
-            path,
-            taken.length + " options taken where the profile allows " + max,
-            sh.pg
-          ));
-        }
-      }
-      if (o.sw) ol.forEach(function(p, j) {
-        if (j <= i || !p.sw || optState(sel, j) !== "take") return;
-        if ((o.sw.f || []).some(function(f) {
-          return (p.sw.f || []).indexOf(f) >= 0;
-        }))
-          out.push(issue(
-            "option.swap_conflict",
-            "error",
-            path,
-            "'" + shortText(o.t) + "' and '" + shortText(p.t) + "' replace the same weapon",
-            sh.pg
-          ));
-      });
-    });
-    if (sh) {
-      var hpIn = +sh.hp || 0;
-      ol.forEach(function(p, j) {
-        if (optState(sel, j) === "take" && p.mod && p.mod.hp) hpIn += p.mod.hp * optCount(sel, j);
-      });
-      ol.forEach(function(o, i) {
-        if (optState(sel, i) === "take" && o.hpmin && hpIn < o.hpmin)
-          out.push(issue(
-            "option.hpmin",
-            "error",
-            "options." + o.id,
-            "'" + shortText(o.t) + "' needs " + o.hpmin + " Hits; the ship has " + hpIn + " as configured",
-            sh.pg
-          ));
-      });
-    }
-    if (sh && sh.modmax) {
-      var modN = 0;
-      ol.forEach(function(o, i) {
-        if (o.mods && optState(sel, i) === "take") modN += optCount(sel, i);
-      });
-      if (modN > sh.modmax.n)
-        out.push(issue(
-          "option.modules",
-          "error",
-          "options",
-          modN + " modules where the core takes " + sh.modmax.n,
-          sh.modmax.pg
-        ));
-    }
-    var seenUpGrp = {};
-    var hostUpV = hostUpgradesAllowed(L, ctx && ctx.host ? ctx.host : null) ? ctx.host : null;
-    var rowOf = function(id) {
-      var p = splitUpgradeId(id);
-      var a2 = p && L && p.list === L.nm ? findUpgradeEntry(L, p.section, p.label, sel.si, sel.ei) : null;
-      if (a2) return { at: a2, en: L.secs[a2.si].ents[a2.ei] };
-      var a3 = p && hostUpV && p.list === hostUpV.nm ? findUpgradeEntry(hostUpV, p.section, p.label, -1, -1) : null;
-      return a3 ? { at: { si: HOST_OFF + a3.si, ei: a3.ei }, en: hostUpV.secs[a3.si].ents[a3.ei] } : null;
-    };
-    Object.keys(intent.upgrades || {}).forEach(function(id) {
-      var st = intent.upgrades[id];
-      var row = rowOf(id);
-      if (!row) {
-        out.push(issue("upgrade.unknown_id", "error", "upgrades." + id, "upgrade row not found or not attached to this unit"));
-        return;
-      }
-      if (st === "off") return;
-      var e2 = row.en;
-      if (e2.req) return;
-      if (st === "take" && !rowAttached(sel, row.at.si, e2)) {
-        out.push(issue(
-          "upgrade.unattached",
-          "error",
-          "upgrades." + id,
-          "'" + e2.l + "' is aimed at other ships of the list, not this one",
-          e2.src_page
-        ));
-        return;
-      }
-      if (coveredByShipOption(sel, e2))
-        out.push(issue(
-          "upgrade.covered",
-          "warning",
-          "upgrades." + id,
-          "'" + e2.l + "' is one of the ship's own options; the list row is not counted",
-          e2.src_page
-        ));
-      else if (!condOK(sel, e2, row.at.si, row.at.ei))
-        out.push(issue(
-          "upgrade.ineligible",
-          "warning",
-          "upgrades." + id,
-          "'" + e2.l + "' is not available to this ship as configured; it is not counted",
-          e2.src_page
-        ));
-      if (st === "take" && e2.grp && !seenUpGrp[e2.grp]) {
-        var others = Object.keys(intent.upgrades).filter(function(id2) {
-          if (id2 === id || intent.upgrades[id2] !== "take") return false;
-          var r2 = rowOf(id2);
-          return r2 && r2.en.grp === e2.grp;
-        });
-        if (others.length) {
-          seenUpGrp[e2.grp] = 1;
-          out.push(issue(
-            "upgrade.exclusive",
-            "error",
-            "upgrades." + id,
-            others.length + 1 + " upgrades taken from a group that allows one",
-            e2.src_page
-          ));
-        }
-      }
-    });
-    if (sel && sel.sh && L) {
-      var bioKinds = {};
-      Object.keys(intent.upgrades || {}).forEach(function(id) {
-        if (intent.upgrades[id] !== "take") return;
-        var row = rowOf(id);
-        var secB = row ? secOf(sel, row.at.si) : null;
-        if (!secB || String(secB.t).trim().toUpperCase() !== "BIO-ENHANCEMENTS") return;
-        bioKinds[row.en.grp || row.en.l] = 1;
-      });
-      var nBio = Object.keys(bioKinds).length, tyB = String(sel.sh.ty || "");
-      var capB = /escort/i.test(tyB) ? 1 : /battleship/i.test(tyB) ? 3 : 2;
-      if (nBio > capB)
-        out.push(issue(
-          "upgrade.bio_limit",
-          "error",
-          "upgrades",
-          nBio + " different bio-enhancements taken; a " + (capB === 3 ? "hive ship" : capB === 2 ? "cruiser" : "escort") + " may have at most " + capB,
-          426
-        ));
-    }
-    return out;
-  }
-  function transition(intent, action, ctx, catalog) {
-    var it = JSON.parse(JSON.stringify(intent)), notices = [];
-    it.options = it.options || {};
-    it.upgrades = it.upgrades || {};
-    var L = listOfIntent(it, ctx, catalog);
-    var at0 = it.entry && L ? findEntry(L, it.entry.section, it.entry.label) : null;
-    var sh = shipFor(it.ref, at0 ? L.secs[at0.si].ents[at0.ei] : null, catalog);
-    var ol = sh && sh.ol || [];
-    var note = function(code, path, message) {
-      notices.push({ code, path, message });
-    };
-    var byId = function(id) {
-      return ol.filter(function(o3) {
-        return o3.id === id;
-      })[0] || null;
-    };
-    var stateOf = function(o3) {
-      var x = it.options[o3.id];
-      return x && x.state ? x.state : "opt";
-    };
-    var setState = function(o3, st) {
-      var x = it.options[o3.id] || { state: "opt", qty: 1 };
-      x.state = st;
-      it.options[o3.id] = x;
-    };
-    if (action.type === "option") {
-      var o = byId(action.id);
-      if (!o) {
-        note("option.unknown_id", "options." + action.id, "unknown option");
-        return { intent: it, notices };
-      }
-      var hpIn = function() {
-        var h = +(sh && sh.hp) || 0;
-        ol.forEach(function(p) {
-          var x = it.options[p.id];
-          if (x && x.state === "take" && p.mod && p.mod.hp) h += p.mod.hp * (p.qty ? Math.max(1, x.qty | 0) : 1);
-        });
-        return h;
-      };
-      if (action.state === "take" && stateOf(o) !== "take" && o.hpmin && hpIn() < o.hpmin) {
-        note("option.blocked", "options." + o.id, "'" + shortText(o.t) + "' needs " + o.hpmin + " Hits; the ship has " + hpIn());
-        return { intent: it, notices };
-      }
-      setState(o, action.state);
-      ol.forEach(function(p) {
-        if (p !== o && p.hpmin && stateOf(p) === "take" && hpIn() < p.hpmin) {
-          setState(p, "opt");
-          note("option.hpmin", "options." + p.id, "'" + shortText(p.t) + "' reopened: it needs " + p.hpmin + " Hits");
-        }
-      });
-      if (action.state === "take") {
-        if (o.grp) {
-          var max = Math.max(1, o.gmax || 1);
-          var others = ol.filter(function(p) {
-            return p !== o && p.grp === o.grp && stateOf(p) === "take";
-          });
-          while (others.length >= max) {
-            var q = others.shift();
-            setState(q, "opt");
-            note(
-              "option.exclusive",
-              "options." + q.id,
-              "'" + shortText(q.t) + "' reopened: only " + max + " of this group can be taken"
-            );
-          }
-        }
-        if (o.sw) ol.forEach(function(p) {
-          if (p === o || !p.sw || stateOf(p) !== "take") return;
-          if ((o.sw.f || []).some(function(f) {
-            return (p.sw.f || []).indexOf(f) >= 0;
-          })) {
-            setState(p, "opt");
-            note(
-              "option.swap_conflict",
-              "options." + p.id,
-              "'" + shortText(p.t) + "' reopened: it replaces the same weapon as '" + shortText(o.t) + "'"
-            );
-          }
-        });
-      }
-      if (action.state === "take" && o.cov && L) {
-        Object.keys(it.upgrades).forEach(function(id3) {
-          if (it.upgrades[id3] !== "take") return;
-          var q3 = splitUpgradeId(id3);
-          var sel3 = selectionOf(it, ctx, catalog);
-          var a4 = q3 && findUpgradeEntry(L, q3.section, q3.label, sel3.si, sel3.ei);
-          var e4 = a4 && L.secs[a4.si].ents[a4.ei];
-          if (!e4 || !e4.cond || !e4.cond.noup) return;
-          if (coversExcludedRow(L, o, e4.cond.noup)) {
-            it.upgrades[id3] = "off";
-            note(
-              "upgrade.conflict",
-              "upgrades." + id3,
-              "'" + e4.l + "' dropped: it may not be combined with '" + shortText(o.t) + "'"
-            );
-          }
-        });
-      }
-      ol.forEach(function(p) {
-        if (p.dep != null && ol[p.dep] && stateOf(p) === "take" && stateOf(ol[p.dep]) !== "take") {
-          setState(p, "opt");
-          note(
-            "option.dependency",
-            "options." + p.id,
-            "'" + shortText(p.t) + "' reopened: it needs '" + shortText(ol[p.dep].t) + "'"
-          );
-        }
-      });
-    } else if (action.type === "quantity") {
-      var o2 = byId(action.id);
-      if (o2) {
-        var x2 = it.options[o2.id] || { state: "opt", qty: 1 };
-        var mx = o2.qty ? o2.qty.max || 1 : 1;
-        x2.qty = Math.min(mx, Math.max(1, action.qty | 0));
-        it.options[o2.id] = x2;
-      }
-    } else if (action.type === "upgrade") {
-      var pre = splitUpgradeId(action.id);
-      var selP = selectionOf(it, ctx, catalog);
-      var atP = pre && L ? findUpgradeEntry(L, pre.section, pre.label, selP.si, selP.ei) : null;
-      var eP = atP ? L.secs[atP.si].ents[atP.ei] : null;
-      if (action.state === "take" && eP && !rowAttached(selP, atP.si, eP)) {
-        note("upgrade.unattached", "upgrades." + action.id, "'" + eP.l + "' is not one of this ship's rows");
-        return { intent: it, notices };
-      }
-      it.upgrades[action.id] = action.state;
-      var sel0 = selectionOf(it, ctx, catalog);
-      var p2 = splitUpgradeId(action.id);
-      var at2 = p2 && L ? findUpgradeEntry(L, p2.section, p2.label, sel0.si, sel0.ei) : null;
-      var e2 = at2 ? L.secs[at2.si].ents[at2.ei] : null;
-      if (action.state === "take" && e2) {
-        Object.keys(it.upgrades).forEach(function(id5) {
-          if (id5 === action.id || it.upgrades[id5] !== "take") return;
-          var q5 = splitUpgradeId(id5);
-          var a5 = q5 && findUpgradeEntry(L, q5.section, q5.label, sel0.si, sel0.ei);
-          var e5 = a5 && L.secs[a5.si].ents[a5.ei];
-          if (!e5) return;
-          var hit = e2.cond && e2.cond.noup && new RegExp(e2.cond.noup, "i").test(String(e5.l)) || e5.cond && e5.cond.noup && new RegExp(e5.cond.noup, "i").test(String(e2.l));
-          if (!hit) return;
-          if (e5.dflt) it.upgrades[id5] = "off";
-          else delete it.upgrades[id5];
-          note("upgrade.conflict", "upgrades." + id5, "'" + e5.l + "' dropped: it may not be combined with '" + e2.l + "'");
-        });
-      }
-      if (action.state === "take" && e2 && e2.cond && e2.cond.noup) {
-        ol.forEach(function(p) {
-          if (!p.cov || stateOf(p) !== "take") return;
-          if (coversExcludedRow(L, p, e2.cond.noup)) {
-            setState(p, "opt");
-            note(
-              "option.conflict",
-              "options." + p.id,
-              "'" + shortText(p.t) + "' reopened: it may not be combined with '" + e2.l + "'"
-            );
-          }
-        });
-      }
-      if (action.state === "take" && e2 && e2.grp) {
-        Object.keys(it.upgrades).forEach(function(id2) {
-          if (id2 === action.id || it.upgrades[id2] !== "take") return;
-          var q2 = splitUpgradeId(id2);
-          var a3 = q2 && findUpgradeEntry(L, q2.section, q2.label, sel0.si, sel0.ei);
-          var e3 = a3 && L.secs[a3.si].ents[a3.ei];
-          if (e3 && e3.grp === e2.grp) {
-            if (e3.dflt) it.upgrades[id2] = "off";
-            else delete it.upgrades[id2];
-            note("upgrade.exclusive", "upgrades." + id2, "'" + e3.l + "' dropped: one of this group at a time");
-          }
-        });
-      }
-    } else if (action.type === "hull") {
-      if (catalog.ships[String(action.ref)]) {
-        var had = Object.keys(it.options).length + Object.keys(it.upgrades).length;
-        it.ref = String(action.ref);
-        it.hull = String(action.ref);
-        it.options = {};
-        it.upgrades = {};
-        if (had) note("hull.changed", "hull", "hull changed: options and upgrades start over");
-      }
-    }
-    if (L && action.type !== "hull") {
-      for (var pass = 0; pass < 20; pass++) {
-        var sel1 = selectionOf(it, ctx, catalog), fell = 0;
-        Object.keys(it.upgrades).forEach(function(id2) {
-          if (it.upgrades[id2] === "off") return;
-          var q2 = splitUpgradeId(id2);
-          var a3 = q2 && findUpgradeEntry(L, q2.section, q2.label, sel1.si, sel1.ei);
-          var e3 = a3 && L.secs[a3.si].ents[a3.ei];
-          if (e3 && !e3.req && !condOK(sel1, e3, a3.si, a3.ei)) {
-            if (e3.dflt) it.upgrades[id2] = "off";
-            else delete it.upgrades[id2];
-            fell++;
-            note("upgrade.ineligible", "upgrades." + id2, "'" + e3.l + "' dropped: not available to this ship as configured");
-          }
-        });
-        if (!fell) break;
-      }
-    }
-    return { intent: it, notices };
-  }
-  function secTitleIs(L, i, want) {
-    var sec = L.secs[i];
-    return !!sec && String(sec.t).trim().toLowerCase() === String(want);
-  }
-  function secNameIssues(L, node, out) {
-    var i, k, v, want;
-    if (Object.prototype.toString.call(node) === "[object Array]") {
-      for (i = 0; i < node.length; i++) secNameIssues(L, node[i], out);
-      return out;
-    }
-    if (!node || typeof node !== "object") return out;
-    for (k in node) {
-      if (!Object.prototype.hasOwnProperty.call(node, k)) continue;
-      v = node[k];
-      if ((k === "sec" || k === "allow_sec" || k === "per_sec") && Object.prototype.toString.call(v) === "[object Array]" && node[k + "_sn"]) {
-        for (i = 0; i < v.length; i++)
-          if (!secTitleIs(L, v[i], node[k + "_sn"][i])) out.push(k + "[" + i + "]");
-      } else if ((k === "sec" || k === "up_sec") && typeof v === "number") {
-        want = k === "sec" ? node.sn : node.up_sn;
-        if (want != null && !secTitleIs(L, v, want)) out.push(k);
-      } else if (v && typeof v === "object" && k !== "sn" && k.slice(-3) !== "_sn") {
-        secNameIssues(L, v, out);
-      }
-    }
-    return out;
-  }
-
   // packages/rules/src/fleet.js
   var HUMAN_FL = /^(IMPERIAL NAVY|SPACE MARINES|ADEPTUS MECHANICUS|INQUISITION|ROGUE TRADERS|CHAOS|HIGH ORBIT|LOW ORBIT|ADDITIONAL)/i;
   function isXenosMember(m) {
@@ -1662,1609 +911,348 @@ var __rules = (() => {
     });
     return out;
   }
-  function resolveFleet(fleetIntent, catalog) {
-    var L = catalog.lists.filter(function(x) {
-      return x.nm === fleetIntent.list;
-    })[0] || null;
-    var ctx = { list: L, host: L };
-    var lim = fleetIntent.limit | 0;
-    var members = (fleetIntent.units || []).map(function(it) {
-      var sel = selectionOf(it, ctx, catalog);
-      var R = resolveUnit(it, ctx, catalog);
-      var en = sel.en;
-      var ownSec = sel.list && sel.list.secs[sel.si];
-      var role = roleOfIntent(it);
-      if (role === "core" && sel.list === L && ownSec && ownSec.ct === "reserve")
-        role = "reserve";
-      return {
-        intent: it,
-        sel,
-        R,
-        si: sel.si,
-        ei: sel.ei,
-        en,
-        role,
-        own: !sel.list || sel.list === L,
-        unitRow: !!en && !isUpgradeEnt(en),
-        hulls: sel.hulls,
-        escort: sel.escort,
-        /* a planetary defence: outside the fleet list's own counts */
-        defence: sel.defence,
-        points: R && R.points != null ? R.points : 0,
-        maxPoints: R && R.maxPoints != null ? R.maxPoints : 0
-      };
+
+  // packages/rules/src/pricing.js
+  function upCost(sel, en) {
+    if (en.pct) return Math.ceil(pctBase(sel) * en.pct / 100);
+    if (en.p == null) return 0;
+    if (en.per === "hull") return en.p * sel.hulls;
+    if (en.per === "bay") return en.p * bayStrength(sel.sh, sel).n * (sel.escort ? sel.hulls : 1);
+    return en.p;
+  }
+  function upgradePts(sel) {
+    var p = 0;
+    var ups = upgradesFor(sel);
+    ups.own.concat(ups.other).forEach(function(x) {
+      if (upState(sel, x[0], x[1]) === "take") p += upCost(sel, x[2]);
     });
-    var tot = members.reduce(function(a, m) {
-      return a + m.points;
-    }, 0);
-    var totMax = members.reduce(function(a, m) {
-      return a + m.maxPoints;
-    }, 0);
-    var defPts = members.reduce(function(a, m) {
-      return a + (m.defence && !defenceOwnPoints(m.sel.sh) ? m.points : 0);
-    }, 0);
-    var worth = tot - defPts;
-    var out = [];
-    out.push({
-      ok: tot <= lim,
-      t: "Points limit",
-      v: tot + " / " + lim,
-      s: tot <= lim ? lim - tot + " pts remaining" : tot - lim + " pts over the limit"
+    return p;
+  }
+  function hullPts(sel, en) {
+    var sh = sel.sh;
+    if (!sh) return 0;
+    var crew = !sh.ven && /SPACE MARINES/i.test(String(sh.fl || "")) ? 0 : en.hcp || 0;
+    return (sh.bp || 0) + crew;
+  }
+  function hullOptionPts(sel) {
+    var en = sel.en, sh = sel.sh;
+    var p = (en.hc ? hullPts(sel, en) : en.p == null ? sel.custom | 0 : en.p) * sel.hulls;
+    if (sh) sh.ol.forEach(function(o, i) {
+      if (o.c != null && optState(sel, i) === "take")
+        p += o.c * optCount(sel, i) * (sel.escort ? sel.hulls : 1);
     });
-    if (!L) return {
-      list: null,
-      limit: lim,
-      units: members.map(function(m) {
-        return m.R;
-      }),
-      totals: { points: tot, maxPoints: totMax, hulls: 0 },
-      checks: out,
-      facts: [],
-      aboard: []
-    };
-    var secKey = function(sec) {
-      return String(sec && sec.t || "").trim().toLowerCase();
-    };
-    var rtOf = function(en2) {
-      var sh2 = en2 && en2.r != null ? catalog.ships[String(en2.r)] : null;
-      return sh2 ? sh2.rt : null;
-    };
-    var matches = function(m, si, re) {
-      if (!m.unitRow) return false;
-      if (m.own) return m.si === si && (!re || re.test(m.en.l));
-      var sec = L.secs[si];
-      if (!sec || sec.ct !== "type") return false;
-      var ds = m.sel.list && m.sel.list.secs[m.si];
-      if (!ds || ds.ct !== "type" || secKey(ds) !== secKey(sec)) return false;
-      var mine = rtOf(m.en);
-      if (mine && !sec.ents.some(function(e2) {
-        return e2.k === "unit" && rtOf(e2) === mine;
-      })) return false;
-      return !re || re.test(m.en.l);
-    };
-    var secShips = function(si, re) {
-      return members.filter(function(m) {
-        return matches(m, si, re);
-      }).reduce(function(a, m) {
-        return a + m.hulls;
-      }, 0);
-    };
-    var secUnits = function(si, re) {
-      return members.filter(function(m) {
-        return matches(m, si, re);
-      }).length;
-    };
-    var rx = function(p) {
-      return p.re ? new RegExp(p.re, "i") : null;
-    };
-    var pickHas = function(m, p) {
-      if (p.race == null && p.hull == null) return matches(m, p.sec, rx(p));
-      if (!m.unitRow) return false;
-      if (p.race != null && (m.own || !m.sel.list || m.sel.list.race !== p.race)) return false;
-      if (p.hull != null && !(m.sel.sh && new RegExp(p.hull, "i").test(String(m.sel.sh.nm || "")))) return false;
-      return !p.re || rx(p).test(m.en.l);
-    };
-    var count = function(pick, secs, units) {
-      var f = units ? secUnits : secShips;
-      return pick ? pick.reduce(function(a, p) {
-        var ms = members.filter(function(m) {
-          return pickHas(m, p);
-        });
-        return a + (units ? ms.length : ms.reduce(function(b, m) {
-          return b + m.hulls;
-        }, 0));
-      }, 0) : (secs || []).reduce(function(a, i) {
-        return a + f(i, null);
-      }, 0);
-    };
-    var pointsOfPick = function(pick, secs) {
-      return members.filter(function(m) {
-        return pick ? pick.some(function(p) {
-          return pickHas(m, p);
-        }) : (secs || []).indexOf(m.si) >= 0 && m.unitRow;
-      }).reduce(function(a, m) {
-        return a + m.points;
-      }, 0);
-    };
-    var distinctKinds = function(pick) {
-      var seen = {};
-      members.forEach(function(m) {
-        if (pick.some(function(p) {
-          return pickHas(m, p);
-        }))
-          seen[String(m.en.l).split(" \u2014 ")[0].trim().toLowerCase()] = 1;
-      });
-      return Object.keys(seen).length;
-    };
-    var upShare = function(secIdx) {
-      return members.reduce(function(a, m) {
-        if (!m.sel || !m.sel.sh) return a;
-        var ups;
-        try {
-          ups = upgradesFor(m.sel);
-        } catch (e) {
-          return a;
-        }
-        return a + ups.own.concat(ups.other).filter(function(x) {
-          return x[0] === secIdx && upState(m.sel, x[0], x[1]) === "take";
-        }).reduce(function(b, x) {
-          return b + upCost(m.sel, x[2]);
-        }, 0);
-      }, 0);
-    };
-    var condMet = function(r) {
-      return !r.cond_pick || count(r.cond_pick, null) >= (r.cond_min == null ? 1 : r.cond_min);
-    };
-    var tookUp = function(m, si, ei) {
-      return upgradeTakenAnyWay(m.sel, m.own ? si : HOST_OFF + si, ei);
-    };
-    var upRows = function(secIdx, re) {
-      var rows = [];
-      (L.secs[secIdx] ? L.secs[secIdx].ents : []).forEach(function(en, ei) {
-        if (isUpgradeEnt(en) && (!re || re.test(en.l))) rows.push([secIdx, ei, en]);
-      });
-      return rows;
-    };
-    L.secs.forEach(function(sec, si) {
-      (sec.rules || []).forEach(function(r) {
-        var lab = r.label || sec.t;
-        if (r.interp) lab += " (open interpretation " + r.interp.id + ")";
-        var badSec = secNameIssues(L, r, []);
-        if (badSec.length) {
-          out.push({
-            ok: false,
-            t: "Data error: " + lab,
-            v: "section index does not match its name (" + badSec.join(", ") + ")",
-            s: r.src
-          });
-          return;
-        }
-        if (r.kind === "section_count") {
-          var c = r.pick ? count(r.pick, null) : secShips(si);
-          out.push({ ok: c <= r.max && (c === 0 || c >= r.min), t: lab, v: c + " / " + r.max, s: r.src });
-        }
-        if (r.kind === "cap") {
-          var cc = r.pick ? count(r.pick, null) : (r.sec || [si]).reduce(function(a, i) {
-            return a + secShips(i);
-          }, 0);
-          out.push({ ok: cc <= r.max, t: lab, v: cc + " / " + r.max, s: r.src });
-        }
-        if (r.kind === "ratio" && !(r.when_pick && count(r.when_pick, null) < 1)) {
-          var have = count(r.allow_pick, r.allow_sec || [si], !!r.units);
-          var base = r.distinct ? distinctKinds(r.per_pick) : count(r.per_pick, r.per_sec);
-          var allowed = Math.floor(base / r.per) * r.allow;
-          if (r.min_one && base >= 1) allowed = Math.max(1, allowed);
-          if (r.exempt && count(r.exempt.cond_pick, null) >= (r.exempt.cond_min == null ? 1 : r.exempt.cond_min))
-            allowed += r.exempt.count == null ? 1 : r.exempt.count;
-          if (r.at_least && count(r.at_least.cond_pick, null) >= (r.at_least.cond_min == null ? 1 : r.at_least.cond_min))
-            allowed = Math.max(allowed, r.at_least.count == null ? 1 : r.at_least.count);
-          out.push({ ok: have <= allowed, t: lab, v: have + " / " + allowed, s: r.src });
-          var strictR = Math.floor(base / r.per) * r.allow;
-          if (r.interp && r.interp.strict === "min_one" && have <= allowed && have > strictR)
-            out.push({
-              ok: true,
-              warn: true,
-              t: "Open interpretation (" + r.interp.id + "): " + r.label,
-              v: have + " / " + strictR + " on the strict reading",
-              s: r.interp.note
-            });
-        }
-        if (r.kind === "per_points") {
-          var cp = r.pick ? count(r.pick, null) : (r.sec || [si]).reduce(function(a, i) {
-            return a + secUnits(i);
-          }, 0);
-          var basePts = r.of_pick ? pointsOfPick(r.of_pick, null) : r.basis === "limit" ? lim : worth;
-          var ap = r.full ? Math.floor(basePts / r.per) * r.each : Math.max(1, Math.ceil(basePts / r.per)) * r.each;
-          if (!condMet(r)) ap = 0;
-          out.push({
-            ok: r.exact ? cp === ap : cp <= ap,
-            t: lab,
-            v: cp + " / " + ap + (r.exact ? " exactly" : ""),
-            s: r.src
-          });
-          if (r.interp && r.interp.strict_max != null && cp <= ap && cp > r.interp.strict_max)
-            out.push({
-              ok: true,
-              warn: true,
-              t: "Open interpretation (" + r.interp.id + "): " + r.label,
-              v: cp + " / " + r.interp.strict_max + " on the strict reading",
-              s: r.interp.note
-            });
-        }
-        if (r.kind === "mandatory_at") {
-          var cm = r.pick ? count(r.pick, null) : (r.sec || [si]).reduce(function(a, i) {
-            return a + secUnits(i);
-          }, 0);
-          var need = r.over ? worth > r.points : worth >= r.points;
-          out.push({
-            ok: !need || cm >= 1,
-            t: lab + (r.points ? " (" + (r.over ? "over " : "from ") + r.points + " pts)" : " required"),
-            v: need ? cm >= 1 ? "included" : "missing" : "not required",
-            s: r.src,
-            warn: !need
-          });
-        }
-        if (r.kind === "squadron") {
-          var insec = r.sec || [si];
-          var inRule = members.filter(function(m) {
-            return m.escort && (r.pick ? r.pick.some(function(p) {
-              return pickHas(m, p);
-            }) : insec.indexOf(m.si) >= 0);
-          });
-          var escortsInFleet = members.filter(function(m) {
-            return m.escort && !m.defence;
-          }).reduce(function(a, m) {
-            return a + m.hulls;
-          }, 0);
-          var poolKey = function(m) {
-            return r.split_fl ? String(m.sel.sh && m.sel.sh.fl || "") : "";
-          };
-          var pools = {};
-          inRule.forEach(function(m) {
-            var k = poolKey(m);
-            (pools[k] = pools[k] || []).push(m);
-          });
-          var partners = r.with_pick ? members.filter(function(m) {
-            return inRule.indexOf(m) < 0 && r.with_pick.some(function(p) {
-              return pickHas(m, p);
-            });
-          }) : [];
-          var fits = function(x) {
-            if (x === 0) return true;
-            for (var q = 1; q * r.min <= x; q++) if (x <= q * r.max) return true;
-            return false;
-          };
-          Object.keys(pools).forEach(function(k) {
-            var pool = pools[k];
-            var shortN = pool.filter(function(m) {
-              return m.hulls < r.min;
-            }).reduce(function(a, m) {
-              return a + m.hulls;
-            }, 0);
-            var room = pool.filter(function(m) {
-              return m.hulls >= r.min && m.hulls <= r.max;
-            }).reduce(function(a, m) {
-              return a + (r.max - m.hulls);
-            }, 0) + partners.filter(function(m) {
-              return poolKey(m) === k;
-            }).reduce(function(a, m) {
-              return a + Math.max(0, r.max - m.hulls);
-            }, 0);
-            var placed = false;
-            for (var j = 0; j <= Math.min(shortN, room) && !placed; j++) placed = fits(shortN - j);
-            var lone = !!r.lone && escortsInFleet === 1;
-            pool.forEach(function(m) {
-              var n = m.hulls, ok = n >= r.min && n <= r.max, v = n + " ships";
-              if (n < r.min && lone) {
-                ok = true;
-                v += " (the only escort in the fleet)";
-              } else if (n < r.min && placed) {
-                ok = true;
-                v += " (joins other escorts in a mixed squadron)";
-              }
-              out.push({
-                ok,
-                t: m.sel.sh.nm,
-                v: m.defence ? n + (n === 1 ? " defence" : " defences") : v,
-                s: "Squadrons of " + r.min + "\u2013" + r.max + ". " + r.src
-              });
-            });
-          });
-        }
-        if (r.kind === "allowed_at") {
-          var ca = count(r.pick, null);
-          var basis = r.basis === "remainder" ? worth - pointsOfPick(r.pick, null) : worth;
-          var okPts = r.over ? basis > r.points : basis >= r.points;
-          var okCond = condMet(r);
-          out.push({
-            ok: ca === 0 || okPts && okCond,
-            t: lab,
-            v: ca === 0 ? "none" : okPts && okCond ? "allowed" : "not allowed",
-            s: r.src,
-            warn: ca === 0
-          });
-        }
-        if (r.kind === "conditional_cap") {
-          var cq = count(r.pick, null);
-          var met = r.cond_role ? members.some(function(m) {
-            return m.role === r.cond_role;
-          }) : condMet(r);
-          var cap = met ? r.max_met : r.max_unmet;
-          out.push({
-            ok: cap == null || cq <= cap,
-            t: lab,
-            v: cq + " / " + (cap == null ? "any" : cap),
-            s: r.src
-          });
-        }
-        if (r.kind === "requires") {
-          var ifc = count(r.if_pick, null, !!r.if_units), thenc = count(r.then_pick, null), min = r.min == null ? 1 : r.min;
-          var ifMin = r.if_min == null ? 1 : r.if_min;
-          var need = ifc >= ifMin && !(r.unless_pick && count(r.unless_pick, null) >= 1);
-          out.push({
-            ok: !need || thenc >= min,
-            t: lab,
-            v: !need ? "not required" : thenc >= min ? "included" : "missing",
-            s: r.src,
-            warn: !need
-          });
-        }
-        if (r.kind === "min_ratio") {
-          var b2 = count(r.per_pick, null), h2 = count(r.allow_pick, null, !!r.units), needN = b2 * r.min;
-          out.push({ ok: b2 === 0 || h2 >= needN, t: lab, v: h2 + " / " + needN + " min", s: r.src });
-        }
-        if (r.kind === "compare") {
-          var a3 = count(r.a_pick, null, !!r.a_units) * (r.a_mult || 1), b3 = count(r.b_pick, null, !!r.b_units) + (r.b_add || 0);
-          var okc = r.op === "<=" ? a3 <= b3 : r.op === "<" ? a3 < b3 : r.op === ">=" ? a3 >= b3 : r.op === ">" ? b3 === 0 || a3 > b3 : a3 === b3;
-          out.push({ ok: okc, t: lab, v: a3 + " " + r.op + " " + b3, s: r.src });
-        }
-        if (r.kind === "points_share") {
-          var share = r.up_sec != null ? upShare(r.up_sec) : pointsOfPick(r.pick, null);
-          var baseP = r.of === "limit" ? lim : r.of === "pick" ? pointsOfPick(r.of_pick, null) : worth;
-          var allow = r.pct != null ? baseP * r.pct / 100 : baseP * (r.frac || 1);
-          if (!condMet(r)) allow = 0;
-          out.push({ ok: share <= allow + 1e-9, t: lab, v: share + " / " + Math.floor(allow) + " pts", s: r.src });
-        }
-        if (r.kind === "tiers") {
-          var ct = count(r.pick, null), capT = 0, tierBase = r.basis === "limit" ? lim : worth;
-          (r.tiers || []).forEach(function(t) {
-            if (tierBase >= t[0]) capT = t[1];
-          });
-          out.push({ ok: ct <= capT, t: lab, v: ct + " / " + capT, s: r.src });
-        }
-        if (r.kind === "upgrade_ratio") {
-          var rows = upRows(r.up_sec, r.up_re ? new RegExp(r.up_re, "i") : null);
-          var nU = members.filter(function(m) {
-            return rows.some(function(x) {
-              return tookUp(m, x[0], x[1]);
-            });
-          }).length;
-          var bU = count(r.per_pick, null);
-          var aU = Math.floor(bU / r.per) * r.allow;
-          if (r.min_one && bU >= 1) aU = Math.max(1, aU);
-          out.push({ ok: nU <= aU, t: lab, v: nU + " / " + aU, s: r.src });
-        }
-        if (r.kind === "option_ratio") {
-          var orx = new RegExp(r.opt_re, "i");
-          var inPick = members.filter(function(m) {
-            return (r.pick || []).some(function(p) {
-              return pickHas(m, p);
-            });
-          });
-          var tookO = inPick.filter(function(m) {
-            var shO = m.sel && m.sel.sh;
-            return !!shO && (shO.ol || []).some(function(o, i) {
-              return orx.test(o.t || "") && optState(m.sel, i) === "take";
-            });
-          }).length;
-          var baseO = inPick.reduce(function(a, m) {
-            return a + m.hulls;
-          }, 0);
-          var allowO = Math.floor(baseO / r.per) * r.allow;
-          out.push({ ok: tookO <= allowO, t: lab, v: tookO + " / " + allowO, s: r.src, warn: tookO === 0 });
-        }
-        if (r.kind === "notice") out.push({ ok: true, warn: true, t: lab, v: "not checked by the app", s: r.src });
-        if (r.kind === "one_donor") {
-          var donors = {};
-          members.forEach(function(m) {
-            if ((r.roles || []).indexOf(m.role) >= 0 && m.sel && m.sel.list && m.sel.list !== L) donors[m.sel.list.nm] = 1;
-          });
-          var nd = Object.keys(donors).length;
-          if (nd) out.push({ ok: nd <= 1, t: lab, v: nd + " / 1" + (nd > 1 ? ": " + Object.keys(donors).join(", ") : ""), s: r.src });
-        }
-        if (r.kind === "agreement") {
-          var agN = r.pick ? count(r.pick, null) : 0;
-          if (r.up_sec != null) upRows(r.up_sec, null).forEach(function(x) {
-            members.forEach(function(m) {
-              if (tookUp(m, x[0], x[1])) agN++;
-            });
-          });
-          if (agN) out.push({
-            ok: true,
-            warn: true,
-            t: "By agreement with your opponent: " + lab,
-            v: agN + " in the fleet",
-            s: r.src
-          });
-        }
-        if (r.kind === "hook_capacity") {
-          var carriedH = count(r.carry, null);
-          var capH = members.reduce(function(a, m) {
-            var hk = m.sel && m.sel.sh && m.sel.sh.hk;
-            if (!hk) return a;
-            var hkRow = (m.R && m.R.weapons || []).filter(function(w) {
-              return (w.box == null || w.box === "on") && /gravitic hook/i.test(String(w.a && w.a[0] || ""));
-            })[0];
-            if (m.defence && !hkRow) return a;
-            var hkN = m.defence && hkRow ? Math.max(1, hkRow.count || 1) : 1;
-            return a + (r.caps || [0]).reduce(function(b, i) {
-              return b + (hk[i] || 0);
-            }, 0) * m.hulls * hkN;
-          }, 0);
-          out.push({
-            ok: carriedH <= capH || !!r.soft,
-            warn: !!r.soft && carriedH > capH,
-            t: lab,
-            v: carriedH + " / " + capH,
-            s: r.src + (r.interp ? " " + r.interp.note : "")
-          });
-        }
-        if (r.kind === "up_budget") {
-          var usedB = 0, budget2 = 0;
-          var budRows = upRows(r.up_sec, r.up_re ? new RegExp(r.up_re, "i") : null);
-          members.forEach(function(m) {
-            budRows.forEach(function(x) {
-              if (tookUp(m, x[0], x[1])) usedB++;
-            });
-          });
-          (r.budget || []).forEach(function(b) {
-            if (b.pick) budget2 += (b.units || 1) * count(b.pick, null, true);
-            if (b.up_re) upRows(b.up_sec, new RegExp(b.up_re, "i")).forEach(function(x) {
-              members.forEach(function(m) {
-                if (tookUp(m, x[0], x[1])) budget2 += b.weight || 1;
-              });
-            });
-          });
-          out.push({ ok: usedB <= budget2, t: lab, v: usedB + " / " + budget2, s: r.src, warn: usedB === 0 });
-        }
-        if (r.kind === "unit_upgrade_max") {
-          var rowsM = upRows(r.up_sec, r.up_re ? new RegExp(r.up_re, "i") : null);
-          var over = 0;
-          members.forEach(function(m) {
-            if (!r.unit_pick.some(function(p) {
-              return pickHas(m, p);
-            })) return;
-            var k = rowsM.filter(function(x) {
-              return tookUp(m, x[0], x[1]);
-            }).length;
-            if (k > r.max) {
-              over++;
-              out.push({
-                ok: false,
-                t: lab + ": " + (m.R ? m.R.className : m.en.l),
-                v: k + " / " + r.max,
-                s: r.src
-              });
-            }
-          });
-          if (!over) out.push({ ok: true, t: lab, v: "max " + r.max, s: r.src, warn: true });
-        }
-      });
+    return p;
+  }
+  function pointsOf(sel) {
+    if (!sel.en) return null;
+    return hullOptionPts(sel) + upgradePts(sel) + (sel.adjust | 0);
+  }
+  function pctBase(sel) {
+    if (!sel.en) return 0;
+    var p = hullOptionPts(sel);
+    var ups = upgradesFor(sel);
+    ups.own.concat(ups.other).forEach(function(x) {
+      if (!x[2].pct && upState(sel, x[0], x[1]) === "take") p += upCost(sel, x[2]);
     });
-    L.secs.forEach(function(sec, si) {
+    return p;
+  }
+  function flatMaxPointsOf(sel) {
+    var sh = sel.sh;
+    var p = pointsOf(sel);
+    if (p == null) return null;
+    var seen = {}, decided = {};
+    var blockedOpt = optionsOf(sel).map(function(o) {
+      return o.blockedBy.length > 0;
+    });
+    if (sh) sh.ol.forEach(function(o, i) {
+      if (o.grp && optState(sel, i) === "take") decided["opt:" + o.grp] = 1;
+    });
+    if (sel.list) upSecs(sel).forEach(function(sec, si) {
       sec.ents.forEach(function(en, ei) {
-        if (en.mx == null) return;
-        if (isUpgradeEnt(en)) {
-          var n = members.filter(function(m) {
-            return m.own && tookUp(m, si, ei);
-          }).length;
-          if (n > 0 || en.mx === 0)
-            out.push({
-              ok: n <= en.mx,
-              t: en.l,
-              v: n + " / " + en.mx,
-              s: "The fleet may take this upgrade " + en.mx + (en.mx === 1 ? " time." : " times.")
-            });
-          return;
-        }
-        var c = members.filter(function(m) {
-          return m.own && m.si === si && m.ei === ei;
-        }).reduce(function(a, m) {
-          return a + m.hulls;
-        }, 0);
-        if (c > 0 || en.mx === 0)
-          out.push({ ok: c <= en.mx, t: en.l, v: c + " / " + en.mx, s: "Entry is limited to " + en.mx + " in the list." });
+        if (isUpgradeEnt(en) && en.grp && upState(sel, si, ei) === "take") decided[en.grp] = 1;
       });
     });
-    var fxg = {};
-    L.secs.forEach(function(sec, si) {
+    var optCost = function(o) {
+      return o.c * (o.qty ? o.qty.max || 1 : 1) * (sel.escort ? sel.hulls : 1);
+    };
+    var depAdd = {};
+    if (sh) sh.ol.forEach(function(o, i) {
+      if (o.dep == null || !(o.c > 0) || optState(sel, i) !== "opt" || blockedOpt[i]) return;
+      var d = o.dep, pre = sh.ol[d];
+      if (!pre) return;
+      var ds = optState(sel, d);
+      if (ds === "take") {
+        p += optCost(o);
+        return;
+      }
+      if (ds !== "opt" || blockedOpt[d] || pre.grp && decided["opt:" + pre.grp]) return;
+      depAdd[d] = (depAdd[d] || 0) + optCost(o);
+    });
+    if (sh) sh.ol.forEach(function(o, i) {
+      if (o.dep != null || optState(sel, i) !== "opt" || blockedOpt[i]) return;
+      var c = (o.c > 0 ? optCost(o) : 0) + (depAdd[i] || 0);
+      if (!(c > 0)) return;
+      if (o.grp) {
+        if (!decided["opt:" + o.grp]) seen["opt:" + o.grp] = Math.max(seen["opt:" + o.grp] || 0, c);
+      } else p += c;
+    });
+    if (sel.list) upSecs(sel).forEach(function(sec, si) {
       sec.ents.forEach(function(en, ei) {
-        if (!en.fxg || !isUpgradeEnt(en)) return;
-        var g = fxg[en.fxg] || (fxg[en.fxg] = { n: 0, t: sec.t, labels: [] });
-        g.labels.push(en.l);
-        g.n += members.filter(function(m) {
-          return tookUp(m, si, ei);
-        }).length;
-      });
-    });
-    Object.keys(fxg).forEach(function(k) {
-      var g = fxg[k];
-      if (g.n > 0) out.push({
-        ok: g.n <= 1,
-        t: g.t + " (bought once for the fleet)",
-        v: g.n + " / 1",
-        s: "One purchase for the whole fleet: " + g.labels.join(" or ") + "."
-      });
-    });
-    if (L.mark_paid) {
-      var MP = L.mark_paid;
-      var markRe = new RegExp("^the mark of " + MP.god, "i");
-      var wm = members.filter(function(m) {
-        return m.en && m.en.k === "cmd" && /warmaster/i.test(String(m.en.l || ""));
-      });
-      if (wm.length) {
-        var shipRe = new RegExp(MP.ship, "i");
-        var aboard = members.filter(function(m) {
-          return m.unitRow && m.en && shipRe.test(String(m.en.l || ""));
-        });
-        var paid = false;
-        if (aboard.length) {
-          if (MP.dearest) {
-            var top = members.reduce(function(a2, m) {
-              return m.unitRow && !m.defence && m.points > a2 ? m.points : a2;
-            }, -1);
-            paid = aboard.some(function(m) {
-              return m.points >= top;
-            }) && members.filter(function(m) {
-              return m.unitRow && !m.defence && m.points === top;
-            }).length === 1;
-          } else {
-            var pkRe = new RegExp(MP.unless, "i");
-            paid = !members.some(function(m) {
-              return m.unitRow && m.en && pkRe.test(String(m.en.l || ""));
-            });
-          }
-        }
-        wm.forEach(function(m) {
-          var ups;
-          try {
-            ups = upgradesFor(m.sel);
-          } catch (e) {
-            return;
-          }
-          var row = ups.own.concat(ups.other).filter(function(x) {
-            return x[2] && markRe.test(String(x[2].l || ""));
-          })[0];
-          if (!row) return;
-          var upSt = upState(m.sel, row[0], row[1]), took = upSt === "take";
-          if (paid && took)
-            out.push({
-              ok: false,
-              t: "Mark of " + MP.god + " paid twice",
-              v: "already in the ship's cost",
-              s: MP.src_ship
-            });
-          else if (paid && upSt === "opt")
-            out.push({
-              ok: true,
-              warn: true,
-              t: "Mark of " + MP.god + " is in the ship's cost",
-              v: "set the Warmaster's Mark row to Hide",
-              s: MP.src_ship
-            });
-          else if (!paid && !took)
-            out.push({
-              ok: false,
-              t: "Warmaster without the Mark of " + MP.god,
-              v: "the list requires it",
-              s: "The Warmaster must take the Mark of " + MP.god + "."
-            });
-        });
-      }
-    }
-    members.forEach(function(m) {
-      var errs = (m.R && m.R.issues || []).filter(function(x) {
-        return x.severity === "error";
-      });
-      if (errs.length)
-        out.push({
-          ok: false,
-          t: "Unit issues: " + m.R.className.toLowerCase().replace(/(^|[\s(\-\u2013/])([a-z])/g, function(a, b, c) {
-            return b + c.toUpperCase();
-          }),
-          v: errs.length + " problem" + (errs.length > 1 ? "s" : ""),
-          s: errs.map(function(x) {
-            return x.message;
-          }).join("; ")
-        });
-    });
-    if (L.aboard) {
-      var AB = L.aboard;
-      var abCmd = members.filter(function(m) {
-        return m.own && m.en && m.en.k === "cmd" && new RegExp(AB.cmd_re, "i").test(String(m.en.l));
-      })[0];
-      if (abCmd) {
-        var abShip = members.some(function(m) {
-          return m.unitRow && m.en && new RegExp(AB.ship_re, "i").test(String(m.en.l));
-        });
-        var abTook = (abCmd.R && abCmd.R.upgrades || []).some(function(u) {
-          return u.state === "take" && new RegExp(AB.up_re, "i").test(String(u.label));
-        });
-        if (abShip || abTook)
-          out.push({
-            ok: abShip || !abTook,
-            warn: abShip && !abTook,
-            t: abCmd.en.l + " aboard the Flame of Asuryan",
-            v: !abShip ? "the Flame of Asuryan is not in the fleet" : abTook ? "125 pts" : "125 pts if the row is ticked",
-            s: AB.src + " (Fleets p. " + AB.pg + ")"
-          });
-      }
-    }
-    var defs = members.filter(function(m) {
-      return m.defence;
-    });
-    if (defs.length) {
-      var budget = defs.reduce(function(a, m) {
-        return a + (defenceOwnPoints(m.sel.sh) ? 0 : m.points);
-      }, 0);
-      var third = Math.floor(lim / 3);
-      if (budget > 0 || defs.some(function(m) {
-        return !defenceOwnPoints(m.sel.sh);
-      }))
-        out.push({
-          ok: true,
-          warn: budget > third,
-          t: "Planetary defences (up to one third of the points)",
-          v: budget + " / " + third + " pts",
-          s: "When desired, the defender in a scenario may spend up to one-third of his allocated point value on planetary defences, in addition to any planetary defences provided by the specific scenario. (Rulebook p. 100)"
-        });
-      defs.forEach(function(m) {
-        var n1 = m.sel.sh && m.sel.sh.need1;
-        if (!n1) return;
-        var took = (m.R && m.R.options || []).filter(function(o) {
-          return o.group === n1.grp && o.state === "take";
-        }).length;
-        if (took === 0)
-          out.push({
-            ok: false,
-            t: m.en.l + " (choose one " + n1.what + ")",
-            v: "none chosen",
-            s: n1.src + " (Fleets p. " + n1.pg + ")"
-          });
-      });
-      if (defs.some(function(m) {
-        return m.sel.sh && m.sel.sh.qd;
-      }))
-        out.push({
-          ok: true,
-          warn: true,
-          t: "Ramilies class star fort",
-          v: "by prior agreement",
-          s: "Bought from the fleet's points, rather than defences, and in competitive play only by prior agreement with the opponent. (Fleets p. 500)"
-        });
-    }
-    members.forEach(function(m) {
-      var nd = m.sel && m.sel.sh && m.sel.sh.need;
-      if (!nd || !m.unitRow) return;
-      nd.forEach(function(n) {
-        var took = (m.R && m.R.options || []).filter(function(o) {
-          return o.group === n.grp && o.state === "take";
-        }).length;
-        if (!took) out.push({
-          ok: false,
-          t: (m.en ? m.en.l : "?") + ": choose " + n.what,
-          v: "none chosen",
-          s: n.src + " (Fleets p. " + n.pg + ")"
-        });
-      });
-    });
-    var fracs = {};
-    members.forEach(function(m) {
-      var fr = m.sel && m.sel.sh && m.sel.sh.frac;
-      if (!fr) return;
-      var g = fracs[fr.what] = fracs[fr.what] || { fr, all: 0, took: 0 };
-      g.all += m.hulls;
-      var rx2 = new RegExp(fr.opt, "i");
-      if ((m.R && m.R.options || []).some(function(o) {
-        return o.state === "take" && rx2.test(String(o.text || ""));
-      }))
-        g.took += m.hulls;
-    });
-    Object.keys(fracs).forEach(function(k) {
-      var g = fracs[k], cap = Math.floor(g.all * g.fr.pct / 100);
-      if (g.took) out.push({
-        ok: g.took <= cap,
-        t: g.fr.label,
-        v: g.took + " / " + cap + " of " + g.all,
-        s: g.fr.src + " (Fleets p. " + g.fr.pg + ")"
-      });
-    });
-    if (L.webway) {
-      var WW = L.webway, wwRe = new RegExp(WW.up, "i"), hvRe = new RegExp(WW.haven, "i");
-      var wwN = members.filter(function(m) {
-        return (m.R && m.R.upgrades || []).some(function(u) {
-          return u.state === "take" && wwRe.test(String(u.label));
-        });
-      }).length;
-      if (wwN) {
-        var hv = members.some(function(m) {
-          return m.unitRow && m.en && hvRe.test(String(m.en.l || ""));
-        });
-        out.push({
-          ok: hv,
-          t: "Ships through the Webway Portal",
-          v: hv ? wwN + " at half cost" : "no Eldar Haven in the fleet",
-          s: WW.src + " (Fleets p. " + WW.pg + ")"
-        });
-      }
-    }
-    var RES_TYPES = [
-      ["battleship", "battleships"],
-      ["cruiser", "cruisers"],
-      ["escort", "escorts"]
-    ];
-    var RES_SRC = "For every three battleships, cruisers or escorts chosen from the fleet list, you may also pick one ship of the same type from another fleet list belonging to the same race. (Fleets p. 14)";
-    var ALLY_SRC = "In all cases these follow the standard rules for reserves in that no more than one allied vessel may be taken for every three core vessels in the fleet. (Fleets p. 16)";
-    var typeOf = function(m) {
-      return m.sel && m.sel.sh && m.sel.sh.rt || "none";
-    };
-    var RX = L.res_exempt || null, rxShip = null;
-    if (RX && members.some(function(x) {
-      return x.own && x.en && x.en.k === "cmd" && new RegExp(RX.needs_re, "i").test(String(x.en.l));
-    }))
-      rxShip = members.filter(function(m) {
-        return m.role === "reserve" && m.unitRow && m.hulls === 1 && new RegExp(RX.re, "i").test(String(m.en.l));
-      })[0] || null;
-    if (rxShip) out.push({
-      ok: true,
-      t: "Exempt from the reserve rules: " + rxShip.en.l,
-      v: "with Prince Yriel",
-      s: RX.src + " (Fleets p. " + RX.pg + ")"
-    });
-    if (RX && RX.unique_src) {
-      var rxN = members.reduce(function(a, m) {
-        return a + (m.unitRow && m.en && new RegExp(RX.re, "i").test(String(m.en.l)) ? m.hulls : 0);
-      }, 0);
-      if (rxN > 1) out.push({
-        ok: false,
-        t: "Flame of Asuryan (unique)",
-        v: rxN + " / 1",
-        s: RX.unique_src + " (Fleets p. " + RX.unique_pg + ")"
-      });
-    }
-    var MECH = L.res_mech || null;
-    var isSMres = function(m) {
-      return m.role === "reserve" && !!m.sel && !!m.sel.list && m.sel.list !== L && m.sel.list.race === "space marines";
-    };
-    var smRes = MECH ? members.filter(isSMres) : [];
-    var mechXenos = MECH ? members.some(isXenosMember) : false;
-    var capLists = {};
-    if (MECH) members.forEach(function(m) {
-      if (m.role === "reserve" && m.sel && m.sel.list && m.sel.list !== L && !isSMres(m) && (typeOf(m) === "battleship" || typeOf(m) === "cruiser")) capLists[m.sel.list.nm] = 1;
-    });
-    var escFree = function(m) {
-      return !!MECH && !(mechXenos && smRes.length) && m.role === "reserve" && typeOf(m) === "escort" && !!m.sel && !!m.sel.list && !!capLists[m.sel.list.nm];
-    };
-    var hullsOf = function(role, ty) {
-      return members.reduce(function(a, m) {
-        if (m.role !== role || m === rxShip || typeOf(m) !== ty) return a;
-        if (MECH && role === "reserve" && (isSMres(m) || escFree(m))) return a;
-        return a + m.hulls;
-      }, 0);
-    };
-    RES_TYPES.forEach(function(t) {
-      var base = Math.floor(hullsOf("core", t[0]) / 3);
-      var res = hullsOf("reserve", t[0]);
-      var free = t[0] !== "escort" ? 0 : members.reduce(function(a, m) {
-        return a + (escFree(m) ? m.hulls : 0);
-      }, 0);
-      if (res || free) out.push({
-        ok: res <= base,
-        t: "Reserves (" + t[1] + ")",
-        v: res + " / " + base + (free ? " (+" + free + " with their list's capital ships, no limit)" : ""),
-        s: free ? MECH.esc_src + " " + MECH.interp.note : RES_SRC
-      });
-      var ally = hullsOf("ally", t[0]);
-      if (ally) out.push({
-        ok: ally <= base,
-        t: "Allied vessels (" + t[1] + ")",
-        v: ally + " / " + base,
-        s: ALLY_SRC
-      });
-    });
-    if (MECH) {
-      var mechCap = hullsOf("core", "battleship") + hullsOf("core", "cruiser");
-      var resCapN = hullsOf("reserve", "battleship") + hullsOf("reserve", "cruiser");
-      if (resCapN) out.push({
-        ok: resCapN <= Math.floor(mechCap / 3),
-        t: "Reserve capital ships (one per three capital ships)",
-        v: resCapN + " / " + Math.floor(mechCap / 3),
-        s: MECH.cap_src
-      });
-      var smHulls = function(ty) {
-        return smRes.reduce(function(a, m) {
-          return a + (typeOf(m) === ty ? m.hulls : 0);
-        }, 0);
-      };
-      var smCr = smHulls("cruiser"), smBs = smHulls("battleship");
-      if (smCr || smBs) out.push({
-        ok: smCr <= Math.floor(mechCap / 3),
-        t: "Space Marine strike cruisers (one per three Mechanicus capital ships)",
-        v: smCr + " / " + Math.floor(mechCap / 3),
-        s: MECH.sm_src
-      });
-      if (smBs) out.push({
-        ok: smBs <= Math.floor(smCr / 3),
-        t: "Space Marine battle barges (one per three strike cruisers)",
-        v: smBs + " / " + Math.floor(smCr / 3),
-        s: MECH.sm_src
-      });
-    }
-    var allySpecial = function(m) {
-      return !!(L.ally_cmd && m.role === "ally" && m.en && m.en.k === "cmd" && new RegExp(L.ally_cmd.re, "i").test(String(m.en.l)));
-    };
-    members.filter(function(m) {
-      return m.role !== "core" && typeOf(m) === "none" && !allySpecial(m);
-    }).forEach(function(m) {
-      out.push({
-        ok: false,
-        t: "Not a reserve type: " + (m.en ? m.en.l : "?"),
-        v: "battleship, cruiser or escort",
-        s: "Only ships of the same 'type' (battleship, cruiser or escort) count for reserves purposes. (Fleets p. 14)"
-      });
-    });
-    var saidHere = {};
-    var sayOnce = function(row) {
-      var k = row.t + " | " + row.v;
-      if (saidHere[k]) return;
-      saidHere[k] = 1;
-      out.push(row);
-    };
-    members.filter(function(m) {
-      return m.role === "reserve" || m.role === "ally";
-    }).forEach(function(m) {
-      var dl = m.sel && m.sel.list, dr = dl ? dl.race : null;
-      if (dl && dl !== L && L.res_ban) {
-        sayOnce({
-          ok: false,
-          t: "Takes no reserves or allies: " + L.nm,
-          v: "not from " + dl.nm,
-          s: L.res_ban
-        });
-        return;
-      }
-      if (dl && dl !== L && dl.res_ban) {
-        sayOnce({
-          ok: false,
-          t: "Gives no reserves or allies: " + dl.nm,
-          v: "not to " + L.nm,
-          s: dl.res_ban
-        });
-        return;
-      }
-      if (dl && dl !== L && dl.lend_ban && m.en && new RegExp(dl.lend_ban.re, "i").test(String(m.en.l || ""))) {
-        sayOnce({
-          ok: false,
-          t: "Not lent as a reserve: " + m.en.l,
-          v: "stays with " + dl.nm,
-          s: dl.lend_ban.src
-        });
-        return;
-      }
-      if (m.role === "ally" && dl && dl !== L && dr && L.race && dr === L.race) {
-        sayOnce({
-          ok: false,
-          t: "Same race, so a reserve and not an ally: " + (m.en ? m.en.l : "?"),
-          v: dl.nm + " is " + dr,
-          s: 'Reserves can only ever be ships belonging to the same "race", chosen from a fleet list of the same "race". (Fleets p. 15)'
-        });
-        return;
-      }
-      if (m.role === "ally" && dl && dl !== L) {
-        var mine = L.ally_rule || {}, theirs = dl.ally_rule || {};
-        var okWith = function(rule, other) {
-          if (!rule) return true;
-          if (rule.only) return rule.only.indexOf(other) >= 0;
-          return (rule.never || []).indexOf(other) < 0;
-        };
-        var a1 = L.ally_race, a2 = dl.ally_race;
-        var named = false;
-        (L.res_ok || []).forEach(function(g) {
-          if (g.race && dl.race !== g.race) return;
-          if (g.list && dl.nm !== g.list) return;
-          if (!g.race && !g.list) return;
-          if (g.not_re && m.en && new RegExp(g.not_re, "i").test(String(m.en.l))) return;
-          named = true;
-        });
-        if (!named && !(okWith(mine, a2) && okWith(theirs, a1))) {
-          sayOnce({
-            ok: false,
-            t: "Never allies: " + a1 + " and " + a2,
-            v: dl.nm + " cannot be an ally here",
-            s: mine.src || theirs.src || "Allies Matrix"
-          });
+        if (!isUpgradeEnt(en) || upState(sel, si, ei) !== "opt") return;
+        if (en.grp) {
+          if (!decided[en.grp]) seen[en.grp] = Math.max(seen[en.grp] || 0, upCost(sel, en), 0);
           return;
         }
-        if (!named && L.ally_excl && a1 === L.ally_excl.who) {
-          var allies = {};
-          members.forEach(function(x) {
-            if (x.role === "ally" && x.sel && x.sel.list && x.sel.list !== L)
-              allies[x.sel.list.ally_race] = 1;
-          });
-          var trig = L.ally_excl.trigger;
-          if (allies[trig] && a2 !== trig && (L.ally_excl.allow || []).indexOf(a2) < 0) {
-            sayOnce({
-              ok: false,
-              t: "With " + trig + " allies, no others: " + a2,
-              v: dl.nm + " is a third ally",
-              s: L.ally_excl.src
-            });
-            return;
-          }
-        }
-        return;
-      }
-      if (m.role !== "reserve") return;
-      if (dl === L) return;
-      if (dl && dl !== L && dr && dr === L.race) return;
-      var hit = null, excluded = null, needs = null;
-      (L.res_ok || []).forEach(function(g) {
-        if (g.race && (!dl || dl.race !== g.race)) return;
-        if (g.list && (!dl || dl.nm !== g.list)) return;
-        if (!g.race && !g.list) return;
-        if (g.not_re && m.en && new RegExp(g.not_re, "i").test(String(m.en.l))) {
-          excluded = g;
-          return;
-        }
-        if (g.needs_re) {
-          var re2 = new RegExp(g.needs_re, "i");
-          var led = members.some(function(x) {
-            return x.own && x.en && re2.test(String(x.en.l));
-          });
-          if (!led) {
-            needs = g;
-            return;
-          }
-        }
-        if ((g.unless_fl || g.unless_xenos) && members.some(function(x) {
-          var sh3 = x.sel && x.sel.sh;
-          if (!sh3 || !x.unitRow) return false;
-          if (g.unless_fl && !x.own && /battleship|cruiser/.test(sh3.rt || "") && new RegExp(g.unless_fl, "i").test(String(sh3.fl || ""))) return true;
-          return !!g.unless_xenos && isXenosMember(x);
-        })) {
-          needs = g;
-          return;
-        }
-        hit = g;
-      });
-      if (hit) return;
-      if (excluded) {
-        sayOnce({
-          ok: false,
-          t: "Not granted as a reserve: " + (m.en ? m.en.l : "?"),
-          v: dl.nm + " is allowed, this row is not",
-          s: L.res_src || ""
-        });
-        return;
-      }
-      if (needs) {
-        sayOnce({
-          ok: false,
-          t: "Reserve needs " + (needs.needs_what || "a condition") + ": " + (m.en ? m.en.l : "?"),
-          v: dl.nm + " is allowed only then",
-          s: needs.src || L.res_src || ""
-        });
-        return;
-      }
-      sayOnce({
-        ok: false,
-        t: "Reserve race: " + (dl ? dl.nm : "?"),
-        v: (dr || "no race") + " / " + (L.race || "no race"),
-        s: 'Reserves can only ever be ships belonging to the same "race", chosen from a fleet list of the same "race". (Fleets p. 15)'
+        p += Math.max(0, upCost(sel, en));
       });
     });
-    members.filter(function(m) {
-      if (m.own || !m.unitRow || !m.sel.list) return false;
-      var ds = m.sel.list.secs[m.si];
-      return !!ds && (ds.ct === "reserve" || ds.ct === "access");
-    }).forEach(function(m) {
-      var ds = m.sel.list.secs[m.si];
-      out.push(ds.ct === "reserve" ? {
-        ok: false,
-        t: "Reserve of a reserve: " + (m.en ? m.en.l : "?"),
-        v: ds.t + " on " + m.sel.list.nm,
-        s: "However, a given fleet list cannot take as reserves ships listed as reserves or allies to another fleet list. In short, you cannot use a reserve of a reserve. (Fleets p. 15)"
-      } : {
-        ok: false,
-        t: "Named access, not a reserve: " + (m.en ? m.en.l : "?"),
-        v: ds.t + " on " + m.sel.list.nm,
-        s: "Some fleet lists explicitly provide access to ships from other races. These may only be taken exactly as described on their fleet list rules and may not also be taken as reserves. (Fleets p. 15)"
-      });
+    Object.keys(seen).forEach(function(g) {
+      p += seen[g];
     });
-    if (L.ally_xenos) {
-      var XN = L.ally_xenos;
-      var smAlly = members.some(function(x) {
-        return x.role === "ally" && x.sel && x.sel.list && x.sel.list.ally_race === XN.when;
-      });
-      if (smAlly || L.ally_race === XN.when) {
-        var xre = new RegExp(XN.re, "i");
-        var saidX = {};
-        members.forEach(function(m) {
-          var lab = m.en ? String(m.en.l) : "";
-          if (!lab || !xre.test(lab) || saidX[lab]) return;
-          if (!smAlly && m.role !== "ally") return;
-          saidX[lab] = 1;
-          out.push({
-            ok: false,
-            t: "No Xenos vessels beside Space Marines: " + lab,
-            v: (m.sel && m.sel.list ? m.sel.list.nm : L.nm) + " row",
-            s: XN.src
-          });
-        });
-      }
+    return p;
+  }
+  var MAX_SEARCH_NODES = 600;
+  var MAXPTS = {};
+  var MAXPTS_N = 0;
+  function maxPointsOf(sel) {
+    var sig = JSON.stringify([
+      sel.list && sel.list.nm,
+      sel.host && sel.host.nm,
+      sel.si,
+      sel.ei,
+      sel.sh && [sel.sh.nm, sel.sh.pg],
+      sel.ost,
+      sel.oqty,
+      sel.ups,
+      sel.hulls,
+      sel.adjust,
+      sel.custom,
+      sel.escort
+    ]);
+    if (Object.prototype.hasOwnProperty.call(MAXPTS, sig)) return MAXPTS[sig];
+    var v = maxPointsSearch(sel);
+    if (++MAXPTS_N > 3e3) {
+      MAXPTS = {};
+      MAXPTS_N = 1;
     }
-    members.filter(function(m) {
-      if (m.own || !m.unitRow) return false;
-      var ds = m.sel.list && m.sel.list.secs[m.si];
-      if (!ds || ds.ct !== "type") return false;
-      return !L.secs.some(function(sec, si) {
-        return sec.ct === "type" && secKey(sec) === secKey(ds) && matches(m, si, null);
-      });
-    }).forEach(function(m) {
-      out.push({
-        ok: true,
-        warn: true,
-        t: "Not counted in this list's limits: " + (m.en ? m.en.l : "?"),
-        v: (m.sel.list ? m.sel.list.secs[m.si].t : "?") + " has no counterpart here",
-        s: "Basically, the restrictions on maximum and minimum numbers of ships are determined for the fleet as a whole, regardless of whether they were purchased from the list or as reserves. (Fleets p. 14)"
-      });
-    });
-    members.filter(function(m) {
-      return m.role === "core" && !m.own;
-    }).forEach(function(m) {
-      out.push({
-        ok: false,
-        t: "Borrowed ship without a role: " + (m.en ? m.en.l : "?"),
-        v: (m.sel.list ? m.sel.list.nm : "?") + " is not the fleet's list",
-        s: "Any fleet chosen from one of the fleet lists may also include reserves. (Fleets p. 14)"
-      });
-    });
-    var CZ = clanzCommand(L, members);
-    var aboard = placeCommanders(L, members, CZ ? CZ.of : null);
-    var sqTags = [];
-    members.forEach(function(m) {
-      var t = m.intent && m.intent.sq;
-      if (t && m.R && m.R.kind === "ship" && !m.escort && sqTags.indexOf(t) < 0) sqTags.push(t);
-    });
-    sqTags.sort();
-    var sqOf = {};
-    sqTags.forEach(function(tag) {
-      var ms = members.filter(function(m) {
-        return m.intent && m.intent.sq === tag && m.R && m.R.kind === "ship" && !m.escort;
-      });
-      sqOf[tag] = ms;
-      var n = ms.reduce(function(a, m) {
-        return a + Math.max(1, m.hulls);
-      }, 0);
-      var nTxt = n + (n === 1 ? " ship" : " ships");
-      var inX = function(m, x) {
-        return m.own && L.secs[m.si] && new RegExp(x.sec, "i").test(String(L.secs[m.si].t).trim());
-      };
-      var X = (L.sqx || []).filter(function(x) {
-        return ms.length && inX(ms[0], x);
-      })[0] || (L.sqx || []).filter(function(x) {
-        return ms.some(function(m) {
-          return inX(m, x);
-        });
-      })[0];
-      if (X) {
-        var outside = X.only && ms.some(function(m) {
-          return !(m.own && L.secs[m.si] && new RegExp(X.sec, "i").test(String(L.secs[m.si].t).trim()));
-        });
-        out.push({
-          ok: !outside && n >= X.min && n <= X.max,
-          t: "Squadron " + tag,
-          v: outside ? "not only " + X.name : nTxt,
-          s: citeText(X.cite)
-        });
-        return;
-      }
-      var cls = [];
-      ms.forEach(function(m) {
-        var c = sqClass(m);
-        if (cls.indexOf(c) < 0) cls.push(c);
-      });
-      var big = cls.length === 1 && (cls[0] === "battleship" || cls[0] === "grand cruiser");
-      var lim2 = big ? SQ_BIG : SQ_CR;
-      var mixed = cls.length > 1;
-      out.push({
-        ok: !mixed && n >= lim2.min && n <= lim2.max,
-        t: "Squadron " + tag,
-        v: mixed ? cls.join(" + ") : nTxt,
-        s: citeText(mixed && cls.some(function(c) {
-          return c !== "cruiser";
-        }) ? SQ_BIG : lim2)
-      });
-    });
-    sqTags.forEach(function(tag) {
-      var dm = sqOf[tag].filter(isDemiurg).length;
-      if (dm && dm < sqOf[tag].length)
-        out.push({
-          ok: false,
-          t: "Squadron " + tag + ": Demiurg ships only with Demiurg ships",
-          v: dm + " Demiurg + " + (sqOf[tag].length - dm) + " other",
-          s: citeText(DEMIURG_CMD)
-        });
-    });
-    if (L.merc) {
-      var mercN = members.filter(function(m) {
-        return m.own && m.unitRow && L.secs[m.si] && new RegExp(L.merc.sec, "i").test(String(L.secs[m.si].t).trim());
-      }).reduce(function(a, m) {
-        return a + Math.max(1, m.hulls);
-      }, 0);
-      if (mercN) out.push({
-        ok: true,
-        t: "Demiurg mercenaries",
-        v: mercN + (mercN === 1 ? " Bastion" : " Bastions"),
-        s: citeText(L.merc.cite) + " " + citeText(DEMIURG_CMD)
-      });
-    }
-    (L.borrow_cond || []).forEach(function(bc) {
-      var re = new RegExp(bc.re, "i");
-      var hits = members.filter(function(m) {
-        return m.unitRow && m.en && re.test(String(m.en.l));
-      });
-      if (!hits.length) return;
-      var needN = members.filter(function(m) {
-        return m.unitRow && !re.test(String(m.en && m.en.l || "")) && m.sel && m.sel.list && new RegExp(bc.need.list_re, "i").test(String(m.sel.list.nm)) && new RegExp(bc.need.type_re, "i").test(String(m.R && m.R.stats && m.R.stats.type || ""));
-      }).reduce(function(a, m) {
-        return a + Math.max(1, m.hulls);
-      }, 0);
-      var tooMany = hits.length > bc.max, tooSmall = worth < bc.min_worth;
-      out.push({
-        ok: !tooMany && !tooSmall && needN >= bc.need.n,
-        t: bc.label,
-        v: needN + " / " + bc.need.n + " " + bc.need.what + (tooSmall ? ", fleet under " + bc.min_worth + " pts" : "") + (tooMany ? ", " + hits.length + " taken" : ""),
-        s: citeText(bc.cite)
-      });
-    });
-    if (L.rt_hulls) {
-      var RH = L.rt_hulls, hRe = new RegExp(RH.hull, "i"), aRe = new RegExp(RH.all, "i");
-      var nH = 0, nA = 0;
-      members.forEach(function(m) {
-        if (!m.unitRow || !m.en) return;
-        if (aRe.test(String(m.en.l))) nA += Math.max(1, m.hulls);
-        if (hRe.test(String(m.en.l))) nH += Math.max(1, m.hulls);
-      });
-      if (nH) out.push({
-        ok: true,
-        warn: nH > nA - 1,
-        t: "Rogue Trader cruiser hulls (second cruiser onwards)",
-        v: nH + " / " + Math.max(0, nA - 1),
-        s: citeText(RH.cite) + " " + citeText(RH.cite2) + " " + RH.interp
-      });
-    }
-    if (L.rt_esc) {
-      var RE = L.rt_esc, eRe = new RegExp(RE.esc, "i"), cRe = new RegExp(RE.cru, "i");
-      var inSecR = function(m) {
-        return m.own && L.secs[m.si] && new RegExp(RE.sec, "i").test(String(L.secs[m.si].t).trim());
-      };
-      var sqR = members.filter(function(m) {
-        return m.unitRow && m.en && inSecR(m) && eRe.test(String(m.en.l));
-      }).length;
-      var cruR = members.filter(function(m) {
-        return m.unitRow && m.en && cRe.test(String(m.en.l));
-      }).reduce(function(a, m) {
-        return a + Math.max(1, m.hulls);
-      }, 0);
-      var needOk = !RE.needs || members.some(function(m) {
-        return m.en && new RegExp(RE.needs, "i").test(String(m.en.l));
-      });
-      if (sqR) out.push({
-        ok: sqR <= cruR && needOk,
-        t: "Rogue Trader escort squadrons (one per Rogue Trader cruiser)",
-        v: needOk ? sqR + " / " + cruR : "needs an Inquisitor Lord",
-        s: citeText(RE.cite)
-      });
-    }
-    if (L.aux) {
-      var raceOf = function(m) {
-        var D = m.sel && m.sel.list;
-        return D ? String(D.race || D.ally_race || D.nm) : "";
-      };
-      var auxM = members.filter(function(m) {
-        return !m.own && m.unitRow && m.escort && (m.role === "ally" || m.role === "reserve") && !/^xenos vessel/i.test(String(m.en && m.en.l || ""));
-      });
-      var races = [];
-      auxM.forEach(function(m) {
-        var r = raceOf(m);
-        if (r && races.indexOf(r) < 0) races.push(r);
-      });
-      if (auxM.length) out.push({
-        ok: races.length <= 1,
-        t: "Auxiliary vessels from one race",
-        v: races.length + " / 1",
-        s: citeText(L.aux.cite_one)
-      });
-      races.forEach(function(r) {
-        if (L.aux.never.indexOf(r.toLowerCase()) >= 0)
-          out.push({
-            ok: false,
-            t: "Auxiliary vessels: not from " + r.replace(/(^|\s)([a-z])/g, function(a, b, c) {
-              return b + c.toUpperCase();
-            }),
-            v: "auxiliary escorts",
-            s: citeText(L.aux.cite_never)
-          });
-      });
-    }
-    if (L.ally_bb) {
-      var bbN = 0, capN = 0;
-      members.forEach(function(m) {
-        if (m.own || !m.unitRow || m.escort || !m.R || m.R.kind !== "ship") return;
-        var bs = /battleship/i.test(String(m.R.stats && m.R.stats.type || ""));
-        if (bs && m.role === "ally") bbN += Math.max(1, m.hulls);
-        else if (!bs && (m.role === "ally" || m.role === "reserve")) capN += Math.max(1, m.hulls);
-      });
-      var bbMax = capN >= 3 ? 1 : 0;
-      if (bbN) out.push({
-        ok: bbN <= bbMax,
-        t: "Allied battleship (0-1, with three reserve or allied capital ships)",
-        v: bbN + " / " + bbMax,
-        s: citeText(L.ally_bb.cite)
-      });
-    }
-    if (L.bloodaxe) {
-      var BA = L.bloodaxe, CZd = L.clanz;
-      var baIx = function(re) {
-        var x = new RegExp(re, "i");
-        return L.secs.findIndex(function(sc) {
-          return x.test(String(sc.t).trim());
-        });
-      };
-      var inSecB = function(m, re) {
-        return m.own && L.secs[m.si] && new RegExp(re, "i").test(String(L.secs[m.si].t).trim());
-      };
-      var baClan = upRows(baIx(CZd.clan_sec), new RegExp(BA.clan, "i"));
-      var com = members.filter(function(m) {
-        return m.unitRow && inSecB(m, BA.sec);
-      });
-      var tagsB = [];
-      com.forEach(function(m) {
-        var tg = m.intent && m.intent.sq;
-        if (!tg) out.push({
-          ok: false,
-          t: "Commandeered escorts: " + m.en.l,
-          v: "not in a Blood Axe tiddla",
-          s: citeText(BA.cite)
-        });
-        else if (tagsB.indexOf(tg) < 0) tagsB.push(tg);
-      });
-      tagsB.sort().forEach(function(tg) {
-        var inTag = members.filter(function(m) {
-          return m.unitRow && m.intent && m.intent.sq === tg;
-        });
-        var ork = inTag.filter(function(m) {
-          return inSecB(m, CZd.tiddla);
-        });
-        var orkN = ork.reduce(function(a, m) {
-          return a + Math.max(1, m.hulls);
-        }, 0);
-        var comN = inTag.filter(function(m) {
-          return inSecB(m, BA.sec);
-        }).reduce(function(a, m) {
-          return a + Math.max(1, m.hulls);
-        }, 0);
-        var axe = ork.some(function(m) {
-          return baClan.some(function(x) {
-            return tookUp(m, x[0], x[1]);
-          });
-        });
-        out.push({
-          ok: axe && orkN >= BA.min && comN <= BA.max,
-          t: "Blood Axe tiddla " + tg,
-          v: orkN + " Ork + " + comN + " commandeered" + (axe ? "" : ", no Blood Axe clan"),
-          s: citeText(BA.cite)
-        });
-      });
-    }
-    if (L.warden_only) {
-      var nW = 0, nO = 0;
-      members.forEach(function(m) {
-        if (!m.unitRow || !m.en) return;
-        if (/^warden/i.test(String(m.en.l))) nW += Math.max(1, m.hulls);
-        else if (/^orca/i.test(String(m.en.l))) nO += Math.max(1, m.hulls);
-      });
-      if (nW && nO) {
-        var anyCaps = [], wOnly = 0;
-        members.forEach(function(m) {
-          var hk = m.sel && m.sel.sh && m.sel.sh.hk;
-          if (!hk) return;
-          if (m.defence && !(m.R && m.R.weapons || []).some(function(w) {
-            return (w.box == null || w.box === "on") && /gravitic hook/i.test(String(w.a && w.a[0] || ""));
-          })) return;
-          for (var h = 0; h < Math.max(1, m.hulls); h++) {
-            if (hk[0]) anyCaps.push(hk[0]);
-            wOnly += hk[1] || 0;
-          }
-        });
-        var totA = anyCaps.reduce(function(a, c) {
-          return a + c;
-        }, 0), needW = Math.max(0, nW - wOnly);
-        var sums = [0];
-        anyCaps.forEach(function(c) {
-          sums.slice().forEach(function(x) {
-            if (sums.indexOf(x + c) < 0) sums.push(x + c);
-          });
-        });
-        var split = sums.some(function(x) {
-          return x >= needW && totA - x >= nO;
-        });
-        out.push({
-          ok: split,
-          t: "Wardens on ships of their own",
-          v: nW + " Wardens, " + nO + " Orcas",
-          s: citeText(L.warden_only.cite)
-        });
-      }
-    }
-    if (L.ally_cmd) {
-      var scN = members.filter(function(m) {
-        return !m.own && m.en && m.en.k === "cmd";
-      });
-      var scOk = scN.filter(allySpecial);
-      if (scN.length) out.push({
-        ok: scN.length === scOk.length && scOk.length <= L.ally_cmd.max,
-        t: "Allied special character (0-" + L.ally_cmd.max + ")",
-        v: scOk.length === scN.length ? scOk.length + " / " + L.ally_cmd.max : "not a special character",
-        s: citeText(L.ally_cmd.cite)
-      });
-    }
-    (L.sq_noup || []).forEach(function(x) {
-      sqTags.forEach(function(tag) {
-        sqOf[tag].forEach(function(m) {
-          if (placeTaken(m, x.re)) out.push({
-            ok: false,
-            t: "Daemonship in a squadron: " + m.en.l,
-            v: "squadron " + tag,
-            s: citeText(x.cite)
-          });
-        });
-      });
-    });
-    (L.sq_need || []).forEach(function(x) {
-      aboard.forEach(function(a) {
-        var cm = members[a.unit];
-        if (!new RegExp(x.cmd, "i").test(String(cm.en.l))) return;
-        var sm = a.ship != null ? members[a.ship] : null;
-        var inSq = !!sm && (sm.escort ? sm.hulls >= 2 : !!(sm.intent && sm.intent.sq && sqOf[sm.intent.sq] && sqOf[sm.intent.sq].length >= 2));
-        out.push({
-          ok: inSq,
-          t: "Squadroned: " + cm.en.l,
-          v: sm ? sm.en.l + (inSq ? " in a squadron" : " alone") : "no ship",
-          s: citeText(x.cite)
-        });
-      });
-    });
-    var wsum = [];
-    if (CZ && CZ.warlords.length) {
-      var C = L.clanz;
-      var secIx = function(re) {
-        var x = new RegExp(re, "i");
-        return L.secs.findIndex(function(sc) {
-          return x.test(String(sc.t).trim());
-        });
-      };
-      var inSec = function(m, re) {
-        return m.own && L.secs[m.si] && new RegExp(re, "i").test(String(L.secs[m.si].t).trim());
-      };
-      var clanRows = upRows(secIx(C.clan_sec)), gubRows = upRows(secIx(C.gub_sec), new RegExp(C.gub_re, "i"));
-      var clansOf = function(m) {
-        return clanRows.filter(function(x) {
-          return tookUp(m, x[0], x[1]);
-        }).map(function(x) {
-          return String(x[2].l).replace(/^clan:\s*/i, "").replace(/\s*\(.*$/, "");
-        });
-      };
-      var clanNames = clanRows.map(function(x) {
-        return String(x[2].l).replace(/^clan:\s*/i, "").replace(/\s*\(.*$/, "");
-      });
-      var bornClan = function(m) {
-        var o = /\(([a-z][a-z ]*?) only\)/i.exec(String(m.en && m.en.l || ""));
-        return o ? clanNames.filter(function(c) {
-          return c.toLowerCase().indexOf(o[1].toLowerCase()) === 0;
-        }).slice(0, 1) : [];
-      };
-      CZ.warlords.forEach(function(w, k) {
-        var wi = members.indexOf(w), tag = "Warlord " + (k + 1) + ": ";
-        var mine = members.filter(function(m, i) {
-          return CZ.of[i] === wi;
-        });
-        var rr = w.R && w.R.rerolls && w.R.rerolls.total || 1;
-        var hulks = mine.filter(function(m) {
-          return inSec(m, C.hulk);
-        });
-        var S1 = { unit: wi, n: k + 1, rr, hulk: hulks.length, units: mine.map(function(m) {
-          return members.indexOf(m);
-        }) };
-        wsum.push(S1);
-        if (hulks.length) {
-          var others = mine.length - 1;
-          out.push({
-            ok: hulks.length === 1 && others === 0,
-            t: tag + "Space Hulk",
-            v: others === 0 && hulks.length === 1 ? "only the hulk" : "hulk + " + others + " other",
-            s: citeText(C.hulk1) + " " + citeText(C.hulk2)
-          });
-        } else {
-          var tid = mine.filter(function(m) {
-            return inSec(m, C.tiddla);
-          }).length;
-          var groups = {};
-          mine.forEach(function(m) {
-            if (inSec(m, C.tiddla)) return;
-            var g2 = (inSec(m, C.big) || inSec(m, C.rok)) && m.intent && m.intent.sq ? "sq:" + m.intent.sq : "u:" + members.indexOf(m);
-            groups[g2] = 1;
-          });
-          var total = tid + Object.keys(groups).length, t1 = Math.min(tid, rr);
-          S1.tiddla = tid;
-          S1.total = total;
-          S1.lone = mine.filter(function(m) {
-            if (!inSec(m, C.big)) return false;
-            var tg = m.intent && m.intent.sq;
-            return !tg || mine.filter(function(o) {
-              return inSec(o, C.big) && o.intent && o.intent.sq === tg;
-            }).length === 1;
-          }).map(function(m) {
-            return members.indexOf(m);
-          });
-          out.push({
-            ok: tid >= rr && total === 2 * rr,
-            t: tag + "skwadrons",
-            v: t1 + " tiddla + " + (total - t1) + " other / " + rr + " + " + rr,
-            s: citeText(C.sk) + " " + C.sk_interp
-          });
-        }
-        var uge = mine.filter(function(m) {
-          return inSec(m, C.uge);
-        }).length;
-        var kro = mine.filter(function(m) {
-          return inSec(m, C.big);
-        }).length;
-        S1.uge = uge;
-        S1.kro = kro;
-        if (uge) out.push({
-          ok: uge <= 1 && kro >= 2,
-          t: tag + "'Uge ship",
-          v: uge + " / 1, " + kro + (kro === 1 ? " kroozer" : " kroozers"),
-          s: citeText(C.uge1) + " " + citeText(C.uge2)
-        });
-        var clans = [];
-        mine.concat([w]).forEach(function(m) {
-          clansOf(m).concat(bornClan(m)).forEach(function(c) {
-            if (clans.indexOf(c) < 0) clans.push(c);
-          });
-        });
-        if (clans.length) out.push({ ok: clans.length <= 1, t: tag + "one clan", v: clans.join(", "), s: citeText(C.clan) });
-        S1.clans = clans;
-        var ab = aboard.filter(function(a) {
-          return a.unit === wi;
-        })[0];
-        var own = ab && ab.ship != null ? members[ab.ship] : null;
-        var g = 0, off = 0;
-        mine.forEach(function(m) {
-          gubRows.forEach(function(x) {
-            if (tookUp(m, x[0], x[1])) {
-              g++;
-              if (m !== own) off++;
-            }
-          });
-        });
-        if (g) out.push({
-          ok: g <= rr && !off,
-          t: tag + "Gubbins",
-          v: g + " / " + rr + (off ? ", " + off + " not on his own ship" : ""),
-          s: citeText(C.gub)
-        });
-        S1.gub = g;
-        S1.gubOff = off;
-        S1.ship = own ? members.indexOf(own) : null;
-      });
-      sqTags.forEach(function(tag) {
-        var ms = sqOf[tag], sets = ms.map(function(m) {
-          return clansOf(m).sort().join(",");
-        });
-        if (sets.some(function(x) {
-          return x;
-        }) && sets.some(function(x) {
-          return x !== sets[0];
-        }))
-          out.push({
-            ok: false,
-            t: "Squadron " + tag + ": the clan on every ship",
-            v: sets.map(function(x) {
-              return x || "none";
-            }).join(" / "),
-            s: citeText(C.clan_sq)
-          });
-      });
-      if (C.split) sqTags.forEach(function(tag) {
-        var wl = [];
-        sqOf[tag].forEach(function(m) {
-          var w = CZ.of[members.indexOf(m)];
-          if (w >= 0 && wl.indexOf(w) < 0) wl.push(w);
-        });
-        if (wl.length > 1) out.push({
-          ok: false,
-          t: "Squadron " + tag + ": one Warlord",
-          v: wl.map(function(w) {
-            return "Warlord " + (CZ.warlords.indexOf(members[w]) + 1);
-          }).join(" + "),
-          s: citeText(C.split)
-        });
-      });
-    }
-    if (L.hulk_pf) {
-      var HP = L.hulk_pf;
-      var hpSec = L.secs.findIndex(function(sc) {
-        return new RegExp(HP.sec, "i").test(String(sc.t).trim());
-      });
-      var hp25 = upRows(hpSec, new RegExp(HP.row, "i")), hp50 = upRows(hpSec, new RegExp(HP.hulk_row, "i"));
-      aboard.forEach(function(a) {
-        var cm = members[a.unit];
-        if (!cm.own || !new RegExp(HP.cmd, "i").test(String(cm.en.l))) return;
-        var t25 = hp25.some(function(x) {
-          return tookUp(cm, x[0], x[1]);
-        });
-        var t50 = hp50.some(function(x) {
-          return tookUp(cm, x[0], x[1]);
-        });
-        if (!t25 && !t50) return;
-        var sm = a.ship != null ? members[a.ship] : null;
-        var onHulk = !!sm && placeRe(HP.ship, sm);
-        if (!onHulk && !t50) return;
-        var ok = onHulk ? t50 && !t25 : t25 && !t50;
-        out.push({
-          ok,
-          t: "Extra Power Fields: " + cm.en.l + " aboard " + (sm ? sm.en.l : "no ship"),
-          v: "+" + (t50 ? 50 : 25) + " pts" + (ok ? "" : onHulk ? " (+50 aboard a space hulk)" : " (+25 off a space hulk)"),
-          s: citeText(HP.cite)
-        });
-      });
-    }
-    aboard.forEach(function(a) {
-      if (!a.ruled) return;
-      var cm = members[a.unit], sm = a.ship != null ? members[a.ship] : null;
-      out.push({
-        ok: a.ok,
-        t: "Aboard: " + cm.en.l,
-        v: sm ? sm.en.l : "no ship he may board",
-        s: a.cite ? citeText(a.cite) : ""
-      });
-    });
-    return {
-      list: L.nm,
-      limit: lim,
-      units: members.map(function(m) {
-        return m.R;
-      }),
-      totals: {
-        points: tot,
-        maxPoints: totMax,
-        hulls: members.reduce(function(a, m) {
-          return a + m.hulls;
-        }, 0)
-      },
-      checks: out,
-      facts: fleetFacts(L, members),
-      aboard,
-      /* Clanz (J216): the Warlord of each unit (unit index -> Warlord's
-         unit index, -1 = none) */
-      command: CZ ? CZ.of : null,
-      /* Clanz (J226): per Warlord {unit, n, rr, tiddla, total, hulk,
-         uge, kro, lone, clans, gub, gubOff, ship, units} */
-      warlords: wsum
+    MAXPTS[sig] = v;
+    return v;
+  }
+  function maxPointsSearch(sel) {
+    var base = pointsOf(sel);
+    if (base == null) return null;
+    var sh = sel.sh, ol = sh && sh.ol || [];
+    var escortMul = sel.escort ? sel.hulls : 1;
+    var bioCap = (function() {
+      var t = String(sh && sh.ty || "");
+      return /escort/i.test(t) ? 1 : /battleship/i.test(t) ? 3 : 2;
+    })();
+    var isBio = function(s, si) {
+      var sec = secOf(s, si);
+      return !!sec && String(sec.t).trim().toUpperCase() === "BIO-ENHANCEMENTS";
     };
+    var take = function(s, items) {
+      var ost = Object.assign({}, s.ost), oqty = Object.assign({}, s.oqty), ups = Object.assign({}, s.ups);
+      items.forEach(function(it) {
+        if (it.i != null) {
+          ost[it.i] = "take";
+          var q = ol[it.i].qty;
+          if (q && q.max > 1) oqty[it.i] = q.max;
+        } else ups[it.key] = "take";
+      });
+      return Object.assign({}, s, { ost, oqty, ups });
+    };
+    var behind = {};
+    for (var pass = 0; pass < ol.length; pass++) {
+      var next = {};
+      ol.forEach(function(o, j) {
+        if (o.dep == null || !ol[o.dep]) return;
+        next[o.dep] = (next[o.dep] || 0) + (o.c > 0 ? o.c * (o.qty ? o.qty.max || 1 : 1) * escortMul : 0) + (behind[j] || 0);
+      });
+      if (JSON.stringify(next) === JSON.stringify(behind)) break;
+      behind = next;
+    }
+    var OPEN = typeof WeakMap === "function" ? /* @__PURE__ */ new WeakMap() : null;
+    var open = function(s) {
+      var hit = OPEN && OPEN.get(s);
+      if (hit) return hit;
+      var out = [], opts = optionsOf(s);
+      ol.forEach(function(o, i) {
+        if (optState(s, i) !== "opt" || !(o.c > 0 || behind[i] > 0)) return;
+        if (s.en && s.en.optno && new RegExp(s.en.optno, "i").test(String(o.t || ""))) return;
+        if (o.dep != null && optState(s, o.dep) !== "take") return;
+        if (opts[i] && opts[i].blockedBy.length) return;
+        out.push({ k: "o" + i, i, c: (o.c > 0 ? o.c : 0) * (o.qty ? o.qty.max || 1 : 1) * escortMul, o });
+      });
+      if (s.list) {
+        var u = upgradesFor(s), bio = {};
+        u.own.concat(u.other).forEach(function(x) {
+          if (isBio(s, x[0]) && upState(s, x[0], x[1]) === "take") bio[x[2].grp || x[2].l] = 1;
+        });
+        var bioFull = Object.keys(bio).length >= bioCap;
+        u.own.concat(u.other).forEach(function(x) {
+          if (x[2].req || upState(s, x[0], x[1]) !== "opt") return;
+          var b = isBio(s, x[0]);
+          if (b && (bioFull || bio[x[2].grp || x[2].l])) return;
+          var c = x[2].pct ? Math.ceil(base * x[2].pct / 100) + 1 : Math.max(0, upCost(s, x[2]));
+          if (c > 0) out.push({ k: "u" + upgradeKey(x[0], x[1]), key: upgradeKey(x[0], x[1]), c, pct: !!x[2].pct, bio: b ? x[2].grp || x[2].l : null, en: x[2] });
+        });
+      }
+      if (OPEN) OPEN.set(s, out);
+      return out;
+    };
+    var keys = function(list) {
+      return list.map(function(it) {
+        return it.k;
+      });
+    };
+    var root = open(sel);
+    if (!root.length) return base;
+    var named = [];
+    upSecs(sel).forEach(function(sec) {
+      (sec.ents || []).forEach(function(e2) {
+        if (isUpgradeEnt(e2) && e2.cond) {
+          if (e2.cond.up) named.push(new RegExp(e2.cond.up, "i"));
+          if (e2.cond.noup) named.push(new RegExp(e2.cond.noup, "i"));
+        }
+      });
+    });
+    var depOn = {};
+    ol.forEach(function(o) {
+      if (o.dep != null) depOn[o.dep] = 1;
+    });
+    var active = function(a) {
+      if (a.o) return !!(a.o.sw || a.o.add || a.o.del || a.o.mod || a.o.cov || a.o.grp || a.o.swp || depOn[a.i]);
+      var e = a.en;
+      return !!(e.grp || e.swp || e.add || e.mod || e.cond && e.cond.no || named.some(function(rx) {
+        return rx.test(String(e.l || ""));
+      }));
+    };
+    var rootKeys = keys(root), inter = {};
+    root.forEach(function(a) {
+      if (a.bio || !active(a)) return;
+      var aft = keys(open(take(sel, [a])));
+      var lost = rootKeys.filter(function(k) {
+        return k !== a.k && aft.indexOf(k) < 0;
+      });
+      var gained = aft.filter(function(k) {
+        return rootKeys.indexOf(k) < 0;
+      });
+      if (lost.length || gained.length) {
+        inter[a.k] = 1;
+        lost.forEach(function(k) {
+          inter[k] = 1;
+        });
+      }
+    });
+    var indep = root.filter(function(a) {
+      return !inter[a.k] && !a.bio;
+    });
+    var indepKey = {};
+    indep.forEach(function(a) {
+      indepKey[a.k] = 1;
+    });
+    var value = function(s) {
+      var op = open(s), o = keys(op);
+      var add = indep.filter(function(a) {
+        return o.indexOf(a.k) >= 0;
+      });
+      var kinds = {}, taken = {};
+      if (s.list) {
+        var u = upgradesFor(s);
+        u.own.concat(u.other).forEach(function(x) {
+          if (isBio(s, x[0]) && upState(s, x[0], x[1]) === "take") taken[x[2].grp || x[2].l] = 1;
+        });
+      }
+      op.forEach(function(it) {
+        if (it.bio && !taken[it.bio] && (!kinds[it.bio] || kinds[it.bio].c < it.c)) kinds[it.bio] = it;
+      });
+      var room = Math.max(0, bioCap - Object.keys(taken).length);
+      add = add.concat(Object.keys(kinds).map(function(k) {
+        return kinds[k];
+      }).sort(function(p, q) {
+        return q.c - p.c;
+      }).slice(0, room));
+      return pointsOf(add.length ? take(s, add) : s);
+    };
+    var best = base, nodes = 0, capped = false;
+    var walk = function(s, skipped) {
+      if (++nodes > MAX_SEARCH_NODES) {
+        capped = true;
+        return;
+      }
+      var v = value(s);
+      if (v > best) best = v;
+      var items = open(s).filter(function(it2) {
+        return !indepKey[it2.k] && !it2.bio && !skipped[it2.k];
+      });
+      if (!items.length) return;
+      var sum = 0, pct = 0, grp = {};
+      items.forEach(function(it2) {
+        var g = it2.o && it2.o.grp ? "o:" + it2.o.grp : it2.en && it2.en.grp ? "u:" + it2.en.grp : null;
+        var c = it2.c + (it2.i != null ? behind[it2.i] || 0 : 0);
+        if (g) {
+          (grp[g] = grp[g] || { n: it2.o ? Math.max(1, it2.o.gmax || 1) : 1, c: [] }).c.push(c);
+          return;
+        }
+        if (it2.pct) pct += it2.c;
+        else sum += c;
+      });
+      Object.keys(grp).forEach(function(g) {
+        grp[g].c.sort(function(p, q) {
+          return q - p;
+        }).slice(0, grp[g].n).forEach(function(c) {
+          sum += c;
+        });
+      });
+      if (v + sum + pct * 2 <= best) return;
+      items.sort(function(p, q) {
+        return q.c - p.c;
+      });
+      var it = items[0];
+      walk(take(s, [it]), skipped);
+      if (capped) return;
+      var sk = Object.assign({}, skipped);
+      sk[it.k] = 1;
+      walk(s, sk);
+    };
+    walk(sel, {});
+    if (capped) return Math.max(best, flatMaxPointsOf(sel));
+    return best;
+  }
+  function timesStrength(txt, n) {
+    var t = String(txt == null ? "" : txt);
+    if (n <= 1) return t;
+    if (!/^\s*\d+(\s*\/\s*\d+)*(\s*squadrons?)?\s*$/i.test(t)) return t + " \xD7" + n;
+    var out = t.replace(/\d+/g, function(m) {
+      return String(parseInt(m, 10) * n);
+    });
+    if (/squadron/i.test(out) && !/squadrons/i.test(out)) out = out.replace(/squadron/i, "squadrons");
+    return out;
+  }
+  function swapRuledOutByUp(sel, o) {
+    if (!sel.list || !sel.sh) return false;
+    var names = (o.sw.t || []).map(function(t) {
+      return String(t[0] || "");
+    }), hit = false;
+    upSecs(sel).forEach(function(sec, si) {
+      (sec.ents || []).forEach(function(en, ei) {
+        if (hit || !isUpgradeEnt(en) || sel.ups[upgradeKey(si, ei)] !== "take") return;
+        if (en.cond && en.cond.no) {
+          var rx = new RegExp(String(en.cond.no).split("@")[0], "i");
+          if (names.some(function(nm) {
+            return rx.test(nm);
+          })) hit = true;
+        }
+        if (!hit && en.swp) {
+          var rx2 = new RegExp(en.swp.f, "i");
+          if ((o.sw.f || []).some(function(fi) {
+            return sel.sh.aw[fi] && rx2.test(String(sel.sh.aw[fi][0]));
+          })) hit = true;
+        }
+      });
+    });
+    return hit;
   }
 
   // packages/rules/src/weapons.js
@@ -5094,6 +3082,414 @@ var __rules = (() => {
     }).filter(Boolean);
   }
 
+  // packages/rules/src/validation.js
+  function issue(code, severity, path, message, page) {
+    return { code, severity, path, message, sourcePage: page == null ? null : page };
+  }
+  function shortText(t) {
+    var s = String(t || "");
+    return s.length > 48 ? s.slice(0, 45) + "..." : s;
+  }
+  function validateIntent(intent, ctx, catalog) {
+    var out = [];
+    var L = listOfIntent(intent, ctx, catalog);
+    var at = intent.entry && L ? findEntry(L, intent.entry.section, intent.entry.label) : null;
+    if (intent.entry && !at) out.push(issue("entry.unknown", "error", "entry", "list row not found: " + intent.entry.label));
+    var en = at ? L.secs[at.si].ents[at.ei] : null;
+    var sh = shipFor(intent.ref, en, catalog);
+    if (intent.ref != null && !sh) out.push(issue("ship.unknown", "error", "ref", "profile not found: " + intent.ref));
+    if (en && en.hc && sh && (en.hulls || []).map(String).indexOf(String(intent.ref)) < 0)
+      out.push(issue("hull.unknown", "error", "hull", "hull " + intent.ref + " is not one this row offers", sh.pg));
+    var sel = selectionOf(intent, ctx, catalog);
+    var ol = sh && sh.ol || [];
+    Object.keys(intent.options || {}).forEach(function(id) {
+      if (optionIndex(sh, id, null) < 0)
+        out.push(issue("option.unknown_id", "error", "options." + id, "option id not in profile " + intent.ref, sh ? sh.pg : null));
+    });
+    var seenGrp = {};
+    ol.forEach(function(o, i) {
+      if (optState(sel, i) !== "take") return;
+      var path = "options." + o.id;
+      if (o.dep != null && ol[o.dep] && optState(sel, o.dep) !== "take")
+        out.push(issue(
+          "option.dependency",
+          "error",
+          path,
+          "'" + shortText(o.t) + "' needs '" + shortText(ol[o.dep].t) + "' taken first",
+          sh.pg
+        ));
+      if (o.grp && !seenGrp[o.grp]) {
+        var max = Math.max(1, o.gmax || 1);
+        var taken = ol.filter(function(p, j) {
+          return p.grp === o.grp && optState(sel, j) === "take";
+        });
+        if (taken.length > max) {
+          seenGrp[o.grp] = 1;
+          out.push(issue(
+            "option.exclusive",
+            "error",
+            path,
+            taken.length + " options taken where the profile allows " + max,
+            sh.pg
+          ));
+        }
+      }
+      if (o.sw) ol.forEach(function(p, j) {
+        if (j <= i || !p.sw || optState(sel, j) !== "take") return;
+        if ((o.sw.f || []).some(function(f) {
+          return (p.sw.f || []).indexOf(f) >= 0;
+        }))
+          out.push(issue(
+            "option.swap_conflict",
+            "error",
+            path,
+            "'" + shortText(o.t) + "' and '" + shortText(p.t) + "' replace the same weapon",
+            sh.pg
+          ));
+      });
+    });
+    if (sh) {
+      var hpIn = +sh.hp || 0;
+      ol.forEach(function(p, j) {
+        if (optState(sel, j) === "take" && p.mod && p.mod.hp) hpIn += p.mod.hp * optCount(sel, j);
+      });
+      ol.forEach(function(o, i) {
+        if (optState(sel, i) === "take" && o.hpmin && hpIn < o.hpmin)
+          out.push(issue(
+            "option.hpmin",
+            "error",
+            "options." + o.id,
+            "'" + shortText(o.t) + "' needs " + o.hpmin + " Hits; the ship has " + hpIn + " as configured",
+            sh.pg
+          ));
+      });
+    }
+    if (sh && sh.modmax) {
+      var modN = 0;
+      ol.forEach(function(o, i) {
+        if (o.mods && optState(sel, i) === "take") modN += optCount(sel, i);
+      });
+      if (modN > sh.modmax.n)
+        out.push(issue(
+          "option.modules",
+          "error",
+          "options",
+          modN + " modules where the core takes " + sh.modmax.n,
+          sh.modmax.pg
+        ));
+    }
+    var seenUpGrp = {};
+    var hostUpV = hostUpgradesAllowed(L, ctx && ctx.host ? ctx.host : null) ? ctx.host : null;
+    var rowOf = function(id) {
+      var p = splitUpgradeId(id);
+      var a2 = p && L && p.list === L.nm ? findUpgradeEntry(L, p.section, p.label, sel.si, sel.ei) : null;
+      if (a2) return { at: a2, en: L.secs[a2.si].ents[a2.ei] };
+      var a3 = p && hostUpV && p.list === hostUpV.nm ? findUpgradeEntry(hostUpV, p.section, p.label, -1, -1) : null;
+      return a3 ? { at: { si: HOST_OFF + a3.si, ei: a3.ei }, en: hostUpV.secs[a3.si].ents[a3.ei] } : null;
+    };
+    Object.keys(intent.upgrades || {}).forEach(function(id) {
+      var st = intent.upgrades[id];
+      var row = rowOf(id);
+      if (!row) {
+        out.push(issue("upgrade.unknown_id", "error", "upgrades." + id, "upgrade row not found or not attached to this unit"));
+        return;
+      }
+      if (st === "off") return;
+      var e2 = row.en;
+      if (e2.req) return;
+      if (st === "take" && !rowAttached(sel, row.at.si, e2)) {
+        out.push(issue(
+          "upgrade.unattached",
+          "error",
+          "upgrades." + id,
+          "'" + e2.l + "' is aimed at other ships of the list, not this one",
+          e2.src_page
+        ));
+        return;
+      }
+      if (coveredByShipOption(sel, e2))
+        out.push(issue(
+          "upgrade.covered",
+          "warning",
+          "upgrades." + id,
+          "'" + e2.l + "' is one of the ship's own options; the list row is not counted",
+          e2.src_page
+        ));
+      else if (!condOK(sel, e2, row.at.si, row.at.ei))
+        out.push(issue(
+          "upgrade.ineligible",
+          "warning",
+          "upgrades." + id,
+          "'" + e2.l + "' is not available to this ship as configured; it is not counted",
+          e2.src_page
+        ));
+      if (st === "take" && e2.grp && !seenUpGrp[e2.grp]) {
+        var others = Object.keys(intent.upgrades).filter(function(id2) {
+          if (id2 === id || intent.upgrades[id2] !== "take") return false;
+          var r2 = rowOf(id2);
+          return r2 && r2.en.grp === e2.grp;
+        });
+        if (others.length) {
+          seenUpGrp[e2.grp] = 1;
+          out.push(issue(
+            "upgrade.exclusive",
+            "error",
+            "upgrades." + id,
+            others.length + 1 + " upgrades taken from a group that allows one",
+            e2.src_page
+          ));
+        }
+      }
+    });
+    if (sel && sel.sh && L) {
+      var bioKinds = {};
+      Object.keys(intent.upgrades || {}).forEach(function(id) {
+        if (intent.upgrades[id] !== "take") return;
+        var row = rowOf(id);
+        var secB = row ? secOf(sel, row.at.si) : null;
+        if (!secB || String(secB.t).trim().toUpperCase() !== "BIO-ENHANCEMENTS") return;
+        bioKinds[row.en.grp || row.en.l] = 1;
+      });
+      var nBio = Object.keys(bioKinds).length, tyB = String(sel.sh.ty || "");
+      var capB = /escort/i.test(tyB) ? 1 : /battleship/i.test(tyB) ? 3 : 2;
+      if (nBio > capB)
+        out.push(issue(
+          "upgrade.bio_limit",
+          "error",
+          "upgrades",
+          nBio + " different bio-enhancements taken; a " + (capB === 3 ? "hive ship" : capB === 2 ? "cruiser" : "escort") + " may have at most " + capB,
+          426
+        ));
+    }
+    return out;
+  }
+  function transition(intent, action, ctx, catalog) {
+    var it = JSON.parse(JSON.stringify(intent)), notices = [];
+    it.options = it.options || {};
+    it.upgrades = it.upgrades || {};
+    var L = listOfIntent(it, ctx, catalog);
+    var at0 = it.entry && L ? findEntry(L, it.entry.section, it.entry.label) : null;
+    var sh = shipFor(it.ref, at0 ? L.secs[at0.si].ents[at0.ei] : null, catalog);
+    var ol = sh && sh.ol || [];
+    var note = function(code, path, message) {
+      notices.push({ code, path, message });
+    };
+    var byId = function(id) {
+      return ol.filter(function(o3) {
+        return o3.id === id;
+      })[0] || null;
+    };
+    var stateOf = function(o3) {
+      var x = it.options[o3.id];
+      return x && x.state ? x.state : "opt";
+    };
+    var setState = function(o3, st) {
+      var x = it.options[o3.id] || { state: "opt", qty: 1 };
+      x.state = st;
+      it.options[o3.id] = x;
+    };
+    if (action.type === "option") {
+      var o = byId(action.id);
+      if (!o) {
+        note("option.unknown_id", "options." + action.id, "unknown option");
+        return { intent: it, notices };
+      }
+      var hpIn = function() {
+        var h = +(sh && sh.hp) || 0;
+        ol.forEach(function(p) {
+          var x = it.options[p.id];
+          if (x && x.state === "take" && p.mod && p.mod.hp) h += p.mod.hp * (p.qty ? Math.max(1, x.qty | 0) : 1);
+        });
+        return h;
+      };
+      if (action.state === "take" && stateOf(o) !== "take" && o.hpmin && hpIn() < o.hpmin) {
+        note("option.blocked", "options." + o.id, "'" + shortText(o.t) + "' needs " + o.hpmin + " Hits; the ship has " + hpIn());
+        return { intent: it, notices };
+      }
+      setState(o, action.state);
+      ol.forEach(function(p) {
+        if (p !== o && p.hpmin && stateOf(p) === "take" && hpIn() < p.hpmin) {
+          setState(p, "opt");
+          note("option.hpmin", "options." + p.id, "'" + shortText(p.t) + "' reopened: it needs " + p.hpmin + " Hits");
+        }
+      });
+      if (action.state === "take") {
+        if (o.grp) {
+          var max = Math.max(1, o.gmax || 1);
+          var others = ol.filter(function(p) {
+            return p !== o && p.grp === o.grp && stateOf(p) === "take";
+          });
+          while (others.length >= max) {
+            var q = others.shift();
+            setState(q, "opt");
+            note(
+              "option.exclusive",
+              "options." + q.id,
+              "'" + shortText(q.t) + "' reopened: only " + max + " of this group can be taken"
+            );
+          }
+        }
+        if (o.sw) ol.forEach(function(p) {
+          if (p === o || !p.sw || stateOf(p) !== "take") return;
+          if ((o.sw.f || []).some(function(f) {
+            return (p.sw.f || []).indexOf(f) >= 0;
+          })) {
+            setState(p, "opt");
+            note(
+              "option.swap_conflict",
+              "options." + p.id,
+              "'" + shortText(p.t) + "' reopened: it replaces the same weapon as '" + shortText(o.t) + "'"
+            );
+          }
+        });
+      }
+      if (action.state === "take" && o.cov && L) {
+        Object.keys(it.upgrades).forEach(function(id3) {
+          if (it.upgrades[id3] !== "take") return;
+          var q3 = splitUpgradeId(id3);
+          var sel3 = selectionOf(it, ctx, catalog);
+          var a4 = q3 && findUpgradeEntry(L, q3.section, q3.label, sel3.si, sel3.ei);
+          var e4 = a4 && L.secs[a4.si].ents[a4.ei];
+          if (!e4 || !e4.cond || !e4.cond.noup) return;
+          if (coversExcludedRow(L, o, e4.cond.noup)) {
+            it.upgrades[id3] = "off";
+            note(
+              "upgrade.conflict",
+              "upgrades." + id3,
+              "'" + e4.l + "' dropped: it may not be combined with '" + shortText(o.t) + "'"
+            );
+          }
+        });
+      }
+      ol.forEach(function(p) {
+        if (p.dep != null && ol[p.dep] && stateOf(p) === "take" && stateOf(ol[p.dep]) !== "take") {
+          setState(p, "opt");
+          note(
+            "option.dependency",
+            "options." + p.id,
+            "'" + shortText(p.t) + "' reopened: it needs '" + shortText(ol[p.dep].t) + "'"
+          );
+        }
+      });
+    } else if (action.type === "quantity") {
+      var o2 = byId(action.id);
+      if (o2) {
+        var x2 = it.options[o2.id] || { state: "opt", qty: 1 };
+        var mx = o2.qty ? o2.qty.max || 1 : 1;
+        x2.qty = Math.min(mx, Math.max(1, action.qty | 0));
+        it.options[o2.id] = x2;
+      }
+    } else if (action.type === "upgrade") {
+      var pre = splitUpgradeId(action.id);
+      var selP = selectionOf(it, ctx, catalog);
+      var atP = pre && L ? findUpgradeEntry(L, pre.section, pre.label, selP.si, selP.ei) : null;
+      var eP = atP ? L.secs[atP.si].ents[atP.ei] : null;
+      if (action.state === "take" && eP && !rowAttached(selP, atP.si, eP)) {
+        note("upgrade.unattached", "upgrades." + action.id, "'" + eP.l + "' is not one of this ship's rows");
+        return { intent: it, notices };
+      }
+      it.upgrades[action.id] = action.state;
+      var sel0 = selectionOf(it, ctx, catalog);
+      var p2 = splitUpgradeId(action.id);
+      var at2 = p2 && L ? findUpgradeEntry(L, p2.section, p2.label, sel0.si, sel0.ei) : null;
+      var e2 = at2 ? L.secs[at2.si].ents[at2.ei] : null;
+      if (action.state === "take" && e2) {
+        Object.keys(it.upgrades).forEach(function(id5) {
+          if (id5 === action.id || it.upgrades[id5] !== "take") return;
+          var q5 = splitUpgradeId(id5);
+          var a5 = q5 && findUpgradeEntry(L, q5.section, q5.label, sel0.si, sel0.ei);
+          var e5 = a5 && L.secs[a5.si].ents[a5.ei];
+          if (!e5) return;
+          var hit = e2.cond && e2.cond.noup && new RegExp(e2.cond.noup, "i").test(String(e5.l)) || e5.cond && e5.cond.noup && new RegExp(e5.cond.noup, "i").test(String(e2.l));
+          if (!hit) return;
+          if (e5.dflt) it.upgrades[id5] = "off";
+          else delete it.upgrades[id5];
+          note("upgrade.conflict", "upgrades." + id5, "'" + e5.l + "' dropped: it may not be combined with '" + e2.l + "'");
+        });
+      }
+      if (action.state === "take" && e2 && e2.cond && e2.cond.noup) {
+        ol.forEach(function(p) {
+          if (!p.cov || stateOf(p) !== "take") return;
+          if (coversExcludedRow(L, p, e2.cond.noup)) {
+            setState(p, "opt");
+            note(
+              "option.conflict",
+              "options." + p.id,
+              "'" + shortText(p.t) + "' reopened: it may not be combined with '" + e2.l + "'"
+            );
+          }
+        });
+      }
+      if (action.state === "take" && e2 && e2.grp) {
+        Object.keys(it.upgrades).forEach(function(id2) {
+          if (id2 === action.id || it.upgrades[id2] !== "take") return;
+          var q2 = splitUpgradeId(id2);
+          var a3 = q2 && findUpgradeEntry(L, q2.section, q2.label, sel0.si, sel0.ei);
+          var e3 = a3 && L.secs[a3.si].ents[a3.ei];
+          if (e3 && e3.grp === e2.grp) {
+            if (e3.dflt) it.upgrades[id2] = "off";
+            else delete it.upgrades[id2];
+            note("upgrade.exclusive", "upgrades." + id2, "'" + e3.l + "' dropped: one of this group at a time");
+          }
+        });
+      }
+    } else if (action.type === "hull") {
+      if (catalog.ships[String(action.ref)]) {
+        var had = Object.keys(it.options).length + Object.keys(it.upgrades).length;
+        it.ref = String(action.ref);
+        it.hull = String(action.ref);
+        it.options = {};
+        it.upgrades = {};
+        if (had) note("hull.changed", "hull", "hull changed: options and upgrades start over");
+      }
+    }
+    if (L && action.type !== "hull") {
+      for (var pass = 0; pass < 20; pass++) {
+        var sel1 = selectionOf(it, ctx, catalog), fell = 0;
+        Object.keys(it.upgrades).forEach(function(id2) {
+          if (it.upgrades[id2] === "off") return;
+          var q2 = splitUpgradeId(id2);
+          var a3 = q2 && findUpgradeEntry(L, q2.section, q2.label, sel1.si, sel1.ei);
+          var e3 = a3 && L.secs[a3.si].ents[a3.ei];
+          if (e3 && !e3.req && !condOK(sel1, e3, a3.si, a3.ei)) {
+            if (e3.dflt) it.upgrades[id2] = "off";
+            else delete it.upgrades[id2];
+            fell++;
+            note("upgrade.ineligible", "upgrades." + id2, "'" + e3.l + "' dropped: not available to this ship as configured");
+          }
+        });
+        if (!fell) break;
+      }
+    }
+    return { intent: it, notices };
+  }
+  function secTitleIs(L, i, want) {
+    var sec = L.secs[i];
+    return !!sec && String(sec.t).trim().toLowerCase() === String(want);
+  }
+  function secNameIssues(L, node, out) {
+    var i, k, v, want;
+    if (Object.prototype.toString.call(node) === "[object Array]") {
+      for (i = 0; i < node.length; i++) secNameIssues(L, node[i], out);
+      return out;
+    }
+    if (!node || typeof node !== "object") return out;
+    for (k in node) {
+      if (!Object.prototype.hasOwnProperty.call(node, k)) continue;
+      v = node[k];
+      if ((k === "sec" || k === "allow_sec" || k === "per_sec") && Object.prototype.toString.call(v) === "[object Array]" && node[k + "_sn"]) {
+        for (i = 0; i < v.length; i++)
+          if (!secTitleIs(L, v[i], node[k + "_sn"][i])) out.push(k + "[" + i + "]");
+      } else if ((k === "sec" || k === "up_sec") && typeof v === "number") {
+        want = k === "sec" ? node.sn : node.up_sn;
+        if (want != null && !secTitleIs(L, v, want)) out.push(k);
+      } else if (v && typeof v === "object" && k !== "sn" && k.slice(-3) !== "_sn") {
+        secNameIssues(L, v, out);
+      }
+    }
+    return out;
+  }
+
   // packages/rules/src/unit.js
   function weaponState(row) {
     return row.box == null || row.box === "on" ? "active" : "offered";
@@ -6835,6 +5231,1751 @@ var __rules = (() => {
       });
     }
     return o;
+  }
+
+  // packages/rules/src/fleet-purchases.js
+  function checkWarmasterMark(F) {
+    var L = F.L, members = F.members, out = F.out;
+    if (L.mark_paid) {
+      var MP = L.mark_paid;
+      var markRe = new RegExp("^the mark of " + MP.god, "i");
+      var wm = members.filter(function(m) {
+        return m.en && m.en.k === "cmd" && /warmaster/i.test(String(m.en.l || ""));
+      });
+      if (wm.length) {
+        var shipRe = new RegExp(MP.ship, "i");
+        var aboard = members.filter(function(m) {
+          return m.unitRow && m.en && shipRe.test(String(m.en.l || ""));
+        });
+        var paid = false;
+        if (aboard.length) {
+          if (MP.dearest) {
+            var top = members.reduce(function(a2, m) {
+              return m.unitRow && !m.defence && m.points > a2 ? m.points : a2;
+            }, -1);
+            paid = aboard.some(function(m) {
+              return m.points >= top;
+            }) && members.filter(function(m) {
+              return m.unitRow && !m.defence && m.points === top;
+            }).length === 1;
+          } else {
+            var pkRe = new RegExp(MP.unless, "i");
+            paid = !members.some(function(m) {
+              return m.unitRow && m.en && pkRe.test(String(m.en.l || ""));
+            });
+          }
+        }
+        wm.forEach(function(m) {
+          var ups;
+          try {
+            ups = upgradesFor(m.sel);
+          } catch (e) {
+            return;
+          }
+          var row = ups.own.concat(ups.other).filter(function(x) {
+            return x[2] && markRe.test(String(x[2].l || ""));
+          })[0];
+          if (!row) return;
+          var upSt = upState(m.sel, row[0], row[1]), took = upSt === "take";
+          if (paid && took)
+            out.push({
+              ok: false,
+              t: "Mark of " + MP.god + " paid twice",
+              v: "already in the ship's cost",
+              s: MP.src_ship
+            });
+          else if (paid && upSt === "opt")
+            out.push({
+              ok: true,
+              warn: true,
+              t: "Mark of " + MP.god + " is in the ship's cost",
+              v: "set the Warmaster's Mark row to Hide",
+              s: MP.src_ship
+            });
+          else if (!paid && !took)
+            out.push({
+              ok: false,
+              t: "Warmaster without the Mark of " + MP.god,
+              v: "the list requires it",
+              s: "The Warmaster must take the Mark of " + MP.god + "."
+            });
+        });
+      }
+    }
+  }
+  function checkUnitIssues(F) {
+    var members = F.members, out = F.out;
+    members.forEach(function(m) {
+      var errs = (m.R && m.R.issues || []).filter(function(x) {
+        return x.severity === "error";
+      });
+      if (errs.length)
+        out.push({
+          ok: false,
+          t: "Unit issues: " + m.R.className.toLowerCase().replace(/(^|[\s(\-\u2013/])([a-z])/g, function(a, b, c) {
+            return b + c.toUpperCase();
+          }),
+          v: errs.length + " problem" + (errs.length > 1 ? "s" : ""),
+          s: errs.map(function(x) {
+            return x.message;
+          }).join("; ")
+        });
+    });
+  }
+  function checkCommanderPrice(F) {
+    var L = F.L, members = F.members, out = F.out;
+    if (L.aboard) {
+      var AB = L.aboard;
+      var abCmd = members.filter(function(m) {
+        return m.own && m.en && m.en.k === "cmd" && new RegExp(AB.cmd_re, "i").test(String(m.en.l));
+      })[0];
+      if (abCmd) {
+        var abShip = members.some(function(m) {
+          return m.unitRow && m.en && new RegExp(AB.ship_re, "i").test(String(m.en.l));
+        });
+        var abTook = (abCmd.R && abCmd.R.upgrades || []).some(function(u) {
+          return u.state === "take" && new RegExp(AB.up_re, "i").test(String(u.label));
+        });
+        if (abShip || abTook)
+          out.push({
+            ok: abShip || !abTook,
+            warn: abShip && !abTook,
+            t: abCmd.en.l + " aboard the Flame of Asuryan",
+            v: !abShip ? "the Flame of Asuryan is not in the fleet" : abTook ? "125 pts" : "125 pts if the row is ticked",
+            s: AB.src + " (Fleets p. " + AB.pg + ")"
+          });
+      }
+    }
+  }
+  function checkDefences(F) {
+    var lim = F.lim, members = F.members, out = F.out;
+    var defs = members.filter(function(m) {
+      return m.defence;
+    });
+    if (defs.length) {
+      var budget = defs.reduce(function(a, m) {
+        return a + (defenceOwnPoints(m.sel.sh) ? 0 : m.points);
+      }, 0);
+      var third = Math.floor(lim / 3);
+      if (budget > 0 || defs.some(function(m) {
+        return !defenceOwnPoints(m.sel.sh);
+      }))
+        out.push({
+          ok: true,
+          warn: budget > third,
+          t: "Planetary defences (up to one third of the points)",
+          v: budget + " / " + third + " pts",
+          s: "When desired, the defender in a scenario may spend up to one-third of his allocated point value on planetary defences, in addition to any planetary defences provided by the specific scenario. (Rulebook p. 100)"
+        });
+      defs.forEach(function(m) {
+        var n1 = m.sel.sh && m.sel.sh.need1;
+        if (!n1) return;
+        var took = (m.R && m.R.options || []).filter(function(o) {
+          return o.group === n1.grp && o.state === "take";
+        }).length;
+        if (took === 0)
+          out.push({
+            ok: false,
+            t: m.en.l + " (choose one " + n1.what + ")",
+            v: "none chosen",
+            s: n1.src + " (Fleets p. " + n1.pg + ")"
+          });
+      });
+      if (defs.some(function(m) {
+        return m.sel.sh && m.sel.sh.qd;
+      }))
+        out.push({
+          ok: true,
+          warn: true,
+          t: "Ramilies class star fort",
+          v: "by prior agreement",
+          s: "Bought from the fleet's points, rather than defences, and in competitive play only by prior agreement with the opponent. (Fleets p. 500)"
+        });
+    }
+  }
+  function checkRequiredWeapons(F) {
+    var members = F.members, out = F.out;
+    members.forEach(function(m) {
+      var nd = m.sel && m.sel.sh && m.sel.sh.need;
+      if (!nd || !m.unitRow) return;
+      nd.forEach(function(n) {
+        var took = (m.R && m.R.options || []).filter(function(o) {
+          return o.group === n.grp && o.state === "take";
+        }).length;
+        if (!took) out.push({
+          ok: false,
+          t: (m.en ? m.en.l : "?") + ": choose " + n.what,
+          v: "none chosen",
+          s: n.src + " (Fleets p. " + n.pg + ")"
+        });
+      });
+    });
+  }
+  function checkOptionShares(F) {
+    var members = F.members, out = F.out;
+    var fracs = {};
+    members.forEach(function(m) {
+      var fr = m.sel && m.sel.sh && m.sel.sh.frac;
+      if (!fr) return;
+      var g = fracs[fr.what] = fracs[fr.what] || { fr, all: 0, took: 0 };
+      g.all += m.hulls;
+      var rx = new RegExp(fr.opt, "i");
+      if ((m.R && m.R.options || []).some(function(o) {
+        return o.state === "take" && rx.test(String(o.text || ""));
+      }))
+        g.took += m.hulls;
+    });
+    Object.keys(fracs).forEach(function(k) {
+      var g = fracs[k], cap = Math.floor(g.all * g.fr.pct / 100);
+      if (g.took) out.push({
+        ok: g.took <= cap,
+        t: g.fr.label,
+        v: g.took + " / " + cap + " of " + g.all,
+        s: g.fr.src + " (Fleets p. " + g.fr.pg + ")"
+      });
+    });
+  }
+  function checkWebway(F) {
+    var L = F.L, members = F.members, out = F.out;
+    if (L.webway) {
+      var WW = L.webway, wwRe = new RegExp(WW.up, "i"), hvRe = new RegExp(WW.haven, "i");
+      var wwN = members.filter(function(m) {
+        return (m.R && m.R.upgrades || []).some(function(u) {
+          return u.state === "take" && wwRe.test(String(u.label));
+        });
+      }).length;
+      if (wwN) {
+        var hv = members.some(function(m) {
+          return m.unitRow && m.en && hvRe.test(String(m.en.l || ""));
+        });
+        out.push({
+          ok: hv,
+          t: "Ships through the Webway Portal",
+          v: hv ? wwN + " at half cost" : "no Eldar Haven in the fleet",
+          s: WW.src + " (Fleets p. " + WW.pg + ")"
+        });
+      }
+    }
+  }
+
+  // packages/rules/src/fleet-reserves.js
+  function checkReserveTypes(F) {
+    var L = F.L, members = F.members, out = F.out, allySpecial = F.allySpecial;
+    var RES_TYPES = [
+      ["battleship", "battleships"],
+      ["cruiser", "cruisers"],
+      ["escort", "escorts"]
+    ];
+    var RES_SRC = "For every three battleships, cruisers or escorts chosen from the fleet list, you may also pick one ship of the same type from another fleet list belonging to the same race. (Fleets p. 14)";
+    var ALLY_SRC = "In all cases these follow the standard rules for reserves in that no more than one allied vessel may be taken for every three core vessels in the fleet. (Fleets p. 16)";
+    var typeOf = function(m) {
+      return m.sel && m.sel.sh && m.sel.sh.rt || "none";
+    };
+    var RX = L.res_exempt || null, rxShip = null;
+    if (RX && members.some(function(x) {
+      return x.own && x.en && x.en.k === "cmd" && new RegExp(RX.needs_re, "i").test(String(x.en.l));
+    }))
+      rxShip = members.filter(function(m) {
+        return m.role === "reserve" && m.unitRow && m.hulls === 1 && new RegExp(RX.re, "i").test(String(m.en.l));
+      })[0] || null;
+    if (rxShip) out.push({
+      ok: true,
+      t: "Exempt from the reserve rules: " + rxShip.en.l,
+      v: "with Prince Yriel",
+      s: RX.src + " (Fleets p. " + RX.pg + ")"
+    });
+    if (RX && RX.unique_src) {
+      var rxN = members.reduce(function(a, m) {
+        return a + (m.unitRow && m.en && new RegExp(RX.re, "i").test(String(m.en.l)) ? m.hulls : 0);
+      }, 0);
+      if (rxN > 1) out.push({
+        ok: false,
+        t: "Flame of Asuryan (unique)",
+        v: rxN + " / 1",
+        s: RX.unique_src + " (Fleets p. " + RX.unique_pg + ")"
+      });
+    }
+    var MECH = L.res_mech || null;
+    var isSMres = function(m) {
+      return m.role === "reserve" && !!m.sel && !!m.sel.list && m.sel.list !== L && m.sel.list.race === "space marines";
+    };
+    var smRes = MECH ? members.filter(isSMres) : [];
+    var mechXenos = MECH ? members.some(isXenosMember) : false;
+    var capLists = {};
+    if (MECH) members.forEach(function(m) {
+      if (m.role === "reserve" && m.sel && m.sel.list && m.sel.list !== L && !isSMres(m) && (typeOf(m) === "battleship" || typeOf(m) === "cruiser")) capLists[m.sel.list.nm] = 1;
+    });
+    var escFree = function(m) {
+      return !!MECH && !(mechXenos && smRes.length) && m.role === "reserve" && typeOf(m) === "escort" && !!m.sel && !!m.sel.list && !!capLists[m.sel.list.nm];
+    };
+    var hullsOf = function(role, ty) {
+      return members.reduce(function(a, m) {
+        if (m.role !== role || m === rxShip || typeOf(m) !== ty) return a;
+        if (MECH && role === "reserve" && (isSMres(m) || escFree(m))) return a;
+        return a + m.hulls;
+      }, 0);
+    };
+    RES_TYPES.forEach(function(t) {
+      var base = Math.floor(hullsOf("core", t[0]) / 3);
+      var res = hullsOf("reserve", t[0]);
+      var free = t[0] !== "escort" ? 0 : members.reduce(function(a, m) {
+        return a + (escFree(m) ? m.hulls : 0);
+      }, 0);
+      if (res || free) out.push({
+        ok: res <= base,
+        t: "Reserves (" + t[1] + ")",
+        v: res + " / " + base + (free ? " (+" + free + " with their list's capital ships, no limit)" : ""),
+        s: free ? MECH.esc_src + " " + MECH.interp.note : RES_SRC
+      });
+      var ally = hullsOf("ally", t[0]);
+      if (ally) out.push({
+        ok: ally <= base,
+        t: "Allied vessels (" + t[1] + ")",
+        v: ally + " / " + base,
+        s: ALLY_SRC
+      });
+    });
+    if (MECH) {
+      var mechCap = hullsOf("core", "battleship") + hullsOf("core", "cruiser");
+      var resCapN = hullsOf("reserve", "battleship") + hullsOf("reserve", "cruiser");
+      if (resCapN) out.push({
+        ok: resCapN <= Math.floor(mechCap / 3),
+        t: "Reserve capital ships (one per three capital ships)",
+        v: resCapN + " / " + Math.floor(mechCap / 3),
+        s: MECH.cap_src
+      });
+      var smHulls = function(ty) {
+        return smRes.reduce(function(a, m) {
+          return a + (typeOf(m) === ty ? m.hulls : 0);
+        }, 0);
+      };
+      var smCr = smHulls("cruiser"), smBs = smHulls("battleship");
+      if (smCr || smBs) out.push({
+        ok: smCr <= Math.floor(mechCap / 3),
+        t: "Space Marine strike cruisers (one per three Mechanicus capital ships)",
+        v: smCr + " / " + Math.floor(mechCap / 3),
+        s: MECH.sm_src
+      });
+      if (smBs) out.push({
+        ok: smBs <= Math.floor(smCr / 3),
+        t: "Space Marine battle barges (one per three strike cruisers)",
+        v: smBs + " / " + Math.floor(smCr / 3),
+        s: MECH.sm_src
+      });
+    }
+    members.filter(function(m) {
+      return m.role !== "core" && typeOf(m) === "none" && !allySpecial(m);
+    }).forEach(function(m) {
+      out.push({
+        ok: false,
+        t: "Not a reserve type: " + (m.en ? m.en.l : "?"),
+        v: "battleship, cruiser or escort",
+        s: "Only ships of the same 'type' (battleship, cruiser or escort) count for reserves purposes. (Fleets p. 14)"
+      });
+    });
+  }
+  function checkReserveRaces(F) {
+    var L = F.L, members = F.members, out = F.out;
+    var saidHere = {};
+    var sayOnce = function(row) {
+      var k = row.t + " | " + row.v;
+      if (saidHere[k]) return;
+      saidHere[k] = 1;
+      out.push(row);
+    };
+    members.filter(function(m) {
+      return m.role === "reserve" || m.role === "ally";
+    }).forEach(function(m) {
+      var dl = m.sel && m.sel.list, dr = dl ? dl.race : null;
+      if (dl && dl !== L && L.res_ban) {
+        sayOnce({
+          ok: false,
+          t: "Takes no reserves or allies: " + L.nm,
+          v: "not from " + dl.nm,
+          s: L.res_ban
+        });
+        return;
+      }
+      if (dl && dl !== L && dl.res_ban) {
+        sayOnce({
+          ok: false,
+          t: "Gives no reserves or allies: " + dl.nm,
+          v: "not to " + L.nm,
+          s: dl.res_ban
+        });
+        return;
+      }
+      if (dl && dl !== L && dl.lend_ban && m.en && new RegExp(dl.lend_ban.re, "i").test(String(m.en.l || ""))) {
+        sayOnce({
+          ok: false,
+          t: "Not lent as a reserve: " + m.en.l,
+          v: "stays with " + dl.nm,
+          s: dl.lend_ban.src
+        });
+        return;
+      }
+      if (m.role === "ally" && dl && dl !== L && dr && L.race && dr === L.race) {
+        sayOnce({
+          ok: false,
+          t: "Same race, so a reserve and not an ally: " + (m.en ? m.en.l : "?"),
+          v: dl.nm + " is " + dr,
+          s: 'Reserves can only ever be ships belonging to the same "race", chosen from a fleet list of the same "race". (Fleets p. 15)'
+        });
+        return;
+      }
+      if (m.role === "ally" && dl && dl !== L) {
+        var mine = L.ally_rule || {}, theirs = dl.ally_rule || {};
+        var okWith = function(rule, other) {
+          if (!rule) return true;
+          if (rule.only) return rule.only.indexOf(other) >= 0;
+          return (rule.never || []).indexOf(other) < 0;
+        };
+        var a1 = L.ally_race, a2 = dl.ally_race;
+        var named = false;
+        (L.res_ok || []).forEach(function(g) {
+          if (g.race && dl.race !== g.race) return;
+          if (g.list && dl.nm !== g.list) return;
+          if (!g.race && !g.list) return;
+          if (g.not_re && m.en && new RegExp(g.not_re, "i").test(String(m.en.l))) return;
+          named = true;
+        });
+        if (!named && !(okWith(mine, a2) && okWith(theirs, a1))) {
+          sayOnce({
+            ok: false,
+            t: "Never allies: " + a1 + " and " + a2,
+            v: dl.nm + " cannot be an ally here",
+            s: mine.src || theirs.src || "Allies Matrix"
+          });
+          return;
+        }
+        if (!named && L.ally_excl && a1 === L.ally_excl.who) {
+          var allies = {};
+          members.forEach(function(x) {
+            if (x.role === "ally" && x.sel && x.sel.list && x.sel.list !== L)
+              allies[x.sel.list.ally_race] = 1;
+          });
+          var trig = L.ally_excl.trigger;
+          if (allies[trig] && a2 !== trig && (L.ally_excl.allow || []).indexOf(a2) < 0) {
+            sayOnce({
+              ok: false,
+              t: "With " + trig + " allies, no others: " + a2,
+              v: dl.nm + " is a third ally",
+              s: L.ally_excl.src
+            });
+            return;
+          }
+        }
+        return;
+      }
+      if (m.role !== "reserve") return;
+      if (dl === L) return;
+      if (dl && dl !== L && dr && dr === L.race) return;
+      var hit = null, excluded = null, needs = null;
+      (L.res_ok || []).forEach(function(g) {
+        if (g.race && (!dl || dl.race !== g.race)) return;
+        if (g.list && (!dl || dl.nm !== g.list)) return;
+        if (!g.race && !g.list) return;
+        if (g.not_re && m.en && new RegExp(g.not_re, "i").test(String(m.en.l))) {
+          excluded = g;
+          return;
+        }
+        if (g.needs_re) {
+          var re2 = new RegExp(g.needs_re, "i");
+          var led = members.some(function(x) {
+            return x.own && x.en && re2.test(String(x.en.l));
+          });
+          if (!led) {
+            needs = g;
+            return;
+          }
+        }
+        if ((g.unless_fl || g.unless_xenos) && members.some(function(x) {
+          var sh3 = x.sel && x.sel.sh;
+          if (!sh3 || !x.unitRow) return false;
+          if (g.unless_fl && !x.own && /battleship|cruiser/.test(sh3.rt || "") && new RegExp(g.unless_fl, "i").test(String(sh3.fl || ""))) return true;
+          return !!g.unless_xenos && isXenosMember(x);
+        })) {
+          needs = g;
+          return;
+        }
+        hit = g;
+      });
+      if (hit) return;
+      if (excluded) {
+        sayOnce({
+          ok: false,
+          t: "Not granted as a reserve: " + (m.en ? m.en.l : "?"),
+          v: dl.nm + " is allowed, this row is not",
+          s: L.res_src || ""
+        });
+        return;
+      }
+      if (needs) {
+        sayOnce({
+          ok: false,
+          t: "Reserve needs " + (needs.needs_what || "a condition") + ": " + (m.en ? m.en.l : "?"),
+          v: dl.nm + " is allowed only then",
+          s: needs.src || L.res_src || ""
+        });
+        return;
+      }
+      sayOnce({
+        ok: false,
+        t: "Reserve race: " + (dl ? dl.nm : "?"),
+        v: (dr || "no race") + " / " + (L.race || "no race"),
+        s: 'Reserves can only ever be ships belonging to the same "race", chosen from a fleet list of the same "race". (Fleets p. 15)'
+      });
+    });
+  }
+  function checkReserveSources(F) {
+    var L = F.L, members = F.members, out = F.out, secKey = F.secKey, matches = F.matches;
+    members.filter(function(m) {
+      if (m.own || !m.unitRow || !m.sel.list) return false;
+      var ds = m.sel.list.secs[m.si];
+      return !!ds && (ds.ct === "reserve" || ds.ct === "access");
+    }).forEach(function(m) {
+      var ds = m.sel.list.secs[m.si];
+      out.push(ds.ct === "reserve" ? {
+        ok: false,
+        t: "Reserve of a reserve: " + (m.en ? m.en.l : "?"),
+        v: ds.t + " on " + m.sel.list.nm,
+        s: "However, a given fleet list cannot take as reserves ships listed as reserves or allies to another fleet list. In short, you cannot use a reserve of a reserve. (Fleets p. 15)"
+      } : {
+        ok: false,
+        t: "Named access, not a reserve: " + (m.en ? m.en.l : "?"),
+        v: ds.t + " on " + m.sel.list.nm,
+        s: "Some fleet lists explicitly provide access to ships from other races. These may only be taken exactly as described on their fleet list rules and may not also be taken as reserves. (Fleets p. 15)"
+      });
+    });
+    if (L.ally_xenos) {
+      var XN = L.ally_xenos;
+      var smAlly = members.some(function(x) {
+        return x.role === "ally" && x.sel && x.sel.list && x.sel.list.ally_race === XN.when;
+      });
+      if (smAlly || L.ally_race === XN.when) {
+        var xre = new RegExp(XN.re, "i");
+        var saidX = {};
+        members.forEach(function(m) {
+          var lab = m.en ? String(m.en.l) : "";
+          if (!lab || !xre.test(lab) || saidX[lab]) return;
+          if (!smAlly && m.role !== "ally") return;
+          saidX[lab] = 1;
+          out.push({
+            ok: false,
+            t: "No Xenos vessels beside Space Marines: " + lab,
+            v: (m.sel && m.sel.list ? m.sel.list.nm : L.nm) + " row",
+            s: XN.src
+          });
+        });
+      }
+    }
+    members.filter(function(m) {
+      if (m.own || !m.unitRow) return false;
+      var ds = m.sel.list && m.sel.list.secs[m.si];
+      if (!ds || ds.ct !== "type") return false;
+      return !L.secs.some(function(sec, si) {
+        return sec.ct === "type" && secKey(sec) === secKey(ds) && matches(m, si, null);
+      });
+    }).forEach(function(m) {
+      out.push({
+        ok: true,
+        warn: true,
+        t: "Not counted in this list's limits: " + (m.en ? m.en.l : "?"),
+        v: (m.sel.list ? m.sel.list.secs[m.si].t : "?") + " has no counterpart here",
+        s: "Basically, the restrictions on maximum and minimum numbers of ships are determined for the fleet as a whole, regardless of whether they were purchased from the list or as reserves. (Fleets p. 14)"
+      });
+    });
+    members.filter(function(m) {
+      return m.role === "core" && !m.own;
+    }).forEach(function(m) {
+      out.push({
+        ok: false,
+        t: "Borrowed ship without a role: " + (m.en ? m.en.l : "?"),
+        v: (m.sel.list ? m.sel.list.nm : "?") + " is not the fleet's list",
+        s: "Any fleet chosen from one of the fleet lists may also include reserves. (Fleets p. 14)"
+      });
+    });
+  }
+
+  // packages/rules/src/fleet-sections.js
+  function fleetCounters(L, catalog, members) {
+    var secKey = function(sec) {
+      return String(sec && sec.t || "").trim().toLowerCase();
+    };
+    var rtOf = function(en2) {
+      var sh2 = en2 && en2.r != null ? catalog.ships[String(en2.r)] : null;
+      return sh2 ? sh2.rt : null;
+    };
+    var matches = function(m, si, re) {
+      if (!m.unitRow) return false;
+      if (m.own) return m.si === si && (!re || re.test(m.en.l));
+      var sec = L.secs[si];
+      if (!sec || sec.ct !== "type") return false;
+      var ds = m.sel.list && m.sel.list.secs[m.si];
+      if (!ds || ds.ct !== "type" || secKey(ds) !== secKey(sec)) return false;
+      var mine = rtOf(m.en);
+      if (mine && !sec.ents.some(function(e2) {
+        return e2.k === "unit" && rtOf(e2) === mine;
+      })) return false;
+      return !re || re.test(m.en.l);
+    };
+    var secShips = function(si, re) {
+      return members.filter(function(m) {
+        return matches(m, si, re);
+      }).reduce(function(a, m) {
+        return a + m.hulls;
+      }, 0);
+    };
+    var secUnits = function(si, re) {
+      return members.filter(function(m) {
+        return matches(m, si, re);
+      }).length;
+    };
+    var rx = function(p) {
+      return p.re ? new RegExp(p.re, "i") : null;
+    };
+    var pickHas = function(m, p) {
+      if (p.race == null && p.hull == null) return matches(m, p.sec, rx(p));
+      if (!m.unitRow) return false;
+      if (p.race != null && (m.own || !m.sel.list || m.sel.list.race !== p.race)) return false;
+      if (p.hull != null && !(m.sel.sh && new RegExp(p.hull, "i").test(String(m.sel.sh.nm || "")))) return false;
+      return !p.re || rx(p).test(m.en.l);
+    };
+    var count = function(pick, secs, units) {
+      var f = units ? secUnits : secShips;
+      return pick ? pick.reduce(function(a, p) {
+        var ms = members.filter(function(m) {
+          return pickHas(m, p);
+        });
+        return a + (units ? ms.length : ms.reduce(function(b, m) {
+          return b + m.hulls;
+        }, 0));
+      }, 0) : (secs || []).reduce(function(a, i) {
+        return a + f(i, null);
+      }, 0);
+    };
+    var pointsOfPick = function(pick, secs) {
+      return members.filter(function(m) {
+        return pick ? pick.some(function(p) {
+          return pickHas(m, p);
+        }) : (secs || []).indexOf(m.si) >= 0 && m.unitRow;
+      }).reduce(function(a, m) {
+        return a + m.points;
+      }, 0);
+    };
+    var distinctKinds = function(pick) {
+      var seen = {};
+      members.forEach(function(m) {
+        if (pick.some(function(p) {
+          return pickHas(m, p);
+        }))
+          seen[String(m.en.l).split(" \u2014 ")[0].trim().toLowerCase()] = 1;
+      });
+      return Object.keys(seen).length;
+    };
+    var upShare = function(secIdx) {
+      return members.reduce(function(a, m) {
+        if (!m.sel || !m.sel.sh) return a;
+        var ups;
+        try {
+          ups = upgradesFor(m.sel);
+        } catch (e) {
+          return a;
+        }
+        return a + ups.own.concat(ups.other).filter(function(x) {
+          return x[0] === secIdx && upState(m.sel, x[0], x[1]) === "take";
+        }).reduce(function(b, x) {
+          return b + upCost(m.sel, x[2]);
+        }, 0);
+      }, 0);
+    };
+    var condMet = function(r) {
+      return !r.cond_pick || count(r.cond_pick, null) >= (r.cond_min == null ? 1 : r.cond_min);
+    };
+    var tookUp = function(m, si, ei) {
+      return upgradeTakenAnyWay(m.sel, m.own ? si : HOST_OFF + si, ei);
+    };
+    var upRows = function(secIdx, re) {
+      var rows = [];
+      (L.secs[secIdx] ? L.secs[secIdx].ents : []).forEach(function(en, ei) {
+        if (isUpgradeEnt(en) && (!re || re.test(en.l))) rows.push([secIdx, ei, en]);
+      });
+      return rows;
+    };
+    var allySpecial = function(m) {
+      return !!(L.ally_cmd && m.role === "ally" && m.en && m.en.k === "cmd" && new RegExp(L.ally_cmd.re, "i").test(String(m.en.l)));
+    };
+    return { secKey, matches, secShips, secUnits, pickHas, count, pointsOfPick, distinctKinds, upShare, condMet, tookUp, upRows, allySpecial };
+  }
+  function checkSectionRules(F) {
+    var L = F.L, out = F.out;
+    L.secs.forEach(function(sec, si) {
+      (sec.rules || []).forEach(function(r) {
+        var lab = r.label || sec.t;
+        if (r.interp) lab += " (open interpretation " + r.interp.id + ")";
+        var badSec = secNameIssues(L, r, []);
+        if (badSec.length) {
+          out.push({
+            ok: false,
+            t: "Data error: " + lab,
+            v: "section index does not match its name (" + badSec.join(", ") + ")",
+            s: r.src
+          });
+          return;
+        }
+        if (Object.prototype.hasOwnProperty.call(SECTION_RULES, r.kind)) SECTION_RULES[r.kind](F, r, sec, si, lab);
+      });
+    });
+  }
+  var SECTION_RULES = {
+    section_count: ruleSectionCount,
+    cap: ruleCap,
+    ratio: ruleRatio,
+    per_points: rulePerPoints,
+    mandatory_at: ruleMandatoryAt,
+    squadron: ruleSquadron,
+    allowed_at: ruleAllowedAt,
+    conditional_cap: ruleConditionalCap,
+    requires: ruleRequires,
+    min_ratio: ruleMinRatio,
+    compare: ruleCompare,
+    points_share: rulePointsShare,
+    tiers: ruleTiers,
+    upgrade_ratio: ruleUpgradeRatio,
+    option_ratio: ruleOptionRatio,
+    notice: ruleNotice,
+    one_donor: ruleOneDonor,
+    agreement: ruleAgreement,
+    hook_capacity: ruleHookCapacity,
+    up_budget: ruleUpBudget,
+    unit_upgrade_max: ruleUnitUpgradeMax
+  };
+  function ruleSectionCount(F, r, sec, si, lab) {
+    var out = F.out, secShips = F.secShips, count = F.count;
+    var c = r.pick ? count(r.pick, null) : secShips(si);
+    out.push({ ok: c <= r.max && (c === 0 || c >= r.min), t: lab, v: c + " / " + r.max, s: r.src });
+  }
+  function ruleCap(F, r, sec, si, lab) {
+    var out = F.out, secShips = F.secShips, count = F.count;
+    var cc = r.pick ? count(r.pick, null) : (r.sec || [si]).reduce(function(a, i) {
+      return a + secShips(i);
+    }, 0);
+    out.push({ ok: cc <= r.max, t: lab, v: cc + " / " + r.max, s: r.src });
+  }
+  function ruleRatio(F, r, sec, si, lab) {
+    var out = F.out, count = F.count, distinctKinds = F.distinctKinds;
+    if (r.when_pick && count(r.when_pick, null) < 1) return;
+    var have = count(r.allow_pick, r.allow_sec || [si], !!r.units);
+    var base = r.distinct ? distinctKinds(r.per_pick) : count(r.per_pick, r.per_sec);
+    var allowed = Math.floor(base / r.per) * r.allow;
+    if (r.min_one && base >= 1) allowed = Math.max(1, allowed);
+    if (r.exempt && count(r.exempt.cond_pick, null) >= (r.exempt.cond_min == null ? 1 : r.exempt.cond_min))
+      allowed += r.exempt.count == null ? 1 : r.exempt.count;
+    if (r.at_least && count(r.at_least.cond_pick, null) >= (r.at_least.cond_min == null ? 1 : r.at_least.cond_min))
+      allowed = Math.max(allowed, r.at_least.count == null ? 1 : r.at_least.count);
+    out.push({ ok: have <= allowed, t: lab, v: have + " / " + allowed, s: r.src });
+    var strictR = Math.floor(base / r.per) * r.allow;
+    if (r.interp && r.interp.strict === "min_one" && have <= allowed && have > strictR)
+      out.push({
+        ok: true,
+        warn: true,
+        t: "Open interpretation (" + r.interp.id + "): " + r.label,
+        v: have + " / " + strictR + " on the strict reading",
+        s: r.interp.note
+      });
+  }
+  function rulePerPoints(F, r, sec, si, lab) {
+    var lim = F.lim, worth = F.worth, out = F.out, secUnits = F.secUnits, count = F.count, pointsOfPick = F.pointsOfPick, condMet = F.condMet;
+    var cp = r.pick ? count(r.pick, null) : (r.sec || [si]).reduce(function(a, i) {
+      return a + secUnits(i);
+    }, 0);
+    var basePts = r.of_pick ? pointsOfPick(r.of_pick, null) : r.basis === "limit" ? lim : worth;
+    var ap = r.full ? Math.floor(basePts / r.per) * r.each : Math.max(1, Math.ceil(basePts / r.per)) * r.each;
+    if (!condMet(r)) ap = 0;
+    out.push({
+      ok: r.exact ? cp === ap : cp <= ap,
+      t: lab,
+      v: cp + " / " + ap + (r.exact ? " exactly" : ""),
+      s: r.src
+    });
+    if (r.interp && r.interp.strict_max != null && cp <= ap && cp > r.interp.strict_max)
+      out.push({
+        ok: true,
+        warn: true,
+        t: "Open interpretation (" + r.interp.id + "): " + r.label,
+        v: cp + " / " + r.interp.strict_max + " on the strict reading",
+        s: r.interp.note
+      });
+  }
+  function ruleMandatoryAt(F, r, sec, si, lab) {
+    var worth = F.worth, out = F.out, secUnits = F.secUnits, count = F.count;
+    var cm = r.pick ? count(r.pick, null) : (r.sec || [si]).reduce(function(a, i) {
+      return a + secUnits(i);
+    }, 0);
+    var need = r.over ? worth > r.points : worth >= r.points;
+    out.push({
+      ok: !need || cm >= 1,
+      t: lab + (r.points ? " (" + (r.over ? "over " : "from ") + r.points + " pts)" : " required"),
+      v: need ? cm >= 1 ? "included" : "missing" : "not required",
+      s: r.src,
+      warn: !need
+    });
+  }
+  function ruleSquadron(F, r, sec, si, lab) {
+    var members = F.members, out = F.out, pickHas = F.pickHas;
+    var insec = r.sec || [si];
+    var inRule = members.filter(function(m) {
+      return m.escort && (r.pick ? r.pick.some(function(p) {
+        return pickHas(m, p);
+      }) : insec.indexOf(m.si) >= 0);
+    });
+    var escortsInFleet = members.filter(function(m) {
+      return m.escort && !m.defence;
+    }).reduce(function(a, m) {
+      return a + m.hulls;
+    }, 0);
+    var poolKey = function(m) {
+      return r.split_fl ? String(m.sel.sh && m.sel.sh.fl || "") : "";
+    };
+    var pools = {};
+    inRule.forEach(function(m) {
+      var k = poolKey(m);
+      (pools[k] = pools[k] || []).push(m);
+    });
+    var partners = r.with_pick ? members.filter(function(m) {
+      return inRule.indexOf(m) < 0 && r.with_pick.some(function(p) {
+        return pickHas(m, p);
+      });
+    }) : [];
+    var fits = function(x) {
+      if (x === 0) return true;
+      for (var q = 1; q * r.min <= x; q++) if (x <= q * r.max) return true;
+      return false;
+    };
+    Object.keys(pools).forEach(function(k) {
+      var pool = pools[k];
+      var shortN = pool.filter(function(m) {
+        return m.hulls < r.min;
+      }).reduce(function(a, m) {
+        return a + m.hulls;
+      }, 0);
+      var room = pool.filter(function(m) {
+        return m.hulls >= r.min && m.hulls <= r.max;
+      }).reduce(function(a, m) {
+        return a + (r.max - m.hulls);
+      }, 0) + partners.filter(function(m) {
+        return poolKey(m) === k;
+      }).reduce(function(a, m) {
+        return a + Math.max(0, r.max - m.hulls);
+      }, 0);
+      var placed = false;
+      for (var j = 0; j <= Math.min(shortN, room) && !placed; j++) placed = fits(shortN - j);
+      var lone = !!r.lone && escortsInFleet === 1;
+      pool.forEach(function(m) {
+        var n = m.hulls, ok = n >= r.min && n <= r.max, v = n + " ships";
+        if (n < r.min && lone) {
+          ok = true;
+          v += " (the only escort in the fleet)";
+        } else if (n < r.min && placed) {
+          ok = true;
+          v += " (joins other escorts in a mixed squadron)";
+        }
+        out.push({
+          ok,
+          t: m.sel.sh.nm,
+          v: m.defence ? n + (n === 1 ? " defence" : " defences") : v,
+          s: "Squadrons of " + r.min + "\u2013" + r.max + ". " + r.src
+        });
+      });
+    });
+  }
+  function ruleAllowedAt(F, r, sec, si, lab) {
+    var worth = F.worth, out = F.out, count = F.count, pointsOfPick = F.pointsOfPick, condMet = F.condMet;
+    var ca = count(r.pick, null);
+    var basis = r.basis === "remainder" ? worth - pointsOfPick(r.pick, null) : worth;
+    var okPts = r.over ? basis > r.points : basis >= r.points;
+    var okCond = condMet(r);
+    out.push({
+      ok: ca === 0 || okPts && okCond,
+      t: lab,
+      v: ca === 0 ? "none" : okPts && okCond ? "allowed" : "not allowed",
+      s: r.src,
+      warn: ca === 0
+    });
+  }
+  function ruleConditionalCap(F, r, sec, si, lab) {
+    var members = F.members, out = F.out, count = F.count, condMet = F.condMet;
+    var cq = count(r.pick, null);
+    var met = r.cond_role ? members.some(function(m) {
+      return m.role === r.cond_role;
+    }) : condMet(r);
+    var cap = met ? r.max_met : r.max_unmet;
+    out.push({
+      ok: cap == null || cq <= cap,
+      t: lab,
+      v: cq + " / " + (cap == null ? "any" : cap),
+      s: r.src
+    });
+  }
+  function ruleRequires(F, r, sec, si, lab) {
+    var out = F.out, count = F.count;
+    var ifc = count(r.if_pick, null, !!r.if_units), thenc = count(r.then_pick, null), min = r.min == null ? 1 : r.min;
+    var ifMin = r.if_min == null ? 1 : r.if_min;
+    var need = ifc >= ifMin && !(r.unless_pick && count(r.unless_pick, null) >= 1);
+    out.push({
+      ok: !need || thenc >= min,
+      t: lab,
+      v: !need ? "not required" : thenc >= min ? "included" : "missing",
+      s: r.src,
+      warn: !need
+    });
+  }
+  function ruleMinRatio(F, r, sec, si, lab) {
+    var out = F.out, count = F.count;
+    var b2 = count(r.per_pick, null), h2 = count(r.allow_pick, null, !!r.units), needN = b2 * r.min;
+    out.push({ ok: b2 === 0 || h2 >= needN, t: lab, v: h2 + " / " + needN + " min", s: r.src });
+  }
+  function ruleCompare(F, r, sec, si, lab) {
+    var out = F.out, count = F.count;
+    var a3 = count(r.a_pick, null, !!r.a_units) * (r.a_mult || 1), b3 = count(r.b_pick, null, !!r.b_units) + (r.b_add || 0);
+    var okc = r.op === "<=" ? a3 <= b3 : r.op === "<" ? a3 < b3 : r.op === ">=" ? a3 >= b3 : r.op === ">" ? b3 === 0 || a3 > b3 : a3 === b3;
+    out.push({ ok: okc, t: lab, v: a3 + " " + r.op + " " + b3, s: r.src });
+  }
+  function rulePointsShare(F, r, sec, si, lab) {
+    var lim = F.lim, worth = F.worth, out = F.out, pointsOfPick = F.pointsOfPick, upShare = F.upShare, condMet = F.condMet;
+    var share = r.up_sec != null ? upShare(r.up_sec) : pointsOfPick(r.pick, null);
+    var baseP = r.of === "limit" ? lim : r.of === "pick" ? pointsOfPick(r.of_pick, null) : worth;
+    var allow = r.pct != null ? baseP * r.pct / 100 : baseP * (r.frac || 1);
+    if (!condMet(r)) allow = 0;
+    out.push({ ok: share <= allow + 1e-9, t: lab, v: share + " / " + Math.floor(allow) + " pts", s: r.src });
+  }
+  function ruleTiers(F, r, sec, si, lab) {
+    var lim = F.lim, worth = F.worth, out = F.out, count = F.count;
+    var ct = count(r.pick, null), capT = 0, tierBase = r.basis === "limit" ? lim : worth;
+    (r.tiers || []).forEach(function(t) {
+      if (tierBase >= t[0]) capT = t[1];
+    });
+    out.push({ ok: ct <= capT, t: lab, v: ct + " / " + capT, s: r.src });
+  }
+  function ruleUpgradeRatio(F, r, sec, si, lab) {
+    var members = F.members, out = F.out, count = F.count, tookUp = F.tookUp, upRows = F.upRows;
+    var rows = upRows(r.up_sec, r.up_re ? new RegExp(r.up_re, "i") : null);
+    var nU = members.filter(function(m) {
+      return rows.some(function(x) {
+        return tookUp(m, x[0], x[1]);
+      });
+    }).length;
+    var bU = count(r.per_pick, null);
+    var aU = Math.floor(bU / r.per) * r.allow;
+    if (r.min_one && bU >= 1) aU = Math.max(1, aU);
+    out.push({ ok: nU <= aU, t: lab, v: nU + " / " + aU, s: r.src });
+  }
+  function ruleOptionRatio(F, r, sec, si, lab) {
+    var members = F.members, out = F.out, pickHas = F.pickHas;
+    var orx = new RegExp(r.opt_re, "i");
+    var inPick = members.filter(function(m) {
+      return (r.pick || []).some(function(p) {
+        return pickHas(m, p);
+      });
+    });
+    var tookO = inPick.filter(function(m) {
+      var shO = m.sel && m.sel.sh;
+      return !!shO && (shO.ol || []).some(function(o, i) {
+        return orx.test(o.t || "") && optState(m.sel, i) === "take";
+      });
+    }).length;
+    var baseO = inPick.reduce(function(a, m) {
+      return a + m.hulls;
+    }, 0);
+    var allowO = Math.floor(baseO / r.per) * r.allow;
+    out.push({ ok: tookO <= allowO, t: lab, v: tookO + " / " + allowO, s: r.src, warn: tookO === 0 });
+  }
+  function ruleNotice(F, r, sec, si, lab) {
+    var out = F.out;
+    out.push({ ok: true, warn: true, t: lab, v: "not checked by the app", s: r.src });
+  }
+  function ruleOneDonor(F, r, sec, si, lab) {
+    var L = F.L, members = F.members, out = F.out;
+    var donors = {};
+    members.forEach(function(m) {
+      if ((r.roles || []).indexOf(m.role) >= 0 && m.sel && m.sel.list && m.sel.list !== L) donors[m.sel.list.nm] = 1;
+    });
+    var nd = Object.keys(donors).length;
+    if (nd) out.push({ ok: nd <= 1, t: lab, v: nd + " / 1" + (nd > 1 ? ": " + Object.keys(donors).join(", ") : ""), s: r.src });
+  }
+  function ruleAgreement(F, r, sec, si, lab) {
+    var members = F.members, out = F.out, count = F.count, tookUp = F.tookUp, upRows = F.upRows;
+    var agN = r.pick ? count(r.pick, null) : 0;
+    if (r.up_sec != null) upRows(r.up_sec, null).forEach(function(x) {
+      members.forEach(function(m) {
+        if (tookUp(m, x[0], x[1])) agN++;
+      });
+    });
+    if (agN) out.push({
+      ok: true,
+      warn: true,
+      t: "By agreement with your opponent: " + lab,
+      v: agN + " in the fleet",
+      s: r.src
+    });
+  }
+  function ruleHookCapacity(F, r, sec, si, lab) {
+    var members = F.members, out = F.out, count = F.count;
+    var carriedH = count(r.carry, null);
+    var capH = members.reduce(function(a, m) {
+      var hk = m.sel && m.sel.sh && m.sel.sh.hk;
+      if (!hk) return a;
+      var hkRow = (m.R && m.R.weapons || []).filter(function(w) {
+        return (w.box == null || w.box === "on") && /gravitic hook/i.test(String(w.a && w.a[0] || ""));
+      })[0];
+      if (m.defence && !hkRow) return a;
+      var hkN = m.defence && hkRow ? Math.max(1, hkRow.count || 1) : 1;
+      return a + (r.caps || [0]).reduce(function(b, i) {
+        return b + (hk[i] || 0);
+      }, 0) * m.hulls * hkN;
+    }, 0);
+    out.push({
+      ok: carriedH <= capH || !!r.soft,
+      warn: !!r.soft && carriedH > capH,
+      t: lab,
+      v: carriedH + " / " + capH,
+      s: r.src + (r.interp ? " " + r.interp.note : "")
+    });
+  }
+  function ruleUpBudget(F, r, sec, si, lab) {
+    var members = F.members, out = F.out, count = F.count, tookUp = F.tookUp, upRows = F.upRows;
+    var usedB = 0, budget = 0;
+    var budRows = upRows(r.up_sec, r.up_re ? new RegExp(r.up_re, "i") : null);
+    members.forEach(function(m) {
+      budRows.forEach(function(x) {
+        if (tookUp(m, x[0], x[1])) usedB++;
+      });
+    });
+    (r.budget || []).forEach(function(b) {
+      if (b.pick) budget += (b.units || 1) * count(b.pick, null, true);
+      if (b.up_re) upRows(b.up_sec, new RegExp(b.up_re, "i")).forEach(function(x) {
+        members.forEach(function(m) {
+          if (tookUp(m, x[0], x[1])) budget += b.weight || 1;
+        });
+      });
+    });
+    out.push({ ok: usedB <= budget, t: lab, v: usedB + " / " + budget, s: r.src, warn: usedB === 0 });
+  }
+  function ruleUnitUpgradeMax(F, r, sec, si, lab) {
+    var members = F.members, out = F.out, pickHas = F.pickHas, tookUp = F.tookUp, upRows = F.upRows;
+    var rowsM = upRows(r.up_sec, r.up_re ? new RegExp(r.up_re, "i") : null);
+    var over = 0;
+    members.forEach(function(m) {
+      if (!r.unit_pick.some(function(p) {
+        return pickHas(m, p);
+      })) return;
+      var k = rowsM.filter(function(x) {
+        return tookUp(m, x[0], x[1]);
+      }).length;
+      if (k > r.max) {
+        over++;
+        out.push({
+          ok: false,
+          t: lab + ": " + (m.R ? m.R.className : m.en.l),
+          v: k + " / " + r.max,
+          s: r.src
+        });
+      }
+    });
+    if (!over) out.push({ ok: true, t: lab, v: "max " + r.max, s: r.src, warn: true });
+  }
+  function checkRowLimits(F) {
+    var L = F.L, members = F.members, out = F.out, tookUp = F.tookUp;
+    L.secs.forEach(function(sec, si) {
+      sec.ents.forEach(function(en, ei) {
+        if (en.mx == null) return;
+        if (isUpgradeEnt(en)) {
+          var n = members.filter(function(m) {
+            return m.own && tookUp(m, si, ei);
+          }).length;
+          if (n > 0 || en.mx === 0)
+            out.push({
+              ok: n <= en.mx,
+              t: en.l,
+              v: n + " / " + en.mx,
+              s: "The fleet may take this upgrade " + en.mx + (en.mx === 1 ? " time." : " times.")
+            });
+          return;
+        }
+        var c = members.filter(function(m) {
+          return m.own && m.si === si && m.ei === ei;
+        }).reduce(function(a, m) {
+          return a + m.hulls;
+        }, 0);
+        if (c > 0 || en.mx === 0)
+          out.push({ ok: c <= en.mx, t: en.l, v: c + " / " + en.mx, s: "Entry is limited to " + en.mx + " in the list." });
+      });
+    });
+    var fxg = {};
+    L.secs.forEach(function(sec, si) {
+      sec.ents.forEach(function(en, ei) {
+        if (!en.fxg || !isUpgradeEnt(en)) return;
+        var g = fxg[en.fxg] || (fxg[en.fxg] = { n: 0, t: sec.t, labels: [] });
+        g.labels.push(en.l);
+        g.n += members.filter(function(m) {
+          return tookUp(m, si, ei);
+        }).length;
+      });
+    });
+    Object.keys(fxg).forEach(function(k) {
+      var g = fxg[k];
+      if (g.n > 0) out.push({
+        ok: g.n <= 1,
+        t: g.t + " (bought once for the fleet)",
+        v: g.n + " / 1",
+        s: "One purchase for the whole fleet: " + g.labels.join(" or ") + "."
+      });
+    });
+  }
+
+  // packages/rules/src/fleet-specials.js
+  function checkSquadrons(F) {
+    var L = F.L, members = F.members, out = F.out;
+    var sqTags = [];
+    members.forEach(function(m) {
+      var t = m.intent && m.intent.sq;
+      if (t && m.R && m.R.kind === "ship" && !m.escort && sqTags.indexOf(t) < 0) sqTags.push(t);
+    });
+    sqTags.sort();
+    var sqOf = {};
+    sqTags.forEach(function(tag) {
+      var ms = members.filter(function(m) {
+        return m.intent && m.intent.sq === tag && m.R && m.R.kind === "ship" && !m.escort;
+      });
+      sqOf[tag] = ms;
+      var n = ms.reduce(function(a, m) {
+        return a + Math.max(1, m.hulls);
+      }, 0);
+      var nTxt = n + (n === 1 ? " ship" : " ships");
+      var inX = function(m, x) {
+        return m.own && L.secs[m.si] && new RegExp(x.sec, "i").test(String(L.secs[m.si].t).trim());
+      };
+      var X = (L.sqx || []).filter(function(x) {
+        return ms.length && inX(ms[0], x);
+      })[0] || (L.sqx || []).filter(function(x) {
+        return ms.some(function(m) {
+          return inX(m, x);
+        });
+      })[0];
+      if (X) {
+        var outside = X.only && ms.some(function(m) {
+          return !(m.own && L.secs[m.si] && new RegExp(X.sec, "i").test(String(L.secs[m.si].t).trim()));
+        });
+        out.push({
+          ok: !outside && n >= X.min && n <= X.max,
+          t: "Squadron " + tag,
+          v: outside ? "not only " + X.name : nTxt,
+          s: citeText(X.cite)
+        });
+        return;
+      }
+      var cls = [];
+      ms.forEach(function(m) {
+        var c = sqClass(m);
+        if (cls.indexOf(c) < 0) cls.push(c);
+      });
+      var big = cls.length === 1 && (cls[0] === "battleship" || cls[0] === "grand cruiser");
+      var lim = big ? SQ_BIG : SQ_CR;
+      var mixed = cls.length > 1;
+      out.push({
+        ok: !mixed && n >= lim.min && n <= lim.max,
+        t: "Squadron " + tag,
+        v: mixed ? cls.join(" + ") : nTxt,
+        s: citeText(mixed && cls.some(function(c) {
+          return c !== "cruiser";
+        }) ? SQ_BIG : lim)
+      });
+    });
+    return { sqTags, sqOf };
+  }
+  function checkBorrowedShips(F) {
+    var L = F.L, members = F.members, worth = F.worth, out = F.out, sqTags = F.sqTags, sqOf = F.sqOf;
+    sqTags.forEach(function(tag) {
+      var dm = sqOf[tag].filter(isDemiurg).length;
+      if (dm && dm < sqOf[tag].length)
+        out.push({
+          ok: false,
+          t: "Squadron " + tag + ": Demiurg ships only with Demiurg ships",
+          v: dm + " Demiurg + " + (sqOf[tag].length - dm) + " other",
+          s: citeText(DEMIURG_CMD)
+        });
+    });
+    if (L.merc) {
+      var mercN = members.filter(function(m) {
+        return m.own && m.unitRow && L.secs[m.si] && new RegExp(L.merc.sec, "i").test(String(L.secs[m.si].t).trim());
+      }).reduce(function(a, m) {
+        return a + Math.max(1, m.hulls);
+      }, 0);
+      if (mercN) out.push({
+        ok: true,
+        t: "Demiurg mercenaries",
+        v: mercN + (mercN === 1 ? " Bastion" : " Bastions"),
+        s: citeText(L.merc.cite) + " " + citeText(DEMIURG_CMD)
+      });
+    }
+    (L.borrow_cond || []).forEach(function(bc) {
+      var re = new RegExp(bc.re, "i");
+      var hits = members.filter(function(m) {
+        return m.unitRow && m.en && re.test(String(m.en.l));
+      });
+      if (!hits.length) return;
+      var needN = members.filter(function(m) {
+        return m.unitRow && !re.test(String(m.en && m.en.l || "")) && m.sel && m.sel.list && new RegExp(bc.need.list_re, "i").test(String(m.sel.list.nm)) && new RegExp(bc.need.type_re, "i").test(String(m.R && m.R.stats && m.R.stats.type || ""));
+      }).reduce(function(a, m) {
+        return a + Math.max(1, m.hulls);
+      }, 0);
+      var tooMany = hits.length > bc.max, tooSmall = worth < bc.min_worth;
+      out.push({
+        ok: !tooMany && !tooSmall && needN >= bc.need.n,
+        t: bc.label,
+        v: needN + " / " + bc.need.n + " " + bc.need.what + (tooSmall ? ", fleet under " + bc.min_worth + " pts" : "") + (tooMany ? ", " + hits.length + " taken" : ""),
+        s: citeText(bc.cite)
+      });
+    });
+    if (L.rt_hulls) {
+      var RH = L.rt_hulls, hRe = new RegExp(RH.hull, "i"), aRe = new RegExp(RH.all, "i");
+      var nH = 0, nA = 0;
+      members.forEach(function(m) {
+        if (!m.unitRow || !m.en) return;
+        if (aRe.test(String(m.en.l))) nA += Math.max(1, m.hulls);
+        if (hRe.test(String(m.en.l))) nH += Math.max(1, m.hulls);
+      });
+      if (nH) out.push({
+        ok: true,
+        warn: nH > nA - 1,
+        t: "Rogue Trader cruiser hulls (second cruiser onwards)",
+        v: nH + " / " + Math.max(0, nA - 1),
+        s: citeText(RH.cite) + " " + citeText(RH.cite2) + " " + RH.interp
+      });
+    }
+    if (L.rt_esc) {
+      var RE = L.rt_esc, eRe = new RegExp(RE.esc, "i"), cRe = new RegExp(RE.cru, "i");
+      var inSecR = function(m) {
+        return m.own && L.secs[m.si] && new RegExp(RE.sec, "i").test(String(L.secs[m.si].t).trim());
+      };
+      var sqR = members.filter(function(m) {
+        return m.unitRow && m.en && inSecR(m) && eRe.test(String(m.en.l));
+      }).length;
+      var cruR = members.filter(function(m) {
+        return m.unitRow && m.en && cRe.test(String(m.en.l));
+      }).reduce(function(a, m) {
+        return a + Math.max(1, m.hulls);
+      }, 0);
+      var needOk = !RE.needs || members.some(function(m) {
+        return m.en && new RegExp(RE.needs, "i").test(String(m.en.l));
+      });
+      if (sqR) out.push({
+        ok: sqR <= cruR && needOk,
+        t: "Rogue Trader escort squadrons (one per Rogue Trader cruiser)",
+        v: needOk ? sqR + " / " + cruR : "needs an Inquisitor Lord",
+        s: citeText(RE.cite)
+      });
+    }
+    if (L.aux) {
+      var raceOf = function(m) {
+        var D = m.sel && m.sel.list;
+        return D ? String(D.race || D.ally_race || D.nm) : "";
+      };
+      var auxM = members.filter(function(m) {
+        return !m.own && m.unitRow && m.escort && (m.role === "ally" || m.role === "reserve") && !/^xenos vessel/i.test(String(m.en && m.en.l || ""));
+      });
+      var races = [];
+      auxM.forEach(function(m) {
+        var r = raceOf(m);
+        if (r && races.indexOf(r) < 0) races.push(r);
+      });
+      if (auxM.length) out.push({
+        ok: races.length <= 1,
+        t: "Auxiliary vessels from one race",
+        v: races.length + " / 1",
+        s: citeText(L.aux.cite_one)
+      });
+      races.forEach(function(r) {
+        if (L.aux.never.indexOf(r.toLowerCase()) >= 0)
+          out.push({
+            ok: false,
+            t: "Auxiliary vessels: not from " + r.replace(/(^|\s)([a-z])/g, function(a, b, c) {
+              return b + c.toUpperCase();
+            }),
+            v: "auxiliary escorts",
+            s: citeText(L.aux.cite_never)
+          });
+      });
+    }
+    if (L.ally_bb) {
+      var bbN = 0, capN = 0;
+      members.forEach(function(m) {
+        if (m.own || !m.unitRow || m.escort || !m.R || m.R.kind !== "ship") return;
+        var bs = /battleship/i.test(String(m.R.stats && m.R.stats.type || ""));
+        if (bs && m.role === "ally") bbN += Math.max(1, m.hulls);
+        else if (!bs && (m.role === "ally" || m.role === "reserve")) capN += Math.max(1, m.hulls);
+      });
+      var bbMax = capN >= 3 ? 1 : 0;
+      if (bbN) out.push({
+        ok: bbN <= bbMax,
+        t: "Allied battleship (0-1, with three reserve or allied capital ships)",
+        v: bbN + " / " + bbMax,
+        s: citeText(L.ally_bb.cite)
+      });
+    }
+  }
+  function checkListSpecials(F) {
+    var L = F.L, members = F.members, out = F.out, tookUp = F.tookUp, upRows = F.upRows, allySpecial = F.allySpecial, aboard = F.aboard, sqTags = F.sqTags, sqOf = F.sqOf;
+    if (L.bloodaxe) {
+      var BA = L.bloodaxe, CZd = L.clanz;
+      var baIx = function(re) {
+        var x = new RegExp(re, "i");
+        return L.secs.findIndex(function(sc) {
+          return x.test(String(sc.t).trim());
+        });
+      };
+      var inSecB = function(m, re) {
+        return m.own && L.secs[m.si] && new RegExp(re, "i").test(String(L.secs[m.si].t).trim());
+      };
+      var baClan = upRows(baIx(CZd.clan_sec), new RegExp(BA.clan, "i"));
+      var com = members.filter(function(m) {
+        return m.unitRow && inSecB(m, BA.sec);
+      });
+      var tagsB = [];
+      com.forEach(function(m) {
+        var tg = m.intent && m.intent.sq;
+        if (!tg) out.push({
+          ok: false,
+          t: "Commandeered escorts: " + m.en.l,
+          v: "not in a Blood Axe tiddla",
+          s: citeText(BA.cite)
+        });
+        else if (tagsB.indexOf(tg) < 0) tagsB.push(tg);
+      });
+      tagsB.sort().forEach(function(tg) {
+        var inTag = members.filter(function(m) {
+          return m.unitRow && m.intent && m.intent.sq === tg;
+        });
+        var ork = inTag.filter(function(m) {
+          return inSecB(m, CZd.tiddla);
+        });
+        var orkN = ork.reduce(function(a, m) {
+          return a + Math.max(1, m.hulls);
+        }, 0);
+        var comN = inTag.filter(function(m) {
+          return inSecB(m, BA.sec);
+        }).reduce(function(a, m) {
+          return a + Math.max(1, m.hulls);
+        }, 0);
+        var axe = ork.some(function(m) {
+          return baClan.some(function(x) {
+            return tookUp(m, x[0], x[1]);
+          });
+        });
+        out.push({
+          ok: axe && orkN >= BA.min && comN <= BA.max,
+          t: "Blood Axe tiddla " + tg,
+          v: orkN + " Ork + " + comN + " commandeered" + (axe ? "" : ", no Blood Axe clan"),
+          s: citeText(BA.cite)
+        });
+      });
+    }
+    if (L.warden_only) {
+      var nW = 0, nO = 0;
+      members.forEach(function(m) {
+        if (!m.unitRow || !m.en) return;
+        if (/^warden/i.test(String(m.en.l))) nW += Math.max(1, m.hulls);
+        else if (/^orca/i.test(String(m.en.l))) nO += Math.max(1, m.hulls);
+      });
+      if (nW && nO) {
+        var anyCaps = [], wOnly = 0;
+        members.forEach(function(m) {
+          var hk = m.sel && m.sel.sh && m.sel.sh.hk;
+          if (!hk) return;
+          if (m.defence && !(m.R && m.R.weapons || []).some(function(w) {
+            return (w.box == null || w.box === "on") && /gravitic hook/i.test(String(w.a && w.a[0] || ""));
+          })) return;
+          for (var h = 0; h < Math.max(1, m.hulls); h++) {
+            if (hk[0]) anyCaps.push(hk[0]);
+            wOnly += hk[1] || 0;
+          }
+        });
+        var totA = anyCaps.reduce(function(a, c) {
+          return a + c;
+        }, 0), needW = Math.max(0, nW - wOnly);
+        var sums = [0];
+        anyCaps.forEach(function(c) {
+          sums.slice().forEach(function(x) {
+            if (sums.indexOf(x + c) < 0) sums.push(x + c);
+          });
+        });
+        var split = sums.some(function(x) {
+          return x >= needW && totA - x >= nO;
+        });
+        out.push({
+          ok: split,
+          t: "Wardens on ships of their own",
+          v: nW + " Wardens, " + nO + " Orcas",
+          s: citeText(L.warden_only.cite)
+        });
+      }
+    }
+    if (L.ally_cmd) {
+      var scN = members.filter(function(m) {
+        return !m.own && m.en && m.en.k === "cmd";
+      });
+      var scOk = scN.filter(allySpecial);
+      if (scN.length) out.push({
+        ok: scN.length === scOk.length && scOk.length <= L.ally_cmd.max,
+        t: "Allied special character (0-" + L.ally_cmd.max + ")",
+        v: scOk.length === scN.length ? scOk.length + " / " + L.ally_cmd.max : "not a special character",
+        s: citeText(L.ally_cmd.cite)
+      });
+    }
+    (L.sq_noup || []).forEach(function(x) {
+      sqTags.forEach(function(tag) {
+        sqOf[tag].forEach(function(m) {
+          if (placeTaken(m, x.re)) out.push({
+            ok: false,
+            t: "Daemonship in a squadron: " + m.en.l,
+            v: "squadron " + tag,
+            s: citeText(x.cite)
+          });
+        });
+      });
+    });
+    (L.sq_need || []).forEach(function(x) {
+      aboard.forEach(function(a) {
+        var cm = members[a.unit];
+        if (!new RegExp(x.cmd, "i").test(String(cm.en.l))) return;
+        var sm = a.ship != null ? members[a.ship] : null;
+        var inSq = !!sm && (sm.escort ? sm.hulls >= 2 : !!(sm.intent && sm.intent.sq && sqOf[sm.intent.sq] && sqOf[sm.intent.sq].length >= 2));
+        out.push({
+          ok: inSq,
+          t: "Squadroned: " + cm.en.l,
+          v: sm ? sm.en.l + (inSq ? " in a squadron" : " alone") : "no ship",
+          s: citeText(x.cite)
+        });
+      });
+    });
+  }
+  function checkOrkClanz(F) {
+    var L = F.L, members = F.members, out = F.out, tookUp = F.tookUp, upRows = F.upRows, CZ = F.CZ, aboard = F.aboard, sqTags = F.sqTags, sqOf = F.sqOf;
+    var wsum = [];
+    if (CZ && CZ.warlords.length) {
+      var C = L.clanz;
+      var secIx = function(re) {
+        var x = new RegExp(re, "i");
+        return L.secs.findIndex(function(sc) {
+          return x.test(String(sc.t).trim());
+        });
+      };
+      var inSec = function(m, re) {
+        return m.own && L.secs[m.si] && new RegExp(re, "i").test(String(L.secs[m.si].t).trim());
+      };
+      var clanRows = upRows(secIx(C.clan_sec)), gubRows = upRows(secIx(C.gub_sec), new RegExp(C.gub_re, "i"));
+      var clansOf = function(m) {
+        return clanRows.filter(function(x) {
+          return tookUp(m, x[0], x[1]);
+        }).map(function(x) {
+          return String(x[2].l).replace(/^clan:\s*/i, "").replace(/\s*\(.*$/, "");
+        });
+      };
+      var clanNames = clanRows.map(function(x) {
+        return String(x[2].l).replace(/^clan:\s*/i, "").replace(/\s*\(.*$/, "");
+      });
+      var bornClan = function(m) {
+        var o = /\(([a-z][a-z ]*?) only\)/i.exec(String(m.en && m.en.l || ""));
+        return o ? clanNames.filter(function(c) {
+          return c.toLowerCase().indexOf(o[1].toLowerCase()) === 0;
+        }).slice(0, 1) : [];
+      };
+      CZ.warlords.forEach(function(w, k) {
+        var wi = members.indexOf(w), tag = "Warlord " + (k + 1) + ": ";
+        var mine = members.filter(function(m, i) {
+          return CZ.of[i] === wi;
+        });
+        var rr = w.R && w.R.rerolls && w.R.rerolls.total || 1;
+        var hulks = mine.filter(function(m) {
+          return inSec(m, C.hulk);
+        });
+        var S1 = { unit: wi, n: k + 1, rr, hulk: hulks.length, units: mine.map(function(m) {
+          return members.indexOf(m);
+        }) };
+        wsum.push(S1);
+        if (hulks.length) {
+          var others = mine.length - 1;
+          out.push({
+            ok: hulks.length === 1 && others === 0,
+            t: tag + "Space Hulk",
+            v: others === 0 && hulks.length === 1 ? "only the hulk" : "hulk + " + others + " other",
+            s: citeText(C.hulk1) + " " + citeText(C.hulk2)
+          });
+        } else {
+          var tid = mine.filter(function(m) {
+            return inSec(m, C.tiddla);
+          }).length;
+          var groups = {};
+          mine.forEach(function(m) {
+            if (inSec(m, C.tiddla)) return;
+            var g2 = (inSec(m, C.big) || inSec(m, C.rok)) && m.intent && m.intent.sq ? "sq:" + m.intent.sq : "u:" + members.indexOf(m);
+            groups[g2] = 1;
+          });
+          var total = tid + Object.keys(groups).length, t1 = Math.min(tid, rr);
+          S1.tiddla = tid;
+          S1.total = total;
+          S1.lone = mine.filter(function(m) {
+            if (!inSec(m, C.big)) return false;
+            var tg = m.intent && m.intent.sq;
+            return !tg || mine.filter(function(o) {
+              return inSec(o, C.big) && o.intent && o.intent.sq === tg;
+            }).length === 1;
+          }).map(function(m) {
+            return members.indexOf(m);
+          });
+          out.push({
+            ok: tid >= rr && total === 2 * rr,
+            t: tag + "skwadrons",
+            v: t1 + " tiddla + " + (total - t1) + " other / " + rr + " + " + rr,
+            s: citeText(C.sk) + " " + C.sk_interp
+          });
+        }
+        var uge = mine.filter(function(m) {
+          return inSec(m, C.uge);
+        }).length;
+        var kro = mine.filter(function(m) {
+          return inSec(m, C.big);
+        }).length;
+        S1.uge = uge;
+        S1.kro = kro;
+        if (uge) out.push({
+          ok: uge <= 1 && kro >= 2,
+          t: tag + "'Uge ship",
+          v: uge + " / 1, " + kro + (kro === 1 ? " kroozer" : " kroozers"),
+          s: citeText(C.uge1) + " " + citeText(C.uge2)
+        });
+        var clans = [];
+        mine.concat([w]).forEach(function(m) {
+          clansOf(m).concat(bornClan(m)).forEach(function(c) {
+            if (clans.indexOf(c) < 0) clans.push(c);
+          });
+        });
+        if (clans.length) out.push({ ok: clans.length <= 1, t: tag + "one clan", v: clans.join(", "), s: citeText(C.clan) });
+        S1.clans = clans;
+        var ab = aboard.filter(function(a) {
+          return a.unit === wi;
+        })[0];
+        var own = ab && ab.ship != null ? members[ab.ship] : null;
+        var g = 0, off = 0;
+        mine.forEach(function(m) {
+          gubRows.forEach(function(x) {
+            if (tookUp(m, x[0], x[1])) {
+              g++;
+              if (m !== own) off++;
+            }
+          });
+        });
+        if (g) out.push({
+          ok: g <= rr && !off,
+          t: tag + "Gubbins",
+          v: g + " / " + rr + (off ? ", " + off + " not on his own ship" : ""),
+          s: citeText(C.gub)
+        });
+        S1.gub = g;
+        S1.gubOff = off;
+        S1.ship = own ? members.indexOf(own) : null;
+      });
+      sqTags.forEach(function(tag) {
+        var ms = sqOf[tag], sets = ms.map(function(m) {
+          return clansOf(m).sort().join(",");
+        });
+        if (sets.some(function(x) {
+          return x;
+        }) && sets.some(function(x) {
+          return x !== sets[0];
+        }))
+          out.push({
+            ok: false,
+            t: "Squadron " + tag + ": the clan on every ship",
+            v: sets.map(function(x) {
+              return x || "none";
+            }).join(" / "),
+            s: citeText(C.clan_sq)
+          });
+      });
+      if (C.split) sqTags.forEach(function(tag) {
+        var wl = [];
+        sqOf[tag].forEach(function(m) {
+          var w = CZ.of[members.indexOf(m)];
+          if (w >= 0 && wl.indexOf(w) < 0) wl.push(w);
+        });
+        if (wl.length > 1) out.push({
+          ok: false,
+          t: "Squadron " + tag + ": one Warlord",
+          v: wl.map(function(w) {
+            return "Warlord " + (CZ.warlords.indexOf(members[w]) + 1);
+          }).join(" + "),
+          s: citeText(C.split)
+        });
+      });
+    }
+    return wsum;
+  }
+  function checkHulkPowerfields(F) {
+    var L = F.L, members = F.members, out = F.out, tookUp = F.tookUp, upRows = F.upRows, aboard = F.aboard;
+    if (L.hulk_pf) {
+      var HP = L.hulk_pf;
+      var hpSec = L.secs.findIndex(function(sc) {
+        return new RegExp(HP.sec, "i").test(String(sc.t).trim());
+      });
+      var hp25 = upRows(hpSec, new RegExp(HP.row, "i")), hp50 = upRows(hpSec, new RegExp(HP.hulk_row, "i"));
+      aboard.forEach(function(a) {
+        var cm = members[a.unit];
+        if (!cm.own || !new RegExp(HP.cmd, "i").test(String(cm.en.l))) return;
+        var t25 = hp25.some(function(x) {
+          return tookUp(cm, x[0], x[1]);
+        });
+        var t50 = hp50.some(function(x) {
+          return tookUp(cm, x[0], x[1]);
+        });
+        if (!t25 && !t50) return;
+        var sm = a.ship != null ? members[a.ship] : null;
+        var onHulk = !!sm && placeRe(HP.ship, sm);
+        if (!onHulk && !t50) return;
+        var ok = onHulk ? t50 && !t25 : t25 && !t50;
+        out.push({
+          ok,
+          t: "Extra Power Fields: " + cm.en.l + " aboard " + (sm ? sm.en.l : "no ship"),
+          v: "+" + (t50 ? 50 : 25) + " pts" + (ok ? "" : onHulk ? " (+50 aboard a space hulk)" : " (+25 off a space hulk)"),
+          s: citeText(HP.cite)
+        });
+      });
+    }
+  }
+
+  // packages/rules/src/resolve-fleet.js
+  function resolveFleet(fleetIntent, catalog) {
+    var L = catalog.lists.filter(function(x) {
+      return x.nm === fleetIntent.list;
+    })[0] || null;
+    var ctx = { list: L, host: L };
+    var lim = fleetIntent.limit | 0;
+    var members = (fleetIntent.units || []).map(function(it) {
+      var sel = selectionOf(it, ctx, catalog);
+      var R = resolveUnit(it, ctx, catalog);
+      var en = sel.en;
+      var ownSec = sel.list && sel.list.secs[sel.si];
+      var role = roleOfIntent(it);
+      if (role === "core" && sel.list === L && ownSec && ownSec.ct === "reserve")
+        role = "reserve";
+      return {
+        intent: it,
+        sel,
+        R,
+        si: sel.si,
+        ei: sel.ei,
+        en,
+        role,
+        own: !sel.list || sel.list === L,
+        unitRow: !!en && !isUpgradeEnt(en),
+        hulls: sel.hulls,
+        escort: sel.escort,
+        /* a planetary defence: outside the fleet list's own counts */
+        defence: sel.defence,
+        points: R && R.points != null ? R.points : 0,
+        maxPoints: R && R.maxPoints != null ? R.maxPoints : 0
+      };
+    });
+    var tot = members.reduce(function(a, m) {
+      return a + m.points;
+    }, 0);
+    var totMax = members.reduce(function(a, m) {
+      return a + m.maxPoints;
+    }, 0);
+    var defPts = members.reduce(function(a, m) {
+      return a + (m.defence && !defenceOwnPoints(m.sel.sh) ? m.points : 0);
+    }, 0);
+    var worth = tot - defPts;
+    var out = [];
+    out.push({
+      ok: tot <= lim,
+      t: "Points limit",
+      v: tot + " / " + lim,
+      s: tot <= lim ? lim - tot + " pts remaining" : tot - lim + " pts over the limit"
+    });
+    if (!L) return {
+      list: null,
+      limit: lim,
+      units: members.map(function(m) {
+        return m.R;
+      }),
+      totals: { points: tot, maxPoints: totMax, hulls: 0 },
+      checks: out,
+      facts: [],
+      aboard: []
+    };
+    var F = fleetCounters(L, catalog, members);
+    F.L = L;
+    F.lim = lim;
+    F.members = members;
+    F.worth = worth;
+    F.out = out;
+    checkSectionRules(F);
+    checkRowLimits(F);
+    checkWarmasterMark(F);
+    checkUnitIssues(F);
+    checkCommanderPrice(F);
+    checkDefences(F);
+    checkRequiredWeapons(F);
+    checkOptionShares(F);
+    checkWebway(F);
+    checkReserveTypes(F);
+    checkReserveRaces(F);
+    checkReserveSources(F);
+    var CZ = clanzCommand(L, members);
+    var aboard = placeCommanders(L, members, CZ ? CZ.of : null);
+    F.CZ = CZ;
+    F.aboard = aboard;
+    var SQ = checkSquadrons(F);
+    F.sqTags = SQ.sqTags;
+    F.sqOf = SQ.sqOf;
+    checkBorrowedShips(F);
+    checkListSpecials(F);
+    var wsum = checkOrkClanz(F);
+    checkHulkPowerfields(F);
+    aboard.forEach(function(a) {
+      if (!a.ruled) return;
+      var cm = members[a.unit], sm = a.ship != null ? members[a.ship] : null;
+      out.push({
+        ok: a.ok,
+        t: "Aboard: " + cm.en.l,
+        v: sm ? sm.en.l : "no ship he may board",
+        s: a.cite ? citeText(a.cite) : ""
+      });
+    });
+    return {
+      list: L.nm,
+      limit: lim,
+      units: members.map(function(m) {
+        return m.R;
+      }),
+      totals: {
+        points: tot,
+        maxPoints: totMax,
+        hulls: members.reduce(function(a, m) {
+          return a + m.hulls;
+        }, 0)
+      },
+      checks: out,
+      facts: fleetFacts(L, members),
+      aboard,
+      /* Clanz (J216): the Warlord of each unit (unit index -> Warlord's
+         unit index, -1 = none) */
+      command: CZ ? CZ.of : null,
+      /* Clanz (J226): per Warlord {unit, n, rr, tiddla, total, hulk,
+         uge, kro, lone, clans, gub, gubOff, ship, units} */
+      warlords: wsum
+    };
   }
 
   // packages/rules/src/index.js
