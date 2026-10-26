@@ -113,11 +113,11 @@ gives one verdict:
 | Group | Steps |
 |---|---|
 | data | rebuilds `data/bfg_data.json` and requires it unchanged; schema; reference checks; option effects |
-| rules | `test_domain.js` (5 700 assertions), symmetry |
-| registry | golden cases read from the book (414 units, 238 fleets) on every surface: price, profile, card, fleet view, save round trip; validator, upgrades, saving, save fuzzing, card structure, printed cards, random fleets, print layout in Chrome, a UI walk-through in Chrome |
+| rules | `domain.js` is what `src/` makes, `test_domain.js` (5 700 assertions), symmetry |
+| registry | golden cases read from the book (414 units, 238 fleets) on every surface: price, profile, card, fleet view, save round trip; validator, upgrades, saving, save fuzzing, card structure, printed cards, random fleets, print layout in Chrome, the editable sheet in Chrome, a UI walk-through in Chrome |
 | play | rules and a smoke test of the built page |
 | boarding | engine, fuzzing |
-| scenarios | bookkeeping, sizes, terrain (with the generator's fingerprints), map measurements |
+| scenarios | bookkeeping, sizes, terrain (with the generator's fingerprints), map measurements, the front page, the lab, and the in-page tests (every view, every map's labels, content) in Chrome |
 
 `npm run check:books` runs the steps that read the PDFs. CI runs `npm test` on
 every push.
