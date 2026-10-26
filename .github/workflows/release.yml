@@ -3,13 +3,22 @@
 # The tag's app is built, tested and deployed to its Cloudflare Worker, and the
 # GitHub Pages mirror is refreshed with every site at that commit.
 #
-# Needs the repository secrets CLOUDFLARE_API_TOKEN (Workers Scripts: Edit) and
-# CLOUDFLARE_ACCOUNT_ID, and Pages set to "GitHub Actions" as the source.
+# The Cloudflare deploy needs the repository secrets CLOUDFLARE_API_TOKEN
+# (Workers Scripts: Edit) and CLOUDFLARE_ACCOUNT_ID. Without them the step is
+# skipped with a notice, and the Workers are published from a developer machine
+# with npm run publish, where Wrangler is logged in. The mirror needs Pages set
+# to "GitHub Actions" as the source; for a tag to deploy it, the github-pages
+# environment must also allow the tags (a tag rule *-v*).
+#
+# Started by hand from main (Actions > Release > Run workflow, or
+# gh workflow run release.yml --ref main) it builds, tests and refreshes only
+# the mirror.
 name: Release
 
 on:
   push:
     tags: ["*-v*"]
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -27,6 +36,8 @@ jobs:
       name: github-pages
       url: ${{ steps.pages.outputs.page_url }}
     timeout-minutes: 40
+    env:
+      HAS_CLOUDFLARE: ${{ secrets.CLOUDFLARE_API_TOKEN != '' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -40,12 +51,16 @@ jobs:
       - run: npm ci
       - run: npm test
       - name: Deploy to Cloudflare
+        if: startsWith(github.ref, 'refs/tags/') && env.HAS_CLOUDFLARE == 'true'
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: |
           APP="${GITHUB_REF_NAME%%-v*}"
           if [ "$APP" = "all" ]; then npm run publish -- --all; else npm run publish -- "$APP"; fi
+      - name: No Cloudflare deploy
+        if: startsWith(github.ref, 'refs/tags/') && env.HAS_CLOUDFLARE != 'true'
+        run: echo "::notice::No CLOUDFLARE_API_TOKEN secret, so the Workers were not deployed; publish them with npm run publish from a developer machine."
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist/

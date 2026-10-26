@@ -24,3 +24,18 @@ numbers were edited by hand in several places, and caches were broken by bumping
 
 - What is live is always a tagged commit.
 - Deploying from CI needs a Cloudflare API token stored as a repository secret.
+
+## Amendment, 2026-10-26: publishing from a developer machine
+
+The owner publishes as before, from their own machine, and has not given CI a
+Cloudflare token. Until they do:
+
+- The Workers are published with `npm run publish -- <app>` (or `--all`) from
+  a machine where Wrangler is logged in. It refuses uncommitted work and a
+  checkout behind origin/main, and compares each live page with the build.
+- The release workflow skips the Cloudflare step with a notice when the secret
+  is missing, and can be started by hand from main to refresh only the GitHub
+  Pages mirror. A tag deploys the mirror only once the github-pages environment
+  allows the tags.
+- So what is live is the commit that was on main when it was published, rather
+  than always a tagged commit.

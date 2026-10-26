@@ -4,10 +4,11 @@
    npm run publish -- --all                  all six sites
    npm run publish -- registry --dry-run     everything except the upload
 
-   Normally CI does this when a release tag is pushed (.github/workflows/
-   release.yml); this is the same thing from a developer machine. It needs
-   Wrangler (npx wrangler) and either `wrangler login` or CLOUDFLARE_API_TOKEN
-   and CLOUDFLARE_ACCOUNT_ID in the environment.
+   The owner publishes from their own machine with this; CI does the same
+   when a release tag is pushed and the repository has the Cloudflare secrets
+   (.github/workflows/release.yml, docs/adr/0006). It needs Wrangler (npx
+   wrangler) and either `wrangler login` or CLOUDFLARE_API_TOKEN and
+   CLOUDFLARE_ACCOUNT_ID in the environment.
 
    Each site is a Worker with static assets only (no code, no bindings). Its
    custom domain (*.kuldare.com) is attached to the Worker in the dashboard;

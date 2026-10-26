@@ -53,8 +53,9 @@ repository and host them under the licence below.
 It is not a community project: issues are off and pull requests are not merged.
 Fork it instead.
 
-Releases are tags (`registry-v1.3`, `scenarios-v0.18`, ...); CI deploys the tagged
-app and refreshes the mirror. Each app has a CHANGELOG.
+The sites are published from the owner's machine with `npm run publish`, and the
+mirror is refreshed by the Release workflow ([ADR 0006](docs/adr/0006-a-release-is-a-tag.md)).
+Each app has a CHANGELOG.
 
 ## Licence
 
