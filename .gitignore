@@ -28,3 +28,7 @@ apps/registry/_layout_*.html
 apps/registry/_layout_report.json
 apps/registry/_fleet_cards_*.html
 apps/registry/_sheet_check/
+
+# The Meta Almanac data downloads: generated, 5.8 MB, from the almanac project
+# or the live site at build time (apps/almanac/build.js)
+apps/almanac/site/data/

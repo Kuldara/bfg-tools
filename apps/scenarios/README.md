@@ -16,7 +16,6 @@ Categories (Core 10, Books, Classic GW, Warp Rift, Fan supplements, All), a
 search, filters and your own record. **Cards** shows each scenario as a card
 with a thumbnail of its deployment map; **Names** shows a dense list with the
 whole picture of one scenario beside it, or under its name on a narrow screen.
-Both came from the discovery lab (`lab/README.md`, ideas A and F).
 
 ## What a scenario page has
 
@@ -57,8 +56,6 @@ scenarios/sizes.js      SIZE: every scenario's size class (S / M / L / any)
 scenarios/wr-rating.js, open-points.js   our notes, the open points as fill-in fields, tags
 favicon.png, apple-touch-icon.png   (make_icons.py draws them)
 build.js                npm run build -> dist/scenarios/
-lab/                    the discovery lab: prototypes for finding a scenario,
-                        built only with BFG_LAB=1 (lab/README.md)
 tests/                  see below
 ```
 
@@ -79,7 +76,6 @@ progress, Before the battle, the category and the filter.
 | `tests/terrain.js` | Node | the generator's fingerprints; every scenario × version × 5 tables × 12 seeds: on the table, no overlaps, battlezone as tabled |
 | `tests/measurements.js` | Node | every map's fixed features measured from the table edges, and every measurement label matches the drawn length |
 | `tests/front.js` | Node | the front page: a map thumbnail on every card, the names view and its picture, every scenario's preview |
-| `tests/lab.js` | Node | the discovery lab: every tab renders, the kinds, the picker, the table sort and the roll |
 | `tests/page_audit.py` | Python, needs `books/text/` | every `[title, "RB p. N"]` reference against the rulebook text |
 | `tests/browser.js`, `maps.js`, `content.js` | the page, through `tests/in_page.js` (Node + headless Chrome, in `npm test`) | every scenario × version × table × turn × tab renders without `undefined` / `NaN`; map labels fit; side colours and verbs |
 | `tests/screenshots.js`, `wide_screens.js` | Node + headless Chrome | a screenshot of every page at phone and desktop width, layout checks |

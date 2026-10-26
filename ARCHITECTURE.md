@@ -57,7 +57,6 @@ behind this layout are in [docs/adr/](docs/adr/).
 | `extractor` | Python that turns the books into data, and the checks that compare data with books | Python |
 | `tools` | build, serve, test, publish, backup | Node |
 | `docs` | `adr/` decisions, `history/` older working notes (Finnish) | Markdown |
-| `marketing` | release images and the scripts that made them | |
 
 ## Building
 
@@ -117,7 +116,7 @@ gives one verdict:
 | registry | golden cases read from the book (414 units, 238 fleets) on every surface: price, profile, card, fleet view, save round trip; validator, upgrades, saving, save fuzzing, card structure, printed cards, random fleets, print layout in Chrome, the editable sheet in Chrome, a UI walk-through in Chrome |
 | play | rules and a smoke test of the built page |
 | boarding | engine, fuzzing, seeded random walks through the page in Chrome |
-| scenarios | bookkeeping, sizes, terrain (with the generator's fingerprints), map measurements, the front page, the lab, and the in-page tests (every view, every map's labels, content) in Chrome |
+| scenarios | bookkeeping, sizes, terrain (with the generator's fingerprints), map measurements, the front page, and the in-page tests (every view, every map's labels, content) in Chrome |
 
 `npm run check:books` runs the steps that read the PDFs. CI runs `npm test` on
 every push.

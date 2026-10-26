@@ -22,8 +22,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 # The whole repository, not just this app: shared code and data are elsewhere.
 ROOT = os.path.dirname(HERE)
 VERBOSE = "-v" in sys.argv
-SKIP_DIR = (".git", "node_modules", "__pycache__", "tmp", "versiot", "books", "dist", "out",
-            "marketing", "share version", ".tmp.drivedownload", ".tmp.driveupload")
+SKIP_DIR = (".git", "node_modules", "__pycache__", "tmp", "books", "dist", "out",
+            "share version", ".tmp.drivedownload", ".tmp.driveupload")
 EXT = (".py", ".js", ".md", ".json", ".html", ".txt", ".css")
 OK = (9, 10, 13)
 

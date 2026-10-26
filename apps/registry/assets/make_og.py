@@ -23,8 +23,12 @@ import os
 from PIL import Image, ImageDraw, ImageFont
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-CARD = os.path.join(HERE, "..", "..", "..", "marketing", "registry", "esimerkkikortit",
-                    "03 - CHAOS BATTLE BARGE (pg 255).png")
+# The example card the image shows. The release images left the repository on
+# 26.10.2026 (they are the owner's own material), so the path is given:
+#   BFG_OG_CARD=<path to a card png> python make_og.py
+CARD = os.environ.get("BFG_OG_CARD")
+if not CARD or not os.path.exists(CARD):
+    raise SystemExit("make_og.py: set BFG_OG_CARD to the example card image (a printed card as png)")
 OUT = os.path.join(HERE, "og.png")
 
 W, H = 1200, 630

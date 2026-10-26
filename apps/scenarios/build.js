@@ -7,7 +7,6 @@
    dist/scenarios/battlezone-core.js       the terrain core, from packages/battlezone
    dist/scenarios/favicon.png, apple-touch-icon.png
 
-   dist/scenarios/lab/lab.js               the discovery lab, only when BFG_LAB=1
 
    Every local script gets ?v=<content hash>, so a browser never keeps an old
    copy after a release and nobody bumps version query strings by hand. */
@@ -21,9 +20,6 @@ const HERE = "apps/scenarios";
 const OUT = "dist/scenarios/";
 const BADGE_HOSTS = ["bfgtools.kuldare.com", "bfgtools.boarding.kuldare.com", "terrain-generator.kuldare.com",
   "bfgtools.meta.kuldare.com", "scenario-library.kuldare.com", "github.com"];
-/* The discovery lab (lab/) is a prototype and never published by default: only
-   a build with BFG_LAB=1 links it, for trying it locally (lab/README.md). */
-const LAB = process.env.BFG_LAB === "1";
 /* Links to where a scenario was published ("Open the original"); nothing is
    fetched from them. */
 const ALLOWED = ["http://www.w3.org", "https://drive.google.com", "https://specialist-arms.com", "https://www.specialist-arms.com"];
@@ -33,15 +29,9 @@ async function build() {
   for (const f of fs.readdirSync(kit.abs(HERE + "/scenarios")).filter(f => f.endsWith(".js")).sort())
     files["scenarios/" + f] = kit.read(HERE + "/scenarios/" + f);
 
-  if (LAB)
-    for (const f of fs.readdirSync(kit.abs(HERE + "/lab")).filter(f => f.endsWith(".js")).sort())
-      files["lab/" + f] = kit.read(HERE + "/lab/" + f);
-  else fs.rmSync(kit.abs(OUT + "lab"), { recursive: true, force: true });   /* no stale copy to publish */
-
   files["app.js"] = await kit.bundle({ entry: HERE + "/src/index.js", globalName: "SL" });
   let page = kit.expandIncludes(kit.read(HERE + "/index.html"), HERE);
   page = kit.fill(page, "version", APP.version);
-  page = kit.fill(page, "lab", LAB ? '<script src="lab/lab.js"></script>' : "");
   page = page.replace("<!--BFGTOOLS--><!--/BFGTOOLS-->", "<!--BFGTOOLS-->" + kit.badge("scenarios") + "<!--/BFGTOOLS-->");
   const linked = new Set();
   page = page.replace(/<script src="([^"?:]+\.js)">/g, (m, src) => {

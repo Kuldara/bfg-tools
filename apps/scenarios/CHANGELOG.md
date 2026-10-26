@@ -4,6 +4,10 @@ Releases are tags `scenarios-v<version>`; the version is in `app.json`.
 
 ## Unreleased
 
+### Removed (for developers)
+- The discovery lab (`lab/`, prototypes B-G, built only with `BFG_LAB=1`) and its
+  test left the repository on 26.10.2026; the owner keeps a copy outside it.
+
 ### Added
 - Every card on the front page carries a thumbnail of its deployment map,
   drawn on your table without labels, so the shape of the fight shows before

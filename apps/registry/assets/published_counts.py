@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-"""The Registry's advertised numbers for Python generators (make_og.py and the
-marketing slides): fleet lists, ship profiles and printable cards.
+"""The Registry's advertised numbers for Python generators (make_og.py):
+fleet lists, ship profiles and printable cards.
 
 The rule lives in one place, apps/registry/counts.js, which the build uses
 too; this module asks it. Two copies of the rule disagreed until October 2026

@@ -5,6 +5,12 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 
 ## Unreleased
 
+### Removed (for developers)
+- The release images and their scripts (`marketing/`) and the archived 1.0 and
+  1.1 pages under `docs/history/registry/versiot/` left the repository on
+  26.10.2026, also from its history: 25 MB of pictures and generated pages that
+  nothing builds from. The owner keeps them outside the repository.
+
 ### Changed (for developers)
 - The rules engine is ES modules in `packages/rules/src/` (ids and the saved
   unit, lending, upgrades, pricing, weapons, the card's arms, criticals, special
