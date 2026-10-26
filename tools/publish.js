@@ -116,8 +116,13 @@ async function verify(app, local) {
     fs.writeFileSync(path.join(stage, "wrangler.json"), JSON.stringify(config(app), null, 2));
     console.log(`${id}: ${DRY ? "would deploy" : "deploying"} dist/${SITES[id]} to Worker ${app.worker} (${app.url})`);
     if (DRY) continue;
+    /* npx is a .cmd file on Windows and needs a shell, and the shell splits
+       arguments at spaces: unquoted, the message "bfg-tools local" became a
+       second argument that Wrangler read as the Worker's entry file. */
+    const win = process.platform === "win32";
+    const arg = a => win && /[\s"]/.test(a) ? '"' + a.replace(/"/g, '\\"') + '"' : a;
     const r = spawnSync("npx", ["--yes", "wrangler@4", "deploy", "--config", path.join(stage, "wrangler.json"),
-      "--message", "bfg-tools " + (process.env.GITHUB_REF_NAME || "local")], { cwd: stage, stdio: "inherit", shell: process.platform === "win32" });
+      "--message", "bfg-tools " + (process.env.GITHUB_REF_NAME || "local")].map(arg), { cwd: stage, stdio: "inherit", shell: win });
     if (r.status !== 0) { failed.push(id); continue; }
     const ok = await verify(app, fs.readFileSync(path.join(dist, "index.html")));
     console.log(`${id}: ${ok ? "live index.html matches the build" : "LIVE PAGE DIFFERS from the build"}`);
