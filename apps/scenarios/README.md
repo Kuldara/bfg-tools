@@ -37,10 +37,18 @@ our own words and link to the original where it is published.
 
 ## Code
 
-The library is plain scripts, no bundling.
+The app is ES modules in `src/`, bundled by the build into `app.js`
+(`window.SL`); the scenario files stay plain scripts.
 
 ```
-index.html              the engine, styles, the Rulebook's scenarios and campaigns
+index.html              the page: markup, the stylesheet include, the script tags
+styles/scenarios.css    the styles
+src/index.js            the modules in page order; the page names the scenario
+                        files may call bare (addScenarios, the map builders ...)
+src/data.js             the Rulebook's scenarios and campaigns, the tables they share
+src/views.js, front-page.js, scenario-page.js, prep.js, subplots.js   the views
+src/maps.js, map-svg.js, dimensions.js, battlezone.js, terrain-legend.js   the maps
+src/state.js, bookkeeping.js, widgets.js, events.js ...   the rest, one concern each
 scenarios/*.js          one file per publication; each calls addScenarios([...])
 scenarios/_wr.js        shared helpers for Warp Rift (dates, credits)
 scenarios/terrain-map.js   TERRAIN: every scenario's terrain (battlezone and reason,
@@ -55,8 +63,9 @@ tests/                  see below
 ```
 
 The terrain core is `packages/battlezone/core.js`; the build writes it next to
-the page as `battlezone-core.js` (global `BZ`). The page loads each script with a
-content hash (`?v=…`) the build adds, so browsers never run an old copy.
+the page as `battlezone-core.js` (global `BZ`), and the QR code comes from
+`packages/ui/qr.js`. The page loads each script with a content hash (`?v=…`)
+the build adds, so browsers never run an old copy.
 
 State is kept in `localStorage["bfg-scenario-library-v1"]`: each scenario's
 progress, Before the battle, the category and the filter.
@@ -72,16 +81,16 @@ progress, Before the battle, the category and the filter.
 | `tests/front.js` | Node | the front page: a map thumbnail on every card, the names view and its picture, every scenario's preview |
 | `tests/lab.js` | Node | the discovery lab: every tab renders, the kinds, the picker, the table sort and the roll |
 | `tests/page_audit.py` | Python, needs `books/text/` | every `[title, "RB p. N"]` reference against the rulebook text |
-| `tests/browser.js`, `maps.js`, `content.js` | paste into the page's console | every scenario × version × table × turn × tab renders without `undefined` / `NaN`; map labels fit; side colours and verbs |
+| `tests/browser.js`, `maps.js`, `content.js` | the page, through `tests/in_page.js` (Node + headless Chrome, in `npm test`) | every scenario × version × table × turn × tab renders without `undefined` / `NaN`; map labels fit; side colours and verbs |
 | `tests/screenshots.js`, `wide_screens.js` | Node + headless Chrome | a screenshot of every page at phone and desktop width, layout checks |
 
-`_load.js` loads the library into Node without a browser.
+`_load.js` loads the library into Node without a browser: it bundles `src/`
+the way the build does and runs the scenario files after it.
 
-## Open finding
+## Open findings
 
-`tests/page_audit.py` leaves three references of the Book of the Void
-(`fan-botv.js`) unverified: e.g. *Instinctive Behaviour* FL p. 416 (the heading is
-on p. 429) and *Miserable defeat* RB p. 122. Check them against the books.
+None: the three Book of the Void references `page_audit.py` once left
+unverified were checked against the books on 26.10.2026 (two corrected).
 
 ## History
 

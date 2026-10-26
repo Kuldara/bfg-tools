@@ -27,6 +27,9 @@
 
    Tolerance: 0.6 % of the table width (anti-aliasing of the text edge and
    rounding of the font metrics). */
+/* the page's names, from the bundle's namespace (apps/scenarios/src/index.js) */
+const { NARROW, SC, TABLES, fitOf, get, mapFn, mapOf, mapSVG, v0 } = window.SL;
+const DB = SL.DB;   /* a let: read once, its object is never replaced on the page */
 (async () => {
   const host = document.createElement("div");
   host.style.cssText = "position:absolute;left:-12000px;top:0;width:1000px;visibility:hidden";

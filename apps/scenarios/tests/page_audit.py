@@ -78,7 +78,7 @@ def rng(s):
             if m: out.append(int(m.group(1)))
     return out
 
-files = [os.path.join(ROOT, "index.html")] + sorted(glob.glob(os.path.join(ROOT, "scenarios", "*.js")))
+files = [os.path.join(ROOT, "index.html")] + sorted(glob.glob(os.path.join(ROOT, "src", "*.js"))) + sorted(glob.glob(os.path.join(ROOT, "scenarios", "*.js")))
 seen = {}
 for f in files:
     s = io.open(f, encoding="utf-8").read()

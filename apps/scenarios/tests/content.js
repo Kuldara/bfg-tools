@@ -11,6 +11,8 @@
    4. EMPTY: in an untouched game (no inputs, turn 1) the verdict shown must not name a
       winner — found in 0.7: the Planetary Assault family said "Defender's victory" before the game.
    Returns a JSON string { counts, err, items }. */
+/* the page's names, from the bundle's namespace (apps/scenarios/src/index.js) */
+const { MAPS, SC, TURNFX, WR, num, pickV, stOf, val, verdict, vis, wins } = window.SL;
 (() => {
   const items = [], esc2 = s => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   const ALLOW_SIDE = new Set(["cl-kotol"]);

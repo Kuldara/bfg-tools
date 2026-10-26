@@ -46,7 +46,7 @@ behind this layout are in [docs/adr/](docs/adr/).
 | `apps/play` | Gothic Fleet Play: the fleet on a phone during a game (hits, criticals, orders) | ES modules, CSS |
 | `apps/boarding` | Boarding Actions: resolves a boarding action step by step | ES module + UMD engine |
 | `apps/terrain` | Battlezone Generator: rolls the celestial phenomena and draws the table | plain script in one page |
-| `apps/scenarios` | Scenario Library: every scenario, set up and tracked at the table | plain scripts, one file per publication |
+| `apps/scenarios` | Scenario Library: every scenario, set up and tracked at the table | ES modules + plain data scripts, one per publication |
 | `apps/almanac` | Meta Almanac: the published site only (its sources are private) | built elsewhere |
 | `apps/home` | the mirror's front page | HTML |
 | `packages/rules` | `domain.js`: pure functions that resolve a fleet and its units, price them and check legality | UMD (browser, Node, the simulator) |
@@ -75,8 +75,9 @@ behind this layout are in [docs/adr/](docs/adr/).
 5. Write `dist/<app>/` and, for the Registry and Boarding, a one-file package in
    `dist/share/`.
 
-The Scenario Library is not bundled: the build copies its scripts and gives each
-a content hash (`?v=…`) so a browser never runs an old copy.
+The Scenario Library's app is bundled from `apps/scenarios/src/` into `app.js`
+(`window.SL`); its scenario files stay plain scripts that the build copies.
+Every script gets a content hash (`?v=…`) so a browser never runs an old copy.
 
 ## The Registry, inside
 

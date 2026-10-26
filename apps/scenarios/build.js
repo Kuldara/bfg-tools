@@ -1,6 +1,7 @@
 /* Builds the Scenario Library.
 
-   dist/scenarios/index.html               the page (plain scripts, no bundling)
+   dist/scenarios/index.html               the page (styles included, the script in app.js)
+   dist/scenarios/app.js                   the app: src/*.js bundled, exports on window.SL
    dist/scenarios/scenarios/*.js           one file per publication; each adds its
                                            scenarios to the library when loaded
    dist/scenarios/battlezone-core.js       the terrain core, from packages/battlezone
@@ -37,7 +38,8 @@ async function build() {
       files["lab/" + f] = kit.read(HERE + "/lab/" + f);
   else fs.rmSync(kit.abs(OUT + "lab"), { recursive: true, force: true });   /* no stale copy to publish */
 
-  let page = kit.read(HERE + "/index.html");
+  files["app.js"] = await kit.bundle({ entry: HERE + "/src/index.js", globalName: "SL" });
+  let page = kit.expandIncludes(kit.read(HERE + "/index.html"), HERE);
   page = kit.fill(page, "version", APP.version);
   page = kit.fill(page, "lab", LAB ? '<script src="lab/lab.js"></script>' : "");
   page = page.replace("<!--BFGTOOLS--><!--/BFGTOOLS-->", "<!--BFGTOOLS-->" + kit.badge("scenarios") + "<!--/BFGTOOLS-->");

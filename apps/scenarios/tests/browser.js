@@ -13,10 +13,12 @@
 
    The cache is no trap: the build gives every scenario file a ?v=<content hash>
    (apps/scenarios/build.js), so a changed file always loads anew. */
+/* the page's names, from the bundle's namespace (apps/scenarios/src/index.js) */
+const { SC, app, prep, render, stOf } = window.SL;
+const DB = SL.DB;   /* a let: read once, its object is never replaced on the page */
 (async () => {
   window.__R = null;
-  const origPH = parseHash;
-  parseHash = () => window.__R || origPH();
+  SL.setRouteHook(() => window.__R);
   const errs = [], tables = [[183, 122], [120, 120], [90, 90], [244, 122], [60, 60]], oldT = DB.table;
   let views = 0;
   const titles = new Set();
@@ -39,6 +41,6 @@
     }
   }
   for (const view of ["list", "prep", "subplots", "sources"]) { try { window.__R = { view }; render(false); views++; } catch (e) { errs.push(view + ": " + e.message); } }
-  window.__R = null; parseHash = origPH; DB.table = oldT; render(false);
+  window.__R = null; SL.setRouteHook(null); DB.table = oldT; render(false);
   return JSON.stringify({ n: SC.length, views, distinctTitles: titles.size, nerr: errs.length, errs: errs.slice(0, 20) });
 })();

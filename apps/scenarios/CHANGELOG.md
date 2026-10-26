@@ -19,6 +19,14 @@ Releases are tags `scenarios-v<version>`; the version is in `app.json`.
   p. 124 (was 122).
 
 ### Changed (for developers)
+- The page's one script is ES modules in `src/` (one concern each: views,
+  maps, battlezone, bookkeeping ...), bundled into `app.js` with the exports on
+  `window.SL`; the styles are `styles/scenarios.css`. The QR code comes from
+  `packages/ui/qr.js` instead of a copy. The scenario files are unchanged: the
+  page names they call bare are listed once in `src/index.js`. Every scenario's
+  four tabs render byte for byte as before.
+- The in-page tests (`tests/browser.js`, `content.js`, `maps.js`) run in a
+  headless Chrome from `npm test` (`tests/in_page.js`), not by hand.
 - `tests/page_audit.py` exits 1 when a reference is unchecked or has no page;
   before, it always passed, and three unchecked references went unnoticed.
 - The version lives in `app.json`; the build gives every script a content hash
