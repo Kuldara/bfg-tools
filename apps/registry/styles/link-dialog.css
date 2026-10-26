@@ -1,0 +1,26 @@
+/* ------------------------------------------------- a fleet from a link --
+   The dialog a fleet link opens (J241, src/link-dialog.js): what the fleet
+   is, what opening it would replace, and Open / Save / Close. It closes only
+   by its own buttons or Escape - a stray tap on the dimmed page does
+   nothing (every input is a chance to err). Big enough buttons for a thumb. */
+.linkdlg{position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:16px;
+  background:rgba(11,17,22,.55)}
+.linkdlg[hidden]{display:none}
+.ld-box{width:min(460px,100%);max-height:calc(100vh - 32px);overflow:auto;background:var(--panel);color:var(--ink);
+  border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:18px 18px 16px}
+.ld-box h3{margin:0 0 10px;font:600 13px/1.2 var(--disp);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.ld-what{margin:0 0 12px;display:flex;flex-direction:column;gap:4px}
+.ld-what b{font:600 17px/1.25 var(--sans);color:var(--ink);overflow-wrap:anywhere}
+.ld-what i{font:400 12px/1.35 var(--mono);font-style:normal;color:var(--ink-3)}
+.ld-warn,.ld-note,.ld-msg{margin:0 0 12px;font:400 13px/1.45 var(--sans);border-radius:var(--r);padding:9px 11px}
+.ld-warn{background:var(--warn-wash);color:var(--ink);border:1px solid var(--warn)}
+.ld-warn b{color:var(--warn)}
+.ld-note{background:var(--sunk);color:var(--ink-2)}
+.ld-msg{background:var(--ok-wash);color:var(--ink);border:1px solid var(--ok)}
+.ld-names{margin:0 0 12px;padding-left:18px;font:400 13px/1.5 var(--sans);color:var(--ink-2)}
+.ld-acts{display:flex;flex-wrap:wrap;gap:8px}
+.ld-acts .btn{min-height:40px;padding:9px 14px}
+.ld-acts .btn[disabled]{opacity:.55;cursor:default}
+.ld-acts .btn[disabled]:hover{border-color:var(--line);color:inherit}
+@media (max-width:520px){ .ld-acts .btn{flex:1 1 100%} }
+@media print{ .linkdlg{display:none!important} }

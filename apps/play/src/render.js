@@ -1,6 +1,6 @@
 import { appState } from "./state.js";
 import { wepClass } from "./setup.js";
-import { KEY_BUILDER, OPT, PLAY_VERSION, TRACK, lsGet } from "./storage.js";
+import { OPT, PLAY_VERSION, TRACK, builderRaw, lsGet } from "./storage.js";
 import { $, MID, TIMES, fnv } from "./helpers.js";
 import { fleetFactsNow, fleetPoints, fleetsIn, parseDoc, resolveFleet } from "./fleet-document.js";
 import { KEY_WAKE, builderTool, carriersOf, cmdsAboard, coCmd, loadPlay, sqnShip, toolBtn, wl2Box, wlExtra, wlTag } from "./game-state.js";
@@ -175,7 +175,7 @@ window.addEventListener("scroll", () => { if(appState.V.screen === "roster" && a
 window.addEventListener("resize", () => { if(appState.V.screen === "roster" && appState.V.sheet == null) paginate(); });
 
 export function renderLoad(){
-  const raw = lsGet(KEY_BUILDER);
+  const raw = builderRaw();
   const g = loadPlay();
   let cards = "";
   if(g){

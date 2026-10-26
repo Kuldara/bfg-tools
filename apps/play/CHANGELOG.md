@@ -9,6 +9,8 @@ a tag `play-v<version>` deploys the Registry's site.
 - A second fleet link opened in a tab where Play is already open (an older
   "to phone" code; new ones open the builder) is read too: the page listens to
   changes of the address instead of reading it only when it opens (J240).
+- Play opened from a builder tab plays that tab's fleet: the builder keeps a copy
+  per tab (J241), and Play reads it before the shared one (`builderRaw`).
 
 ### Changed (for developers)
 - ES modules (`src/`) and `styles/play.css` instead of one template; the 24

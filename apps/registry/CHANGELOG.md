@@ -23,16 +23,19 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   the one-file engine, as do the golden cases, Play and the simulator.
 
 ### Fixed
-- **Friends' fleet links opened one after another (J240).** A link worked once,
-  and later links showed the same fleet again. Three causes, all fixed: a second
-  link in an open tab changed only the address after # and was never read (now
-  read on every change of the address); the first link's fleet stayed unsaved on
-  its list, so every later link of that list went quietly into Saved fleets
-  (now a link always opens its fleet and keeps it in Saved fleets under its name;
-  what the list had is kept there too, as *Name (changed)*); and an older tab of
-  the page wrote its state over a newer tab's at its next change (tabs now read
-  each other's saves). `check_links.js` opens links in a row in Chrome, in one
-  tab and in two; `test_save.js` checks the same order in Node.
+- **Friends' fleet links opened one after another (J240, J241).** A link worked
+  once, and later links showed the same fleet again: a second link in an open tab
+  changed only the address after # and was never read, and the first link's fleet,
+  left unsaved on its list, sent every later link of that list quietly into Saved
+  fleets. Now every link shows a dialog with the fleet's name, list, points and
+  ships, and *Open it*, *Save to Saved fleets* and *Close*; nothing is saved by
+  itself, and before Open it says when your fleet on that list is not saved and
+  would be replaced. Each tab keeps its own fleet, so four links in four tabs stay
+  four fleets, also after a reload, and Play opened from a tab plays that tab's
+  fleet. (J240, live for a few hours on 26.10.2026, saved every linked fleet and
+  made the tabs follow each other; the user asked for the dialog and separate tabs
+  instead.) `check_links.js` drives this in Chrome with five tabs; `test_save.js`
+  checks the same decisions in Node.
 - The page's description said 738 printable cards and its link preview's alt text
   1102; the preview image itself said 30 lists, 171 profiles and 460 cards. All
   three now come from one count (`counts.js`): 32 lists, 176 profiles, 738 cards.

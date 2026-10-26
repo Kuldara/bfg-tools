@@ -99,15 +99,23 @@ untouched by it.
   without a question only when nothing is lost.
 - **Import file, Paste text, and a link or QR code with several fleets** add to the
   library and never touch the fleet on screen. The same fleet is not added twice.
-- **A link or QR code with one fleet** (J240) opens it on its own list and keeps it
-  in the library at once, under the name it came with (`"from": "link"`), so the
-  next link can take the screen without asking. What that list had is kept in the
-  library first unless it is there already (`"from": "kept"`, named *Name
-  (changed)* or *List points*). The same fleet twice is one save. A link is read
-  when the page opens and whenever the address gets a new one.
-- **Tabs**: every change is saved at once, and a tab reads the store again when
-  another tab of the page saves (the `storage` event), without writing back. An
-  older tab therefore never writes its state over a newer one.
+- **A link or QR code with one fleet** (J241) shows a dialog and saves nothing by
+  itself: *Open it* puts the fleet on its own list in this tab, *Save to Saved
+  fleets* adds it to the library (`"from": "link"`) and leaves the screen, *Close*
+  does neither. Before Open the dialog says when the tab's fleet on that list is not
+  in the library and would be replaced. A link is read when the page opens and
+  whenever the address gets a new one. (For a few hours on 26.10.2026, J240 saved
+  every linked fleet on arrival, and the fleet it replaced with `"from": "kept"`;
+  such saves are ordinary saves.)
+
+### Tabs
+
+Each tab keeps its own copy of the working save in `sessionStorage` under the same
+key (J241: four links in four tabs stay four fleets; a reload brings back the tab's
+own). Every change writes both that copy and the shared one in `localStorage`; a
+page loads its tab copy first and the shared one when the tab has none, so a new
+tab starts from whatever was saved last. Play reads the tab's copy too. Tabs share
+the library: when another tab changes it, the list redraws without saving.
 
 ## Files and links
 

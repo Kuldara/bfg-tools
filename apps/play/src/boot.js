@@ -1,5 +1,5 @@
 import { appState } from "./state.js";
-import { KEY_BUILDER, lsGet } from "./storage.js";
+import { builderRaw } from "./storage.js";
 import { fnv } from "./helpers.js";
 import { fleetsIn, parseDoc } from "./fleet-document.js";
 import { loadPlay, resumeGame } from "./game-state.js";
@@ -30,7 +30,7 @@ export function takeLinkFromAddress(){
   const g = loadPlay();
   if(g && resumeGame(g)){
     /* the game continues where it was unless the builder's fleet changed */
-    const raw = lsGet(KEY_BUILDER);
+    const raw = builderRaw();
     const p = raw ? parseDoc(raw) : null;
     const same = (g.src && g.src !== "builder") || !p || !p.o || fleetsIn(p.o).some(f => fnv(JSON.stringify([f.ln, f.units])) === g.fp);
     appState.V.screen = same ? "roster" : "load";

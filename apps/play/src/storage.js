@@ -33,6 +33,14 @@ export function normaliseUntracked(g){
 /* Set by the build (tools/build.js); "dev" when the modules run unbundled in tests. */
 export const PLAY_VERSION = typeof __APP_VERSION__ !== "undefined" ? __APP_VERSION__ : "dev";
 export function lsGet(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }
+/* The builder's fleet as THIS tab has it (J241): the builder keeps a copy per
+   tab in sessionStorage, so Play opened from a tab plays that tab's fleet
+   (a fleet opened from a link in it, say), not whichever tab saved last. A
+   tab that never had the builder open reads the shared copy. */
+export function builderRaw(){
+  try{ const t = typeof sessionStorage !== "undefined" ? sessionStorage.getItem(KEY_BUILDER) : null; if(t) return t; }catch(e){}
+  return lsGet(KEY_BUILDER);
+}
 export function lsSet(k, v){ try{ localStorage.setItem(k, v); return true; }catch(e){ return false; } }
 export function lsDel(k){ try{ localStorage.removeItem(k); }catch(e){} }
 

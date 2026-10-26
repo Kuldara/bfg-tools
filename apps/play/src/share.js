@@ -1,5 +1,5 @@
 import { appState } from "./state.js";
-import { KEY_BUILDER, lsGet, lsSet } from "./storage.js";
+import { builderRaw, lsGet, lsSet } from "./storage.js";
 import { MID, TIMES, fnv } from "./helpers.js";
 import { fleetsIn, parseDoc, resolveFleet } from "./fleet-document.js";
 import { BUILDER_URL, KEY_LINKED, save } from "./game-state.js";
@@ -59,7 +59,7 @@ export function builderFleets(){
   (lib && Array.isArray(lib.saves) ? lib.saves : []).forEach(f => {
     if(f && Array.isArray(f.units) && f.units.length) out.push({ name: f.name || "", ln: f.ln, limit: f.limit, units: f.units, saved: true });
   });
-  const p = parseDoc(lsGet(KEY_BUILDER) || "");
+  const p = parseDoc(builderRaw() || "");
   if(p.o) fleetsIn(p.o).forEach(f => out.push(Object.assign({ saved: false }, f)));
   return out;
 }

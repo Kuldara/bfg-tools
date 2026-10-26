@@ -1,18 +1,23 @@
-/* Friends' fleet links opened one after another, in a real browser (J240).
+/* Friends' fleet links, in a real browser (J240, J241).
 
      node apps/registry/check_links.js        (part of npm test; needs dist/)
 
    The user 26.10.2026: a friend's fleet link opened once, and the next links
-   opened the same fleet again. Three causes, each a step here:
-     1. a second link in the same tab changes only the part after # and does
-        not reload the page - the page has to hear it (hashchange);
-     2. the first link's fleet stayed unsaved on its list and blocked every
-        later link of that list - each link must open its own fleet and keep
-        it in Saved fleets;
-     3. an older tab of the page wrote its state over a newer tab's at its
-        next change - the tabs must follow each other's saves.
-   test_save.js checks the same order of links in Node; this one checks what
-   only a browser does: the address, two tabs sharing storage, the events. */
+   opened the same fleet again. Then: "clicking a share link should always open
+   that link's fleet; no need to save it automatically", "even if you click
+   four different links, each tab has its own fleet open", and a simple
+   dialog: open the link's fleet or save it, with a warning before Open
+   replaces your own. This drives the built page as a player would, over http
+   so that the address, the tabs and their storage behave as on the web:
+     - four links in four tabs: each tab opens its own fleet and keeps it,
+       also after a reload, and the player's own tab is left alone;
+     - the dialog warns when Open would replace a fleet that is not saved,
+       and not when the list is empty;
+     - a second link in the same tab (only the # changes) shows the dialog;
+       Save puts the fleet in Saved fleets and leaves the screen as it was;
+     - the other tabs' Saved fleets lists see the new save;
+     - Play opened from a tab plays that tab's fleet.
+   test_save.js checks the same decisions in Node. */
 "use strict";
 const fs = require("fs"), path = require("path");
 const { launch } = require("../../tools/lib/chrome.js");
@@ -21,7 +26,7 @@ const { serve } = require("../../tools/serve.js");
 const PAGE = path.resolve(__dirname, "..", "..", "dist", "registry", "index.html");
 if (!fs.existsSync(PAGE)) { console.error("dist/registry/index.html is missing: run npm run build"); process.exit(1); }
 
-/* three links made by the page itself: A and B on one list, C on another */
+/* the links, made by the page itself; then the player's own fleet in tab 1 */
 const MAKE = `(async () => {
   const mk = async (name, listRe, rows) => {
     const li = GFR.LISTS.findIndex(x => listRe.test(x.nm));
@@ -35,20 +40,30 @@ const MAKE = `(async () => {
     const d = GFR.openDoc();
     return await GFR.packFleet({ name: name, ln: d.ln, limit: d.limit, units: d.units });
   };
+  const G = /Gothic Sector/, C = /^Cruisers$/;
   const out = {
-    A: await mk("Friend A", /Gothic Sector/, [[/^Cruisers$/, /^Lunar/], [/^Cruisers$/, /^Lunar/]]),
-    B: await mk("Friend B", /Gothic Sector/, [[/^Cruisers$/, /^Dauntless/], [/^Cruisers$/, /^Dauntless/], [/^Cruisers$/, /^Dauntless/]]),
-    C: await mk("Friend C", /Waaagh/, [[/^KROOZERS$/, /^Terror ship/]])
+    A: await mk("Friend A", G, [[C, /^Lunar/], [C, /^Lunar/]]),
+    B: await mk("Friend B", G, [[C, /^Dauntless/], [C, /^Dauntless/], [C, /^Dauntless/]]),
+    C: await mk("Friend C", /Waaagh/, [[/^KROOZERS$/, /^Terror ship/]]),
+    D: await mk("Friend D", G, [[C, /^Gothic/], [C, /^Gothic/], [C, /^Gothic/], [C, /^Gothic/]])
   };
-  localStorage.clear();
+  localStorage.clear(); sessionStorage.clear();
+  GFR.switchList(GFR.LISTS.findIndex(x => G.test(x.nm))); GFR.appState.S.units = [];
+  const L = GFR.LISTS[GFR.appState.S.li], si = L.secs.findIndex(s => C.test(s.t));
+  GFR.addUnit(si, L.secs[si].ents.findIndex(e => /^Tyrant/.test(e.l)));
   return out;
 })()`;
-/* what the player sees in a tab */
 const STATE = `(() => {
   const S = GFR.appState.S, L = GFR.LISTS[S.li];
-  return { list: L.nm.replace(/^.* \\u2014 /, ""), units: S.units.map(u => GFR.entOf(u).l.replace(/ class.*$/, "")),
-           saved: GFR.libRead().saves.map(s => s.name).sort(), hash: location.hash, errors: (window.__errs || []).slice() };
+  return { list: L.nm.replace(/^.* \\u2014 /, ""), units: S.units.map(u => GFR.entOf(u).l.replace(/ class.*$/, "")) };
 })()`;
+const DIALOG = `(() => {
+  const d = document.getElementById("linkdlg");
+  return { shown: !!d && !d.hidden, name: (d.querySelector(".ld-what b") || {}).textContent || "",
+           warn: !!d.querySelector(".ld-warn"), msg: (d.querySelector(".ld-msg") || {}).textContent || "",
+           saveDisabled: !!(d.querySelector('[data-link="save"]') || {}).disabled };
+})()`;
+const press = what => `document.querySelector('#linkdlg [data-link="${what}"]').click()`;
 const ERRS = "window.__errs = []; addEventListener('error', e => __errs.push(String(e.message)));";
 
 let pass = 0, fail = 0;
@@ -58,8 +73,8 @@ const check = (name, got, want) => {
   ok ? pass++ : fail++;
 };
 const sleep = ms => new Promise(r => setTimeout(r, ms));
-/* the page answers on its own time (a link is unpacked asynchronously, another
-   tab's save arrives as an event): wait until the expression is true */
+/* the page answers on its own time (a link is unpacked asynchronously,
+   another tab's save arrives as an event): wait until the expression holds */
 async function until(tab, expr, ms) {
   const end = Date.now() + (ms || 8000);
   for (;;) {
@@ -68,71 +83,85 @@ async function until(tab, expr, ms) {
     await sleep(100);
   }
 }
-async function open(tab, url) {
+async function open(tab, url, ready) {
   const loaded = tab.once("Page.loadEventFired");
   await tab.send("Page.navigate", { url });
   await loaded;
-  await until(tab, "window.GFR && GFR.appState && GFR.appState.S");
+  await until(tab, ready || "window.GFR && GFR.appState && GFR.appState.S");
 }
-const shows = (list, n) => `GFR.appState.S.units.length === ${n} && GFR.LISTS[GFR.appState.S.li].nm.indexOf(${JSON.stringify(list)}) >= 0 && !location.hash`;
+const dialogUp = `!document.getElementById("linkdlg").hidden`;
 
 (async () => {
   const server = await serve(0, true);
   const URL0 = "http://127.0.0.1:" + server.address().port + "/registry/";
   const cd = await launch({ prefix: "gfr-links-", args: ["--window-size=1200,900"] });
-  let tab2 = null;
+  const tabs = [];
+  const newTab = async () => {
+    const t = await cd.newPage("about:blank");
+    await t.send("Page.enable");
+    await t.send("Page.addScriptToEvaluateOnNewDocument", { source: ERRS });
+    tabs.push(t);
+    return t;
+  };
   try {
-    const tab1 = cd;
-    await tab1.send("Page.enable");
-    await tab1.send("Page.addScriptToEvaluateOnNewDocument", { source: ERRS });
-    await open(tab1, URL0);
-    const L = await tab1.evaluate(MAKE);
+    const t1 = cd;
+    await t1.send("Page.enable");
+    await t1.send("Page.addScriptToEvaluateOnNewDocument", { source: ERRS });
+    await open(t1, URL0);
+    const L = await t1.evaluate(MAKE);
+    await until(t1, "localStorage.getItem('gothic-fleet-registry-v1')");
 
-    console.log("\nOne tab, links one after another");
-    await open(tab1, "about:blank");
-    await open(tab1, URL0 + "#" + L.A);
-    await until(tab1, shows("Gothic Sector", 2));
-    check("A opens (a fresh page)", await tab1.evaluate(STATE),
-          { list: "Gothic Sector", units: ["Lunar", "Lunar"], saved: ["Friend A"], hash: "", errors: [] });
-    await tab1.evaluate("location.hash = " + JSON.stringify(L.B));
-    await until(tab1, shows("Gothic Sector", 3));
-    check("B in the same tab opens (only the # changed; it used to do nothing)", await tab1.evaluate(STATE),
-          { list: "Gothic Sector", units: ["Dauntless", "Dauntless", "Dauntless"], saved: ["Friend A", "Friend B"], hash: "", errors: [] });
-    await open(tab1, "about:blank");
-    await open(tab1, URL0 + "#" + L.C);
-    await until(tab1, shows("Waaagh", 1));
-    check("C of another list opens", await tab1.evaluate(STATE),
-          { list: "Waaagh!", units: ["Terror ship"], saved: ["Friend A", "Friend B", "Friend C"], hash: "", errors: [] });
-    await open(tab1, "about:blank");
-    await open(tab1, URL0 + "#" + L.B);
-    await until(tab1, shows("Gothic Sector", 3));
-    check("B again on a fresh page opens B, not the fleet before it", (await tab1.evaluate(STATE)).units, ["Dauntless", "Dauntless", "Dauntless"]);
+    console.log("\nFour links, four tabs");
+    const opened = {};
+    for (const [k, n] of [["A", 2], ["B", 3], ["C", 1], ["D", 4]]) {
+      const t = await newTab();
+      await open(t, URL0 + "#" + L[k], "window.GFR && " + dialogUp);
+      const d = await t.evaluate(DIALOG);
+      await t.evaluate(press("open"));
+      await until(t, "GFR.appState.S.units.length === " + n + " && document.getElementById('linkdlg').hidden");
+      opened[k] = { t, d, s: await t.evaluate(STATE) };
+    }
+    check("the dialog names the link's fleet", ["A", "B", "C", "D"].map(k => opened[k].d.name), ["Friend A", "Friend B", "Friend C", "Friend D"]);
+    check("it warns when Open replaces an unsaved fleet of the list, not when the list is empty",
+          ["A", "B", "C", "D"].map(k => opened[k].d.warn), [true, true, false, true]);
+    check("each tab opened its own link's fleet", ["A", "B", "C", "D"].map(k => opened[k].s.units[0] + " x" + opened[k].s.units.length),
+          ["Lunar x2", "Dauntless x3", "Terror ship x1", "Gothic x4"]);
+    const now = [];
+    for (const k of ["A", "B", "C", "D"]) now.push((await opened[k].t.evaluate(STATE)).units.length);
+    check("... and still has it after the other three opened theirs", now, [2, 3, 1, 4]);
+    check("the player's own tab is left alone", (await t1.evaluate(STATE)).units, ["Tyrant"]);
+    await open(opened.A.t, URL0);
+    check("a reload brings back the tab's own fleet", (await opened.A.t.evaluate(STATE)).units, ["Lunar", "Lunar"]);
 
-    console.log("\nTwo tabs");
-    tab2 = await cd.newPage("about:blank");
-    await tab2.send("Page.enable");
-    await tab2.send("Page.addScriptToEvaluateOnNewDocument", { source: ERRS });
-    await open(tab2, URL0);
-    check("a second tab opens on what the first saved", (await tab2.evaluate(STATE)).units, ["Dauntless", "Dauntless", "Dauntless"]);
-    await tab1.evaluate("location.hash = " + JSON.stringify(L.A));
-    await until(tab1, shows("Gothic Sector", 2));
-    const followed = await until(tab2, "GFR.appState.S.units.length === 2");
-    check("the second tab follows the first's link", [followed, (await tab2.evaluate(STATE)).units], [true, ["Lunar", "Lunar"]]);
-    /* the player adds a ship in the second tab; the first must not write its older state back */
-    await tab2.evaluate(`(() => { const L = GFR.LISTS[GFR.appState.S.li]; const si = L.secs.findIndex(s => /^Cruisers$/.test(s.t));
-      GFR.addUnit(si, L.secs[si].ents.findIndex(e => /^Lunar/.test(e.l))); })()`);
-    const back = await until(tab1, "GFR.appState.S.units.length === 3");
-    check("the first tab follows the second's change", [back, (await tab1.evaluate(STATE)).units], [true, ["Lunar", "Lunar", "Lunar"]]);
-    await tab1.evaluate("GFR.render()");
-    await open(tab1, URL0);
-    const end = await tab1.evaluate(STATE);
-    check("after a reload: the last change stands, every friend's fleet is saved",
-          [end.units, end.saved], [["Lunar", "Lunar", "Lunar"], ["Friend A", "Friend B", "Friend C"]]);
-    check("no errors on the pages", [end.errors, (await tab2.evaluate(STATE)).errors], [[], []]);
+    console.log("\nA second link in the same tab, and Save");
+    const tB = opened.B.t;
+    await tB.evaluate("location.hash = " + JSON.stringify(L.A));
+    const shownAgain = await until(tB, dialogUp);
+    await tB.evaluate(press("save"));
+    await until(tB, `document.querySelector('#linkdlg .ld-msg')`);
+    const ds = await tB.evaluate(DIALOG);
+    check("the dialog comes up for a link in an open tab; Save answers in it", [shownAgain, ds.shown, /^Saved Friend A/.test(ds.msg), ds.saveDisabled], [true, true, true, true]);
+    await tB.evaluate(press("close"));
+    check("Close closes it, and the screen kept its fleet", [await tB.evaluate("document.getElementById('linkdlg').hidden"), (await tB.evaluate(STATE)).units.length], [true, 3]);
+    check("Saved fleets in that tab", await tB.evaluate("GFR.libRead().saves.map(s => s.name)"), ["Friend A"]);
+    const seen = await until(t1, "document.getElementById('savescount').textContent === '1'");
+    check("the other tabs' Saved fleets list sees it", [seen, (await t1.evaluate(STATE)).units], [true, ["Tyrant"]]);
+
+    console.log("\nPlay from a tab");
+    const tD = opened.D.t;
+    await open(tD, URL0 + "play/Gothic%20Fleet%20Play.html", "window.GFP && GFP.builderFleets");
+    /* Play lists Saved fleets too (Friend A, saved above); the builder's own
+       fleet is the one not saved */
+    const pf = await tD.evaluate("GFP.builderFleets().filter(f => !f.saved && /Gothic Sector/.test(f.ln)).map(f => f.units.length)");
+    check("Play plays the tab's fleet (Friend D's four Gothics), not the last saved", pf, [4]);
+
+    const errs = [];
+    for (const t of [t1].concat(tabs)) errs.push(...(await t.evaluate("(window.__errs || []).slice()")));
+    check("no errors on the pages", errs, []);
   } catch (e) {
     console.log("  FAIL  " + (e && e.stack || e)); fail++;
   } finally {
-    if (tab2) tab2.close();
+    tabs.forEach(t => t.close());
     cd.close();
     server.close();
   }

@@ -147,9 +147,8 @@ export function save(){
      backup was taken to protect; saving resumes the moment the player puts
      something in the fleet. */
   if(appState.LOAD_NOTE && !appState.S.units.length && !Object.keys(stashAll()).length) return;
-  /* J240: redrawing after another tab saved (syncFromStore) writes nothing
-     back - the store already holds it, and two tabs must not set each
-     other off. */
+  /* Redrawing because another tab changed the Saved fleets library
+     (refreshLibrary) writes nothing: nothing changed here. */
   if(appState.SYNCING) return;
   /* The document is built OUTSIDE the try. Only the write can fail for a
      reason that is not a bug; a bug in the builder used to be swallowed here,
@@ -157,6 +156,7 @@ export function save(){
      list without a word (J146). And a write that fails now loses every list's
      fleet, not one, so the player is told. */
   const doc = JSON.stringify(saveDocument());
+  tabSet(doc);
   try{ localStorage.setItem(KEY, doc); }
   catch(e){
     appState.LOAD_NOTE = "This browser would not store the fleet (" +
@@ -167,6 +167,16 @@ export function save(){
   }
 }
 
+/* J241 (user 26.10.2026: "even if you click four different links, each tab
+   has its own fleet open"): each tab keeps its own copy of the working save.
+   sessionStorage belongs to one tab and survives its reload; the shared copy
+   under KEY is what a NEW tab starts from. So four links opened in four tabs
+   stay four fleets, a reload brings each tab's own back, and a tab never
+   takes over another's fleet. The Play page opened from a tab reads the
+   same copy (apps/play/src/storage.js builderRaw). */
+export function tabGet(){ try{ return typeof sessionStorage !== "undefined" ? sessionStorage.getItem(KEY) : null; }catch(e){ return null; } }
+export function tabSet(doc){ try{ if(typeof sessionStorage !== "undefined") sessionStorage.setItem(KEY, doc); }catch(e){ /* a browser without it: the shared copy still works */ } }
+
 export function load(){
   /* A saved fleet points at its list and sections by index, and indexes move
      whenever the book data grows: a new fleet list, or a new first section.
@@ -176,8 +186,8 @@ export function load(){
   /* Even reading the store can throw when the browser blocks site data,
      and that must not stop the app from starting: without a save there is
      simply nothing to restore. */
-  let r = null;
-  try{ r = localStorage.getItem(KEY); }catch(e){
+  let r = tabGet();
+  if(!r) try{ r = localStorage.getItem(KEY); }catch(e){
     appState.LOAD_NOTE = "This browser is blocking storage for this page, so fleets " +
       "cannot be saved or restored. Everything else works.";
     return;
