@@ -5,6 +5,11 @@ a tag `play-v<version>` deploys the Registry's site.
 
 ## Unreleased
 
+### Fixed
+- A second fleet link opened in a tab where Play is already open (an older
+  "to phone" code; new ones open the builder) is read too: the page listens to
+  changes of the address instead of reading it only when it opens (J240).
+
 ### Changed (for developers)
 - ES modules (`src/`) and `styles/play.css` instead of one template; the 24
   functions the build used to copy out of the Registry's template with regular

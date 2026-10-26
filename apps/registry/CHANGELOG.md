@@ -17,6 +17,16 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   the one-file engine, as do the golden cases, Play and the simulator.
 
 ### Fixed
+- **Friends' fleet links opened one after another (J240).** A link worked once,
+  and later links showed the same fleet again. Three causes, all fixed: a second
+  link in an open tab changed only the address after # and was never read (now
+  read on every change of the address); the first link's fleet stayed unsaved on
+  its list, so every later link of that list went quietly into Saved fleets
+  (now a link always opens its fleet and keeps it in Saved fleets under its name;
+  what the list had is kept there too, as *Name (changed)*); and an older tab of
+  the page wrote its state over a newer tab's at its next change (tabs now read
+  each other's saves). `check_links.js` opens links in a row in Chrome, in one
+  tab and in two; `test_save.js` checks the same order in Node.
 - The page's description said 738 printable cards and its link preview's alt text
   1102; the preview image itself said 30 lists, 171 profiles and 460 cards. All
   three now come from one count (`counts.js`): 32 lists, 176 profiles, 738 cards.

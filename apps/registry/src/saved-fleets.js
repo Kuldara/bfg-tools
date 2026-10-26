@@ -86,8 +86,9 @@ export function saveOpenAs(name, asNew){
   libWrite(lib);
   return s;
 }
-/* Fleets from a file or a link go into the library, never over a fleet on
-   screen: nothing is lost and nothing has to be asked. A fleet already
+/* Fleets from a file, pasted text or a link with several fleets go into the
+   library, never over a fleet on screen: nothing is lost and nothing has to
+   be asked (a link with one fleet opens it: receiveFleet). A fleet already
    saved here (same list, limit and ships) is not added twice. A fleet
    document is one fleet (units) and any number more (fleets), each with an
    optional name. Returns { ids, notes }. */
@@ -124,6 +125,75 @@ export function libAddText(text, how){
   let o = null;
   try{ o = JSON.parse(text); }catch(e){ return { ids: [], notes: ["it is not a fleet: it could not be read as JSON"] }; }
   return libAdd(o, how);
+}
+/* A saved fleet's units as this page writes them (the shape openDoc gives),
+   so a fleet that came in a file or a link compares equal to the same fleet
+   once it is open. */
+export function libNormal(d){
+  const Lx = LISTS.filter(x => x.nm === d.ln)[0];
+  if(!Lx) return d;
+  return { ln: d.ln, limit: d.limit | 0, units: unitDocs(resolveSaved(JSON.parse(JSON.stringify(d.units)), Lx, []), Lx) };
+}
+/* The saved fleet that is this document, as written or once normalised. */
+export function libFind(lib, doc){
+  const k = libKey(doc);
+  return lib.saves.filter(s => libKey(s) === k)[0] ||
+         lib.saves.filter(s => s.ln === doc.ln && libKey(libNormal(s)) === k)[0] || null;
+}
+/* ------------------------------------------------ a fleet from a link ---- */
+/* J240 (user 26.10.2026: opening a friend's fleet link worked once, and the
+   next links opened the same fleet again; "the link's fleet always on screen
+   and in Saved fleets at the same time"). A link with ONE fleet opens it on
+   its own list and keeps it in Saved fleets under the name it came with, so
+   the fleet on screen is a saved one and the next link can take the screen
+   without asking and without losing anything. Whatever that list had before
+   goes into Saved fleets first unless it is there already - the player's own
+   unsaved work included. The same fleet twice is one saved fleet. A link with
+   several fleets is not this case: libAdd puts them into Saved fleets.
+   Returns null when the document is not one fleet this page can open, else
+   { id, name, kept, keptId, lost }. The caller renders. */
+export function receiveFleet(o){
+  if(!o || typeof o !== "object" || !Array.isArray(o.units) || !o.units.length) return null;
+  if(Array.isArray(o.fleets) && o.fleets.length) return null;
+  if(typeof o.schemaVersion === "number" && o.schemaVersion > DOMAIN.SCHEMA_VERSION) return null;
+  const li = LISTS.findIndex(x => x.nm === o.ln);
+  if(li < 0) return null;
+  const Lx = LISTS[li], here = li === appState.S.li;
+  const lost = [], units = resolveSaved(JSON.parse(JSON.stringify(o.units)), Lx, lost);
+  if(!units.length) return null;
+  const limit = typeof o.limit === "number" && o.limit >= 0 ? o.limit | 0 : appState.S.limit | 0;
+  const doc = { ln: Lx.nm, limit: limit, units: unitDocs(units, Lx) };
+  const pts = fleetPoints(units, Lx.nm);
+  const lib = libRead();
+  /* what the list had: kept unless it is saved already, as itself or as this link */
+  const cur = here ? openDoc() : stashDoc(Lx.nm);
+  let kept = null;
+  if(cur.units.length && libKey(cur) !== libKey(doc) && !libFind(lib, cur)){
+    const was = lib.saves.filter(s => s.id === lib.open[Lx.nm])[0];
+    const curPts = here ? total() : (STASH_PTS[Lx.nm] || fleetPoints(stashUnits(Lx.nm), Lx.nm));
+    kept = { id: libId(), name: libName(lib, was ? was.name + " (changed)" : Lx.nm + " " + curPts),
+             ln: Lx.nm, limit: cur.limit | 0, units: cur.units, pts: curPts, saved: libToday(), from: "kept" };
+    lib.saves.unshift(kept);
+  }
+  /* the link's fleet into Saved fleets, once */
+  let s = libFind(lib, doc);
+  if(!s){
+    s = { id: libId(), name: libName(lib, String(o.name || "").trim() || (Lx.nm + " " + pts)),
+          ln: Lx.nm, limit: limit, units: doc.units, pts: pts, saved: libToday(), from: "link" };
+    lib.saves.unshift(s);
+  }else{
+    /* stored as this page writes it, so the open fleet reads as saved */
+    s.units = doc.units; s.limit = limit;
+  }
+  lib.open[Lx.nm] = s.id;
+  /* A library that cannot be written keeps nothing: the list's own fleet is
+     then not replaced (the caller says the link could not be kept). */
+  if(!libWrite(lib) && kept) return null;
+  if(!here) switchList(li);
+  appState.S.units = units; appState.S.limit = limit;
+  appState.SAVE_NAME = null;
+  LIB_NEW = [s.id].concat(kept ? [kept.id] : []);
+  return { id: s.id, name: s.name, kept: kept ? kept.name : null, keptId: kept ? kept.id : null, lost: lost };
 }
 /* Open a saved fleet on its own list. The list's working fleet gives way
    only when nothing would be lost: it is empty, the same, or saved; other
@@ -229,7 +299,7 @@ export function renderSaves(){
   const changed = openUnsaved(lib);
   const saved = lib.saves.map(s => {
     const isOpen = s.id === openId && s.ln === L().nm;
-    const meta = [esc(s.ln), (s.pts | 0) + " pts", esc(s.saved || ""), s.from === "link" ? "from a link" : s.from === "file" ? "from a file" : s.from === "paste" ? "pasted" : "",
+    const meta = [esc(s.ln), (s.pts | 0) + " pts", esc(s.saved || ""), s.from === "link" ? "from a link" : s.from === "file" ? "from a file" : s.from === "paste" ? "pasted" : s.from === "kept" ? "kept when a link opened" : "",
                   isOpen ? (changed ? "open, changed" : "open") : ""].filter(Boolean).join(" &middot; ");
     return `<div class="rowf${isOpen ? " open" : ""}${LIB_NEW.indexOf(s.id) >= 0 ? " fresh" : ""}"><span class="nm"><b>${esc(s.name)}</b><i>${meta}</i></span>${
       isOpen ? "" : `<button class="go" data-libopen="${esc(s.id)}" title="${esc("Open " + s.name + " on the " + s.ln + " list")}">Open</button>`

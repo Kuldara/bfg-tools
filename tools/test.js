@@ -51,6 +51,7 @@ const STEPS = [
   ["registry",  "random fleets",           ["node", "apps/registry/stress.js"], { slow: true }],
   ["registry",  "print layout (Chrome)",   ["node", "apps/registry/layout_check.js", "--json"], { slow: true, json: "layout" }],
   ["registry",  "editable sheet (Chrome)", ["node", "apps/registry/check_editable.js"], { slow: true }],
+  ["registry",  "fleet links (Chrome)",    ["node", "apps/registry/check_links.js"], { slow: true }],
   ["registry",  "Ork Clanz UI (Chrome)",   ["node", "apps/registry/metrics/clanz.js", "--mode=browse"], { slow: true }],
   ["play",      "rules and smoke",         ["node", "apps/play/test_play.js"]],
   ["boarding",  "engine",                  ["node", "apps/boarding/test_engine.js"]],

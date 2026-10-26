@@ -49,7 +49,30 @@ async function launch(opts = {}) {
   if (!port) { try { proc.kill(); } catch (e) { /* already gone */ } throw new Error("Chrome did not start: " + exe); }
   const list = await (await fetch("http://127.0.0.1:" + port + "/json/list")).json();
   const page = list.find(t => t.type === "page");
-  const ws = new WebSocket(page.webSocketDebuggerUrl);
+  /* A headless page has, a few times under a heavy machine load, stopped
+     answering for good (no dialog, no CPU; cause not found). A check then
+     fails with this instead of waiting for ever. */
+  const LIMIT = opts.evaluateTimeout || 300000;
+  const first = await connect(page.webSocketDebuggerUrl, LIMIT);
+  /* newPage(url): a second tab in the same browser - the same profile, so
+     the same localStorage, as two tabs of one player's browser (the J240
+     link check). Its close() closes the connection only. */
+  const newPage = async url => {
+    const t = await (await fetch("http://127.0.0.1:" + port + "/json/new?" + encodeURIComponent(url || "about:blank"), { method: "PUT" })).json();
+    return connect(t.webSocketDebuggerUrl, LIMIT);
+  };
+  const close = () => {
+    first.close();
+    try { proc.kill(); } catch (e) { /* gone already */ }
+    setTimeout(() => { try { fs.rmSync(dir, { recursive: true, force: true }); } catch (e) { /* a locked profile file; the OS temp cleans it */ } }, 800);
+  };
+  return { send: first.send, once: first.once, evaluate: first.evaluate, close, newPage, port, dir };
+}
+
+/* A DevTools session on one page: send(method, params), once(event) and
+   evaluate(expression), which waits for a promise and returns the value. */
+async function connect(wsUrl, LIMIT) {
+  const ws = new WebSocket(wsUrl);
   await new Promise((ok, no) => { ws.onopen = ok; ws.onerror = no; });
   let id = 0; const wait = new Map(), on = new Map();
   ws.onmessage = m => {
@@ -59,10 +82,6 @@ async function launch(opts = {}) {
   };
   const send = (method, params) => new Promise((ok, no) => { const k = ++id; wait.set(k, { ok, no }); ws.send(JSON.stringify({ id: k, method, params: params || {} })); });
   const once = method => new Promise(ok => on.set(method, ok));
-  /* A headless page has, a few times under a heavy machine load, stopped
-     answering for good (no dialog, no CPU; cause not found). A check then
-     fails with this instead of waiting for ever. */
-  const LIMIT = opts.evaluateTimeout || 300000;
   const evaluate = async expr => {
     let timer;
     const r = await Promise.race([
@@ -72,12 +91,8 @@ async function launch(opts = {}) {
     if (r.exceptionDetails) throw new Error("on the page: " + (r.exceptionDetails.exception && r.exceptionDetails.exception.description || r.exceptionDetails.text));
     return r.result.value;
   };
-  const close = () => {
-    try { ws.close(); } catch (e) { /* closed already */ }
-    try { proc.kill(); } catch (e) { /* gone already */ }
-    setTimeout(() => { try { fs.rmSync(dir, { recursive: true, force: true }); } catch (e) { /* a locked profile file; the OS temp cleans it */ } }, 800);
-  };
-  return { send, once, evaluate, close, port, dir };
+  const close = () => { try { ws.close(); } catch (e) { /* closed already */ } };
+  return { send, once, evaluate, close };
 }
 
 module.exports = { findChrome, launch, CANDIDATES };

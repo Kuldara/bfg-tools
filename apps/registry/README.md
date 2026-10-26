@@ -77,6 +77,8 @@ All run by `npm test`; each also runs alone:
 | `print_check.js` | every printed card against its profile |
 | `stress.js` | random fleets with every combination of choices |
 | `layout_check.js` | print layout in headless Chrome: overflow and text under 4.2 pt |
+| `check_editable.js` | the downloaded editable card sheet in Chrome: fitting, edits, tick boxes |
+| `check_links.js` | friends' fleet links in a row in Chrome: the same tab, fresh pages, two tabs |
 | `metrics/clanz.js` | builds an Ork Clanz fleet through the real UI in Chrome, at phone size |
 
 Tools that are not tests:

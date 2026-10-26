@@ -147,6 +147,10 @@ export function save(){
      backup was taken to protect; saving resumes the moment the player puts
      something in the fleet. */
   if(appState.LOAD_NOTE && !appState.S.units.length && !Object.keys(stashAll()).length) return;
+  /* J240: redrawing after another tab saved (syncFromStore) writes nothing
+     back - the store already holds it, and two tabs must not set each
+     other off. */
+  if(appState.SYNCING) return;
   /* The document is built OUTSIDE the try. Only the write can fail for a
      reason that is not a bug; a bug in the builder used to be swallowed here,
      which is exactly how a stashed fleet went out saved against the wrong

@@ -5,13 +5,12 @@ import { L, defaultRole, switchList } from "./model.js";
 import { placeSaves } from "./panels.js";
 import { copyInPlace, openPhone } from "./phone.js";
 import { PRINT, auditAllCardLayouts, auditOneCard, listText, printCards, printFitPct, printRoster, setPage, setPrint } from "./print.js";
-import { STASH_PTS, load, save, stashAll, stashUnits } from "./save.js";
-import { afterAdd, doSave, exportSaved, libAddText, libDelete, libDocument, libKey, libOpen, libRead, libWrite, openDoc, renderSaveNow, stashDoc } from "./saved-fleets.js";
+import { KEY, STASH_PTS, load, save, stashAll, stashUnits } from "./save.js";
+import { KEY_LIB, afterAdd, doSave, exportSaved, libAddText, libDelete, libDocument, libOpen, libRead, receiveFleet, renderSaveNow } from "./saved-fleets.js";
 import { appState } from "./state.js";
 import { DRAGS, dragScrollAt, dragScrollStop, dragTopEdge, render, renderChecks, renderTop } from "./view.js";
 import { LISTS } from "../../../packages/ui/catalog.js";
 import { qrFull } from "../../../packages/ui/qr.js";
-import { resolveSaved } from "../../../packages/ui/saved-fleet.js";
 import { unpackFleet } from "../../../packages/ui/share-link.js";
 
 export const dropKept = nm => {
@@ -211,34 +210,50 @@ appState.SRC_ROLE = defaultRole();
 render();
 /* A link with fleets in it (#fleet=, the To phone codes) opened here, and
    the address loses them so a reload does not take them again. One fleet
-   opens on screen (J236: "open it in the fleet builder; you can save it
-   from there if you want"), not saved until the player saves it; several
-   fleets, or a list whose own fleet has unsaved changes, go into Saved
-   fleets (user 19.10.2026: the receiver's library) - nothing is lost and
-   nothing is asked. */
+   opens on screen and is kept in Saved fleets at the same time (J240,
+   receiveFleet: the next link then opens just as well, and what the list
+   had is kept too); several fleets go into Saved fleets (user 19.10.2026:
+   the receiver's library). Nothing is lost and nothing is asked. */
 export function openReceived(text){
   let o = null;
   try{ o = JSON.parse(text); }catch(e){ return false; }
-  if(!o || !Array.isArray(o.units) || !o.units.length || (Array.isArray(o.fleets) && o.fleets.length)) return false;
-  const li = LISTS.findIndex(x => x.nm === o.ln);
-  if(li < 0) return false;
-  const lib = libRead(), here = li === appState.S.li;
-  const cur = here ? openDoc() : stashDoc(o.ln), curSave = lib.saves.filter(x => x.id === lib.open[o.ln])[0];
-  const doc = { ln: o.ln, limit: typeof o.limit === "number" ? o.limit | 0 : appState.S.limit | 0, units: o.units };
-  if(cur.units.length && libKey(cur) !== libKey(doc) && !(curSave && libKey(curSave) === libKey(cur))) return false;
-  const lost = [], units = resolveSaved(JSON.parse(JSON.stringify(o.units)), LISTS[li], lost);
-  if(!here) switchList(li);
-  appState.S.units = units; appState.S.limit = doc.limit;
-  delete lib.open[o.ln]; libWrite(lib);
-  appState.SAVE_NAME = String(o.name || "").trim() || null;
+  const r = receiveFleet(o);
+  if(!r) return false;
   render();
-  fileNote("Opened " + (o.name ? o.name + " " : "") + "from the link: Save keeps it in Saved fleets, Play plays it." +
-           (lost.length ? " " + lost.length + " entr" + (lost.length > 1 ? "ies" : "y") + " could not be matched (" + lost.slice(0, 3).join(", ") + ")." : ""));
+  fileNote("Opened " + r.name + " from the link; it is in Saved fleets too." +
+           (r.kept ? " The fleet that was on this list is kept there as " + r.kept + "." : "") +
+           (r.lost.length ? " " + r.lost.length + " entr" + (r.lost.length > 1 ? "ies" : "y") + " could not be matched (" + r.lost.slice(0, 3).join(", ") + ")." : ""));
   return true;
 }
-if(typeof location !== "undefined" && /^#fleetj?=/.test(location.hash || "")){
+/* J240: the link is read when the page opens AND whenever the address gets
+   a new one. A second link opened in the same tab or app window changes only
+   the part after #, which does not reload the page - it used to do nothing,
+   and the screen kept the first link's fleet. */
+export function takeLink(){
+  if(typeof location === "undefined" || !/^#fleetj?=/.test(location.hash || "")) return false;
   const frag = location.hash.slice(1);
   try{ history.replaceState(null, "", location.pathname + location.search); }catch(e){}
-  unpackFleet(frag).then(text => { if(!openReceived(text)) afterAdd(libAddText(text, "link"), "a link"); },
-                         e => fileNote("The fleets in the link could not be read: " + (e && e.message || e) + "."));
+  return unpackFleet(frag).then(text => { if(!openReceived(text)) afterAdd(libAddText(text, "link"), "a link"); },
+                                e => fileNote("The fleets in the link could not be read: " + (e && e.message || e) + "."));
+}
+/* J240: the tabs of this page follow each other. Every change here is saved
+   at once, so this tab's state is the store's until another tab writes;
+   then this one reads the store again. Before, an older tab wrote its own
+   state over the other's at its next change - a fleet just opened from a
+   link in a new tab was lost that way. Reading does not write back (SYNCING),
+   so two tabs cannot set each other off. */
+export function syncFromStore(){
+  appState.SYNCING = true;
+  try{
+    load();
+    if(!LISTS[appState.S.li]) appState.S.li = 0;
+    render();
+  }finally{ appState.SYNCING = false; }
+}
+takeLink();
+if(typeof window !== "undefined" && window.addEventListener){
+  window.addEventListener("hashchange", takeLink);
+  window.addEventListener("storage", e => { if(e.key === KEY || e.key === KEY_LIB || e.key === null) syncFromStore(); });
+  /* back to this page from the browser's back-forward cache: another tab may have saved meanwhile */
+  window.addEventListener("pageshow", e => { if(e.persisted) syncFromStore(); });
 }

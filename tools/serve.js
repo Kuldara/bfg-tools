@@ -22,24 +22,36 @@ function runBuild() {
   });
 }
 
-function serve() {
-  http.createServer((req, res) => {
-    let rel = decodeURIComponent(new URL(req.url, "http://x").pathname);
-    let file = path.join(DIST, rel);
-    if (!file.startsWith(DIST)) { res.writeHead(403); return res.end(); }
-    if (fs.existsSync(file) && fs.statSync(file).isDirectory()) {
-      if (!rel.endsWith("/")) { res.writeHead(301, { Location: rel + "/" }); return res.end(); }
-      file = path.join(file, "index.html");
-    }
-    if (!fs.existsSync(file)) { res.writeHead(404, { "Content-Type": "text/plain" }); return res.end("not found: " + rel); }
-    res.writeHead(200, { "Content-Type": TYPES[path.extname(file)] || "application/octet-stream", "Cache-Control": "no-store" });
-    fs.createReadStream(file).pipe(res);
-  }).listen(PORT, () => console.log(`serving dist/ at http://localhost:${PORT}/`));
+function distHandler(req, res) {
+  let rel = decodeURIComponent(new URL(req.url, "http://x").pathname);
+  let file = path.join(DIST, rel);
+  if (!file.startsWith(DIST)) { res.writeHead(403); return res.end(); }
+  if (fs.existsSync(file) && fs.statSync(file).isDirectory()) {
+    if (!rel.endsWith("/")) { res.writeHead(301, { Location: rel + "/" }); return res.end(); }
+    file = path.join(file, "index.html");
+  }
+  if (!fs.existsSync(file)) { res.writeHead(404, { "Content-Type": "text/plain" }); return res.end("not found: " + rel); }
+  res.writeHead(200, { "Content-Type": TYPES[path.extname(file)] || "application/octet-stream", "Cache-Control": "no-store" });
+  fs.createReadStream(file).pipe(res);
 }
 
-(async () => {
+/* serve(port): dist/ over http; port 0 picks a free one. Resolves with the
+   server (its address().port is the port). The browser checks use it too:
+   a page over http behaves as on the web - its address changes, its tabs
+   share storage and hear each other's saves - where a file:// page may not. */
+function serve(port, quiet) {
+  return new Promise(ok => {
+    const s = http.createServer(distHandler).listen(port, () => {
+      if (!quiet) console.log(`serving dist/ at http://localhost:${s.address().port}/`);
+      ok(s);
+    });
+  });
+}
+module.exports = { serve, DIST };
+
+if (require.main === module) (async () => {
   if (!process.argv.includes("--no-build")) await runBuild();
-  serve();
+  await serve(PORT);
   if (process.argv.includes("--watch")) {
     let timer = null, running = false, again = false;
     const kick = () => { clearTimeout(timer); timer = setTimeout(async () => {

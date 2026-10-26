@@ -635,15 +635,21 @@ const ASYNC = [];
     const nLib = libRead().saves.length;
     const all = JSON.stringify(libDocument("all"));
     check("J236: a multi-fleet link does not open on screen (it goes to Saved fleets)", openReceived(all), false);
-    /* one fleet for a list whose own fleet is saved or empty */
+    /* J240: one fleet opens on screen AND is kept in Saved fleets */
     const one = libRead().saves.filter(x => x.ln === TAU)[0];
     const doc = JSON.stringify({ name: "Tau from a link", ln: one.ln, limit: 1000, units: one.units });
     switchList(LISTS.findIndex(x => x.nm === TAU)); getS().units = []; save();
-    check("J236: a single fleet opens on screen without saving", [openReceived(doc), LISTS[getS().li].nm, getS().units.length, getS().limit, libRead().saves.length],
-          [true, TAU, one.units.length, 1000, nLib]);
-    /* the list has its own unsaved fleet: not replaced, the link goes to the library */
+    check("J240: a single fleet opens on screen and is saved under its name",
+          [openReceived(doc), LISTS[getS().li].nm, getS().units.length, getS().limit, libRead().saves.length, libRead().saves[0].name, libRead().saves[0].from, openUnsaved()],
+          [true, TAU, one.units.length, 1000, nLib + 1, "Tau from a link", "link", false]);
+    check("J240: the same link again is not saved twice", [openReceived(doc), libRead().saves.length], [true, nLib + 1]);
+    /* the list has the player's own unsaved fleet: the link still opens, and that fleet is kept */
     getS().units = getS().units.concat(getS().units); save();
-    check("J236: an unsaved fleet is not replaced by a link", openReceived(JSON.stringify({ ln: one.ln, limit: 1500, units: one.units })), false);
+    const mine = getS().units.length;
+    check("J240: an unsaved fleet gives way to a link and is kept in Saved fleets",
+          [openReceived(JSON.stringify({ name: "Tau again", ln: one.ln, limit: 1500, units: one.units })), getS().units.length,
+           libRead().saves.filter(x => x.from === "kept").map(x => [x.name, x.units.length])],
+          [true, one.units.length, [["Tau from a link (changed)", mine]]]);
   }
   /* a bigger QR (user 19.10.2026): from the Full screen button and a tap on the code */
   api.setPhone({ key: "x", url: "https://bfgtools.kuldare.com/play/x#fleet=abc", svg: "<svg></svg>", err: "", remote: false, n: 1 });
@@ -658,6 +664,43 @@ const ASYNC = [];
     const q = QR.encode(PHONE_LINK.play + "#" + frag);
     check("link: fits in a QR code", [q.size === q.version * 4 + 17, q.version <= 40], [true, true]);
   });
+}
+
+/* --- J240: friends' links opened one after another ----------------------
+   The user 26.10.2026: a friend's fleet link opened once, and the next links
+   opened the same fleet again. Every link must show its own fleet, whatever
+   was opened before, and nothing on the way may be lost. */
+{
+  console.log("\nLinks in a row (J240)");
+  const { libRead, openReceived, openUnsaved, KEY_LIB } = api;
+  const IN = "Imperial Navy — Gothic Sector", ORK = "Orks — Waaagh!";
+  const link = (name, list, rows) => JSON.stringify(Object.assign({ name: name }, JSON.parse(makeSave(list, rows))));
+  const A = link("Friend A", IN, [["Cruisers", /^Lunar/], ["Cruisers", /^Lunar/]]);
+  const B = link("Friend B", IN, [["Cruisers", /^Dauntless/], ["Cruisers", /^Dauntless/], ["Cruisers", /^Dauntless/]]);
+  const C = link("Friend C", ORK, [["KROOZERS", /^Terror ship/]]);
+  const screen = () => [LISTS[getS().li].nm, getS().units.map(u => entOf(u).l)];
+  const names = () => libRead().saves.map(s => s.name).sort();
+  delete store[KEY_LIB];
+  restore(JSON.stringify({ li: 0, ln: LISTS[0].nm, limit: 1500, units: [] }));
+  check("A opens", [openReceived(A), screen(), openUnsaved()], [true, [IN, ["Lunar class cruiser", "Lunar class cruiser"]], false]);
+  check("B of the same list opens over A (it used to stay on A)", [openReceived(B), screen()],
+        [true, [IN, ["Dauntless class light cruiser", "Dauntless class light cruiser", "Dauntless class light cruiser"]]]);
+  check("... and A is still in Saved fleets", names(), ["Friend A", "Friend B"]);
+  check("C of another list opens", [openReceived(C), screen()], [true, [ORK, ["Terror ship"]]]);
+  check("B again opens from another list, not saved twice", [openReceived(B), screen()[1].length, names()], [true, 3, ["Friend A", "Friend B", "Friend C"]]);
+  /* the player edits B: the next link still opens, and the edit is kept */
+  getS().units.pop(); save();
+  check("an edited fleet reads as unsaved", openUnsaved(), true);
+  check("A opens over the edited B", [openReceived(A), screen()[1].length], [true, 2]);
+  check("... and the edited B is kept in Saved fleets", libRead().saves.filter(s => s.from === "kept").map(s => [s.name, s.units.length]), [["Friend B (changed)", 2]]);
+  /* an edited fleet on ANOTHER list stays where it is, as that list's own fleet */
+  getS().units.push(JSON.parse(JSON.stringify(getS().units[0]))); save();
+  check("C opens while A is edited on its own list", [openReceived(C), screen()[0]], [true, ORK]);
+  check("... and the edited A waits on its list, nothing lost", (getS().stash[IN] || { units: [] }).units.length, 3);
+  check("the library holds every fleet once", names(), ["Friend A", "Friend B", "Friend B (changed)", "Friend C"]);
+  /* a link whose list this version does not have, and junk: nothing changes */
+  check("unknown list: not opened", [openReceived(JSON.stringify({ name: "X", ln: "No such list", units: [{ el: "x" }] })), screen()[0]], [false, ORK]);
+  check("junk: not opened", openReceived("{nope"), false);
 }
 
 /* --- ranges in the catalogue and on the fleet row (29.9.2026) ------------------

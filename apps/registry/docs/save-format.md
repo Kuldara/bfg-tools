@@ -97,8 +97,17 @@ untouched by it.
   dot on the Save button shows it.
 - **Open** opens a save on its own list. The fleet being edited there gives way
   without a question only when nothing is lost.
-- **Import file, link and QR code** add to the library and never touch the fleet on
-  screen. The same fleet is not added twice.
+- **Import file, Paste text, and a link or QR code with several fleets** add to the
+  library and never touch the fleet on screen. The same fleet is not added twice.
+- **A link or QR code with one fleet** (J240) opens it on its own list and keeps it
+  in the library at once, under the name it came with (`"from": "link"`), so the
+  next link can take the screen without asking. What that list had is kept in the
+  library first unless it is there already (`"from": "kept"`, named *Name
+  (changed)* or *List points*). The same fleet twice is one save. A link is read
+  when the page opens and whenever the address gets a new one.
+- **Tabs**: every change is saved at once, and a tab reads the store again when
+  another tab of the page saves (the `storage` event), without writing back. An
+  older tab therefore never writes its state over a newer one.
 
 ## Files and links
 
