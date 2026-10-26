@@ -86,11 +86,16 @@ for (const [group, name, cmd, flags = {}] of STEPS) {
   if (QUICK && flags.slow) { console.log(`  ${group.padEnd(10)} ${name.padEnd(26)} skipped (--quick)`); continue; }
   const before = flags.reproducible ? read(path.join(REPO, flags.reproducible)) : null;
   const t0 = Date.now();
-  const r = spawnSync(cmd[0], cmd.slice(1), { cwd: REPO, env: ENV, encoding: "utf8", maxBuffer: 1 << 28 });
+  /* A step that hangs (a browser page that stopped answering under a heavy
+     machine load did once) fails after this long instead of stopping the run. */
+  const limit = (flags.slow ? 30 : 15) * 60000;
+  const r = spawnSync(cmd[0], cmd.slice(1), { cwd: REPO, env: ENV, encoding: "utf8", maxBuffer: 1 << 28, timeout: limit });
   const out = (r.stdout || "") + (r.stderr || "");
   let ok = r.status === 0;
   let note = out.trim().split("\n").filter(l => l.trim()).pop() || "";
   if (r.error) { ok = false; note = r.error.message; }
+  /* the step's own headless Chrome goes with it (checked on Windows) */
+  if (r.error && r.error.code === "ETIMEDOUT") note = "did not finish in " + limit / 60000 + " min";
   if (flags.json) {
     try { json[flags.json] = JSON.parse(out.slice(out.indexOf("{"))); } catch (e) { json[flags.json] = null; }
     /* these report known gaps as data; their verdict is read from the report */
