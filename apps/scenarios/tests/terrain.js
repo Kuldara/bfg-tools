@@ -17,11 +17,11 @@ const DIR = path.join(__dirname, "..");
 let fails = 0;
 const fail = (k, m) => { fails++; if (fails <= 40) console.log("ERROR " + k + ": " + m); };
 
-/* 1. core: the generator's page and the library are built from one file,
-   packages/battlezone/core.js; check that the generator page still includes it */
-const gen = fs.readFileSync(path.join(DIR, "..", "terrain", "index.html"), "utf8");
+/* 1. core: the generator's app and the library are built from one file,
+   packages/battlezone/core.js; check that the generator's modules still import it */
+const gen = fs.readFileSync(path.join(DIR, "..", "terrain", "src", "index.js"), "utf8");
 const gm = [null, require(path.join(DIR, "..", "..", "packages", "battlezone", "index.js")).core()];
-if (!/^@@include \.\.\/\.\.\/packages\/battlezone\/core\.js$/m.test(gen)) fail("CORE", "the generator page does not include packages/battlezone/core.js");
+if (!/from "\.\.\/\.\.\/\.\.\/packages\/battlezone\/core\.js"/.test(gen)) fail("CORE", "the generator's src/index.js does not import packages/battlezone/core.js");
 else console.log("CORE ok: generator and library share packages/battlezone/core.js (" + gm[1].length + " chars)");
 
 /* 2. the generator's own maps */

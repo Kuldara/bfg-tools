@@ -7,14 +7,18 @@ piece. Live at [terrain-generator.kuldare.com](https://terrain-generator.kuldare
 ## Code
 
 ```
-index.html        the whole app: styles, page and script, plain JavaScript
+index.html        the page: markup, the stylesheet include, the script slot
+styles/terrain.css   the styles
+src/              the app as ES modules: chart.js (the canvas), rules.js (legend,
+                  rules panels), events.js (start-of-turn rolls), controls.js;
+                  index.js bundles them with the core into the page (window.BZG)
 favicon.png, apple-touch-icon.png
 build.js          npm run build -> dist/terrain/
 ```
 
 The rolling core (dice, battlezone tables, geometry, `generate()` and the rules
-texts) is **not** in this folder: it is `packages/battlezone/core.js`, and the
-page includes it with an `@@include` line inside its script. The Scenario Library
+texts) is **not** in this folder: it is `packages/battlezone/core.js`, an ES
+module the app imports. The Scenario Library
 uses the same core for its scenarios' maps, so the rules cannot drift into two
 versions. The core never touches the page.
 

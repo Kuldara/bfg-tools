@@ -9,7 +9,7 @@
    these four methods and nowhere else; that is what makes the log an audit
    trail rather than a decoration. */
 
-function makeRng(seed) {
+export function makeRng(seed) {
   let a = (seed >>> 0) || 1;
   return function () {
     a |= 0; a = (a + 0x6D2B79F5) | 0;
@@ -19,7 +19,7 @@ function makeRng(seed) {
   };
 }
 
-function Dice(seed) {
+export function Dice(seed) {
   const r = makeRng(seed);
   this.d6 = function () { return 1 + Math.floor(r() * 6); };
   this.d3 = function () { return 1 + Math.floor(r() * 3); };
@@ -32,14 +32,14 @@ function Dice(seed) {
    the row produces: a count of templates of one kind, a whole-table event,
    or a planet with the sub-roll that sizes it. */
 
-const PLANET_SUB = {
+export const PLANET_SUB = {
   //  "roll again: 1-5 = small, 6 = medium"      (generators 1–4, p. 107)
   small5:     { text: '1–5 small, 6 medium', of: function (r) { return r <= 5 ? 'small' : 'medium'; } },
   //  "roll again: 1-3 = small, 4-6 = large"     (Outer Reaches, p. 108)
   outer:      { text: '1–3 small, 4–6 large',  of: function (r) { return r <= 3 ? 'small' : 'large'; } }
 };
 
-const ZONES = [
+export const ZONES = [
   { n: 1, key: 'flare', name: 'Flare Region', page: 107,
     blurb: 'Hard against the star. Half of everything here is a flare or a burst.',
     rows: [
@@ -117,12 +117,12 @@ const ZONES = [
 /* Sunward edge, p. 109. The mapping is printed as a diagram, not as text, and
    it is deliberately lopsided: each long edge takes two faces, each short edge
    one. Do not "fix" this into a uniform quarter each. */
-const SUN_EDGE = { 1: 'left', 2: 'top', 3: 'top', 4: 'bottom', 5: 'bottom', 6: 'right' };
+export const SUN_EDGE = { 1: 'left', 2: 'top', 3: 'top', 4: 'bottom', 5: 'bottom', 6: 'right' };
 
 /* Planet bands, p. 113. The book prints diameter ranges and gravity wells but
    no die for the diameter, so a D6 walks each band end to end — including both
    endpoints, which is the part an invented roll usually gets wrong. */
-const PLANET_BAND = {
+export const PLANET_BAND = {
   //  The book prints only "up to 15cm" for a small planet, with no floor, so the
   //  10 cm bottom end is this tool's and the log says so. Medium and large are
   //  closed ranges in the book and the D6 reaches both of their endpoints.
@@ -132,7 +132,7 @@ const PLANET_BAND = {
   large:  { lo: 26, hi: 50, gravity: 30, band: 'the book’s 26–50 cm band' }
 };
 
-const KIND = {
+export const KIND = {
   asteroid: { name: 'Asteroid field',   tag: 'A', colour: 'ast'  },
   gas:      { name: 'Gas & dust cloud', tag: 'C', colour: 'gas'  },
   planet:   { name: 'Planet',           tag: 'P', colour: 'pln'  },
@@ -140,8 +140,8 @@ const KIND = {
   rift:     { name: 'Warp rift',        tag: 'R', colour: 'rift' }
 };
 
-const KEEP_CLEAR = 2;        // cm between templates — see the footer note
-const RING_ON = 5;           // p. 113 wins over the p. 108 footnote
+export const KEEP_CLEAR = 2;        // cm between templates — see the footer note
+export const RING_ON = 5;           // p. 113 wins over the p. 108 footnote
 
 /* ═════════════════════════════════════════════════════════════ GEOMETRY
    Every template is an ellipse with semi-axes rx (along the sunward edge) and
@@ -150,12 +150,12 @@ const RING_ON = 5;           // p. 113 wins over the p. 108 footnote
    the ROTATED extents — testing rx against x and ry against y silently swaps
    the axes on two of the six sun rolls and lets bands sit on top of each other. */
 
-function extents(t) {
+export function extents(t) {
   const c = Math.abs(Math.cos(t.angle || 0)), s = Math.abs(Math.sin(t.angle || 0));
   return { hw: t.rx * c + t.ry * s, hh: t.rx * s + t.ry * c };
 }
 
-function overlaps(list, cand) {
+export function overlaps(list, cand) {
   const a = extents(cand);
   for (let i = 0; i < list.length; i++) {
     const t = list[i];
@@ -167,7 +167,7 @@ function overlaps(list, cand) {
   return false;
 }
 
-function onTable(cand, W, H) {
+export function onTable(cand, W, H) {
   const e = extents(cand);
   return cand.x - e.hw >= 0 && cand.x + e.hw <= W &&
          cand.y - e.hh >= 0 && cand.y + e.hh <= H;
@@ -175,7 +175,7 @@ function onTable(cand, W, H) {
 
 /* ═══════════════════════════════════════════════════════════ GENERATOR */
 
-function generate(seed, opts) {
+export function generate(seed, opts) {
   const d = new Dice(seed);
   const W = opts.width, H = opts.height;
   const log = [];
@@ -730,7 +730,7 @@ function generate(seed, opts) {
    reference to the Blast Marker rules, so those are pulled in from pp. 48
    and 68–69 rather than assumed known. */
 
-const RULES = {
+export const RULES = {
 
   asteroid: {
     title: 'Asteroid field', page: 'pp. 110–111',
@@ -877,7 +877,7 @@ const RULES = {
   }
 };
 
-const EVENT_RULES = {
+export const EVENT_RULES = {
   flare: {
     name: 'Solar flare', page: 'p. 115', trigger: 6, triggerText: 'a 6', once: true,
     how: 'Roll a D6 for each flare generated, at the start of every turn. On any 6 a flare occurs — ' +

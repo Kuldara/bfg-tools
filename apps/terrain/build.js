@@ -1,7 +1,7 @@
 /* Builds the Battlezone Generator.
 
-   dist/terrain/index.html     the page, with the terrain core from
-                               packages/battlezone/core.js included in its script
+   dist/terrain/index.html     the page: styles included, the script bundled
+                               from src/ (and packages/battlezone/core.js) into it
    dist/terrain/favicon.png, apple-touch-icon.png */
 "use strict";
 const path = require("path");
@@ -16,7 +16,9 @@ const BADGE_HOSTS = ["bfgtools.kuldare.com", "bfgtools.boarding.kuldare.com", "t
 const ALLOWED = ["http://www.w3.org", "https://fonts.googleapis.com", "https://fonts.gstatic.com"];
 
 async function build() {
+  const script = await kit.bundle({ entry: HERE + "/src/index.js", globalName: "BZG" });
   let page = kit.expandIncludes(kit.read(HERE + "/index.html"), HERE);
+  page = kit.fill(page, "script", script);
   page = page.replace("<!--BFGTOOLS--><!--/BFGTOOLS-->", "<!--BFGTOOLS-->" + kit.badge("terrain") + "<!--/BFGTOOLS-->");
   kit.guards.controlChars(page, "terrain");
   kit.guards.cssVars(page, "terrain");

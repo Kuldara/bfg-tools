@@ -45,13 +45,13 @@ behind this layout are in [docs/adr/](docs/adr/).
 | `apps/registry` | Gothic Fleet Registry: fleet builder, legality checks, printable ship cards | ES modules, CSS |
 | `apps/play` | Gothic Fleet Play: the fleet on a phone during a game (hits, criticals, orders) | ES modules, CSS |
 | `apps/boarding` | Boarding Actions: resolves a boarding action step by step | ES module + UMD engine |
-| `apps/terrain` | Battlezone Generator: rolls the celestial phenomena and draws the table | plain script in one page |
+| `apps/terrain` | Battlezone Generator: rolls the celestial phenomena and draws the table | ES modules, CSS |
 | `apps/scenarios` | Scenario Library: every scenario, set up and tracked at the table | ES modules + plain data scripts, one per publication |
 | `apps/almanac` | Meta Almanac: the published site only (its sources are private) | built elsewhere |
 | `apps/home` | the mirror's front page | HTML |
 | `packages/rules` | `domain.js`: pure functions that resolve a fleet and its units, price them and check legality | UMD (browser, Node, the simulator) |
 | `packages/ui` | code and assets the apps share | ES modules, CSS |
-| `packages/battlezone` | the terrain core shared by the generator and the library | plain script |
+| `packages/battlezone` | the terrain core shared by the generator and the library | ES module (the library gets it as a namespace) |
 | `data` | the ship data and its contract | JSON |
 | `reference` | what was read from the books by hand: list rules, golden test cases, commanders, option effects | JSON |
 | `extractor` | Python that turns the books into data, and the checks that compare data with books | Python |
