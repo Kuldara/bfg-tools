@@ -126,7 +126,11 @@ Verdicts: **PASS**, **WORK LEFT** (a planned gap is open: nothing is broken),
 
 ## Releasing
 
-A tag `<app>-v<version>` releases one app: CI builds, tests, deploys `dist/<app>`
-to its Cloudflare Worker (static assets only) and refreshes the GitHub Pages
-mirror. `npm run publish -- <app>` does the same from a machine. Versions and
-Worker names are in each `apps/<app>/app.json`.
+The owner publishes from their machine: `npm run publish -- <app>` deploys
+`dist/<app>` to its Cloudflare Worker (static assets only) and checks the live
+page against the build. The Release workflow, started by hand from main
+(`gh workflow run release.yml --ref main`), tests and refreshes the GitHub Pages
+mirror. A tag `<app>-v<version>` would do both in CI once the repository has the
+Cloudflare secrets and the github-pages environment allows tags
+([ADR 0006](docs/adr/0006-a-release-is-a-tag.md)). Versions and Worker names
+are in each `apps/<app>/app.json`.

@@ -10,4 +10,6 @@ private project, because its raw sources contain player names; that project
 checks the published site for private names before every release.
 
 To update: build the almanac there, copy its site folder over `apps/almanac/site/`,
-commit, and release with a tag `almanac-v<date>`.
+commit and push, then publish with `npm run publish -- almanac` and refresh the
+mirror with the Release workflow (`gh workflow run release.yml --ref main`); see
+[ADR 0006](../../docs/adr/0006-a-release-is-a-tag.md).
