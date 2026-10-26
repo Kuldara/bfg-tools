@@ -28,7 +28,11 @@ import io, json, os, re, sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 D = json.load(io.open(os.path.join(HERE, "..", "data", "bfg_data.json"), encoding="utf-8"))
 REF = json.load(io.open(os.path.join(HERE, "..", "reference", "upgrades.json"), encoding="utf-8"))
-DOMAIN = io.open(os.path.join(HERE, "..", "packages", "rules", "domain.js"), encoding="utf-8").read()
+# the rules engine's hand-written modules, not the generated domain.js: the
+# bundler rewrites "up:/re/" as "up: /re/", and the pattern below reads the source
+_SRC = os.path.join(HERE, "..", "packages", "rules", "src")
+DOMAIN = "\n".join(io.open(os.path.join(_SRC, f), encoding="utf-8").read()
+                   for f in sorted(os.listdir(_SRC)) if f.endswith(".js"))
 VERBOSE = "-v" in sys.argv
 AS_JSON = "--json" in sys.argv
 
