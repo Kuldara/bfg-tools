@@ -81,13 +81,15 @@ async function verify(app, local) {
   /* Cloudflare Web Analytics, when it is switched on for the zone, adds its
      beacon script to HTML responses; that is not a difference in the app. */
   const beacon = /<script[^>]*cloudflareinsights[^>]*>\s*<\/script>\s*/g;
-  for (let i = 0; i < 5; i++) {
+  /* the edge cache can serve the previous page for a while after a deploy:
+     on 26.10.2026 two of five sites took longer than 20 s, so up to a minute */
+  for (let i = 0; i < 12; i++) {
     try {
       const r = await fetch(app.url + "/?v=" + Date.now(), { headers: { "Cache-Control": "no-cache" } });
       const got = Buffer.from(await r.arrayBuffer());
       if (got.equals(local) || got.toString("utf8").replace(beacon, "") === local.toString("utf8")) return true;
     } catch (e) { /* network hiccup: try again */ }
-    await new Promise(ok => setTimeout(ok, 4000));
+    await new Promise(ok => setTimeout(ok, 5000));
   }
   return false;
 }
