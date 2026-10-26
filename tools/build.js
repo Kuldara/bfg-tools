@@ -14,6 +14,12 @@ const APPS = ["registry", "play", "boarding", "terrain", "scenarios", "almanac",
   const apps = want.length ? want : APPS;
   for (const a of apps) if (!APPS.includes(a)) { console.error("unknown app: " + a + " (" + APPS.join(", ") + ")"); process.exit(2); }
   let failed = 0;
+  /* the rules engine first: the apps bundle packages/rules/domain.js */
+  try {
+    const rules = require(path.join(kit.REPO, "packages", "rules", "build.js"));
+    fs.writeFileSync(rules.OUT, await rules.make());
+    console.log("rules      ok  packages/rules/domain.js");
+  } catch (e) { failed++; console.error("rules      FAILED: " + e.message); }
   for (const a of apps) {
     const t0 = Date.now();
     try {

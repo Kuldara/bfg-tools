@@ -74,7 +74,7 @@ checks find 13 problems). Method: `docs/history/registry/PISTOKOE.md`.
 | an option does not change the profile | `build_data.py` → `OPT_EFFECTS` |
 | a list rule is not enforced | `build_data.py` → `RULE_PICKS` and `reference/NN_*.json` |
 | an upgrade row is offered to a ship the book's sentence does not allow | `extractor/upgrades.py` (row conditions; see `condOK` in `packages/rules/domain.js`) |
-| how a fleet or a unit is resolved, priced or checked | `packages/rules/domain.js`, pure functions, tested by `packages/rules/test_domain.js` |
+| how a fleet or a unit is resolved, priced or checked | `packages/rules/src/` (pure functions; `domain.js` is built from it), tested by `packages/rules/test_domain.js` |
 | what a card or a page shows | `apps/<app>/src` |
 | code two apps share | `packages/ui` (never copy it) |
 

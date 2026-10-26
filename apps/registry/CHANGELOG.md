@@ -5,6 +5,14 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 
 ## Unreleased
 
+### Changed (for developers)
+- The rules engine is ES modules in `packages/rules/src/` (ids and the saved
+  unit, lending, upgrades, pricing, weapons, the card's arms, criticals, special
+  rules, commanders, validation, resolveFleet, resolveUnit); `domain.js` is
+  built from them and checked in `npm test`. Every Registry result is the same:
+  4,162 cases (every row, every option and upgrade, 300 random fleets) match
+  the one-file engine, as do the golden cases, Play and the simulator.
+
 ### Fixed
 - The page's description said 738 printable cards and its link preview's alt text
   1102; the preview image itself said 30 lists, 171 profiles and 460 cards. All

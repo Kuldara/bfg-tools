@@ -49,7 +49,7 @@ behind this layout are in [docs/adr/](docs/adr/).
 | `apps/scenarios` | Scenario Library: every scenario, set up and tracked at the table | ES modules + plain data scripts, one per publication |
 | `apps/almanac` | Meta Almanac: the published site only (its sources are private) | built elsewhere |
 | `apps/home` | the mirror's front page | HTML |
-| `packages/rules` | `domain.js`: pure functions that resolve a fleet and its units, price them and check legality | UMD (browser, Node, the simulator) |
+| `packages/rules` | the rules engine: pure functions that resolve a fleet and its units, price them and check legality | ES modules in `src/`, built into `domain.js` (UMD) for the apps, Node and the simulator |
 | `packages/ui` | code and assets the apps share | ES modules, CSS |
 | `packages/battlezone` | the terrain core shared by the generator and the library | ES module (the library gets it as a namespace) |
 | `data` | the ship data and its contract | JSON |
@@ -101,7 +101,7 @@ when it was one script):
 | `phone.js`, `panels.js` | the "to phone" panel, placing drop-down panels |
 | `main.js` | wiring the page's controls, then the first render |
 
-The rules themselves are not here: `packages/rules/domain.js` resolves an
+The rules themselves are not here: `packages/rules` (`src/`, built into `domain.js`) resolves an
 *intent* (which ship, which options) against the catalog into a resolved unit and
 a resolved fleet, with every issue listed. The page renders what it returns.
 
