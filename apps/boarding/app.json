@@ -1,6 +1,7 @@
 {
   "id": "boarding",
   "name": "Boarding Actions",
+  "version": "2026.10.26",
   "url": "https://bfgtools.boarding.kuldare.com",
   "worker": "bfg-tools-boarding"
 }

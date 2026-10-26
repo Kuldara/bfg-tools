@@ -1,6 +1,7 @@
 {
   "id": "terrain",
   "name": "Battlezone Generator",
+  "version": "2026.10.26",
   "url": "https://terrain-generator.kuldare.com",
   "worker": "terrain-generator"
 }

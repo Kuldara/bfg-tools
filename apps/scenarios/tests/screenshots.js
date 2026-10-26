@@ -21,10 +21,9 @@
    The browser is a separate headless Chrome with an empty profile. The route is set
    by bypassing parseHash (as browser.js does), not with history calls. */
 "use strict";
-const fs = require("fs"), path = require("path"), http = require("http"), os = require("os");
-const { spawn } = require("child_process");
+const fs = require("fs"), path = require("path"), http = require("http");
 const ROOT = path.resolve(__dirname, "..", "..", "..", "dist", "scenarios");
-const CHROME = require("../../../tools/lib/chrome.js").findChrome();
+const { launch } = require("../../../tools/lib/chrome.js");
 const OUT = process.argv[2];
 const ONLY_CHECK = process.argv.includes("--check-only");
 const TERRAIN_ON = process.argv.includes("--terrain");
@@ -45,27 +44,8 @@ function serve(){
   });
   return new Promise(ok => srv.listen(0, "127.0.0.1", () => ok(srv)));
 }
-async function chrome(){
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "scl-round-"));
-  const proc = spawn(CHROME, ["--headless=new", "--no-sandbox", "--remote-debugging-port=0", "--user-data-dir=" + dir, "--no-first-run",
-    "--no-default-browser-check", "--disable-extensions", "--hide-scrollbars", "about:blank"], { stdio: "ignore" });
-  const pf = path.join(dir, "DevToolsActivePort");
-  let port = null;
-  for(let k = 0; k < 100 && !port; k++){ await new Promise(r => setTimeout(r, 100)); if(fs.existsSync(pf)) port = fs.readFileSync(pf, "utf8").split("\n")[0].trim() || null; }
-  const list = await (await fetch("http://127.0.0.1:" + port + "/json/list")).json();
-  const ws = new WebSocket(list.find(t => t.type === "page").webSocketDebuggerUrl);
-  await new Promise((ok, no) => { ws.onopen = ok; ws.onerror = no; });
-  let id = 0; const wait = new Map(), on = new Map();
-  ws.onmessage = m => { const d = JSON.parse(m.data);
-    if(d.id && wait.has(d.id)){ const w = wait.get(d.id); wait.delete(d.id); d.error ? w.no(new Error(JSON.stringify(d.error))) : w.ok(d.result); }
-    else if(d.method && on.has(d.method)){ const f = on.get(d.method); on.delete(d.method); f(d.params); } };
-  const send = (method, params) => new Promise((ok, no) => { const k = ++id; wait.set(k, { ok, no }); ws.send(JSON.stringify({ id: k, method, params: params || {} })); });
-  const once = method => new Promise(ok => on.set(method, ok));
-  const evaluate = async expr => { const r = await send("Runtime.evaluate", { expression: expr, awaitPromise: true, returnByValue: true });
-    if(r.exceptionDetails) throw new Error(r.exceptionDetails.exception ? r.exceptionDetails.exception.description : r.exceptionDetails.text); return r.result.value; };
-  const close = () => { try{ ws.close(); }catch(e){} try{ proc.kill(); }catch(e){} setTimeout(() => { try{ fs.rmSync(dir, { recursive: true, force: true }); }catch(e){} }, 800); };
-  return { send, once, evaluate, close };
-}
+/* headless Chrome with a DevTools session: tools/lib/chrome.js */
+const chrome = () => launch({ prefix: "scl-round-", args: ["--hide-scrollbars"] });
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 
 /* the check run inside the page; returns [[kind, description], ...] */

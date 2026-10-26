@@ -28,8 +28,7 @@
    nor wrong taps. That is still most of the pain, so the
    result is recorded beside it in words. */
 "use strict";
-const fs = require("fs"), path = require("path"), http = require("http"), os = require("os");
-const { spawn } = require("child_process");
+const fs = require("fs"), path = require("path"), http = require("http");
 
 const HERE = __dirname, ROOT = path.join(HERE, "..");
 const arg = (k, d) => { const a = process.argv.find(x => x.startsWith("--" + k + "=")); return a ? a.slice(k.length + 3) : d; };
@@ -38,7 +37,7 @@ const PAGE = path.resolve(arg("page", BUILT));
 const UI = arg("ui", "new"), MODE = arg("mode", "planned");
 const [W, H] = arg("size", "375x812").split("x").map(Number);
 const JSON_OUT = arg("json", "");
-const CHROME = require("../../../tools/lib/chrome.js").findChrome();
+const { launch } = require("../../../tools/lib/chrome.js");
 
 /* -------------------------------------------------------------- task -- */
 /* Three Warlords at 1 500 points (one per 500 pts or part, Fleets p. 372).
@@ -123,37 +122,8 @@ function serve(file){
 }
 
 /* ---------------------------------------------------------- Chrome/CDP -- */
-async function chrome(){
-  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "gfr-metrics-"));
-  const proc = spawn(CHROME, ["--headless=new", "--no-sandbox", "--remote-debugging-port=0", "--user-data-dir=" + dir, "--no-first-run",
-    "--no-default-browser-check", "--disable-extensions", "--window-size=" + W + "," + H, "about:blank"], { stdio: "ignore" });
-  const portFile = path.join(dir, "DevToolsActivePort");
-  let port = null;
-  for(let k = 0; k < 100 && !port; k++){
-    await new Promise(r => setTimeout(r, 100));
-    if(fs.existsSync(portFile)){ const t = fs.readFileSync(portFile, "utf8").split("\n")[0].trim(); if(t) port = t; }
-  }
-  if(!port) throw new Error("Chrome did not start: " + CHROME);
-  const list = await (await fetch("http://127.0.0.1:" + port + "/json/list")).json();
-  const page = list.find(t => t.type === "page");
-  const ws = new WebSocket(page.webSocketDebuggerUrl);
-  await new Promise((ok, no) => { ws.onopen = ok; ws.onerror = no; });
-  let id = 0; const wait = new Map(), on = new Map();
-  ws.onmessage = m => {
-    const d = JSON.parse(m.data);
-    if(d.id && wait.has(d.id)){ const w = wait.get(d.id); wait.delete(d.id); d.error ? w.no(new Error(JSON.stringify(d.error))) : w.ok(d.result); }
-    else if(d.method && on.has(d.method)){ const f = on.get(d.method); on.delete(d.method); f(d.params); }
-  };
-  const send = (method, params) => new Promise((ok, no) => { const k = ++id; wait.set(k, { ok, no }); ws.send(JSON.stringify({ id: k, method, params: params || {} })); });
-  const once = method => new Promise(ok => on.set(method, ok));
-  const evaluate = async expr => {
-    const r = await send("Runtime.evaluate", { expression: expr, awaitPromise: true, returnByValue: true });
-    if(r.exceptionDetails) throw new Error("on the page: " + (r.exceptionDetails.exception && r.exceptionDetails.exception.description || r.exceptionDetails.text));
-    return r.result.value;
-  };
-  const close = () => { try{ ws.close(); }catch(e){} try{ proc.kill(); }catch(e){} setTimeout(() => { try{ fs.rmSync(dir, { recursive: true, force: true }); }catch(e){} }, 800); };
-  return { send, once, evaluate, close };
-}
+/* headless Chrome with a DevTools session: tools/lib/chrome.js */
+const chrome = () => launch({ prefix: "gfr-metrics-", args: ["--window-size=" + W + "," + H] });
 
 /* ------------------------------------------- the part run on the page -- */
 function inPage(){

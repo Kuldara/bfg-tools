@@ -1,6 +1,7 @@
 {
   "id": "almanac",
   "name": "Meta Almanac",
+  "version": "2026.10.26",
   "url": "https://bfgtools.meta.kuldare.com",
   "worker": "bfg-meta-almanac"
 }
