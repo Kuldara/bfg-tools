@@ -30,7 +30,6 @@ export function stepTurrets(k,i,d){
 }
 function onDie(which, v, idx){
   if(which==="holo"){ doHolo(v, idx); return; }
-  if(which==="rr"){ onRerollDie(v, idx); return; }
   if(!Array.isArray(pending[which])) pending[which] = [];
   pending[which][idx || 0] = v;
   render();
