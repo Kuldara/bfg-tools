@@ -107,6 +107,8 @@ for (const [group, name, cmd, flags = {}] of STEPS) {
   }
   console.log(`  ${group.padEnd(10)} ${name.padEnd(26)} ${(ok ? "ok" : "FAILED").padEnd(7)} ${((Date.now() - t0) / 1000).toFixed(1).padStart(6)}s  ${note.slice(0, 50)}`);
   if (!ok) broken.push([group + " / " + name, note.slice(0, 100)]);
+  /* a failed step shows the end of what it printed: in CI there is no other way to see it */
+  if (!ok) out.trim().split("\n").slice(-30).forEach(l => console.log("      | " + l.slice(0, 200)));
   if (!ok && group === "build") break;
 }
 
