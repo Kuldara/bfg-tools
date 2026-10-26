@@ -30,8 +30,9 @@ function findChrome() {
 }
 
 /* opts.prefix: the temp profile folder's name prefix; opts.args: extra Chrome
-   flags (a window size, --hide-scrollbars). The sandbox is off because the
-   pages are this repository's own and a CI runner may refuse it. */
+   flags (a window size, --hide-scrollbars); opts.evaluateTimeout: ms one
+   evaluate may take (300 000). The sandbox is off because the pages are this
+   repository's own and a CI runner may refuse it. */
 async function launch(opts = {}) {
   const exe = findChrome();
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), opts.prefix || "bfgtools-chrome-"));
@@ -41,7 +42,9 @@ async function launch(opts = {}) {
   let port = null;
   for (let k = 0; k < 100 && !port; k++) {
     await new Promise(r => setTimeout(r, 100));
-    if (fs.existsSync(portFile)) { const t = fs.readFileSync(portFile, "utf8").split("\n")[0].trim(); if (t) port = t; }
+    /* Chrome may hold the file while it writes it (EBUSY on Windows): try again */
+    try { if (fs.existsSync(portFile)) { const t = fs.readFileSync(portFile, "utf8").split("\n")[0].trim(); if (t) port = t; } }
+    catch (e) { if (e.code !== "EBUSY" && e.code !== "EPERM") throw e; }
   }
   if (!port) { try { proc.kill(); } catch (e) { /* already gone */ } throw new Error("Chrome did not start: " + exe); }
   const list = await (await fetch("http://127.0.0.1:" + port + "/json/list")).json();
@@ -56,8 +59,16 @@ async function launch(opts = {}) {
   };
   const send = (method, params) => new Promise((ok, no) => { const k = ++id; wait.set(k, { ok, no }); ws.send(JSON.stringify({ id: k, method, params: params || {} })); });
   const once = method => new Promise(ok => on.set(method, ok));
+  /* A headless page has, a few times under a heavy machine load, stopped
+     answering for good (no dialog, no CPU; cause not found). A check then
+     fails with this instead of waiting for ever. */
+  const LIMIT = opts.evaluateTimeout || 300000;
   const evaluate = async expr => {
-    const r = await send("Runtime.evaluate", { expression: expr, awaitPromise: true, returnByValue: true });
+    let timer;
+    const r = await Promise.race([
+      send("Runtime.evaluate", { expression: expr, awaitPromise: true, returnByValue: true }),
+      new Promise((_, no) => { timer = setTimeout(() => no(new Error("the page did not answer in " + LIMIT / 1000 + " s (headless Chrome stalled)")), LIMIT); }),
+    ]).finally(() => clearTimeout(timer));
     if (r.exceptionDetails) throw new Error("on the page: " + (r.exceptionDetails.exception && r.exceptionDetails.exception.description || r.exceptionDetails.text));
     return r.result.value;
   };
