@@ -70,9 +70,9 @@ checks find 13 problems). Method: `docs/history/registry/PISTOKOE.md`.
 | Symptom | Fix it in |
 |---|---|
 | a value read wrong from the PDF | `extractor/extract.py`, `extractor/lists.py` |
-| a single exception in the book | the curated tables in `extractor/build_data.py` |
-| an option does not change the profile | `build_data.py` → `OPT_EFFECTS` |
-| a list rule is not enforced | `build_data.py` → `RULE_PICKS` and `reference/NN_*.json` |
+| a single exception in the book | the curated tables in `extractor/data_pipeline/` (the stage named after the subject: `ships`, `row_classes`, `races`, `defences` ...) |
+| an option does not change the profile | `data_pipeline/inputs.py` → `OPT_EFFECTS` |
+| a list rule is not enforced | `data_pipeline/rule_detectors.py` → `RULE_PICKS` and `reference/NN_*.json` |
 | an upgrade row is offered to a ship the book's sentence does not allow | `extractor/upgrades.py` (row conditions; see `condOK` in `packages/rules/domain.js`) |
 | how a fleet or a unit is resolved, priced or checked | `packages/rules/src/` (pure functions; `domain.js` is built from it), tested by `packages/rules/test_domain.js` |
 | what a card or a page shows | `apps/<app>/src` |
@@ -111,7 +111,7 @@ with `PYTHONIOENCODING=utf-8`, or cp1252 breaks on the first dash.
 **`open(path, "w")` empties the file at once.** If writing then fails, the
 content is gone. Build the text first, write a temporary file, then rename.
 
-**The curated tables match exactly once.** `build_data.py` has some 290 rows of
+**The curated tables match exactly once.** The data pipeline (`extractor/data_pipeline/`) has some 290 rows of
 corrections read from the book (`FIXES`, `RULE_PICKS`, `OPT_EFFECTS`, ...), and
 each asserts it matches exactly once, so silent drift stops the build. If it
 stops there, do not loosen the assertion: find out why the match disappeared.
@@ -119,7 +119,7 @@ stops there, do not loosen the assertion: find out why the match disappeared.
 **A shifted section index is the most dangerous bug.** Rules refer to a list's
 sections by number. Add a section and the numbers move, and a wrong but existing
 index shows nowhere: the engine counts an empty section as zero and shows green.
-`build_data.py` has a guard that remembers each section's name (`--prove-guard`).
+The pipeline has a guard that remembers each section's name (`build_data.py --prove-guard`).
 
 **A ship's rules continue after its profile page.** The extractor reads the page
 with the TYPE/HITS heading; the Chaos Space Hulk's rules are on pp. 287-288 and

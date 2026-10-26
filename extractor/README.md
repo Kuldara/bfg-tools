@@ -23,7 +23,8 @@ without the books; `npm test` runs it and requires the data to come out unchange
 |---|---|
 | `extract.py` | reads the profile tables: the stat line by pattern, the armament table by column geometry (the wide ARMOUR cell spills into its neighbours) |
 | `lists.py` | reads the fleet lists; rows link to profiles through their `(pg. NN)` references |
-| `build_data.py` | merges them, applies some 290 corrections read from the book (`FIXES`, `RULE_PICKS`, `OPT_EFFECTS`, `ENTRY_LIMITS`, ...; each asserts it matches exactly once), turns list sentences into machine-checked rules, assigns option ids, classifies section sentences |
+| `build_data.py` | the entry point of the pipeline below: imports its last stage, which runs them all |
+| `data_pipeline/` | the pipeline, one module per stage in the order they run: `inputs`, `ships`, `weapon_menu`, `rule_detectors`, `section_guard`, `page_refs`, `row_classes`, `row_texts`, `profile_types`, `inquisition_allies`, `races`, `special_rows`, `defences`, `section_kinds`, `chapters_marks`, `output`. Together they merge the raw files, apply some 290 corrections read from the book (`FIXES`, `RULE_PICKS`, `OPT_EFFECTS`, `ENTRY_LIMITS`, ...; each asserts it matches exactly once), turn list sentences into machine-checked rules, assign option ids and classify section sentences. Each stage imports what it uses from the stages before it; `data_pipeline/__init__.py` lists the order |
 | `upgrades.py`, `swaps.py` | list upgrades and weapon swaps |
 | `books.py` | where the books are |
 | `pdf_text.py` | page text from the PDFs for the checks |
