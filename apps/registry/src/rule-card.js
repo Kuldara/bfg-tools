@@ -89,7 +89,11 @@ export function ruleCardHTML(R, pos){
 }
 
 /* Card content varies; the box is a fixed 135 mm, so an over-long card is
-   shrunk to fit rather than clipped. */
+   shrunk to fit rather than clipped.
+   One long function on purpose: download-editable.js copies its source text
+   (fitCards.toString()) into the downloaded sheet, and layout_check.js into
+   its test page, so every helper it needs (setScale, roomOf, fitInto,
+   balance ...) lives inside it. A helper moved out would be missing there. */
 export function fitCards(){
   const sheet = $("#sheet");
   const prev = sheet.getAttribute("style") || "";
