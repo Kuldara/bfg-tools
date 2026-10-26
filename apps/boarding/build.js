@@ -40,7 +40,7 @@ async function build() {
   if (bad.length) throw new Error("icons (make_icons.py):\n  " + bad.join("\n  "));
 
   const stamp = new Date().toISOString().slice(0, 10) + " · " + ships.ships.length + " ships";
-  const script = await kit.bundle({ entry: HERE + "/src/app.js", globalName: "BoardingApp", define: { __BUILD__: JSON.stringify(stamp) } });
+  const script = await kit.bundle({ entry: HERE + "/src/index.js", globalName: "BoardingApp", define: { __BUILD__: JSON.stringify(stamp) } });
   let page = kit.expandIncludes(kit.read(HERE + "/index.html"), HERE);
   page = page.replace("<!--BFGTOOLS--><!--/BFGTOOLS-->", "<!--BFGTOOLS-->" + kit.badge("boarding") + "<!--/BFGTOOLS-->");
   page = kit.fill(page, "script", "\n" + script);

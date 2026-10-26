@@ -44,7 +44,7 @@ behind this layout are in [docs/adr/](docs/adr/).
 |---|---|---|
 | `apps/registry` | Gothic Fleet Registry: fleet builder, legality checks, printable ship cards | ES modules, CSS |
 | `apps/play` | Gothic Fleet Play: the fleet on a phone during a game (hits, criticals, orders) | ES modules, CSS |
-| `apps/boarding` | Boarding Actions: resolves a boarding action step by step | ES module + UMD engine |
+| `apps/boarding` | Boarding Actions: resolves a boarding action step by step | ES modules + UMD engine |
 | `apps/terrain` | Battlezone Generator: rolls the celestial phenomena and draws the table | ES modules, CSS |
 | `apps/scenarios` | Scenario Library: every scenario, set up and tracked at the table | ES modules + plain data scripts, one per publication |
 | `apps/almanac` | Meta Almanac: the published site only (its sources are private) | built elsewhere |
@@ -116,7 +116,7 @@ gives one verdict:
 | rules | `domain.js` is what `src/` makes, `test_domain.js` (5 700 assertions), symmetry |
 | registry | golden cases read from the book (414 units, 238 fleets) on every surface: price, profile, card, fleet view, save round trip; validator, upgrades, saving, save fuzzing, card structure, printed cards, random fleets, print layout in Chrome, the editable sheet in Chrome, a UI walk-through in Chrome |
 | play | rules and a smoke test of the built page |
-| boarding | engine, fuzzing |
+| boarding | engine, fuzzing, seeded random walks through the page in Chrome |
 | scenarios | bookkeeping, sizes, terrain (with the generator's fingerprints), map measurements, the front page, the lab, and the in-page tests (every view, every map's labels, content) in Chrome |
 
 `npm run check:books` runs the steps that read the PDFs. CI runs `npm test` on

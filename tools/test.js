@@ -55,6 +55,7 @@ const STEPS = [
   ["play",      "rules and smoke",         ["node", "apps/play/test_play.js"]],
   ["boarding",  "engine",                  ["node", "apps/boarding/test_engine.js"]],
   ["boarding",  "fuzz",                    ["node", "apps/boarding/test_fuzz.js"]],
+  ["boarding",  "page walks (Chrome)",     ["node", "apps/boarding/test_page.js"], { slow: true }],
   ["scenarios", "bookkeeping",             ["node", "apps/scenarios/tests/bookkeeping.js"]],
   ["scenarios", "sizes",                   ["node", "apps/scenarios/tests/sizes.js"]],
   ["scenarios", "terrain",                 ["node", "apps/scenarios/tests/terrain.js"]],

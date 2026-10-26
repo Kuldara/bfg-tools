@@ -5,8 +5,12 @@ Releases are tags `boarding-v<yyyy.mm.dd>`.
 ## Unreleased
 
 ### Changed (for developers)
-- The interface is one ES module (`src/app.js`) that imports the engine and its
-  JSON data; `build.js` replaces `build.py` and keeps its icon checks.
+- The interface is ES modules in `src/` (`index.js` and ten modules by task:
+  the sides, the action bar, the sheets, rolling, the result sheet ...) that
+  import the engine and its JSON data; the page calls `BoardingApp.boot()`.
+  `build.js` replaces `build.py` and keeps its icon checks.
+- `test_page.js` walks the built page in headless Chrome (in `npm test`); the
+  page had no test of its own before.
 - `build_ships.py` reads the ship data from `data/bfg_data.json` in the repository
   instead of an absolute path on one machine.
 - The share package's readme is in English (`README.md`, rulings in `RULINGS.md`).
