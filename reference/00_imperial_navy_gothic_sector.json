@@ -1,0 +1,211 @@
+{
+  "list": "Imperial Navy — Gothic Sector",
+  "book_page": 35,
+  "read_pages": [
+    32,
+    33,
+    35
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Admiral",
+      "text": "0-1 Admiral",
+      "page": 35,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "worth over 750 points an Admiral must be included",
+      "text": "If the fleet is worth over 750 points an Admiral must be included to lead it.",
+      "page": 35,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "why": "The book says 'over 750 points'. The MAND pattern used to know only the form 'points or more', so the required commander went unenforced on 13 lists. Fixed 7.9.2026; the comparison is now recorded too, because 'over 750' and '750 or more' differ exactly at 750 points.",
+      "over": true
+    },
+    {
+      "key": "one battleship in your fleet for every three cruisers",
+      "text": "You may include up to one battleship in your fleet for every three cruisers or battlecruisers.",
+      "page": 35,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 3,
+      "per_types": [
+        "cruisers",
+        "battlecruisers"
+      ]
+    },
+    {
+      "key": "one battlecruiser in your fleet for every two cruisers",
+      "text": "You may include up to one battlecruiser in your fleet for every two cruisers.",
+      "page": 35,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 2,
+      "per_types": [
+        "cruisers"
+      ]
+    },
+    {
+      "key": "0-12 Cruisers",
+      "text": "0-12 Cruisers",
+      "page": 35,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 12
+    },
+    {
+      "key": "escorts in your fleet in squadrons of 2",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "page": 35,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "Admirals get one Fleet Commander re-roll",
+      "text": "Admirals get one Fleet Commander re-roll included in their points cost. If you want more you'll have to pay for them.",
+      "page": 35,
+      "status": "manual",
+      "why": "Shown as text of the commander section since 9.9.2026 (the sentence filter knows the words re-roll and leadership, P1-8e). The included re-roll is in the resolver's rerolls.included field and on the commander card; the fleet validator does not enforce the number of re-rolls."
+    },
+    {
+      "key": "any mix of Fury interceptors and Starhawk bombers",
+      "text": "Any ship with launch bays may choose to have them launch any mix of Fury interceptors and Starhawk bombers.",
+      "page": 35,
+      "status": "manual",
+      "why": "an ordnance choice during the game, not fleet composition"
+    },
+    {
+      "key": "Some ships may carry Shark assault boats",
+      "text": "Some ships may carry Shark assault boats at an additional cost.",
+      "page": 35,
+      "status": "manual",
+      "why": "refers to the ships whose profile has the option: Emperor p.53, Oberon p.56, Exorcist p.59"
+    },
+    {
+      "key": "Ships with torpedo tubes are armed with ordinary torpedoes",
+      "text": "Ships with torpedo tubes are armed with ordinary torpedoes.",
+      "page": 35,
+      "status": "out_of_scope",
+      "why": "A statement of the default (ordinary torpedoes), not a choice or a restriction; the card's torpedo rule says the same.",
+      "classified_on": "2026-09-09"
+    }
+  ],
+  "entries": [
+    {
+      "name": "Fleet-Admiral (Ld 8)",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Admiral (Ld 9)",
+      "pts": 100,
+      "page": null
+    },
+    {
+      "name": "Solar Admiral (Ld 10)",
+      "pts": 150,
+      "page": null
+    },
+    {
+      "name": "One extra re-roll",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Two extra re-rolls",
+      "pts": 75,
+      "page": null
+    },
+    {
+      "name": "Three extra re-rolls",
+      "pts": 150,
+      "page": null
+    },
+    {
+      "name": "Emperor class battleship",
+      "pts": 365,
+      "page": 53
+    },
+    {
+      "name": "Retribution class battleship",
+      "pts": 345,
+      "page": 54
+    },
+    {
+      "name": "Mars class battlecruiser",
+      "pts": 270,
+      "page": 61
+    },
+    {
+      "name": "Overlord class battlecruiser",
+      "pts": 220,
+      "page": 66
+    },
+    {
+      "name": "Dictator class cruiser",
+      "pts": 220,
+      "page": 67
+    },
+    {
+      "name": "Dominator class cruiser",
+      "pts": 190,
+      "page": 68
+    },
+    {
+      "name": "Tyrant class cruiser",
+      "pts": 185,
+      "page": 69
+    },
+    {
+      "name": "Gothic class cruiser",
+      "pts": 180,
+      "page": 70
+    },
+    {
+      "name": "Lunar class cruiser",
+      "pts": 180,
+      "page": 71
+    },
+    {
+      "name": "Dauntless class light cruiser",
+      "pts": 110,
+      "page": 77
+    },
+    {
+      "name": "Firestorm class frigate",
+      "pts": 40,
+      "page": 79
+    },
+    {
+      "name": "Sword class frigate",
+      "pts": 35,
+      "page": 82
+    },
+    {
+      "name": "Cobra class destroyer",
+      "pts": 30,
+      "page": 84
+    }
+  ],
+  "extra_entries": [
+    {
+      "name": "Imperial Power Ram",
+      "pts": 5,
+      "why": "The book gives this in the shared Imperial Navy rules on page 32, not on the list page: 'The Imperial Power Ram may be taken by any Imperial capital ship with a 6+ prow for +5 points unless it has a Nova Cannon.' upgrades.py adds it to the list."
+    }
+  ],
+  "notes": [
+    "The shared Imperial Navy rules are on pages 32-33, not on the list page. Page 32: attack rating 2; Fury 30 cm, Starhawk 20 cm, Shark 30 cm; Power Ram. Page 33: campaign rules and the Space Marine call-for-help table 2D6.",
+    "Pages 29-31 and 34 are empty or illustrations."
+  ]
+}

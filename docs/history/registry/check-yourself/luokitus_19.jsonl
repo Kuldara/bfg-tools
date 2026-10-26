@@ -1,0 +1,60 @@
+{"id": "S1081", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F451", "pok": "ok", "n": "Mantat eivät hyökkää boardingiin."}
+{"id": "S1082", "l": "PELI", "a": "play", "f": "ordnance_speed", "p": "F451", "pok": "ok", "x": "table", "n": "Nopeustaulukko + ohjusten kuvaus."}
+{"id": "S1083", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F451", "pok": "ok", "n": "Tau-ohjukset."}
+{"id": "S1084", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F451", "pok": "ok", "n": "Tau-ohjukset."}
+{"id": "S1085", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F451", "pok": "ok", "n": "Tau-ohjukset."}
+{"id": "S1086", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F451", "pok": "ok", "n": "Tau-ohjukset."}
+{"id": "S1087", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F451", "pok": "ok", "x": "heading", "n": "Tau-listojen puolustusosiossa vain orbitaalit (build_data.py:5984)."}
+{"id": "S1088", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F451", "pok": "ok", "n": "Sama."}
+{"id": "S1089", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F452", "pok": "ok", "n": "Muita puolustuksia ei tarjota (build_data.py:5880)."}
+{"id": "S1090", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F452", "pok": "ok", "x": "heading", "n": "Kampanja."}
+{"id": "S1091", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F452", "pok": "osittain", "x": "split", "n": "Kampanjan refitit; lause katkeaa sivuviitteeseen 'pgs.'."}
+{"id": "S1092", "l": "VALVOTTU", "a": "checked", "f": "allies", "p": "F452", "pok": "ok", "x": "heading", "n": "Liittolaiset 1.1-mekanismilla ja listan omilla osioilla."}
+{"id": "S1093", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F453", "pok": "ok", "n": "Mesmen tarina."}
+{"id": "S1094", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F453", "pok": "ok", "x": "heading", "n": "Kor'O Mesme on aina oman Custodianinsa kyydissä. Custodian vaatii Kor'On (build_data.py:1586), mutta Mesme ilman Custodiania ei ole kielletty. Varmista. Ajo 20.10.: Mesme ilman Custodiania menee läpi.", "vk": "aukko ajossa"}
+{"id": "S1095", "l": "KUVAUS", "a": "row", "f": "commander_stats", "p": "F453", "pok": "ok", "n": "Mesmen Ld 9 ja kaksi re-rollia; komentajakortilla (domain.js:3533)."}
+{"id": "S1096", "l": "KUVAUS", "a": "row", "f": "commander_stats", "p": "F453", "pok": "ok", "x": "heading", "n": "Excellent Pilots -otsikko + kerronta; vaikutus on kortilla."}
+{"id": "S1097", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F453", "pok": "ok", "x": "heading", "n": "Improved Logic Engines +10."}
+{"id": "S1098", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F453", "pok": "ok", "n": "Rivin vaikutus (upgrades.py:667)."}
+{"id": "S1099", "l": "RAKENNE", "a": "guaranteed", "f": "no_limit", "p": "F454", "pok": "ok", "n": "Vapaaehtoinen komentaja (750 pisteen sääntö on erikseen)."}
+{"id": "S1100", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F454", "pok": "ok", "n": "Osion 0-1 ja kaksi riviä; pieni alkukirjain on kirjan."}
+{"id": "S1101", "l": "KUVAUS", "a": "row", "f": "rerolls_included", "p": "F454", "pok": "ok", "n": "Sisältyvä re-roll."}
+{"id": "S1102", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F454", "pok": "ok", "n": "Aun'el/Aun'O komentajan alla (domain.js:4413).", "vk": "ajo ok"}
+{"id": "S1103", "l": "RAKENNE", "a": "guaranteed", "f": "no_limit", "p": "F454", "pok": "ok", "n": "Ei rajaa."}
+{"id": "S1104", "l": "RAKENNE", "a": "guaranteed", "f": "no_limit", "p": "F454", "pok": "ok", "n": "Ei rajaa."}
+{"id": "S1105", "l": "RAKENNE", "a": "guaranteed", "f": "no_limit", "p": "F454", "pok": "ok", "n": "Ei rajaa."}
+{"id": "S1106", "l": "OMINAISUUS", "a": "feature", "f": "hook_parent", "p": "F454", "pok": "ok", "n": "Wardenit vain omaan emoalukseen, ei muita hook-saattajia samaan. Vaatii saattajan ja emoaluksen sidoksen."}
+{"id": "S1107", "l": "PELI", "a": "play", "f": "ordnance_choice", "p": "F455", "pok": "ok", "n": "Ordnance pelissä."}
+{"id": "S1108", "l": "VALVOTTU", "a": "checked", "f": "squadron_rule", "p": "F455", "pok": "ok", "n": "with_pick: Defenderit ja Messengerit samaan laivueeseen (build_data.py:4092)."}
+{"id": "S1109", "l": "RAKENNE", "a": "guaranteed", "f": "squadron_unit", "p": "F455", "pok": "ok", "n": "Eri rivit = eri laivueet."}
+{"id": "S1110", "l": "PELI", "a": "play", "f": "squadron_tabletop", "p": "F455", "pok": "ok", "n": "Orcat emoaluksen Ld:llä."}
+{"id": "S1111", "l": "TARKISTA", "a": "keep", "f": "squadron_tabletop", "p": "F455", "pok": "ok", "n": "Orca-laivueet emoalusten mukaan pöydällä."}
+{"id": "S1112", "l": "TARKISTA", "a": "keep", "f": "squadron_tabletop", "p": "F455", "pok": "ok", "n": "Laivuekatto kuusi."}
+{"id": "S1113", "l": "TARKISTA", "a": "keep", "f": "squadron_tabletop", "p": "F455", "pok": "ok", "n": "Orca-laivueet."}
+{"id": "S1114", "l": "RAKENNE", "a": "guaranteed", "f": "squadron_unit", "p": "F455", "pok": "ok", "n": "Orcat omalla rivillään."}
+{"id": "S1115", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F455", "pok": "ok", "n": "Palkkasoturiosiot listalla."}
+{"id": "S1116", "l": "VALVOTTU", "a": "checked", "f": "hook_capacity", "p": "F455", "pok": "ok", "n": "Dhowt ja Orcat jakavat hook-kapasiteetin (J95)."}
+{"id": "S1117", "l": "VALVOTTU", "a": "checked", "f": "other_section", "p": "F455", "pok": "ok", "n": "hook_capacity ESCORTS-osiossa."}
+{"id": "S1118", "l": "VALVOTTU", "a": "checked", "f": "other_section", "p": "F455", "pok": "ok", "n": "Seuraus valvottu (hook_capacity); aluskohtainen 'joko tai' vaatisi emoalussidoksen."}
+{"id": "S1119", "l": "PELI", "a": "play", "f": "squadron_tabletop", "p": "F455", "pok": "ok", "n": "Dhowt emoaluksen Ld:llä."}
+{"id": "S1120", "l": "TARKISTA", "a": "keep", "f": "squadron_tabletop", "p": "F455", "pok": "ok", "n": "Dhow-laivueet."}
+{"id": "S1121", "l": "TARKISTA", "a": "keep", "f": "squadron_tabletop", "p": "F455", "pok": "ok", "n": "Laivuekatto kuusi."}
+{"id": "S1122", "l": "RAKENNE", "a": "guaranteed", "f": "squadron_unit", "p": "F455", "pok": "ok", "n": "Dhowt omalla rivillään."}
+{"id": "S1123", "l": "RAKENNE", "a": "guaranteed", "f": "row_offered", "p": "F451", "pok": "ok", "x": "dup", "n": "Sama kuin S1087, puolustusosiossa."}
+{"id": "S1124", "l": "PELI", "a": "play", "f": "defence_rule", "p": "F451", "pok": "ok", "n": "Orbitaalien säännöt; kortilla (domain.js:2509)."}
+{"id": "S1125", "l": "RAKENNE", "a": "guaranteed", "f": "no_limit", "p": "F456", "pok": "ok", "n": "Ei rajaa."}
+{"id": "S1126", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F456", "pok": "ok", "n": "per_points samassa osiossa."}
+{"id": "S1127", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F456", "pok": "ok", "n": "Sama per_points; varmista, että pohja laskee vain Tau-alukset.", "vk": "ajo ok"}
+{"id": "S1128", "l": "VALVOTTU", "a": "checked", "f": "example", "p": "F456", "pok": "ok", "n": "Esimerkki."}
+{"id": "S1129", "l": "VALVOTTU", "a": "checked", "f": "example", "p": "F456", "pok": "ok", "n": "Esimerkki."}
+{"id": "S1130", "l": "RAKENNE", "a": "guaranteed", "f": "no_limit", "p": "F456", "pok": "ok", "n": "Ei rajaa."}
+{"id": "S1131", "l": "RAKENNE", "a": "guaranteed", "f": "no_limit", "p": "F456", "pok": "ok", "n": "Ei rajaa."}
+{"id": "S1132", "l": "RAKENNE", "a": "guaranteed", "f": "no_limit", "p": "F457", "pok": "ok", "n": "Listalla ei ole risteilijäkattoa (referenssi 31 #261)."}
+{"id": "S1133", "l": "VALVOTTU", "a": "checked", "f": "other_section", "p": "F457", "pok": "ok", "n": "hook_capacity jättää Custodianin ja Emissaryn pois (build_data.py:4454)."}
+{"id": "S1134", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F482", "pok": "ok", "x": "heading", "n": "Kerronta."}
+{"id": "S1135", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F482", "pok": "ok", "n": "Kerronta."}
+{"id": "S1136", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F482", "pok": "ok", "n": "Kerronta."}
+{"id": "S1137", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F482", "pok": "ok", "n": "Kerronta."}
+{"id": "S1138", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F483", "pok": "ok", "n": "Kerronta."}
+{"id": "S1139", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F483", "pok": "ok", "n": "Demiurg ja blast markerit."}
+{"id": "S1140", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F483", "pok": "ok", "n": "Cutting beam."}

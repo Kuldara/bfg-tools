@@ -1,0 +1,38 @@
+<details class="bfgt" data-here="__HERE__">
+<summary title="Other BFG Tools"><svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true" fill="currentColor"><circle cx="2" cy="2" r="1.4"/><circle cx="6" cy="2" r="1.4"/><circle cx="10" cy="2" r="1.4"/><circle cx="2" cy="6" r="1.4"/><circle cx="6" cy="6" r="1.4"/><circle cx="10" cy="6" r="1.4"/><circle cx="2" cy="10" r="1.4"/><circle cx="6" cy="10" r="1.4"/><circle cx="10" cy="10" r="1.4"/></svg><i>BFG Tools</i><svg class="bfgt-chev" viewBox="0 0 10 10" width="9" height="9" aria-hidden="true"><path d="M1.5 3.5 5 7l3.5-3.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></summary>
+<div class="bfgt-menu">
+<p>Free fan-made tools for Battlefleet Gothic. Each opens in a new tab.</p>
+<a data-id="registry" href="https://bfgtools.kuldare.com/" target="_blank" rel="noopener"><span>Gothic Fleet Registry</span><small>Fleet builder with legality checks and printable ship cards</small></a>
+<a data-id="boarding" href="https://bfgtools.boarding.kuldare.com/" target="_blank" rel="noopener"><span>Boarding Actions</span><small>Resolves a boarding action by the book, one tap at a time</small></a>
+<a data-id="terrain" href="https://terrain-generator.kuldare.com/" target="_blank" rel="noopener"><span>Battlezone Generator</span><small>Rolls the celestial phenomena and plots the table</small></a>
+<a data-id="scenarios" href="https://scenario-library.kuldare.com/" target="_blank" rel="noopener"><span>Scenario Library</span><small>Rulebook and Warp Rift scenarios, set up and tracked at the table</small></a>
+<a data-id="almanac" href="https://bfgtools.meta.kuldare.com/" target="_blank" rel="noopener"><span>Meta Almanac</span><small>What gets played and what wins, every record with its source</small></a>
+<a data-id="source" href="https://github.com/Kuldara/bfg-tools" target="_blank" rel="noopener"><span>Source code on GitHub</span><small>Open source (MIT), with a mirror of every tool</small></a>
+</div>
+</details>
+<style>
+.bfgt{position:relative;display:inline-block;vertical-align:middle;z-index:40;line-height:1;text-align:left}
+.bfgt>summary{list-style:none;display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 9px 0 8px;border:1px solid rgba(128,128,128,.45);border-radius:999px;background:rgba(128,128,128,.12);color:inherit;cursor:pointer;user-select:none;-webkit-user-select:none;font-family:inherit;font-size:11px;font-weight:600;font-style:normal;line-height:1;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.bfgt>summary::-webkit-details-marker{display:none}
+.bfgt>summary::marker{content:""}
+.bfgt>summary:hover{background:rgba(128,128,128,.24)}
+.bfgt>summary:active{filter:none}
+.bfgt>summary:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+.bfgt>summary>i{font-style:normal}
+.bfgt>summary>svg{display:block;flex:none}
+.bfgt>summary>.bfgt-chev{opacity:.7}
+.bfgt[open]>summary>.bfgt-chev{transform:rotate(180deg)}
+.bfgt[open]>summary::before{content:"";position:fixed;left:0;top:0;right:0;bottom:0;z-index:1;cursor:default}
+.bfgt-menu{position:absolute;left:0;top:calc(100% + 6px);z-index:2;width:300px;max-width:calc(100vw - 24px);padding:6px;border:1px solid rgba(128,128,128,.45);border-radius:10px;background:#fff;background:Canvas;color:#000;color:CanvasText;box-shadow:0 12px 32px rgba(0,0,0,.35);font-family:inherit;font-size:13px;font-weight:400;font-style:normal;line-height:1.3;letter-spacing:0;text-transform:none;white-space:normal}
+.bfgt-menu>p{margin:4px 8px 8px;font-size:11px;line-height:1.4;opacity:.7}
+.bfgt-menu>a{display:block;padding:7px 8px;border-radius:7px;color:inherit;text-decoration:none}
+.bfgt-menu>a:hover,.bfgt-menu>a:focus-visible{background:rgba(128,128,128,.18);outline:none}
+.bfgt-menu>a>span{display:block;font-family:inherit;font-size:13px;font-weight:600;line-height:1.25;letter-spacing:0;text-transform:none;color:inherit}
+.bfgt-menu>a>small{display:block;font-family:inherit;font-size:11px;font-weight:400;line-height:1.35;margin-top:2px;opacity:.7;letter-spacing:0;text-transform:none}
+.bfgt-menu>a[data-id="source"]{margin-top:4px;border-top:1px solid rgba(128,128,128,.3);border-radius:0 0 7px 7px}
+.bfgt-menu>a[data-id="source"]>span{font-weight:500}
+.bfgt[data-here="registry"] .bfgt-menu>a[data-id="registry"],.bfgt[data-here="boarding"] .bfgt-menu>a[data-id="boarding"],.bfgt[data-here="terrain"] .bfgt-menu>a[data-id="terrain"],.bfgt[data-here="almanac"] .bfgt-menu>a[data-id="almanac"],.bfgt[data-here="scenarios"] .bfgt-menu>a[data-id="scenarios"]{pointer-events:none;background:rgba(128,128,128,.12)}
+.bfgt[data-here="registry"] .bfgt-menu>a[data-id="registry"]>span::after,.bfgt[data-here="boarding"] .bfgt-menu>a[data-id="boarding"]>span::after,.bfgt[data-here="terrain"] .bfgt-menu>a[data-id="terrain"]>span::after,.bfgt[data-here="almanac"] .bfgt-menu>a[data-id="almanac"]>span::after,.bfgt[data-here="scenarios"] .bfgt-menu>a[data-id="scenarios"]>span::after{content:" (this page)";font-weight:400;opacity:.6}
+@media (max-width:480px){.bfgt>summary>i{display:none}.bfgt>summary{padding:0 8px}}
+@media print{.bfgt{display:none}}
+</style>

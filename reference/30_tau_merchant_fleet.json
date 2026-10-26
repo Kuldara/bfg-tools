@@ -1,0 +1,259 @@
+{
+  "list": "Tau — Merchant Fleet",
+  "book_page": 454,
+  "read_pages": [
+    448,
+    449,
+    450,
+    451,
+    452,
+    453,
+    454,
+    455
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Commander",
+      "text": "0-1 Commander",
+      "page": null,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "Your fleet may include a fleet commander to lead it if you wish",
+      "text": "Your fleet may include a fleet commander to lead it if you wish.",
+      "page": null,
+      "status": "manual",
+      "why": "Being optional in fleets under 750 points."
+    },
+    {
+      "key": "Your fleet must include a commander if it is greater than 750 pts",
+      "text": "Your fleet must include a commander if it is greater than 750 pts.",
+      "page": null,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "over": true
+    },
+    {
+      "key": "the commander may be either a Kor",
+      "text": "The commander may be either a Kor'O or Kor'el.",
+      "page": null,
+      "status": "manual",
+      "why": "In the book the sentence starts with a lower-case letter; left that way. Both rows are on the list, and the section's 0-1 limit sees to it that only one is chosen."
+    },
+    {
+      "key": "The commander has one re-roll included in his points cost",
+      "text": "The commander has one re-roll included in his points cost.",
+      "page": 454,
+      "status": "manual",
+      "why": "Shown as text of the commander section since 9.9.2026 (the sentence filter knows the words re-roll and leadership, P1-8e). The included re-roll is in the resolver's rerolls.included field and on the commander card; the fleet validator does not enforce the number of re-rolls."
+    },
+    {
+      "key": "the commander's ship may carry a member of the Ethereal caste",
+      "text": "If you wish, the commander's ship may carry a member of the Ethereal caste and therefore purchase additional re-rolls at the cost shown.",
+      "page": null,
+      "status": "manual",
+      "why": "Aun'el and Aun'O are upgrade rows under the commander."
+    },
+    {
+      "key": "Your fleet may include any number of battleships",
+      "text": "Your fleet may include any number of battleships.",
+      "page": 454,
+      "status": "manual",
+      "why": "Limits nothing. The section has only the Explorer."
+    },
+    {
+      "key": "it must include at least one Explorer",
+      "text": "If your fleets is worth more than 750 pts it must include at least one Explorer.",
+      "page": 454,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "over": true,
+      "why": "Written by hand. The sentence does not mention the section heading 'Battleships', and the section guard rejected it for that reason - the guard exists exactly so the section counter would not measure the wrong section. The book has a misprint 'your fleets'; left that way."
+    },
+    {
+      "key": "Your fleet may include any number of Merchant class starships",
+      "text": "Your fleet may include any number of Merchant class starships.",
+      "page": 454,
+      "status": "manual",
+      "why": "Limits nothing."
+    },
+    {
+      "key": "one Hero class starship for every Merchant or Explorer",
+      "text": "It may also include up to one Hero class starship for every Merchant or Explorer in the fleet.",
+      "page": 454,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 1,
+      "why": "Written by hand: the denominator is two SHIP CLASSES from two different sections (the Merchant in the Cruisers section, the Explorer in the Battleships section), and neither is a section heading."
+    },
+    {
+      "key": "one Messenger class starship per 500 points",
+      "text": "Your fleet may include up to one Messenger class starship per 500 points.",
+      "page": null,
+      "status": "enforced",
+      "kind": "per_points",
+      "each": 1,
+      "per": 500,
+      "why": "Written by hand: the ESCORTS section has four other ships too, so the count must be limited by name. On 7.9.2026 the points limits got the same name filter the ratios already had."
+    },
+    {
+      "key": "Your fleet may include any number of Defender class starships",
+      "text": "Your fleet may include any number of Defender class starships.",
+      "page": 454,
+      "status": "manual",
+      "why": "Limits nothing."
+    },
+    {
+      "key": "You may not have more Orcas and Wardens than the gravitic hook capacity",
+      "text": "You may not have more Orcas and Wardens than the gravitic hook capacity of the fleet.",
+      "page": null,
+      "status": "enforced",
+      "why": "Enforced 14.9.2026 (J95): the capacity is read from the profile's hook rows (e.g. Explorer 3 x 'Capacity: 1 Orca/Warden', p.458), and the fleet-level rule is 'Gravitic hook capacity (Orcas and Wardens)'.",
+      "classified_on": "2026-09-14",
+      "kind": "hook_capacity"
+    },
+    {
+      "key": "Any ship equipped with Wardens can only be equipped with Wardens",
+      "text": "Any ship equipped with Wardens can only be equipped with Wardens and may not have other hook-transported escorts.",
+      "page": null,
+      "status": "manual",
+      "why": "A tie to a mother ship; the app does not tie escorts to mother ships."
+    },
+    {
+      "key": "A ship may have either Orcas or Dhows, but not both",
+      "text": "A ship may have either Orcas or Dhows, but not both so the gravitic hook capacity of the fleet is divided between Orcas and Dhows.",
+      "page": null,
+      "status": "manual",
+      "why": "The per-ship split (which ship carries what) is not modelled (J8). The sentence's consequence, the split of capacity between Orcas and Dhows, is enforced by the rule 'Gravitic hook capacity (Dhows and Orcas)' (J95)."
+    },
+    {
+      "key": "Defenders are fielded in squadrons of 2",
+      "text": "Defenders are fielded in squadrons of 2-6 ships.",
+      "page": 455,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6,
+      "why": "Fixed 10.9.2026 (fleet spot check S2, report 17): the rule was in the SQUADRONS section, which has no ships, and checked nothing. Now the pick names the Defender class from the ESCORTS section; Messengers may operate alone ('Messengers operate as single ships, or in squadrons')."
+    },
+    {
+      "key": "up to one Warsphere if the fleet is worth 1500 points",
+      "text": "A Tau fleet can include up to one Warsphere if the fleet is worth 1500 points, or up to two Warspheres in games larger than that.",
+      "page": null,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. tiers: 1500 -> 1, over 1500 -> 2. The earlier gap: a conditional tiering ('if 1500, then one; in larger ones two'), not an even ratio to points. The engine's per_points counts evenly, so it would give 3000",
+      "kind": "tiers",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "one Demiurg vessel for every three Tau capital ships",
+      "text": "A Tau fleet can include up to one Demiurg vessel for every three Tau capital ships in the fleet.",
+      "page": null,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 3,
+      "why": "Written by hand: the denominator 'Tau capital ships' means two sections (Battleships and Cruisers), and resolving sections does not find it."
+    },
+    {
+      "key": "Nicassar Dhows in place of some or all of its Orcas",
+      "text": "Your fleet may include Nicassar Dhows in place of some or all of its Orcas.",
+      "page": 455,
+      "status": "manual",
+      "why": "A trade-off with the Orcas; both are limited by the gravitic hook capacity, which is not enforced."
+    }
+  ],
+  "entries": [
+    {
+      "name": "Tau Kor'el (Ld 8)",
+      "pts": 50,
+      "page": null,
+      "sec": "Commander"
+    },
+    {
+      "name": "Tau Kor'O (Ld 9)",
+      "pts": 80,
+      "page": null,
+      "sec": "Commander"
+    },
+    {
+      "name": "Aun'el (one extra re-roll)",
+      "pts": 25,
+      "page": null,
+      "sec": "Commander"
+    },
+    {
+      "name": "Aun'O (two extra re-rolls)",
+      "pts": 75,
+      "page": null,
+      "sec": "Commander"
+    },
+    {
+      "name": "Messenger class starship",
+      "pts": 50,
+      "page": 465,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Defender class starship",
+      "pts": 45,
+      "page": 464,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Warden class gunship",
+      "pts": 30,
+      "page": 475,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Orca class gunship",
+      "pts": 25,
+      "page": 466,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Kroot Warsphere",
+      "pts": 145,
+      "page": 494,
+      "sec": "Kroot Vessels"
+    },
+    {
+      "name": "Stronghold Commerce Vessel",
+      "pts": 350,
+      "page": 488,
+      "sec": "Demiurg Vessels"
+    },
+    {
+      "name": "Bastion Commerce Vessel",
+      "pts": 255,
+      "page": 489,
+      "sec": "Demiurg Vessels"
+    },
+    {
+      "name": "Citadel Commerce Vessel",
+      "pts": 185,
+      "page": 490,
+      "sec": "Demiurg Vessels"
+    },
+    {
+      "name": "Nicassar Dhow",
+      "pts": 45,
+      "page": 491,
+      "sec": "Nicassar Vessels"
+    }
+  ],
+  "notes": [
+    "The Explorer, the Hero and the Merchant appear on the list as two rows each ('- Vash'ya Mk XXIII configuration' etc.). That is not an error: the book's profile pages have several configurations of the same hull, and the app offers them separately at the same price.",
+    "The heading 'ALLIES, SUBJECTS & MERCENARIES' contains a comma, which the heading pattern does not allow. Until 7.9.2026 it was ordinary text, so the mercenary paragraph ran onto the end of the SQUADRONS section. A comma cannot be allowed in the pattern (the book's two-line headings would break at the wrong place), so this heading is a named exception.",
+    "The list's three most central restrictions were entirely unenforced until 7.9.2026, all for the same reason: the book names a SHIP CLASS where the engine expects a section heading.",
+    "The gravitic hook capacity is the list's only thing that cannot be enforced at all: it is in the hull ships' profiles, not on the list rows. The number of Orcas, Wardens and Dhows depends on it."
+  ]
+}

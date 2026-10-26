@@ -1,0 +1,6 @@
+{
+  "id": "boarding",
+  "name": "Boarding Actions",
+  "url": "https://bfgtools.boarding.kuldare.com",
+  "worker": "bfg-tools-boarding"
+}

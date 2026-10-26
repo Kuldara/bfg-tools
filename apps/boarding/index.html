@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0c0f">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230b0c0f'/%3E%3Cpath d='M13 18h38v8H36v9h11v8H36v9h-8v-9H17v-8h11v-9H13z' fill='%23e0a93f'/%3E%3C/svg%3E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<title>Boarding Actions</title>
+<style>
+@@include styles/app.css
+</style>
+</head>
+<body>
+
+<div id="app">
+  <header id="top">
+    <!--BFGTOOLS--><!--/BFGTOOLS-->
+    <button class="ghost" id="swapBtn" title="Swap attacker and defender" aria-label="Swap attacker and defender">&#8646;</button>
+    <div class="tt" id="title">Boarding action</div>
+    <button class="ghost" id="resetAllBtn" title="Reset the whole battle" aria-label="Reset the whole battle">&#8634; ALL</button>
+    <button class="ghost" id="refBtn" title="Rules reference" aria-label="Rules reference">?</button>
+    <button class="ghost" id="modeBtn"></button>
+  </header>
+
+  <main id="board">
+    <section class="side att" id="sideAtt"></section>
+    <section class="side def" id="sideDef"></section>
+  </main>
+
+  <footer id="act"></footer>
+</div>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="sheetBox">
+    <div class="sheetHead">
+      <h2 id="sheetTitle"></h2>
+      <div class="sub" id="sheetSub"></div>
+      <button class="xBtn" id="sheetGear" hidden>&#9881;</button>
+      <button class="xBtn" id="sheetClose">&#10005;</button>
+    </div>
+    <div class="tabs" id="sheetTabs" hidden></div>
+    <div id="sheetBody" class="grid"></div>
+  </div>
+</div>
+
+<div class="sheet" id="diceSheet" hidden>
+  <div class="sheetBox">
+    <div class="spacer"></div>
+    <div class="verdict"><div class="head">Boarding Actions</div>
+      <div class="sub">Battlefleet Gothic — the whole End Phase boarding action,<br>resolved by the book.</div></div>
+    <div class="spacer"></div>
+    <div class="q" style="text-align:center;font:700 12px/1 system-ui;letter-spacing:.16em;
+      text-transform:uppercase;color:var(--dimmer);padding-bottom:2px">Who rolls the dice?</div>
+    <button class="bigBtn stack" data-dice="digital" style="height:92px;flex:0 0 auto">&#127922; The app rolls
+      <small>One tap resolves the whole action, criticals and all</small></button>
+    <button class="bigBtn stack" data-dice="physical" style="height:92px;flex:0 0 auto;
+      background:linear-gradient(#1d2b34,#121c22);border-color:#2b4757;color:var(--def)">&#9995; I roll my own
+      <small>Tap the number you rolled; the app does the rest</small></button>
+    <div class="spacer"></div>
+    <div class="hint">You can change this any time from the top of the screen.</div>
+  </div>
+</div>
+
+<div class="sheet" id="resultSheet" hidden>
+  <div class="sheetBox" id="resultBox"></div>
+</div>
+
+<script><!--@script--></script>
+</body>
+</html>

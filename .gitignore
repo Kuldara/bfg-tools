@@ -1,0 +1,30 @@
+# Rulebook PDFs and other third-party documents: your own copies, never committed
+# (see apps/registry/books.py)
+books/
+
+# Build output
+dist/
+out/
+node_modules/
+
+# Windows / Google Drive metadata
+desktop.ini
+Thumbs.db
+
+# Python
+__pycache__/
+*.pyc
+
+# Boarding build output (apps/boarding/build.py)
+apps/boarding/Boarding.html
+apps/boarding/Boarding.zip
+apps/boarding/web/index.html
+
+# The old single-file Play build's output (the build now writes to dist/)
+apps/play/Gothic Fleet Play.html
+
+# Page tools' scratch files (layout_check.js --keep, make_fleet_cards.js)
+apps/registry/_layout_*.html
+apps/registry/_layout_report.json
+apps/registry/_fleet_cards_*.html
+apps/registry/_sheet_check/

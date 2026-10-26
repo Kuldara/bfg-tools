@@ -1,0 +1,322 @@
+{
+  "list": "Tau — Commerce Protection",
+  "book_page": 456,
+  "read_pages": [
+    448,
+    449,
+    450,
+    451,
+    452,
+    453,
+    456,
+    457
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Commander",
+      "text": "0-1 Commander",
+      "page": null,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "Your fleet may include a fleet commander to lead it if you wish",
+      "text": "Your fleet may include a fleet commander to lead it if you wish.",
+      "page": null,
+      "status": "manual",
+      "why": "Being optional in fleets under 750 points."
+    },
+    {
+      "key": "Your fleet must include a commander if it is greater than 750 pts",
+      "text": "Your fleet must include a commander if it is greater than 750 pts.",
+      "page": null,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "over": true
+    },
+    {
+      "key": "the commander may be either a Kor",
+      "text": "The commander may be either a Kor'O or Kor'el.",
+      "page": null,
+      "status": "manual",
+      "why": "In the book the sentence starts with a lower-case letter; left that way. Both rows are on the list, and the section's 0-1 limit sees to it that only one is chosen."
+    },
+    {
+      "key": "The commander has one re-roll included in his points cost",
+      "text": "The commander has one re-roll included in his points cost.",
+      "page": 456,
+      "status": "manual",
+      "why": "Shown as text of the commander section since 9.9.2026 (the sentence filter knows the words re-roll and leadership, P1-8e). The included re-roll is in the resolver's rerolls.included field and on the commander card; the fleet validator does not enforce the number of re-rolls."
+    },
+    {
+      "key": "the commander's ship may carry a member of the Ethereal caste",
+      "text": "If you wish, the commander's ship may carry a member of the Ethereal caste and therefore purchase additional re-rolls at the cost shown.",
+      "page": null,
+      "status": "manual",
+      "why": "Aun'el and Aun'O are upgrade rows under the commander."
+    },
+    {
+      "key": "If the fleet includes a Custodian, a Kor",
+      "text": "If the fleet includes a Custodian, a Kor'O must lead it.",
+      "page": 456,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. requires: Custodian -> Kor'O or Kor'O'Mesme as the commander. The earlier gap: a conditional requirement: choosing one row forces another. The engine had no conditional rule type. On this list it is easy to forget, because the Kor'el is chea",
+      "kind": "requires",
+      "min": 1,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Your fleet may include any number of Explorer battleships",
+      "text": "Your fleet may include any number of Explorer battleships.",
+      "page": 456,
+      "status": "manual",
+      "why": "Limits nothing."
+    },
+    {
+      "key": "up to one Custodian per FULL 750 points of Tau vessels",
+      "text": "Your fleet may include up to one Custodian per FULL 750 points of Tau vessels. Allied, Subject, Mercenary and Reserve vessels don't count toward this total.",
+      "page": 456,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. of_pick: the denominator is the points of the Tau ships (commander, Battleships, Cruisers, ESCORTS), not the points limit; full=True. The earlier gap: the denominator is the TAU SHIPS' point total, not the fleet's points limit. The app's points limit rule always counts from the points limit, so it would wrongly give too much to a fleet al",
+      "kind": "per_points",
+      "per": 750,
+      "each": 1,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "any number of Merchant, Emissary or Protector class starships",
+      "text": "Your fleet may include any number of Merchant, Emissary or Protector class starships.",
+      "page": 456,
+      "status": "manual",
+      "why": "Limits nothing."
+    },
+    {
+      "key": "one Hero class starship for every other type of capital ship",
+      "text": "It may also include up to one Hero class starship for every other type of capital ship in the fleet.",
+      "page": 456,
+      "status": "manual",
+      "why": "The wording is ambiguous (per ship or per class); the book does not settle it, so the sentence is shown and the interpretation is left to the player.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "one Messenger class starship per 500 points",
+      "text": "Your fleet may include up to one Messenger class starship per 500 points.",
+      "page": null,
+      "status": "enforced",
+      "kind": "per_points",
+      "each": 1,
+      "per": 500,
+      "why": "Written by hand: the ESCORTS section has four other ships too, so the count must be limited by name. On 7.9.2026 the points limits got the same name filter the ratios already had."
+    },
+    {
+      "key": "any number of Defender and/or Castellan class starships",
+      "text": "Your fleet may include any number of Defender and/or Castellan class starships.",
+      "page": 456,
+      "status": "manual",
+      "why": "Limits nothing."
+    },
+    {
+      "key": "You may not have more Orcas and Wardens than the gravitic hook capacity",
+      "text": "You may not have more Orcas and Wardens than the gravitic hook capacity of the fleet.",
+      "page": null,
+      "status": "enforced",
+      "why": "Enforced 14.9.2026 (J95): the capacity is read from the profile's hook rows (e.g. Explorer 3 x 'Capacity: 1 Orca/Warden', p.458), and the fleet-level rule is 'Gravitic hook capacity (Orcas and Wardens)'.",
+      "classified_on": "2026-09-14",
+      "kind": "hook_capacity"
+    },
+    {
+      "key": "Any ship equipped with Wardens can only be equipped with Wardens",
+      "text": "Any ship equipped with Wardens can only be equipped with Wardens and may not have other hook-transported escorts.",
+      "page": null,
+      "status": "manual",
+      "why": "A tie to a mother ship; the app does not tie escorts to mother ships."
+    },
+    {
+      "key": "A ship may have either Orcas or Dhows, but not both",
+      "text": "A ship may have either Orcas or Dhows, but not both so the gravitic hook capacity of the fleet is divided between Orcas and Dhows.",
+      "page": null,
+      "status": "manual",
+      "why": "The per-ship split (which ship carries what) is not modelled (J8). The sentence's consequence, the split of capacity between Orcas and Dhows, is enforced by the rule 'Gravitic hook capacity (Dhows and Orcas)' (J95)."
+    },
+    {
+      "key": "Defenders are fielded in squadrons of 2",
+      "text": "Defenders are fielded in squadrons of 2-6 ships.",
+      "page": 455,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6,
+      "why": "Fixed 10.9.2026 (fleet spot check S2, report 17): the rule was in the SQUADRONS section, which has no ships, and checked nothing. Now the pick names the Defender class from the ESCORTS section; Messengers may operate alone ('Messengers operate as single ships, or in squadrons')."
+    },
+    {
+      "key": "up to one Warsphere if the fleet is worth 1500 points",
+      "text": "A Tau fleet can include up to one Warsphere if the fleet is worth 1500 points, or up to two Warspheres in games larger than that.",
+      "page": null,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. tiers: 1500 -> 1, over 1500 -> 2. The earlier gap: a conditional tiering ('if 1500, then one; in larger ones two'), not an even ratio to points. The engine's per_points counts evenly, so it would give 3000",
+      "kind": "tiers",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Warspheres do not count against cruiser limits",
+      "text": "Warspheres do not count against cruiser limits in a Kor'vattra Fleet.",
+      "page": 457,
+      "status": "manual",
+      "why": "This list has no cruiser cap at all, so the sentence has no effect. The Kor'vattra is the Merchant list."
+    },
+    {
+      "key": "one Demiurg vessel for every three Tau capital ships",
+      "text": "A Tau fleet can include up to one Demiurg vessel for every three Tau capital ships in the fleet.",
+      "page": null,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 3,
+      "why": "Written by hand: the denominator 'Tau capital ships' means two sections (Battleships and Cruisers), and resolving sections does not find it."
+    },
+    {
+      "key": "There cannot be more Stronghold than Bastion vessels",
+      "text": "There cannot be more Stronghold than Bastion vessels in the fleet.",
+      "page": 457,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. The earlier gap: a COMPARISON of two list rows with each other. The engine can count sections and sets limited by name, but cannot compare two sets with each other.",
+      "kind": "compare",
+      "op": "<=",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Gravitic hooks on a Custodian battleship or Emissary starship cannot count toward this total",
+      "text": "Gravitic hooks on a Custodian battleship or Emissary starship cannot count toward this total.",
+      "page": 457,
+      "status": "enforced",
+      "why": "Enforced 14.9.2026 (J95): the Custodian's and the Emissary's hooks are Warden-specific in the profile ('Capacity: 3 Wardens', p.468; 'Capacity: 1 Warden', p.472), so they do not do for Orcas or Dhows.",
+      "kind": "hook_capacity",
+      "classified_on": "2026-09-14"
+    },
+    {
+      "key": "one Rogue Trader cruiser and its attendant escorts",
+      "text": "Up to one Rogue Trader cruiser and its attendant escorts may accompany the fleet for every 750 points of Tau ships in the fleet.",
+      "page": 457,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. of_pick: the Tau ships' points; pick: the Rogue Traders section's cruisers. The earlier gap: the same reason as for the Custodian: the denominator is the Tau ships' point total, not the fleet's points limit.",
+      "kind": "per_points",
+      "per": 750,
+      "each": 1,
+      "classified_on": "2026-09-09"
+    }
+  ],
+  "entries": [
+    {
+      "name": "Tau Kor'el (Ld 8)",
+      "pts": 50,
+      "page": null,
+      "sec": "Commander"
+    },
+    {
+      "name": "Tau Kor'O (Ld 9)",
+      "pts": 80,
+      "page": null,
+      "sec": "Commander"
+    },
+    {
+      "name": "Kor'O'Mesme* (Ld 9)",
+      "pts": 110,
+      "page": null,
+      "sec": "Commander"
+    },
+    {
+      "name": "Custodian class starship",
+      "pts": 330,
+      "page": 468,
+      "sec": "Battleships"
+    },
+    {
+      "name": "Castellan class starship",
+      "pts": 50,
+      "page": 474,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Messenger class starship",
+      "pts": 50,
+      "page": 465,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Defender class starship",
+      "pts": 45,
+      "page": 464,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Warden class gunship",
+      "pts": 30,
+      "page": 475,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Orca class gunship",
+      "pts": 25,
+      "page": 466,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Kroot Warsphere",
+      "pts": 145,
+      "page": 494,
+      "sec": "Kroot Vessels"
+    },
+    {
+      "name": "Nicassar Caravan",
+      "pts": 200,
+      "page": 492,
+      "sec": "Nicassar Vessels"
+    },
+    {
+      "name": "Nicassar Rig",
+      "pts": 40,
+      "page": 493,
+      "sec": "Nicassar Vessels"
+    },
+    {
+      "name": "Nicassar Dhow",
+      "pts": 45,
+      "page": 491,
+      "sec": "Nicassar Vessels"
+    },
+    {
+      "name": "Rogue Trader Cruiser",
+      "pts": 185,
+      "page": 180,
+      "sec": "Rogue Traders"
+    },
+    {
+      "name": "Dauntless Class Light Cruiser",
+      "pts": 125,
+      "page": 77,
+      "sec": "Rogue Traders"
+    },
+    {
+      "name": "Endeavour Class Light Cruiser",
+      "pts": 110,
+      "page": 181,
+      "sec": "Rogue Traders"
+    },
+    {
+      "name": "Cargo Vessel",
+      "pts": 20,
+      "page": 192,
+      "sec": "Rogue Traders"
+    }
+  ],
+  "notes": [
+    "On the book's page 456 the row is 'Custodian class starship (pg. 440)... 330 pts', and there is no profile on page 440 - it is on page 468. The app corrects the reference by name.",
+    "Kor'O'Mesme is marked with a star and explained on page 457. The row is on the list as it is, star included.",
+    "This is the book's only list with two different limits tied to a point total that are counted from the TAU SHIPS' points and not from the fleet's points limit (the Custodian and the Rogue Trader cruiser). Neither can be enforced correctly, so neither is enforced.",
+    "The heading 'ALLIES, SUBJECTS & MERCENARIES' was ordinary text until 7.9.2026, and the mercenary paragraph ended up in a section whose heading became the list's name printed on the page's side 'COMMERCE PROTECTION FLEET LIS'."
+  ]
+}

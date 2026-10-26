@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "reference/options.json",
+  "description": "Ships' option effects, read from the book. audit_effects.py checks these conditions itself (the jsonschema library is not installed), so this file is a contract for people and agents - and it is kept as strict as the code's check.",
+  "type": "object",
+  "required": ["options"],
+  "properties": {
+    "options": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/option" }
+    }
+  },
+  "$defs": {
+    "option": {
+      "type": "object",
+      "required": ["ship", "text", "page", "effect", "why", "verified"],
+      "additionalProperties": false,
+      "properties": {
+        "ship": {
+          "type": "string", "minLength": 3,
+          "description": "The ship's name exactly as in bfg_data.json's nm field."
+        },
+        "text": {
+          "type": "string", "minLength": 8,
+          "description": "The option's text. Matching is done on the first 120 characters, so the start is enough but it must match the book exactly."
+        },
+        "page": {
+          "type": "integer", "minimum": 1, "maximum": 600,
+          "description": "The page of the Fleets WiP book the decision was read from. Required: an acknowledgement without a page is not valid."
+        },
+        "effect": {
+          "description": "A structured effect, or null if the option does NOT change the profile. Implemented in build_data.py's OPT_EFFECTS table - EXCEPT when modelled_by is given: then effect only describes the effect that is already in the data through that field, and it is not added again.",
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object", "minProperties": 1, "additionalProperties": false,
+              "properties": {
+                "mod": {
+                  "type": "object", "additionalProperties": false,
+                  "description": "A stat ADDITION (not a setting): tu=1 means +1 turret.",
+                  "properties": {
+                    "hp": { "type": "integer" }, "sh": { "type": "integer" },
+                    "tu": { "type": "integer" }
+                  }
+                },
+                "set": {
+                  "type": "object", "additionalProperties": false, "minProperties": 1,
+                  "description": "Tekstistatsin ASETUS (mod lisaa lukuun, set korvaa tekstin): sp = nopeus, tn = kaanto, ar = panssari. Endeavour p.72: ar '6+ front / 5+', tn '45°'.",
+                  "properties": {
+                    "sp": { "type": "string" }, "tn": { "type": "string" }, "ar": { "type": "string" }
+                  }
+                },
+                "swp": {
+                  "type": "object", "additionalProperties": false,
+                  "description": "A change to a weapon row's field. f = a regex of the row's name, onlyrg = only rows whose range contains this (Mercury: only the 45 cm batteries), rg = range, rgadd = ADDS a new ordnance type to the range cell without replacing (torpedo-bommas: 'Torpedo-Bommas: 20 cm'), st = firepower (absolute or +N/-N).",
+                  "required": ["f"],
+                  "properties": {
+                    "f": { "type": "string" }, "onlyrg": { "type": "string" },
+                    "rg": { "type": "string" }, "rgadd": { "type": "string" }, "st": { "type": "string" }
+                  }
+                },
+                "sw": {
+                  "type": "object", "additionalProperties": false, "required": ["f", "t"],
+                  "description": "A REPLACEMENT of weapon rows with an alternative (a tick box on the card): f = the indexes of the rows to replace in the aw table, t = the replacing rows in the same order. The same structure swaps.py produces; used when swaps.py does not parse the sentence (Omnissiah p.126).",
+                  "properties": {
+                    "f": { "type": "array", "minItems": 1, "items": { "type": "integer", "minimum": 0 } },
+                    "t": { "type": "array", "minItems": 1, "items": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "string" } } }
+                  }
+                },
+                "add": {
+                  "description": "A new weapon row [name, range, firepower, arc] OR a list of them (Murder: the port and starboard lance), on the card only when the option is chosen (take = ticked, opt = an empty box, off = no row). The same 4-array as a list upgrade's en.add.",
+                  "oneOf": [
+                    { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "string" } },
+                    { "type": "array", "minItems": 1, "items": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "string" } } }
+                  ]
+                },
+                "del": {
+                  "type": "string",
+                  "description": "A regex: the chosen option REMOVES the weapon rows whose name matches (Cobra p.84: the detection refit 'removes the squadron's weapons batteries')."
+                },
+                "qty": {
+                  "type": "object", "additionalProperties": false,
+                  "description": "Toistettava optio; max = montako kertaa.",
+                  "required": ["max"],
+                  "properties": { "max": { "type": "integer", "minimum": 2 } }
+                }
+              }
+            }
+          ]
+        },
+        "modelled_by": {
+          "type": "string", "enum": ["sw", "aws", "mod", "set", "swp", "add", "qty"],
+          "description": "Optional. The effect IS already in the data in this field, and the words the audit finds (e.g. a torpedo's 'speed: 30 cm', 'turret strength') are not a separate profile change. Used instead of effect: null, so the acknowledgement does not claim 'no effect' for an option that has an effect."
+        },
+        "why": {
+          "type": "string", "minLength": 15,
+          "description": "In one or two sentences: what the page says and what follows from it."
+        },
+        "verified": {
+          "const": true,
+          "description": "Only true is valid. A row that has not been verified does not belong here but in the queue."
+        }
+      }
+    }
+  }
+}

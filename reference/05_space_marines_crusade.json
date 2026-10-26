@@ -1,0 +1,232 @@
+{
+  "list": "Space Marines — Crusade",
+  "book_page": 98,
+  "read_pages": [
+    98,
+    99,
+    102
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Master of the Fleet",
+      "text": "0-1 Master of the Fleet",
+      "page": 98,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "worth over 750 points, the Master of the Fleet must be included",
+      "text": "If the fleet is worth over 750 points, the Master of the Fleet must be included to lead it.",
+      "page": 98,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "over": true
+    },
+    {
+      "key": "may be assigned to a venerable battle barge or fortress monastery if one is present",
+      "text": "The Master of the Fleet may be assigned to a venerable battle barge or fortress monastery if one is present, but does not have to be.",
+      "page": 98,
+      "status": "manual",
+      "why": "The placement is done at the table."
+    },
+    {
+      "key": "0-1 Fortress-Monastery",
+      "text": "0-1 Fortress-Monastery",
+      "page": 98,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "worth at least 2,000 points, it may include one Fortress-Monastery",
+      "text": "If your fleet is worth at least 2,000 points, it may include one Fortress-Monastery.",
+      "page": 98,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. The earlier gap: a PERMISSION tied to a points limit, not a requirement. The engine's mandatory_at enforces only a requirement ('must be included'); there was no 'may be taken only from N points' type. Sam",
+      "kind": "allowed_at",
+      "points": 2000,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "fortress-monastery may purchase re-rolls, which it may use for its own command checks only",
+      "text": "As the base of operations for the entire Chapter, the fortress-monastery may purchase re-rolls, which it may use for its own command checks only.",
+      "page": 98,
+      "status": "manual",
+      "why": "How the re-rolls are used is decided in the game. The rows are in their own section."
+    },
+    {
+      "key": "0-3 Battle Barges",
+      "text": "0-3 Battle Barges",
+      "page": 99,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 3
+    },
+    {
+      "key": "one Space Marine battle barge for every 1,000 points or part thereof",
+      "text": "You may include one Space Marine battle barge for every 1,000 points or part thereof in your fleet.",
+      "page": 99,
+      "status": "enforced",
+      "kind": "per_points",
+      "each": 1,
+      "per": 1000,
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. per_points pick=the Battle Barges section (the Venerable counts as one of the three). The earlier gap: resolve_sections does not link the phrase 'Space Marine battle barge' to the section 'Battle Barges'. The same in all three Space Marine lists.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "must be worth at least 1,000 points to include a single Venerable battle barge",
+      "text": "The fleet must be worth at least 1,000 points to include a single Venerable battle barge (counting as one of the three allowed), chosen from any available Imperial or Chaos battleship, grand cruiser, battlecruiser or heavy cruiser at the listed cost, plus an additional +35 points for its Space Marine crew.",
+      "page": 99,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. The sentence is also kept visible (keep_text), because it tells the price of the hull choice. The earlier gap: the same permission tied to a points limit as for the Fortress-Monastery. The number one is enforced as the row limit mx=1.",
+      "kind": "allowed_at",
+      "points": 1000,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "0-10 Cruisers",
+      "text": "0-10 Cruisers",
+      "page": 99,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 10
+    },
+    {
+      "key": "escorts in your fleet in squadrons of 2",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "page": 99,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "Any ship with launch bays carries Thunderhawks and Thunderhawk Annihilators",
+      "text": "Any ship with launch bays carries Thunderhawks and Thunderhawk Annihilators.",
+      "page": 99,
+      "status": "out_of_scope",
+      "why": "A statement; the Annihilator rule is on the card only on the Crusade list (the SPECIAL_WEAPON_RULES list gate).",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "equipped with an Honour Guard for +10 points per ship",
+      "text": "Any battle barge or strike cruiser in the fleet may be equipped with an Honour Guard for +10 points per ship.",
+      "page": 99,
+      "status": "manual",
+      "why": "A priced option; the row 'Honour Guard 10 pts' can be chosen."
+    },
+    {
+      "key": "fortress-monastery is equipped with Terminator boarding parties and an Honour Guard as part of its point cost",
+      "text": "A fortress-monastery is equipped with Terminator boarding parties and an Honour Guard as part of its point cost.",
+      "page": 99,
+      "status": "out_of_scope",
+      "why": "The equipment is included in the price; no choice and nothing to count.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "If the fleet includes a fortress-monastery, it has an attack rating of 1",
+      "text": "A Space Marine Crusade Fleet has an attack rating of 3. If the fleet includes a fortress-monastery, it has an attack rating of 1.",
+      "page": 99,
+      "status": "manual",
+      "why": "Attack rating is an in-game value, not a fleet composition limit."
+    },
+    {
+      "key": "will not take ships from or provide ships to any other fleet list",
+      "text": "A Space Marine Crusade fleet will not take ships from or provide ships to any other fleet list as reserves or allies, including Imperial Navy, Rogue Trader or Adeptus Mechanicus fleet lists.",
+      "page": 99,
+      "status": "enforced",
+      "why": "1.1 (14.9.2026): the list's field res_ban. The ban works both ways and also beats p.139's inquisitor permission, because it is the list's own and more specific. Without it the general race rule would let the Crusade and the Codex Astartes swap ships - both are space marines by race. A reserve rule; the app does not model reserves at all, so the ban holds by itself.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "crusade-takes-no-reserves-at-all",
+        "crusade-ships-are-no-reserves-for-others"
+      ]
+    },
+    {
+      "key": "fortress-monastery should only be used as a defence",
+      "text": "Like the rules for a Ramilies Star Fortress, the fortress-monastery should only be used as a defence or in some scenarios substituting for the planet itself.",
+      "page": 99,
+      "status": "manual",
+      "why": "Skenaariosaanto."
+    }
+  ],
+  "entries": [
+    {
+      "name": "Master of the Fleet (Ld 10)",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "One re-roll",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Two re-rolls",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Three re-rolls",
+      "pts": 75,
+      "page": null
+    },
+    {
+      "name": "Terminator boarding party",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Fortress-Monastery",
+      "pts": 1000,
+      "page": 110
+    },
+    {
+      "name": "Venerable battle barge",
+      "pts": null,
+      "page": 103
+    },
+    {
+      "name": "Battle barge",
+      "pts": 425,
+      "page": 104
+    },
+    {
+      "name": "Strike cruisers",
+      "pts": 145,
+      "page": 105
+    },
+    {
+      "name": "Nova class Frigate",
+      "pts": 50,
+      "page": 107
+    },
+    {
+      "name": "Gladius class Frigate",
+      "pts": 45,
+      "page": 108
+    },
+    {
+      "name": "Hunter class Destroyer",
+      "pts": 40,
+      "page": 109
+    },
+    {
+      "name": "Honour Guard",
+      "pts": 10,
+      "page": null
+    }
+  ],
+  "notes": [
+    "The Crusade list has NO Rapid strike vessel rows, unlike the Codex Astartes and the Dominion. This is in the book (p. 99), not a gap.",
+    "The Fortress-Monastery's re-rolls are a price list of their own in the book (25/50/75) and separate from the Master of the Fleet's rows of the same price. The app keeps them in different sections, which matches the book.",
+    "The Venerable battle barge rules on page 102 apply to this list too; the card uses page 103's example ship."
+  ]
+}

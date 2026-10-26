@@ -1,0 +1,7 @@
+{
+  "id": "registry",
+  "name": "Gothic Fleet Registry",
+  "version": "1.2",
+  "url": "https://bfgtools.kuldare.com",
+  "worker": "gothic-fleet-registry"
+}

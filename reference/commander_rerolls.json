@@ -1,0 +1,572 @@
+{
+ "_": "The re-rolls included in the commander rows' price, read FROM THE BOOK (book check 5.10.2026: eight readers read every row from the Fleets book's page, the app's value was a claim being checked, not a source; deviations had their own counter-reader). page = the page with the deciding sentence. test_domain.js compares bfg_data.json's en.rr value with this - not the other way round.",
+ "rows": [
+  {
+   "list": "Imperial Navy — Gothic Sector",
+   "section": "Admiral",
+   "label": "Fleet-Admiral (Ld 8)",
+   "rerolls_included": 1,
+   "page": 35
+  },
+  {
+   "list": "Imperial Navy — Gothic Sector",
+   "section": "Admiral",
+   "label": "Admiral (Ld 9)",
+   "rerolls_included": 1,
+   "page": 35
+  },
+  {
+   "list": "Imperial Navy — Gothic Sector",
+   "section": "Admiral",
+   "label": "Solar Admiral (Ld 10)",
+   "rerolls_included": 1,
+   "page": 35
+  },
+  {
+   "list": "Imperial Navy — Gothic Sector",
+   "section": "THE INQUISITION",
+   "label": "Inquisitor Lord (Ld 9)",
+   "rerolls_included": 1,
+   "page": 138
+  },
+  {
+   "list": "Imperial Navy — Gothic Sector",
+   "section": "ORDO MALLEUS INQUISITORS",
+   "label": "Ordo Malleus Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 142
+  },
+  {
+   "list": "Imperial Navy — Bastion Fleets",
+   "section": "Admiral",
+   "label": "Fleet-Admiral (Ld 8)",
+   "rerolls_included": 1,
+   "page": 36
+  },
+  {
+   "list": "Imperial Navy — Bastion Fleets",
+   "section": "Admiral",
+   "label": "Admiral (Ld 9)",
+   "rerolls_included": 1,
+   "page": 36
+  },
+  {
+   "list": "Imperial Navy — Bastion Fleets",
+   "section": "Admiral",
+   "label": "Solar Admiral (Ld 10)",
+   "rerolls_included": 1,
+   "page": 36
+  },
+  {
+   "list": "Imperial Navy — Bastion Fleets",
+   "section": "Veteran Captains",
+   "label": "Veteran Captain (Ld +1)",
+   "rerolls_included": 1,
+   "page": 38
+  },
+  {
+   "list": "Imperial Navy — Bastion Fleets",
+   "section": "THE INQUISITION",
+   "label": "Inquisitor Lord (Ld 9)",
+   "rerolls_included": 1,
+   "page": 138
+  },
+  {
+   "list": "Imperial Navy — Bastion Fleets",
+   "section": "ORDO MALLEUS INQUISITORS",
+   "label": "Ordo Malleus Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 142
+  },
+  {
+   "list": "Imperial Navy — Armageddon Sector",
+   "section": "Fleet Commander",
+   "label": "Fleet-Admiral (Ld 8)",
+   "rerolls_included": 1,
+   "page": 40
+  },
+  {
+   "list": "Imperial Navy — Armageddon Sector",
+   "section": "Fleet Commander",
+   "label": "Admiral (Ld 9)",
+   "rerolls_included": 1,
+   "page": 40
+  },
+  {
+   "list": "Imperial Navy — Armageddon Sector",
+   "section": "Fleet Commander",
+   "label": "Solar Admiral (Ld 10)",
+   "rerolls_included": 1,
+   "page": 40
+  },
+  {
+   "list": "Imperial Navy — Armageddon Sector",
+   "section": "Fleet Commander",
+   "label": "Master of the Fleet (Ld 10)",
+   "rerolls_included": 1,
+   "page": 40
+  },
+  {
+   "list": "Imperial Navy — Armageddon Sector",
+   "section": "THE INQUISITION",
+   "label": "Inquisitor Lord (Ld 9)",
+   "rerolls_included": 1,
+   "page": 138
+  },
+  {
+   "list": "Imperial Navy — Armageddon Sector",
+   "section": "ORDO MALLEUS INQUISITORS",
+   "label": "Ordo Malleus Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 142
+  },
+  {
+   "list": "Imperial Navy — Bakka Sector",
+   "section": "Admiral",
+   "label": "Fleet-Admiral (Ld 8)",
+   "rerolls_included": 1,
+   "page": 48
+  },
+  {
+   "list": "Imperial Navy — Bakka Sector",
+   "section": "Admiral",
+   "label": "Admiral (Ld 9)",
+   "rerolls_included": 1,
+   "page": 48
+  },
+  {
+   "list": "Imperial Navy — Bakka Sector",
+   "section": "Admiral",
+   "label": "Solar Admiral (Ld 10)",
+   "rerolls_included": 1,
+   "page": 48
+  },
+  {
+   "list": "Imperial Navy — Bakka Sector",
+   "section": "Admiral",
+   "label": "Lord Admiral Rath (Ld10)",
+   "rerolls_included": 2,
+   "page": 48
+  },
+  {
+   "list": "Imperial Navy — Bakka Sector",
+   "section": "THE INQUISITION",
+   "label": "Inquisitor Lord (Ld 9)",
+   "rerolls_included": 1,
+   "page": 138
+  },
+  {
+   "list": "Imperial Navy — Bakka Sector",
+   "section": "ORDO MALLEUS INQUISITORS",
+   "label": "Ordo Malleus Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 142
+  },
+  {
+   "list": "Space Marines — Codex Astartes",
+   "section": "Master of the Fleet",
+   "label": "Master of the Fleet (Ld 10)",
+   "rerolls_included": 0,
+   "page": 97
+  },
+  {
+   "list": "Space Marines — Codex Astartes",
+   "section": "THE INQUISITION",
+   "label": "Inquisitor Lord (Ld 9)",
+   "rerolls_included": 1,
+   "page": 138
+  },
+  {
+   "list": "Space Marines — Crusade",
+   "section": "Master of the Fleet",
+   "label": "Master of the Fleet (Ld 10)",
+   "rerolls_included": 0,
+   "page": 98
+  },
+  {
+   "list": "Space Marines — Crusade",
+   "section": "THE INQUISITION",
+   "label": "Inquisitor Lord (Ld 9)",
+   "rerolls_included": 1,
+   "page": 138
+  },
+  {
+   "list": "Space Marines — Dominion",
+   "section": "Master of the Fleet",
+   "label": "Master of the Fleet (Ld 10)",
+   "rerolls_included": 0,
+   "page": 100
+  },
+  {
+   "list": "Space Marines — Dominion",
+   "section": "Space Marine Captains",
+   "label": "Space Marine Captain",
+   "rerolls_included": 0,
+   "page": 100
+  },
+  {
+   "list": "Space Marines — Dominion",
+   "section": "THE INQUISITION",
+   "label": "Inquisitor Lord (Ld 9)",
+   "rerolls_included": 1,
+   "page": 138
+  },
+  {
+   "list": "Adeptus Mechanicus — Explorator",
+   "section": "Mechanicus Archmagos",
+   "label": "Archmagos Explorator (Ld 8)",
+   "rerolls_included": 0,
+   "page": 124
+  },
+  {
+   "list": "Adeptus Mechanicus — Explorator",
+   "section": "Mechanicus Archmagos",
+   "label": "Archmagos Veneratus (Ld 9)",
+   "rerolls_included": 0,
+   "page": 124
+  },
+  {
+   "list": "Adeptus Mechanicus — Explorator",
+   "section": "THE INQUISITION",
+   "label": "Inquisitor Lord (Ld 9)",
+   "rerolls_included": 1,
+   "page": 138
+  },
+  {
+   "list": "Adeptus Mechanicus — Explorator",
+   "section": "ORDO MALLEUS INQUISITORS",
+   "label": "Ordo Malleus Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 142
+  },
+  {
+   "list": "The Emperor's Inquisition",
+   "section": "Inquisitor Lord",
+   "label": "Inquisitor Lord (Ld 9)",
+   "rerolls_included": 1,
+   "page": 138
+  },
+  {
+   "list": "The Emperor's Inquisition",
+   "section": "ORDO HERETICUS INQUISITORS",
+   "label": "Ordo Hereticus Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 140
+  },
+  {
+   "list": "The Emperor's Inquisition",
+   "section": "ORDO XENOS INQUISITORS",
+   "label": "Ordo Xenos Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 141
+  },
+  {
+   "list": "The Emperor's Inquisition",
+   "section": "ORDO MALLEUS INQUISITORS",
+   "label": "Ordo Malleus Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 142
+  },
+  {
+   "list": "Grey Knights",
+   "section": "FLEET COMMANDER",
+   "label": "Inquisitor Lord (Ld 9)",
+   "rerolls_included": 1,
+   "page": 144
+  },
+  {
+   "list": "Grey Knights",
+   "section": "FLEET COMMANDER",
+   "label": "Ordo Malleus Inquisitor Lord (Ld 10)",
+   "rerolls_included": 1,
+   "page": 144
+  },
+  {
+   "list": "Rogue Traders",
+   "section": "Veteran Rogue Traders",
+   "label": "Veteran Rogue Trader (Ld 9)",
+   "rerolls_included": 1,
+   "page": 174
+  },
+  {
+   "list": "Rogue Traders — Exploration",
+   "section": "Veteran Rogue Traders",
+   "label": "Veteran Rogue Trader (Ld 9)",
+   "rerolls_included": 1,
+   "page": 176
+  },
+  {
+   "list": "Rogue Traders — Pirates and Wolf Packs",
+   "section": "Pirate Captains",
+   "label": "Pirate Captain (+1 Ld)",
+   "rerolls_included": 1,
+   "page": 178
+  },
+  {
+   "list": "Chaos — Incursion",
+   "section": "FLEET COMMANDER",
+   "label": "Chaos Warmaster (Ld 8)",
+   "rerolls_included": 1,
+   "page": 232
+  },
+  {
+   "list": "Chaos — Incursion",
+   "section": "FLEET COMMANDER",
+   "label": "Chaos Warmaster (Ld 9)",
+   "rerolls_included": 1,
+   "page": 232
+  },
+  {
+   "list": "Chaos — Incursion",
+   "section": "Chaos Lords",
+   "label": "Chaos Lord (Ld 8)",
+   "rerolls_included": 0,
+   "page": 232
+  },
+  {
+   "list": "Chaos — Black Crusade",
+   "section": "Chaos Warmaster",
+   "label": "Chaos Warmaster (Ld +2)",
+   "rerolls_included": 1,
+   "page": 234
+  },
+  {
+   "list": "Chaos — Black Crusade",
+   "section": "Abaddon",
+   "label": "Abaddon (Ld 10)",
+   "rerolls_included": 1,
+   "page": 234
+  },
+  {
+   "list": "Chaos — Tzeentch",
+   "section": "Abaddon",
+   "label": "Abaddon (Ld 10)",
+   "rerolls_included": 1,
+   "page": 231
+  },
+  {
+   "list": "Chaos — Nurgle",
+   "section": "Abaddon",
+   "label": "Abaddon (Ld 10)",
+   "rerolls_included": 1,
+   "page": 231
+  },
+  {
+   "list": "Chaos — Khorne",
+   "section": "Abaddon",
+   "label": "Abaddon (Ld 10)",
+   "rerolls_included": 1,
+   "page": 231
+  },
+  {
+   "list": "Chaos — Slaanesh",
+   "section": "Abaddon",
+   "label": "Abaddon (Ld 10)",
+   "rerolls_included": 1,
+   "page": 231
+  },
+  {
+   "list": "Chaos — Black Crusade",
+   "section": "Chaos Lords",
+   "label": "Chaos Lord (Ld +1)",
+   "rerolls_included": 0,
+   "page": 234
+  },
+  {
+   "list": "Chaos — Tzeentch",
+   "section": "Chaos Warmaster of Tzeentch",
+   "label": "Chaos Warmaster (Ld +2)",
+   "rerolls_included": 1,
+   "page": 236
+  },
+  {
+   "list": "Chaos — Tzeentch",
+   "section": "Chaos Lords",
+   "label": "Chaos Lord (Ld +1)",
+   "rerolls_included": 0,
+   "page": 236
+  },
+  {
+   "list": "Chaos — Nurgle",
+   "section": "Chaos Warmaster of Nurgle",
+   "label": "Chaos Warmaster (Ld +2)",
+   "rerolls_included": 1,
+   "page": 240
+  },
+  {
+   "list": "Chaos — Nurgle",
+   "section": "Chaos Lords",
+   "label": "Chaos Lord (Ld +1)",
+   "rerolls_included": 0,
+   "page": 240
+  },
+  {
+   "list": "Chaos — Khorne",
+   "section": "Chaos Warmaster of Khorne",
+   "label": "Chaos Warmaster (Ld +2)",
+   "rerolls_included": 1,
+   "page": 244
+  },
+  {
+   "list": "Chaos — Khorne",
+   "section": "Chaos Lords",
+   "label": "Chaos Lord (Ld +1)",
+   "rerolls_included": 0,
+   "page": 244
+  },
+  {
+   "list": "Chaos — Slaanesh",
+   "section": "Chaos Warmaster of Slaanesh",
+   "label": "Chaos Warmaster (Ld +2)",
+   "rerolls_included": 1,
+   "page": 248
+  },
+  {
+   "list": "Chaos — Slaanesh",
+   "section": "Chaos Lords",
+   "label": "Chaos Lord (Ld +1)",
+   "rerolls_included": 0,
+   "page": 248
+  },
+  {
+   "list": "Eldar Corsairs — Gothic Sector",
+   "section": "Pirate Prince",
+   "label": "Pirate Prince (+2 Ld)",
+   "rerolls_included": 0,
+   "page": 316
+  },
+  {
+   "list": "Eldar Corsairs — Gothic Sector",
+   "section": "Eldar Hero",
+   "label": "Eldar Hero (Ld 10)",
+   "rerolls_included": 0,
+   "page": 316
+  },
+  {
+   "list": "Eldar Corsairs — Later Gothic War",
+   "section": "Pirate Prince",
+   "label": "Pirate Prince (+2 Ld)",
+   "rerolls_included": 0,
+   "page": 317
+  },
+  {
+   "list": "Eldar Corsairs — Later Gothic War",
+   "section": "Eldar Hero",
+   "label": "Eldar Hero (Ld 10)",
+   "rerolls_included": 0,
+   "page": 317
+  },
+  {
+   "list": "Eldar — Iyanden Craftworld",
+   "section": "Autarch",
+   "label": "Eldar Autarch (Ld 9)",
+   "rerolls_included": 0,
+   "page": 318
+  },
+  {
+   "list": "Eldar — Iyanden Craftworld",
+   "section": "Autarch",
+   "label": "Iyanden Bearer of the Flame (Ld 10)",
+   "rerolls_included": 0,
+   "page": 318
+  },
+  {
+   "list": "Eldar — Iyanden Craftworld",
+   "section": "Eldar Hero",
+   "label": "Eldar Hero (Ld 10)",
+   "rerolls_included": 0,
+   "page": 318
+  },
+  {
+   "list": "Eldar — Iyanden Craftworld",
+   "section": "Farseers",
+   "label": "Farseers",
+   "rerolls_included": 1,
+   "page": 318
+  },
+  {
+   "list": "Eldar — Iyanden Craftworld",
+   "section": "RESERVES AND ALLIES",
+   "label": "Prince Yriel",
+   "rerolls_included": 1,
+   "page": 319
+  },
+  {
+   "list": "Dark Eldar — Pirates",
+   "section": "Dread Archon",
+   "label": "Dread Archon (+2 Ld)",
+   "rerolls_included": 0,
+   "page": 351
+  },
+  {
+   "list": "Orks — Cyclops Cluster",
+   "section": "WARLORD",
+   "label": "Ork Warlord",
+   "rerolls_included": 1,
+   "page": 365
+  },
+  {
+   "list": "Orks — Waaagh!",
+   "section": "WARLORD",
+   "label": "Ork Warlord",
+   "rerolls_included": 1,
+   "page": 366
+  },
+  {
+   "list": "Orks — Da Ork Clanz",
+   "section": "WARLORD",
+   "label": "Ork Warlord",
+   "rerolls_included": 1,
+   "page": 372
+  },
+  {
+   "list": "Tau — Merchant Fleet",
+   "section": "Commander",
+   "label": "Tau Kor'el (Ld 8)",
+   "rerolls_included": 1,
+   "page": 454
+  },
+  {
+   "list": "Tau — Merchant Fleet",
+   "section": "Commander",
+   "label": "Tau Kor’O (Ld 9)",
+   "rerolls_included": 1,
+   "page": 454
+  },
+  {
+   "list": "Tau — Commerce Protection",
+   "section": "Commander",
+   "label": "Tau Kor'el (Ld 8)",
+   "rerolls_included": 1,
+   "page": 456
+  },
+  {
+   "list": "Tau — Commerce Protection",
+   "section": "Commander",
+   "label": "Tau Kor’O (Ld 9)",
+   "rerolls_included": 1,
+   "page": 456
+  },
+  {
+   "list": "Tau — Commerce Protection",
+   "section": "Commander",
+   "label": "Kor’O’Mesme* (Ld 9)",
+   "rerolls_included": 2,
+   "page": 453
+  },
+  {
+   "list": "Eldar Corsairs — Gothic Sector",
+   "section": "RESERVES AND ALLIES",
+   "label": "Prince Yriel",
+   "rerolls_included": 1,
+   "page": 319
+  },
+  {
+   "list": "Eldar Corsairs — Later Gothic War",
+   "section": "RESERVES AND ALLIES",
+   "label": "Prince Yriel",
+   "rerolls_included": 1,
+   "page": 319
+  }
+ ]
+}

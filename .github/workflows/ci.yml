@@ -1,0 +1,34 @@
+# Every push and pull request: build all apps and run every test that needs
+# only the repository (npm test). The rulebook checks need the books and run
+# on a developer machine (npm run check:books).
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # The ubuntu runner has Chrome; the layout and UI checks find it through CHROME.
+      - run: echo "CHROME=$(which google-chrome || which chromium)" >> "$GITHUB_ENV"
+      - run: npm ci
+      - run: npm test
+      - uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 14

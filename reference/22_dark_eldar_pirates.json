@@ -1,0 +1,156 @@
+{
+  "list": "Dark Eldar — Pirates",
+  "book_page": 351,
+  "read_pages": [
+    351,
+    352
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Dread Archon",
+      "text": "0-1 Dread Archon",
+      "page": 351,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "fleet is worth over 750 points a Dread Archon must be included",
+      "text": "1f the fleet is worth over 750 points a Dread Archon must be included to lead it.",
+      "page": 351,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "over": true,
+      "why": "The book has a misprint: the sentence starts '1f' and not 'If'. It does no harm, because the pattern looks for a hit in the middle of the sentence and does not require the start."
+    },
+    {
+      "key": "adds + 2 to its Leadership, to a maximum of 10",
+      "text": "You may include 1 Dread Archon in your fleet, who must be assigned to a ship and adds +2 to its Leadership, to a maximum of 10.",
+      "page": 351,
+      "status": "manual",
+      "why": "The placement and the leadership maximum are decided in the game."
+    },
+    {
+      "key": "0-12 Cruisers",
+      "text": "0-12 Cruisers",
+      "page": 351,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 12
+    },
+    {
+      "key": "Torture class cruisers may choose one of the following for the points shown",
+      "text": "Torture class cruisers may choose one of the following for the points shown: ... Prow Torpedoes +20 pts ... Phantom Lance +20 pts ... 1-2 Impaler Assault Modules +20 /+40 pts ... Launch Bays +40 pts",
+      "page": 351,
+      "status": "manual",
+      "why": "The book says 'one of the following', so the choices exclude each other. The app offers them as options of the ship's profile, where the exclusion is implemented; as list rows they would be mere prices without a condition."
+    },
+    {
+      "key": "escorts in your fleet in squadrons of 2",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "page": 351,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "must contain at least three escorts for every capital ship taken",
+      "text": "However, Dark Eldar fleets must contain at least three escorts for every capital ship taken.",
+      "page": 351,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. The earlier gap: a ratio as a MINIMUM and in the opposite direction: there must be at least three escorts per hull ship. The engine's ratio enforced only the maximum ('en",
+      "kind": "min_ratio",
+      "min": 3,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Ships with launch bays may launch any mix of Raptor fighters",
+      "text": "Ships with launch bays may launch any mix of Raptor fighters, Razorwing bombers and Slavebringer assault boats.",
+      "page": 351,
+      "status": "manual",
+      "why": "Ordnance-valinta pelin aikana."
+    },
+    {
+      "key": "Leech torpedoes must be loaded with a separate reload ordnance roll",
+      "text": "Ships with torpedo tubes are armed with both Eldar torpedoes and Leech torpedoes, though the Leech torpedoes must be loaded with a separate reload ordnance roll as described in the special rules.",
+      "page": 351,
+      "status": "manual",
+      "why": "An in-game rule; the app offers the row 'Leech torpedoes 0 pts' as a marking."
+    }
+  ],
+  "entries": [
+    {
+      "name": "Dread Archon (+2 Ld)",
+      "pts": 100,
+      "page": null
+    },
+    {
+      "name": "One re-roll",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Two re-rolls",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Three re-rolls",
+      "pts": 100,
+      "page": null
+    },
+    {
+      "name": "Torture class cruiser",
+      "pts": 210,
+      "page": 352
+    },
+    {
+      "name": "Prow Torpedoes",
+      "pts": 20,
+      "page": null
+    },
+    {
+      "name": "Phantom Lance",
+      "pts": 20,
+      "page": null
+    },
+    {
+      "name": "Launch Bays",
+      "pts": 40,
+      "page": null
+    },
+    {
+      "name": "Mimic Engines",
+      "pts": 20,
+      "page": null
+    },
+    {
+      "name": "Corsair Class Escort",
+      "pts": 50,
+      "page": 353
+    },
+    {
+      "name": "Mimic Engines",
+      "pts": 5,
+      "page": null
+    }
+  ],
+  "extra_entries": [
+    {
+      "name": "Leech torpedoes",
+      "pts": 0,
+      "why": "p.351 ORDNANCE, ilmainen merkinta"
+    }
+  ],
+  "notes": [
+    "There is NO Impaler Assault Module option as a list row, and that is right: the book's row is '1-2 Impaler Assault Modules.........+20 /+40 pts', i.e. two different prices on the same row. The app offers them as the ship profile's options 'Impaler module I' and 'Impaler module II', each 20 pts, which matches the wording on the book's page 352 'up to 2 Impaler assault modules for +20 each'.",
+    "This is the only list whose row still carries price table debris in the visible text: 'Torture class cruisers may choose one of the following for the points shown: 1-2 Impaler Assault Modules.........+20 /+40 pts ...'. The debris is in the MIDDLE of the sentence, and cleaning it would take the rule itself off the sentence's start. Left on purpose.",
+    "Mimic Engines appears twice at different prices: 20 pts for a hull ship and 5 pts for an escort. That is in the book, not an error.",
+    "'Dark Eldar fleets must contain at least three escorts for every capital ship' is the list's tightest restriction and it is not enforceable. It is worth remembering when building the list."
+  ]
+}

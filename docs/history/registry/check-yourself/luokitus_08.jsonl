@@ -1,0 +1,60 @@
+{"id": "S0421", "l": "TARKISTA", "a": "keep", "f": "squadron_tabletop", "p": "F227", "pok": "ok", "n": "Daemonship ei laivueessa. Capital-laivueita ei mallinneta, joten pelaaja tarkistaa; laivue ryhmänä -ominaisuus voisi valvoa."}
+{"id": "S0422", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F227", "pok": "ok", "n": "Black Crusadessa Mark-rivit ehdolla 'Daemonship otettu', grp mark (build_data.py:2637). Varmista muut viisi Chaos-listaa. Ajo 20.10.: Black Crusadessa ja neljällä jumalalistalla Daemonship-Markit ovat riveinä. Incursion-listalla ei ole Daemonship-rivejä lainkaan, joten yleisen Chaos-luvun Daemonship-lauseet (S0413–S0447) ovat sille turhia.", "vk": "ajo ok"}
+{"id": "S0423", "l": "PELI", "a": "play", "f": "leadership_roll", "p": "F227", "pok": "ok", "n": "Daemonshipin Ld-heitto."}
+{"id": "S0424", "l": "PELI", "a": "play", "f": "daemonship", "p": "F227", "pok": "ok", "x": "heading", "n": "Warp translation; kortilla (domain.js:2724)."}
+{"id": "S0425", "l": "PELI", "a": "play", "f": "daemonship", "p": "F227", "pok": "ok", "n": "Warp translation."}
+{"id": "S0426", "l": "PELI", "a": "play", "f": "daemonship", "p": "F227", "pok": "ok", "n": "Warp translation."}
+{"id": "S0427", "l": "PELI", "a": "play", "f": "daemonship", "p": "F227", "pok": "ok", "n": "Warp translation."}
+{"id": "S0428", "l": "PELI", "a": "play", "f": "daemonship", "p": "F227", "pok": "ok", "n": "Warp translation."}
+{"id": "S0429", "l": "PELI", "a": "play", "f": "daemonship", "p": "F227", "pok": "ok", "n": "Warp translation."}
+{"id": "S0430", "l": "PELI", "a": "play", "f": "daemonship", "p": "F227", "pok": "ok", "n": "Warp translation."}
+{"id": "S0431", "l": "PELI", "a": "play", "f": "daemonship", "p": "F228", "pok": "ok", "n": "Spectral."}
+{"id": "S0432", "l": "PELI", "a": "play", "f": "daemonship", "p": "F228", "pok": "ok", "n": "Spectral."}
+{"id": "S0433", "l": "PELI", "a": "play", "f": "daemonship", "p": "F228", "pok": "ok", "n": "Spectral."}
+{"id": "S0434", "l": "PELI", "a": "play", "f": "daemonship", "p": "F228", "pok": "ok", "n": "Spectral."}
+{"id": "S0435", "l": "PELI", "a": "play", "f": "daemonship", "p": "F228", "pok": "ok", "n": "Spectral. Koodiosumat ovat eri lauseita."}
+{"id": "S0436", "l": "PELI", "a": "play", "f": "daemonship", "p": "F228", "pok": "ok", "n": "Spectral."}
+{"id": "S0437", "l": "PELI", "a": "play", "f": "daemonship", "p": "F228", "pok": "ok", "n": "Spectral."}
+{"id": "S0438", "l": "PELI", "a": "play", "f": "daemonship", "p": "F228", "pok": "ok", "n": "Spectral."}
+{"id": "S0439", "l": "PELI", "a": "play", "f": "daemonship", "p": "F228", "pok": "ok", "x": "heading", "n": "Haunting."}
+{"id": "S0440", "l": "PELI", "a": "play", "f": "daemonship", "p": "F228", "pok": "ok", "n": "Haunting."}
+{"id": "S0441", "l": "PELI", "a": "play", "f": "daemonship", "p": "F228", "pok": "osittain", "x": "table", "n": "Haunting; korjaustaulukko yhdessä lauseessa (rivi '6' puuttuu)."}
+{"id": "S0442", "l": "PELI", "a": "play", "f": "daemonship", "p": "F228", "pok": "ok", "n": "Haunting."}
+{"id": "S0443", "l": "PELI", "a": "play", "f": "daemonship", "p": "F228", "pok": "ok", "n": "Haunting."}
+{"id": "S0444", "l": "PELI", "a": "play", "f": "daemonship", "p": "F228", "pok": "ok", "n": "Haunting."}
+{"id": "S0445", "l": "PELI", "a": "play", "f": "daemonship", "p": "F228", "pok": "ok", "n": "Haunting."}
+{"id": "S0446", "l": "PELI", "a": "play", "f": "daemonship", "p": "F228", "pok": "ok", "n": "Haunting."}
+{"id": "S0447", "l": "PELI", "a": "play", "f": "daemonship", "p": "F228", "pok": "ok", "n": "Voittopisteet."}
+{"id": "S0448", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F229", "pok": "ok", "x": "heading", "n": "Kampanja."}
+{"id": "S0449", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F229", "pok": "osittain", "x": "table", "n": "Promotions-taulukko ja Appeals-otsikko yhdessä."}
+{"id": "S0450", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F229", "pok": "osittain", "x": "table", "n": "Appeals-taulukko."}
+{"id": "S0451", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F229", "pok": "ok", "n": "Appeals."}
+{"id": "S0452", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F229", "pok": "ok", "n": "Appeals."}
+{"id": "S0453", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F229", "pok": "ok", "n": "Appeals."}
+{"id": "S0454", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F229", "pok": "ok", "n": "Appeals."}
+{"id": "S0455", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F229", "pok": "ok", "n": "Appeals."}
+{"id": "S0456", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F229", "pok": "ok", "n": "Appeals."}
+{"id": "S0457", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F229", "pok": "ok", "n": "Appeals."}
+{"id": "S0458", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F229", "pok": "ok", "n": "Appeals."}
+{"id": "S0459", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F229", "pok": "ok", "n": "Appeals."}
+{"id": "S0460", "l": "KAMPANJA", "a": "campaign", "f": "appeals", "p": "F229", "pok": "ok", "n": "Appeals."}
+{"id": "S0461", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F230", "pok": "ok", "n": "Abaddonin kerronta."}
+{"id": "S0462", "l": "PELI", "a": "play", "f": "abaddon", "p": "F231", "pok": "ok", "n": "Abaddonin kortti (domain.js:3531)."}
+{"id": "S0463", "l": "PELI", "a": "play", "f": "abaddon", "p": "F231", "pok": "ok", "n": "Abaddonin kortti."}
+{"id": "S0464", "l": "PELI", "a": "play", "f": "abaddon", "p": "F231", "pok": "ok", "n": "Abaddon."}
+{"id": "S0465", "l": "PELI", "a": "play", "f": "abaddon", "p": "F231", "pok": "ok", "n": "Abaddon."}
+{"id": "S0466", "l": "PELI", "a": "play", "f": "abaddon", "p": "F231", "pok": "ok", "n": "Abaddon."}
+{"id": "S0467", "l": "PELI", "a": "play", "f": "abaddon", "p": "F231", "pok": "ok", "n": "Abaddon."}
+{"id": "S0468", "l": "PELI", "a": "play", "f": "abaddon", "p": "F231", "pok": "ok", "n": "Abaddon."}
+{"id": "S0469", "l": "PELI", "a": "play", "f": "abaddon", "p": "F231", "pok": "ok", "n": "Abaddon."}
+{"id": "S0470", "l": "PELI", "a": "play", "f": "abaddon", "p": "F231", "pok": "ok", "n": "Abaddon."}
+{"id": "S0471", "l": "PELI", "a": "play", "f": "abaddon", "p": "F231", "pok": "ok", "n": "Abaddon."}
+{"id": "S0472", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F231", "pok": "ok", "x": "heading", "n": "allowed_at 1 000 (build_data.py:5744, J162). Lause on yleisessä osiossa otsikon kanssa.", "vk": "ajo ok"}
+{"id": "S0473", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F231", "pok": "ok", "n": "Chaos Lord ei samalla aluksella kuin Abaddon. Vaatii komentajien sijoituksen."}
+{"id": "S0474", "l": "KUVAUS", "a": "row", "f": "commander_stats", "p": "F231", "pok": "ok", "x": "heading", "n": "Abaddon Ld 10; komentajarivin kuvaus."}
+{"id": "S0475", "l": "KUVAUS", "a": "row", "f": "rerolls_included", "p": "F231", "pok": "ok", "n": "Re-roll per vuoro."}
+{"id": "S0476", "l": "KUVAUS", "a": "row", "f": "rerolls_included", "p": "F231", "pok": "ok", "n": "Re-roll per vuoro; _AB_RR (build_data.py:5746)."}
+{"id": "S0477", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F232", "pok": "ok", "n": "Warmaster kalleimmalle alukselle. Sovellus voisi nimetä aluksen."}
+{"id": "S0478", "l": "KUVAUS", "a": "row", "f": "rerolls_included", "p": "F232", "pok": "ok", "n": "Sisältyvä re-roll."}
+{"id": "S0479", "l": "VALVOTTU", "a": "checked", "f": "group_rule", "p": "F232", "pok": "ok", "n": "_MULTI_MARK purkaa Mark-ryhmän Warmasterille (upgrades.py:156); sama Mark ei kahdesti."}
+{"id": "S0480", "l": "PELI", "a": "play", "f": "mark_effect", "p": "F232", "pok": "ok", "n": "Mark of Slaanesh; kortilla (domain.js:2727)."}

@@ -1,0 +1,62 @@
+/* ====================================================== NARROW SCREENS ====
+   One column (the 1020 px of .work below). The whole bar used to stay pinned
+   here too, and on a phone it wraps into many rows: measured 13.10.2026 at
+   375 x 812 it was 405 px tall with an empty fleet and 465 px with two ships,
+   and 248 px of the 375 on a phone held sideways - more than half the screen
+   gone for as long as the player scrolled the catalogue and the fleet.
+
+   Now the bar is not a box (display:contents) and its parts stand in the
+   page on their own. The heading, the list and the limit scroll away. The
+   points total is the one thing pinned, as a strip of a fixed height: the
+   "max" line has its place under the number whether it is there or not, so
+   the strip does not grow when the first ship brings one and nothing below
+   it moves (the scroll compensation in render() still stands for whatever
+   else changes height above the tapped control). The saved fleets and the
+   buttons come right under the strip, where they are at the top of the page
+   without a tap, and scroll away too - Menu pins them under the strip from
+   wherever the player is. Menu is a checkbox and its label, so it stays as
+   it was left until it is tapped again, and pinning takes the block out of
+   nobody's way: a pinned box keeps its place in the page, so nothing moves
+   when it comes or goes. The checkbox itself is fixed to the corner of the
+   screen: a label hands the focus to its control, and a control somewhere up
+   the page would have the browser scroll to it. */
+@media screen and (max-width:1020px){
+  :root{--tb-strip:60px}
+  .topbar{display:contents}
+  .tb-head{display:flex;flex-wrap:wrap;gap:14px 18px;align-items:flex-end;
+    padding:12px 20px 14px;background:var(--panel)}
+  .tb-strip{display:block;position:sticky;top:0;z-index:20;height:var(--tb-strip);
+    padding:7px 20px 0;background:var(--panel);
+    border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line)}
+  .tb-strip .tally{flex-wrap:wrap;gap:0 8px;align-content:flex-start;min-height:45px}
+  /* The line runs under Menu to the strip's far edge, and is cut short
+     rather than folded where even that is too little: the figure is first. */
+  .tb-strip .maxp{order:3;flex:0 0 100%;min-width:0;margin:4px 0 0;font-size:11px;line-height:13px;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  /* "Above the number" is off the screen in a strip at its top edge: the
+     change stands after the limit, last on its line, so it pushes nothing. */
+  .tb-strip .tally .dl{position:static;order:2;margin:0}
+  .tb-lab{display:inline-flex;align-items:center;gap:7px;position:absolute;right:20px;top:5px;height:32px;
+    padding:0 11px;border:1px solid var(--line);border-radius:var(--r);background:var(--ground);cursor:pointer;
+    font:600 12px/1 var(--sans);letter-spacing:.03em;user-select:none;-webkit-user-select:none;
+    -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+    transition:transform .09s ease-out,filter .12s ease-out,background-color .15s,border-color .15s,color .15s}
+  .tb-lab::after{content:"\25BE";color:var(--ink-3)}
+  .tb-lab:active{transform:scale(.96);filter:brightness(.82)}
+  .tb-tog{display:block;position:fixed;left:0;top:0;width:1px;height:1px;margin:0;opacity:0;pointer-events:none}
+  .tb-tog:focus-visible~.tb-strip .tb-lab{outline:2px solid var(--accent);outline-offset:2px}
+  .tb-tog:checked~.tb-strip .tb-lab{background:var(--accent-wash);border-color:var(--accent);color:var(--accent-ink)}
+  .tb-tog:checked~.tb-strip .tb-lab::after{content:"\25B4";color:inherit}
+  /* Below the strip in the stack as well: an open dropdown of this block
+     passes under the pinned total, not over it. */
+  .tb-acts{display:flex;flex-wrap:wrap;gap:8px;align-items:center;position:relative;z-index:19;
+    padding:10px 20px;background:var(--panel);border-bottom:1px solid var(--line)}
+  .tb-acts>.field,.tb-acts .btnrow{display:contents}
+  .tb-acts>.field>label{display:none}
+  /* Three rows of buttons on a 360 px phone, not four: Sheet and Download
+     for editing were 2 px too wide for one row. */
+  .tb-acts .btn{padding-left:10px;padding-right:10px}
+  .tb-tog:checked~.tb-acts{position:sticky;top:var(--tb-strip);border-bottom-color:var(--accent);box-shadow:var(--shadow)}
+}
+@media (prefers-reduced-motion:reduce){.tb-lab:active{transform:none}}
+

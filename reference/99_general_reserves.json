@@ -1,0 +1,287 @@
+{
+  "scope": "general",
+  "title": "Fleets p.14-17: reserves, allies and races",
+  "book_page": 14,
+  "read_pages": [
+    14,
+    15,
+    16,
+    17
+  ],
+  "read_on": "2026-09-14",
+  "_read": "This is not a fleet list reference but the book's GENERAL CHAPTER. Every sentence is read from the book with its page number. These rules concern all lists, so the file has no list field; check_reference.py recognises it from the field scope=general. Status gap means: should be enforced, not enforced yet - every gap has a task that says where it is done.",
+  "_why": "1.1 (borrowed ships) is built on these sentences. Without one source of truth every mechanism would be built on memory, and the book's own wording decides for example whether a borrowed ship counts towards the host list's quotas (p.14: it does).",
+  "rules": [
+    {
+      "key": "Any fleet chosen from one of the fleet lists may also include reserves",
+      "text": "Any fleet chosen from one of the fleet lists may also include reserves.",
+      "page": 14,
+      "status": "enforced",
+      "why": "1.1 (14.9.2026): the engine accepts a borrowed ship into any fleet; the goldens cover the Imperial Navy, the Space Marines, Bastion and the Eldar as host lists. The USER INTERFACE is another matter: the catalogue still shows only the chosen list's rows, and it waits for app_template.html (another session). Settles T28's host side: reserves are not limited to certain lists. The app does not yet have any mechanism at all to add another list's ship to a fleet.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "reserve-cruiser-with-three-own-cruisers",
+        "dominion-takes-imperial-navy-reserves",
+        "bastion-chaos-reserve-with-three-cruisers",
+        "corsairs-craftworld-reserve-with-an-eldar-hero"
+      ]
+    },
+    {
+      "key": "For every three battleships, cruisers or escorts chosen from the fleet list",
+      "text": "For every three battleships, cruisers or escorts chosen from the fleet list, you may also pick one ship of the same type from another fleet list belonging to the same race.",
+      "page": 14,
+      "status": "enforced",
+      "kind": "reserve_ratio",
+      "why": "The rule kind reserve_ratio in resolveFleet (domain.js item 8): reserve hulls by type at most floor(own hulls / 3). The ratio is counted by type: three cruisers entitle to one cruiser, not to one ship of any kind.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "reserve-cruiser-with-three-own-cruisers",
+        "reserve-cruiser-without-three-own-cruisers"
+      ]
+    },
+    {
+      "key": "Only ships of the same 'type' (battleship, cruiser or escort) count for reserves purposes",
+      "text": "Only ships of the same 'type' (battleship, cruiser or escort) count for reserves purposes, so you can't pick three escorts from a fleet list and then use these to qualify for a battleship from reserves.",
+      "page": 14,
+      "status": "enforced",
+      "why": "The base is counted by type, and a hull whose type is none does not do as a reserve at all. The book rules out mixing types with its own example.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "reserve-escorts-do-not-qualify-a-cruiser",
+        "reserve-must-be-battleship-cruiser-or-escort"
+      ]
+    },
+    {
+      "key": "battlecruisers, grand cruisers, heavy cruisers, cruisers, and light cruisers all count as",
+      "text": "Also, for these purposes, battlecruisers, grand cruisers, heavy cruisers, cruisers, and light cruisers all count as \"cruisers\", so three cruisers would allow you to choose a grand cruiser as a reserve.",
+      "page": 14,
+      "status": "enforced",
+      "why": "The profile's rt field: Cruiser and Grand Cruiser are both cruiser. In the golden the reserve is an Avenger class GRAND cruiser, which does on a base of three ordinary cruisers. The profile's ty field does not do as it is: a battlecruiser is 'Cruiser' in the data, but the Chaos Space Hulk, the Ork Hulk and the Kroot Warsphere are 'Defence'. The classification must be read from the book and recorded by name.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "reserve-cruiser-with-three-own-cruisers"
+      ]
+    },
+    {
+      "key": "Reserves are still subject to the restrictions on minimum and maximum numbers",
+      "text": "Reserves are still subject to the restrictions on minimum and maximum numbers of certain types of vessels.",
+      "page": 14,
+      "status": "enforced",
+      "why": "A borrowed ship lands in the host list's quotas by the section's HEADING (decision T34): the same heading on both lists and the heading is a ship kind (the section's ct = type). Named access sections (ct = own) do not take borrowed ships, because p.15 keeps them apart from reserves. The book's own example: three cruisers entitle to one grand cruiser, and a second may not be taken as a reserve, because the fleet would then have two.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "whole-fleet-cruiser-count-includes-reserves",
+        "whole-fleet-kroozer-cap-counts-reserves"
+      ]
+    },
+    {
+      "key": "determined for the fleet as a whole, regardless of whether they were purchased",
+      "text": "Basically, the restrictions on maximum and minimum numbers of ships are determined for the fleet as a whole, regardless of whether they were purchased from the list or as reserves.",
+      "page": 14,
+      "status": "enforced",
+      "why": "The same mechanism in both directions: a borrowed ship is counted both in a quota's numerator (0-12 Cruisers, six kroozers) and in the denominator (one battleship per three cruisers), and the rule on squadron size applies to it too. This sentence overrules an alternative implementation where the host list's check rows would stay unchanged when a borrowed ship is added. DoD-1.1 rests on this sentence.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "whole-fleet-battleship-ratio-counts-reserve-cruisers",
+        "whole-fleet-escort-squadron-from-another-list",
+        "whole-fleet-cruiser-count-within-limit"
+      ]
+    },
+    {
+      "key": "Reserve vessels may take any upgrades, refits, etc. available to either fleet list",
+      "text": "Reserve vessels may take any upgrades, refits, etc. available to either fleet list but may not take any special characters from the reserve fleet list to use with the primary fleet.",
+      "page": 14,
+      "status": "enforced",
+      "task": "WAITS FOR ANOTHER SESSION (app_template.html). The source list's upgrades already work, but offering the host list's needs naming the upgrade key space: upState(sel, si, ei) opens an upgrade by section and row index, which mean different things on two lists. The change also concerns the save format (saveDocument/load are in app_template).",
+      "why": "Enforced 14.9.2026, both sides. PERMISSION: a borrowed ship is also offered the host list's upgrade rows meant for the whole fleet. The implementation does not change the key format - the host list's section gets the index HOST_OFF + si (domain.js), so the key is still 'si:ei' and no old save changes, and in a one-list fleet the mechanism does not exist. The same upgrade on both lists is offered ONCE (63 % of the host's rows have the same name), because 'either fleet list' concerns availability and not quantity. BAN: a special character is not offered from the source list at all - the catalogue gives a commander no + button from a foreign list, and the engine's type gate rejects it in any case. Two limits follow from the data's own logic: a targeted host row (en.at) is left out, because its targets are the host's coordinates and the borrowed ship is not among them, and a required host row is left out, because p.14 says 'may take', i.e. a permission and not an obligation (the user's decision T35). The book's own example p.14 (a Retaliator from the 13th list into the 12th list's fleet) is the golden reserve-takes-an-upgrade-from-the-reserve-list, and the sentence's other half the golden reserve-takes-an-upgrade-from-the-host-list.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "reserve-takes-an-upgrade-from-the-reserve-list",
+        "reserve-takes-an-upgrade-from-the-host-list"
+      ]
+    },
+    {
+      "key": "Reserve fleets are those specifically described as such in their fleet lists",
+      "text": "Reserve fleets are those specifically described as such in their fleet lists, not merely those identified as being capable of allying with each other.",
+      "page": 14,
+      "status": "enforced",
+      "why": "Reserve and ally are different roles with different gates in the engine: a reserve requires the same race, an ally does not. The goldens show both sides. T28's donor side: a mere ally relationship does not make a list a reserve.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "reserve-must-come-from-the-same-race",
+        "ally-one-per-three-core-vessels"
+      ]
+    },
+    {
+      "key": "Reserve vessels taken at the start of a battle or earned as reinforcements",
+      "text": "Reserve vessels taken at the start of a battle or earned as reinforcements in the course of a campaign must come from the same \"race\". For the purpose of the game, the races are: Imperial Navy (including Adeptus Mechanicus), Space Marines, Chaos (including Chaos Space Marines), Eldar, Craftworld Eldar, Dark Eldar, Orks, Necrons, Tyranids and Tau (including Tau allies).",
+      "page": 14,
+      "status": "enforced",
+      "why": "The race list is in the data as the LIST_RACE table (32 lists, of which 26 get a race) and the race gate enforces it. The race list is the book's own and closed ('the races are'). The list has no Rogue Traders and no Demiurg, so they do not take part in the general reserve mechanism but only through their own list rules (p.15).",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "gothic-sector-cannot-take-space-marine-reserves",
+        "reserve-must-come-from-the-same-race"
+      ]
+    },
+    {
+      "key": "Some fleet lists explicitly provide access to ships from other races",
+      "text": "Some fleet lists explicitly provide access to ships from other races. These may only be taken exactly as described on their fleet list rules and may not also be taken as reserves.",
+      "page": 15,
+      "status": "enforced",
+      "why": "The section kind access: a list's named access to another race's ships (Kroot Vessels, Demiurg Vessels, Nicassar, Rogue Traders, Tau Escorts, Stryxis) does not do as a reserve. 16 sections are classified so. Separates two routes from each other: the list's own named section (e.g. the Tau list's Demiurg ships) and the general reserve rule. The same ship may not come by both routes.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "reserve-must-be-battleship-cruiser-or-escort"
+      ]
+    },
+    {
+      "key": "a Gothic Sector fleet list cannot take Space Marine vessels as reserves",
+      "text": "An Imperial Navy fleet taken from the Segmentum Solar fleet list can take Space Marine vessels as part of its fleet list, even though Space Marines are technically from another \"race\". However, a Gothic Sector fleet list cannot take Space Marine vessels as reserves, even though it can take as reserves other Imperial Navy vessels from the Segmentum Solar fleet list.",
+      "page": 15,
+      "status": "enforced",
+      "why": "The race gate rejects the book's own example: Space Marines and Imperial Navy are different races in p.14's list. Shows that a list's own permission does not extend into a race rule. The Segmentum Solar list is not in this book, but the sentence must be recorded, because it defines the mechanism: the permission belongs to the list, not to the race.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "gothic-sector-cannot-take-space-marine-reserves"
+      ]
+    },
+    {
+      "key": "The Demiurg and Kroot have specific rules allowing them to be used by various other fleets",
+      "text": "The Demiurg and Kroot have specific rules allowing them to be used by various other fleets as allies in the same manner those fleets can take reserves. However, the Tau Kor'vattra fleet list allows a far more liberal use of Demiurg vessels in the fleet.",
+      "page": 15,
+      "status": "enforced",
+      "enforced_by": "list_rules",
+      "src_has": "A Tau fleet can include up to one Demiurg vessel for every three",
+      "why": "The Tau lists' own Demiurg section and its ratio are in the data and enforced. The general sentence adds nothing to enforce to these; it explains why the Tau get more than the general 1:3."
+    },
+    {
+      "key": "A given fleet may take ships as reserves from any number of fleet lists",
+      "text": "A given fleet may take ships as reserves from any number of fleet lists that are the same race that allow their vessels to be used as reserves.",
+      "page": 15,
+      "status": "enforced",
+      "why": "A fleet can have units from several source lists at once; the golden is the book's own example (Gothic Sector + Bastion + Adeptus Mechanicus). A fleet can have ships of three different lists at once; the save format (schema 3) must carry each unit's own source list.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "reserves-from-two-fleet-lists-at-once"
+      ]
+    },
+    {
+      "key": "you cannot use a reserve of a reserve",
+      "text": "However, a given fleet list cannot take as reserves ships listed as reserves or allies to another fleet list. ... In short, you cannot use a reserve of a reserve.",
+      "page": 15,
+      "status": "enforced",
+      "why": "The section kind reserve: a row of the source list's reserve section does not do as another list's reserve. The Jovian in Bakka Sector's RESERVES section is an example that really exists in the data. The book's example: the Chaos Repulsive is a reserve of the Bastion Fleets, so it may not be taken as a reserve into any other Imperial list. Requires that the rows of reserve and ally sections are marked in the data.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "reserve-of-a-reserve-is-illegal"
+      ]
+    },
+    {
+      "key": "Reserves can only ever be ships belonging to the same",
+      "text": "Reserves can only ever be ships belonging to the same \"race\", chosen from a fleet list of the same \"race\".",
+      "page": 15,
+      "status": "enforced",
+      "why": "The race gate in resolveFleet: the source list's race field must be the same as the host list's, and the race must exist (LIST_RACE). The same requirement twice: it must be a gate, not a recommendation.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "reserve-must-come-from-the-same-race"
+      ]
+    },
+    {
+      "key": "ships or special characters added to a fleet list as a special reward",
+      "text": "However, ships or special characters added to a fleet list as a special reward or through special scenario or campaign driven circumstances are exempt from meeting fleet prerequisites beforehand.",
+      "page": 15,
+      "status": "out_of_scope",
+      "why": "A campaign or scenario reward. The app builds a one-battle fleet and does not know the campaign; enforcing the exception would need a campaign state. The player can add the ship and ignore the warning."
+    },
+    {
+      "key": "The Tau in particular have access to ships from several different races simultaneously",
+      "text": "Some fleet lists have explicit access to ships from other races. The Tau in particular have access to ships from several different races simultaneously. These may only be taken exactly as described on their fleet list rules and may not also be taken as reserves.",
+      "page": 16,
+      "status": "enforced",
+      "enforced_by": "list_rules",
+      "src_has": "A Tau fleet can include up to one Demiurg vessel for every three",
+      "why": "The Tau lists' own Kroot, Demiurg, Nicassar and Rogue Trader sections are in the data as sections of their own with their own ratio rules (p.456-457). The general sentence's other half ('may not also be taken as reserves') is recorded on p.15's row."
+    },
+    {
+      "key": "Allied and reserve vessels cannot use refits and upgrades from the fleet list they are allied to",
+      "text": "Allied and reserve vessels cannot use refits and upgrades from the fleet list they are allied to unless they are of the same race or the rules for that fleet specifically allow it.",
+      "page": 16,
+      "status": "enforced",
+      "task": "WAITS FOR ANOTHER SESSION: the same upgrade key space as in the previous one. This is its limit - a reserve gets both lists' upgrades only from the same race.",
+      "why": "Enforced 14.9.2026. The host list's upgrades open only when the source list's and the host list's race is the same; an ally of a different race never gets them, and a list with no race is not 'the same race' as anything. Race is a game-technical group and not a biological species (the user's decision T37): p.15's list separates the Imperial Navy and the Space Marines although both are human, and the same list says 'Tau (including Tau allies)'. So the Grey Knights are space marines by race (p.144: 'Grey Knights count as Space Marines in all respects') and the Demiurg tau (p.482 names it one of the Tau fleets' three races). The Inquisition and the three Rogue Traders lists are left without a race, so they do not inherit the host's upgrades. NOT IMPLEMENTED: the sentence's end 'or the rules for that fleet specifically allow it' - the data has no field for it and no list has been identified as such. Leaving it out can only WITHHOLD a permission, not give too much, so it is the cautious direction; if such a list is found, it is a row of its own.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "different-race-reserve-gets-no-host-upgrades"
+      ]
+    },
+    {
+      "key": "no more than one allied vessel may be taken for every three core vessels",
+      "text": "In all cases these follow the standard rules for reserves in that no more than one allied vessel may be taken for every three core vessels in the fleet.",
+      "page": 16,
+      "status": "enforced",
+      "kind": "ally_ratio",
+      "why": "The rule kind ally_ratio in resolveFleet; the base is only the core role's hulls, i.e. those bought from the fleet's own list. Allies have the same ratio as reserves, but the base is 'core vessels' - the ships bought from the fleet's own list.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "ally-one-per-three-core-vessels",
+        "ally-without-three-core-vessels"
+      ]
+    },
+    {
+      "key": "the same restrictions that apply to reserves also apply to allies regarding ship types",
+      "text": "Unless specifically described otherwise in a particular fleet list (such as Demiurg ships in a Tau fleet), the same restrictions that apply to reserves also apply to allies regarding ship types, (escorts, cruisers, battleships, etc.).",
+      "page": 16,
+      "status": "enforced",
+      "why": "The ally ratio is counted with the same types as the reserve. Per-type counting is inherited from reserves to allies, and the list's own wording wins.",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "ally-one-per-three-core-vessels"
+      ]
+    },
+    {
+      "key": "this list does not supersede any specific ship or fleet restrictions",
+      "text": "Finally, this list does not supersede any specific ship or fleet restrictions, such as the Craftworld Eldar having access to the Corsair Eldar fleet list as reserves (and vice versa) only when the fleet is led by an Eldar Hero aboard the Flame of Asuryan, or that three Dark Eldar escorts must be taken in a fleet in order to have one Dark Eldar capital ship.",
+      "page": 16,
+      "status": "enforced",
+      "enforced_by": "list_rules",
+      "src_has": "must contain at least three escorts for every capital ship taken",
+      "why": "Both examples the book names are already enforced: the Dark Eldar's 3:1 (p.351, min_ratio) and Iyanden's Flame of Asuryan condition (p.319, requires). The sentence itself is a principle - the list's own restriction beats the general rule - and it is recorded here so that phase 3's mechanism does not bypass them."
+    },
+    {
+      "key": "Allied vessels taken in this way cannot be placed in squadrons with vessels in the core fleet",
+      "text": "Allied vessels taken in this way cannot be placed in squadrons with vessels in the core fleet unless specifically allowed to in the core fleet's list, nor can they use the core fleet's re-rolls unless specifically allowed to.",
+      "page": 16,
+      "status": "out_of_scope",
+      "why": "Two sides, both outside the app. Squadron composition: in the app one unit IS one squadron, so an ally and a core ship cannot be put in the same squadron - the structure prevents it. Re-rolls: they are an in-game resource that the app does not distribute to ships; it shows only the number. Neither is a fleet composition rule. The squadron pool (J42) already exists; it must know the role, so it does not mix an ally into a host squadron."
+    },
+    {
+      "key": "the number of allied vessels the fleet takes is only limited by the rules applied to the allied fleet",
+      "text": "Just as a fleet can take any number of reserves as long as restrictions are followed concerning the number taken compared to the core fleet list (typically in a ration of no more than one for three unless listed otherwise in a given fleet list), the number of allied vessels the fleet takes is only limited by the rules applied to the allied fleet as long as all other restrictions concerning reserves are also followed.",
+      "page": 16,
+      "status": "out_of_scope",
+      "task": "1.2: running the source list's own rules for borrowed ships is a mechanism of its own (two rule sets in the same fleet). The current state is undercounting, not wrong counting: the host's rules are counted, the source list's are not.",
+      "why": "1.2's mechanism, and DEFINITION_OF_DONE-1.1.md names it so already in the starting point: the SOURCE LIST's own rule (e.g. its 0-12 cruisers) applies to a borrowed ship too, not only the host's quota. It is a different mechanism from p.14's 'fleet as a whole' counting, which is enforced in 1.1: it would need running the source list's rules as a parallel fleet. Excluded from 1.1 on 14.9.2026."
+    },
+    {
+      "key": "no vessel can be allied to a fleet for which it is a natural enemy",
+      "text": "In addition to these restrictions, no vessel can be allied to a fleet for which it is a natural enemy, nor can it ally itself to a fleet that already contains allies for which it is a natural enemy.",
+      "page": 17,
+      "status": "out_of_scope",
+      "why": "The book's own ALLIES MATRIX is EMPTY in this edition (WIP v0.36): page 17 has the heading, but there is no matrix. So natural enemies cannot be read from the book. The book itself says on the same page that the list is guidance and not a requirement. To be recorded again when the book is completed."
+    },
+    {
+      "key": "provided only as a guide as opposed to any requirement",
+      "text": "In all cases this is provided only as a guide as opposed to any requirement that such fleets must ally with each other, and it is just as plausible that any one of these will be enemies of and combat any other.",
+      "page": 17,
+      "status": "out_of_scope",
+      "why": "The book defines the allies matrix as guidance, not a rule. Guidance is not enforced; the players' agreement decides."
+    }
+  ],
+  "notes": [
+    "p.17's ALLIES MATRIX is a heading without content (checked from the page image 14.9.2026). This is a gap in the book, not in the extraction.",
+    "The race list (p.14-15) does not name the Rogue Traders or the Demiurg. Both have their own list rules (p.174, p.487), and p.15 says that named access is not a reserve - that is why they get no race in the LIST_RACE table.",
+    "The Segmentum Solar list is not in this book, so p.15's example stays an example. The mechanism must still be recorded: the permission belongs to the list, not to the race."
+  ]
+}

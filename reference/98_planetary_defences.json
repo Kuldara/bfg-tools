@@ -1,0 +1,169 @@
+{
+  "scope": "general",
+  "title": "Fleets p.496-517 and Rulebook p.100-101: planetary defences",
+  "book_page": 498,
+  "read_pages": [
+    498,
+    499,
+    500,
+    451,
+    452,
+    512,
+    513,
+    516,
+    517
+  ],
+  "read_on": "2026-10-08",
+  "_read": "The book's general chapter, not a fleet list reference (scope=general). Every sentence is read from the book with its page number: Fleets p.498-499 (rules and the price list), p.500 (Ramilies), p.451-452 (Tau), Rulebook p.100-101. The rows' prices and 0-N limits (p.499) are not sentences; they are locked in test_domain.js item 15 and in the fleet goldens pd-minefield-limit and pd-fire-ship-limit.",
+  "_why": "The defences were added on 8.10.2026 as a section of their own at the end of every list (the user's decision). The chapter belongs to no list, so its rules are in the engine (domain.js resolveFleet, m.defence) and in the card's rule texts (SPECIAL_HULL_RULES pd_*, fort_*, haven_*), not in the lists' rule data.",
+  "rules": [
+    {
+      "key": "Orbital defences or ships that count as defences may be placed in squadrons",
+      "text": "Orbital defences or ships that count as defences may be placed in squadrons, with 1HP defences grouped in up to six units and larger defences grouped in up to four.",
+      "page": 100,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "pd-platform-squadron-over-six",
+        "pd-lone-escort-beside-defence-monitor"
+      ],
+      "why": "Rulebook p.100. The section's own squadron rule (min 1, max 6) covers six one-hit rows; the sentence is the rule's src. Fleets p.498 prints the same sentence in the form 'l HP fixed or mobile defences' (a small L in place of the one), so the source is the Rulebook. 'Larger defences grouped in up to four' is not enforceable: in the app a defence of many hits is always one unit."
+    },
+    {
+      "key": "A Ramilies Star Fort cannot squadron with other orbital defences",
+      "text": "A Ramilies Star Fort cannot squadron with other orbital defences.",
+      "page": 100,
+      "status": "manual",
+      "why": "Rulebook p.100 (Fleets p.498 leaves the sentence out). The app does not group defences of many hits into squadrons at all, so the ban cannot be broken; the Ramilies is always one unit."
+    },
+    {
+      "key": "the defender in a scenario may spend up to one-third of his allocated point value",
+      "text": "When desired, the defender in a scenario may spend up to one-third of his allocated point value on planetary defences, in addition to any planetary defences provided by the specific scenario.",
+      "page": 498,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "pd-one-third-advice",
+        "pd-blackstone-not-fleet-worth"
+      ],
+      "why": "The legality panel's row 'Planetary defences (up to one third of the points)' shows the total and a third of the points limit. It WARNS and does not reject: the limit concerns the scenario's defender, and the app does not know the scenario. The Ramilies (p.500) and the Haven (p.337) are not in the total."
+    },
+    {
+      "key": "these additional defences come directly from the points allowed against his or her fleet list",
+      "text": "However, these additional defences come directly from the points allowed against his or her fleet list.",
+      "page": 498,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "pd-blackstone-not-fleet-worth",
+        "pd-ramilies-fleet-points",
+        "pd-ramilies-counts-toward-fleet-worth"
+      ],
+      "why": "Defences use up the points limit (Points limit counts them). INTERPRETATION (the user's decision 8.10.2026, BACKLOG J170): they are still not part of 'what the fleet is worth' - the commander threshold, 'one per 500 points' and the like are counted from the ships. The book does not say either directly. The Ramilies (p.500) and the Haven (p.337) are bought from the fleet's points 'rather than defences', so they are part of the fleet's worth like the Fortress-Monastery."
+    },
+    {
+      "key": "Stationary planetary defences may be placed in base contact if desired",
+      "text": "Stationary planetary defences may be placed in base contact if desired, but they can never be stacked or have their bases overlap other stationary planetary defences.",
+      "page": 498,
+      "status": "manual",
+      "why": "Table layout; the app shows the sentence in the section's Check yourself part and in the card's rule pd_high_orbit."
+    },
+    {
+      "key": "They must be deployed within the planet or moon's gravity well",
+      "text": "They must be deployed within the planet or moon's gravity well (ie, 10 cm for a small planet, 15cm for a medium one, etc.).",
+      "page": 498,
+      "status": "manual",
+      "why": "Table layout; the card's rule pd_high_orbit."
+    },
+    {
+      "key": "Low orbit defences may only be deployed on the low orbit table",
+      "text": "Low orbit defences may only be deployed on the low orbit table.",
+      "page": 498,
+      "status": "manual",
+      "why": "A rule about the scenario's table; the section's Check yourself sentence and the ground targets' card rule pd_ground."
+    },
+    {
+      "key": "a small planet can have no more than 4 planetary defences",
+      "text": "Alternatively, you can decide beforehand that you'll be fighting near to a planet, in which case the defending player may buy planetary defences out of their normal points value - a small planet can have no more than 4 planetary defences, a medium planet can have a maximum of 5 planetary defences and a large planet a maximum of 6.",
+      "page": 499,
+      "status": "manual",
+      "why": "Depends on the planet's size, which the app does not know, and the book does not define what one 'planetary defence' is (a squadron, a single mine?). Shown as a Check yourself sentence."
+    },
+    {
+      "key": "perhaps no more than 10% of the fleet's points may be spent on planetary defences",
+      "text": "It is also a good idea to put an upper limit on the amount of points that can be spent (for example, in a standard battle perhaps no more than 10% of the fleet's points may be spent on planetary defences).",
+      "page": 499,
+      "status": "manual",
+      "why": "The book's own example, not a rule ('for example ... perhaps'). Shown as a Check yourself sentence."
+    },
+    {
+      "key": "do not roll for leadership or have a leadership value",
+      "text": "Stationary defences and vessels used as planetary defences such as Defence Monitors or system ships do not roll for leadership or have a leadership value just as other normal planetary defences do not, with the exception that they reload ordnance (where applicable) on a nominal leadership of 7 unless specifically stated otherwise in their fleet lists or special rules.",
+      "page": 499,
+      "status": "manual",
+      "why": "Not a fleet legality rule but an in-game one: the profile's field dld=7 and the card's rule pd_orders, a fixed Ld on the play page. The conflict is recorded under notes (p.499's left column)."
+    },
+    {
+      "key": "You remove D6 Blast Markers from each defence with a speed of 0 cm",
+      "text": "You remove D6 Blast Markers from each defence with a speed of 0 cm in each End Phase after all other actions in the End Phase.",
+      "page": 101,
+      "status": "manual",
+      "why": "Rulebook p.101, in-game: the card's rules pd_station, pd_platform and pd_ground; system defence vessels (pd_vessel) do not get it."
+    },
+    {
+      "key": "The Tau may spend their points allocation for planetary defences on orbitals",
+      "text": "The Tau may spend their points allocation for planetary defences on orbitals.",
+      "page": 451,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "pd-tau-orbital-city"
+      ],
+      "why": "The two Tau lists' defence section has only the orbitals (p.478-481)."
+    },
+    {
+      "key": "The Tau may not use any other form of planetary defence",
+      "text": "The Tau may not use any other form of planetary defence.",
+      "page": 452,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "pd-tau-orbital-city"
+      ],
+      "why": "The Tau lists have none of p.499's general rows: the structure is locked in test_domain.js's check 'PD Tau (p.452)'. The Demiurg War Host (p.482-487) is a different chapter, whose rules do not repeat the ban: it gets the general rows (interpretation, BACKLOG J173)."
+    },
+    {
+      "key": "The Ramilies is available to Imperial and Chaos Fleets",
+      "text": "The Ramilies is available to Imperial and Chaos Fleets, subject to the rules below.",
+      "page": 500,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "pd-ramilies-fleet-points"
+      ],
+      "why": "The row is on the lists of the Imperial Navy race (the four Navy lists and the Adeptus Mechanicus, p.14) and on six Chaos lists; test_domain 'PD Ramilies (p.500)'. 'Imperial' is not defined in the book: the Space Marines have their own Fortress-Monastery (p.98), and of the Inquisition, the Grey Knights and the Rogue Traders the book says nothing (interpretation, BACKLOG J173)."
+    },
+    {
+      "key": "Choose one of the defence systems below",
+      "text": "Choose one of the defence systems below. This defines the point cost for the waystation.",
+      "page": 481,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "pd-waystation-needs-one-system",
+        "pd-waystation-with-railgun"
+      ],
+      "why": "The profile's field need1 and resolveFleet's row 'Waystation (choose one defence system)': without a choice the unit is illegal, with two choices the option group's own limit rejects it. Review 9.10.2026: without this the Waystation cost 0 points."
+    }
+  ],
+  "notes": [
+    "CONFLICT p.499: the right column's box and Rulebook p.100 say that a defence takes all other Leadership tests at 7. At the end of the left column is a loose sentence 'However, they automatically pass any other leadership tests they may be required to make' - a remnant of the old rule. p.360 (Orks) repeats the old form. The app uses the form of the box and the Rulebook (Ld 7).",
+    "RULEBOOK p.101, oddities of the table (recorded, not harmonised): result 2-3 says 'The station may not fire until its lance armament has been repaired' under the heading 'Lances Damaged'; result 4 silences the batteries entirely, while the Ramilies' table (Fleets p.505) halves them; result 8-9 'Orbit Lost' moves the station, although the same page says 'defences never drift'.",
+    "CONFLICT on special torpedoes: p.19 'Escort squadrons and defences may not be equipped with special torpedoes at all', p.503 'A Ramilies can purchase special torpedoes' without a price or a method. The app offers defences no upgrades; the Ramilies' torpedoes are open (BACKLOG J174).",
+    "THE BOOK IS SILENT on squadrons of ground targets (Ground/1, p.517). Rulebook p.100's squadron sentence names 'orbital defences or ships that count as defences'. The app gives ground targets one card for 1-6 of them without a squadron rule (no legality row); the row's own limit 0-4 / 0-8 (p.499) is enforced.",
+    "THE BOOK IS SILENT on the critical hit of a one-hit defence. Rulebook p.66 names only escorts. The card says only 'one unsaved Hit destroys it'.",
+    "p.512: the placement of a mine bought singly is not told; the card uses the general high orbit rule (p.498). p.516: 'every ship within 3D6 cm' does not exclude own ships.",
+    "p.517 prints three profiles on one page (Air Base, Defence Laser Silo, Missile Silo) and p.516 a profile without a weapon table (Fire Ship): the extractor does not get them, so they are curated in build_data.py (keys 516, 517b, 517c).",
+    "Haven (p.334-337): no list prints a row for it, and the book does not say how many may be taken or from which points it is paid in a single game (only the campaign sentence p.337: 'counts against the fleet list in battles it takes part in'). The app: on the Corsair and Craftworld lists, for the Dark Eldar with swapped weapons (p.347), from the fleet's points, not in the third's total."
+  ]
+}

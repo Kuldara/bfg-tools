@@ -1,0 +1,137 @@
+/* ------------------------------------------------- star fort: plan card ----
+   A Ramilies (Fleets p. 500) or a Fortress-Monastery (p. 110) prints as two
+   cards on one page. This is the first: the fort seen from above, as the
+   user's model is built (7.10.2026) - four docking piers form a cross on the
+   axes, the Basilica sits where they meet, and the quadrants are the four
+   quarters between the piers. Each quadrant has its own hit track, weapons
+   and critical ticks (p. 501: "its weapons, hits and defences are divided up
+   into four quadrants"); the column beside the plan holds what belongs to
+   the whole fort. Every text zone is .k-box > .k-bd > .fit-content, so
+   fitCards() scales it instead of clipping it and layout_check.js sees it.
+   The plan is not a .k-row: the row balance must not re-cut it. */
+.fortw{display:grid;grid-template-columns:minmax(0,1fr) 46mm;gap:1.2mm;
+  padding:.9mm 1.35mm;flex:1 1 0;min-height:0}
+.fplan{position:relative;display:grid;gap:4.2mm;min-width:0;min-height:0;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  grid-template-rows:minmax(0,1fr) minmax(0,1fr)}
+.k-box.fq{border-color:#8C8781;border-radius:.6mm}
+.fq>.k-bd{padding:1mm 1.2mm;display:flex;flex-direction:column}
+/* The content fills the quadrant, so the critical ticks can sit against the
+   hub side: at the bottom of a top quadrant, at the top of a bottom one. */
+.fq .fit-content{flex:1 0 auto;display:flex;flex-direction:column;gap:1mm}
+.fq h5{margin:0;display:flex;align-items:center;justify-content:space-between;gap:1mm;
+  font:700 7pt/1 var(--disp);letter-spacing:.07em;color:var(--kd)}
+.fq h5 span{display:inline-flex;align-items:center;gap:1mm;white-space:nowrap}
+.fq h5 em{font:500 4.9pt/1 var(--mono);font-style:normal;letter-spacing:0;
+  color:#55504F;white-space:nowrap}
+.fq .k-cr{margin:.3mm 0 0}
+.fcomp{width:3.8mm;height:3.8mm;display:block;flex:none}
+.fcomp path{fill:#fff;stroke:#8C8781;stroke-width:.4}
+.fcomp path.on{fill:var(--kd)}
+.fcomp circle{fill:none;stroke:#4A4644;stroke-width:.75}
+.fcomp line{stroke:#4A4644;stroke-width:.6}
+/* Weapon rows of a quadrant and of the Basilica: one look, the weapon
+   table's own colours. The range is the book's text in full - a launch bay
+   row carries two ("Fighters: 30 cm / Bombers: 20 cm"), one to a line.
+   The columns are fixed and every cell may wrap: a table laid out by its
+   content grew wider than the quadrant on the Fortress-Monastery's
+   "Thunderhawk: 20 cm" row and the strengths were cut off at the edge. */
+.fq-arm{border-collapse:collapse;width:100%;table-layout:fixed}
+.fq-arm td{font:400 5.8pt/1.12 var(--sans);padding:.55mm .5mm;color:#211F20;
+  vertical-align:middle;background:var(--rw);overflow-wrap:anywhere}
+.fq-arm td.n{width:48%}
+.fq-arm td.rg{width:35.6%;font-size:5pt;line-height:1.12}
+.fq-arm td.s{width:16.4%;font-weight:700;text-align:right}
+.fq-arm .bg{display:inline-block;width:2.6mm;height:2.6mm;border-radius:.4mm;
+  background:var(--bd);color:#fff;font:700 4pt/2.6mm var(--sans);text-align:center;
+  margin-right:.7mm;vertical-align:-.4mm}
+/* Critical ticks. The hub covers a quadrant's inner corner, so the ticks
+   keep to the outer side of it and are at least as tall as the overlap:
+   nothing else in the quadrant can end up under the hub. */
+.fct{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:.6mm}
+.fq .fct{min-height:13.6mm}
+.fq.top .fct{margin-top:auto}
+.fq.bot .fct{order:-1}
+.fq.lft .fct{margin-right:13.4mm}
+.fq.rgt .fct{margin-left:13.4mm}
+.fct span{display:flex;align-items:center;gap:.7mm;min-width:0;border:.5pt solid #B9B4B5;
+  border-radius:.3mm;background:#FAF9F6;padding:.35mm .6mm}
+.fct i{display:block;flex:none;width:2.9mm;height:2.9mm;border:.6pt solid #211F20;
+  border-radius:.3mm;background:#fff}
+.fct u{text-decoration:none;font:600 4.4pt/1.06 var(--sans);color:#211F20;min-width:0}
+.fct u b{font-family:var(--mono);font-weight:700;margin-right:.5mm;white-space:nowrap}
+/* the piers: a cross through the plan, pier N marked for a rotating fort */
+.fpier{position:absolute;background:#E9E4DA;border:.5pt solid #8C8781;z-index:1;display:flex;
+  align-items:center;justify-content:center;font:700 4.2pt/1 var(--sans);letter-spacing:.14em;
+  color:#6B6769}
+.fpier.v{left:calc(50% - 1.6mm);width:3.2mm;writing-mode:vertical-rl}
+.fpier.h{top:calc(50% - 1.6mm);height:3.2mm}
+.fpier.n{top:0;height:calc(50% - 15.5mm)}.fpier.s{bottom:0;height:calc(50% - 15.5mm)}
+.fpier.w{left:0;width:calc(50% - 16mm)}.fpier.e{right:0;width:calc(50% - 16mm)}
+.fpier.n{background:var(--kd);color:#fff;border-color:var(--kd)}
+.k-box.fbas{position:absolute;left:calc(50% - 16mm);top:calc(50% - 15.5mm);width:32mm;
+  height:31mm;border:1.3pt solid var(--kd);border-radius:1mm;z-index:2}
+.fbas>h4{background:var(--kd);font:700 7pt/1 var(--disp);letter-spacing:.1em;
+  padding:.8mm 1.1mm;align-items:center}
+.fbas>h4 em{font:500 4.9pt/1 var(--mono);color:#fff}
+.fbas>.k-bd{padding:0 0 .7mm}
+.fbas .fq-arm td{font-size:5.6pt;padding:.5mm .4mm}
+.fbas .fq-arm td.n{width:65%;padding-left:.8mm}
+.fbas .fq-arm td.rg{width:21%;font-size:5pt}
+.fbas .fq-arm td.s{width:14%;padding-right:.8mm}
+.fbas .k-sr{list-style:none;padding:.6mm 1mm 0}
+.fbas .k-sr li{font-size:4.7pt;line-height:1.14;margin:0;color:#3D3937}
+.fbas .fct{padding:.6mm 1mm 0}
+/* the column beside the plan: what belongs to the whole fort. fitCards()
+   cuts its height between the boxes by what each one holds. */
+.fcol{display:flex;flex-direction:column;gap:1mm;min-width:0;min-height:0}
+.fcol>.k-box{flex:1 1 0;min-height:0;border-color:#D8D3CB;border-radius:.6mm;background:#FAF9F6}
+.fcol .k-bd{padding:.9mm 1.2mm}
+.fcol .fit-content{display:flow-root}
+.fcol h6{margin:0 0 .7mm;font:700 5pt/1 var(--sans);letter-spacing:.1em;color:var(--km)}
+.fcol .k-sr{padding-left:0;list-style:none}
+.fcol .k-sr li{margin-bottom:.5mm}
+.fline{display:flex;flex-wrap:wrap;gap:.7mm 1.1mm;align-items:center;margin:0 0 .8mm}
+.fld{display:block;flex:none;min-width:9mm;height:4.3mm;border:.6pt solid #8C8781;
+  border-radius:.5mm;background:#fff;font:700 6.4pt/4.3mm var(--mono);font-style:normal;
+  text-align:center;padding:0 1mm;color:#211F20}
+.fldn{font:500 5.2pt/1.1 var(--sans);color:#55504F}
+.ford{font:600 5pt/1 var(--sans);border:.5pt solid #B9B4B5;border-radius:.4mm;
+  padding:.45mm .9mm;background:#fff;color:#211F20;white-space:nowrap}
+.fcap{margin:0 0 .6mm;font:500 5.2pt/1.15 var(--sans);color:#55504F}
+.fcol i.rrb{display:block;flex:none;width:9.4mm;height:4.3mm;border-radius:.5mm;background:#fff;
+  font:600 5pt/4.1mm var(--sans);font-style:normal;text-align:center;letter-spacing:.01em;
+  white-space:nowrap}
+.fcol i.rrb.included{border:.9pt solid var(--kd);background:color-mix(in srgb,var(--km) 14%,#fff);color:var(--kd)}
+.fcol i.rrb.bought{border:.9pt solid #8A6A1F;background:#FAF1D6;color:#8A6A1F}
+.fcol i.rrb.optional{border:.9pt dashed #8C8781;color:#7A7572}
+/* the plan in small, with the quarter one quadrant covers and a firing line */
+.fsecg{float:left;width:15mm;height:15mm;margin:0 1.2mm .4mm 0;display:block}
+.fsecg .oct{fill:#fff;stroke:#211F20;stroke-width:.5}
+.fsecg .on{fill:color-mix(in srgb,var(--km) 32%,#fff)}
+.fsecg .pr{fill:#E9E4DA;stroke:#8C8781;stroke-width:.4}
+.fsecg .pn{fill:var(--kd);stroke:var(--kd);stroke-width:.4}
+.fsecg .bs{fill:var(--kd)}
+.fsecg text{font:700 3.2px var(--sans);fill:#211F20;text-anchor:middle}
+.fsecg .tg{fill:#A23B2E}
+.fsecg .ln{stroke:#A23B2E;stroke-width:.5}
+.fsecg .ax{stroke:#211F20;stroke-width:.4;stroke-dasharray:1.5 1.1}
+
+/* ------------------------------------------------ star fort: rules card ----
+   The second card of the pair is the ordinary card without its damage track
+   (the tracks are on the plan, four of them) and with the rules given the
+   width of the card: a fort's rules run to some 3000 characters, and beside
+   the weapon table they came out at 3.2 pt (layout_check.js, 8.10.2026). */
+.k-sr.cols{column-count:3;column-gap:3mm}
+.k-sr.cols li{break-inside:avoid;page-break-inside:avoid}
+/* A rules-heavy stationary defence (.k.widerules): the weapon table and the
+   rules in one box of two columns, the table at the head of the first. */
+.k-flow{column-count:2;column-gap:3mm}
+.k-flow .k-arm{break-inside:avoid;page-break-inside:avoid;margin-bottom:1.2mm}
+.k-flow .k-sr li,.k-flow .k-gift{break-inside:avoid;page-break-inside:avoid}
+.k-subh{margin:0 0 .9mm;padding:.5mm 1.2mm;background:var(--km);color:#fff;
+  font:700 6pt/1.1 var(--sans);letter-spacing:.045em;break-after:avoid}
+.k.fortr .k-sr li.fnote{list-style:none;margin-left:-3.2mm;font-weight:600;color:#4A4644}
+.k.fortr .k-crit .wide{flex-wrap:wrap;gap:.5mm 5mm}
+.k.fortr .k-crit .wide span{flex:0 1 auto}
+

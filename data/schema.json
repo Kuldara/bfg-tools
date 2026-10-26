@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bfgtools.kuldare.com/bfg_data.schema.json",
+  "title": "BFG Tools ship data",
+  "description": "Ship profiles and fleet lists of Battlefleet Gothic: Remastered, extracted from the Fleets Book WiP v0.36 and the Rulebook v1.10. See data/README.md for which fields are stable.",
+  "type": "object",
+  "required": ["schemaVersion", "src", "ships", "lists"],
+  "properties": {
+    "schemaVersion": {
+      "description": "Version of this interface, MAJOR.MINOR. MAJOR changes when a stable field is removed or renamed.",
+      "type": "string",
+      "pattern": "^1\\.[0-9]+$"
+    },
+    "src": {
+      "description": "The books the data was read from, as one line of text.",
+      "type": "string"
+    },
+    "ships": {
+      "description": "Ship profiles by id. The id is the Fleets Book page of the profile, with a letter when one page has several (\"472c\").",
+      "type": "object",
+      "patternProperties": {
+        "^[0-9]+[a-z]?$": { "$ref": "#/$defs/ship" }
+      },
+      "additionalProperties": false
+    },
+    "lists": {
+      "description": "Fleet lists in book order.",
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/list" }
+    }
+  },
+  "$defs": {
+    "ship": {
+      "type": "object",
+      "required": ["pg", "fl", "nm", "ty", "hp", "sp", "tn", "sh", "ar", "tl", "tu", "aw", "sr", "op"],
+      "properties": {
+        "pg": { "description": "Fleets Book page of the profile (its picture is on this page).", "type": "integer" },
+        "fl": { "description": "The book's fleet heading, upper case (\"IMPERIAL NAVY\").", "type": "string" },
+        "nm": { "description": "Class name as printed, upper case (\"APOCALYPSE CLASS BATTLESHIP\").", "type": "string" },
+        "bp": { "description": "Base points, or null when the profile has no price of its own.", "type": ["integer", "null"] },
+        "ty": { "description": "Hull type.", "enum": ["Battleship", "Grand Cruiser", "Cruiser", "Escort", "Defence", "Ground"] },
+        "hp": { "description": "Hits (damage points).", "type": "integer" },
+        "sp": { "description": "Speed as printed (\"15 cm\").", "type": "string" },
+        "tn": { "description": "Turns as printed (\"45°\").", "type": "string" },
+        "sh": { "description": "Shields as printed.", "type": "string" },
+        "ar": { "description": "Armour as printed (\"6+ front / 5+\").", "type": "string" },
+        "tl": { "description": "Label of the turret column in the book (\"TURRETS\", or what a fleet calls them).", "type": "string" },
+        "tu": { "description": "Turrets as printed.", "type": "string" },
+        "aw": {
+          "description": "Armament rows: [name, range/speed, firepower/strength, arc], as printed.",
+          "type": "array",
+          "items": { "type": "array", "minItems": 4, "maxItems": 4, "items": { "type": "string" } }
+        },
+        "sr": { "description": "Special rules text of the profile, as printed.", "type": "string" },
+        "op": { "description": "Options text of the profile, as printed (may be empty).", "type": "string" },
+        "rt": { "description": "Rules type the apps use (\"battleship\", \"cruiser\", ...).", "type": "string" },
+        "chap": { "description": "Index of the book chapter the profile is in.", "type": "integer" },
+        "qd": { "type": "integer" },
+        "ol": { "description": "Options the apps can apply, resolved from op. Internal: the shape may change.", "type": "array" }
+      },
+      "additionalProperties": true
+    },
+    "list": {
+      "type": "object",
+      "required": ["nm", "pg", "secs"],
+      "properties": {
+        "nm": { "description": "Fleet list name (\"Imperial Navy — Gothic Sector\").", "type": "string" },
+        "pg": { "description": "Fleets Book page where the list starts.", "type": "integer" },
+        "race": { "description": "Race used by the reserve and ally rules, or null.", "type": ["string", "null"] },
+        "secs": {
+          "description": "Sections of the list in book order (commanders, capital ships, escorts, ...).",
+          "type": "array",
+          "items": { "$ref": "#/$defs/section" }
+        }
+      },
+      "additionalProperties": true
+    },
+    "section": {
+      "type": "object",
+      "required": ["t", "ents", "rules"],
+      "properties": {
+        "t": { "description": "Section heading as printed.", "type": "string" },
+        "ents": { "description": "Rows of the section.", "type": "array", "items": { "$ref": "#/$defs/entry" } },
+        "rules": { "description": "The section's restrictions, machine-checked or marked for the player. Internal: the shape may change.", "type": "array" },
+        "text": { "description": "The section's sentences as printed.", "type": "array" }
+      },
+      "additionalProperties": true
+    },
+    "entry": {
+      "type": "object",
+      "required": ["l", "k", "p"],
+      "properties": {
+        "l": { "description": "Row label as printed.", "type": "string" },
+        "k": { "description": "Row kind: a unit to buy, an upgrade, or a commander.", "enum": ["unit", "up", "cmd"] },
+        "p": { "description": "Points, or null when the row has no fixed price.", "type": ["integer", "null"] },
+        "r": { "description": "Ship profile id (a key of ships) the row buys, if any.", "type": ["integer", "string", "null"] },
+        "src_page": { "description": "Fleets Book page of the row.", "type": ["integer", "null"] }
+      },
+      "additionalProperties": true
+    }
+  }
+}

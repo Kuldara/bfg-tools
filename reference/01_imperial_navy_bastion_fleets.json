@@ -1,0 +1,282 @@
+{
+  "list": "Imperial Navy — Bastion Fleets",
+  "book_page": 36,
+  "read_pages": [
+    36,
+    37,
+    38,
+    39
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Admiral",
+      "text": "0-1 Admiral",
+      "page": 36,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "worth over 750 points an Admiral must be included",
+      "text": "If the fleet is worth over 750 points an Admiral must be included to lead it.",
+      "page": 36,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "why": "The book says 'over 750 points'. The MAND pattern used to know only the form 'points or more', so the required commander went unenforced on 13 lists. Fixed 7.9.2026; the comparison is now recorded too, because 'over 750' and '750 or more' differ exactly at 750 points.",
+      "over": true
+    },
+    {
+      "key": "one battleship in your fleet for every three cruisers",
+      "text": "You may include up to one battleship in your fleet for every three cruisers or battlecruisers.",
+      "page": 37,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 3,
+      "per_types": [
+        "cruisers",
+        "battlecruisers"
+      ],
+      "why": "The numerator must be limited to battleships and the denominator must take in the battlecruisers: all three types are in the book under the same heading 'Battleships'. This was a reported bug on 7.9.2026."
+    },
+    {
+      "key": "one battlecruiser or grand cruiser in your fleet for every two cruisers",
+      "text": "You may include up to one battlecruiser or grand cruiser in your fleet for every two cruisers.",
+      "page": 37,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 2,
+      "per_types": [
+        "cruisers"
+      ],
+      "why": "Did not parse by itself, because in the book the subheading 'Battlecruisers & Grand Cruisers' is stuck to the start of the sentence. Added by hand in the RULE_PICKS table."
+    },
+    {
+      "key": "Grand Cruisers do not count as cruisers for purposes of fielding battleships",
+      "text": "Grand Cruisers do not count as cruisers for purposes of fielding battleships.",
+      "page": 37,
+      "status": "manual",
+      "why": "An explanatory sentence. Already holds: grand cruisers are not in the battleship rule's denominator."
+    },
+    {
+      "key": "0-12 Cruisers",
+      "text": "0-12 Cruisers",
+      "page": 37,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 12
+    },
+    {
+      "key": "escorts in your fleet in squadrons of 2",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "page": 37,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "combined numbers of Endurance and Defiant class vessels may not exceed",
+      "text": "The Endurance and Defiant class light cruisers are rare variants of the Endeavour, hence the combined numbers of Endurance and Defiant class vessels may not exceed the number of Endeavour class light cruisers in the fleet.",
+      "page": 37,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. compare: Endurance+Defiant <= Endeavour. The earlier gap: a comparison between two sets of rows. The engine had no such rule type; the same form as in the Protector and Demiurg rules.",
+      "kind": "compare",
+      "op": "<=",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "up to five Veteran Captains in your fleet",
+      "text": "You may include up to five Veteran Captains in your fleet.",
+      "page": 38,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 5,
+      "why": "The book writes this limit twice: as a heading and as a sentence. The app showed two identical rows of them until they were merged on 7.9.2026. One check is left, whose source sentence is the book's full sentence."
+    },
+    {
+      "key": "must roll two dice and pick the lowest score when determining leadership",
+      "text": "Because of this, the ships and squadrons of Battlefleet Cadia must roll two dice and pick the lowest score when determining leadership.",
+      "page": 38,
+      "status": "manual",
+      "why": "an in-game rule, not fleet composition"
+    },
+    {
+      "key": "Each Veteran Captain must be assigned to a particular ship",
+      "text": "Each Veteran Captain must be assigned to a particular ship and improves its leadership by +1.",
+      "page": 38,
+      "status": "manual",
+      "why": "placement happens in the game, not in the list"
+    },
+    {
+      "key": "Ships assigned a Veteran Captain must be squadroned on the tabletop",
+      "text": "Ships assigned a Veteran Captain must be squadroned on the tabletop (their skills are too precious to waste on lone ships).",
+      "page": 38,
+      "status": "manual",
+      "why": "poydalla tarkistettava"
+    },
+    {
+      "key": "for every three vessels of a given type which you choose from the main fleet list",
+      "text": "These 'reserve' vessels are picked in the normal manner, so for every three vessels of a given type which you choose from the main fleet list, you may pick one vessel of that type from another Imperial list, or from the above selection of Chaos vessels (but not both).",
+      "page": 39,
+      "status": "manual",
+      "why": "Shown since 9.9.2026 (sentence limit 400 -> 500 characters). Reserves from other lists are not modelled; the player's responsibility.",
+      "classified_on": "2026-09-09"
+    }
+  ],
+  "entries": [
+    {
+      "name": "Fleet-Admiral (Ld 8)",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Admiral (Ld 9)",
+      "pts": 100,
+      "page": null
+    },
+    {
+      "name": "Solar Admiral (Ld 10)",
+      "pts": 150,
+      "page": null
+    },
+    {
+      "name": "One extra re-roll",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Two extra re-rolls",
+      "pts": 75,
+      "page": null
+    },
+    {
+      "name": "Three extra re-rolls",
+      "pts": 150,
+      "page": null
+    },
+    {
+      "name": "Apocalypse class battleship",
+      "pts": 365,
+      "page": 52
+    },
+    {
+      "name": "Emperor class battleship",
+      "pts": 365,
+      "page": 53
+    },
+    {
+      "name": "Retribution class battleship",
+      "pts": 345,
+      "page": 54
+    },
+    {
+      "name": "Exorcist class grand cruiser",
+      "pts": 230,
+      "page": 59
+    },
+    {
+      "name": "Vengeance class grand cruiser",
+      "pts": 230,
+      "page": 58
+    },
+    {
+      "name": "Avenger class grand cruiser",
+      "pts": 200,
+      "page": 60
+    },
+    {
+      "name": "Mars class battlecruiser",
+      "pts": 270,
+      "page": 61
+    },
+    {
+      "name": "Armageddon class battlecruiser",
+      "pts": 235,
+      "page": 65
+    },
+    {
+      "name": "Overlord class battlecruiser",
+      "pts": 220,
+      "page": 66
+    },
+    {
+      "name": "Dictator class cruiser",
+      "pts": 220,
+      "page": 67
+    },
+    {
+      "name": "Tyrant class cruiser",
+      "pts": 185,
+      "page": 69
+    },
+    {
+      "name": "Gothic class cruiser",
+      "pts": 180,
+      "page": 70
+    },
+    {
+      "name": "Lunar class cruiser",
+      "pts": 180,
+      "page": 71
+    },
+    {
+      "name": "Dauntless class light cruiser",
+      "pts": 110,
+      "page": 77
+    },
+    {
+      "name": "Endeavour Class Light Cruiser",
+      "pts": 110,
+      "page": 72
+    },
+    {
+      "name": "Endurance Class Light Cruiser*",
+      "pts": 110,
+      "page": 74
+    },
+    {
+      "name": "Defiant Class Light Cruiser*",
+      "pts": 120,
+      "page": 76
+    },
+    {
+      "name": "Firestorm class frigate",
+      "pts": 40,
+      "page": 79
+    },
+    {
+      "name": "Sword class frigate",
+      "pts": 35,
+      "page": 82
+    },
+    {
+      "name": "Cobra class destroyer",
+      "pts": 30,
+      "page": 84
+    },
+    {
+      "name": "Veteran Captain (Ld +1)",
+      "pts": 50,
+      "page": null
+    }
+  ],
+  "extra_entries": [
+    {
+      "name": "Imperial Power Ram",
+      "pts": 5,
+      "why": "from the shared Imperial Navy rules on page 32"
+    }
+  ],
+  "notes": [
+    "Page 36 is the start of the list and narrative about the Bastion fleets. Page 37 is the whole composition list. Page 38 is Battlefleet Cadia and Veteran Captains. Page 39 is the reserve fleets of Segmentum Obscurus.",
+    "The reserve rule on page 39 allows five Chaos ships: Repulsive p.269, Executor p.271, Hades p.274, Murder p.279, Carnage p.277. They are not rows of the list, because they come through the Reserves rule.",
+    "Battlefleet Cadia's leadership rule (two dice, the lower) is in-game and does not show on the cards."
+  ]
+}

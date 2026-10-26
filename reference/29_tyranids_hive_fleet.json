@@ -1,0 +1,324 @@
+{
+  "list": "Tyranids — Hive Fleet",
+  "book_page": 430,
+  "read_pages": [
+    423,
+    424,
+    425,
+    426,
+    427,
+    428,
+    430,
+    431
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "may opt to include the direct influence of the Hive Mind in lieu of having a fleet commander",
+      "text": "The Tyranid player may opt to include the direct influence of the Hive Mind in lieu of having a fleet commander.",
+      "page": 430,
+      "status": "manual",
+      "why": "Explains why the FLEET COMMANDER section has no commander but two purchasable effects."
+    },
+    {
+      "key": "A maximum of one Hive Mind Influence re-roll can be purchased per hive ship",
+      "text": "A maximum of one Hive Mind Influence re-roll can be purchased per hive ship in the fleet.",
+      "page": 430,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. upgrade_ratio: the units that took the upgrade per hive ship. The earlier gap: a ratio whose NUMERATOR is an upgrade row and not a ship. The engine counts ratios from the sections' ship counts, so this could not be expressed.",
+      "kind": "upgrade_ratio",
+      "per": 1,
+      "allow": 1,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "A maximum of one Hive Mind Imperative can be purchased per two hive ships",
+      "text": "A maximum of one Hive Mind Imperative can be purchased per two hive ships in the fleet, though a single Hive Mind Imperative may be purchased as long as the fleet contains at least one hive ship.",
+      "page": 430,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. upgrade_ratio min_one: one is allowed already with one hive ship. The earlier gap: the same reason, and the sentence also contains an exception: one may be bought already with one hive ship.",
+      "kind": "upgrade_ratio",
+      "per": 2,
+      "allow": 1,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Each hive ship allows the Tyranid player to purchase",
+      "text": "Each hive ship allows the Tyranid player to purchase 6-12 escort ships and 0-2 capital ships.",
+      "page": 430,
+      "status": "manual",
+      "why": "Two rules in one sentence. The hull ships' side is enforced from the next page's sentence ('up to 2 capital ships for each hive ship'); the escorts' 6-12 is not."
+    },
+    {
+      "key": "up to 2 capital ships for each hive ship",
+      "text": "You may include up to 2 capital ships for each hive ship in the fleet.",
+      "page": 430,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 2,
+      "per": 1,
+      "why": "Parsed only when the ratio pattern was taught to know 'for each' alongside the word pair 'for every' (7.9.2026)."
+    },
+    {
+      "key": "between 6 and 12 escort class ships for each hive ship",
+      "text": "You may include between 6 and 12 escort class ships for each hive ship.",
+      "page": 431,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. Two rules: min_ratio 6 and ratio 12 per hive ship. The earlier gap: a ratio with both a minimum and a maximum. The engine's ratio enforced only the maximum, and the number word 'between' does not do as a number. In practice this is the list's most important limi",
+      "kind": "min_ratio",
+      "min": 6,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "If no hive ships are chosen, only Kraken and Vanguard drone ships may be included",
+      "text": "If no hive ships are chosen, only Kraken and Vanguard drone ships may be included in the fleet.",
+      "page": 431,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. conditional_cap: without a hive ship, anything other than Kraken/Vanguard (CAPITAL SHIPS too) = 0. The earlier gap: a conditional ban: 'if X, then only Y'. The engine had no conditional rule type.",
+      "kind": "conditional_cap",
+      "max_unmet": 0,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "at least six escort drones for every hive ship",
+      "text": "The fleet must have at least six escort drones for every hive ship in the fleet.",
+      "page": 431,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. The earlier gap: a ratio as a MINIMUM, like the Dark Eldar escort limit. The engine enforced only maximums.",
+      "kind": "min_ratio",
+      "min": 6,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "squadrons of 1 to 12 vessels",
+      "text": "Tyranid Escorts come as squadrons of 1 to 12 vessels, while all other types are individuals and may not deploy in squadrons.",
+      "page": 431,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 1,
+      "max": 12,
+      "why": "Written by hand for the same reason as on the Vanguard list: the separator is the word 'to', and the sentence is in the SQUADRONS section, which has no ships."
+    },
+    {
+      "key": "Up to 10 % of the fleet",
+      "text": "Up to 10 % of the fleet's points allowance may be spent on Ordnance markers as long as at least one hive ship is chosen.",
+      "page": 431,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. points_share of=limit, cond: at least one hive ship. The earlier gap: a percentage share of the fleet's points limit, and a condition too ('as long as at least one hive ship'). Neither could be expressed. The ordnance markers are list rows with pric",
+      "kind": "points_share",
+      "pct": 10,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "the points cost indicated provides you with one port weapon and one starboard weapon",
+      "text": "When buying 'port/starboard weapons' the points cost indicated provides you with one port weapon and one starboard weapon (of the same type) for the points cost indicated.",
+      "page": 431,
+      "status": "manual",
+      "why": "An interpretation of the pricing: one purchase = both sides. The rows are in their own section 'Up to Three Port/Starboard Weapons'."
+    },
+    {
+      "key": "No hive ship may ever have more than three different special refits",
+      "text": "No hive ship may ever have more than three different special refits, no cruiser more than two and no escort more than one.",
+      "page": 426,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. unit_upgrade_max: BIO-ENHANCEMENTS rows per unit: hive ship 3, cruiser 2, escort 1 (three rules). The earlier gap: the bio-enhancements' count limit by ship type. The app does not count how many different refits one ship has, so the limit is left to the player. It reads BIO-ENHANCEME",
+      "kind": "unit_upgrade_max",
+      "max": 3,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "no single bio-enhancement may be granted more than once",
+      "text": "With the exception of reinforced carapace and extra spore cysts, no single bio-enhancement may be granted more than once.",
+      "page": 426,
+      "status": "manual",
+      "why": "The structure allows every row once; the exceptions (carapace and spore cysts several times) cannot be bought in v1 - repeatable list upgrades are a v1.1 feature (docs/history/registry/BACKLOG.md).",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Tyranids cannot use the torpedo refits available to other races",
+      "text": "Because the equivalent of Tyranid torpedoes are always boarding torpedoes, Tyranids cannot use the torpedo refits available to other races.",
+      "page": 426,
+      "status": "manual",
+      "why": "The ban concerns other factions' refit tables, which this list does not offer at all."
+    }
+  ],
+  "entries": [
+    {
+      "name": "Hive Mind Influence re-roll",
+      "pts": 30,
+      "page": null,
+      "sec": "FLEET COMMANDER"
+    },
+    {
+      "name": "Hive Mind Imperative",
+      "pts": 40,
+      "page": null,
+      "sec": "FLEET COMMANDER"
+    },
+    {
+      "name": "Hive ship (Ld 8)",
+      "pts": 200,
+      "page": 432,
+      "sec": "HIVE SHIPS"
+    },
+    {
+      "name": "Increase to Ld 9",
+      "pts": 40,
+      "page": null,
+      "sec": "HIVE SHIPS"
+    },
+    {
+      "name": "Cruiser",
+      "pts": 80,
+      "page": 434,
+      "sec": "CAPITAL SHIPS"
+    },
+    {
+      "name": "Pyro-acid battery",
+      "pts": 15,
+      "page": null,
+      "sec": "Up to Three Port/Starboard Weapons"
+    },
+    {
+      "name": "Bio-plasma discharge",
+      "pts": 20,
+      "page": null,
+      "sec": "Up to Three Port/Starboard Weapons"
+    },
+    {
+      "name": "Launch bays",
+      "pts": 20,
+      "page": null,
+      "sec": "Up to Three Port/Starboard Weapons"
+    },
+    {
+      "name": "Pyro-acid battery",
+      "pts": 15,
+      "page": null,
+      "sec": "Up to two Port/Starboard Weapons"
+    },
+    {
+      "name": "Bio-plasma discharge",
+      "pts": 20,
+      "page": null,
+      "sec": "Up to two Port/Starboard Weapons"
+    },
+    {
+      "name": "Vanguard drone ship",
+      "pts": 20,
+      "page": 436,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Escort drone",
+      "pts": 10,
+      "page": 437,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Kraken",
+      "pts": 25,
+      "page": 435,
+      "sec": "ESCORTS"
+    },
+    {
+      "name": "Boarding torpedoes",
+      "pts": 15,
+      "page": null,
+      "sec": "ESCORTS",
+      "grp": true
+    },
+    {
+      "name": "Strength 4 boarding torpedo marker",
+      "pts": 12,
+      "page": null,
+      "sec": "ORDNANCE"
+    },
+    {
+      "name": "Assault boat marker",
+      "pts": 8,
+      "page": null,
+      "sec": "ORDNANCE"
+    },
+    {
+      "name": "Fighter marker",
+      "pts": 7,
+      "page": null,
+      "sec": "ORDNANCE"
+    },
+    {
+      "name": "Solar Vanes",
+      "pts": 15,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Adrenaline Sacs",
+      "pts": 10,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Psychic Scream",
+      "pts": 20,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "More Discharge Vents",
+      "pts": 15,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Extra Spore Cysts (each)",
+      "pts": 10,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Reinforced Carapace (each)",
+      "pts": 10,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Mucous Membrane",
+      "pts": 20,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Accelerated Healing",
+      "pts": 10,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Drone Link",
+      "pts": 20,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Tenacity",
+      "pts": 20,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Mega-Spore Mines",
+      "pts": 10,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    }
+  ],
+  "notes": [
+    "The hive ship's and the cruiser's weapons are in three blocks in the book: 'One prow weapon', 'One thorax weapon' and 'Up to Three (or two) Port/Starboard Weapons'. The last two merged into one until 7.9.2026, because a section heading was not allowed to contain a slash. After the merge the duplicate pruning dropped 'Bio-plasma discharge +20' and 'Launch bays +20' from the hive ship, so two of the three port/starboard alternatives disappeared entirely.",
+    "The ESCORTS section has three ships in a row, each with its own weapon list. All three have 'Feeder tentacles +5', and the pruning dropped the two latter ones - the Escort drone and the Kraken lost the alternative. Fixed by resetting the pruning's memory at every ship row.",
+    "The weapons exclude each other one ship at a time: the Kraken's choice does not switch off the Escort drone's weapon, although they are in the same section.",
+    "This is the most complex list in the book. Two rules could be enforced (the hull ship ratio and the skwadron size); five are left as gaps, and the most important of them is the escorts' 6-12 per hive ship.",
+    "The Kraken's torpedo row is 'Boarding torpedoes' (+15) on this list and 'Torpedoes' (+15) on the Vanguard list. The difference is the book's own.",
+    "This list revealed a wide gap: the faction's shared rules (for the tyranids pages 423-428) showed only on each faction's FIRST list, because the book prints them once before it. Twenty lists of 32 were without - the Hive Fleet included. Now a list inherits the block from the previous list, and this reference checks the inheritance: three bio-enhancement rules are read from page 426, which is not in this list's own page range."
+  ]
+}

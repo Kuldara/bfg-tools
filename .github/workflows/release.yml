@@ -1,0 +1,53 @@
+# A release is a tag (docs/adr/0006-a-release-is-a-tag.md):
+#   registry-v1.3   scenarios-v0.18   boarding-v2026.11   ...   all-v2026.11.01
+# The tag's app is built, tested and deployed to its Cloudflare Worker, and the
+# GitHub Pages mirror is refreshed with every site at that commit.
+#
+# Needs the repository secrets CLOUDFLARE_API_TOKEN (Workers Scripts: Edit) and
+# CLOUDFLARE_ACCOUNT_ID, and Pages set to "GitHub Actions" as the source.
+name: Release
+
+on:
+  push:
+    tags: ["*-v*"]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.pages.outputs.page_url }}
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: echo "CHROME=$(which google-chrome || which chromium)" >> "$GITHUB_ENV"
+      - run: npm ci
+      - run: npm test
+      - name: Deploy to Cloudflare
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+        run: |
+          APP="${GITHUB_REF_NAME%%-v*}"
+          if [ "$APP" = "all" ]; then npm run publish -- --all; else npm run publish -- "$APP"; fi
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/
+      - id: pages
+        uses: actions/deploy-pages@v4

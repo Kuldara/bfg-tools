@@ -1,0 +1,89 @@
+/* ---------------------------------------------------------- validation -- */
+.checks{padding:4px 0}
+.chk{
+  display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:baseline;
+  padding:7px 14px;border-bottom:1px solid var(--line-soft);font-size:12.5px
+}
+.chk:last-child{border-bottom:0}
+.chk .dot{
+  width:8px;height:8px;border-radius:50%;background:var(--ok);
+  align-self:center;box-shadow:0 0 0 3px var(--ok-wash)
+}
+.chk.bad .dot{background:var(--bad);box-shadow:0 0 0 3px var(--bad-wash)}
+.chk.warn .dot{background:var(--warn);box-shadow:0 0 0 3px var(--warn-wash)}
+.chk .src{display:block;color:var(--ink-3);font-size:11px;line-height:1.45;margin-top:2px}
+.chk .val{font:500 11px/1 var(--mono);color:var(--ink-3);white-space:nowrap}
+/* every squadron of one rule on one row (J228) */
+.chk .sqs{display:flex;flex-wrap:wrap;gap:2px 12px;margin-top:3px;color:var(--ink-2);font-size:12px}
+.chk .sqs i{font:500 11px var(--mono);font-style:normal;color:var(--ink-3)}
+.chk .sqs .sq.bad,.chk .sqs .sq.bad i{color:var(--bad);font-weight:600}
+/* Fleet facts (J214): worked out for the player, not checked - a hollow dot */
+.facts:empty{display:none}
+.facts{border-top:1px solid var(--line)}
+.facts .facthd{padding:8px 14px 2px;font:500 11px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.chk.fact .dot{background:transparent;box-shadow:inset 0 0 0 2px var(--ink-3)}
+.chk.fact.warn .dot{background:transparent;box-shadow:inset 0 0 0 2px var(--warn)}
+.chk.fact .val{color:var(--ink);font-weight:600}
+/* Da Ork Clanz Warlord block (J226) */
+.wlpanel{margin:8px 0 2px;padding:8px 10px;border:1px solid var(--line);border-radius:var(--r);background:var(--ground);display:flex;flex-direction:column;gap:6px}
+.wlpanel.on{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.wlrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px}
+.wlrow .abl{min-width:62px;font:500 11px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.wlname{font-size:13px}
+.wlhint{font-size:11.5px;color:var(--ink-3)}
+.wlneed{font-size:12.5px}
+.wlneed.ok{color:var(--ok)}
+.wlneed.bad{color:var(--bad)}
+.seg{display:inline-flex;flex-wrap:wrap;gap:4px}
+.segb,.wlact{min-height:30px;padding:0 10px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);
+  color:var(--ink);font:500 12px/1 var(--sans);cursor:pointer}
+.segb.on,.wlact.on{background:var(--accent-wash);border-color:var(--accent);color:var(--accent-ink)}
+.wlact{margin-left:auto}
+.limitchip.wlto{border-color:var(--wl);color:var(--ink);box-shadow:inset 3px 0 0 var(--wl)}
+.wlpanel{border-left:4px solid var(--wl)}
+.wlpanel.on{border-color:var(--wl);box-shadow:0 0 0 1px var(--wl) inset}
+.unit.wlc{box-shadow:inset 5px 0 0 var(--wl)}
+/* J232: Send to beside the grip, the skwadrons in the Warlord block, the
+   Ork words in plain English */
+.uhead .wlsend{max-width:11em;min-height:26px;padding:0 4px;border:1px solid var(--line);border-left:5px solid var(--wl);
+  border-radius:var(--r);background:var(--panel);color:var(--ink);font:500 12px/1.2 var(--sans);cursor:pointer}
+.wlsk{flex:1 1 260px;margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px;font-size:12.5px;line-height:1.35}
+.wlsk li{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}
+.wlsk .skk{flex:0 0 auto;min-width:9.5em;padding-left:7px;box-shadow:inset 3px 0 0 var(--wl);color:var(--ink-2);font-size:11.5px}
+.wlsk .skn{font-weight:600}
+.wlsk select{max-width:100%;min-height:28px;font:500 12px/1.2 var(--sans)}
+/* the gloss on a line of its own under the section's name, so the chips
+   beside the name keep their width on a phone */
+.sec>summary:has(.gloss){flex-wrap:wrap;row-gap:2px}
+.sec summary .gloss{order:9;flex:1 0 100%;margin-left:22px;font:400 11.5px/1.3 var(--sans);color:var(--ink-3);text-transform:none;letter-spacing:0}
+.limitchip.wlto{white-space:nowrap}
+.segb[disabled]{opacity:.45;cursor:default}
+.unit.wlhead{margin-top:10px}
+.wlbar{position:sticky;top:0;z-index:15;display:flex;flex-direction:column;gap:6px;padding:8px 12px;
+  background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.wldot{display:inline-block;width:10px;height:10px;border-radius:50%;background:var(--wl);margin-right:6px;vertical-align:-1px}
+.segb.wlpick.on{background:var(--panel);border-color:var(--wl);box-shadow:inset 0 -3px 0 var(--wl);color:var(--ink)}
+.wlhint.bad{color:var(--bad)}
+/* clan effects (J227): the six while none is chosen, then his own */
+.wlclans{flex:1 1 260px;margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:5px;font-size:12px;line-height:1.35}
+.wlclans li{display:flex;gap:8px;align-items:flex-start}
+.wlclans b{flex:0 0 86px;padding:1px 0 1px 7px;box-shadow:inset 3px 0 0 var(--wl)}
+.wlclans b .wlhint{display:block;font-weight:400;font-size:11px}
+.wlclans .fxs{display:flex;flex-wrap:wrap;gap:4px;align-items:center}
+.wlclans .fx{padding:1px 7px;border:1px solid var(--wl);border-radius:3px;background:var(--sunk);color:var(--ink);font-weight:700}
+.wlclans .fx.lim{font-weight:400;color:var(--ink-2);border-style:dashed}
+/* upgrade rows' game effects (J229) */
+.upfx{--wl:var(--line);display:flex;flex-wrap:wrap;gap:3px 4px;grid-column:2/4;margin-top:-6px}
+/* a per-bay or per-ship price ("+5 x 4 bays = +20") takes two lines on a
+   phone instead of squeezing the row's name and effects into a column */
+@media (max-width:640px){.opt .c{white-space:normal;max-width:84px;text-align:right}}
+.upfx .fx{padding:0 6px;border:1px solid var(--wl,var(--line));border-radius:3px;background:var(--sunk);color:var(--ink);font-size:11.5px;font-weight:600;line-height:1.6}
+.upfx .fx.lim{font-weight:400;color:var(--ink-2);border-style:dashed}
+/* Aboard line of a commander (J215) */
+.uctl.aboard{align-items:center}
+.uctl.aboard .abl{font:500 11px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.uctl.aboard .abv{font-size:12.5px;font-weight:600}
+.uctl.aboard .abv.bad,.uctl.aboard select.bad{color:var(--bad)}
+.uctl.aboard select{max-width:100%}
+.empty{padding:22px 14px;color:var(--ink-3);font-size:13px;text-align:center}
+

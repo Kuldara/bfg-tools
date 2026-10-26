@@ -1,0 +1,52 @@
+/* ============================================================= LAYOUT ==== */
+.work{
+  display:grid; grid-template-columns:minmax(0,7fr) minmax(0,9fr);
+  gap:18px; padding:18px 20px 60px; align-items:start;
+  max-width:1560px; margin:0 auto;
+}
+@media (max-width:1020px){.work{grid-template-columns:1fr}}
+.col{display:flex;flex-direction:column;gap:14px;min-width:0}
+.card{
+  background:var(--panel); border:1px solid var(--line); border-radius:var(--r);
+  box-shadow:var(--shadow); overflow:hidden;
+}
+.card>h2{
+  margin:0; padding:9px 14px; background:var(--sunk);
+  border-bottom:1px solid var(--line);
+  font:600 11px/1.2 var(--sans); letter-spacing:.13em; text-transform:uppercase;
+  color:var(--ink-2); display:flex; justify-content:space-between; gap:10px;
+}
+.card>h2 em{font-style:normal;color:var(--ink-3);font-weight:500;letter-spacing:.04em}
+/* J238: on a phone the swipe between the catalogue and Your fleet has a
+   face - a pill at the foot that says it, shows where you are and does the
+   same move on a tap */
+.swipenav{display:none}
+@media (max-width:1020px){
+  .swipenav{display:flex;position:fixed;left:50%;bottom:max(10px,env(safe-area-inset-bottom));transform:translateX(-50%);z-index:25;
+    align-items:center;gap:2px;padding:3px;border-radius:999px;background:var(--panel);border:1px solid var(--line);box-shadow:var(--shadow);white-space:nowrap}
+  .swipenav button{min-height:36px;padding:0 12px;border:0;border-radius:999px;background:none;color:var(--ink-2);
+    font:600 11.5px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+  .swipenav button.on{background:var(--accent-wash);color:var(--ink)}
+  .swipenav button b{font:600 11px/1 var(--mono);color:var(--brass)}
+  .swipenav .swh{font:400 10px/1 var(--mono);color:var(--ink-3);letter-spacing:.04em}
+  .work{padding-bottom:64px}
+}
+/* J234: the checks that pass behind one line; Your fleet one line per unit */
+.card>h2 .h2r{display:flex;align-items:center;gap:10px}
+.card>h2 .fold{font:600 10.5px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;padding:5px 9px;
+  border:1px solid var(--line);border-radius:var(--r);background:var(--panel);color:var(--ink-2);cursor:pointer}
+.card>h2 .fold.on{border-color:var(--accent);background:var(--accent-wash);color:var(--ink)}
+#checks:empty{display:none}
+.chkfold{border-top:1px solid var(--line-soft)}
+.chkfold:first-child{border-top:0}
+.chkfold>summary{cursor:pointer;list-style:none;padding:9px 14px;font:500 12px/1.3 var(--sans);color:var(--ink-2)}
+.chkfold>summary::-webkit-details-marker{display:none}
+.chkfold>summary::before{content:"+";display:inline-block;width:14px;font:600 13px/1 var(--mono);color:var(--ink-3)}
+.chkfold[open]>summary::before{content:"\2212"}
+.chkfold>summary.chg{animation:fb-wash 1.6s ease-out}
+.unit.folded{padding:7px 14px}
+.uhead button.cls{border:0;background:none;padding:0;margin:0;color:inherit;cursor:pointer;text-align:left;
+  text-decoration:underline dotted var(--ink-3);text-underline-offset:3px}
+.usum{margin-top:3px;font:400 12px/1.4 var(--sans);color:var(--ink-2)}
+.usum b{color:var(--ink);font-weight:600}
+

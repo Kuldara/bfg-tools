@@ -1,0 +1,6 @@
+{
+  "id": "almanac",
+  "name": "Meta Almanac",
+  "url": "https://bfgtools.meta.kuldare.com",
+  "worker": "bfg-meta-almanac"
+}

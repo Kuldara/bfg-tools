@@ -1,0 +1,139 @@
+/* --------------------------------------------------------------- fleet -- */
+.unit .arms{margin-top:5px}
+/* Ranges (user 29.9.2026): a pill after each weapon group in the catalogue,
+   or one "all 30 cm" when every group reaches the same; the chosen ship's
+   weapons one by one as chips with range and fire arc. */
+.arms .rng{font:500 11px/1.3 var(--mono);font-style:normal;color:var(--ink-2);background:none;
+  border:1px solid var(--line-soft);border-radius:3px;padding:0 4px;margin-left:5px}
+.arms .rng.all{margin-left:0}
+.wchips{gap:5px 6px;margin-top:6px}
+.wchip{display:inline-flex;align-items:center;gap:5px;border:1px solid var(--line);border-radius:4px;
+  padding:2px 6px;background:var(--sunk);font:400 12px/1.3 var(--mono);color:var(--ink)}
+.wchip b{margin-right:0}
+.wchip i{font-style:normal;color:var(--ink-2)}
+.wchip .arcg{width:12px;height:12px;display:block}
+.wchip .arcg path{fill:transparent;stroke:var(--ink-3);stroke-width:.5}
+.wchip .arcg path.on{fill:var(--ink)}
+.wchip .arcg path.pick{fill:var(--ink-2)}
+.wchip .arcg circle{fill:none;stroke:var(--ink-2);stroke-width:.9}
+.wchip .noarc{color:var(--ink-3)}
+/* Reordering: a grip on every row - drag it with the mouse, or move it one
+   step with the arrow keys; the order is the roster's, the cards' and the
+   play page's. */
+.grip{cursor:grab;border:0;background:none;color:var(--ink-3);padding:2px 4px;margin:0 -2px 0 -6px;
+  display:inline-flex;align-items:center;align-self:center;border-radius:3px}
+.grip:hover,.grip:focus-visible{color:var(--ink);background:var(--sunk)}
+.grip:active{cursor:grabbing}
+.grip svg{width:10px;height:16px;fill:currentColor;display:block}
+.unit.dragging{opacity:.45}
+.unit.over-before{box-shadow:inset 0 3px 0 var(--accent)}
+.unit.over-after{box-shadow:inset 0 -3px 0 var(--accent)}
+.unit{border-bottom:1px solid var(--line-soft);padding:10px 14px}
+.unit:last-child{border-bottom:0}
+.uhead{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.uhead .cls{
+  font:600 14px/1.2 var(--disp); letter-spacing:.04em; text-transform:uppercase;
+}
+.uhead .ty{font:400 11px/1 var(--mono);color:var(--ink-3)}
+.uhead .pts{margin-left:auto;font:600 14px/1 var(--mono);color:var(--brass)}
+.uctl{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:7px}
+.uctl .sqr{font:400 11px/1 var(--mono);color:var(--ink-3)}
+.uctl input[type=text]{padding:4px 7px;font-size:13px}
+.uctl .nmin{flex:1 1 190px;min-width:130px}
+.stepper{display:flex;align-items:center;gap:0;border:1px solid var(--line);border-radius:2px}
+.stepper button{border:0;background:transparent;width:24px;height:26px;cursor:pointer;color:var(--accent);font:600 14px/1 var(--sans)}
+.stepper span{
+  min-width:34px;text-align:center;font:500 12px/1 var(--mono);
+  border-left:1px solid var(--line);border-right:1px solid var(--line);padding:7px 0
+}
+.opt{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:start;
+  margin-top:7px;font-size:12px;line-height:1.5}
+.tri{display:flex;border:1px solid var(--line);border-radius:2px;overflow:hidden;flex:none}
+.tri button{
+  border:0;background:var(--ground);cursor:pointer;padding:3px 7px;
+  font:600 9px/1.4 var(--sans);letter-spacing:.06em;text-transform:uppercase;
+  color:var(--ink-3);border-left:1px solid var(--line)
+}
+.tri button:first-child{border-left:0}
+.tri button[aria-pressed="true"]{background:var(--accent);color:#fff}
+.tri button.off[aria-pressed="true"]{background:var(--ink-3)}
+.tri button:disabled{opacity:.35;cursor:not-allowed}
+.opt input{margin-top:3px;accent-color:var(--accent)}
+.opt.dis{opacity:.5}
+.opt .c{font-family:var(--mono);color:var(--brass);white-space:nowrap}
+.ups{margin-top:8px;border-top:1px dashed var(--line);padding-top:7px}
+.ups>h5{font:600 10px/1 var(--sans);letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink-3);margin:0 0 5px}
+/* This was small grey text and went unnoticed, which matters: the
+   upgrades behind it are paid options the player has to know about. It
+   now reads as a control, with the count as a badge. */
+.ups details>summary{cursor:pointer;font:600 11px/1.5 var(--sans);color:var(--ink-2);
+  list-style:none;padding:4px 8px;margin:4px 0 2px;border:1px solid var(--line);
+  border-radius:3px;background:var(--sunk);display:flex;align-items:center;gap:6px}
+.ups details>summary:hover{border-color:var(--ink-3);color:var(--ink)}
+.ups details>summary::-webkit-details-marker{display:none}
+.ups details>summary::before{content:"\25B8";font-weight:700;color:var(--ink-3)}
+.ups details[open]>summary::before{content:"\25BE"}
+.ups details>summary .n{margin-left:auto;padding:0 6px;border-radius:8px;
+  background:var(--line);color:var(--ink-2);font:600 10px/16px var(--sans)}
+.ups details[open]>summary{margin-bottom:4px}
+.opt .oq{display:inline-flex;align-items:center;gap:4px;margin-left:8px;
+  vertical-align:1px}
+.opt .oq button{padding:0 6px;font:600 12px/18px var(--sans)}
+.opt .oq>span{min-width:20px;text-align:center;font:600 11px/1 var(--mono)}
+.opt .oq em{font-style:normal;color:var(--ink-3);font:400 10px/1 var(--sans)}
+.unit .issues{margin:4px 0 0}
+.unit .issues p{margin:2px 0;font:500 11px/1.3 var(--sans)}
+.unit .issues p.error{color:var(--bad)}
+.unit .issues p.warning{color:var(--ink-3)}
+.opt.req .tri{opacity:.55;pointer-events:none}
+.opt .src{display:block;color:var(--ink-3);font:400 11px/1.35 var(--sans);margin-top:2px}
+/* A row's detail: quiet and indented, not a warning. */
+.pick .qual{grid-column:1/-1;margin:2px 0 0;padding-left:9px;
+  border-left:2px solid var(--line);color:var(--ink-3);
+  font:400 11.5px/1.4 var(--sans)}
+/* The book's own sentence about the row (J212): the same quiet detail, not in italics. */
+.pick .qual.book{border-left-color:var(--line-soft)}
+.pick.upg{opacity:.72}
+.pick.upg .p{color:var(--ink-3)}
+/* The Fleet rules block and its groups (J212). The block is the
+   catalogue's first row and starts folded; the groups inside it open on
+   their own. Not checked is the only group about legality. */
+.fleetrules>summary{flex-wrap:wrap;row-gap:4px}
+.frchip{font:500 10px/1.6 var(--mono);letter-spacing:0;text-transform:none;color:var(--ink-3);
+  border:1px solid var(--line);border-radius:2px;padding:0 5px}
+.frchip:first-of-type{margin-left:auto}
+.frchip.fr-open{color:var(--brass);border-color:color-mix(in srgb,var(--brass) 45%,transparent);background:var(--brass-wash)}
+.frg{margin:0 0 4px}
+.frg>summary{cursor:pointer;list-style:none;padding:5px 0;
+  font:600 10px/1.6 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.frg>summary::-webkit-details-marker{display:none}
+.frg>summary::before{content:"+ ";font-family:var(--mono);color:var(--ink-3)}
+.frg[open]>summary::before{content:"\2013  "}
+.frg>summary i,.rules summary i{font-style:normal;color:var(--ink-3);margin-left:4px;letter-spacing:0}
+.frg>.rules{margin:2px 0 8px}
+.frg.fr-open>summary{color:var(--brass)}
+.rules.open{border-left-color:var(--brass)}
+.rules.open>b.hd{color:var(--brass)}
+.rules .pg{font:500 10px/1 var(--mono);color:var(--ink-3);white-space:nowrap}
+details.rules.auto>summary{cursor:pointer;list-style:none}
+details.rules.auto>summary::-webkit-details-marker{display:none}
+details.rules.auto>summary .hd{display:inline;font:600 9px/1.6 var(--sans);letter-spacing:.1em;
+  text-transform:uppercase;color:var(--accent)}
+details.rules.auto>summary::after{content:" +";font-family:var(--mono);color:var(--ink-3)}
+details.rules.auto[open]>summary::after{content:" \2013"}
+.pick .tag{display:inline-block;margin-left:6px;padding:1px 5px;border:1px solid var(--line);
+  border-radius:2px;font:600 9px/1.5 var(--sans);letter-spacing:.06em;
+  text-transform:uppercase;color:var(--ink-3);vertical-align:1px}
+.maxp{font:400 11px/1 var(--mono);color:var(--ink-3);margin-left:6px}
+.stats{
+  display:flex;flex-wrap:wrap;gap:0 14px;margin-top:6px;
+  font:400 11px/1.6 var(--mono);color:var(--ink-3)
+}
+.stats b{color:var(--ink-2);font-weight:500}
+.del{
+  border:0;background:transparent;color:var(--ink-3);cursor:pointer;
+  font:500 11px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase
+}
+.del:hover{color:var(--bad)}
+

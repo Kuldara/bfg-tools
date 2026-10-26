@@ -1,0 +1,82 @@
+/* ------------------------------------------------- borrowed ships (1.1) ---
+   The source bar sits above the catalogue. It is deliberately quiet while it
+   shows the fleet's own list and marked while it shows another list's ships,
+   because "which list am I buying from" is the one thing the player must not
+   get wrong. */
+.srcbar{
+  display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+  padding:9px 14px; border-bottom:1px solid var(--line-soft);
+}
+.srcbar .srclab{font:600 10px/1.4 var(--disp); letter-spacing:.08em;
+  text-transform:uppercase; color:var(--ink-3); white-space:nowrap}
+/* The heading and its control are one piece: without this "Ships from"
+   wrapped onto another line than its menu, and on a narrow panel the menu
+   shrank until the end of its line (e.g. "(not every ship)") was hidden. */
+.srcgrp{display:flex; align-items:center; gap:10px}
+.srcgrp.wide{flex:1 1 260px; min-width:0}
+.srcbar select{flex:1 1 auto; min-width:0; font:inherit; padding:3px 6px;
+  border:1px solid var(--line); border-radius:2px;
+  background:var(--ground); color:var(--ink)}
+/* A drop-down's list is drawn by the browser: without color-scheme it
+   stays light in the dark theme. */
+.srcbar select{color-scheme:inherit}
+.srcbar select option{background:var(--panel); color:var(--ink)}
+/* Group heading and colour code. The three colours are already in the
+   palette for both themes (--ok, --warn, --bad), so no new variable is
+   needed and the build's definition check cannot fire. Colour is an extra,
+   not the only channel: the group heading and the row's mark say the same
+   without colour, because colouring an option element does not carry
+   through in every browser. */
+.srcbar select optgroup{font-style:normal; font-weight:600;
+  background:var(--sunk); color:var(--ink-2)}
+.srcbar select option.lend-ok{color:var(--ok)}
+.srcbar select option.lend-lim{color:var(--warn)}
+.srcbar select option.lend-no{color:var(--bad)}
+/* The closed select is the only place whose colouring works in every
+   browser, so the chosen state shows there and under it too. */
+/* .foreign in the selector: without it .srcbar.foreign>select (below, same
+   specificity) always won by its order and the border stayed brass. The
+   classes always occur together, so this does not narrow the match. */
+.srcbar.foreign.lend-lim select{border-color:var(--warn)}
+.srcbar.foreign.lend-no select{border-color:var(--bad)}
+.srcnote.lend-lim{background:var(--warn-wash); color:var(--ink-2)}
+.srcnote.lend-no{background:var(--bad-wash); color:var(--ink-2)}
+.srcbar.foreign{background:var(--brass-wash)}
+.srcbar.foreign select{border-color:var(--brass)}
+.srcrole{display:flex; align-items:center; gap:0;
+  font:500 11px/1 var(--mono); color:var(--ink-3)}
+/* How many lists each door opens. That number is what the player asks
+   before opening either - often one is empty or nearly so. */
+.srcrole i{font-style:normal; opacity:.75; margin-left:4px;
+  font-variant-numeric:tabular-nums}
+.srcrole button:first-child{border-radius:2px 0 0 2px}
+.srcrole button+button{border-radius:0 2px 2px 0; border-left:0}
+.srcrole button{
+  font:500 11px/1.6 var(--mono); padding:0 8px; cursor:pointer;
+  border:1px solid var(--line); background:var(--ground); color:var(--ink-2);
+  border-radius:2px;
+}
+.srcrole button[aria-pressed="true"]{
+  background:var(--brass); border-color:var(--brass); color:var(--ground);
+}
+.srcnote{margin:0; padding:8px 14px; font-size:12px; color:var(--ink-2);
+  background:var(--brass-wash); border-bottom:1px solid var(--line-soft)}
+/* The fleet-pane badge: a borrowed ship says whose it is and what it counts
+   as, because its price and its upgrades come from that other list. */
+.rolebadge{display:inline-flex; gap:6px; align-items:center; margin-left:6px}
+.rolebadge>b{
+  font:500 10px/1.6 var(--mono); letter-spacing:.02em; text-transform:uppercase;
+  background:var(--brass-wash); color:var(--brass);
+  border:1px solid color-mix(in srgb,var(--brass) 35%,transparent);
+  border-radius:2px; padding:0 6px;
+}
+.rolebadge>span{font:500 11px/1 var(--mono); color:var(--ink-3)}
+.rolebadge button{
+  font:500 10px/1.6 var(--mono); padding:0 6px; cursor:pointer;
+  border:1px solid var(--line); background:var(--ground); color:var(--ink-3);
+  border-radius:2px;
+}
+.rolebadge button[aria-pressed="true"]{
+  background:var(--ink-2); border-color:var(--ink-2); color:var(--ground);
+}
+

@@ -1,0 +1,268 @@
+{
+  "list": "Rogue Traders — Exploration",
+  "book_page": 176,
+  "read_pages": [
+    176,
+    177
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "Rogue Traders have an attack (initiative) rating of 3",
+      "text": "When used with this fleet list, Rogue Traders have an attack (initiative) rating of 3.",
+      "page": 176,
+      "status": "manual",
+      "why": "An in-game value. Note the difference: the basic Rogue Trader list does not give the value separately."
+    },
+    {
+      "key": "A Veteran Rogue Trader may be present for every two Rogue Trader cruisers in a fleet",
+      "text": "A Veteran Rogue Trader may be present for every two Rogue Trader cruisers in a fleet. At least one Veteran Rogue Trader must be assigned to a Rogue Trader cruiser in the fleet.",
+      "page": 176,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 2,
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. ratio min_one + mandatory_at 0: one Veteran RT is required and allowed already with one RT cruiser. The earlier gap: a ratio to one SHIP CLASS ('Rogue Trader cruisers'), not to a section. The CAPITAL SHIPS section has seven different hulls, of which only one is the Rogue Trader cruiser, so",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "no more than twelve capital s hips, at least half of which must be Rogue Trader Cruisers",
+      "text": "Your fleet may include no more than twelve capital ships, at least half of which must be Rogue Trader Cruisers and/or Endeavour light cruisers, following the basic profile for this ship.",
+      "page": 176,
+      "status": "enforced",
+      "kind": "cap",
+      "max": 12,
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. Two rules: cap 12 (CAPITAL SHIPS + Siluria + Demiurg) and compare 2 x (RT cruiser|Endeavour) >= hull ships. The earlier gap: two requirements in one sentence: at most 12 hull ships AND at least half of two certain types. The latter cannot be expressed with the current rule types,",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "A single squadron of 2-6 Rogue Trader escorts, Rogue Trader cargo ships and auxiliary vessels",
+      "text": "A single squadron of 2-6 Rogue Trader escorts, Rogue Trader cargo ships and auxiliary vessels may accompany each Rogue Trader cruiser in a fleet, in any mix desired.",
+      "page": 177,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "Besides Xenos vessels, auxiliary vessels from only one race can be taken in a fleet",
+      "text": "Besides Xenos vessels, auxiliary vessels from only one race can be taken in a fleet. Any race can be used to provide auxiliary vessels except Orks, Dark Eldar, Necrons and Tyranids.",
+      "page": 177,
+      "status": "manual",
+      "why": "The auxiliary ships come from other lists; the app offers them as one row 'Auxiliary vessels' without a price."
+    },
+    {
+      "key": "The fleet must include at least one squadron of escort-sized cargo ships",
+      "text": "The fleet must include at least one squadron of escort-sized cargo ships of any type (whether or not the scenario requires transports), in a squadron of 2 to 6 ships.",
+      "page": 177,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. mandatory_at points=0 pick=cargo ships (TRANSPORTS + ESCORTS Cargo Vessel); the skwadron size 2-6 is in the escort rule. The earlier gap: a required skwadron of ships of a certain type. The engine had no 'the section must contain at least one skwadron' type; mandatory_at concerns a points limit.",
+      "kind": "mandatory_at",
+      "points": 0,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "No more than 1/3 of the fleet’s total transport value can be made up of heavy transports",
+      "text": "No more than 1/3 of the fleet's total transport value can be made up of heavy transports.",
+      "page": 177,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. points_share of=pick: Heavy Transport points <= 1/3 of the TRANSPORTS section's points. The earlier gap: a share of other rows' point value. The engine had no percentage or share limit.",
+      "kind": "points_share",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Up to one cruiser from any fleet except Orks, Necrons and Tyranids can be taken for every three Rogue Trader cruisers",
+      "text": "Up to one cruiser from any fleet except Orks, Necrons and Tyranids can be taken for every three Rogue Trader cruisers in the fleet.",
+      "page": 177,
+      "status": "manual",
+      "why": "A reserve rule: the ships come from other lists."
+    },
+    {
+      "key": "no more than one Stronghold may be taken",
+      "text": "Each Demiurg vessel taken still counts against the twelve-cruiser limit, and no more than one Stronghold may be taken.",
+      "page": 177,
+      "status": "enforced",
+      "why": "Enforced as the row limit mx=1 (ENTRY_LIMITS, item 8). Counting the Demiurg towards the 12 cruiser limit is the cap rule's pick. The earlier gap: a per-row count limit of one. The book does not mark the row in the form '(0-1)', so the parser does not set the row limit mx=1 - it reads the limit only from the list row's marking.",
+      "enforced_by": "entry_max",
+      "entry": "Stronghold Commerce Vessel",
+      "mx": 1,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "A single Kroot Warsphere may be taken if there are at least three Rogue Trader cruisers",
+      "text": "A single Kroot Warsphere may be taken if there are at least three Rogue Trader cruisers in the fleet.",
+      "page": 177,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. The earlier gap: a conditional row limit: the number one, on the condition of three ships of a certain class. Neither side could be expressed.",
+      "kind": "conditional_cap",
+      "max_met": 1,
+      "max_unmet": 0,
+      "cond_min": 3,
+      "classified_on": "2026-09-09"
+    }
+  ],
+  "entries": [
+    {
+      "name": "Veteran Rogue Trader (Ld 9)",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Lunar class cruiser",
+      "pts": 195,
+      "page": 71
+    },
+    {
+      "name": "Carnage class cruiser",
+      "pts": 195,
+      "page": 277
+    },
+    {
+      "name": "Rogue Trader cruiser",
+      "pts": 185,
+      "page": 180
+    },
+    {
+      "name": "Tyrant class cruiser",
+      "pts": 185,
+      "page": 69
+    },
+    {
+      "name": "Murder class cruiser",
+      "pts": 185,
+      "page": 279
+    },
+    {
+      "name": "Dauntless class light cruiser",
+      "pts": 125,
+      "page": 77
+    },
+    {
+      "name": "Endeavour class light cruiser",
+      "pts": 110,
+      "page": 181
+    },
+    {
+      "name": "Siluria Class Light Cruiser",
+      "pts": 100,
+      "page": 78
+    },
+    {
+      "name": "Havoc Class Frigate",
+      "pts": 35,
+      "page": 81
+    },
+    {
+      "name": "Xenos Vessel",
+      "pts": 50,
+      "page": 184
+    },
+    {
+      "name": "Recommissioned Escort",
+      "pts": 30,
+      "page": 189
+    },
+    {
+      "name": "Iconoclast Destroyer",
+      "pts": 30,
+      "page": 190
+    },
+    {
+      "name": "Cargo Vessel",
+      "pts": 20,
+      "page": 192
+    },
+    {
+      "name": "Escort Carrier",
+      "pts": 60,
+      "page": 521
+    },
+    {
+      "name": "Q-Ship",
+      "pts": 60,
+      "page": 522
+    },
+    {
+      "name": "Heavy Transport",
+      "pts": 40,
+      "page": 182
+    },
+    {
+      "name": "Armed Cargo Vessel",
+      "pts": 20,
+      "page": 192
+    },
+    {
+      "name": "Armed Freighter",
+      "pts": 20,
+      "page": 523
+    },
+    {
+      "name": "Cargo Transport",
+      "pts": 10,
+      "page": 85
+    },
+    {
+      "name": "Stronghold Commerce Vessel",
+      "pts": 350,
+      "page": 488
+    },
+    {
+      "name": "Bastion Commerce Vessel",
+      "pts": 255,
+      "page": 489
+    },
+    {
+      "name": "Citadel Commerce Vessel",
+      "pts": 185,
+      "page": 490
+    },
+    {
+      "name": "Kroot Warsphere",
+      "pts": 145,
+      "page": 494
+    }
+  ],
+  "extra_entries": [
+    {
+      "name": "Imperial Power Ram (6+ prow, not with a Nova Cannon)",
+      "pts": 5,
+      "why": "p.176 POWER RAM"
+    },
+    {
+      "name": "Xenotech System, rolled randomly (cruiser)",
+      "pts": 15,
+      "why": "p.176 The Best Money Can Buy: 'The Xenotech Systems refits listed on [p.175] can only be used by Rogue Trader cruisers and escorts' and 'may start by taking one refit from the Xenotech list for the appropriate point cost'; the price p.175 (+15 per cruiser). Spot check 6 row 88."
+    },
+    {
+      "name": "Xenotech System, rolled randomly (escort, per ship)",
+      "pts": 5,
+      "why": "p.176 / p.175 '+5 points per escort'"
+    },
+    {
+      "name": "Choose the Xenotech System instead of rolling",
+      "pts": 5,
+      "why": "p.176 / p.175 'For an additional +5 points per ship, the player can select the desired technology'"
+    },
+    {
+      "name": "Xenos Vessel - Pthuxutl war cruiser",
+      "pts": 50,
+      "why": "p.186"
+    },
+    {
+      "name": "Xenos Vessel - Fra'al raider",
+      "pts": 50,
+      "why": "p.187"
+    },
+    {
+      "name": "Xenos Vessel - Nekulli whip",
+      "pts": 50,
+      "why": "p.188"
+    }
+  ],
+  "notes": [
+    "The book's page 176 has a misprint: 'Havoc Class Frigatevvvv....35 pts' - the page reference has run into the end of the name. The app named the row after it and was left without a card. Fixed 7.9.2026 in the FIXES table to the name 'Havoc Class Frigate' and page 81, which the book gives for the same ship on pages 174 and 179.",
+    "'Cargo Transport (pg. 85)' is CORRECT in the book: page 85 is the Imperial Navy's TRANSPORT profile ('PTS: SPECIAL'). The app pointed the row wrongly at page 192 (Armed Cargo Vessel) and claimed the book was wrong, because the word 'transport' is on the stop list and the profile's name was cut down to nothing. Fixed 7.9.2026.",
+    "This list has the most recorded gaps in the whole book: five. They are all of the same family - the limit targets a ship class, a share or a condition, not a section."
+  ]
+}

@@ -1,0 +1,193 @@
+{
+  "list": "Space Marines — Codex Astartes",
+  "book_page": 97,
+  "read_pages": [
+    91,
+    94,
+    95,
+    96,
+    97,
+    102
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Master of the Fleet",
+      "text": "0-1 Master of the Fleet",
+      "page": 97,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "worth over 750 points, the Master of the Fleet must be included",
+      "text": "If the fleet is worth over 750 points, the Master of the Fleet must be included to lead it.",
+      "page": 97,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "over": true
+    },
+    {
+      "key": "he must be assigned to a battle barge in preference to a strike cruiser",
+      "text": "If your fleet includes any battle barges, he must be assigned to a battle barge in preference to a strike cruiser.",
+      "page": 97,
+      "status": "manual",
+      "why": "Where the commander is placed depends on which ships the fleet has; the placement is done at the table."
+    },
+    {
+      "key": "0-3 Battle Barges",
+      "text": "0-3 Battle Barges",
+      "page": 97,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 3
+    },
+    {
+      "key": "one Space Marine battle barge for every 1,000 points or part thereof",
+      "text": "You may include one Space Marine battle barge for every 1,000 points or part thereof in your fleet.",
+      "page": 97,
+      "status": "enforced",
+      "kind": "per_points",
+      "each": 1,
+      "per": 1000,
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. per_points pick=the Battle Barges section (the Venerable counts as one of the three). The earlier gap: PER_PTS recognises the sentence, but resolve_sections cannot link the phrase 'Space Marine battle barge' to the section 'Battle Barges' - that needs an exact section ident",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "single Venerable battle barge (counting as one of the three allowed)",
+      "text": "The fleet can include a single Venerable battle barge (counting as one of the three allowed), chosen from any available Imperial or Chaos battleship, grand cruiser, battlecruiser or heavy cruiser at the listed cost, plus an additional +35 points for its Space Marine crew.",
+      "page": 97,
+      "status": "enforced",
+      "why": "The number one is enforced (mx=1). The hull is now a CHOICE (P1-4, 9.9.2026): the row offers 26 Imperial/Chaos hulls (battleship, grand cruiser, battlecruiser, heavy cruiser) at +35 pts, or the Seditio Opprimere at its own price. Golden: venerable-default-seditio, -on-mars-hull, -on-desolator-hull, -hull-then-option-reset.",
+      "enforced_by": "hull_choice"
+    },
+    {
+      "key": "0-10 Cruisers",
+      "text": "0-10 Cruisers",
+      "page": 97,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 10
+    },
+    {
+      "key": "escorts in your fleet in squadrons of 2",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "page": 97,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "Any ship with launch bays carries Thunderhawk Gunships",
+      "text": "Any ship with launch bays carries Thunderhawk Gunships.",
+      "page": 97,
+      "status": "out_of_scope",
+      "why": "A statement; the Thunderhawk rule is on the card as the launch bays' star reference.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Ships with torpedo tubes are armed with ordinary torpedoes and boarding torpedoes",
+      "text": "Ships with torpedo tubes are armed with ordinary torpedoes and boarding torpedoes.",
+      "page": 97,
+      "status": "out_of_scope",
+      "why": "A statement; boarding torpedoes are on the card as the Astartes Torpedoes rule.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "add +2 to their D6 roll when they fight in a boarding action",
+      "text": "To represent this, Space Marine ships add +2 to their D6 roll when they fight in a boarding action and +1 when they make any hit and run attack.",
+      "page": 94,
+      "status": "manual",
+      "why": "A shared Space Marine rule. It also shows on every card through the SPECIAL_HULL_RULES rule 'astartes_core'."
+    },
+    {
+      "key": "Space Marines have a starting attack or initiative rating of 3",
+      "text": "ATTACK RATING Space Marines have a starting attack or initiative rating of 3.",
+      "page": 94,
+      "status": "manual",
+      "why": "Shown after 7.9.2026: 'attack rating' was added to RULEY, and the block 'FLEET RULES (pg. 91-96)' now contains the shared Space Marine rules. The same used to hold for every faction: attack rating showed nowhere."
+    }
+  ],
+  "entries": [
+    {
+      "name": "Master of the Fleet (Ld 10)",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "One re-roll",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Two re-rolls",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Three re-rolls",
+      "pts": 75,
+      "page": null
+    },
+    {
+      "name": "Terminator boarding party",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Venerable battle barge",
+      "pts": null,
+      "page": 103
+    },
+    {
+      "name": "Battle barge",
+      "pts": 425,
+      "page": 104
+    },
+    {
+      "name": "Strike cruisers",
+      "pts": 145,
+      "page": 105
+    },
+    {
+      "name": "Nova class Frigate",
+      "pts": 50,
+      "page": 107
+    },
+    {
+      "name": "Gladius class Frigate",
+      "pts": 45,
+      "page": 108
+    },
+    {
+      "name": "Hunter class Destroyer",
+      "pts": 40,
+      "page": 109
+    },
+    {
+      "name": "Rapid strike vessel (Firestorm)",
+      "pts": 45,
+      "page": 79
+    },
+    {
+      "name": "Rapid strike vessel (Sword)",
+      "pts": 40,
+      "page": 82
+    },
+    {
+      "name": "Rapid strike vessel (Cobra)",
+      "pts": 35,
+      "page": 84
+    }
+  ],
+  "notes": [
+    "The book marks the Venerable battle barge on page 102, and that is CORRECT: page 102 is the rule page 'PTS: VARY', whose stats depend on the chosen hull and which has no stat block. The app uses page 103's example ship on the card (Seditio Opprimere, 450 pts) and says so in the row's note. The note's wording was corrected on 7.9.2026: it used to claim the book's reference was wrong.",
+    "The shared Space Marine rules are on pages 91-96: the leadership table (D6 1-2 Ld8, 3-4 Ld9, 5-6 Ld10), attack rating 3, +2 boarding and +1 hit-and-run, planetary assault 2 points, the Thunderhawk and Thunderhawk Annihilator rules, drop pods, Honour Guard, Terminator boarding parties.",
+    "The block 'FLEET RULES (pg. 91-96)' was empty until 7.9.2026, because RULEY did not recognise the wording of these pages as rules. Now it shows among others attack rating, the Thunderhawk rules and the Terminator rules. The most important part also shows on every card through the SPECIAL_HULL_RULES rule 'astartes_core'."
+  ]
+}

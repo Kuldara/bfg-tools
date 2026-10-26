@@ -1,0 +1,290 @@
+{
+  "list": "Imperial Navy — Armageddon Sector",
+  "book_page": 40,
+  "read_pages": [
+    40,
+    41
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Fleet Commander",
+      "text": "0-1 Fleet Commander",
+      "page": 40,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "worth over 750 points a fleet commander must be included",
+      "text": "If the fleet is worth over 750 points a fleet commander must be included to lead it.",
+      "page": 40,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "over": true
+    },
+    {
+      "key": "As long as at least one Space Marine Battle barge is included",
+      "text": "As long as at least one Space Marine Battle barge is included you may choose a Master of the Fleet, who will always be assigned to a Battle barge and cannot be assigned to a non-Space Marine ship.",
+      "page": 40,
+      "status": "manual",
+      "why": "A conditional commander choice: it depends on which ships the fleet has. The engine cannot tie a commander to a ship type."
+    },
+    {
+      "key": "you cannot choose to buy Master of the Fleet re-rolls if your fleet is commanded by an Admiral",
+      "text": "The cost of your re-rolls depends on the commander you choose (ie you cannot choose to buy Master of the Fleet re-rolls if your fleet is commanded by an Admiral).",
+      "page": 40,
+      "status": "manual",
+      "why": "Two separate re-roll price lists; the choice is the player's. The rows are in their own sections 'Admiral Re-rolls' and 'Master of the Fleet Re-rolls'."
+    },
+    {
+      "key": "one battleship in your fleet for every three cruisers",
+      "text": "You may include up to one battleship in your fleet for every three cruisers or battlecruisers.",
+      "page": 41,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 3,
+      "per_types": [
+        "cruisers",
+        "battlecruisers"
+      ]
+    },
+    {
+      "key": "one battlecruiser in your fleet for every cruiser",
+      "text": "You may include up to one battlecruiser in your fleet for every cruiser.",
+      "page": 41,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 1,
+      "per_types": [
+        "cruiser"
+      ],
+      "why": "Note: 'for every cruiser' without a number word, so the ratio is 1:1 and not 1:2 as in the other Imperial lists. Did not parse before 7.9.2026, because the start of the word stuck in the number word's place ('cruise' + 'r')."
+    },
+    {
+      "key": "0-12 Cruisers",
+      "text": "0-12 Cruisers",
+      "page": 41,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 12
+    },
+    {
+      "key": "escorts in your fleet in squadrons of 2",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "page": 41,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "Space Marine vessels may not be squadroned with non-Space Marine vessels",
+      "text": "* Space Marine vessels may not be squadroned with non-Space Marine vessels.",
+      "page": 41,
+      "status": "manual",
+      "why": "The skwadron's composition is decided at the table, not in the list."
+    },
+    {
+      "key": "No more than two of these vessels (Endurance and Defiant class light cruisers)",
+      "text": "No more than two of these vessels (Endurance and Defiant class light cruisers) may be taken for every 500 points (or portion thereof) in the fleet.",
+      "page": 41,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. per_points pick=Endurance|Defiant. The earlier gap: a limit tied to points, but the target is two named list rows and not a section. The per_points check counts a section, so it would accept any cruisers.",
+      "kind": "per_points",
+      "per": 500,
+      "each": 2,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "may only take reserves from other Imperial Navy fleets list NOT Space Marine fleet lists",
+      "text": "However, it is important to note that despite the inclusion of Space Marine vessels in the fleet list, this is still an Imperial Navy fleet and hence may only take reserves from other Imperial Navy fleets list NOT Space Marine fleet lists.",
+      "page": 41,
+      "status": "manual",
+      "why": "Reserve-saanto ylittaa listarajan."
+    },
+    {
+      "key": "any mix of Fury interceptors and Starhawk bombers",
+      "text": "Any ship with launch bays may choose to have them launch any mix of Fury interceptors and Starhawk bombers.",
+      "page": 41,
+      "status": "manual",
+      "why": "ordnance-valinta pelin aikana"
+    },
+    {
+      "key": "Some ships may carry Shark assault boats",
+      "text": "Some ships may carry Shark assault boats at an additional cost.",
+      "page": 41,
+      "status": "manual",
+      "why": "viittaa profiileihin: Emperor p.53, Oberon p.56"
+    },
+    {
+      "key": "Ships with torpedo tubes are armed with ordinary torpedoes",
+      "text": "Ships with torpedo tubes are armed with ordinary torpedoes.",
+      "page": 41,
+      "status": "out_of_scope",
+      "why": "A statement of the default, not a choice or a restriction.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Imperial Navy fleets choosing reserves from this fleet list cannot choose Space Marine vessels",
+      "text": "Likewise, Imperial Navy fleets choosing reserves from this fleet list cannot choose Space Marine vessels from it.",
+      "page": 41,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "armageddon-space-marine-vessels-are-not-lent",
+        "armageddon-navy-vessels-are-still-lent"
+      ],
+      "why": "A partial lending ban on the source list's side (lend_ban): the rows marked with a star are Space Marine ships (p.41: '* Space Marine vessels may not be squadroned with non-Space Marine vessels'), and p.15 says the same as an example from the Gothic Sector. Exactly one star at the end of the name, because two stars mark the Endurance and the Defiant (rare variants). Found in spot check 20 (seed 2026091413): Gladius* was offered to Bakka as a reserve and the fleet was accepted as green. The app had offered these eight rows as reserves to every Imperial Navy list since 1.0."
+    }
+  ],
+  "entries": [
+    {
+      "name": "Fleet-Admiral (Ld 8)",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Admiral (Ld 9)",
+      "pts": 100,
+      "page": null
+    },
+    {
+      "name": "Solar Admiral (Ld 10)",
+      "pts": 150,
+      "page": null
+    },
+    {
+      "name": "Master of the Fleet (Ld 10)",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Apocalypse class battleship",
+      "pts": 365,
+      "page": 52
+    },
+    {
+      "name": "Emperor class battleship",
+      "pts": 365,
+      "page": 53
+    },
+    {
+      "name": "Oberon class battleship",
+      "pts": 335,
+      "page": 56
+    },
+    {
+      "name": "Space Marine Battle barge*",
+      "pts": 425,
+      "page": 104
+    },
+    {
+      "name": "Mars class battlecruiser",
+      "pts": 270,
+      "page": 61
+    },
+    {
+      "name": "Armageddon class battlecruiser",
+      "pts": 235,
+      "page": 65
+    },
+    {
+      "name": "Dictator class cruiser",
+      "pts": 220,
+      "page": 67
+    },
+    {
+      "name": "Tyrant class cruiser",
+      "pts": 185,
+      "page": 69
+    },
+    {
+      "name": "Gothic class cruiser",
+      "pts": 180,
+      "page": 70
+    },
+    {
+      "name": "Lunar class cruiser",
+      "pts": 180,
+      "page": 71
+    },
+    {
+      "name": "Space Marine Strike Cruiser*",
+      "pts": 145,
+      "page": 105
+    },
+    {
+      "name": "Endeavour class light cruiser",
+      "pts": 110,
+      "page": 72
+    },
+    {
+      "name": "Endurance class light cruiser**",
+      "pts": 110,
+      "page": 74
+    },
+    {
+      "name": "Defiant class light cruiser**",
+      "pts": 120,
+      "page": 76
+    },
+    {
+      "name": "Firestorm Class Frigate",
+      "pts": 40,
+      "page": 79
+    },
+    {
+      "name": "Falchion Class Frigate",
+      "pts": 35,
+      "page": 80
+    },
+    {
+      "name": "Nova Class Frigate*",
+      "pts": 50,
+      "page": 107
+    },
+    {
+      "name": "Rapid Strike Vessel (Firestorm)*",
+      "pts": 45,
+      "page": 79
+    },
+    {
+      "name": "Gladius Class Frigate*",
+      "pts": 45,
+      "page": 108
+    },
+    {
+      "name": "Hunter Class Destroyer*",
+      "pts": 40,
+      "page": 109
+    },
+    {
+      "name": "Rapid Strike Vessel (Sword)*",
+      "pts": 40,
+      "page": 82
+    },
+    {
+      "name": "Rapid Strike Vessel (Cobra)*",
+      "pts": 35,
+      "page": 84
+    }
+  ],
+  "extra_entries": [
+    {
+      "name": "Imperial Power Ram",
+      "pts": 5,
+      "why": "from the shared Imperial Navy rules p.32"
+    }
+  ],
+  "notes": [
+    "The re-roll rows are in two sections, because the book has two different price lists: Admiral 25/75/150 and Master of the Fleet 25/50/75. The app keeps them apart, which matches the book.",
+    "The Rapid Strike Vessel rows refer to two pages in the book (e.g. 'pg 106 (pg 79)'): the rules are on page 106 and the profile on the original ship's page. The app uses the profile page.",
+    "Pages 42-47 belong to this list's page range but are narrative (Dominus Astra, Calgar, Rath's portrait). They are hidden in the LORE_SECTIONS table."
+  ]
+}

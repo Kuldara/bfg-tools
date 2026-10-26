@@ -1,0 +1,1296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Rolls Battlefleet Gothic celestial phenomena by the rulebook Method 2, plots the table and gives the in-play rules for what it rolled.">
+<style>
+  :root { color-scheme: light; padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
+  body { margin: 0; }
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+</style>
+<title>Battlezone Generator</title>
+
+<!-- The mark: the void, the sunward edge, a planet and its moon. The SVG is
+     the one that matters for tabs and bookmarks; the PNG covers Safari before
+     16.4, and apple-touch-icon must be a real file because iOS ignores a data
+     URI for it. -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Cdefs%3E%3CclipPath%20id='r'%3E%3Crect%20width='32'%20height='32'%20rx='6'/%3E%3C/clipPath%3E%3C/defs%3E%3Cg%20clip-path='url%28%23r%29'%3E%3Crect%20width='32'%20height='32'%20fill='%23070a11'/%3E%3Crect%20width='32'%20height='5'%20fill='%23e8a33d'/%3E%3Ccircle%20cx='20.5'%20cy='20'%20r='7.5'%20fill='%238a7434'/%3E%3Ccircle%20cx='20.5'%20cy='18.7'%20r='6.3'%20fill='%23cbb98a'/%3E%3Ccircle%20cx='8'%20cy='12.5'%20r='3'%20fill='%23b3bdca'/%3E%3C/g%3E%3C/svg%3E">
+<link rel="alternate icon" type="image/png" sizes="32x32" href="data:image/png;base64,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">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" media="(prefers-color-scheme: light)" content="#e7ecf2">
+<meta name="theme-color" media="(prefers-color-scheme: dark)" content="#070a11">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500&family=Saira+Condensed:wght@500;600;700&display=swap">
+
+<style>
+/* ───────────────────────────────────────────────────────── tokens: light */
+:root {
+  --void:        #e7ecf2;   /* page ground                                  */
+  --panel:       #f4f7fa;
+  --panel-2:     #ffffff;
+  --line:        #c3cfdd;
+  --line-soft:   #d9e2ec;
+  --ink:         #16202e;
+  --ink-2:       #4a5a6e;
+  --ink-3:       #7b8b9f;
+
+  --chart-bg:    #e3eaf2;   /* chart paper                                  */
+  --chart-grid:  #c8d5e3;
+  --chart-sect:  #92a8c0;
+  --chart-frame: #445871;
+  --chart-label: #5f7185;
+  --chart-star:  transparent;
+
+  --sun:         #b47410;
+  --ast:         #9d5f22;
+  --gas:         #3d6ea8;
+  --pln:         #8a7434;
+  --moon:        #6d7a88;
+  --rift:        #7442b8;
+
+  --focus:       #1f5fa8;
+  --shadow:      0 1px 2px rgba(22,32,46,.08), 0 8px 24px -12px rgba(22,32,46,.22);
+}
+
+/* ────────────────────────────────────────────────────────── tokens: dark */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --void:        #070a11;
+    --panel:       #0d131e;
+    --panel-2:     #121a27;
+    --line:        #24314a;
+    --line-soft:   #1a2436;
+    --ink:         #dfe7f2;
+    --ink-2:       #9aabc2;
+    --ink-3:       #6b7c93;
+
+    --chart-bg:    #05070d;
+    --chart-grid:  #16203a;
+    --chart-sect:  #2c3c5e;
+    --chart-frame: #3f5480;
+    --chart-label: #7387a6;
+    --chart-star:  #dfe9ff;
+
+    --sun:         #e8a33d;
+    --ast:         #c3874a;
+    --gas:         #6f9bd1;
+    --pln:         #cbb98a;
+    --moon:        #b3bdca;
+    --rift:        #a874e8;
+
+    --focus:       #74a8ea;
+    --shadow:      0 1px 2px rgba(0,0,0,.5), 0 10px 30px -14px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --void:        #070a11;
+  --panel:       #0d131e;
+  --panel-2:     #121a27;
+  --line:        #24314a;
+  --line-soft:   #1a2436;
+  --ink:         #dfe7f2;
+  --ink-2:       #9aabc2;
+  --ink-3:       #6b7c93;
+
+  --chart-bg:    #05070d;
+  --chart-grid:  #16203a;
+  --chart-sect:  #2c3c5e;
+  --chart-frame: #3f5480;
+  --chart-label: #7387a6;
+  --chart-star:  #dfe9ff;
+
+  --sun:         #e8a33d;
+  --ast:         #c3874a;
+  --gas:         #6f9bd1;
+  --pln:         #cbb98a;
+  --moon:        #b3bdca;
+  --rift:        #a874e8;
+
+  --focus:       #74a8ea;
+  --shadow:      0 1px 2px rgba(0,0,0,.5), 0 10px 30px -14px rgba(0,0,0,.8);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  background: var(--void);
+  color: var(--ink);
+  font-family: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.wrap {
+  max-width: 1320px;
+  margin: 0 auto;
+  padding-inline: 16px;
+  padding-block: 28px 44px;
+}
+
+/* ───────────────────────────────────────────────────────────────── header */
+header { margin-bottom: 22px; }
+/* The family badge (BFG Tools, packages/ui/tools-badge.html) shares the
+   title line with the name and wraps under it on a narrow phone. */
+.titlerow { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 8px; }
+.titlerow h1 { margin: 0; }
+
+h1 {
+  font-family: "Saira Condensed", "IBM Plex Sans Condensed", sans-serif;
+  font-weight: 700;
+  font-size: clamp(30px, 6vw, 46px);
+  letter-spacing: .055em;
+  text-transform: uppercase;
+  line-height: 1;
+  margin: 0 0 8px;
+  text-wrap: balance;
+}
+h1 .glyph { color: var(--sun); }
+
+.standfirst {
+  color: var(--ink-2);
+  max-width: 62ch;
+  margin: 0;
+  font-size: 15px;
+}
+.standfirst b { color: var(--ink); font-weight: 500; }
+
+/* ───────────────────────────────────────────────────────────────── controls */
+.controls {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
+  gap: 12px 16px;
+  align-items: end;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 16px;
+  margin: 22px 0 18px;
+}
+
+.field { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+
+.field > label {
+  font-family: "Saira Condensed", sans-serif;
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+select, input[type="number"] {
+  font: 500 14px/1.3 "IBM Plex Mono", ui-monospace, monospace;
+  color: var(--ink);
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 8px 9px;
+  width: 100%;
+  min-width: 0;
+}
+select:focus-visible, input:focus-visible, button:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 1px;
+}
+
+.dims { display: grid; grid-template-columns: 1fr auto 1fr; gap: 6px; align-items: center; }
+.dims .by { color: var(--ink-3); font: 500 13px "IBM Plex Mono", monospace; }
+
+.field.act { justify-content: end; }
+
+button {
+  font-family: "Saira Condensed", sans-serif;
+  font-weight: 600;
+  font-size: 15px;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 9px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+button:hover { border-color: var(--ink-3); }
+
+button.primary {
+  background: var(--sun);
+  border-color: var(--sun);
+  color: #1b1304;
+  font-weight: 700;
+}
+button.primary:hover { filter: brightness(1.08); }
+
+/* ───────────────────────────────────────────────────────────────── layout */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+  gap: 18px;
+  align-items: start;
+}
+@media (max-width: 900px) { .layout { grid-template-columns: 1fr; } }
+
+/* ────────────────────────────────────────────────────────────────── chart */
+.chartbox {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 12px;
+  box-shadow: var(--shadow);
+}
+#chart { display: block; width: 100%; border-radius: 2px; }
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line-soft);
+  font: 500 11.5px/1.6 "IBM Plex Mono", monospace;
+  color: var(--ink-2);
+}
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i {
+  width: 11px; height: 11px; border-radius: 50%;
+  border: 1.5px solid currentColor; flex: none;
+}
+
+/* ──────────────────────────────────────────────────────────────── readout */
+.readout { display: flex; flex-direction: column; gap: 18px; }
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+}
+.card > h2 {
+  font-family: "Saira Condensed", sans-serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  margin: 0;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--line-soft);
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.card > h2 em {
+  font-style: normal;
+  font-family: "IBM Plex Mono", monospace;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--ink-3);
+  text-transform: none;
+}
+
+/* verdict strip: the two once-per-battlefield rolls */
+.verdict { padding: 14px; display: grid; gap: 12px; }
+.vrow { display: grid; grid-template-columns: auto 1fr auto; gap: 12px; align-items: baseline; }
+.vdie {
+  font: 700 15px "IBM Plex Mono", monospace;
+  color: var(--sun);
+  background: color-mix(in srgb, var(--sun) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--sun) 40%, transparent);
+  border-radius: 2px;
+  padding: 2px 7px;
+  white-space: nowrap;
+}
+.vbody { min-width: 0; }
+.vname {
+  display: block;
+  font-family: "Saira Condensed", sans-serif;
+  font-weight: 600; font-size: 19px; letter-spacing: .03em;
+  text-transform: uppercase; line-height: 1.15;
+}
+.vnote { display: block; color: var(--ink-3); font-size: 13px; }
+
+.tally {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  padding: 0 14px 14px;
+}
+.tally b {
+  font: 500 12px "IBM Plex Mono", monospace;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 3px 8px;
+  color: var(--ink-2);
+}
+.tally b s { text-decoration: none; color: var(--ink); font-weight: 600; }
+
+/* manifest */
+.manifest { margin: 0; padding: 4px 0; max-height: 340px; overflow-y: auto; }
+.mrow {
+  display: grid;
+  grid-template-columns: 34px 1fr auto;
+  gap: 10px;
+  padding: 7px 14px;
+  border-bottom: 1px solid var(--line-soft);
+  align-items: start;
+}
+.mrow.sel { background: color-mix(in srgb, var(--sun) 12%, transparent); }
+.mrow:last-child { border-bottom: 0; }
+.mid {
+  font: 600 12px "IBM Plex Mono", monospace;
+  color: var(--ink);
+  border-left: 3px solid currentColor;
+  padding-left: 7px;
+}
+.mname { display: block; font-size: 13.5px; font-weight: 500; }
+.mspec {
+  font: 400 12px/1.5 "IBM Plex Mono", monospace;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+}
+.mspec .ring { display: block; color: var(--ink-2); }
+
+/* roll log */
+.log {
+  margin: 0;
+  padding: 10px 14px 14px;
+  max-height: 420px;
+  overflow-y: auto;
+  font: 400 12.5px/1.65 "IBM Plex Mono", monospace;
+  font-variant-numeric: tabular-nums;
+}
+.log div { color: var(--ink-2); }
+.log .l-head {
+  color: var(--ink);
+  font-weight: 600;
+  margin-top: 12px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line-soft);
+}
+.log div:first-child.l-head { margin-top: 0; padding-top: 0; border-top: 0; }
+.log .l-area { color: var(--ink); font-weight: 500; margin-top: 10px; }
+.log .l-empty { color: var(--ink-3); margin-top: 10px; }
+.log .l-piece { padding-left: 14px; }
+.log .l-sub   { padding-left: 28px; color: var(--ink-3); }
+.log .l-skip  { padding-left: 14px; color: var(--ink-3); font-style: italic; }
+.log .l-event { padding-left: 14px; color: var(--sun); }
+.log .l-note  { color: var(--ink-3); }
+.log .l-total { color: var(--ink); font-weight: 600; margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--line-soft); }
+.log b { color: var(--ink); font-weight: 600; }
+
+/* ───────────────────────────────────────────────────── map column, rules */
+.mapcol { display: flex; flex-direction: column; gap: 18px; min-width: 0; }
+
+#chart { cursor: pointer; }
+
+.charthint {
+  margin: 9px 0 0;
+  font: 400 12px/1.5 "IBM Plex Sans", sans-serif;
+  color: var(--ink-3);
+}
+.charthint .qm { display: inline-grid; vertical-align: -3px; }
+
+/* the ? affordance, used on the map hint, the battlefield rows and the list */
+.qm {
+  width: 17px; height: 17px; padding: 0;
+  display: grid; place-items: center;
+  font: 700 11px/1 "IBM Plex Mono", monospace;
+  letter-spacing: 0;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--panel-2);
+  color: var(--ink-3);
+  cursor: pointer;
+  flex: none;
+}
+button.qm:hover { color: var(--ink); border-color: var(--ink-3); }
+button.qm[aria-pressed="true"] {
+  background: var(--sun); border-color: var(--sun); color: #1b1304;
+}
+
+.rulescard .rules { padding: 14px; }
+
+.rules .lede {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: var(--ink-2);
+  max-width: 68ch;
+}
+.rules ul { margin: 0; padding-left: 17px; max-width: 74ch; }
+.rules li { margin-bottom: 6px; font-size: 13.5px; }
+.rules li b { font-weight: 600; }
+.rules .grp {
+  font-family: "Saira Condensed", sans-serif;
+  font-weight: 600; font-size: 12px; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--ink-3);
+  margin: 14px 0 6px;
+}
+.rules .grp:first-child { margin-top: 0; }
+.rules .cite { color: var(--ink-3); font-family: "IBM Plex Mono", monospace; font-size: 12px; }
+.rules .none { color: var(--ink-3); font-size: 13.5px; margin: 0; }
+
+/* ──────────────────────────────────────────────────── start-of-turn events */
+.events { padding: 14px; display: grid; gap: 16px; }
+
+.ev { display: grid; gap: 8px; }
+.ev.spent { opacity: .55; }
+
+.evhead { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.evname {
+  font-family: "Saira Condensed", sans-serif;
+  font-weight: 600; font-size: 17px; letter-spacing: .03em; text-transform: uppercase;
+}
+.evhead .cite { color: var(--ink-3); font: 400 12px "IBM Plex Mono", monospace; }
+.evhow { font-size: 13px; color: var(--ink-2); margin: 0; }
+
+.evroll { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.pip {
+  width: 26px; height: 26px;
+  display: grid; place-items: center;
+  font: 600 13px "IBM Plex Mono", monospace;
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  background: var(--panel-2);
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+.pip.hit { border-color: var(--sun); background: var(--sun); color: #1b1304; font-weight: 700; }
+
+.evout {
+  border-left: 3px solid var(--sun);
+  padding: 2px 0 2px 11px;
+  font-size: 13.5px;
+}
+.evout.quiet { border-left-color: var(--line); color: var(--ink-3); }
+.evout ul { margin: 6px 0 0; padding-left: 16px; }
+.evout li { margin-bottom: 4px; }
+.evout .big {
+  font-family: "Saira Condensed", sans-serif;
+  font-weight: 700; font-size: 18px; letter-spacing: .03em; text-transform: uppercase;
+  color: var(--sun);
+}
+
+.evfoot {
+  display: flex; gap: 8px; flex-wrap: wrap;
+  padding: 0 14px 14px;
+}
+.evfoot button { font-size: 13px; padding: 7px 11px; }
+
+/* ───────────────────────────────────────────────────────────────── footer */
+footer {
+  margin-top: 30px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+  color: var(--ink-3);
+  font-size: 12.5px;
+  max-width: 78ch;
+}
+footer p { margin: 0 0 7px; }
+footer ul { margin: 0 0 7px; padding-left: 18px; }
+footer li { margin-bottom: 4px; }
+footer b { color: var(--ink-2); font-weight: 500; }
+</style>
+
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="titlerow"><!--BFGTOOLS--><!--/BFGTOOLS--><h1>Battlezone <span class="glyph">Generator</span></h1></div>
+  <p class="standfirst">
+    Celestial phenomena for <b>Battlefleet Gothic</b>, rolled by the book. Method&nbsp;2 divides the
+    table into 60&nbsp;cm areas, rolls a D6 for each, and rolls the survivors on one battlezone
+    generator picked for the whole battlefield. Every die is shown, including the ones it throws
+    away, so neither admiral decides anything. <b>Rulebook v1.10, pp.&nbsp;104–113.</b>
+  </p>
+</header>
+
+<div class="controls">
+  <div class="field">
+    <label for="zone">Battlezone</label>
+    <select id="zone">
+      <option value="roll" selected>Roll a D6</option>
+      <option value="1">1 · Flare Region</option>
+      <option value="2">2 · Mercurial Zone</option>
+      <option value="3">3 · Inner Biosphere</option>
+      <option value="4">4 · Primary Biosphere</option>
+      <option value="5">5 · Outer Reaches</option>
+      <option value="6">6 · Deep Space</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="preset">Table</label>
+    <select id="preset">
+      <option value="180x120" selected>180 × 120 cm</option>
+      <option value="240x180">240 × 180 cm</option>
+      <option value="120x90">120 × 90 cm</option>
+      <option value="90x60">90 × 60 cm</option>
+      <option value="custom">Custom…</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="tw">Table size (cm)</label>
+    <div class="dims">
+      <input type="number" id="tw" value="180" min="60" max="300" step="10" aria-label="Table width in cm">
+      <span class="by">×</span>
+      <input type="number" id="th" value="120" min="60" max="300" step="10" aria-label="Table height in cm">
+    </div>
+  </div>
+
+  <div class="field">
+    <label for="sector">Area size (cm)</label>
+    <input type="number" id="sector" value="60" min="20" max="120" step="10">
+  </div>
+
+  <div class="field">
+    <label for="threshold">Phenomena on</label>
+    <select id="threshold">
+      <option value="2">2+ very dense</option>
+      <option value="3">3+ dense</option>
+      <option value="4" selected>4+ as written</option>
+      <option value="5">5+ sparse</option>
+      <option value="6">6 very sparse</option>
+    </select>
+  </div>
+
+  <div class="field">
+    <label for="seed">Seed</label>
+    <input type="number" id="seed" value="27104" min="1" max="999999999" step="1">
+  </div>
+
+  <div class="field act">
+    <button id="roll" class="primary" type="button">Roll the table</button>
+  </div>
+</div>
+
+<div class="layout">
+
+  <div class="mapcol">
+    <div class="chartbox">
+      <canvas id="chart" aria-label="Plotted map of the generated celestial phenomena"></canvas>
+      <div class="legend" id="legend"></div>
+      <p class="charthint">Tap a template on the map, or a <span class="qm" aria-hidden="true">?</span> in the list, to see what it does in play.</p>
+    </div>
+
+    <div class="card rulescard">
+      <h2><span id="rulesTitle">Rules</span> <em id="rulesPage"></em></h2>
+      <div class="rules" id="rules"></div>
+    </div>
+  </div>
+
+  <div class="readout">
+
+    <div class="card" id="eventsCard" hidden>
+      <h2>Start of turn <em id="turnNo"></em></h2>
+      <div class="events" id="events"></div>
+      <div class="evfoot">
+        <button type="button" id="nextTurn">Next turn</button>
+        <button type="button" id="newGame">New game</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>The battlefield <em id="seedEcho"></em></h2>
+      <div class="verdict">
+        <div class="vrow">
+          <span class="vdie" id="zoneDie">D6 —</span>
+          <span class="vbody">
+            <span class="vname" id="zoneName">—</span>
+            <span class="vnote" id="zoneNote"></span>
+          </span>
+          <button type="button" class="qm" id="zoneHelp"
+                  aria-label="What this battlezone means in play">?</button>
+        </div>
+        <div class="vrow">
+          <span class="vdie" id="sunDie">D6 —</span>
+          <span class="vbody">
+            <span class="vname" id="sunName">—</span>
+            <span class="vnote">Sunward edge. Clouds and asteroid belts run parallel to it (p. 109).</span>
+          </span>
+          <button type="button" class="qm" id="sunHelp"
+                  aria-label="What the sunward edge means in play">?</button>
+        </div>
+      </div>
+      <div class="tally" id="tally"></div>
+    </div>
+
+    <div class="card">
+      <h2>Templates <em id="pieceCount"></em></h2>
+      <div class="manifest" id="manifest"></div>
+    </div>
+
+    <div class="card">
+      <h2>Roll log</h2>
+      <div class="log" id="log"></div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <p><b>Where the book contradicts itself.</b> Rings: the footnote on p. 108 says a large planet
+    has rings on a 4 or more, while the dedicated <i>Ringed Planets</i> section on p. 113 says 5 or 6.
+    This tool follows p. 113, on the principle that the section defining the thing outranks the
+    footnote mentioning it. The roll log states the threshold each time.</p>
+  <p><b>Where the book leaves a gap, and what this tool does instead.</b> The rulebook does not
+    print any of the following, and the roll log names each one where it happens.</p>
+  <ul>
+    <li><b>Planet and moon diameters.</b> The book gives planet <i>bands</i> (small up to 15 cm,
+      medium 16–25 cm, large 26–50 cm) and a 5 cm ceiling for moons, p. 113, but no die for
+      picking a size inside them. A D6 walks each planet band end to end and a D3 gives a moon
+      3, 4 or 5 cm. Small planets have no printed floor, so the 10 cm bottom end is this tool’s.</li>
+    <li><b>Position inside an area.</b> The book says to place phenomena “anywhere within the
+      area” (p. 105) — the last thing in the whole setup either player could still argue about
+      — so two D6 pick the sixth of the area, re-rolled until the template fits.</li>
+    <li><b>Spacing and containment.</b> The book says only to leave “plenty of empty space”
+      (p. 109), so templates are kept 2 cm apart and entirely on the table. Rings are the
+      exception: the book lets them merge (p. 113), so they are ignored when spacing everything
+      else and may run past the table edge.</li>
+    <li><b>Retries.</b> Positions, moon directions and the second-planet re-roll are all capped,
+      at 14, 24 and 20 attempts. A template or moon that still does not fit is reported as not
+      placed rather than forced.</li>
+    <li><b>Warp rift orientation.</b> The book aligns clouds and asteroid fields with the sunward
+      edge (pp. 110–111) but says nothing about rifts. This tool aligns them too.</li>
+    <li><b>Gravity wells.</b> The book gives them as maxima — “up to” 10, 15 and 30 cm from the
+      template edge (p. 113). The map draws the full distance.</li>
+    <li><b>The area threshold menu.</b> Only 4+ is the book’s (p. 105). The log says so whenever
+      you pick another, or change the area size.</li>
+  </ul>
+  <p>Two generator rows are printed in the plural with no die — Primary Biosphere 3 and Deep Space
+    2 — where the same spread prints the singular elsewhere. This tool reads both as one template
+    and says so in the log. The book calls all of its sizing and placement advice “guidelines to
+    take some of the brain ache out of setting up the tabletop, not… definitive rules” (p. 109).</p>
+  <p>Battlefleet Gothic is © Games Workshop Ltd. This is an unofficial fan-made tool with no
+    affiliation, reproducing the setup tables of the community <i>Battlefleet Gothic: Remastered</i>
+    rulebook v1.10 for use at the table.</p>
+</footer>
+
+</div>
+
+<script>
+'use strict';
+
+/*BZCORE*/
+@@include ../../packages/battlezone/core.js
+/*/BZCORE*/
+
+/* ═══════════════════════════════════════════════════════════════ DRAWING
+   Colours come from the stylesheet at draw time, so the chart follows the
+   reader's theme instead of carrying a second, stale palette of its own. */
+
+const canvas = document.getElementById('chart');
+const ctx = canvas.getContext('2d');
+let current = null;
+let starfield = null;
+let view = null;        // { s, ox, oy } from the last draw, for hit testing
+let selected = null;    // the piece whose rules are showing, or null for the battlezone
+
+function tok(name) {
+  return getComputedStyle(document.documentElement).getPropertyValue('--' + name).trim();
+}
+
+function makeStars(seed, W, H) {
+  const r = makeRng((seed ^ 0x9E3779B9) >>> 0);
+  const out = [];
+  for (let i = 0; i < 380; i++) {
+    out.push({ x: r() * W, y: r() * H, r: 0.05 + r() * 0.16, a: 0.12 + r() * 0.6 });
+  }
+  return out;
+}
+
+function draw() {
+  if (!current) return;
+  const m = current.meta;
+  const dpr = Math.min(2, window.devicePixelRatio || 1);
+
+  // fit the canvas box to the table's proportions, then to the column width
+  const cssW = canvas.parentElement.clientWidth - 24;
+  const pad = 26;
+  const cssH = Math.max(220, Math.min(620, Math.round((cssW - pad * 2) * (m.H / m.W)) + pad * 2));
+  canvas.style.height = cssH + 'px';
+  canvas.width = Math.round(cssW * dpr);
+  canvas.height = Math.round(cssH * dpr);
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+  const s = Math.min((cssW - pad * 2) / m.W, (cssH - pad * 2) / m.H);
+  const ox = (cssW - m.W * s) / 2, oy = (cssH - m.H * s) / 2;
+  view = { s: s, ox: ox, oy: oy };           // kept so a click can be turned back into cm
+  const X = function (cm) { return ox + cm * s; };
+  const Y = function (cm) { return oy + cm * s; };
+  const L = function (cm) { return cm * s; };
+
+  const C = {
+    bg: tok('chart-bg'), grid: tok('chart-grid'), sect: tok('chart-sect'),
+    frame: tok('chart-frame'), label: tok('chart-label'), star: tok('chart-star'),
+    sun: tok('sun'), ast: tok('ast'), gas: tok('gas'),
+    pln: tok('pln'), moon: tok('moon'), rift: tok('rift')
+  };
+  const mono = '"IBM Plex Mono", ui-monospace, monospace';
+
+  ctx.clearRect(0, 0, cssW, cssH);
+
+  /* table ground */
+  ctx.fillStyle = C.bg;
+  ctx.fillRect(X(0), Y(0), L(m.W), L(m.H));
+
+  /* starfield — only where the ground is dark enough to carry it */
+  if (C.star && C.star !== 'transparent') {
+    if (!starfield || starfield.seed !== m.seed) {
+      starfield = { seed: m.seed, stars: makeStars(m.seed, m.W, m.H) };
+    }
+    ctx.save();
+    ctx.beginPath(); ctx.rect(X(0), Y(0), L(m.W), L(m.H)); ctx.clip();
+    for (const st of starfield.stars) {
+      ctx.globalAlpha = st.a;
+      ctx.fillStyle = C.star;
+      ctx.beginPath(); ctx.arc(X(st.x), Y(st.y), Math.max(0.4, L(st.r)), 0, 7); ctx.fill();
+    }
+    ctx.restore();
+    ctx.globalAlpha = 1;
+  }
+
+  /* 10 cm grid */
+  ctx.strokeStyle = C.grid; ctx.lineWidth = 1; ctx.beginPath();
+  for (let x = 10; x < m.W; x += 10) { ctx.moveTo(X(x), Y(0)); ctx.lineTo(X(x), Y(m.H)); }
+  for (let y = 10; y < m.H; y += 10) { ctx.moveTo(X(0), Y(y)); ctx.lineTo(X(m.W), Y(y)); }
+  ctx.stroke();
+
+  /* area grid, plus each area's number for the log to refer to */
+  ctx.strokeStyle = C.sect; ctx.lineWidth = 1; ctx.setLineDash([5, 4]); ctx.beginPath();
+  for (let x = m.sector; x < m.W; x += m.sector) { ctx.moveTo(X(x), Y(0)); ctx.lineTo(X(x), Y(m.H)); }
+  for (let y = m.sector; y < m.H; y += m.sector) { ctx.moveTo(X(0), Y(y)); ctx.lineTo(X(m.W), Y(y)); }
+  ctx.stroke(); ctx.setLineDash([]);
+
+  ctx.fillStyle = C.label; ctx.font = '500 10px ' + mono;
+  for (const a of m.areas) ctx.fillText(String(a.n), X(a.x0) + 4, Y(a.y0) + 12);
+
+  /* the templates */
+  for (const t of current.terrain) {
+    if (t.kind === 'ring') {
+      const col = t.ringKind === 'gas' ? C.gas : C.ast;
+      ctx.save();
+      ctx.beginPath(); ctx.rect(X(0), Y(0), L(m.W), L(m.H)); ctx.clip();
+      ctx.strokeStyle = col;
+      ctx.globalAlpha = 0.5;
+      ctx.lineWidth = Math.max(1, L(t.outer - t.inner));
+      ctx.beginPath();
+      ctx.arc(X(t.x), Y(t.y), L((t.inner + t.outer) / 2), 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+      ctx.restore();
+      continue;
+    }
+
+    const col = C[KIND[t.kind].colour];
+    const seed = (t.id.charCodeAt(0) * 2654435761 + parseInt(t.id.slice(1), 10) * 40503) >>> 0;
+    const rnd = makeRng(seed || 1);
+
+    if (t.kind === 'planet' || t.kind === 'moon') {
+      // round bodies are drawn in table coordinates; only bands need rotating
+      // gravity well first, so the planet sits on top of it
+      ctx.strokeStyle = col; ctx.globalAlpha = 0.42; ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath(); ctx.arc(X(t.x), Y(t.y), L(t.rx + t.gravity), 0, Math.PI * 2); ctx.stroke();
+      ctx.setLineDash([]); ctx.globalAlpha = 1;
+
+      const g = ctx.createRadialGradient(
+        X(t.x) - L(t.rx) * 0.35, Y(t.y) - L(t.ry) * 0.35, L(t.rx) * 0.08,
+        X(t.x), Y(t.y), Math.max(1, L(t.rx)));
+      g.addColorStop(0, col);
+      g.addColorStop(1, C.bg);
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(X(t.x), Y(t.y), L(t.rx), 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = col; ctx.lineWidth = 1.2;
+      ctx.stroke();
+      for (let i = 0; i < (t.kind === 'planet' ? 11 : 5); i++) {
+        const a = rnd() * Math.PI * 2, r = Math.sqrt(rnd()) * L(t.rx) * 0.66;
+        ctx.globalAlpha = 0.22; ctx.fillStyle = C.frame;
+        ctx.beginPath();
+        ctx.arc(X(t.x) + Math.cos(a) * r, Y(t.y) + Math.sin(a) * r, Math.max(0.6, L(0.15 + rnd() * 0.3)), 0, 7);
+        ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+      continue;
+    }
+
+    ctx.save();
+    ctx.translate(X(t.x), Y(t.y));
+    ctx.rotate(t.angle || 0);
+
+    if (t.kind === 'rift') {
+      const g = ctx.createRadialGradient(0, 0, 0, 0, 0, Math.max(1, L(Math.max(t.rx, t.ry))));
+      g.addColorStop(0, col); g.addColorStop(1, C.bg);
+      ctx.globalAlpha = 0.5; ctx.fillStyle = g;
+      ctx.beginPath(); ctx.ellipse(0, 0, L(t.rx), L(t.ry), 0, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = col; ctx.lineWidth = 1.4; ctx.setLineDash([5, 3]);
+      ctx.beginPath(); ctx.ellipse(0, 0, L(t.rx), L(t.ry), 0, 0, Math.PI * 2); ctx.stroke();
+      ctx.setLineDash([]);
+      for (let i = 0; i < 7; i++) {
+        const f = 0.25 + rnd() * 0.7;
+        ctx.globalAlpha = 0.16 + rnd() * 0.26; ctx.strokeStyle = col; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.ellipse(0, 0, L(t.rx) * f, L(t.ry) * f, rnd() * Math.PI, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+    } else {
+      // asteroid field or gas band: dashed outline plus its own speckle
+      ctx.globalAlpha = 0.13; ctx.fillStyle = col;
+      ctx.beginPath(); ctx.ellipse(0, 0, L(t.rx), L(t.ry), 0, 0, Math.PI * 2); ctx.fill();
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = col; ctx.lineWidth = 1.25;
+      ctx.setLineDash(t.kind === 'gas' ? [6, 5] : [4, 3]);
+      ctx.beginPath(); ctx.ellipse(0, 0, L(t.rx), L(t.ry), 0, 0, Math.PI * 2); ctx.stroke();
+      ctx.setLineDash([]);
+
+      if (t.kind === 'asteroid') {
+        for (let i = 0; i < 30; i++) {
+          const a = rnd() * Math.PI * 2, r = Math.sqrt(rnd()) * 0.9;
+          ctx.globalAlpha = 0.55 + rnd() * 0.4; ctx.fillStyle = col;
+          ctx.beginPath();
+          ctx.arc(Math.cos(a) * L(t.rx) * r, Math.sin(a) * L(t.ry) * r, Math.max(0.7, L(0.14 + rnd() * 0.3)), 0, 7);
+          ctx.fill();
+        }
+      } else {
+        for (let i = 0; i < 14; i++) {
+          const a = rnd() * Math.PI * 2, r = Math.sqrt(rnd());
+          const px = Math.cos(a) * L(t.rx) * 0.78 * r, py = Math.sin(a) * L(t.ry) * 0.7 * r;
+          const rr = Math.max(2, L(0.6 + rnd() * 1.2));
+          const g = ctx.createRadialGradient(px, py, 0, px, py, rr);
+          g.addColorStop(0, col); g.addColorStop(1, C.bg);
+          ctx.globalAlpha = 0.3; ctx.fillStyle = g;
+          ctx.beginPath(); ctx.arc(px, py, rr, 0, 7); ctx.fill();
+        }
+      }
+      ctx.globalAlpha = 1;
+    }
+    ctx.restore();
+  }
+
+  /* the piece whose rules are on screen gets a ring, so map and panel agree */
+  if (selected && current.terrain.indexOf(selected) !== -1) {
+    const e = extents(selected);
+    ctx.save();
+    ctx.strokeStyle = C.sun;
+    ctx.lineWidth = 2;
+    ctx.setLineDash([6, 4]);
+    ctx.beginPath();
+    ctx.ellipse(X(selected.x), Y(selected.y),
+      Math.max(6, L(e.hw) + 5), Math.max(6, L(e.hh) + 5), 0, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  /* template labels, sized in screen pixels so they stay legible on a phone */
+  ctx.font = '600 10px ' + mono;
+  ctx.textAlign = 'center';
+  for (const t of current.terrain) {
+    if (t.kind === 'ring') continue;
+    const e = extents(t);
+    if (L(Math.max(e.hw, e.hh)) < 9) continue;
+    ctx.fillStyle = C[KIND[t.kind].colour];
+    ctx.fillText(t.id, X(t.x), Y(t.y + e.hh) + 12);
+  }
+  ctx.textAlign = 'left';
+
+  /* frame, ruler ticks and the sunward edge */
+  ctx.strokeStyle = C.frame; ctx.lineWidth = 1.5;
+  ctx.strokeRect(X(0), Y(0), L(m.W), L(m.H));
+
+  ctx.strokeStyle = C.frame; ctx.lineWidth = 1; ctx.beginPath();
+  for (let x = 30; x < m.W; x += 30) { ctx.moveTo(X(x), Y(0)); ctx.lineTo(X(x), Y(0) - 5); }
+  for (let y = 30; y < m.H; y += 30) { ctx.moveTo(X(0), Y(y)); ctx.lineTo(X(0) - 5, Y(y)); }
+  ctx.stroke();
+
+  ctx.fillStyle = C.label; ctx.font = '400 9.5px ' + mono;
+  for (let x = 30; x < m.W; x += 30) ctx.fillText(String(x), X(x) - 7, Y(0) - 9);
+  for (let y = 30; y < m.H; y += 30) ctx.fillText(String(y), X(0) - 22, Y(y) + 3);
+  ctx.fillText(m.W + ' × ' + m.H + ' cm', X(0), Y(m.H) + 15);
+
+  ctx.strokeStyle = C.sun; ctx.lineWidth = 3; ctx.setLineDash([9, 5]);
+  ctx.beginPath();
+  if (m.sunEdge === 'top')         { ctx.moveTo(X(0), Y(0));    ctx.lineTo(X(m.W), Y(0)); }
+  else if (m.sunEdge === 'bottom') { ctx.moveTo(X(0), Y(m.H));  ctx.lineTo(X(m.W), Y(m.H)); }
+  else if (m.sunEdge === 'left')   { ctx.moveTo(X(0), Y(0));    ctx.lineTo(X(0), Y(m.H)); }
+  else                             { ctx.moveTo(X(m.W), Y(0));  ctx.lineTo(X(m.W), Y(m.H)); }
+  ctx.stroke(); ctx.setLineDash([]);
+
+  ctx.fillStyle = C.sun; ctx.font = '600 10px ' + mono;
+  const tag = 'SUNWARD  D6 = ' + m.sunDie;
+  if (m.sunEdge === 'top')         ctx.fillText(tag, X(0) + 6, Y(0) + 14);
+  else if (m.sunEdge === 'bottom') ctx.fillText(tag, X(0) + 6, Y(m.H) - 7);
+  else {
+    ctx.save();
+    ctx.translate(m.sunEdge === 'left' ? X(0) + 14 : X(m.W) - 6, Y(m.H) - 6);
+    ctx.rotate(-Math.PI / 2);
+    ctx.fillText(tag, 0, 0);
+    ctx.restore();
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════════ READOUT */
+
+const $ = function (id) { return document.getElementById(id); };
+
+function renderLegend() {
+  const items = [
+    ['ast', 'Asteroid field'], ['gas', 'Gas & dust'], ['pln', 'Planet'],
+    ['moon', 'Moon'], ['rift', 'Warp rift'], ['sun', 'Sunward edge']
+  ];
+  $('legend').innerHTML = items.map(function (i) {
+    return '<span style="color:var(--' + i[0] + ')"><i></i><span style="color:var(--ink-2)">' +
+      i[1] + '</span></span>';
+  }).join('') +
+  '<span style="color:var(--ink-3)">dashed circle = gravity well · numbers = area</span>';
+}
+
+function render(result) {
+  current = result;
+  const m = result.meta;
+
+  $('seedEcho').textContent = 'seed ' + m.seed;
+
+  $('zoneDie').textContent = m.zoneDie ? 'D6 ' + m.zoneDie : 'set';
+  $('zoneName').textContent = m.zone.name;
+  $('zoneNote').textContent = m.zone.blurb + ' (p. ' + m.zone.page + ')';
+
+  $('sunDie').textContent = 'D6 ' + m.sunDie;
+  $('sunName').textContent = m.sunEdge + ' edge';
+
+  const chips = [];
+  const c = m.counters;
+  if (c.asteroid) chips.push(['Asteroid fields', c.asteroid]);
+  if (c.gas)      chips.push(['Gas & dust', c.gas]);
+  if (c.planet)   chips.push(['Planets', c.planet]);
+  if (c.moon)     chips.push(['Moons', c.moon]);
+  if (c.rift)     chips.push(['Warp rifts', c.rift]);
+  if (m.events.flare)     chips.push(['Solar flares', m.events.flare]);
+  if (m.events.radiation) chips.push(['Radiation bursts', m.events.radiation]);
+  chips.push(['Areas', m.cols + ' × ' + m.rows]);
+  $('tally').innerHTML = chips.map(function (x) {
+    return '<b><s>' + x[1] + '</s> ' + x[0] + '</b>';
+  }).join('');
+
+  const pieces = result.terrain.filter(function (t) { return t.kind !== 'ring'; });
+  $('pieceCount').textContent = pieces.length + (pieces.length === 1 ? ' piece' : ' pieces');
+
+  $('manifest').innerHTML = pieces.length ? pieces.map(function (t) {
+    let spec = t.dims;
+    if (t.kind === 'planet' || t.kind === 'moon') spec += ' · gravity well ' + t.gravity + ' cm';
+    spec += ' · at ' + Math.round(t.x) + ', ' + Math.round(t.y) + ' cm';
+    let rings = '';
+    if (t.rings) {
+      rings = t.rings.map(function (r, i) {
+        return '<span class="ring">ring ' + (i + 1) + ': ' +
+          (r.kind === 'gas' ? 'gas and dust' : 'asteroids') + ', ' + r.wide +
+          ' cm wide, ' + r.gap + ' cm out</span>';
+      }).join('');
+    }
+    const label = t.kind === 'planet'
+      ? t.size.charAt(0).toUpperCase() + t.size.slice(1) + ' planet'
+      : (t.kind === 'moon' ? 'Moon of ' + t.of : t.name);
+    return '<div class="mrow' + (selected === t ? ' sel' : '') + '" data-id="' + t.id + '">' +
+      '<span class="mid" style="color:var(--' + KIND[t.kind].colour + ')">' + t.id + '</span>' +
+      '<span><span class="mname">' + label + '</span>' +
+      '<span class="mspec">' + spec + rings + '</span></span>' +
+      '<button type="button" class="qm" data-help="' + t.id + '" aria-pressed="' +
+        (selected === t) + '" aria-label="What a ' + label.toLowerCase() +
+        ' does in play">?</button></div>';
+  }).join('')
+    : '<div class="mrow" style="grid-template-columns:1fr"><span class="mspec">' +
+      'Empty void. Every area rolled under the threshold — legal, and rarer than it feels.' +
+      '</span></div>';
+
+  for (const b of $('manifest').querySelectorAll('button[data-help]')) {
+    b.onclick = function (e) {
+      const id = e.currentTarget.dataset.help;
+      const piece = current.terrain.find(function (t) { return t.id === id; });
+      showRules(selected === piece ? null : piece);
+    };
+  }
+
+  $('log').innerHTML = result.log.map(function (l) {
+    return '<div class="' + l.cls + '">' + l.text + '</div>';
+  }).join('');
+
+  showRules(null);          // a fresh map explains its battlezone, and draws
+  resetEvents(true);
+}
+
+/* ══════════════════════════════════════════════════ THE RULES PANEL
+   One panel, one subject. With nothing selected it explains the battlezone
+   that was rolled, because that is the thing on screen a reader is least
+   likely to know — a Flare Region changes your gunnery before a shot is
+   fired. Selecting a template swaps it for that template's rules. */
+
+function ruleHtml(r) {
+  return (r.lede ? '<p class="lede">' + r.lede + '</p>' : '') +
+    r.groups.map(function (g) {
+      return '<p class="grp">' + g.head + ' <span class="cite">' + g.cite + '</span></p><ul>' +
+        (g.raw || g.items.map(function (i) { return '<li>' + i + '</li>'; }).join('')) + '</ul>';
+    }).join('');
+}
+
+function zoneRules(m) {
+  const sunward = m.zone.n <= 3;
+  const produces = m.zone.rows.map(function (row, i) {
+    return '<li><b>' + (i + 1) + '</b> — ' + row.text + '</li>';
+  }).join('');
+  return {
+    title: m.zone.name,
+    page: 'p. ' + m.zone.page,
+    lede: m.zone.blurb + ' This is the one generator every populated area was rolled on, ' +
+      'picked once for the whole battlefield.',
+    groups: [
+      { head: 'What this zone can produce', cite: 'p. ' + m.zone.page, items: [], raw: produces },
+      sunward
+        ? { head: 'Fighting sunward applies here', cite: 'p. 114', items: [
+            'The star is close enough to matter. Any firing toward the <b>' + m.sunEdge +
+              ' edge</b> doubles the range column shifts.',
+            'At <b>15 cm or under</b>, two shifts <b>left</b> instead of one — the target is silhouetted.',
+            'At <b>over 30 cm</b>, two shifts <b>right</b> instead of one — the photosphere blinds sensors.',
+            'Judge it with the bearing compass laid over the firing ship, arrows parallel to that edge.'
+          ] }
+        : { head: 'Fighting sunward does not apply here', cite: 'p. 114', items: [
+            'In the Primary Biosphere, Outer Reaches and Deep Space the light from the distant ' +
+              'star has no effect on combat. The sunward edge still decides how the bands were laid out.'
+          ] }
+    ]
+  };
+}
+
+function showRules(piece) {
+  selected = piece || null;
+  const m = current.meta;
+  let r;
+  if (selected) {
+    r = RULES[selected.kind];
+    if (selected.kind === 'planet') {
+      r = Object.assign({}, r, {
+        title: selected.size.charAt(0).toUpperCase() + selected.size.slice(1) +
+          ' planet — ' + selected.id
+      });
+    } else {
+      r = Object.assign({}, r, { title: r.title + ' — ' + selected.id });
+    }
+  } else {
+    r = zoneRules(m);
+  }
+  $('rulesTitle').textContent = r.title;
+  $('rulesPage').textContent = r.page;
+  $('rules').innerHTML = ruleHtml(r);
+
+  for (const b of document.querySelectorAll('.manifest button[data-help]')) {
+    const on = !!selected && b.dataset.help === selected.id;
+    b.setAttribute('aria-pressed', String(on));
+    b.parentElement.classList.toggle('sel', on);
+  }
+  $('zoneHelp').setAttribute('aria-pressed', String(!selected));
+  draw();
+}
+
+function showFixedRules(key) {
+  selected = null;
+  const r = RULES[key];
+  $('rulesTitle').textContent = r.title;
+  $('rulesPage').textContent = r.page;
+  $('rules').innerHTML = ruleHtml(r);
+  for (const b of document.querySelectorAll('.manifest button[data-help]')) {
+    b.setAttribute('aria-pressed', 'false');
+    b.parentElement.classList.remove('sel');
+  }
+  $('zoneHelp').setAttribute('aria-pressed', 'false');
+  draw();
+}
+
+/* a click on the map picks the smallest template under the finger */
+canvas.addEventListener('click', function (e) {
+  if (!current || !view) return;
+  const r = canvas.getBoundingClientRect();
+  const x = (e.clientX - r.left - view.ox) / view.s;
+  const y = (e.clientY - r.top - view.oy) / view.s;
+  let best = null, bestArea = Infinity;
+  for (const t of current.terrain) {
+    if (t.kind === 'ring') continue;
+    const a = -(t.angle || 0), dx = x - t.x, dy = y - t.y;
+    const lx = dx * Math.cos(a) - dy * Math.sin(a);
+    const ly = dx * Math.sin(a) + dy * Math.cos(a);
+    const pad = 6 / view.s;                       // a forgiving target on a phone
+    const rx = t.rx + pad, ry = t.ry + pad;
+    if ((lx * lx) / (rx * rx) + (ly * ly) / (ry * ry) <= 1) {
+      const area = t.rx * t.ry;
+      if (area < bestArea) { best = t; bestArea = area; }
+    }
+  }
+  showRules(best === selected ? null : best);
+});
+
+/* ═════════════════════════════════════════════════ START-OF-TURN EVENTS
+   Solar flares and radiation bursts are not templates — the generator hands
+   you a count, and you roll that many D6 at the start of every turn. These
+   rolls are the players' own, live at the table, so they do not come from
+   the map seed. */
+
+let ev = { turn: 1, flareSpent: false, rolls: {} };
+
+function d6() { return 1 + Math.floor(Math.random() * 6); }
+
+function renderEvents() {
+  const m = current.meta, e = m.events;
+  const any = e.flare || e.radiation;
+  $('eventsCard').hidden = !any;
+  if (!any) return;
+  $('turnNo').textContent = 'turn ' + ev.turn;
+
+  const parts = [];
+  for (const key of ['flare', 'radiation']) {
+    const n = e[key];
+    if (!n) continue;
+    const R = EVENT_RULES[key];
+    const spent = key === 'flare' && ev.flareSpent;
+    const roll = ev.rolls[key];
+
+    let out = '';
+    if (spent && !roll) {
+      out = '<div class="evout quiet">Already happened this game. Stop rolling for it.</div>';
+    } else if (roll) {
+      out = '<div class="evroll">' + roll.dice.map(function (d) {
+        return '<span class="pip' + (d >= R.trigger ? ' hit' : '') + '">' + d + '</span>';
+      }).join('') + '</div>';
+      if (roll.hit) {
+        let body = '<span class="big">' + R.name + '</span>';
+        if (key === 'radiation') {
+          body += '<div style="margin-top:4px">Interference level <b>D6 = ' + roll.level +
+            '</b> → every ship on the table is at <b>−' + roll.level +
+            ' Leadership</b> for the rest of this turn.</div>';
+        }
+        body += '<ul>' + R.effects.map(function (x) { return '<li>' + x + '</li>'; }).join('') + '</ul>';
+        if (key === 'radiation' && roll.hits > 1) {
+          body += '<p class="evhow">' + roll.hits + ' dice came up ' + R.triggerText +
+            ', but only one burst happens in a turn.</p>';
+        }
+        out += '<div class="evout">' + body + '</div>';
+      } else {
+        out += '<div class="evout quiet">No ' + R.name.toLowerCase() + ' this turn.</div>';
+      }
+    }
+
+    parts.push(
+      // dim a spent flare only once its result has been cleared — the turn it
+      // fires is the turn its effects most need to be legible
+      '<div class="ev' + (spent && !roll ? ' spent' : '') + '">' +
+        '<div class="evhead"><span class="evname">' + R.name + ' × ' + n + '</span>' +
+          '<span class="cite">' + R.page + '</span></div>' +
+        '<p class="evhow">' + R.how + '</p>' +
+        '<div class="evroll">' +
+          '<button type="button" data-ev="' + key + '"' + (spent ? ' disabled' : '') + '>Roll ' +
+            n + 'D6</button>' +
+          '<span class="evhow">' + R.triggerText + ' triggers</span>' +
+        '</div>' + out +
+      '</div>');
+  }
+  $('events').innerHTML = parts.join('');
+
+  for (const b of $('events').querySelectorAll('button[data-ev]')) {
+    b.onclick = function (e2) {
+      const key = e2.currentTarget.dataset.ev;
+      const R = EVENT_RULES[key];
+      const n = current.meta.events[key];
+      const dice = [];
+      for (let i = 0; i < n; i++) dice.push(d6());
+      const hits = dice.filter(function (d) { return d >= R.trigger; }).length;
+      const roll = { dice: dice, hits: hits, hit: hits > 0 };
+      if (roll.hit && key === 'radiation') roll.level = d6();
+      if (roll.hit && key === 'flare') ev.flareSpent = true;
+      ev.rolls[key] = roll;
+      renderEvents();
+    };
+  }
+}
+
+function resetEvents(newGame) {
+  ev.rolls = {};
+  if (newGame) { ev.turn = 1; ev.flareSpent = false; }
+  renderEvents();
+}
+
+/* ════════════════════════════════════════════════════════════════ CONTROLS */
+
+const PRESETS = {
+  '180x120': [180, 120], '240x180': [240, 180],
+  '120x90':  [120, 90],  '90x60':   [90, 60]
+};
+
+function clamp(v, lo, hi, fallback) {
+  v = Number(v);
+  if (!isFinite(v)) return fallback;
+  return Math.max(lo, Math.min(hi, Math.round(v)));
+}
+
+function readOpts() {
+  return {
+    zone: $('zone').value,
+    width: clamp($('tw').value, 60, 300, 180),
+    height: clamp($('th').value, 60, 300, 120),
+    sector: clamp($('sector').value, 20, 120, 60),
+    threshold: clamp($('threshold').value, 2, 6, 4)
+  };
+}
+
+function run() {
+  const o = readOpts();
+  $('tw').value = o.width; $('th').value = o.height; $('sector').value = o.sector;
+  const seed = clamp($('seed').value, 1, 999999999, 27104);
+  $('seed').value = seed;
+  render(generate(seed, o));
+}
+
+$('preset').addEventListener('change', function () {
+  const p = PRESETS[$('preset').value];
+  if (p) { $('tw').value = p[0]; $('th').value = p[1]; run(); }
+});
+
+for (const id of ['tw', 'th']) {
+  $(id).addEventListener('change', function () {
+    const key = $('tw').value + 'x' + $('th').value;
+    $('preset').value = PRESETS[key] ? key : 'custom';
+    run();
+  });
+}
+
+for (const id of ['zone', 'sector', 'threshold', 'seed']) {
+  $(id).addEventListener('change', run);
+}
+
+$('roll').addEventListener('click', function () {
+  $('seed').value = 1 + Math.floor(Math.random() * 999999);
+  run();
+});
+
+$('zoneHelp').addEventListener('click', function () { showRules(null); });
+$('sunHelp').addEventListener('click', function () { showFixedRules('sunward'); });
+
+$('nextTurn').addEventListener('click', function () { ev.turn++; resetEvents(false); });
+$('newGame').addEventListener('click', function () { resetEvents(true); });
+
+let resizeTimer = null;
+window.addEventListener('resize', function () {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(draw, 120);
+});
+
+const darkQuery = window.matchMedia('(prefers-color-scheme: dark)');
+if (darkQuery.addEventListener) darkQuery.addEventListener('change', function () { starfield = null; draw(); });
+
+renderLegend();
+run();
+</script>
+
+</body>
+</html>

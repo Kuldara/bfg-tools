@@ -1,0 +1,271 @@
+{
+  "list": "Chaos — Incursion",
+  "book_page": 232,
+  "read_pages": [
+    226,
+    228,
+    229,
+    232,
+    233
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "You must include a Chaos Warmaster in your fleet",
+      "text": "You must include a Chaos Warmaster in your fleet, even if it is worth 750 points or less.",
+      "page": 232,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 0,
+      "over": false,
+      "why": "The only list where the commander is required without a points limit. The book's sentence explicitly forbids a limit, so the general patterns cannot recognise it; recorded by hand in the RULE_PICKS table with the points limit 0."
+    },
+    {
+      "key": "He must be assigned to the biggest (ie, most expensive) ship",
+      "text": "He must be assigned to the biggest (ie, most expensive) ship and improves its Leadership to the value shown below.",
+      "page": 232,
+      "status": "manual",
+      "why": "The placement is done at the table."
+    },
+    {
+      "key": "they may be given up to four Marks of Chaos",
+      "text": "In addition they may be given up to four Marks of Chaos as shown below (no Mark may be taken more than once).",
+      "page": 232,
+      "status": "manual",
+      "why": "A Warmaster gets FOUR marks, a Chaos Lord only one. The app prevents the same mark twice with the group logic, but the number four or one is not enforced."
+    },
+    {
+      "key": "You may include up to three Chaos Lords in your fleet",
+      "text": "You may include up to three Chaos Lords in your fleet.",
+      "page": 232,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 3,
+      "why": "The book writes this limit twice: as a heading and as a sentence. The app showed two identical rows of them until they were merged on 7.9.2026. One check is left, whose source sentence is the book's full sentence."
+    },
+    {
+      "key": "A Chaos Lord may be given up to one of the following Marks of Chaos",
+      "text": "A Chaos Lord may be given up to one of the following Marks of Chaos.",
+      "page": 232,
+      "status": "manual",
+      "why": "A limit of one mark per Lord; the app does not count marks per commander."
+    },
+    {
+      "key": "You may include up to one Space Hulk in the fleet",
+      "text": "You may include up to one Space Hulk in the fleet. See its profile for restrictions and how to include it.",
+      "page": 233,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1,
+      "why": "The book writes this limit twice: as a heading and as a sentence. The app showed two identical rows of them until they were merged on 7.9.2026. One check is left, whose source sentence is the book's full sentence."
+    },
+    {
+      "key": "one battleship in your fleet for every three cruisers or heavy cruisers",
+      "text": "You may include up to one battleship in your fleet for every three cruisers or heavy cruisers.",
+      "page": 233,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 3,
+      "per_types": [
+        "cruisers",
+        "heavy cruisers"
+      ],
+      "why": "The denominator covers both types only after 7.9.2026; before that 'or heavy cruisers' was cut off and the check was too strict."
+    },
+    {
+      "key": "one grand cruiser in your fleet for every three cruisers or heavy cruisers",
+      "text": "You may include up to one grand cruiser in your fleet for every three cruisers or heavy cruisers.",
+      "page": 233,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 3,
+      "per_types": [
+        "cruisers",
+        "heavy cruisers"
+      ]
+    },
+    {
+      "key": "one heavy cruiser in your fleet for every two cruisers",
+      "text": "You may include up to one heavy cruiser in your fleet for every two cruisers.",
+      "page": 233,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 2,
+      "per_types": [
+        "cruisers"
+      ]
+    },
+    {
+      "key": "0-12 Cruisers",
+      "text": "0-12 Cruisers",
+      "page": 233,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 12
+    },
+    {
+      "key": "escorts in your fleet in squadrons of 2",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "page": 233,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "Ships with launch bays can have a mixture",
+      "text": "Ships with launch bays can have a mixture of Swiftdeath fighters, Doomfire bombers or Dreadclaw assault craft. Ships with torpedo tubes are armed with normal and boarding torpedoes.",
+      "page": 233,
+      "status": "manual",
+      "why": "The book's sentence shows as the section's text. The ordnance type is chosen during the game, so there is nothing to enforce. (Earlier 'not_shown': RULEY did not know the word 'can', fixed 7.9.2026.)"
+    },
+    {
+      "key": "one cruiser from any Imperial Navy fleet list up to 185 points",
+      "text": "For every 1,500 points in a Chaos fleet, one cruiser from any Imperial Navy fleet list up to 185 points and/or up to six Imperial Navy escorts may be taken. Special weapon rules, Nova Cannon, Chaos Lords, Chaos Space Marines, Chaos ordnance or Daemonship upgrades may not be taken for Imperial Navy vessels used in this manner, and cruisers suffer -1Ld for going renegade. Imperial Navy escorts need not be in a single squadron and may be interspersed within other Chaos escort squadrons if desired. These vessels may not take any upgrade listed in their profile and do not count as reserves; they count as Chaos vessels in all respects.",
+      "page": 222,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "chaos-renegade-cruiser-per-1500-points",
+        "chaos-renegade-cruiser-under-1500-points",
+        "chaos-renegade-escorts-seven-is-too-many",
+        "chaos-renegade-cruiser-fills-the-chaos-limit"
+      ],
+      "why": "1.1 (14.9.2026): a section of its own RENEGADE IMPERIAL VESSELS with Imperial hulls (cruisers at most 185 p and escorts) without profile upgrades (noopt). Two per_points rules: one cruiser and six escorts per FULL 1500 points (the sentence does not say 'or part thereof'). The end of the sentence 'they count as Chaos vessels in all respects' holds because the list's own 0-12 Cruisers and the escort squadron rule count these in (section_count.pick). Page 222 does not fit in the lists' rule window (lists.py rules_pages, six pages), so the section's text carries the sentence to the player."
+    }
+  ],
+  "entries": [
+    {
+      "name": "Chaos Warmaster (Ld 8)",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Chaos Warmaster (Ld 9)",
+      "pts": 100,
+      "page": null
+    },
+    {
+      "name": "Chaos Lord (Ld 8)",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "The Mark of Slaanesh",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "The Mark of Khorne",
+      "pts": 20,
+      "page": null
+    },
+    {
+      "name": "The Mark of Tzeentch",
+      "pts": 30,
+      "page": null
+    },
+    {
+      "name": "The Mark of Nurgle",
+      "pts": 35,
+      "page": null
+    },
+    {
+      "name": "Chaos Space Hulk",
+      "pts": 650,
+      "page": 286
+    },
+    {
+      "name": "Chaos battle barge",
+      "pts": 410,
+      "page": 255
+    },
+    {
+      "name": "Despoiler class battleship",
+      "pts": 400,
+      "page": 266
+    },
+    {
+      "name": "Desolator class battleship",
+      "pts": 300,
+      "page": 267
+    },
+    {
+      "name": "Repulsive class grand cruiser",
+      "pts": 230,
+      "page": 269
+    },
+    {
+      "name": "Styx class heavy cruiser",
+      "pts": 260,
+      "page": 272
+    },
+    {
+      "name": "Hecate class heavy cruiser",
+      "pts": 230,
+      "page": 273
+    },
+    {
+      "name": "Hades class heavy cruiser",
+      "pts": 200,
+      "page": 274
+    },
+    {
+      "name": "Acheron class heavy cruiser",
+      "pts": 190,
+      "page": 275
+    },
+    {
+      "name": "Devastation class cruiser",
+      "pts": 190,
+      "page": 276
+    },
+    {
+      "name": "Carnage class cruiser",
+      "pts": 180,
+      "page": 277
+    },
+    {
+      "name": "Inferno class cruiser",
+      "pts": 180,
+      "page": 278
+    },
+    {
+      "name": "Murder class cruiser",
+      "pts": 170,
+      "page": 279
+    },
+    {
+      "name": "Slaughter class cruiser",
+      "pts": 165,
+      "page": 280
+    },
+    {
+      "name": "Idolator class raider",
+      "pts": 45,
+      "page": 281
+    },
+    {
+      "name": "Infidel class raider",
+      "pts": 40,
+      "page": 282
+    },
+    {
+      "name": "Iconoclast class destroyer",
+      "pts": 30,
+      "page": 283
+    }
+  ],
+  "notes": [
+    "Pages 226-231 are Chaos's shared rules: the daemonships' warp translation, haunting, campaign rules and the Chaos Promotions table. They are in-game and campaign rules.",
+    "This is the basic Chaos list. The other five are its variants, and in them the commander is required only from 750 points.",
+    "The Marks of Chaos are the same four for both commanders, but the Warmaster gets four and the Lord one. That difference is not enforced.",
+    "This list has NO DAEMON SHIPS section. That is according to the book: pages 232-233 have no such heading or price list; the daemonship prices are printed only on the Black Crusade list's page 235. The shared rules' sentence 'Any number of capital ships can be upgraded to Daemon ships' shows in the FLEET RULES block, but no row is offered - nor should it be, because this list has no price."
+  ]
+}

@@ -1,0 +1,417 @@
+/* --- card ----------------------------------------------------------- */
+.k{
+  position:absolute;left:var(--card-x);width:var(--card-w);height:var(--card-h);
+  background:#F6F2E9;border:.6pt solid var(--kd);overflow:hidden;
+  display:flex;flex-direction:column;
+}
+.k.top{top:var(--card-top)}
+.k.bot{top:var(--card-bottom)}
+.kfit{display:flex;flex-direction:column;height:100%;transform-origin:top left}
+
+.k-hd{background:var(--kd);color:#fff;display:flex;align-items:stretch;
+  border-left:2.6mm solid #D1792A}
+.k-hd .t{padding:1.25mm 3mm 1.2mm;min-width:0;flex:1}
+.k-hd h3{margin:0;font:700 13.5pt/1 var(--disp);letter-spacing:.005em;
+  text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.k-hd p{margin:.55mm 0 0;font:400 6pt/1.2 var(--sans);color:#E8E4DC}
+.k-hd .pts{display:flex;flex-direction:column;justify-content:center;
+  padding:0 3mm 0 0;gap:.55mm}
+.k-hd .pts span{font:700 5.2pt/1 var(--sans);letter-spacing:.13em;color:#F0C99A}
+.k-hd .pts i{display:block;width:34mm;height:6.9mm;background:#fff;
+  border:.9pt solid #D1792A;border-radius:.6mm;
+  font:700 9pt/6.9mm var(--mono);font-style:normal;text-align:center;color:#211F20}
+
+.k-st{display:flex;background:#FAF9F6;border-bottom:.6pt solid #B9B4B5}
+/* > div: the cell only. Unscoped, this rule also hit the nested .v row, which
+   padded the value a second time and drew a second border tick in front of it:
+   the value line kept 16.23 mm of the cell's 20.21 mm, and the row was 1.54 mm
+   taller than designed. That missing 4 mm is what pushed long values under the
+   write-in box (user 20.9.). */
+.k-st>div{flex:1;padding:.75mm 1.8mm .8mm;border-left:.5pt solid #D8D3CB;
+  display:flex;flex-direction:column;gap:.65mm;min-width:0}
+.k-st>div:first-child{border-left:0}
+.k-st span{font:700 5.4pt/1 var(--sans);letter-spacing:.09em;color:var(--km)}
+.k-st .v{display:flex;flex-direction:row;align-items:center;gap:1.6mm}
+.k-st b{font:700 8.6pt/1.02 var(--sans);min-width:0;white-space:nowrap}
+/* The write-in box yields before the value does: "Special" plus a 7 mm box
+   overran the cell, and the 20 mm Leadership box was clipped at the card's
+   edge (seen on a printed Chaos Space Hulk). */
+.k-st i{display:block;width:7mm;height:4.3mm;background:#fff;border:.6pt solid #8C8781;
+  border-radius:.5mm;flex:0 1 7mm;min-width:3.5mm;
+  font:700 6.4pt/4.3mm var(--mono);font-style:normal;text-align:center;color:#211F20;
+  white-space:nowrap;overflow:hidden}
+.k-st .wide i{width:20mm;flex:1 1 10mm;max-width:20mm}
+/* The commander's re-rolls are a sentence, not a number: the box takes the
+   cell's width so "3 re-rolls (1 included + 2 bought)" is read whole. */
+.k-st .wide.rr i{width:auto;max-width:none;flex:1 1 auto;font-size:5.8pt;padding:0 1mm}
+/* Re-roll boxes (user 5.10.2026): one box per re-roll, crossed off when it
+   is used. Where it came from is told three ways, so a black-and-white
+   print reads too: colour, border and the word in the box - "included"
+   comes with the price, "bought" was paid for, "option" (dashed) is an
+   open option of the list: use it only if it is bought. The cell is the
+   widest of the three because it now carries the boxes. */
+.k-st .wide.ld{flex:.8} .k-st .wide.rr{flex:1.45} .k-st .wide.as{flex:.75}
+.k-st .rrh{display:flex;align-items:baseline;gap:1.4mm;min-width:0}
+.k-st .rrh em{font:500 5.2pt/1 var(--sans);font-style:normal;color:#55504F;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+/* The boxes give way before anything leaves the cell: a sixth still fits
+   at 7.8 mm, where "included" at 4.8 pt is still inside its box. */
+.k-st .wide.rr i.rrb{width:9.4mm;flex:0 1 9.4mm;min-width:7.8mm;max-width:9.4mm;padding:0;
+  font:600 4.8pt/4.1mm var(--sans);letter-spacing:.01em}
+.k-st i.rrb.included{border:.9pt solid var(--kd);background:color-mix(in srgb,var(--km) 14%,#fff);color:var(--kd)}
+.k-st i.rrb.bought{border:.9pt solid #8A6A1F;background:#FAF1D6;color:#8A6A1F}
+.k-st i.rrb.optional{border:.9pt dashed #8C8781;background:#fff;color:#7A7572}
+.k-st .rrt{font:500 4.8pt/1.1 var(--sans);color:#6B6769;white-space:nowrap}
+.k-st .rrm{display:flex;align-items:center;gap:.6mm;flex:0 0 auto}
+.k-st .rrm small{font:700 4.8pt/1 var(--sans);letter-spacing:.06em;color:var(--km)}
+.k-st .rrm i.rrb{width:3.4mm;min-width:3.4mm;max-width:3.4mm;flex:0 0 3.4mm;height:3.4mm;padding:0}
+/* Eldar speed is three values in one cell ("10/20/25 cm", Fleets pp. 302-305:
+   sunward, crosswind and downwind). The value then needed 70 px in a 40 px
+   slot and ran under the write-in box, which is what the box looked like it
+   was covering (user 20.9.). There is no single speed to write for a ship
+   whose speed is read off the wind each turn, so that cell keeps the numbers
+   and drops the box. */
+.k-st .nobox i{display:none}
+
+.k-row{display:flex;gap:1mm;padding:.75mm 1.35mm 0;flex:none}
+.k-row.grow{flex:1;min-height:0;padding-bottom:.75mm}
+.k-box{background:#fff;border:.6pt solid #B9B4B5;display:flex;
+  flex-direction:column;min-width:0;overflow:hidden}
+.k-box>h4{margin:0;background:var(--km);color:#fff;
+  padding:.65mm 1.4mm;display:flex;justify-content:space-between;gap:1.2mm;
+  font:700 7.1pt/1.12 var(--sans);letter-spacing:.045em}
+.k-box>h4 em{font-style:normal;font:400 5.4pt/1.3 var(--sans);color:#E6EFE7;
+  align-self:center}
+.k-bd{padding:1mm 1.4mm;min-width:0;flex:1;overflow:hidden}
+.fit-content{transform-origin:top left}
+
+/* Damage boxes as two bands: undamaged hits on top, the crippled half below
+   with its own label. The split is in the structure now, not only in the box
+   colour, and the block fits a narrower column. */
+.k-hits{display:flex;flex-wrap:wrap;gap:.85mm}
+.k-hits i{width:4.5mm;height:4.5mm;border:.6pt solid #7D7873;background:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font:400 5pt/1 var(--mono);color:#6B6769;border-radius:.4mm}
+.k-hits.cr i{background:#F4E5E6;border-color:#C08E90;color:#9A5F62}
+.k-cr{margin:1.1mm 0 .6mm;font:700 4.9pt/1 var(--sans);letter-spacing:.06em;
+  color:#9A5F62}
+.k-cr em{font-style:normal;font-weight:400;letter-spacing:0;color:#8C8781}
+/* Two hulls carry 40 hits. At full size they would take eight rows, so their
+   boxes are smaller, and the damage box is 58 mm wide: 14 to a row, three
+   rows. (At 56 mm it was 13 to a row and the fortieth box a row of its own.) */
+.k.hp-big .k-hits i{width:3.2mm;height:3.2mm;font-size:3.7pt;border-radius:.3mm}
+.k.hp-big .k-hits{gap:.6mm}
+.k-note{margin:.8mm 0 0;font:400 4.6pt/1.2 var(--sans);color:#4A4644}
+
+/* squadron */
+.k-sq{display:flex;gap:2.4mm}
+.k-sq div{flex:1}
+.k-sq span{display:block;font:700 5.4pt/1 var(--sans);letter-spacing:.08em;
+  color:var(--km);margin-bottom:1mm}
+.k-sq i{display:block;height:6.4mm;background:#fff;border:.6pt solid #8C8781;border-radius:.5mm}
+.k-mem{display:flex;flex-wrap:wrap;gap:1.4mm}
+.k-mem div{flex:1 1 30%;min-width:28mm;border:.6pt solid #B9B4B5;background:#FAF9F6;
+  border-radius:.5mm;padding:1.1mm 1.4mm;display:flex;align-items:center;gap:1.2mm;
+  font:400 6.2pt/1.1 var(--sans)}
+.k-mem div.gh{border-style:dashed;border-color:#CFCAC4;background:transparent}
+/* More than eight boxes fit only narrower; the card's own fitting shrinks
+   the rest. */
+.k-mem.tight div{flex:1 1 22%;min-width:20mm}
+.k-mem em{font-style:normal;color:var(--km);font-weight:700;font-size:5.4pt}
+.k-mem u{text-decoration:none;flex:1;min-width:0;overflow:hidden;white-space:nowrap;
+  text-overflow:ellipsis}
+.k-mem s{text-decoration:none;width:5mm;height:4.4mm;border:.55pt solid #8C8781;
+  background:#fff;border-radius:.4mm;flex:none;
+  font:400 4.2pt/4.4mm var(--sans);text-align:center;color:#8C8781}
+
+/* loadout / options */
+.k-optbox{overflow:hidden}
+.k-opt-list{transform-origin:top left}
+.k-opt{display:flex;gap:1mm;align-items:flex-start;padding:.38mm 0;min-width:0}
+.k-opt+.k-opt{border-top:.4pt solid #EDE9E1}
+.k-opt .cb{width:3.1mm;height:3.1mm;border:.7pt solid #4A4644;background:#fff;
+  flex:none;margin-top:.25mm;border-radius:.4mm;position:relative}
+.k-opt .cb.on::after{content:"X";position:absolute;inset:0;
+  font:700 3pt/3.1mm var(--sans);text-align:center;color:#211F20}
+/* choose-one group: round box, like the radio mark in the weapon table */
+.k-opt .cb.rd{border-radius:50%}
+.k-opt .tx{flex:1;min-width:0}
+.k-opt .tx>b{display:block;font:700 5.55pt/1.12 var(--sans)}
+.k-opt .tx b.ast{display:inline;font:inherit;color:var(--ast);margin-right:.35mm}
+.k-opt .tx span{display:block;font:400 4.45pt/1.18 var(--sans);color:#6B6769;margin-top:.12mm}
+.k-opt .c{font:700 5.75pt/1.15 var(--mono);white-space:nowrap;color:#211F20}
+.k-opt.pick{border-left:1mm solid #D1792A;padding-left:1.1mm}
+/* The fleet-list upgrades still open (every offered row opens as Option,
+   user 30.9.2026) share ONE row: a wrapped line of tick boxes with name and
+   price, so a list with a dozen of them does not push the card's text below
+   the readable size. A taken or required upgrade keeps a row of its own. */
+.k-opt.k-upg .tx .ug{display:flex;flex-wrap:wrap;align-items:center;gap:.2mm 1.6mm;margin:0;font:600 4.9pt/1.16 var(--sans);color:#211F20}
+.k-opt.k-upg .ug>b{font:700 4.6pt/1.16 var(--sans);color:#6B6769;letter-spacing:.03em;text-transform:uppercase}
+.k-opt.k-upg .ui{display:inline-flex;align-items:center;gap:.5mm;font-style:normal;white-space:nowrap}
+.k-opt.k-upg .ui .cb{width:2.2mm;height:2.2mm;margin:0;border-width:.6pt;flex:0 0 auto}
+.k-opt.k-upg .ui em{font:700 4.9pt/1 var(--mono);font-style:normal;color:#211F20}
+.k-opt.k-upg .ui u{text-decoration:none;color:#6B6769}
+
+/* Option policy: 0-4 normal, 5-6 compact, 7-8 dense, 9+ overflow. Every
+   name and price always survives; fitCards() keeps scaling with no hard
+   floor. The description tail (the sentence under the choice) is printed
+   in normal and compact modes only: in dense mode it would be 3.85 pt
+   before any fitting, which is below the print floor (item 10), and the
+   height it took came off the weapon table and the rules. The builder
+   screen shows it in every mode. */
+.k.opt-compact .k-opt{padding:.25mm 0;gap:.8mm}
+.k.opt-compact .k-opt .tx b{font-size:5.15pt;line-height:1.08}
+.k.opt-compact .k-opt .tx span{font-size:4.1pt;line-height:1.12}
+.k.opt-compact .k-opt .c{font-size:5.35pt}
+.k.opt-dense .k-opt{padding:.12mm 0;gap:.65mm}
+/* The box sets the row height once the tail is gone: 2.3 mm over a 1.8 mm
+   line (Chaos battle barge, eight options, item 10). */
+.k.opt-dense .k-opt .cb{width:2.3mm;height:2.3mm;margin-top:.08mm;border-width:.6pt}
+.k.opt-dense .k-opt .cb.on::after{font-size:2.7pt;line-height:2.3mm}
+.k.opt-dense .k-opt .tx b{font-size:4.85pt;line-height:1.04}
+.k.opt-dense .k-opt .tx span{display:none}
+.k.opt-dense .k-opt .c{font-size:5pt;line-height:1.05}
+.k.opt-overflow .k-opt{padding:.12mm 0;gap:.6mm}
+/* The box was the row: 3.1 mm of checkbox over 1.7 mm of text. Measured on
+   the Hive Ship (17 options), the list came out at 0.52 of its size. */
+.k.opt-overflow .k-opt .cb{width:2.2mm;height:2.2mm;margin-top:.05mm;border-width:.6pt}
+.k.opt-overflow .k-opt .cb.on::after{font-size:2.6pt;line-height:2.2mm}
+.k.opt-overflow .k-opt .tx b{font-size:4.7pt;line-height:1.03}
+.k.opt-overflow .k-opt .c{font-size:4.8pt;line-height:1.03}
+.k.opt-overflow .k-opt .tx span{display:none}
+/* Nine or more options go in two columns: a choice is a short line, and one
+   column of 17 left the weapon table and the rules at half size (Hive
+   Ship). A row never breaks across the columns. */
+.k.opt-overflow .k-opt-list{column-count:2;column-gap:2.5mm;column-fill:balance}
+.k.opt-overflow .k-opt{break-inside:avoid;page-break-inside:avoid}
+
+/* aseistus */
+.k-arm{width:100%;border-collapse:collapse;table-layout:fixed;
+  color:#211F20;font-family:var(--sans)}
+.k-arm th{font:700 5pt/1 var(--sans);letter-spacing:.06em;color:#6B6769;
+  overflow:hidden;white-space:nowrap;
+  text-align:left;padding:0 1.2mm .8mm;border-bottom:.5pt solid #D8D3CB}
+.k-arm th.r{text-align:center}
+/* v1.2: in a block fitCards has grown the columns are narrower in the layout,
+   and "Range cm" would be cut - there a heading may take two lines */
+.fit-grow .k-arm th{white-space:normal;overflow:visible}
+/* several speeds in one cell ("30/20/30") may break after a slash - only in
+   a grown table, where the cell is narrower; at full size nothing changes */
+.k-arm wbr{display:none}
+.fit-grow .k-arm wbr,.k-arm .fit-probe wbr{display:inline}
+.k-arm td.st i.wi{display:inline-block;width:4.6mm;height:2.8mm;margin-left:1mm;
+  vertical-align:-.7mm;background:#fff;border:.5pt solid #8C8781;border-radius:.4mm}
+.k-arm td{padding:.42mm 1.1mm;font:400 6pt/1.06 var(--sans);color:#211F20;
+  vertical-align:middle;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.k-arm tr.w td{background:var(--rw)}
+/* the letter: 5 pt in the 2.8 mm square (was 4), 6.5 pt in the tall badge of
+   a pair below - the box and its line are fixed, so no row changes (the user
+   said on 12.10.2026 that the letters had room to be bigger) */
+.k-arm .bg{width:2.8mm;height:2.8mm;border-radius:.45mm;display:inline-block;
+  vertical-align:-.5mm;color:#fff;font:700 5pt/2.8mm var(--sans);text-align:center;background:var(--bd)}
+/* v1.2 port / starboard pair (armRowsHTML): one badge two rows high. Each
+   row paints its half from its own name cell - the upper one down to the
+   cell's lower edge, the lower one up to its upper edge - so the halves meet
+   on the line between the rows whatever the rows' heights are. The letter is
+   set on that line by both halves, and each cell cuts it at its own edge
+   (the cell hides its overflow). The row's own badge keeps its place in the
+   line but is not painted: the name starts where it always did and the row
+   is as high as it was. No left offset: the half sits where the unseen
+   badge begins (static position). */
+.k-arm tr[data-pair] td.nm{position:relative}
+.k-arm tr[data-pair] td.nm > .bg{visibility:hidden}
+.k-arm .pj{position:absolute;width:2.8mm;background:var(--bd)}
+.k-arm tr[data-pair="1"] .pj{top:.42mm;bottom:0;border-radius:.45mm .45mm 0 0}
+.k-arm tr[data-pair="2"] .pj{top:-.15mm;bottom:.42mm;border-radius:0 0 .45mm .45mm}
+/* The line between the two rows falls on a fraction of a pixel once
+   fitCards has scaled the block, and two fills that only touch there leave
+   a pale hairline - across the name cell and through the badge, while the
+   shared range and strength cells beside it have no line at all. The lower
+   row therefore paints a hair over the upper one: a strip of its wash
+   that straddles the line (one rectangle across it - a shadow would be cut
+   at the very same edge), and its half of the badge .15 mm higher. The cell
+   lets that much out (overflow-clip-margin). Paint only - no box moves. */
+.k-arm tr[data-pair="2"] td.nm,.k-arm tr[data-pair="2"] td.ar{position:relative;overflow:clip;overflow-clip-margin:.2mm}
+.k-arm tr[data-pair="2"] td.nm::before,.k-arm tr[data-pair="2"] td.ar::before{content:"";position:absolute;
+  left:0;right:0;top:-.15mm;height:.3mm;background:var(--rw)}
+.k-arm .pj::after{content:attr(data-l);position:absolute;left:0;right:0;text-align:center;
+  color:#fff;font:700 6.5pt/1 var(--sans)}
+.k-arm tr[data-pair="1"] .pj::after{bottom:0;transform:translateY(50%)}
+.k-arm tr[data-pair="2"] .pj::after{top:.15mm;transform:translateY(-50%)}
+/* the strength of a pair is what EACH side has: the word goes under the
+   number, on a line of its own - beside it, it would widen the column and
+   be the cell that stops the table from growing */
+.k-arm .ea{display:block;font-style:normal;font-weight:400;color:#6B6769}
+/* side padding .2/.3 mm (was .3/.6): the larger rosette of v1.2 would
+   otherwise be the cell that stops a table from growing */
+.k-arm td.ar{text-align:center;padding-left:.2mm;padding-right:.3mm}
+/* Narrow columns wrap rather than clip: the longest values are two words
+   ("Thunderhawk: 20 cm", "Cap. 1 Orca/Warden") and fit on two lines. The name
+   column stays on one line. */
+.k-arm td.rg,.k-arm td.st{white-space:normal;line-height:1.02}
+/* When the table has given width to the rules (fitCards balance), a long
+   name wraps to a second line rather than ending in an ellipsis. */
+.k-row.narrow-arm .k-arm td.nm{white-space:normal;line-height:1.02}
+.k-arm .st{font-weight:600}
+/* a strength with a write-in box: the box stays beside its number (user
+   12.10.2026: "they could be side by side"). The cell gives up most of its side
+   padding, or in the narrow table the pair would not fit and the number
+   would be the thing that shrinks. */
+.k-arm td.st.wr{white-space:nowrap;padding-left:.5mm;padding-right:.3mm}
+/* v1.2: the range is the number a player looks for every turn - bold, a
+   little larger, in a white frame of its band's colour (15 / 30 / 45 / 60 cm
+   and beyond). A border, not a shadow: it prints without background
+   graphics. The negative margin lets the frame reach into the cell's own
+   padding, so a framed row is exactly as tall as a plain one - a taller row
+   times nine weapons came out of the rules of the fullest cards
+   (layout_check.js, 12.10.2026). */
+.k-arm .rp{display:inline-block;border:.11em solid var(--rb, #8C8781);border-radius:.38em;padding:.02em .3em;
+  margin:-.17em 0;vertical-align:middle;background:#fff;color:#1B1A1A;font-weight:700;font-size:1.12em;line-height:1}
+/* a span of ranges ("30-150", the nova cannon) is twice as long as any other
+   value: at the table's own size, not larger - and set tighter (.t) by
+   fitCards where it alone would hold the growth of the whole table back */
+.k-arm .rp.l{font-size:1em}
+.k-arm .rp.l.t{font-size:.78em;padding-left:.2em;padding-right:.2em}
+.k-arm .st .tight{font-size:5.5pt;letter-spacing:-.005em}
+/* Arc rosette: four wedges, front up. A dark wedge is a fixed arc, grey is
+   one you may choose. The rosette is also the box the arc used is marked in,
+   so there is no separate writing box. Text did not fit the column: 438 cells
+   out of 1829 were clipped to an ellipsis. */
+/* v1.2 (user 12.10.2026: "the arc circle would fit a bit bigger, and raise
+   its contrast against the background and between the sectors a little"): 3.2 mm
+   instead of 2.6 - the row is 3.3 mm high by its badge, so the row does not
+   grow - a near-black rim and wedge on white, darker lines between the
+   sectors. */
+.k-arm .arcg{width:3.2mm;height:3.2mm;display:block;margin:0 auto}
+.k-arm .arcg path{fill:#fff;stroke:#4A4644;stroke-width:.5}
+.k-arm .arcg path.on{fill:#1B1A1A}
+.k-arm .arcg path.pick{fill:#8C8781}
+.k-arm .arcg circle{fill:none;stroke:#1B1A1A;stroke-width:.95}
+.k-arm .noarc{color:#8C8781}
+/* Choice marks: a square = a choice of its own (an optional weapon), a
+   circle = choose one of a group. A group is always the place of exactly
+   one weapon. */
+.k-arm .wb,.k-arm .rb{width:2.5mm;height:2.5mm;border:.7pt solid #4A4644;
+  background:#fff;display:inline-block;position:relative;
+  vertical-align:-.35mm;margin-right:.4mm}
+.k-arm .wb.on::after{content:"X";position:absolute;inset:0;
+  font:700 2.1mm/2.6mm var(--mono);text-align:center;color:#211F20}
+.k-arm .rb{border-radius:50%}
+.k-arm .rb.on::after{content:"";position:absolute;inset:.55mm;
+  background:#211F20;border-radius:50%}
+/* The group spine ties the alternatives together. The dashed line that used
+   to sit between rows separated them, which was backwards: they are one
+   choice. Row backgrounds come from the weapon type, so the grouping cannot
+   be carried by colour. */
+.k-arm tbody.g td.nm{border-left:.7pt solid #8C8781;padding-left:.9mm}
+/* Consecutive groups are different choices, so they need a gap between them -
+   otherwise two spines touch and read as one group. The gap is a row of its
+   own rather than padding: padding would take the row's background colour,
+   and the gap would be invisible between two rows of the same colour. */
+.k-arm tbody.gp td{padding:0;height:1.2mm;border:0;background:transparent}
+.k-arm tr.alt td{padding-top:.2mm;padding-bottom:.2mm;font-size:5.5pt}
+.k-arm tr.alt .arcg{width:2.9mm;height:2.9mm}
+.k-arm tr.alt .or{font:700 4pt/1 var(--sans);color:#8C8781;letter-spacing:.04em;
+  margin-right:.35mm}
+/* one option that swaps two rows (the Tyrant's 45 cm batteries, both
+   sides): its alternatives say they go together */
+.k-arm .both{font:600 4pt/1 var(--sans);font-style:normal;color:#8C8781;margin-left:.6mm;white-space:nowrap}
+
+/* special rules */
+/* Gifts of the Omnissiah: two columns at the top of the SPECIAL block. The
+   number is an outlined circle so the gift you rolled can be filled in. */
+.k-gift{margin:0 0 1.3mm;padding-bottom:1.2mm;border-bottom:.4pt solid #D8D3CB}
+.k-gift>b{display:block;font:700 5pt/1.15 var(--sans);letter-spacing:.05em;
+  color:var(--km);margin-bottom:1mm}
+.k-gift>b em{font-style:normal;font-weight:400;letter-spacing:0;color:#6B6769}
+.k-gg{display:grid;grid-template-columns:1fr 1fr;gap:1mm 2.2mm}
+.k-gg>div{display:flex;gap:1.1mm;align-items:flex-start;min-width:0}
+.k-gg i{flex:none;width:3.1mm;height:3.1mm;border:.55pt solid var(--km);
+  border-radius:50%;background:#fff;font:700 4.1pt/3.1mm var(--mono);
+  font-style:normal;text-align:center;color:var(--km)}
+.k-gg span{min-width:0}
+.k-gg u{text-decoration:none;display:block;font:700 4.8pt/1.15 var(--sans)}
+.k-gg em{display:block;font-style:normal;font:400 4.4pt/1.2 var(--sans);
+  color:#4A4644;margin-top:.2mm}
+.k-gg em b{font-weight:700;color:var(--km)}
+.k-sr{margin:0;padding-left:3.2mm;list-style:disc}
+.k-sr li{font:400 5.4pt/1.2 var(--sans);margin-bottom:.35mm;color:#211F20}
+.k-sr li.ast{list-style:none;margin-left:-3.2mm;text-indent:0}
+b.ast{color:var(--ast,#D1792A);font-weight:700;margin-right:.35mm}
+.k-sr b.ast{display:inline-block;min-width:1.6mm}
+
+/* critical damage */
+/* space hulk criticals: three result boxes with their sub-results */
+.k-hcrit{display:flex;flex-wrap:wrap;gap:.6mm .9mm}
+.k-hcrit .hg{flex:1 1 0;min-width:0;border:.55pt solid #C9C4BC;background:#FAF9F6;border-radius:.5mm;
+  padding:.5mm 1.1mm .5mm;display:flex;flex-direction:column}
+.k-hcrit h6 em{flex:0 1 auto;min-width:0;margin-left:auto;text-align:right;font:400 4.3pt/1.05 var(--sans);
+  font-style:normal;letter-spacing:0;color:#6B6769}
+.k-hcrit .hs{flex:1 1 auto;display:flex;flex-direction:column;justify-content:space-evenly}
+.k-hcrit p.col{flex-direction:column;align-items:flex-start;gap:.6mm}
+.k-hcrit p.col span .hb:first-child{margin-left:0}
+.k-hcrit .hg.w2{flex:1.3 1 0}
+.k-hcrit .hg.w0{flex:.8 1 0}
+.k-hcrit h6{margin:0;display:flex;align-items:baseline;gap:1.2mm;font:700 5.4pt/1.05 var(--sans);
+  letter-spacing:.03em;color:var(--kd);border-bottom:.5pt solid #C9C4BC;padding-bottom:.3mm}
+.k-hcrit h6 u{text-decoration:none;flex:none;background:var(--kd);color:#fff;border-radius:.4mm;
+  padding:.25mm 1.1mm;font:700 5.4pt/1.1 var(--mono)}
+.k-hcrit p{margin:0;display:flex;align-items:center;gap:1mm;padding:.2mm 0;min-height:2.7mm}
+.k-hcrit p + p{border-top:.4pt dotted #C9C4BC}
+.k-hcrit p s{text-decoration:none;flex:none;width:5.2mm;font:700 4.8pt/1 var(--mono);color:#4A4644}
+.k-hcrit p b{flex:1 1 auto;min-width:0;font:700 4.7pt/1.08 var(--sans)}
+.k-hcrit p em{flex:none;font:400 4.2pt/1.05 var(--sans);font-style:normal;color:#6B6769;text-align:right}
+.k-hcrit .hb{display:inline-block;flex:none;width:2.3mm;height:2.3mm;border:.5pt solid #4A4644;background:#fff;
+  border-radius:.25mm;margin-left:.45mm}
+.k-hcrit .wide{flex:1 1 100%;display:flex;gap:4mm;align-items:baseline;background:#F3E8CF;border:.55pt solid #D9C79B;
+  border-radius:.5mm;padding:.3mm 1.2mm}
+.k-hcrit .wide span{font:700 4.7pt/1.15 var(--sans)}
+.k-hcrit .wide i{font:400 4.3pt/1.15 var(--sans);font-style:normal;color:#8A6A1E;margin-left:auto;text-align:right}
+/* boxes beside a weapon row: the minuses that system has taken */
+.k-arm td.lo{padding-left:.4mm;padding-right:.5mm;white-space:nowrap}
+.k-arm .ls{display:inline-flex;align-items:center;gap:.4mm}
+.k-arm .ls em{font:700 4.6pt/1 var(--mono);font-style:normal;color:#4A4644;margin-right:.3mm}
+.k-arm .ls i{display:inline-block;width:2.2mm;height:2.2mm;border:.5pt solid #4A4644;background:#fff;border-radius:.25mm}
+.k-crit{display:flex;flex-wrap:wrap;gap:.7mm}
+.k-crit div{flex:1 1 18%;min-width:23mm;border:.55pt solid #C9C4BC;background:#FAF9F6;
+  border-radius:.5mm;padding:.6mm 1mm;display:flex;align-items:center;gap:1mm}
+.k-crit .lb{flex:1;min-width:0}
+.k-crit b{display:block;font:700 4.7pt/1.06 var(--sans)}
+.k-crit em{display:block;font-style:normal;font:400 3.8pt/1.02 var(--sans);color:#6B6769}
+.k-crit .tk{display:flex;gap:.45mm;flex:none}
+.k-crit .tk i{width:2.1mm;height:2.1mm;border:.45pt solid #8C8781;background:#fff;
+  display:block;border-radius:.3mm}
+/* v1.2 pictogram tile: the picture on the left, the name over its boxes.
+   Sized to be no taller than the two-line text tile it replaces (name 1.8 +
+   gap .1 + boxes 2.4 with their borders + padding .3 = 4.6 mm against the
+   text tile's 4.6): a taller tile took its height from the rules of the
+   fullest cards and put four of them under the 4.2 pt floor
+   (layout_check.js, 12.10.2026). The odd padding makes the two tiles the
+   same height to a hundredth of a millimetre, so the row balance of a full
+   card comes out as it did before the pictograms. */
+.k-crit div.ic{display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:.9mm;row-gap:.1mm;
+  align-items:center;padding:.165mm .9mm}
+.k-crit div.ic .cic{grid-row:1 / 3;grid-column:1;width:2.3mm;height:4mm;display:block}
+.k-crit div.ic .lb{grid-row:1;grid-column:2;display:flex;align-items:baseline;gap:.8mm;white-space:nowrap}
+.k-crit div.ic .tk{grid-row:2;grid-column:2}
+.cic .h{fill:#fff;stroke:#2B2826;stroke-width:1.1;stroke-linejoin:round}
+.cic .h.o{fill:none}
+.cic .z{fill:#4A4644}
+.cic .l{fill:none;stroke:#4A4644;stroke-width:1.8;stroke-linecap:round}
+.cic .f{fill:#C9C4BC}
+.k-crit .wide{flex:1 1 100%;background:#F3E8CF;border-color:#D9C79B;gap:5mm}
+.k-crit .wide span{font:700 5pt/1.2 var(--sans);flex:none}
+.k-crit .wide u{text-decoration:none;margin-left:auto;font:400 4.2pt/1.2 var(--sans);
+  color:#8A7340;text-align:right}
+
+.k-foot{margin:0 2mm 1.2mm;border:.6pt solid #B9B4B5;background:#fff;
+  padding:.9mm 2mm;font:700 5.2pt/1 var(--sans);letter-spacing:.07em;color:#6B6769}
+
+/* A Leadership the book fixes is printed, not written in: a planetary
+   defence's nominal 7 (Fleets p. 499), a Fortress-Monastery's 10 (p. 111).
+   The value, and beside it the resolver's own short caption; no box, because
+   nobody writes a number over a fixed one. The caption may wrap inside the
+   cell - layout_check.js measures the row. */
+.k-st .wide.ldfix .v{gap:1.2mm}
+.k-st .ldn{font:500 4.8pt/1.05 var(--sans);color:#6B6769;min-width:0}
+

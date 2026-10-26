@@ -1,0 +1,60 @@
+{"id": "S0601", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F314", "pok": "ok", "n": "Craftworld-skenaario."}
+{"id": "S0602", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F314", "pok": "ok", "n": "Skenaario."}
+{"id": "S0603", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F314", "pok": "ok", "n": "Skenaario."}
+{"id": "S0604", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F315", "pok": "ok", "n": "Kerronta."}
+{"id": "S0605", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F315", "pok": "ok", "n": "Skenaarion webway-saapuminen."}
+{"id": "S0606", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F315", "pok": "ok", "n": "Skenaario."}
+{"id": "S0607", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F315", "pok": "ok", "n": "Skenaario."}
+{"id": "S0608", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F315", "pok": "ok", "x": "heading", "n": "Skenaario."}
+{"id": "S0609", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F315", "pok": "ok", "n": "Skenaario."}
+{"id": "S0610", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F315", "pok": "ok", "x": "heading", "n": "Skenaario."}
+{"id": "S0611", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F315", "pok": "ok", "n": "Skenaario."}
+{"id": "S0612", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F315", "pok": "ok", "n": "Skenaario."}
+{"id": "S0613", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F315", "pok": "ok", "n": "Skenaario."}
+{"id": "S0614", "l": "KAMPANJA", "a": "campaign", "f": "scenario", "p": "F315", "pok": "ok", "x": "heading", "n": "Skenaarion voittoehdot."}
+{"id": "S0615", "l": "VALVOTTU", "a": "checked", "f": "commander_count", "p": "F316", "pok": "ok", "n": "1 Pirate Prince osion rajana; +2 Ld (max 10) komentajakortilla; sijoitus pöydällä.", "vk": "ajo ok"}
+{"id": "S0616", "l": "KUVAUS", "a": "row", "f": "reroll_price", "p": "F316", "pok": "ok", "n": "Re-rollit riveinä."}
+{"id": "S0617", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F316", "pok": "ok", "n": "cap Pirate Prince tai Eldar Hero (build_data.py:1180), src laajennettu Yriel-lauseella."}
+{"id": "S0618", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F316", "pok": "ok", "n": "Hero-portti Craftworld-reserveille (build_data.py:5318)."}
+{"id": "S0619", "l": "KUVAUS", "a": "row", "f": "reroll_price", "p": "F316", "pok": "ok", "n": "Re-rollit riveinä."}
+{"id": "S0620", "l": "PELI", "a": "play", "f": "ordnance_choice", "p": "F316", "pok": "ok", "n": "Ordnance pelissä."}
+{"id": "S0621", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F316", "pok": "ok", "n": "Hero-portti."}
+{"id": "S0622", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F316", "pok": "ok", "n": "Yleinen 1:3 tyypeittäin (build_data.py:5330).", "vk": "ajo ok"}
+{"id": "S0623", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F316", "pok": "ok", "n": "Saattajien 1:3 yleisellä säännöllä.", "vk": "ajo ok"}
+{"id": "S0624", "l": "RAKENNE", "a": "guaranteed", "f": "squadron_unit", "p": "F316", "pok": "ok", "n": "Eri rivit = eri laivueet."}
+{"id": "S0625", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F316", "pok": "ok", "n": "Eldar Hero Flame of Asuryanille. L.aboard kattaa vain Prince Yrielin (domain.js:4516); Iyandenissa ehto on requires-säännössä, Corsair-listoilla ei."}
+{"id": "S0626", "l": "VALVOTTU", "a": "checked", "f": "other_section", "p": "F319", "pok": "ok", "n": "Yriel Heron tilalla: komentajacap Eldar Hero -osiossa (SRC)."}
+{"id": "S0627", "l": "RAKENNE", "a": "guaranteed", "f": "list_choice", "p": "F319", "pok": "ok", "n": "Valittu lista on isäntä; lainaus kulkee 1.1-mekanismilla."}
+{"id": "S0628", "l": "KUVAUS", "a": "row", "f": "commander_stats", "p": "F319", "pok": "ok", "n": "Yrielin warband = Aspect Warrior host; komentajakortille."}
+{"id": "S0629", "l": "KUVAUS", "a": "row", "f": "commander_stats", "p": "F319", "pok": "ok", "n": "Vampire raiders Yrielin aluksella; kortille."}
+{"id": "S0630", "l": "KUVAUS", "a": "row", "f": "reroll_price", "p": "F319", "pok": "ok", "n": "Sisältyvä re-roll + 25 pts lisät."}
+{"id": "S0631", "l": "OMINAISUUS", "a": "feature", "f": "aboard", "p": "F319", "pok": "ok", "n": "Yriel Dragonshipille, jossa on launch bayt, tai Flame of Asuryanille. Flame-puoli on L.aboard-säännössä; Dragonship-vaatimus ei.", "vk": "koodi luettu"}
+{"id": "S0632", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F319", "pok": "ok", "n": "res_exempt (build_data.py:4027)."}
+{"id": "S0633", "l": "LASKETTAVA", "a": "roster", "f": "attack_rating", "p": "F319", "pok": "ok", "n": "Yrielin johtama laivasto 4, myös Craftworld-alusten kanssa."}
+{"id": "S0634", "l": "VALVOTTU", "a": "checked", "f": "aboard_row", "p": "F319", "pok": "ok", "n": "L.aboard ja rivi 'Embarked aboard the Flame of Asuryan' -25 pts (upgrades.py:562)."}
+{"id": "S0635", "l": "VALVOTTU", "a": "checked", "f": "domain_check", "p": "F337", "pok": "ok", "n": "Webway Portal 50 % (domain.js:4588)."}
+{"id": "S0636", "l": "PELI", "a": "play", "f": "defence_rule", "p": "F337", "pok": "ok", "n": "Webway-saapuminen; puolustuskortille."}
+{"id": "S0637", "l": "VALVOTTU", "a": "checked", "f": "example", "p": "F317", "pok": "ok", "n": "Esimerkki valvotusta per_points-battleship-säännöstä."}
+{"id": "S0638", "l": "VALVOTTU", "a": "checked", "f": "commander_count", "p": "F318", "pok": "ok", "n": "Autarch 0-1 komentajacapissa; Ld komentajakortilla.", "vk": "ajo ok"}
+{"id": "S0639", "l": "KUVAUS", "a": "row", "f": "reroll_price", "p": "F318", "pok": "ok", "n": "Re-roll-rivi."}
+{"id": "S0640", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F318", "pok": "ok", "n": "Hero-portti Corsair-reserveille."}
+{"id": "S0641", "l": "OMINAISUUS", "a": "feature", "f": "flagship_exception", "p": "F318", "pok": "ok", "n": "Autarchin lippulaivaksi yksi Dragonship, joka ei laske Dragonship-rajaan. Osion ratio-sääntö ei tunne poikkeusta; vaatii lippulaivamerkinnän."}
+{"id": "S0642", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F318", "pok": "ok", "n": "requires samassa osiossa (build_data.py:4519), src laajennettu Yriel-lauseella."}
+{"id": "S0643", "l": "RAKENNE", "a": "guaranteed", "f": "no_limit", "p": "F318", "pok": "ok", "n": "Ei rajaa."}
+{"id": "S0644", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F318", "pok": "ok", "n": "Ghostship-rivi."}
+{"id": "S0645", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F318", "pok": "ok", "n": "Farseer ja Aspect Warrior Host noup ghostship (build_data.py:2614)."}
+{"id": "S0646", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F318", "pok": "ok", "n": "Aspect Warrior Host -rivi."}
+{"id": "S0647", "l": "PELI", "a": "play", "f": "ordnance_choice", "p": "F319", "pok": "ok", "n": "Ordnance pelissä."}
+{"id": "S0648", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F319", "pok": "ok", "n": "Torpedo bombers +15 / bay."}
+{"id": "S0649", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F319", "pok": "ok", "n": "Hero-portti."}
+{"id": "S0650", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F319", "pok": "ok", "n": "1:3 tyypeittäin; 'Dragonships and/or Wraithships' on pohja, ei kaikki risteilijät. Varmista pohjan valinta.", "vk": "ajo ok"}
+{"id": "S0651", "l": "VALVOTTU", "a": "checked", "f": "reserves", "p": "F319", "pok": "ok", "n": "Saattajat 1:3 Shadowhuntereista. Varmista, että pohja on Shadowhunterit eikä kaikki saattajat.", "vk": "ajo ok"}
+{"id": "S0652", "l": "RAKENNE", "a": "guaranteed", "f": "squadron_unit", "p": "F319", "pok": "ok", "n": "Eri rivit = eri laivueet."}
+{"id": "S0653", "l": "OMINAISUUS", "a": "feature", "f": "lend_route", "p": "F319", "pok": "ok", "n": "Void Stalker Iyandeniin: vähintään 1 000 pistettä ja kolme Corsair-risteilijää. Rivi on vain Corsairs Later -listalla; ehtoa ei ole koodissa."}
+{"id": "S0654", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F319", "pok": "ok", "n": "Autarch-kerronta (osion omistajaton lause, vrt. build_data.py:4045)."}
+{"id": "S0655", "l": "ROSKA", "a": "fix", "f": "table_merge", "p": "F345", "pok": "osittain", "x": "table", "n": "Phantom lance -taulukko (rivi 4 puuttuu) ja ORDNANCE-otsikko. Sisältö PELI."}
+{"id": "S0656", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F345", "pok": "ok", "n": "Orbital mines Dark Eldar -carriereilla."}
+{"id": "S0657", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F345", "pok": "ok", "n": "Ordnance."}
+{"id": "S0658", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F345", "pok": "ok", "n": "Raptor."}
+{"id": "S0659", "l": "PELI", "a": "play", "f": "ordnance_rule", "p": "F345", "pok": "ok", "n": "Razorwing."}
+{"id": "S0660", "l": "PELI", "a": "play", "f": "ordnance_speed", "p": "F346", "pok": "osittain", "x": "table", "n": "Nopeustaulukko ja Impaler-otsikko yhdessä."}

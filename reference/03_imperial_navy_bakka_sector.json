@@ -1,0 +1,345 @@
+{
+  "list": "Imperial Navy — Bakka Sector",
+  "book_page": 48,
+  "read_pages": [
+    48,
+    49,
+    50
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Admiral",
+      "text": "0-1 Admiral",
+      "page": 48,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "worth over 750 points an Admiral must be included",
+      "text": "If the fleet is worth over 750 points an Admiral must be included to lead it.",
+      "page": 48,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "over": true
+    },
+    {
+      "key": "Battlefleet with 1,500 points or greater may be led by Lord Admiral Rath",
+      "text": "An Imperial Bakka Battlefleet with 1,500 points or greater may be led by Lord Admiral Rath, who must always be placed on a battleship, though it not necessarily be the most expensive one present.",
+      "page": 48,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. Placing him on a battleship is left to the player (the sentence shows). The earlier gap: a points limit on a single row (Lord Admiral Rath). The engine's mandatory_at concerns a section and not a row, and it cannot prevent choosing the row below the points limit.",
+      "kind": "allowed_at",
+      "points": 1500,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Bakka fleets may only field a single Emperor battleship",
+      "text": "Bakka fleets may only field a single Emperor battleship, and this only as reserves unless Admiral Rath leads the fleet, in which case it must be his flagship.",
+      "page": 48,
+      "status": "manual",
+      "why": "The count limit of one is already in force: the book's list row is '(0-1) Emperor class battleship', and the app sets the row limit mx=1 from it. The condition 'only as reserves unless Rath leads' is left to the player."
+    },
+    {
+      "key": "one battleship in your fleet for every three cruisers",
+      "text": "You may include up to one battleship in your fleet for every three cruisers or battlecruisers.",
+      "page": 49,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 3,
+      "per_types": [
+        "cruisers",
+        "battlecruisers"
+      ]
+    },
+    {
+      "key": "If taken as reserves, grand cruisers do not count for this purpose",
+      "text": "If taken as reserves, grand cruisers do not count for this purpose.",
+      "page": 49,
+      "status": "manual",
+      "why": "Bakka's own list has no grand cruisers; the rule concerns only those taken as reserves, which are not rows of this list."
+    },
+    {
+      "key": "An Emperor class battleship can only be taken as reserves",
+      "text": "An Emperor class battleship can only be taken as reserves unless Admiral Rath leads the fleet.",
+      "page": 49,
+      "status": "manual",
+      "why": "Conditional: depends on whether Rath is chosen. The engine has no conditional row limits."
+    },
+    {
+      "key": "one battlecruiser in your fleet for every two cruisers",
+      "text": "You may include up to one battlecruiser in your fleet for every two cruisers.",
+      "page": 49,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 2,
+      "per_types": [
+        "cruisers"
+      ]
+    },
+    {
+      "key": "0-12 Cruisers",
+      "text": "0-12 Cruisers",
+      "page": 49,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 12
+    },
+    {
+      "key": "no restriction for the number of Endurance light cruisers",
+      "text": "There is no restriction for the number of Endurance light cruisers taken in a Bakka fleet.",
+      "page": 49,
+      "status": "manual",
+      "why": "An exception to the other lists' Endurance limit. It limits nothing, so there is nothing to enforce."
+    },
+    {
+      "key": "escorts in your fleet in squadrons of 2",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "page": 49,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "An Emperor class battleship may carry Shark assault boats at an additional cost of +5 points",
+      "text": "An Emperor class battleship may carry Shark assault boats at an additional cost of +5 points.",
+      "page": 49,
+      "status": "manual",
+      "why": "A priced option, the same purchase as the Emperor's own p.53 option 'For an extra +5 points an Emperor class ship may carry squadrons of Shark assault boats'; the app sells it once as the ship's option (spot check 15 row 13)."
+    },
+    {
+      "key": "cruisers from the Adeptus Mechanicus fleet list may be taken instead of",
+      "text": "In a Bakka fleet list, cruisers from the Adeptus Mechanicus fleet list may be taken instead of and in the same manner as Imperial Navy battlecruisers, counting as battlecruisers against any fleet limits in all respects.",
+      "page": 49,
+      "status": "manual",
+      "why": "The ships come from another list, which this list does not contain."
+    },
+    {
+      "key": "the fleet may not be led by nor take an Archmagos when used this way",
+      "text": "However, the fleet may not be led by nor take an Archmagos when used this way.",
+      "page": 49,
+      "status": "manual",
+      "why": "A conditional ban, depends on the previous choice."
+    },
+    {
+      "key": "one reserve cruiser, battlecruiser or grand cruiser for every three Bakka cruisers",
+      "text": "Ships from any Imperial fleet list may be used as reserves, with one reserve cruiser, battlecruiser or grand cruiser for every three Bakka cruisers in the fleet, one reserve battleship for every three Bakka battleships in the fleet, etc.",
+      "page": 50,
+      "status": "manual",
+      "why": "Reserve-saanto ylittaa listarajan."
+    },
+    {
+      "key": "One Rogue Trader cruiser and its attendant escorts may be taken for every 750 points",
+      "text": "One Rogue Trader cruiser and its attendant escorts may be taken for every 750 points in the fleet.",
+      "page": 50,
+      "status": "enforced",
+      "why": "1.1 (14.9.2026): the section got rows and a rule. 750 is read as full, because the sentence does not say 'or part thereof' - unlike the RT cruiser rule on p.174, which does. The ship comes from the Rogue Trader list, which this list does not contain.",
+      "kind": "per_points"
+    },
+    {
+      "key": "Reserve cruisers (not battlecruisers or grand cruisers) always count toward the twelve-cruiser fleet limit",
+      "text": "Reserve cruisers (not battlecruisers or grand cruisers) always count toward the twelve-cruiser fleet limit.",
+      "page": 50,
+      "status": "manual",
+      "why": "Concerns reserve ships, which are not rows of the list; the 0-12 limit itself is enforced."
+    },
+    {
+      "key": "One cannot take as reserves the reserves of another fleet list",
+      "text": "One cannot take as reserves the reserves of another fleet list.",
+      "page": 50,
+      "status": "manual",
+      "why": "Reserve-saanto."
+    },
+    {
+      "key": "Adeptus Mechanicus capital ships may take the Fleet Defence Turrets refit",
+      "text": "When used with Battlefleet Bakka, Adeptus Mechanicus capital ships may take the Fleet Defence Turrets refit instead of rolling randomly on the Mechanicus Gifts table.",
+      "page": 50,
+      "status": "manual",
+      "why": "Concerns AdMech ships, which come from another list. The row 'Fleet Defence Turret 5 pts' is still offered."
+    },
+    {
+      "key": "Fleet Defence Turret",
+      "text": "Fleet Defence Turret ........................+5 points. Two turrets on a ship are exchanged for fleet defence turrets capable of protecting itself or any one other vessel within 15 cm each ordnance phase, adding +2 to the turret strength of the ship it is defending.",
+      "page": 50,
+      "status": "out_of_scope",
+      "why": "The refit concerns Adeptus Mechanicus ships, which the Bakka list does not contain as rows (they come from the AdMech list as reserves). Reserves between lists are v1.1.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Any capital ship of Battlefleet Bakka can add this upgrade",
+      "text": "Any capital ship of Battlefleet Bakka can add this upgrade.",
+      "page": 50,
+      "status": "manual",
+      "why": "Shown after 7.9.2026: in the book the sentence is stuck to the price row '+1 turret .... +5 points', and the sentence naming the price is now let through. The price row is cleaned off the start, so the player sees only the rule sentence."
+    },
+    {
+      "key": "It does not count against refits ships can take normally",
+      "text": "It does not count against refits ships can take normally.",
+      "page": 50,
+      "status": "manual",
+      "why": "Shown after 7.9.2026: 'does not count' was added to RULEY."
+    }
+  ],
+  "entries": [
+    {
+      "name": "Fleet-Admiral (Ld 8)",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Admiral (Ld 9)",
+      "pts": 100,
+      "page": null
+    },
+    {
+      "name": "Solar Admiral (Ld 10)",
+      "pts": 150,
+      "page": null
+    },
+    {
+      "name": "Lord Admiral Rath (Ld10)",
+      "pts": 200,
+      "page": null
+    },
+    {
+      "name": "One extra re-roll",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Two extra re-rolls",
+      "pts": 75,
+      "page": null
+    },
+    {
+      "name": "Three extra re-rolls",
+      "pts": 150,
+      "page": null
+    },
+    {
+      "name": "Emperor class battleship",
+      "pts": 365,
+      "page": 53
+    },
+    {
+      "name": "Retribution class battleship",
+      "pts": 345,
+      "page": 54
+    },
+    {
+      "name": "Victory class battleship",
+      "pts": 345,
+      "page": 55
+    },
+    {
+      "name": "Vanquisher class battleship",
+      "pts": 300,
+      "page": 57
+    },
+    {
+      "name": "Dominion class battlecruiser",
+      "pts": 260,
+      "page": 62
+    },
+    {
+      "name": "Mercury class battlecruiser",
+      "pts": 255,
+      "page": 64
+    },
+    {
+      "name": "Armageddon class battlecruiser",
+      "pts": 235,
+      "page": 65
+    },
+    {
+      "name": "Dominator class cruiser",
+      "pts": 190,
+      "page": 68
+    },
+    {
+      "name": "Tyrant class cruiser",
+      "pts": 185,
+      "page": 69
+    },
+    {
+      "name": "Gothic class cruiser",
+      "pts": 180,
+      "page": 70
+    },
+    {
+      "name": "Lunar class cruiser",
+      "pts": 180,
+      "page": 71
+    },
+    {
+      "name": "Endeavour Class Light Cruiser",
+      "pts": 115,
+      "page": 73
+    },
+    {
+      "name": "Endurance Class Light Cruiser",
+      "pts": 115,
+      "page": 75
+    },
+    {
+      "name": "Siluria Class Light Cruiser",
+      "pts": 100,
+      "page": 78
+    },
+    {
+      "name": "Havoc class frigate",
+      "pts": 35,
+      "page": 81
+    },
+    {
+      "name": "Sword class frigate",
+      "pts": 35,
+      "page": 82
+    },
+    {
+      "name": "Viper class destroyer",
+      "pts": 35,
+      "page": 83
+    },
+    {
+      "name": "Jovian class battlecruiser",
+      "pts": 260,
+      "page": 63
+    }
+  ],
+  "extra_entries": [
+    {
+      "name": "Torpedo bombers",
+      "pts": 10,
+      "why": "the book's ORDNANCE p.49: 'They may also take torpedo bombers for +10 points per launch bay.'"
+    },
+    {
+      "name": "Shark assault boats (Emperor class only)",
+      "pts": 5,
+      "why": "the book's ORDNANCE p.49"
+    },
+    {
+      "name": "+1 turret (Battlefleet Bakka refit)",
+      "pts": 5,
+      "why": "p.50, for any capital ship of Bakka"
+    },
+    {
+      "name": "Imperial Power Ram",
+      "pts": 5,
+      "why": "from the shared Imperial Navy rules p.32"
+    }
+  ],
+  "notes": [
+    "The Emperor class battleship is marked '(0-1)' in the book, and the app sets the row limit mx=1 from it. The same goes for the Jovian class battlecruiser in the RESERVES section.",
+    "Bakka's Endeavour and Endurance cost 115 pts, while in the other Imperial lists they cost 110. The difference is in the book, not an error.",
+    "The Dominus Astra narrative on page 48 is hidden in the LORE_SECTIONS table; its last sentence ('Bakka fleets may only field a single Emperor battleship') is still a valid rule and is recorded here.",
+    "Page 51 is empty."
+  ]
+}

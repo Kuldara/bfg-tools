@@ -1,0 +1,2046 @@
+/* The Boarding Actions page: everything except the rules, which are in
+   engine.js (pure functions, tested in Node by test_engine.js). */
+import BOARDING from "./engine.js";
+import SHIPDATA from "./ships.json";
+import ICONS from "./icons.json";
+
+(function(){
+var B = BOARDING;
+var SHIPS = SHIPDATA.ships, FLEETS = SHIPDATA.fleets;
+var KEY = "bfg-boarding-v1";
+
+/* ---------------------------------------------------------- option catalogue */
+/* Per-ship things a player buys or brings. Shown only to the fleets that can
+   actually take them, so nobody ever sees a choice that cannot apply. */
+var OPTS = [
+  {id:"khorne",     t:"Mark of Khorne",                 d:"Boarding value x2. +1 to the roll to cause a critical hit.", r:["chaos"], noflag:"renegade"},
+  {id:"nurgle",     t:"Mark of Nurgle",                 d:"May not be boarded at all (an Ordo Malleus Inquisitor Lord is the exception).", r:["chaos"], noflag:"renegade"},
+  {id:"csm",        t:"Chaos Space Marine crew",        d:"+2, and it supersedes the +1 for being Chaos.", r:["chaos"], noflag:"renegade"},
+  {id:"abaddon",    t:"Abaddon the Despoiler aboard",   d:"Boarding value x2 and +1 to the boarding roll.", r:["chaos"], noflag:"renegade"},
+  {id:"berzerkers", t:"Khorne Berzerker retinue",       d:"+2 to the boarding roll.", r:["chaos"], noflag:"renegade"},
+  {id:"berzerkerfleet", t:"Berzerker Tide",             d:"A Mark of Khorne ship may roll D3 extra critical damage rolls, but then may take no special orders next turn.", r:["chaos"], noflag:"renegade"},
+  {id:"warlord",    t:"Ork Warlord aboard",             d:"Boarding value x2. Ork Pirates and Waaagh! lists only, and never aboard a space hulk.", r:["ork"]},
+  {id:"clanzwarlord", t:"Ork Clanz Warlord",            d:"+2 to one boarding dice roll per game. Da Ork Clanz list — that Warlord does not double the boarding value.", r:["ork"]},
+  {id:"goff",       t:"Goff clan",                      d:"+1 to the boarding roll.", r:["ork"]},
+  {id:"megaarmour", t:"Mega-armoured boarding parties", d:"+1 to the boarding roll.", r:["ork"]},
+  {id:"holofields", t:"Holofields / shadowfields",      d:"One save against the whole boarding attempt: on a D6 roll of 2+ the attempt is ignored and a Blast Marker is placed in contact (3+ against an Ordo Xenos Inquisitor Lord).", r:["eldar","darkeldar"]},
+  {id:"aspect",     t:"Aspect Warrior Host",             d:"+2 to the boarding roll. Prince Yriel’s ship always counts as carrying one.", r:["eldar"]},
+  {id:"talons",     t:"Talons refit",                    d:"Enemies boarding this vessel suffer −2.", r:["eldar","darkeldar"]},
+  {id:"ghostship",  t:"Iyanden Ghostship",               d:"May not initiate a boarding action, and enemies boarding it gain +1.", r:["eldar"]},
+  {id:"battlestance", t:"Trained crew (campaign)",        d:"May re-roll the boarding dice; the second roll stands even if it is worse. Eldar Battle Stance (FL p.310) and the Imperial Navy crew-training appeal (FL p.33) both work this way.", r:["imperial","spacemarines","admech","inquisition","roguetrader","chaos","ork","eldar","darkeldar","necron","tyranid","tau","tau_kororvesh","kroot","demiurg","nicassar","none"]},
+  /* not offered to the Mechanicus fleet itself: its own ships already have it */
+  {id:"admech",     t:"Adeptus Mechanicus vessel",        d:"Whoever boards it may re-roll the boarding dice; the second roll stands (FL p.118). For a Mechanicus cruiser in another fleet, such as a Bakka battlecruiser slot (FL p.49).", r:["imperial","inquisition","roguetrader"]},
+  {id:"ark",        t:"Ark of Pestilence",                d:"Every ship it boards is also infected: treat it as a single Fire critical in addition to all damage (FL p.240).", r:["chaos"], noflag:"renegade"},
+  {id:"rath",       t:"Lord Admiral Rath’s flagship",    d:"+1 when defending against a boarding action.", r:["imperial"]},
+  {id:"marines",    t:"Space Marine crew",              d:"+2 to the boarding roll.", r:["imperial","inquisition","roguetrader","admech"]},
+  {id:"greyknights",t:"Grey Knights",                   d:"May re-roll the boarding result; the second roll stands.", r:["imperial","inquisition","spacemarines"]},
+  {id:"inq_malleus",t:"Ordo Malleus Inquisitor Lord",   d:"+2, and may board ships bearing the Mark of Nurgle.", r:["imperial","inquisition","spacemarines","roguetrader","admech"]},
+  {id:"inq_hereticus",t:"Ordo Hereticus Inquisitor Lord",d:"+2 to the boarding roll.", r:["imperial","inquisition","spacemarines","roguetrader","admech"]},
+  {id:"inq_xenos",  t:"Ordo Xenos Inquisitor Lord",     d:"+2 against alien vessels, and those aliens take -1.", r:["imperial","inquisition","spacemarines","roguetrader","admech"]},
+  {id:"terminators",t:"Chosen Terminators (Chaos)",      d:"Chaos: a teleport hit-and-run attack rolls 2D6 and picks the highest (FL p.224). Neither affects the boarding roll itself.", r:["chaos"], noflag:"renegade"},
+  {id:"terminators",t:"Terminator boarding party",       d:"Space Marines and Grey Knights: an extra teleport attack each turn, rolling 2D6 (FL p.96, p.145). It does not change the boarding roll.", r:["spacemarines","inquisition"]},
+  {id:"fuel_tanker",t:"Fuel Tanker",                    d:"Rolls 3D6 for catastrophic damage; a total over 12 counts as 12.", r:["roguetrader"], only:["HEAVY TRANSPORT"]}
+];
+/* Flags the ship profile itself carries. Never editable, always shown. */
+var AUTO = {
+  corridor:{t:"Narrow mid-ship corridor", d:"+1 when defending against a boarding action."},
+  blackship:{t:"Inquisition Blackship", d:"Never boards. +2 when defending. Hit-and-run attacks take -1."},
+  greyknights:{t:"Grey Knights", d:"May re-roll the boarding result."},
+  marines:{t:"Space Marine crew", d:"+2 to the boarding roll."},
+  khorne:{t:"Mark of Khorne", d:"Boarding value x2. +1 to cause a critical hit."},
+  csm:{t:"Chaos Space Marine crew", d:"+2, supersedes the +1 for Chaos."},
+  renegade:{t:"Renegade Imperial vessel", d:"Counts as a Chaos vessel in every respect, so it adds the +1 for Chaos — but it can never take a Chaos Space Marine crew, a Chaos Lord or a Mark of Chaos (FL p.222)."},
+  berzerkers:{t:"Khorne Berzerker retinue", d:"+2 to the boarding roll."},
+  terminators:{t:"Chosen Terminators", d:"Teleport hit-and-run rolls 2D6, pick the highest."},
+  nocrew:{t:"No crew", d:"Adds no D6 at all to its boarding score."},
+  noboard:{t:"Cannot board", d:"Too small a crew to initiate a boarding action."},
+  easyprey:{t:"Easily boarded", d:"A ship that boards it gains +1."},
+  hp2:{t:"Ork boarding drills", d:"Counts as 2 HP when determining its boarding value."},
+  goff:{t:"Goff clan", d:"+1 to the boarding roll."},
+  hr_target_plus1:{t:"Fragile", d:"Hit-and-run attacks against it add +1."},
+  critplus1:{t:"No critical hits table", d:"Each critical hit simply inflicts 1 extra damage instead of a table result."},
+  orkhulk:{t:"Ork space hulk", d:"Uses its own D6 critical table and cannot repair criticals during the battle."},
+  spacehulk:{t:"Space hulk", d:"Never crippled, a Warlord aboard does not double the boarding value, and no boarding-value upgrades may be taken."},
+  chaoshulk:{t:"Chaos space hulk", d:"Uses its own D6 critical table and cannot repair criticals during the battle."},
+  nocata4:{t:"Breaks up", d:"Never rolls for catastrophic damage: it is replaced by four Blast Markers."},
+  fortress:{t:"Star fort", d:"The only vessel that may attempt to board it is a space hulk."},
+  ramilies:{t:"Star fort tables", d:"Uses the Ramilies critical and catastrophic damage tables."},
+  haven:{t:"Haven tables", d:"Uses the Eldar Haven critical hits table."},
+  nurgle:{t:"Mark of Nurgle", d:"May not be boarded at all."},
+  aspect:{t:"Aspect Warrior Host", d:"+2 to the boarding roll."},
+  orders2:{t:"Improved sensor array", d:"Gets +2 instead of +1 when the enemy is on special orders."},
+  cata3:{t:"Unstable engineering plant", d:"Rolls 3D6 for catastrophic damage; a total over 12 counts as 12."},
+  ignoreprow:{t:"Prow critical immunity", d:"Ignores Prow Armament Damaged completely."},
+  bridgeplus1:{t:"Demiurg bridge rule", d:"Bridge Smashed causes +1 damage instead of Leadership loss."},
+  gellar:{t:"Gellar Field", d:"If Shields Collapse, roll D6; on 4+ the field is also damaged."}
+};
+/* Options that stand for two engine flags at once. */
+var OPT_EXPAND = {ghostship:["noboard","easyprey"]};
+
+/* ------------------------------------------------------------------- state -- */
+var S;
+function blankSide(){ return {f:-1, ships:[], blast:0, orders:0, other:0}; }
+function blankState(){ return {v:1, dice:null, round:1, att:blankSide(), def:blankSide()}; }
+function load(){
+  try{
+    var raw = localStorage.getItem(KEY);
+    if(raw){ var o = JSON.parse(raw); if(o && o.att && o.def){ S = o; migrate(); return; } }
+  }catch(e){}
+  S = blankState();
+}
+function migrate(){
+  S.round = S.round || 1;
+  if(S.dice !== "digital" && S.dice !== "physical") S.dice = null;
+  ["att","def"].forEach(function(k){
+    var s = S[k]; s.ships = s.ships || []; s.blast = s.blast||0; s.orders = s.orders||0;
+    s.other = +s.other || 0;
+    if(["one","high","low"].indexOf(s.dice6) < 0) s.dice6 = null;
+    /* the fleet is stored as an index; a rebuilt data file must not crash it */
+    if(typeof s.f !== "number" || s.f < 0 || s.f >= FLEETS.length){
+      var byId = -1;
+      if(s.ships.length){
+        byId = FLEETS.map(function(f){ return f.id; }).indexOf(s.ships[0].fid);
+      }
+      s.f = byId;
+    }
+    s.ships = s.ships.filter(function(u){ return u && typeof u.n === "string"; });
+    s.ships.forEach(function(u){
+      u.opts = u.opts || [];
+      u.dp = +u.dp || 0;
+      sanitizeUnit(u);
+      if(u.tu !== undefined && u.tu !== null){
+        u.tu = Math.max(0, Math.min(12, +u.tu || 0));
+      }
+      if(u.q !== undefined && u.q !== null){
+        u.q = Math.max(0, Math.min(99, +u.q || 0));
+        if(!u.q) delete u.q;
+      }
+      if(u.holo !== "saved" && u.holo !== "failed") delete u.holo;
+    });
+  });
+}
+function save(){ try{ localStorage.setItem(KEY, JSON.stringify(S)); }catch(e){} }
+
+/* --------------------------------------------------------------- ship lookup */
+/* Saved units keep the ship's NAME, not its index: a data rebuild must not
+   silently point a saved unit at a different hull. */
+var PCACHE = {};
+function profile(u){
+  var key = u.fid + "|" + u.n;
+  if(key in PCACHE) return PCACHE[key];
+  var hit = null;
+  for(var i=0;i<SHIPS.length && !hit;i++){
+    if(SHIPS[i].full === u.n && FLEETS[SHIPS[i].f].id === u.fid) hit = SHIPS[i];
+  }
+  for(var j=0;j<SHIPS.length && !hit;j++){ if(SHIPS[j].full === u.n) hit = SHIPS[j]; }
+  PCACHE[key] = hit;
+  return hit;
+}
+/* Remove choices older versions could save even though the hull can never use
+   them. Dedicated hulk profiles carry their immutable flag in p.fl. */
+function sanitizeUnit(u){
+  var p = profile(u), auto = (p && p.fl) || [];
+  u.opts = (u.opts||[]).filter(function(o){
+    if(o === "spacehulk") return false;
+    if(auto.indexOf("blackship")>=0 && (o === "marines" || o === "greyknights")) return false;
+    /* a renegade Imperial hull may never carry a Chaos crew or a Mark (FL p.222) */
+    if(auto.indexOf("renegade")>=0 && RENEGADE_NEVER.indexOf(o)>=0) return false;
+    return true;
+  });
+}
+function unitFromShip(sh){
+  return {n:sh.full, fid:FLEETS[sh.f].id, dp:sh.hp, opts:(sh.on||[]).slice()};
+}
+function cloneUnit(u){
+  var c = {n:u.n, fid:u.fid, dp:u.dp, opts:(u.opts||[]).slice()};
+  if(u.tu !== undefined && u.tu !== null) c.tu = u.tu;   /* a bought turret is copied too */
+  if(u.q) c.q = u.q;
+  return c;
+}
+/* engine ship record */
+/* FL p.240: the Mark of Nurgle "gains 1 Damage Point and may not be boarded".
+   Only the bought mark adds it - the Terminus Est already has it in its profile
+   (FL p.262), and that one arrives as a profile flag, not a chosen option. */
+/* RB p.89 counts "remaining turrets", and three fleet lists buy more of them
+   (Ork Dakka Dakka FL p.365, AdMech +1 FL p.119, Tyranid extra spore cysts
+   FL p.426) while criticals take them away. The profile is the starting point,
+   not the last word. */
+function shipTurrets(u, p){
+  var base = p ? p.tu : 0;
+  var n = (u.tu === undefined || u.tu === null) ? base : +u.tu;
+  return Math.max(0, Math.min(12, n));
+}
+function markedHp(u, p){
+  var base = p ? p.hp : 1;
+  return base + (((u.opts||[]).indexOf("nurgle") >= 0) ? 1 : 0);
+}
+function eShip(u){
+  var p = profile(u);
+  if(!p) return {name:u.n+" (unknown ship)", hp:1, dp:u.dp, turrets:0, type:"Cruiser",
+                 spores:false, opts:["unknown"], _u:u, _p:null};
+  var opts = (u.opts||[]).slice();
+  if(p && p.fl) p.fl.forEach(function(f){ if(opts.indexOf(f)<0) opts.push(f); });
+  opts.slice().forEach(function(o){
+    (OPT_EXPAND[o]||[]).forEach(function(x){ if(opts.indexOf(x)<0) opts.push(x); });
+  });
+  return {name:p?p.n:"Ship", hp:markedHp(u,p), dp:u.dp, turrets:shipTurrets(u,p), type:p?p.t:"Cruiser", page:p?p.pg:null,
+          extraHp:(p && p.fl && p.fl.indexOf("fortress")>=0) ? (+u.q || 0) : 0,
+          spores:!!(p && p.spores), opts:opts, out:u.holo==="saved", idx:u._i, _u:u, _p:p};
+}
+function eSide(k){
+  var s = S[k];
+  s.ships.forEach(function(u,i){ u._i = i; });
+  return {race:s.f>=0?FLEETS[s.f].race:"none", ships:s.ships.map(eShip),
+          blast:!!s.blast, orders:!!s.orders, other:s.other||0,
+          diceOverride:s.dice6 || null};
+}
+/* Both sides have to have a ship chosen; whether those ships can still fight
+   is the rules engine's business, so that it can say WHY not. */
+function ready(){ return S.att.ships.length>0 && S.def.ships.length>0; }
+function unknownShips(){
+  var bad = [];
+  ["att","def"].forEach(function(k){
+    S[k].ships.forEach(function(u){ if(!profile(u)) bad.push(u.n); });
+  });
+  return bad;
+}
+
+/* ------------------------------------------------------------------- render */
+function esc(s){ return String(s).replace(/[&<>"]/g,function(c){
+  return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]; }); }
+
+/* Icons come from src/icons.json (make_icons.py). build.py refuses to build if
+   a fleet or a hull type in the ship data has no icon, so a missing one here
+   only means an old save pointing at a fleet that no longer exists. */
+function svgIcon(markup, color, cls){
+  if(!markup) return "";
+  return '<svg class="ic'+(cls?" "+cls:"")+'" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"'+
+    ' focusable="false"'+(color?' style="color:'+color+'"':'')+'>'+markup+'</svg>';
+}
+function fleetColor(i){
+  var st = FLEETS[i] && ICONS.fleets[FLEETS[i].id];
+  return st ? st.color : "";
+}
+function fleetIcon(i, cls){
+  var st = FLEETS[i] && ICONS.fleets[FLEETS[i].id];
+  return st ? svgIcon(ICONS.glyphs[st.glyph], st.color, cls) : "";
+}
+function hullIcon(t, color, cls){ return svgIcon(ICONS.hulls[t], color, cls); }
+var HULL_SHORT = {"Battleship":"Battle", "Grand Cruiser":"Grand"};
+/* FL p.222: renegade Imperial vessels take no Chaos Lord, no Chaos Space Marine
+   crew and no Chaos ordnance, and FL p.225 hangs every Mark on one of those. */
+var RENEGADE_NEVER = ["khorne","nurgle","csm","abaddon","berzerkers","berzerkerfleet","ark","terminators"];
+/* the "open the math" mark on the boarding value and roll modifier buttons */
+var INFO_ICON = '<svg class="info" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'+
+  '<circle cx="12" cy="12" r="9.6" fill="none" stroke="currentColor" stroke-width="2"/>'+
+  '<circle cx="12" cy="7.4" r="1.55" fill="currentColor"/>'+
+  '<path d="M10.7 10.4h2.6v7.4h-2.6z" fill="currentColor"/></svg>';
+
+var prep = null;
+function render(){
+  window.S = S;                         /* keep the documented debug handle current */
+  prep = ready() ? B.prepare({att:eSide("att"), def:eSide("def"), round:S.round}) : null;
+  renderSide("att"); renderSide("def");
+  document.getElementById("modeBtn").innerHTML = S.dice==="physical" ? "&#9995; I roll" : "&#127922; App rolls";
+  document.getElementById("title").textContent = S.round>1 ? "Grapple — round " + S.round : "Boarding action";
+  document.getElementById("diceSheet").hidden = !!S.dice;
+  renderAct();
+  fitAll();
+  save();
+}
+
+function renderSide(k){
+  var el = document.getElementById(k==="att"?"sideAtt":"sideDef");
+  var s = S[k], p = prep ? prep[k] : null;
+  var h = [];
+  var sideBlank = s.f<0 && !s.ships.length && !s.blast && !s.orders && !s.other;
+  h.push('<div class="sideHead"><span class="role">'+(k==="att"?"Boarder":"Defender")+'</span>');
+  h.push('<button class="sideReset" data-a="resetSide" data-k="'+k+'" title="Reset this side"'+
+    (sideBlank?' disabled':'')+'>&#8634; Reset</button>');
+  h.push('<button class="fleetBtn'+(s.f>=0?" set":"")+'" data-a="fleet" data-k="'+k+'">'+
+    (s.f>=0?fleetIcon(s.f,"in")+esc(FLEETS[s.f].name):"Choose fleet")+' ▾</button></div>');
+
+  h.push('<div class="ships">');
+  if(!s.ships.length){
+    h.push('<div class="shipRow"><button class="shipName empty" data-a="ship" data-k="'+k+'" data-i="-1">'+
+      '<span class="nm">+ Choose a ship</span></button></div>');
+  }
+  s.ships.forEach(function(u,i){
+    var pr = profile(u);
+    var es = eShip(u);                    /* one crippled rule, and it lives in the engine */
+    var hp = es.hp, tu = es.turrets;      /* the Mark of Nurgle's extra hit and bought turrets */
+    var crip = B.isCrippled(es), hulk = u.dp<=0;
+    var etu = B.effTurrets(es);
+    var sub = [];
+    if(pr){
+      sub.push(pr.s);
+      sub.push(hp+" HP"+(hp!==pr.hp?"*":""));
+      if(tu) sub.push(etu + (pr.spores?" spore":" turret") + (etu===1?"":"s") +
+        (etu<tu?" (halved)":"") + (tu!==pr.tu?"*":""));
+    }
+    var chips = (u.opts||[]).length;
+    if(chips) sub.push(chips + " upgrade" + (chips===1?"":"s"));
+    h.push('<div class="shipRow">');
+    h.push('<button class="shipName" data-a="ship" data-k="'+k+'" data-i="'+i+'"><span class="nm">'+
+      esc(pr?pr.n:u.n)+'</span><span class="sub">'+esc(sub.join(" · "))+'</span></button>');
+    h.push('<div class="dpGroup">');
+    h.push('<button class="dpBtn" data-a="dp-" data-k="'+k+'" data-i="'+i+'"'+(u.dp<=0?" disabled":"")+'>−</button>');
+    h.push('<button class="dpNum num'+(hulk?" hulk":(crip?" crip":""))+'" data-a="dpset" data-k="'+k+'" data-i="'+i+'">'+
+      (hulk?'<b>'+(hp<=1?"DEAD":"HULK")+'</b>':'<b>'+u.dp+'</b><span>'+(crip?"CRIPPLED":"OF "+hp)+'</span>')+'</button>');
+    h.push('<button class="dpBtn" data-a="dp+" data-k="'+k+'" data-i="'+i+'"'+(u.dp>=hp?" disabled":"")+'>+</button>');
+    h.push('</div>');
+    var toolName = esc(pr?pr.n:u.n);
+    h.push('<div class="shipOps">');
+    h.push('<button class="shipOp copy" data-a="clone" data-k="'+k+'" data-i="'+i+'" title="Add another identical '+
+      toolName+'" aria-label="Add another identical '+toolName+'">+1</button>');
+    h.push('<button class="shipOp del" data-a="rm" data-k="'+k+'" data-i="'+i+'" title="Delete '+
+      toolName+'" aria-label="Delete '+toolName+'">&#10005;</button>');
+    h.push('</div>');
+    h.push('</div>');
+  });
+  h.push('</div>');
+
+  h.push(upRow(k));
+
+  h.push('<div class="tgRow">');
+  /* Tyranids never grant the Blast Marker modifier (FL p.418), so on their card
+     the switch is shown as having no effect rather than lighting up for nothing. */
+  var blastInert = (s.f>=0 && FLEETS[s.f].race==="tyranid");
+  h.push('<button class="tg'+(s.blast&&!blastInert?" on":"")+(blastInert?" inert":"")+
+    '" data-a="tg" data-k="'+k+'" data-t="blast">'+
+    '<span class="dot"></span>'+(blastInert?"Blast: no effect":"In Blast Markers")+'</button>');
+  h.push('<button class="tg'+(s.orders?" on":"")+'" data-a="tg" data-k="'+k+'" data-t="orders">'+
+    '<span class="dot"></span>On special orders</button>');
+  /* Multi-boarding works in either direction: several ships may board one, or
+     one ship may board several (creator clarification; RULINGS.md 16). */
+  if(s.ships.length)
+    h.push('<button class="tg add" data-a="addship" data-k="'+k+'">+</button>');
+  h.push('</div>');
+
+  h.push('<div class="valRow">');
+  h.push('<button class="valBtn" data-a="val" data-k="'+k+'" aria-label="Boarding value '+
+    (p?p.value:"not set")+': show how it is counted"><span class="cap"><b class="num">'+(p?p.value:"–")+
+    '</b><span>Boarding<br>value</span></span>'+INFO_ICON+'</button>');
+  var ms = p?p.modSum:0;
+  /* the dice notation rides along in the caption, so even the most compacted
+     card still says that this side throws two */
+  var di = diceInfo(p);
+  var cap = (di && di.kind!=="one")
+    ? (di.kind==="none" ? 'No dice<br>+ modifiers'
+       : '<span class="'+di.kind+'-mark">2D6'+di.arrow+'</span><br>+ modifiers')
+    : 'Roll<br>modifiers';
+  var capSay = (di && di.kind==="none") ? "No dice + modifiers"
+    : (di && di.kind!=="one") ? "2D6 keep the "+(di.kind==="low"?"lowest":"highest")+" + modifiers"
+    : "Roll modifiers";
+  h.push('<button class="valBtn mods'+(ms===0?" zero":"")+'" data-a="mods" data-k="'+k+'" aria-label="'+capSay+' '+
+    (p?(ms>0?"+":"")+ms:"not set")+': show each modifier and the dice"><span class="cap"><b class="num">'+
+    (p?(ms>0?"+":"")+ms:"–")+'</b><span>'+cap+'</span></span>'+INFO_ICON+'</button>');
+  h.push('</div>');
+  h.push(diceStrip(p));
+  el.innerHTML = h.join("");
+  el.classList.toggle("dead", !!s.ships.length && !s.ships.some(function(u){return u.dp>0}));
+}
+/* Nothing in a side card may ever be cut off: drop the upgrade chips first,
+   then tighten the rows, until the content fits the space it has. */
+/* Measure, do not predict: fit the cards, and if anything is still cut off give
+   the footer's advisory text away a step at a time and fit them again. */
+function fitAll(){
+  var act = document.getElementById("act");
+  var a = document.getElementById("sideAtt"), d = document.getElementById("sideDef");
+  act.classList.remove("f1","f2","f3","f4");
+  void act.offsetHeight;
+  var steps = ["f1","f2","f3","f4"];
+  for(var step=0; step<=steps.length; step++){
+    fitSide(a); fitSide(d);
+    if(a.clientHeight < 40) break;                /* not laid out yet */
+    if(!clipped(a) && !clipped(d)) break;
+    if(step < steps.length){ act.classList.add(steps[step]); void act.offsetHeight; }
+  }
+  markClamp(act);
+}
+function markClamp(act){
+  var w = act.querySelector(".warn.rule");
+  if(!w) return;
+  w.classList.toggle("clamped", act.classList.contains("f1") ||
+    act.classList.contains("f2") || act.classList.contains("f3"));
+}
+function clipped(el){
+  if(el.scrollHeight > el.clientHeight + 1) return true;
+  var inner = el.querySelectorAll(".ships,.upRow,.upSum");
+  for(var i=0;i<inner.length;i++){
+    if(inner[i].scrollHeight > inner[i].clientHeight + 1) return true;
+  }
+  return false;
+}
+/* A glyph in front of a one-line name never costs the name its letters: it
+   shrinks first, and if the name is still cut it is dropped. */
+function fitGlyph(el){
+  if(!el || !el.querySelector(".ic")) return;
+  el.classList.remove("icS","icCut");
+  var cut = function(){ return el.scrollWidth > el.clientWidth + 1; };
+  if(cut()){ el.classList.add("icS"); void el.offsetWidth; }
+  if(cut()){ el.classList.remove("icS"); el.classList.add("icCut"); }
+}
+function fitVal(el){
+  var row = el.querySelector(".valRow");
+  if(!row) return;
+  row.classList.remove("vt1","vt2");
+  var cut = function(){
+    return [].some.call(row.querySelectorAll(".cap > span"), function(t){ return t.scrollWidth > t.clientWidth + 1; });
+  };
+  if(cut()){ row.classList.add("vt1"); void row.offsetWidth; }
+  if(cut()) row.classList.add("vt2");
+}
+function fitSide(el){
+  /* a hidden or not-yet-laid-out page reports zero height; compacting against
+     that would leave the card crushed when it becomes visible again */
+  if(el.clientHeight < 40) return;
+  fitGlyph(el.querySelector(".fleetBtn"));
+  el.classList.remove("c1","c2","c3","c4","c5","c6");
+  var steps = ["c1","c2","c3","c4","c5","c6"];
+  for(var i=0;i<steps.length;i++){
+    if(!clipped(el)) break;
+    el.classList.add(steps[i]);
+    void el.offsetHeight;                 /* force the reflow before re-measuring */
+  }
+  /* widths only, so it cannot undo a compaction step; measured at the final one */
+  fitVal(el);
+}
+
+/* The upgrades actually in play, visible without opening anything: the one
+   thing a player most wants to double-check before committing to a roll. */
+function upLabel(id){
+  if(AUTO[id]) return AUTO[id].t;
+  for(var i=0;i<OPTS.length;i++) if(OPTS[i].id===id) return OPTS[i].t;
+  return id;
+}
+var UP_HIDE = ["hr_target_plus1"];
+function upRow(k){
+  var s = S[k];
+  if(!s.ships.length) return '<div class="upRow"></div>';
+  var h = ['<div class="upRow">'];
+  var any = false;
+  s.ships.forEach(function(u,i){
+    var p = profile(u);
+    var auto = (p && p.fl) || [];
+    var list = auto.concat((u.opts||[]).filter(function(o){ return auto.indexOf(o)<0; }));
+    list = list.filter(function(o){ return UP_HIDE.indexOf(o)<0; });
+    var seen = {};
+    list.forEach(function(o){
+      if(seen[o]) return; seen[o] = 1; any = true;
+      var locked = auto.indexOf(o)>=0;
+      h.push('<button class="up'+(locked?" lock":"")+'" data-a="opts" data-k="'+k+'" data-i="'+i+'">'+
+        (s.ships.length>1 ? esc((p?p.n:u.n).slice(0,6))+": " : "")+esc(upLabel(o))+'</button>');
+    });
+  });
+  var n = h.length - 1;
+  if(S[k].other){
+    h.push('<button class="up" data-a="mods" data-k="'+k+'">'+fmt(S[k].other)+' by hand</button>');
+    any = true; n++;
+  }
+  if(S[k].dice6){
+    h.push('<button class="up" data-a="mods" data-k="'+k+'">dice set by hand</button>');
+    any = true; n++;
+  }
+  if(!any){
+    h.push('<button class="up add" data-a="opts" data-k="'+k+'" data-i="0">+ marks, crew, characters</button>');
+  } else {
+    s.ships.forEach(function(u,i){
+      h.push('<button class="up add" data-a="opts" data-k="'+k+'" data-i="'+i+'">+'+
+        (s.ships.length>1 ? " "+esc((profile(u)||{n:u.n}).n.slice(0,6)) : "")+'</button>');
+    });
+  }
+  h.push('</div>');
+  h.push('<div class="upSum">'+(any
+    ? '<button class="up" data-a="opts" data-k="'+k+'" data-i="0">&#9873; '+n+' in play</button>'
+    : '<button class="up add" data-a="opts" data-k="'+k+'" data-i="0">+ marks, crew</button>')+'</div>');
+  return h.join("");
+}
+
+/* ------------------------------------------------------------------- action */
+var pending = {att:[], def:[]};
+var armedRemove = null;
+function resetRound(){ S.round = 1; pending = {att:[], def:[]}; }
+function renderAct(){
+  var act = document.getElementById("act");
+  var h = [];
+  if(!ready()){
+    h.push('<button class="bigBtn" disabled>Choose both ships</button>');
+    act.innerHTML = h.join(""); return;
+  }
+  var bad = unknownShips();
+  if(bad.length){
+    h.push('<div class="warn"><b>✖</b><div>This saved game names a ship the app does not know: <b>'+
+      esc(bad.join(", "))+'</b>. Tap it and pick it again.</div></div>');
+    h.push('<button class="bigBtn" disabled>Unknown ship</button>');
+    act.innerHTML = h.join(""); return;
+  }
+  var holo = prep.problems.filter(function(p){return p.level==="roll";});
+  /* If every defending hull that could still fight saved, there is no boarding
+     action left to resolve. The engine no longer reports those ships at all, so
+     this has to be read off the hulls themselves. */
+  var anySaved = S.def.ships.some(function(u){ return u.holo==="saved"; });
+  var anyLeft = S.def.ships.some(function(u){ return u.dp>0; });
+  if(anySaved && anyLeft && !livingIdx("def").length){
+    var savedNames = S.def.ships.filter(function(u){ return u.holo==="saved"; })
+      .map(function(u){ var p=profile(u); return p?p.n:u.n; });
+    h.push('<div class="warn note"><b>✔</b><div><b>'+(fieldWord()==="shadowfields"?"Shadowfields":"Holofields")+' hold.</b> '+
+      esc(savedNames.join(", "))+' ignored the boarding attempt. Place a Blast Marker in contact '+
+      'with each of them. Nothing else happens this End Phase.</div></div>');
+    h.push('<button class="bigBtn" data-a="holodone">Done</button>');
+    act.innerHTML = h.join(""); return;
+  }
+  var stops = prep.problems.filter(function(p){return p.level==="stop";});
+  if(stops.length){
+    h.push('<div class="warn"><b>✖</b><div>'+stops.map(function(p){return esc(p.text);}).join("<br>")+'</div></div>');
+    h.push('<button class="bigBtn" disabled>No boarding action</button>');
+    act.innerHTML = h.join(""); return;
+  }
+  var notes = prep.problems.filter(function(p){return p.level==="note";});
+  if(notes.length){
+    h.push('<div class="warn note"><b>✔</b><div>'+notes.map(function(p){return esc(p.text);}).join("<br>")+'</div></div>');
+  }
+  var rules = prep.problems.filter(function(p){return p.level==="rule";});
+  if(rules.length){
+    h.push('<div class="warn rule" data-a="rulehelp"><b>!</b><div>'+
+      rules.map(function(p){return esc(p.text);}).join("<br>")+'</div></div>');
+  }
+  /* Every defending hull with holofields owes its own save (FL p.303-304: the
+     save is rolled once against each attack, by the ship being attacked). */
+  var owed = holo.filter(function(p){ return !S.def.ships[p.idx] || !S.def.ships[p.idx].holo; });
+  if(owed.length){
+    var first = owed[0];
+    h.push('<div class="warn note"><b>⚑</b><div>'+esc(first.text)+
+      (owed.length>1 ? '<br><b>'+owed.length+' hulls still owe a save.</b>' : '')+'</div></div>');
+    if(S.dice==="digital"){
+      h.push('<button class="bigBtn" data-a="holo" data-i="'+first.idx+'">Roll '+esc(first.field||"holofields")+
+        (owed.length>1 ? '<small>'+esc(first.ship)+'</small>' : '')+'</button>');
+    }else{
+      h.push(holoRow(first));
+    }
+    act.innerHTML = h.join(""); bindDice(); return;
+  }
+  var saved = S.def.ships.filter(function(u){ return u.holo==="saved"; });
+  if(saved.length){
+    h.push('<div class="warn note"><b>✔</b><div>'+
+      esc(saved.map(function(u){ var p=profile(u); return p?p.n:u.n; }).join(", "))+
+      ' saved and '+(saved.length===1?"is":"are")+' out of this action — place a Blast Marker in contact. '+
+      'The boarding action continues against the rest.</div></div>');
+  }
+  if(S.att.ships.length>1 || S.def.ships.length>1){
+    h.push('<button class="multiBtn" data-a="multihelp"><b>Multi-boarding '+S.att.ships.length+' &#8596; '+
+      S.def.ships.length+'</b><span>one roll per side · critical check against every enemy ship · loser splits damage</span></button>');
+  }
+  if(S.dice==="digital"){
+    h.push('<button class="bigBtn" data-a="roll">Resolve<small>'+
+      esc(diceInfo(prep.att).short)+(prep.att.modSum?" "+fmt(prep.att.modSum):"")+
+      '  vs  '+esc(diceInfo(prep.def).short)+
+      (prep.def.modSum?" "+fmt(prep.def.modSum):"")+'</small></button>');
+  }else if(prep.att.dice===0 && prep.def.dice===0){
+    h.push('<button class="bigBtn" data-a="roll">Resolve<small>neither side rolls a die</small></button>');
+  }else{
+    h.push(dieRow("att","Boarder",prep.att));
+    h.push(dieRow("def","Defender",prep.def));
+  }
+  act.innerHTML = h.join("");
+  bindDice();
+}
+function fmt(n){ return (n>=0?"+":"")+n; }
+/* One vocabulary for "what does this side roll", used on the card, on the
+   Resolve button, in the modifier list and on the result. */
+function diceInfo(p){
+  if(!p) return null;
+  if(p.dice===0) return {kind:"none", short:"no dice", long:"No crew — adds no dice at all"};
+  if(p.dice===1) return {kind:"one", short:"D6", long:"D6"};
+  if(p.pick==="low") return {kind:"low", short:"2D6 lowest", long:"2D6 — keep the LOWEST",
+    arrow:"\u25BC", n:"2D6"};
+  return {kind:"high", short:"2D6 highest", long:"2D6 — keep the highest",
+    arrow:"\u25B2", n:"2D6"};
+}
+function diceStrip(p){
+  var d = diceInfo(p);
+  var byHand = p && p.diceByHand ? ' · by hand' : '';
+  if(!d) return "";
+  if(d.kind==="one") return p && p.diceByHand
+    ? '<div class="diceStrip none">D6 · set by hand</div>' : "";
+  if(d.kind==="none") return '<div class="diceStrip none">no crew · no dice</div>';
+  return '<div class="diceStrip '+d.kind+'"><span class="arrow">'+d.arrow+'</span><b>'+d.n+
+    '</b>keep the '+(d.kind==="low"?"lowest":"highest")+esc(byHand)+'</div>';
+}
+/* Two dice means two rows: the app compares them, so the player never has to
+   work out which one counts. */
+/* The defender's save is "shadowfields" on a Dark Eldar ship (FL p.342),
+   "holofields" on an Eldar one (FL p.303): the same save under two names. */
+function fieldWord(){ return S.def.f>=0 && FLEETS[S.def.f].race==="darkeldar" ? "shadowfields" : "holofields"; }
+function holoRow(pr){
+  var h = ['<div class="dieRow def"><div class="lab def-lab">'+esc(pr.ship.slice(0,9))+
+    '<br><span style="color:var(--dim)">'+pr.target+'+</span></div>'];
+  for(var i=1;i<=6;i++) h.push('<button class="die" data-die="holo" data-idx="'+pr.idx+
+    '" data-v="'+i+'">'+i+'</button>');
+  h.push('</div>');
+  return h.join("");
+}
+function dieRow(which,label,p){
+  var cls = which==="def"?"def":"att";
+  var d = diceInfo(p);
+  if(p && p.dice===0){
+    return '<div class="dieRow '+cls+'"><div class="lab '+cls+'-lab">'+label+'</div>'+
+      '<div class="die" style="flex:1;color:var(--dimmer);font-size:13px">no crew — no dice</div></div>';
+  }
+  var n = p ? p.dice : 1, h = [];
+  for(var r=0;r<n;r++){
+    var lab = n===1 ? label
+      : (r===0 ? label+'<br><span style="color:var(--dim)">die 1 of '+n+'</span>'
+               : '<span style="color:var(--dim)">die '+(r+1)+'</span><br>'+
+                 '<span class="'+d.kind+'-mark">'+d.arrow+' '+(d.kind==="low"?"low":"high")+'</span>');
+    h.push('<div class="dieRow '+cls+'" data-row="'+which+'">');
+    h.push('<div class="lab '+cls+'-lab">'+lab+'</div>');
+    for(var i=1;i<=6;i++){
+      h.push('<button class="die'+((pending[which]||[])[r]===i?" sel":"")+'" data-die="'+which+
+        '" data-idx="'+r+'" data-v="'+i+'">'+i+'</button>');
+    }
+    h.push('</div>');
+  }
+  return h.join("");
+}
+function bindDice(){
+  if(S.dice==="physical" && prep){
+    ["att","def"].forEach(function(k){
+      if(!Array.isArray(pending[k])) pending[k] = [];
+      if(prep[k].dice === 0) pending[k] = [];
+      if(pending[k].length > prep[k].dice) pending[k].length = prep[k].dice;
+    });
+  }
+}
+function diceReady(k){
+  if(!prep) return false;
+  if(prep[k].dice === 0) return true;
+  var got = pending[k] || [];
+  for(var i=0;i<prep[k].dice;i++) if(!got[i]) return false;
+  return true;
+}
+
+/* --------------------------------------------------------------- interaction */
+document.addEventListener("click", function(ev){
+  var t = ev.target.closest("[data-a],[data-die],[data-tab],[data-pick]");
+  if(!t) return;
+  if(t.dataset.die !== undefined && t.dataset.die !== ""){
+    onDie(t.dataset.die, +t.dataset.v, +(t.dataset.idx || 0)); return;
+  }
+  var a = t.dataset.a, k = t.dataset.k, i = +t.dataset.i;
+  switch(a){
+    case "fleet": pickFleet(k); break;
+    case "ship": pickShip(k, i); break;
+    case "addship": pickShip(k, -1); break;
+    case "clone": S[k].ships.splice(i+1,0,cloneUnit(S[k].ships[i])); resetRound(); render(); break;
+    case "rm": {
+      /* two small buttons side by side, one of them destructive: it arms first */
+      var key = k+":"+i;
+      if(armedRemove === key){ armedRemove = null; S[k].ships.splice(i,1); resetRound(); render(); }
+      else { armedRemove = key; render(); setTimeout(function(){
+        if(armedRemove === key){ armedRemove = null; render(); } }, 2600); }
+      break;
+    }
+    case "resetSide": askReset(k); break;
+    case "dp-": step(k,i,-1); break;
+    case "dp+": step(k,i,1); break;
+    case "dpset": pickDp(k,i); break;
+    case "tu-": stepTurrets(k,i,-1); break;
+    case "tu+": stepTurrets(k,i,1); break;
+    case "opts": shipOpts(k,i); break;
+    case "tg": S[k][t.dataset.t] = S[k][t.dataset.t]?0:1; render(); break;
+    case "val": showValue(k); break;
+    case "mods": showMods(k); break;
+    case "roll": doRoll(); break;
+    case "rulehelp": showRuleNote(); break;
+    case "holo": doHolo(null, i); break;
+    case "holodone": clearHolo(); resetRound(); render(); break;
+    case "multihelp": showRef(1); break;
+  }
+});
+function step(k,i,d){
+  var u = S[k].ships[i];
+  u.dp = Math.max(0, Math.min(eShip(u).hp, u.dp + d));
+  render();
+}
+/* Turrets are bought (Ork Dakka Dakka FL p.365, AdMech +1 FL p.119, Tyranid
+   extra spore cysts FL p.426) and shot away, and the defender adds the number
+   REMAINING (RB p.89), so the profile value is only where it starts. */
+function stepTurrets(k,i,d){
+  var u = S[k].ships[i], p = profile(u);
+  var cur = (u.tu === undefined || u.tu === null) ? (p?p.tu:0) : +u.tu;
+  var next = Math.max(0, Math.min(12, cur + d));
+  if(p && next === p.tu) delete u.tu; else u.tu = next;
+  render();
+}
+function onDie(which, v, idx){
+  if(which==="holo"){ doHolo(v, idx); return; }
+  if(which==="rr"){ onRerollDie(v, idx); return; }
+  if(!Array.isArray(pending[which])) pending[which] = [];
+  pending[which][idx || 0] = v;
+  render();
+  if(diceReady("att") && diceReady("def")) doRoll();
+}
+
+/* --------------------------------------------------------------- the sheets */
+var sheetPick = null, sheetTabState = null;
+function openSheet(o){
+  sheetPick = o;
+  document.getElementById("sheetTitle").innerHTML = (o.icon || "") + esc(o.title || "");
+  document.getElementById("sheetSub").textContent = o.sub || "";
+  var tabs = document.getElementById("sheetTabs");
+  if(o.tabs && o.tabs.length>1){
+    tabs.hidden = false;
+    sheetTabState = (o.tab!==undefined && o.tab!==null) ? o.tab : 0;
+    tabs.innerHTML = o.tabs.map(function(t,i){
+      return '<button class="tab'+(i===sheetTabState?" on":"")+'" data-tab="'+i+'" aria-label="'+esc(t)+'">'+
+        (o.tabIcon ? o.tabIcon(t) : "")+'<span class="tl">'+esc(t)+'</span>'+
+        '<span class="ts">'+esc(o.tabShort ? o.tabShort(t) : t)+'</span></button>';
+    }).join("");
+  } else { tabs.hidden = true; sheetTabState = null; }
+  document.getElementById("sheetGear").hidden = !o.gear;
+  listPage = 0;
+  document.getElementById("sheet").hidden = false;
+  drawSheet();
+}
+document.getElementById("sheetGear").addEventListener("click", function(){
+  if(sheetPick && sheetPick.gear) sheetPick.gear();
+});
+function closeSheet(){ document.getElementById("sheet").hidden = true; sheetPick = null; }
+document.getElementById("sheetClose").addEventListener("click", closeSheet);
+document.getElementById("sheet").addEventListener("click", function(ev){
+  if(ev.target.id === "sheet") closeSheet();
+  var tb = ev.target.closest("[data-tab]");
+  if(tb){ sheetTabState = +tb.dataset.tab; listPage = 0;
+    document.querySelectorAll("#sheetTabs .tab").forEach(function(e,i){ e.classList.toggle("on", i===sheetTabState); });
+    drawSheet(); return; }
+  var pk = ev.target.closest("[data-pick]");
+  if(pk && String(pk.dataset.pick).indexOf("page:") === 0){
+    listPage += +String(pk.dataset.pick).slice(5);
+    drawSheet(); return;
+  }
+  if(pk && sheetPick){ sheetPick.onPick(pk.dataset.pick, pk); }
+});
+function fitTabs(){
+  var el = document.getElementById("sheetTabs");
+  if(el.hidden) return;
+  el.classList.remove("t1","t2","t3");
+  var steps = ["t1","t2","t3"];
+  for(var i=0;i<=steps.length;i++){
+    var clipped = [].some.call(el.children, function(b){ return b.scrollWidth > b.clientWidth + 1; });
+    if(!clipped || i===steps.length) return;
+    if(i>0) el.classList.remove(steps[i-1]);
+    el.classList.add(steps[i]);
+    void el.offsetHeight;
+  }
+}
+function drawSheet(){
+  var o = sheetPick; if(!o) return;
+  fitGlyph(document.getElementById("sheetTitle"));
+  fitTabs();
+  var body = document.getElementById("sheetBody");
+  body.style.overflowY = "";
+  var items = o.items(sheetTabState);
+  if(o.mode === "list"){
+    paintList(body, items);
+    return;
+  }
+  body.className = "grid";
+  body.innerHTML = items.join("");
+  fitGrid(body, items.length, o.minRow||44, o.minCol||1);
+  /* a glyph never costs a name its last letters: glyphs shrink first, and a chip
+     whose name is still cut drops its glyph */
+  var chips = [].filter.call(body.querySelectorAll(".chip"), function(c){ return c.querySelector(".ic"); });
+  if(chips.some(chipCut)){ body.classList.add("icS"); void body.offsetHeight; }
+  chips.forEach(function(c){ if(chipCut(c)) c.classList.add("cut"); });
+}
+function chipCut(c){
+  var nm = c.querySelector(".nm");
+  if(!nm) return false;
+  return nm.scrollWidth > nm.clientWidth + 1 || nm.scrollHeight > nm.clientHeight + 2 ||
+    (c.classList.contains("fx") && c.scrollHeight > c.clientHeight + 1);
+}
+/* Lists compact before they scroll, the same way the side cards do. */
+function fitList(el){
+  if(el.clientHeight < 40) return;
+  el.classList.remove("t1","t2","t3");
+  var steps = ["t1","t2","t3"];
+  for(var i=0;i<steps.length;i++){
+    if(el.scrollHeight <= el.clientHeight + 1) return;
+    el.classList.add(steps[i]);
+    void el.offsetHeight;
+  }
+}
+/* A reference list is never allowed to scroll either: once it has compacted as
+   far as it goes, it is cut into pages that fit, and a pager appears. */
+var listPage = 0;
+function paintList(el, items){
+  el.className = "list";
+  el.style.overflowY = "";
+  el.innerHTML = items.join("");
+  fitList(el);
+  if(el.clientHeight < 40 || el.scrollHeight <= el.clientHeight + 2){ listPage = 0; noSliver(el); return; }
+
+  var kids = [].slice.call(el.children);
+  var gap = 5, room = el.clientHeight - 34;          /* leave room for the pager */
+  var pages = [[]], used = 0;
+  kids.forEach(function(node, i){
+    var h = node.offsetHeight + gap;
+    if(used + h > room && pages[pages.length-1].length){ pages.push([]); used = 0; }
+    pages[pages.length-1].push(i);
+    used += h;
+  });
+  if(pages.length < 2){ listPage = 0; return; }
+  if(listPage >= pages.length) listPage = pages.length - 1;
+  if(listPage < 0) listPage = 0;
+
+  var shown = pages[listPage].map(function(i){ return items[i]; });
+  el.innerHTML = shown.join("") +
+    '<div class="pager">' +
+    '<button class="pg" data-pick="page:-1"'+(listPage===0?" disabled":"")+'>&#8592;</button>' +
+    '<span>' + (listPage+1) + ' / ' + pages.length + '</span>' +
+    '<button class="pg" data-pick="page:1"'+(listPage===pages.length-1?" disabled":"")+'>&#8594;</button>' +
+    '</div>';
+  noSliver(el);
+}
+/* a pixel of rounding is not worth a scrollbar */
+function noSliver(el){
+  if(el.clientHeight >= 40 && el.scrollHeight <= el.clientHeight + 2) el.style.overflowY = "hidden";
+}
+/* Choose the column count so that every chip fits without scrolling. */
+/* A chip must stay readable before it stays tall: the column count is capped by
+   a minimum chip width, and only then chosen to be as few columns as will fit. */
+function fitGrid(el, n, minRow, minCol){
+  if(!n || el.clientHeight < 40) return;
+  var h = el.clientHeight, w = el.clientWidth, gap = 6;
+  var lo = minCol || 1;
+  var hi = Math.max(lo, Math.floor((w + gap) / (96 + gap)));
+  var best = hi, rh = 0;
+  for(var c=lo;c<=hi;c++){
+    var rows = Math.ceil(n/c);
+    rh = (h - gap*(rows-1)) / rows;
+    best = c;
+    if(rh >= minRow) break;
+  }
+  var rows2 = Math.ceil(n/best);
+  rh = (h - gap*(rows2-1)) / rows2;
+  el.style.gridTemplateColumns = "repeat("+best+",1fr)";
+  el.style.gridAutoRows = "1fr";
+  el.classList.toggle("tall", rh >= 64);
+  el.classList.toggle("dense", rh < 56);
+  el.classList.toggle("denser", rh < 40);
+  el.classList.toggle("narrow", (w - gap*(best-1)) / best < 150);
+}
+window.addEventListener("resize", function(){
+  if(sheetPick) drawSheet();
+  ["sideAtt","sideDef"].forEach(function(id){ fitSide(document.getElementById(id)); });
+});
+if(window.visualViewport) window.visualViewport.addEventListener("resize", function(){
+  ["sideAtt","sideDef"].forEach(function(id){ fitSide(document.getElementById(id)); });
+});
+
+function pickFleet(k){
+  openSheet({
+    title:"Fleet", sub: k==="att"?"Boarder":"Defender", minRow:48, minCol:2,
+    items:function(){
+      return FLEETS.map(function(f,i){
+        return '<button class="chip fx'+(S[k].f===i?" on":"")+'" data-pick="'+i+'">'+fleetIcon(i)+
+          '<span class="nm">'+esc(f.name)+'</span></button>';
+      });
+    },
+    onPick:function(v){
+      var i = +v, changed = (S[k].f !== i);
+      if(changed){
+        S[k].f = i; S[k].ships = [];
+        S[k].blast = 0; S[k].orders = 0; S[k].other = 0;
+        resetRound();
+      }
+      closeSheet(); render();
+      if(changed || !S[k].ships.length) pickShip(k, -1);
+    }
+  });
+}
+var TYPE_ORDER = ["Battleship","Grand Cruiser","Cruiser","Escort","Defence","Ground"];
+function pickShip(k, idx){
+  if(S[k].f < 0){ pickFleet(k); return; }
+  var fid = S[k].f;
+  var mine = SHIPS.map(function(s,i){ return {s:s,i:i}; }).filter(function(o){ return o.s.f===fid; });
+  var types = TYPE_ORDER.filter(function(t){ return mine.some(function(o){ return o.s.t===t; }); });
+  var tabs = types.length>1 ? ["All"].concat(types) : types;
+  var cur = idx>=0 ? S[k].ships[idx] : null;
+  /* a big fleet opens on its largest class group, so the chips stay readable */
+  var startTab = 0;
+  if(mine.length > 18 && tabs.length > 1){
+    var biggest = types[0], bn = 0;
+    types.forEach(function(t){
+      var c = mine.filter(function(o){ return o.s.t===t; }).length;
+      if(c > bn){ bn = c; biggest = t; }
+    });
+    if(cur){
+      var curType = (SHIPS.find(function(x){ return x.full===cur.n; })||{}).t;
+      if(curType && types.indexOf(curType)>=0) biggest = curType;
+    }
+    startTab = tabs.indexOf(biggest);
+  }
+  openSheet({
+    title: FLEETS[fid].name, icon: fleetIcon(fid,"in"), sub: k==="att"?"Boarder":"Defender",
+    tabs:tabs, tab:startTab,
+    tabIcon:function(t){ return hullIcon(t, fleetColor(fid)); },
+    tabShort:function(t){ return HULL_SHORT[t] || t; },
+    minRow:62, minCol:2,
+    gear: idx>=0 ? function(){ shipOpts(k, idx); } : null,
+    items:function(ti){
+      var all = (!tabs.length || ti===null || (tabs[ti]==="All"));
+      var list = all ? mine : mine.filter(function(o){ return o.s.t===tabs[ti]; });
+      return list.map(function(o){
+        var on = cur && cur.n===o.s.full;
+        return '<button class="chip'+(on?" on":"")+(all?"":" hx")+'" data-pick="'+o.i+'"><span class="nm">'+
+          hullIcon(o.s.t, fleetColor(fid), "in")+esc(o.s.n)+
+          '</span><span class="sub">'+esc(o.s.s)+' · '+o.s.hp+'HP'+(o.s.tu?" · "+o.s.tu+(o.s.spores?"sp":"T"):"")+'</span></button>';
+      });
+    },
+    onPick:function(v){
+      var sh = SHIPS[+v];
+      var u = unitFromShip(sh);
+      if(idx>=0) { u.opts = S[k].ships[idx].opts || []; sanitizeUnit(u); S[k].ships[idx] = u; }
+      else S[k].ships.push(u);
+      resetRound();
+      closeSheet(); render();
+    }
+  });
+}
+function pickDp(k,i){
+  var u = S[k].ships[i], p = profile(u);
+  var max = eShip(u).hp;
+  openSheet({
+    title:"Damage points remaining", sub:(p?p.n:""), minRow:52, minCol:3,
+    items:function(){
+      var out = [];
+      var probe = eShip(u);
+      for(var n=max;n>=0;n--){
+        probe.dp = n;
+        var crip = B.isCrippled(probe);
+        out.push('<button class="chip num'+(u.dp===n?" on":"")+'" data-pick="'+n+'"><b>'+
+          (n===0?"☠":n)+'</b>'+(n===0?'<span class="sub">hulk</span>':(crip?'<span class="sub">crippled</span>':""))+'</button>');
+      }
+      return out;
+    },
+    onPick:function(v){ u.dp = +v; closeSheet(); render(); }
+  });
+}
+function showValue(k){
+  var side = eSide(k), role = k==="att"?"attacker":"defender";
+  var bv = B.boardingValue(side, role, eSide(k==="att"?"def":"att"));
+  var h = [];
+  bv.parts.forEach(function(p){
+    h.push('<div class="mline"><span class="v num">'+p.base+'</span><span class="t">'+esc(p.ship.name)+
+      ' — damage points remaining</span></div>');
+    p.steps.forEach(function(st){
+      h.push('<div class="mline sub"><span class="v num">'+st.v+'</span><span class="t">'+esc(st.t)+'</span></div>');
+    });
+  });
+  if(role==="defender"){
+    var anySpore = side.ships.some(function(s){ return s._p && s._p.spores; });
+    h.push('<div class="mline"><span class="v num">+'+bv.turrets+'</span><span class="t">remaining '+
+      (anySpore?"spore cysts":"turrets")+' (the ship being boarded adds them)</span><span class="p">p.89</span></div>');
+  }
+  h.push('<div class="mline tot"><span class="v num">'+bv.value+'</span><span class="t"><b>Boarding value</b></span></div>');
+  openSheet({title:"Boarding value", sub:k==="att"?"Boarder":"Defender", mode:"list",
+    items:function(){ return h; }, onPick:function(){}});
+}
+var PAGE = {ratio1:"RB p.90",ratio2:"RB p.90",ratio3:"RB p.90",ratio4:"RB p.90",blast:"RB p.90",orders:"RB p.90",orders2:"FL p.63",
+  crippled:"RB p.90",chaos:"RB p.90",ork:"RB p.90",marines:"RB p.90",csm:"REF p.1",abaddon:"REF p.1",berzerkers:"FL p.264",
+  megaarmour:"REF p.1",goff:"REF p.1",clanzwarlord:"FL p.372",corridor:"FL p.72",blackship:"FL p.148",easyprey:"FL p.327",
+  inq_malleus:"REF p.1",inq_hereticus:"REF p.1",inq_xenos:"REF p.1",vs_xenos:"REF p.1",de1:"REF p.1",de2:"REF p.1",
+  aspect:"FL p.305",rath:"FL p.48",talons:"FL p.309/350"};
+function showMods(k){
+  var p = prep ? prep[k] : null;
+  var h = [];
+  if(!p || !p.mods.length) h.push('<div class="mline"><span class="v num">0</span><span class="t">No modifiers apply.</span></div>');
+  p && p.mods.forEach(function(m){
+    h.push('<div class="mline"><span class="v num '+(m.v>0?"plus":"minus")+'">'+fmt(m.v)+'</span><span class="t">'+
+      esc(m.label)+'</span><span class="p">'+(PAGE[m.id]||"")+'</span></div>');
+  });
+  if(p){
+    h.push('<div class="mline tot"><span class="v num">'+fmt(p.modSum)+'</span><span class="t"><b>Added to the D6</b></span></div>');
+    var di = diceInfo(p);
+    if(di && di.kind!=="one"){
+      h.push('<div class="mline'+(di.kind==="low"?"":"")+'"><span class="v">'+
+        (di.kind==="none"?"—":"2D6")+'</span><span class="t"><b>'+esc(di.long)+'</b>'+
+        (di.kind==="high"?" — Tyranids roll two dice and keep the better one."
+         :di.kind==="low"?" — two dice, and the worse one counts."
+         :"")+'</span></div>');
+    }
+    if(p.reroll) h.push('<div class="mline sub"><span class="v">↺</span><span class="t">This side may re-roll the boarding result; the second roll stands.</span></div>');
+  }
+  h.push('<div class="mline sub"><span class="v"></span><span class="t">The ratio modifiers are an either-or group: only the highest one applies.</span></div>');
+  h.push('<div class="dieRow" style="margin-top:4px"><div class="lab" style="width:104px;text-align:left;color:var(--dim)">'+
+    'Anything else</div>'+
+    '<button class="die" style="flex:0 0 46px;height:40px" data-pick="minus">−</button>'+
+    '<div class="die" style="flex:0 0 52px;height:40px;background:transparent;border-color:transparent">'+
+    fmt(S[k].other||0)+'</div>'+
+    '<button class="die" style="flex:0 0 46px;height:40px" data-pick="plus">+</button><div style="flex:1"></div></div>');
+  h.push('<div class="mline sub"><span class="v"></span><span class="t">Campaign bonuses, house rules and anything the app does not know go here.</span></div>');
+  var cur = S[k].dice6 || "rules";
+  var DICE_CHOICES = [["rules","By the rules"],["one","D6"],["high","2D6 \u25B2 highest"],["low","2D6 \u25BC lowest"]];
+  h.push('<div class="mline tot"><span class="v"></span><span class="t"><b>Dice this side throws</b></span></div>');
+  h.push('<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:5px">');
+  DICE_CHOICES.forEach(function(c){
+    h.push('<button class="die" style="height:40px;font-size:12.5px;font-weight:700'+
+      (cur===c[0]?";background:var(--panel2);border-color:#5a6070;color:var(--ink)":"")+
+      '" data-pick="dice:'+c[0]+'">'+c[1]+'</button>');
+  });
+  h.push('</div>');
+  h.push('<div class="mline sub"><span class="v"></span><span class="t">'+
+    (cur==="rules"
+      ? 'The rules decide: Tyranids throw two and keep the highest, a crewless hull throws none, everyone else throws one.'
+      : '<b style="color:var(--warn)">Set by hand</b> — this replaces what the rules say for this side until you set it back.')+
+    '</span></div>');
+  openSheet({title:"Roll modifiers", sub:k==="att"?"Boarder":"Defender", mode:"list",
+    items:function(){ return h; },
+    onPick:function(v){
+      if(v.indexOf("dice:")===0){
+        var d = v.slice(5);
+        S[k].dice6 = (d==="rules") ? null : d;
+        pending = {att:[], def:[]};
+        render(); showMods(k); return;
+      }
+      if(v!=="plus" && v!=="minus") return;
+      var n = (S[k].other||0) + (v==="plus"?1:-1);
+      S[k].other = Math.max(-9, Math.min(9, n));
+      render(); showMods(k);
+    }});
+}
+
+/* -------------------------------------------------------------- ship options */
+function shipOpts(k,i){
+  var u = S[k].ships[i], p = profile(u), race = FLEETS[S[k].f].race;
+  var auto = (p && p.fl) || [];
+  openSheet({
+    title:(p?p.n:"Ship"), sub:"Upgrades and crew", mode:"list",
+    items:function(){
+      var h = [];
+      auto.forEach(function(f){
+        var a = AUTO[f]; if(!a) return;
+        h.push('<div class="opt on locked"><span class="box">●</span><span class="txt"><b>'+esc(a.t)+
+          '</b><span>'+esc(a.d)+' — part of this hull’s profile.</span></span></div>');
+      });
+      var hulk = auto.indexOf("spacehulk")>=0 || (u.opts||[]).indexOf("spacehulk")>=0;
+      var BV_UP = ["khorne","abaddon","warlord"];   /* FL p.288, p.390 */
+      OPTS.filter(function(o){
+        if(o.r.indexOf(race)<0 || auto.indexOf(o.id)>=0) return false;
+        if(o.only && (!p || o.only.indexOf(p.full)<0)) return false;
+        if(auto.indexOf("blackship")>=0 && (o.id==="marines" || o.id==="greyknights")) return false;
+        if(o.noflag && auto.indexOf(o.noflag)>=0) return false;
+        if(hulk && BV_UP.indexOf(o.id)>=0) return false;
+        return true;
+      }).forEach(function(o){
+        var on = (u.opts||[]).indexOf(o.id)>=0;
+        h.push('<button class="opt'+(on?" on":"")+'" data-pick="'+o.id+'"><span class="box">✓</span>'+
+          '<span class="txt"><b>'+esc(o.t)+'</b><span>'+esc(o.d)+'</span></span></button>');
+      });
+      var pr2 = profile(u), es2 = eShip(u);
+      if(pr2 && pr2.fl && pr2.fl.indexOf("fortress")>=0){
+        h.push('<div class="mline tot"><span class="v"></span><span class="t"><b>Other quadrants</b>'+
+          ' <span style="color:var(--dim);font-weight:600">— all four quadrants’ remaining hit points count (p.502)</span></span></div>');
+        h.push('<div class="dieRow"><div class="lab" style="width:104px;text-align:left;color:var(--dim)">'+
+          'Their HP</div>'+
+          '<button class="die" style="flex:0 0 46px;height:40px" data-pick="q:-1">−</button>'+
+          '<div class="die" style="flex:0 0 52px;height:40px;background:transparent;border-color:transparent">'+
+          (+u.q || 0)+'</div>'+
+          '<button class="die" style="flex:0 0 46px;height:40px" data-pick="q:1">+</button>'+
+          '<div style="flex:1"></div></div>');
+        h.push('<div class="mline sub"><span class="v"></span><span class="t">The damage points left on '+
+          'the three quadrants that are not being boarded. Only the boarded quadrant’s turrets count, '+
+          'and damage still lands on that quadrant alone.</span></div>');
+      }
+      var tuName = (pr2 && pr2.spores) ? "Spore cysts" : "Turrets";
+      h.push('<div class="mline tot"><span class="v"></span><span class="t"><b>'+tuName+' remaining</b>'+
+        ' <span style="color:var(--dim);font-weight:600">— the ship being boarded adds these (p.89)</span></span></div>');
+      h.push('<div class="dieRow"><div class="lab" style="width:104px;text-align:left;color:var(--dim)">'+
+        tuName+'</div>'+
+        '<button class="die" style="flex:0 0 46px;height:40px" data-pick="tu:-1">−</button>'+
+        '<div class="die" style="flex:0 0 52px;height:40px;background:transparent;border-color:transparent">'+
+        es2.turrets+'</div>'+
+        '<button class="die" style="flex:0 0 46px;height:40px" data-pick="tu:1">+</button>'+
+        '<div style="flex:1"></div></div>');
+      h.push('<div class="mline sub"><span class="v"></span><span class="t">'+
+        (pr2 && es2.turrets !== pr2.tu
+          ? '<b style="color:var(--warn)">Set by hand</b> — the profile prints '+pr2.tu+'.'
+          : 'The profile value. Change it if the ship bought more or has had them shot away.')+
+        '</span></div>');
+      if(!h.length) h.push('<div class="mline"><span class="t">This fleet has no boarding upgrades to choose.</span></div>');
+      if(S[k].ships.length > 1){
+        h.push('<button class="opt" data-pick="__remove" style="margin-top:6px;border-color:#5c3a36">'+
+          '<span class="box" style="border-color:#5c3a36;color:#e0584a">✕</span><span class="txt">'+
+          '<b>Remove this ship</b><span>Take it out of this boarding action.</span></span></button>');
+      }
+      return h;
+    },
+    onPick:function(id, el){
+      if(id === "q:-1" || id === "q:1"){
+        u.q = Math.max(0, Math.min(99, (+u.q || 0) + (id==="q:1"?1:-1)));
+        if(!u.q) delete u.q;
+        render(); shipOpts(k,i); return;
+      }
+      if(id === "tu:-1"){ stepTurrets(k,i,-1); shipOpts(k,i); return; }
+      if(id === "tu:1"){ stepTurrets(k,i,1); shipOpts(k,i); return; }
+      if(id === "__remove"){ S[k].ships.splice(i,1); resetRound(); closeSheet(); render(); return; }
+      u.opts = u.opts || [];
+      var j = u.opts.indexOf(id);
+      if(j>=0) u.opts.splice(j,1); else u.opts.push(id);
+      el.classList.toggle("on");
+      render();
+    }
+  });
+}
+
+/* ------------------------------------------------------------------ rolling */
+var rng = Math.random;
+function roll(){ return 1 + Math.floor(rng()*6); }
+var holoResult = null;
+/* One save, for one hull, recorded on that hull so it survives everything until
+   the attempt is over. */
+function doHolo(v, idx){
+  var owed = prep.problems.filter(function(p){
+    return p.level==="roll" && (!S.def.ships[p.idx] || !S.def.ships[p.idx].holo);
+  });
+  var need = null;
+  for(var i=0;i<owed.length;i++) if(owed[i].idx === idx) need = owed[i];
+  if(!need) need = owed[0];
+  if(!need) return;
+  var r = v || roll();
+  var u = S.def.ships[need.idx];
+  if(u) u.holo = (r >= need.target) ? "saved" : "failed";
+  render();
+}
+/* A new attempt starts clean: nobody is still saved out of a fight that is over. */
+function clearHolo(){
+  ["att","def"].forEach(function(k){
+    S[k].ships.forEach(function(u){ delete u.holo; });
+  });
+}
+function doRoll(){
+  var a = [], d = [];
+  if(S.dice === "digital"){
+    for(var i=0;i<prep.att.dice;i++) a.push(roll());
+    for(var j=0;j<prep.def.dice;j++) d.push(roll());
+  }else{
+    a = (pending.att || []).slice(0, prep.att.dice);
+    d = (pending.def || []).slice(0, prep.def.dice);
+  }
+  var rolls = {att:a, def:d};
+  showResult({score:B.score(prep, rolls), rolls:rolls});
+}
+
+/* ------------------------------------------------------------------- result */
+/* One boarding action produces, in order: the two scores, the damage the loser
+   takes, and one critical-hit chance against EVERY ship involved (p.91).
+   The app rolls all of it in one go; in hand-dice mode it asks for each roll. */
+var R = null;
+
+function livingIdx(k){
+  var out = [];
+  S[k].ships.forEach(function(u,i){ if(u.dp>0 && u.holo!=="saved") out.push(i); });
+  return out;
+}
+function shipName(k,i){ var u=S[k].ships[i], p=profile(u); return p?p.n:u.n; }
+function shipHp(k,i){ var p=profile(S[k].ships[i]); return p?p.hp:1; }
+
+function buildCrits(){
+  var sc = R.score, out = [];
+  ["att","def"].forEach(function(k){
+    var from = k==="att" ? "def" : "att";
+    var need = (sc.winner===from) ? sc.critNeeds.win : sc.critNeeds.lose;
+    var bonus = B.critBonus(eSide(from), eSide(from==="att"?"def":"att"));
+    livingIdx(k).forEach(function(i){
+      var c = {cid:"c"+(out.length), to:k, i:i, from:from, need:need, bonus:bonus,
+               roll:null, hit:null, table:null, extra:null, followup:null};
+      if(need > 6) c.hit = false;          /* this result causes none */
+      else if(need === 0) c.hit = true;    /* Overwhelmed: automatic */
+      out.push(c);
+    });
+  });
+  return out;
+}
+/* Damage is distributed by the owning player (p.91); this is only the opening
+   suggestion — one hull at a time, and any excess is wasted. */
+function initAlloc(){
+  var sc = R.score, a = {att:[], def:[]};
+  ["att","def"].forEach(function(k){ a[k] = S[k].ships.map(function(){ return 0; }); });
+  if(!sc.winner) return a;
+  var left = sc.damage, ids = livingIdx(sc.loser);
+  for(var n=0;n<ids.length && left>0;n++){
+    var take = Math.min(S[sc.loser].ships[ids[n]].dp, left);
+    a[sc.loser][ids[n]] = take; left -= take;
+  }
+  return a;
+}
+function critTableIdFor(k,i){
+  var sd = eSide(k);
+  return B.critTableId(sd.ships[i], sd);
+}
+function criticalResultFor(k,i,n){
+  var sd = eSide(k);
+  return B.criticalResult(sd.ships[i], sd, n);
+}
+function cataTableIdFor(k,i){
+  var sd = eSide(k);
+  return B.cataTableId(sd.ships[i], sd);
+}
+function cataDiceFor(k,i){
+  var sd = eSide(k);
+  return B.cataDice(sd.ships[i], sd);
+}
+/* Every point the loser actually can take must be placed on a hull before the
+   result may be applied, or damage would quietly vanish. */
+function allocDone(){
+  var sc = R.score;
+  if(!sc || !sc.winner || !sc.damage) return true;
+  var ids = livingIdx(sc.loser);
+  var pool = ids.reduce(function(n,i){ return n + S[sc.loser].ships[i].dp; },0);
+  var cap = Math.min(sc.damage, pool);
+  var used = ids.reduce(function(n,i){ return n + (R.alloc[sc.loser][i]||0); },0);
+  return used >= cap;
+}
+function critFor(k,i){
+  for(var n=0;n<R.crits.length;n++) if(R.crits[n].to===k && R.crits[n].i===i) return R.crits[n];
+  return null;
+}
+/* What happens to one hull once everything is counted. */
+function outcome(k,i){
+  var u = S[k].ships[i], hp = shipHp(k,i), es = eShip(u);
+  var al = R.alloc[k][i]||0;
+  var hits = R.crits.filter(function(x){ return x.to===k && x.i===i && x.hit; });
+  var c = hits[0] || critFor(k,i);
+  var ex = hits.reduce(function(n,x){ return n + (x.extra||0); }, 0);
+  var afterBoarding = u.dp - al;
+  var fin = Math.max(0, afterBoarding - ex);
+  var st = "ok";
+  if(hp<=1 && c && c.hit) st = "destroyed";          /* escorts die to any critical (p.66) */
+  else if(fin<=0){
+    if(hp<=1) st = "destroyed";
+    else if(B.has(es,"fortress")) st = "quadrant";   /* the fort survives until all four are gone */
+    else if(afterBoarding<=0) st = "hulk";           /* boarding damage: no catastrophic roll */
+    else st = "cata";                                /* the critical's extra damage killed it */
+  }
+  return {dp:u.dp, alloc:al, extra:ex, fin:fin, state:st, crit:c, hp:hp};
+}
+function cataNeeded(){
+  var out = [];
+  ["att","def"].forEach(function(k){
+    livingIdx(k).forEach(function(i){ if(outcome(k,i).state==="cata") out.push({k:k,i:i}); });
+  });
+  return out;
+}
+
+function showResult(o){
+  R = {score:o.score||null, holo:o.holo||null, rolls:o.rolls||{att:[],def:[]}, rrDice:{},
+       stage:"main", crits:[], alloc:{att:[],def:[]}, cata:{}, rerolled:{}, seq:0};
+  /* A re-roll is decided on the boarding result alone, so nothing else is
+     rolled until the offer has been taken or passed (FL p.118, p.147, p.310). */
+  if(R.score && prep && (prep.att.reroll || prep.def.reroll)) R.stage = "reroll";
+  else startMain();
+  document.getElementById("resultSheet").hidden = false;
+  drawResult();
+}
+function startMain(){
+  R.stage = "main";
+  if(R.score && R.score.winner){
+    R.crits = buildCrits();
+    R.alloc = initAlloc();
+    if(S.dice === "digital") autoCrits();
+  }
+}
+function autoCrits(){
+  R.crits.forEach(function(c){
+    if(c.need > 6){ c.hit = false; return; }
+    if(c.need > 0){
+      c.roll = roll();
+      c.hit = (c.roll + c.bonus) >= c.need;
+    } else c.hit = true;
+    if(!c.hit) return;
+    var tid = critTableIdFor(c.to, c.i);
+    var T = B.CRIT_TABLES[tid];
+    setTableFor(c, T ? (T.dice===1 ? roll() : roll()+roll()) : 0, tid);
+  });
+}
+/* Escorts are destroyed outright and roll on no table at all (p.66, p.92). */
+function setTableFor(c, n, tid){
+  tid = tid || critTableIdFor(c.to, c.i);
+  var t = criticalResultFor(c.to, c.i, n);
+  c.table = t;
+  var variable = (t.extra==="D3" || t.extra==="D6");
+  if(!variable) c.extra = t.extra || 0;
+  else {
+    /* the app rolls the extra damage too; by hand it is one more tap */
+    c.extra = (S.dice==="digital")
+      ? (t.extra==="D3" ? 1+Math.floor(rng()*3) : roll())
+      : null;
+  }
+  c.followup = t.followup ? {rule:t.followup, roll:null, result:null} : null;
+  if(c.followup && S.dice==="digital") setFollowupFor(c, roll());
+  if(t.repeatCritical && !c.repeatQueued) queueRepeatCritical(c);
+}
+function queueRepeatCritical(c){
+  c.repeatQueued = true;
+  var more = {cid:"r"+(++R.seq), to:c.to, i:c.i, from:c.from, need:0, bonus:0,
+              roll:null, hit:true, table:null, extra:null, followup:null, repeated:true,
+              depth:(c.depth||0)+1};
+  R.crits.push(more);
+  if(S.dice==="digital"){
+    var tid = critTableIdFor(more.to, more.i), T = B.CRIT_TABLES[tid];
+    setTableFor(more, T.dice===1 ? roll() : roll()+roll(), tid);
+  }
+}
+function closeResult(){
+  document.getElementById("resultSheet").hidden = true;
+  pending = {att:[], def:[]};
+  holoResult = null; R = null;
+  render();
+}
+function sideName(k){
+  var s = S[k]; if(!s.ships.length) return k==="att"?"the boarder":"the defender";
+  var names = s.ships.map(function(u){ var p=profile(u); return p?p.n:u.n; });
+  return names.length===1 ? names[0] : names.join(" + ");
+}
+
+/* ---------------------------------------------------------------- drawing -- */
+/* Escorts and Kroot Warspheres roll on no table; settle those before drawing so
+   the very first render is already complete. */
+function resolveFreeTables(){
+  (R.crits||[]).forEach(function(c){
+    if(c.hit && !c.table){
+      var tid = critTableIdFor(c.to, c.i);
+      if(!B.CRIT_TABLES[tid]) setTableFor(c, 0, tid);
+    }
+  });
+}
+/* The action row is never part of the scrolling area: whatever happens above
+   it, APPLY DAMAGE stays on screen. */
+function paint(box, html){
+  var i = html.lastIndexOf('<div class="actRow"');
+  if(i < 0){ box.innerHTML = '<div class="rollArea">'+html+'</div>'; return; }
+  box.innerHTML = '<div class="rollArea">'+html.slice(0,i)+'</div>'+html.slice(i);
+}
+function drawResult(){
+  var box = document.getElementById("resultBox");
+  if(R.holo) return drawHolo(box);
+  if(R.crits) resolveFreeTables();
+  if(R.stage==="reroll") return drawReroll(box);
+  if(R.stage==="cata") return drawCata(box);
+
+  var sc = R.score, h = [scoreRow()];
+
+  if(!sc.winner){
+    h.push('<div class="verdict grapple"><div class="head">Grapple</div><div class="sub">'+
+      'The ships grapple together and fight again in every following End Phase. Neither may move, '+
+      'shoot or launch ordnance until one side is reduced to zero damage points. '+
+      'No damage and no critical hits this round.</div></div>');
+    h.push('<div class="spacer"></div>');
+    h.push('<div class="actRow"><button data-r="undo">Undo this roll</button>'+
+      '<button class="primary" data-r="next">Next End Phase</button></div>');
+    paint(box, h.join("")); return;
+  }
+
+  h.push('<div class="verdict"><div class="head">'+esc(sc.result.name)+'</div><div class="sub"><b>'+
+    esc(sideName(sc.winner))+'</b> wins by '+sc.diff+'</div></div>');
+
+  h.push(critBlock());
+  h.push(damageBlock());
+
+  h.push(arkBlock());
+  h.push(tideBlock());
+  h.push('<div class="spacer"></div>');
+  var rollsLeft = R.crits.some(function(c){
+    return c.hit===null || (c.hit && !c.table) || (c.hit && c.table && c.extra===null) ||
+      (c.hit && c.followup && c.followup.roll===null);
+  });
+  var splitLeft = !allocDone();
+  var waiting = rollsLeft || splitLeft;
+  var cn = cataNeeded();
+  h.push('<div class="actRow"><button data-r="close">Close</button>'+
+    '<button class="primary" data-r="apply"'+(waiting?" disabled":"")+'>'+
+    (rollsLeft ? "Enter the rolls" : splitLeft ? "Split the damage"
+      : (cn.length ? "Apply &amp; catastrophic damage" : "Apply damage"))+
+    '</button></div>');
+  paint(box, h.join(""));
+}
+
+/* Every die that was thrown, with the one that counted marked and the one that
+   did not struck through. */
+function diceShown(p, s){
+  if(!p || p.dice===0) return "no dice";
+  var dice = (s && s.dice) || [];
+  if(p.dice===1) return dice.length ? String(dice[0]) : String(s.used);
+  var kept = (s && s.kept >= 0) ? s.kept : dice.indexOf(s.used);
+  return dice.map(function(v,i){
+    return '<span class="dieShown '+(i===kept?"kept":"drop")+'">'+v+'</span>';
+  }).join(" ") + '<span style="font-size:9px;letter-spacing:.06em"> '+
+    (p.pick==="low" ? "LOWEST" : "HIGHEST")+'</span>';
+}
+function scoreRow(){
+  var sc = R.score, pr = prep, h = ['<div class="scoreRow">'];
+  ["att","def"].forEach(function(k,ix){
+    if(ix===1) h.push('<div class="vs">vs</div>');
+    var s = sc[k], w = sc.winner===k;
+    var calc = diceShown(pr[k], s) + (pr[k].modSum ? " "+fmt(pr[k].modSum) : "");
+    h.push('<div class="scoreBox '+k+(w?" win":"")+'"><span class="who">'+(k==="att"?"Boarder":"Defender")+
+      '</span><span class="tot num">'+s.total+'</span><span class="calc num">'+calc+'</span></div>');
+  });
+  h.push('</div>');
+  return h.join("");
+}
+function drawReroll(box){
+  var sc = R.score, h = [scoreRow()];
+  h.push('<div class="verdict"><div class="head">'+(sc.winner?esc(sc.result.name):"Grapple")+'</div>'+
+    '<div class="sub">'+(sc.winner ? '<b>'+esc(sideName(sc.winner))+'</b> would win by '+sc.diff
+      : 'A draw as it stands')+'</div></div>');
+  ["att","def"].forEach(function(k){
+    if(!prep[k].reroll) return;
+    var done = R.rerolled[k];
+    h.push('<div class="step'+(done?" done":"")+'"><div class="q"><b>'+esc(sideName(k))+
+      '</b> may re-roll the boarding dice. The second roll stands, even if it is worse.</div>');
+    if(!done){
+      if(S.dice==="digital"){
+        h.push('<div class="actRow" style="margin:0"><button data-r="reroll" data-c="'+k+'">Re-roll</button></div>');
+      }else{
+        var need = prep[k].dice, got = (R.rrDice[k] || []);
+        for(var r=0;r<need;r++){
+          h.push('<div class="dieRow '+k+'"><div class="lab '+k+'-lab">'+
+            (need>1 ? "new "+(r+1) : "new")+'</div>');
+          for(var i=1;i<=6;i++) h.push('<button class="die'+(got[r]===i?" sel":"")+
+            '" data-r="rerolldie" data-c="'+k+'" data-idx="'+r+'" data-v="'+i+'">'+i+'</button>');
+          h.push('</div>');
+        }
+        if(need>1){
+          var dd = diceInfo(prep[k]);
+          h.push('<div class="diceStrip '+dd.kind+'"><span class="arrow">'+dd.arrow+
+            '</span>keeps the '+(dd.kind==="low"?"lowest":"highest")+'</div>');
+        }
+      }
+    } else {
+      h.push('<div class="q" style="color:var(--dim)">Re-rolled.</div>');
+    }
+    h.push('</div>');
+  });
+  h.push('<div class="spacer"></div>');
+  h.push('<div class="actRow"><button data-r="close">Close</button>'+
+    '<button class="primary" data-r="noreroll">Stand on this roll</button></div>');
+  paint(box, h.join(""));
+}
+function reroll(k){
+  if(R.rerolled[k]) return;
+  var dice = [];
+  for(var i=0;i<prep[k].dice;i++) dice.push(roll());
+  R.rerolled[k] = true;
+  R.rolls[k] = dice;
+  R.score = B.score(prep, R.rolls);
+  drawResult();
+}
+/* By hand the whole set has to arrive before the re-roll can replace the old
+   one, or a 2D6 side would be scored on one die. */
+function rerollDie(k, v, idx){
+  if(R.rerolled[k]) return;
+  R.rrDice = R.rrDice || {};
+  R.rrDice[k] = R.rrDice[k] || [];
+  R.rrDice[k][idx || 0] = v;
+  var need = prep[k].dice, got = R.rrDice[k], full = true;
+  for(var i=0;i<need;i++) if(!got[i]) full = false;
+  if(full){
+    R.rerolled[k] = true;
+    R.rolls[k] = got.slice(0, need);
+    R.score = B.score(prep, R.rolls);
+  }
+  drawResult();
+}
+function drawHolo(box){
+  paint(box,
+    '<div class="spacer"></div>'+
+    '<div class="verdict"><div class="head" style="color:var(--def)">'+(fieldWord()==="shadowfields"?"Shadowfields":"Holofields")+' hold</div>'+
+    '<div class="sub">Rolled <b>'+R.holo.roll+'</b>, needed '+R.holo.target+'+.<br>'+
+    'The entire boarding attempt is ignored. Nothing else happens.</div></div>'+
+    '<div class="spacer"></div>'+
+    '<div class="actRow"><button class="primary" data-r="close">Done</button></div>');
+}
+
+/* One line per ship that could take a critical hit. */
+function critBlock(){
+  var h = [], anyPending = false;
+  var groups = {att:[], def:[]};
+  R.crits.forEach(function(c){ groups[c.from].push(c); });
+  ["att","def"].forEach(function(from){
+    var list = groups[from]; if(!list.length) return;
+    var need = list[0].need, bonus = list[0].bonus;
+    if(need > 6){
+      h.push('<div class="step done"><div class="q">'+esc(sideName(from))+
+        ' causes no critical hit <span class="no">—</span></div></div>');
+      return;
+    }
+    var head = esc(sideName(from)) + (need===0
+      ? ' causes an <b>automatic</b> critical hit'
+      : ' causes a critical hit on a <b>'+need+'+</b>') +
+      (bonus ? ' <span style="color:var(--warn)">(+'+bonus+' Mark of Khorne)</span>' : '');
+    var rows = [], pend = [];
+    var compact = list.filter(function(c){ return c.hit && c.table; }).length > 2;
+    list.forEach(function(c){
+      var target = esc(shipName(c.to, c.i));
+      var arrow = c.repeated ? "Additional Ramilies critical → " : "→ ";
+      if(c.hit === null){
+        anyPending = true;
+        pend.push(c);
+        rows.push('<div class="q">'+arrow+target+'</div>');
+      } else if(!c.hit){
+        rows.push('<div class="q">'+arrow+target+' — rolled <b>'+c.roll+(bonus?"+"+bonus:"")+
+          '</b> <span class="no">no critical</span></div>');
+      } else {
+        rows.push('<div class="q">'+arrow+target+(c.roll!==null?' — rolled <b>'+c.roll+(bonus?"+"+bonus:"")+'</b>':'')+
+          ' <span class="ok">CRITICAL HIT</span>'+
+          (shipHp(c.to,c.i)<=1 ? ' <span style="color:var(--bad)">— destroyed</span>' : '')+'</div>');
+        if(c.table && c.table.table==="escort"){
+          /* nothing more to roll: the damage block already says DESTROYED */
+        } else if(c.table && compact){
+          rows.push('<div class="q" style="padding-left:14px">'+
+            '<b>'+(c.table.roll===null?"":c.table.roll+" — ")+esc(c.table.name)+'</b>'+
+            (c.extra ? ' <span style="color:var(--warn)">+'+c.extra+'</span>' : '')+
+            (c.table.tableLabel && c.table.table!=="standard"
+              ? ' <span style="color:var(--dim);font-size:10px">'+esc(c.table.tableLabel)+'</span>' : '')+
+            '<span style="display:block;color:var(--dim);font-size:11.5px;line-height:1.25">'+
+            esc(c.table.text)+'</span></div>');
+          if(c.extra === null){ anyPending = true; rows.push(extraInput(c)); }
+        } else if(c.table){
+          rows.push('<div class="crit"><b>'+(c.table.roll===null?"":c.table.roll+" — ")+esc(c.table.name)+
+            (c.table.tableLabel && c.table.table!=="standard" ? ' <span style="color:var(--dim);font-weight:600;font-size:11px">'+esc(c.table.tableLabel)+'</span>' : '')+
+            '</b><span>'+
+            esc(c.table.text)+'</span>'+
+            (c.table.note ? '<span style="color:var(--dim)">'+esc(c.table.note)+'</span>' : '')+
+            (c.extra ? '<span style="color:var(--warn)">Extra damage: '+c.extra+'</span>' : '')+
+            (shipHp(c.to,c.i)<=1 ? '<span style="color:var(--bad)">An escort is destroyed by any critical hit.</span>' : '')+
+            '</span></div>');
+          if(c.extra === null){
+            anyPending = true;
+            rows.push(extraInput(c));
+          }
+        } else {
+          anyPending = true;
+          rows.push(tableInput(c));
+        }
+        if(c.followup){
+          if(c.followup.roll===null){
+            anyPending = true;
+            rows.push(followupInput(c));
+          }else{
+            rows.push('<div class="q" style="color:var(--dim);padding-left:14px">'+
+              esc(c.followup.result.label)+' D6: <b>'+c.followup.roll+'</b> — '+
+              esc(c.followup.result.text)+'</div>');
+          }
+        }
+        if(c.table && c.table.allQuadrants){
+          rows.push('<div class="q" style="color:var(--warn);padding-left:14px">Apply the rolled extra damage to all four quadrants. This tracker updates the boarded quadrant; record the same damage on the other three.</div>');
+        }
+      }
+    });
+    var done = !pend.length && list.every(function(c){
+      return c.hit!==null && (!c.hit || (c.table && c.extra!==null && (!c.followup || c.followup.roll!==null)));
+    });
+    h.push('<div class="step'+(done?" done":"")+'"><div class="q">'+head+'</div>'+rows.join(""));
+    if(pend.length) h.push(critInput(pend));
+    h.push('</div>');
+  });
+  return h.join("");
+}
+function critInput(pend){
+  if(S.dice==="digital"){
+    return '<div class="actRow" style="margin:0"><button class="primary" data-r="critroll">Roll D6</button></div>';
+  }
+  var c = pend[0], key = c.cid;
+  var h = ['<div class="dieRow '+c.from+'"><div class="lab '+c.from+'-lab">'+
+    (pend.length>1 ? esc(shipName(c.to,c.i))+"<br>1 of "+pend.length : "D6")+'</div>'];
+  for(var i=1;i<=6;i++) h.push('<button class="die" data-r="critdie" data-c="'+key+'" data-v="'+i+'">'+i+'</button>');
+  h.push('</div>');
+  return h.join("");
+}
+function extraInput(c){
+  var key = c.cid, mx = c.table.extra==="D3" ? 3 : 6;
+  var h = ['<div class="dieRow"><div class="lab" style="color:var(--warn)">'+esc(c.table.extra)+'<br>damage</div>'];
+  for(var i=1;i<=mx;i++) h.push('<button class="die" data-r="critex" data-c="'+key+'" data-v="'+i+'">'+i+'</button>');
+  if(mx===3) h.push('<div style="flex:3 1 0"></div>');
+  h.push('</div>');
+  return h.join("");
+}
+function followupInput(c){
+  var key = c.cid, h = ['<div class="dieRow"><div class="lab" style="color:var(--warn)">'+
+    esc(c.followup.rule.label)+'<br>D6</div>'];
+  for(var i=1;i<=6;i++) h.push('<button class="die" data-r="critfollow" data-c="'+key+'" data-v="'+i+'">'+i+'</button>');
+  h.push('</div>');
+  return h.join("");
+}
+function tableInput(c){
+  var key = c.cid, tid = critTableIdFor(c.to, c.i);
+  var T = B.CRIT_TABLES[tid];
+  if(!T){                      /* escorts are destroyed; Kroot take +1 damage */
+    setTableFor(c, 0, tid);
+    return "";
+  }
+  var one = T.dice===1;
+  var lo = one?1:2, hi = one?6:12;
+  if(S.dice==="digital"){
+    return '<div class="actRow" style="margin:0"><button class="primary" data-r="crittable" data-c="'+key+
+      '">Roll '+(one?"D6":"2D6")+' on the '+esc(T.label)+' table</button></div>';
+  }
+  var h = ['<div class="q" style="color:var(--dim);margin-top:2px">'+(one?"D6":"2D6")+' on the '+
+           esc(T.label)+' table ('+esc(T.page)+'):</div>',
+           '<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:5px">'];
+  for(var n=lo;n<=hi;n++) h.push('<button class="die" style="height:38px;font-size:15px" data-r="crittbl" data-c="'+
+    key+'" data-v="'+n+'">'+n+'</button>');
+  h.push('</div>');
+  return h.join("");
+}
+
+/* What each hull ends the End Phase on. */
+function damageBlock(){
+  var sc = R.score, h = [];
+  var rows = [];
+  ["att","def"].forEach(function(k){
+    livingIdx(k).forEach(function(i){
+      var o = outcome(k,i);
+      /* a ship destroyed by a critical alone takes no damage points, and must
+         still appear here */
+      if(!o.alloc && !o.extra && o.state==="ok") return;
+      var why = [];
+      if(o.alloc) why.push(o.alloc+" boarding");
+      if(o.extra){
+        var names = R.crits.filter(function(x){ return x.to===k && x.i===i && x.hit && x.extra; })
+          .map(function(x){ return x.table ? x.table.name.replace(/!$/,"") : "critical"; });
+        why.push(names.length > 2
+          ? o.extra + " from " + names.length + " critical hits"
+          : o.extra + " " + (names.length ? names.join(" + ") : "critical"));
+      }
+      var tag = o.state==="hulk" ? '<span style="color:var(--bad);font-weight:700">DRIFTING HULK</span>'
+              : o.state==="destroyed" ? '<span style="color:var(--bad);font-weight:700">DESTROYED</span>'
+              : o.state==="quadrant" ? '<span style="color:var(--bad);font-weight:700">QUADRANT DESTROYED</span>'
+              : o.state==="cata" ? '<span style="color:var(--bad);font-weight:700">CATASTROPHIC DAMAGE</span>'
+              : '<b class="num">'+o.fin+'</b> DP left';
+      if(!why.length) why.push("critical hit");
+      rows.push('<div class="mline"><span class="v num" style="color:var(--bad)">'+
+        ((o.alloc+o.extra) ? "−"+(o.alloc+o.extra) : "✕")+
+        '</span><span class="t">'+esc(shipName(k,i))+' <span style="color:var(--dim)">('+why.join(" + ")+
+        ')</span></span><span class="p">'+tag+'</span></div>');
+    });
+  });
+  if(!rows.length) rows.push('<div class="mline"><span class="v">0</span><span class="t">No damage.</span></div>');
+  h.push('<div class="step" style="gap:4px">'+rows.join(""));
+
+  /* the owning player distributes the boarding damage himself (p.91) */
+  var ids = livingIdx(sc.loser);
+  var pool = ids.reduce(function(n,i){ return n + S[sc.loser].ships[i].dp; },0);
+  var assignable = Math.min(sc.damage, pool);
+  var wasted = sc.damage - assignable;
+  if(wasted > 0){
+    h.push('<div class="q" style="color:var(--dim);margin-top:2px">'+wasted+
+      ' damage point'+(wasted===1?"":"s")+' beyond what is left on the hull'+(ids.length>1?"s":"")+
+      ' — wasted.</div>');
+  }
+  if(ids.length>1 && assignable>0 && assignable<pool){
+    var used = ids.reduce(function(n,i){ return n + (R.alloc[sc.loser][i]||0); },0);
+    h.push('<div class="q" style="color:var(--dim);margin-top:4px">'+esc(sideName(sc.loser))+
+      ' — the owner splits the damage: <b>'+used+'/'+assignable+'</b> assigned</div>');
+    ids.forEach(function(i){
+      h.push('<div class="dieRow"><div class="lab" style="width:92px;text-align:left;color:var(--ink)">'+
+        esc(shipName(sc.loser,i))+'</div>'+
+        '<button class="die" style="flex:0 0 44px;height:38px" data-r="alloc-" data-c="'+sc.loser+':'+i+'">−</button>'+
+        '<div class="die" style="flex:0 0 44px;height:38px;background:transparent;border-color:transparent">'+
+        (R.alloc[sc.loser][i]||0)+'</div>'+
+        '<button class="die" style="flex:0 0 44px;height:38px" data-r="alloc+" data-c="'+sc.loser+':'+i+'">+</button>'+
+        '<div style="flex:1"></div></div>');
+    });
+  }
+  h.push('</div>');
+  return h.join("");
+}
+
+/* FL p.240: "Ships boarded by them are also infected by plague in addition to
+   all damage inflicted normally, affecting it the same way as if it suffered a
+   single Fire critical." It is not a critical roll and does not depend on who
+   won, so it is stated, not rolled. */
+function arkBlock(){
+  if(!B.sideHas(eSide("att"), "ark")) return "";
+  var targets = livingIdx("def").map(function(i){ return shipName("def", i); });
+  if(!targets.length) return "";
+  return '<div class="step"><div class="q"><b>Ark of Pestilence</b> — '+esc(targets.join(", "))+
+    (targets.length===1?" is":" are")+' infected by plague as well: treat it as a single '+
+    '<b>Fire critical</b> in addition to all damage. Roll to put it out in the End Phase like any '+
+    'other fire. A ship hulked this way does not stay on fire and rolls normally on the '+
+    'catastrophic damage table.</div></div>';
+}
+
+/* A Berzerker Tide fleet may roll D3 extra critical rolls, and then may take no
+   special orders in the following turn (FL p.244). Neither book says whether the
+   extra rolls use the same threshold, so the app rolls them the same way and
+   says so. */
+function tideSide(){
+  var sc = R.score; if(!sc || !sc.winner) return null;
+  var out = [];
+  ["att","def"].forEach(function(k){
+    if(B.extraCritRolls(eSide(k)) && B.sideHas(eSide(k), "khorne")) out.push(k);
+  });
+  return out.length ? out : null;
+}
+function tideBlock(){
+  var sides = tideSide(); if(!sides) return "";
+  var h = [];
+  sides.forEach(function(k){
+    var used = R.tide && R.tide[k];
+    h.push('<div class="step'+(used?" done":"")+'"><div class="q"><b>Berzerker Tide</b> — '+
+      esc(sideName(k))+' may roll D3 extra critical rolls, but may then take no special '+
+      'orders next turn.</div>');
+    if(used){
+      h.push('<div class="q" style="color:var(--dim)">D3 rolled: <b>'+used.n+'</b> extra roll'+
+        (used.n===1?"":"s")+' at the same threshold. The books do not say whether the extra '+
+        'rolls use the same threshold, so they are rolled the same way.</div>');
+    } else {
+      h.push('<div class="actRow" style="margin:0"><button data-r="tide" data-c="'+k+
+        '">Use the Berzerker Tide</button></div>');
+    }
+    h.push('</div>');
+  });
+  return h.join("");
+}
+
+/* -------------------------------------------------------- catastrophic ---- */
+function drawCata(box){
+  var list = cataNeeded(), h = [];
+  h.push('<div class="verdict"><div class="head" style="color:var(--bad)">Catastrophic damage</div>'+
+    '<div class="sub">A ship reduced to zero by a boarding action is simply a drifting hulk — but these '+
+    'were finished off by the <b>extra damage from a critical hit</b>, so they roll on the '+
+    'Catastrophic Damage table as normal (p.90).</div></div>');
+  list.forEach(function(o){
+    var key = o.k+":"+o.i, res = R.cata[key], tid = cataTableIdFor(o.k, o.i);
+    if(!res && tid==="nocata4"){ R.cata[key] = B.cataLookup(0, tid); res = R.cata[key]; }
+    h.push('<div class="step"><div class="q"><b>'+esc(shipName(o.k,o.i))+'</b></div>');
+    if(!res){
+      var CT = B.CATA_TABLES[tid], dice = cataDiceFor(o.k,o.i), one = dice===1;
+      if(S.dice==="digital"){
+        h.push('<div class="actRow" style="margin:0"><button class="primary" data-r="cataroll" data-c="'+key+
+          '">Roll '+(dice===1?"D6":dice+"D6")+' on the '+esc(CT.label)+' table</button></div>');
+      }else{
+        h.push('<div class="q" style="color:var(--dim)">'+(dice===1?"D6":dice+"D6")+' on the '+esc(CT.label)+
+          ' table ('+esc(CT.page)+'):</div>');
+        h.push('<div style="display:grid;grid-template-columns:repeat(6,1fr);gap:5px">');
+        for(var n=(one?1:dice);n<=(one?6:12);n++) h.push('<button class="die" style="height:38px;font-size:15px" data-r="catatbl" data-c="'+key+'" data-v="'+n+'">'+(dice===3&&n===12?"12+":n)+'</button>');
+        h.push('</div>');
+      }
+    }else{
+      h.push('<div class="crit"><b>'+(res.roll===null?"":res.roll+" — ")+esc(res.name)+
+        (res.tableLabel && res.table!=="standard" ? ' <span style="color:var(--dim);font-weight:600;font-size:11px">'+esc(res.tableLabel)+'</span>' : '')+
+        '</b><span>'+esc(res.text)+'</span>'+
+        '<span style="color:var(--dim)">Blast Markers: '+esc(res.bm)+'</span></div>');
+    }
+    h.push('</div>');
+  });
+  h.push('<div class="spacer"></div>');
+  var left = list.some(function(o){ return !R.cata[o.k+":"+o.i]; });
+  h.push('<div class="actRow"><button class="primary" data-r="done"'+(left?" disabled":"")+'>Done</button></div>');
+  paint(box, h.join(""));
+}
+
+/* ------------------------------------------------------------------ events */
+document.getElementById("resultSheet").addEventListener("click", function(ev){
+  var t = ev.target.closest("[data-r]"); if(!t) return;
+  var c = t.dataset.c, v = +t.dataset.v;
+  switch(t.dataset.r){
+    case "close": closeResult(); break;
+    case "undo": closeResult(); break;
+    case "done": applyResult(); break;
+    case "next": {
+      var spent = [];
+      spendOncePerGame(spent);
+      S.round++;
+      closeResult();
+      if(spent.length) flash(spent.join(" · "));
+      break;
+    }
+    case "critroll":
+      R.crits.forEach(function(x){
+        if(x.hit!==null) return;
+        if(x.need>6){ x.hit=false; return; }
+        x.roll = x.need===0 ? null : roll();
+        x.hit = x.need===0 || (x.roll + x.bonus) >= x.need;
+      });
+      drawResult(); break;
+    case "critdie": {
+      var x = byKey(c); if(!x) break;
+      x.roll = v; x.hit = (v + x.bonus) >= x.need;
+      drawResult(); break;
+    }
+    case "crittable": {
+      var cc = byKey(c), tid = critTableIdFor(cc.to, cc.i), TT = B.CRIT_TABLES[tid];
+      setTable(cc, !TT ? 0 : (TT.dice===1 ? roll() : roll()+roll()));
+      break;
+    }
+    case "crittbl": setTable(byKey(c), v); break;
+    case "critex": { var ce = byKey(c); if(ce) ce.extra = v; drawResult(); break; }
+    case "critfollow": { var cf = byKey(c); if(cf) setFollowupFor(cf, v); drawResult(); break; }
+    case "tide": useTide(c); break;
+    case "reroll": reroll(c); break;
+    case "rerolldie": rerollDie(c, v, +(t.dataset.idx || 0)); break;
+    case "noreroll": startMain(); drawResult(); break;
+    case "alloc-": allocStep(c,-1); break;
+    case "alloc+": allocStep(c, 1); break;
+    case "apply": {
+      var need = cataNeeded();
+      if(need.length){ R.stage = "cata"; drawResult(); }
+      else applyResult();
+      break;
+    }
+    case "cataroll": {
+      var ck = c.split(":");
+      var ctid = cataTableIdFor(ck[0], +ck[1]);
+      var dice = cataDiceFor(ck[0], +ck[1]), sum = 0;
+      for(var di=0;di<dice;di++) sum += roll();
+      R.cata[c] = B.cataLookup(sum, ctid);
+      drawResult(); break;
+    }
+    case "catatbl": {
+      var ck2 = c.split(":");
+      R.cata[c] = B.cataLookup(v, cataTableIdFor(ck2[0], +ck2[1]));
+      drawResult(); break;
+    }
+  }
+});
+function useTide(k){
+  var n = 1 + Math.floor(rng()*3);
+  R.tide = R.tide || {};
+  R.tide[k] = {n:n};
+  var other = k==="att" ? "def" : "att";
+  var sc = R.score;
+  var need = (sc.winner===k) ? sc.critNeeds.win : sc.critNeeds.lose;
+  var bonus = B.critBonus(eSide(k));
+  var targets = livingIdx(other);
+  for(var i=0;i<n && targets.length;i++){
+    var t = targets[i % targets.length];
+    var c = {cid:"t"+k+i, to:other, i:t, from:k, need:need, bonus:bonus, roll:null, hit:null,
+             table:null, extra:null, followup:null, tide:true};
+    if(need > 6) c.hit = false; else if(need === 0) c.hit = true;
+    R.crits.push(c);
+  }
+  if(S.dice==="digital"){
+    R.crits.filter(function(c){ return c.tide && !c.table && c.hit!==false; }).forEach(function(c){
+      if(c.hit===null){ c.roll = roll(); c.hit = (c.roll + c.bonus) >= c.need; }
+      if(!c.hit) return;
+      var tid = critTableIdFor(c.to, c.i), T = B.CRIT_TABLES[tid];
+      setTableFor(c, T ? (T.dice===1 ? roll() : roll()+roll()) : 0, tid);
+    });
+  }
+  drawResult();
+}
+function byKey(key){
+  for(var n=0;n<R.crits.length;n++) if(R.crits[n].cid===key) return R.crits[n];
+  return null;
+}
+function setTable(c, n){
+  if(!c) return;
+  setTableFor(c, n);
+  drawResult();
+}
+function setFollowupFor(c, n){
+  if(!c || !c.followup) return;
+  c.followup.roll = n;
+  c.followup.result = B.followupLookup(c.followup.rule, n);
+}
+function allocStep(key, d){
+  var p = key.split(":"), k = p[0], i = +p[1];
+  var cur = R.alloc[k][i]||0, sc = R.score;
+  var ids = livingIdx(k);
+  var pool = ids.reduce(function(n,j){ return n + S[k].ships[j].dp; },0);
+  var cap = Math.min(sc.damage, pool);
+  var used = R.alloc[k].reduce(function(n,x){ return n+(x||0); },0);
+  if(d>0 && (used >= cap || cur >= S[k].ships[i].dp)) return;
+  if(d<0 && cur <= 0) return;
+  R.alloc[k][i] = cur + d;
+  drawResult();
+}
+
+/* Damage lands: the boarding damage as allocated, plus each critical's extra
+   damage on the ship that suffered that critical. Extra damage from a critical
+   never causes further critical hits (p.66). */
+function applyResult(){
+  var notes = [];
+  ["att","def"].forEach(function(k){
+    livingIdx(k).forEach(function(i){
+      var o = outcome(k,i);
+      /* an escort that suffers a critical hit is destroyed whatever its
+         damage points say (p.66) */
+      S[k].ships[i].dp = (o.state==="destroyed") ? 0 : o.fin;
+      if(o.state==="destroyed") notes.push(shipName(k,i)+" is destroyed");
+      else if(o.state==="hulk") notes.push(shipName(k,i)+" is a drifting hulk");
+      else if(o.state==="quadrant") notes.push(shipName(k,i)+" — boarded quadrant destroyed; the fort survives until all four quadrants are destroyed");
+      else if(o.state==="cata"){
+        var r = R.cata[k+":"+i];
+        notes.push(shipName(k,i)+" — "+(r?r.name:"catastrophic damage"));
+      }
+    });
+  });
+  spendOncePerGame(notes);
+  S.round = 1;
+  closeResult();
+  if(notes.length) flash(notes.join(" · "));
+}
+/* "+2 to one boarding dice roll per game" (FL p.372): once it has been used in
+   a resolved action, the app takes it off the ship so it cannot be used twice. */
+function spendOncePerGame(notes){
+  ["att","def"].forEach(function(k){
+    if(!prep || !prep[k].mods.some(function(m){ return m.id==="clanzwarlord"; })) return;
+    S[k].ships.forEach(function(u){
+      var j = (u.opts||[]).indexOf("clanzwarlord");
+      if(j>=0){ u.opts.splice(j,1); notes.push("Clanz Warlord’s +2 is used up for this game"); }
+    });
+  });
+}
+function flash(msg){
+  var d = document.createElement("div");
+  d.className = "warn";
+  d.style.cssText = "position:fixed;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom) + 14px);"+
+    "z-index:80;max-width:880px;margin:0 auto";
+  d.innerHTML = "<b>☠</b><div>"+esc(msg)+"</div>";
+  document.body.appendChild(d);
+  setTimeout(function(){ d.remove(); }, 6000);
+}
+
+/* The advisory banner is clamped when the board needs the room; this is how the
+   whole of it is still reachable. */
+function showRuleNote(){
+  var rules = prep ? prep.problems.filter(function(p){return p.level==="rule";}) : [];
+  if(!rules.length) return;
+  openSheet({title:"Rules reminder", sub:"", mode:"list",
+    items:function(){
+      return rules.map(function(p){
+        return '<div class="mline"><span class="v">!</span><span class="t">'+esc(p.text)+'</span></div>';
+      });
+    }, onPick:function(){}});
+}
+
+/* --------------------------------------------------------------- reference */
+function refResults(){
+  var h = ['<div class="mline tot"><span class="v"></span><span class="t"><b>Difference in scores</b></span><span class="p">p.90</span></div>'];
+  B.RESULTS.forEach(function(r){
+    if(r.diff===0){
+      h.push('<div class="mline"><span class="v num">0</span><span class="t">Draw — the ships grapple and fight again every End Phase</span></div>');
+      return;
+    }
+    var w = r.win===0?"auto":r.win+"+", l = r.lose>6?"none":r.lose+"+";
+    h.push('<div class="mline"><span class="v num">'+(r.diff===5?"5+":r.diff)+'</span><span class="t"><b>'+
+      r.name+'</b> — critical hits '+w+' / '+l+'</span></div>');
+  });
+  h.push('<div class="mline sub"><span class="v"></span><span class="t">The loser takes one damage point per point it lost by. A ship reduced to 0 damage points by a boarding action is automatically a drifting hulk — no Catastrophic Damage roll. Brace For Impact does not protect against boarding damage or boarding criticals (p.66).</span></div>');
+  return h;
+}
+function refCrits(){
+  /* the table shown is the one the ships actually on the board will roll on */
+  var tid = "standard";
+  ["def","att"].some(function(k){
+    if(!S[k].ships.length) return false;
+    var t = critTableIdFor(k, 0);
+    if(t !== "escort" && t !== "plus1" && B.CRIT_TABLES[t] && t !== "standard"){ tid = t; return true; }
+    return false;
+  });
+  var T = B.CRIT_TABLES[tid];
+  var h = ['<div class="mline tot"><span class="v"></span><span class="t"><b>'+
+    (T.dice===1?"D6":"2D6")+' '+esc(T.label)+'</b></span><span class="p">'+esc(T.page)+'</span></div>'];
+  T.rows.forEach(function(r){
+    h.push('<div class="mline"><span class="v num">'+(r.lo===r.hi?r.lo:r.lo+"-"+r.hi)+
+      '</span><span class="t">'+esc(r.name)+
+      (r.extra? ' <span style="color:var(--warn)">+'+r.extra+' damage</span>':'')+'</span></div>');
+  });
+  h.push('<div class="mline sub"><span class="v"></span><span class="t">Escorts are destroyed by any critical hit. A critical that cannot be applied becomes the next highest instead. Only these two rolls happen — damage points inflicted by a boarding action never cause further criticals.</span></div>');
+  return h;
+}
+function refSeq(){
+  return [
+  '<div class="mline tot"><span class="v"></span><span class="t"><b>End Phase, step 1</b></span><span class="p">p.88</span></div>',
+  '<div class="mline"><span class="v">1</span><span class="t">Declared in the <b>Movement Phase</b> when base contact was made. Those ships may not fire or launch ordnance this turn.</span></div>',
+  '<div class="mline"><span class="v">2</span><span class="t">Boarding value = damage points remaining, modified. The ship <b>being boarded</b> adds its remaining turrets.</span></div>',
+  '<div class="mline"><span class="v">3</span><span class="t">Both roll a D6 and add modifiers. Only the highest boarding-value modifier applies; the rest are cumulative.</span></div>',
+  '<div class="mline"><span class="v">4</span><span class="t">Highest total wins. Totals are not capped at 6.</span></div>',
+  '<div class="mline"><span class="v">5</span><span class="t">Never initiate in the enemy’s turn; you always defend normally.</span></div>',
+  '<div class="mline sub"><span class="v"></span><span class="t">Multi-ship: several ships may board one enemy, or one ship may board several. Resolve them together (each side\'s values added and race modifiers counted once) or separately. The losing side\'s owner distributes the damage, and a critical is rolled against every ship involved.</span></div>'];
+}
+function refMulti(){
+  return [
+  '<div class="mline tot"><span class="v">1</span><span class="t"><b>Combine each side</b> — add the boarding values of every participating ship. The defender also adds all remaining turrets or spore cysts. Side-wide race and situation modifiers are counted once unless a rule names each ship separately.</span></div>',
+  '<div class="mline"><span class="v">2</span><span class="t"><b>One opposed roll per side.</b> Each side rolls only once and adds its combined modifiers. Tyranids still roll 2D6 and keep the highest.</span></div>',
+  '<div class="mline"><span class="v">3</span><span class="t"><b>Boarding damage goes to the losing side.</b> The score difference is the damage pool. The losing side\'s owner distributes it among their participating ships, up to each ship\'s remaining DP; excess is wasted.</span></div>',
+  '<div class="mline"><span class="v">4</span><span class="t"><b>Both sides can still cause criticals.</b> Use the winner or loser critical threshold printed for the result. Each side makes one critical check against <b>every enemy ship</b> involved. A Grapple causes no criticals.</span></div>',
+  '<div class="mline"><span class="v">5</span><span class="t"><b>A critical belongs to its target ship.</b> Roll that ship\'s own critical table. Its extra damage is not part of the shared damage pool and cannot be moved to another ship. Any critical destroys an escort.</span></div>',
+  '<div class="mline tot"><span class="v">EX</span><span class="t"><b>Strike Cruiser vs four Vanguard drones:</b> after the one opposed roll, the Strike Cruiser\'s side checks for a critical separately against all four drones. The Tyranid group checks once against the Strike Cruiser. If the drones lose, their owner divides the boarding damage between them; if the cruiser loses, it takes the whole pool.</span></div>',
+  '<div class="mline sub"><span class="v"></span><span class="t">Digital mode rolls all checks automatically. Hand-dice mode asks for them one target ship at a time. One-against-many follows the creator clarification recorded in LUEMINUT decision 16.</span></div>'];
+}
+/* Set by the build: the build date and the number of ships. */
+var BUILD = typeof __BUILD__ !== "undefined" ? __BUILD__ : "dev";
+function refBattle(){
+  return ['<div class="mline tot"><span class="v"></span><span class="t"><b>This battle</b></span></div>',
+    '<div class="mline sub"><span class="v"></span><span class="t">Both fleets, both ships, their '+
+    'upgrades and their damage points are remembered in this browser until you change them, so the '+
+    'next End Phase is one tap away.</span></div>',
+    '<div class="mline sub"><span class="v"></span><span class="t">Applying damage writes the new '+
+    'damage points straight onto the two ships on the board.</span></div>',
+    '<div class="mline sub"><span class="v"></span><span class="t">Build <b>'+esc(BUILD)+
+    '</b>. If you report something, this is the number that says which version you have.</span></div>',
+    '<button class="opt" data-pick="reset" style="margin-top:6px"><span class="box">↺</span>'+
+    '<span class="txt"><b>Start over</b><span>Forget both fleets and begin a new battle.</span></span></button>'];
+}
+function showRef(tab){
+  var tabs = ["Order","Multi","Results","Crits","Battle"];
+  openSheet({title:"Reference", sub:"Rulebook v1.10", mode:"list", tabs:tabs, tab:tab===undefined?2:tab,
+    items:function(ti){ return ti===0?refSeq() : ti===1?refMulti() : ti===3?refCrits() : ti===4?refBattle() : refResults(); },
+    onPick:function(v){
+      if(v!=="reset") return;
+      askReset(null);
+    }});
+}
+
+function clearBattle(){
+  var dice = S.dice;
+  S = blankState(); S.dice = dice;
+  PCACHE = {}; pending = {att:[], def:[]};
+  closeSheet(); render();
+}
+function clearSide(k){
+  S[k] = blankSide();
+  resetRound(); closeSheet(); render();
+}
+function askReset(k){
+  var whole = !k, label = whole ? "whole battle" : (k==="att" ? "Boarder side" : "Defender side");
+  openSheet({title:"Reset "+label, sub:"This cannot be undone", mode:"list",
+    items:function(){ return [
+      '<div class="mline tot"><span class="v">&#8634;</span><span class="t"><b>'+
+      (whole?'Clear both sides?':'Clear '+label+'?')+'</b><br>'+
+      (whole?'Fleets, ships, damage points and battle conditions will be removed. Your dice preference stays the same.':'Its fleet, ships, damage points and conditions will be removed. The other side stays untouched.')+'</span></div>',
+      '<button class="opt" data-pick="confirm" style="border-color:#5c3a36"><span class="box" style="border-color:#5c3a36;color:#e0584a">&#10005;</span><span class="txt"><b>Yes, reset '+label+'</b><span>Remove the saved setup now.</span></span></button>'
+    ]; },
+    onPick:function(v){ if(v==="confirm") { if(whole) clearBattle(); else clearSide(k); } }
+  });
+}
+
+/* ------------------------------------------------------------------- wiring */
+document.getElementById("diceSheet").addEventListener("click", function(ev){
+  var t = ev.target.closest("[data-dice]"); if(!t) return;
+  S.dice = t.dataset.dice;
+  render();
+});
+document.getElementById("refBtn").addEventListener("click", function(){ showRef(); });
+document.getElementById("resetAllBtn").addEventListener("click", function(){ askReset(null); });
+document.getElementById("modeBtn").addEventListener("click", function(){
+  S.dice = S.dice==="digital" ? "physical" : "digital";
+  pending = {att:[], def:[]};
+  render();
+});
+document.getElementById("swapBtn").addEventListener("click", function(){
+  var a = S.att; S.att = S.def; S.def = a;
+  resetRound();                         /* this is a new action with a new boarder */
+  render();
+});
+load();
+render();
+window.S = S; window.render = render; window.BOARDING = B;
+})();

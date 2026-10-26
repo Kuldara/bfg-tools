@@ -1,0 +1,305 @@
+{
+  "_guide": "The list upgrades' effect classes, read from the book by hand (work queue J1, Codex review 10.9.2026). audit_upgrades.py checks that every list upgrade row offered on a ship's card hits exactly one class and that the effect the class requires is in the data. Classes: stat = mod/set (the stats line changes), weapon = swp/add/del/sw (a weapon row changes), text = the card's upgrade box states the book's rule (the book section's own sentence, the row's desc or a rule bound with domain.js's up key), fleet = a fleet-level purchase with no per-ship effect. Commander rows (at -> a commander) and rows covered by the ship's own option are not classified: they print on the commander card or drop out of the offer. The first matching row wins.",
+  "classes": [
+    {
+      "match": "re-rolls?$",
+      "list": "^Demiurg",
+      "class": "text",
+      "page": 486,
+      "why": "The fleet's re-rolls, only for Demiurg ships; the card states the limit on use."
+    },
+    {
+      "match": "re-rolls?$",
+      "list": "Crusade",
+      "class": "text",
+      "page": 98,
+      "why": "The Fortress-Monastery's own re-rolls (p.98): only for its own command checks, with the Master of the Fleet for the whole fleet."
+    },
+    {
+      "match": "re-rolls?$",
+      "list": "^Necrons",
+      "class": "text",
+      "page": 404,
+      "why": "The Necron fleet's re-rolls, bought once for the fleet (p.404)."
+    },
+    {
+      "match": "^Imperial Power Ram",
+      "class": "text",
+      "page": 176,
+      "why": "p.32/118/176: one automatic hit when ramming (the power_ram rule)."
+    },
+    {
+      "match": "^Torpedo bombers( \\((Eldar or Tau|Tau) vessel\\))?$",
+      "class": "text",
+      "page": 22,
+      "why": "p.22: the bombers attack with torpedoes from afar; the price per launch bay strength."
+    },
+    {
+      "match": "^Special torpedoes \\(",
+      "class": "text",
+      "page": 19,
+      "why": "p.19: special torpedoes are bought as a roll on a D6 table before the game; the type is not known when building, so the card prints the table and the types' rules (the special_torpedoes rule, p.19-21)."
+    },
+    {
+      "match": "^Orbital mines$",
+      "class": "weapon",
+      "page": 23,
+      "why": "p.23: mines replace the launch bay's attack craft - the launch bay rows turn into mine rows (swp permine, 10 cm p.512, one mine per bay strength); the mine rule is on the card. Not with torpedo bombers or the ship's own attack craft choices. J21 (10.9.2026, Bug Hunt finding 1)."
+    },
+    {
+      "match": "^Shark assault boats",
+      "class": "text",
+      "page": 49,
+      "why": "p.49: the Emperor's launch bays can carry Shark assault boats."
+    },
+    {
+      "match": "^\\+1 turret",
+      "class": "stat",
+      "page": 50,
+      "why": "p.50 Bakka, p.121 Mechanicus-saattajat: +1 torni."
+    },
+    {
+      "match": "^Honour Guard$",
+      "class": "text",
+      "page": 96,
+      "why": "p.96: a teleport attack with two dice (the honour_guard rule)."
+    },
+    {
+      "match": "^Mechanicus turret refit",
+      "class": "stat",
+      "page": 120,
+      "why": "p.120: +1 turret for all Mechanicus capital ships."
+    },
+    {
+      "match": "^Mechanicus dorsal lance battery",
+      "class": "weapon",
+      "page": 120,
+      "why": "p.120: 60 cm dorsal lance."
+    },
+    {
+      "match": "^Nova Cannon instead of prow torpedoes",
+      "class": "weapon",
+      "page": 121,
+      "why": "p.121: keulatorpedot -> Nova Cannon."
+    },
+    {
+      "match": "^Plasma-boosted batteries",
+      "class": "weapon",
+      "page": 121,
+      "why": "p.121: 30 cm batteries -> 45 cm."
+    },
+    {
+      "match": "^Dorsal lance instead of prow torpedoes",
+      "class": "weapon",
+      "page": 121,
+      "why": "p.121: Endeavour/Endurance torpedot -> 30 cm dorsal lance."
+    },
+    {
+      "match": "^Embarks the Inquisitor",
+      "class": "weapon",
+      "page": 142,
+      "why": "The inquisitor's ship: the launch bays are halved and carry Thunderhawks."
+    },
+    {
+      "match": "^Grey Knights (Terminators|Honour Guard)$",
+      "class": "text",
+      "page": 145,
+      "why": "p.145: the section's own sentences print."
+    },
+    {
+      "match": "^(Xenotech System|Choose the Xenotech)",
+      "class": "text",
+      "page": 175,
+      "why": "p.175: the player rolls or chooses the Xenotech system; the card states the table."
+    },
+    {
+      "match": "^Summoned through the Webway Portal",
+      "class": "text",
+      "page": 337,
+      "why": "p.337: a way of buying - the ship is bought at half price and arrives from off the table through the Haven's portal; the card's row states the arrival rule (J175 d)."
+    },
+    {
+      "match": "^Crew skill, rolled randomly",
+      "class": "text",
+      "page": 175,
+      "why": "p.175: the player rolls the crew skill from the Rulebook's table (p.159); the card states the table and how the price is counted (J44)."
+    },
+    {
+      "match": "^Mark of (Nurgle|Khorne|Slaanesh|Tzeentch)$",
+      "class": "text",
+      "page": 258,
+      "why": "A Mark that comes built in, 0 points, a locked info row (J142). The barges p.258-264: 'This ship bears the Mark of X as part of its point cost'; the Daemonships p.240/244/248: the Mark 'already included in the cost'. The row's desc is the book's sentence; no mod key, because the profile already includes the Mark (Terminus Est hp 13) and the Daemonship row carries Nurgle's +1 hp. The label is without 'The' on purpose, so the card's Mark rules and mark_paid do not trigger a second time."
+    },
+    {
+      "match": "^The Mark of Nurgle$",
+      "class": "stat",
+      "page": 240,
+      "why": "p.232/240: +1 Damage Point."
+    },
+    {
+      "match": "^The Mark of (Slaanesh|Khorne|Tzeentch)$",
+      "class": "text",
+      "page": 232,
+      "why": "p.232-248: Markin saanto (mark_*-saannot)."
+    },
+    {
+      "match": "Chaos Space Marine crew$",
+      "class": "text",
+      "page": 224,
+      "why": "p.224-225: CSM-miehiston saannot (csm_crew)."
+    },
+    {
+      "match": "^(Wage of Sin: )?Chosen Terminators",
+      "class": "text",
+      "page": 224,
+      "why": "p.224: a teleport attack with two dice (chosen_terminators)."
+    },
+    {
+      "match": "^Daemonship:",
+      "class": "text",
+      "page": 227,
+      "why": "p.227-249: the Daemonship rules (daemonship). The Nurgle, Khorne and Slaanesh Daemonship includes the Mark (Nurgle: mod hp +1), the Black Crusade's and Tzeentch's do not - a stat effect is not the class's condition."
+    },
+    {
+      "match": "^(Warp Beasts|Strand of Fortune|Hives of Nurgle|Ark of Pestilence|Berzerker Tide|Veil of Lust|Siren.s Summon)$",
+      "class": "text",
+      "page": 236,
+      "why": "p.236-248 Forces of Chaos: the section's own sentences print."
+    },
+    {
+      "match": "^Ghostship$",
+      "class": "text",
+      "page": 307,
+      "why": "p.307: Ghostship-saannot (ghostship)."
+    },
+    {
+      "match": "^Aspect Warrior Host$",
+      "class": "text",
+      "page": 305,
+      "why": "p.305: Aspect Warrior Host (aspect_host)."
+    },
+    {
+      "match": "^Leech torpedoes$",
+      "class": "text",
+      "page": 347,
+      "why": "p.347: leech torpedoes, loaded with their own Reload Ordnance roll."
+    },
+    {
+      "match": "^Dakka Dakka",
+      "class": "stat",
+      "page": 365,
+      "why": "p.365/367: +2 turrets for a capital ship, +1 for an escort."
+    },
+    {
+      "match": "^Torpedo-bommas$",
+      "class": "text",
+      "page": 360,
+      "why": "p.360: torpedo-bommas; the price per launch bay strength."
+    },
+    {
+      "match": "^Boarding torpedoes( \\(Space Hulk\\))?$",
+      "class": "text",
+      "page": 360,
+      "why": "p.360/372: the torpedoes can be boarding torpedoes (Hit & Run)."
+    },
+    {
+      "match": "^(Soopa Boostas|Extra Power Fields|Extra Turrets|Maniac Turrets)",
+      "class": "stat",
+      "page": 370,
+      "why": "p.370: +5 cm / +1 kilpi / +2 tornia (saattaja +1) / tornit D3."
+    },
+    {
+      "match": "^(Looted Lances|Shokk-Attack Lance)",
+      "class": "weapon",
+      "page": 370,
+      "why": "p.370-371: heavy gunz -> lance battery / prow heavy gunz -> Shokk-attack lance."
+    },
+    {
+      "match": "^(Looted Torpedoes|Mad Meks|Maniac Gunners|Mega-Armoured Boarding Parties|Prow Ram|Tellyporta|Klaws|Assault Karrier)",
+      "class": "text",
+      "page": 370,
+      "why": "p.370-371: the Gubbin's rule in the card's upgrade box."
+    },
+    {
+      "match": "^Clan: Evil Sunz",
+      "class": "stat",
+      "page": 369,
+      "why": "p.369: +5 cm."
+    },
+    {
+      "match": "^Clan: ",
+      "class": "text",
+      "page": 369,
+      "why": "p.369: the clan's rule in the card's upgrade box."
+    },
+    {
+      "match": "^Sepulchre$",
+      "class": "text",
+      "page": 404,
+      "why": "Necron Sepulchre (sepulchre-saanto)."
+    },
+    {
+      "match": "^(Solar Vanes|Extra Spore Cysts|Reinforced Carapace)",
+      "class": "stat",
+      "page": 426,
+      "why": "p.426: +5 cm / +1 spore / +1 Hit."
+    },
+    {
+      "match": "^Mega-Spore Mines$",
+      "class": "weapon",
+      "page": 427,
+      "why": "p.427: launch bays -> spore mine launchers, the price per launch bay."
+    },
+    {
+      "match": "^(Adrenaline Sacs|Psychic Scream|More Discharge Vents|Mucous Membrane|Accelerated Healing|Drone Link|Tenacity)$",
+      "class": "text",
+      "page": 426,
+      "why": "p.426-427: the bio-enhancement's rule in the card's upgrade box."
+    },
+    {
+      "match": "^Hive Mind (Influence re-roll|Imperative)$",
+      "class": "text",
+      "page": 430,
+      "why": "p.430: a Hive Mind re-roll / automatic pass; a fleet-level purchase, the card states its use."
+    },
+    {
+      "match": "^Increase to Ld 9$",
+      "class": "text",
+      "page": 430,
+      "why": "p.430: the hive ship's Ld 9 (Ld is not a stat on the card, the card states the value)."
+    },
+    {
+      "match": "marker$",
+      "list": "^Tyranids",
+      "class": "fleet",
+      "page": 431,
+      "why": "p.431: the ordnance markers are bought for the fleet (at most 10 % of the points), they are not the ship's equipment."
+    },
+    {
+      "match": "^Improved Logic Engines$",
+      "class": "text",
+      "page": 453,
+      "why": "p.453: Kor'O'Mesme's ship ignores the Ld effects of blast marker contact."
+    },
+    {
+      "match": "^(Pyro-acid battery|Feeder tentacles|Massive claws|Bio-plasma discharge|Torpedoes|Feeder tentacles & massive claws|Bio-plasma spines|Launch bays|Prow Torpedoes|Phantom Lance|Mimic Engines)$",
+      "class": "weapon",
+      "page": 430,
+      "why": "Tyranid and Dark Eldar weapon choices: the ship's own options cover these; if the row stays offered, it must change the armament."
+    },
+    {
+      "match": "^Thunderhawk Gunships \\(Chaos Space Marine crew\\)$",
+      "list": "^Chaos",
+      "class": "text",
+      "page": 235,
+      "why": "J213: a ship with a Space Marine crew may carry Thunderhawks and then only them (p.235); the card states the limit, the stats do not change."
+    },
+    {
+      "match": "^Fleet Defence Turrets \\(instead of a Mechanicus Gift\\)$",
+      "list": "^Imperial Navy — Bakka",
+      "class": "text",
+      "page": 50,
+      "why": "J217: Bakka's Adeptus Mechanicus ship takes fleet defence turrets instead of the Mechanicus gift (p.50); the number of turrets does not change, the card states the rule."
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{"id": "S0841", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F373", "pok": "ok", "n": "Kampanjan komentaja-Warlord ('In campaigns, nominate one Warlord') kalleimmalle alukselle."}
+{"id": "S0842", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F373", "pok": "ok", "n": "Kampanja."}
+{"id": "S0843", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F373", "pok": "ok", "n": "Kampanja."}
+{"id": "S0844", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F373", "pok": "ok", "n": "Kampanjakomentajan re-rollit."}
+{"id": "S0845", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F373", "pok": "ok", "n": "Kampanja."}
+{"id": "S0846", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F370", "pok": "ok", "n": "Kerronta."}
+{"id": "S0847", "l": "TAUSTA", "a": "drop", "f": "lore", "p": "F370", "pok": "ok", "n": "Kerronta."}
+{"id": "S0848", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F370", "pok": "ok", "n": "up_budget samassa osiossa (SRC)."}
+{"id": "S0849", "l": "VALVOTTU", "a": "checked", "f": "text_mismatch", "p": "F370", "pok": "ok", "n": "Sama up_budget-src."}
+{"id": "S0850", "l": "KAMPANJA", "a": "campaign", "f": "campaign", "p": "F370", "pok": "ok", "n": "Kampanja."}
+{"id": "S0851", "l": "PELI", "a": "play", "f": "victory_points", "p": "F370", "pok": "ok", "n": "Voittopisteet."}
+{"id": "S0852", "l": "PELI", "a": "play", "f": "victory_points", "p": "F370", "pok": "ok", "n": "Voittopisteet."}
+{"id": "S0853", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F370", "pok": "ok", "n": "Soopa Boostas."}
+{"id": "S0854", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F370", "pok": "ok", "n": "Extra Power Fields; 'Not for escorts' valvottu ROW_CONDS cap=1."}
+{"id": "S0855", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F370", "pok": "ok", "n": "Extra Turrets."}
+{"id": "S0856", "l": "VALVOTTU", "a": "checked", "f": "group_rule", "p": "F370", "pok": "ok", "n": "Extra Turrets ja Maniac Turrets eivät yhdessä (upgrades.py:180–183).", "vk": "ajo ok"}
+{"id": "S0857", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F370", "pok": "ok", "n": "Maniac Turrets; ei saattajille (ROW_CONDS)."}
+{"id": "S0858", "l": "VALVOTTU", "a": "checked", "f": "group_rule", "p": "F370", "pok": "osittain", "n": "Sama poissulku toisin päin; lause liian lyhyt haettavaksi.", "vk": "ajo ok"}
+{"id": "S0859", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F370", "pok": "ok", "n": "Shokk-Attack Lance -vaihto."}
+{"id": "S0860", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F370", "pok": "ok", "n": "Edellisen kantama."}
+{"id": "S0861", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F370", "pok": "ok", "n": "Mad Meks."}
+{"id": "S0862", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F370", "pok": "ok", "n": "Prow Ram."}
+{"id": "S0863", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F371", "pok": "ok", "n": "Tellyporta."}
+{"id": "S0864", "l": "RAKENNE", "a": "guaranteed", "f": "no_limit", "p": "F371", "pok": "ok", "n": "More Gubbins ilman budjettia."}
+{"id": "S0865", "l": "VALVOTTU", "a": "checked", "f": "row_cond", "p": "F371", "pok": "ok", "n": "cap=1 (upgrades.py:109)."}
+{"id": "S0866", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F371", "pok": "ok", "n": "Klaws; Gruntin oma optio (upgrades.py:294)."}
+{"id": "S0867", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F371", "pok": "ok", "n": "Klaws."}
+{"id": "S0868", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F371", "pok": "ok", "n": "Klaws."}
+{"id": "S0869", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F371", "pok": "ok", "n": "Klaws."}
+{"id": "S0870", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F371", "pok": "ok", "n": "Klaws."}
+{"id": "S0871", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F371", "pok": "ok", "n": "Klaws."}
+{"id": "S0872", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F371", "pok": "ok", "n": "Klaws."}
+{"id": "S0873", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F371", "pok": "ok", "n": "Klaws."}
+{"id": "S0874", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F371", "pok": "ok", "n": "Snotling launcha -vaihto; ei saattajille."}
+{"id": "S0875", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F371", "pok": "ok", "n": "Snotlingit."}
+{"id": "S0876", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F371", "pok": "ok", "n": "Snotlingit."}
+{"id": "S0877", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F371", "pok": "ok", "n": "Snotlingit."}
+{"id": "S0878", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F371", "pok": "ok", "n": "Snotlingit."}
+{"id": "S0879", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F371", "pok": "ok", "n": "Snotlingit."}
+{"id": "S0880", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F371", "pok": "ok", "n": "Snotlingit."}
+{"id": "S0881", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F371", "pok": "ok", "n": "Snotlingit."}
+{"id": "S0882", "l": "PELI", "a": "play", "f": "weapon_rule", "p": "F371", "pok": "ok", "n": "Snotlingit."}
+{"id": "S0883", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F371", "pok": "ok", "n": "Assault Karrier (upgrades.py:209)."}
+{"id": "S0884", "l": "KUVAUS", "a": "row", "f": "option_effect", "p": "F371", "pok": "ok", "n": "Assault Karrier."}
+{"id": "S0885", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F370", "pok": "ok", "n": "Mob Rule."}
+{"id": "S0886", "l": "VALVOTTU", "a": "checked", "f": "squadron_rule", "p": "F370", "pok": "ok", "n": "Tiddla-laivue 3–10 on valvottu (J62); referenssi 25 #214 on vanhentunut."}
+{"id": "S0887", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F370", "pok": "ok", "n": "Young Gunz: ilmainen saattaja Ld-heiton jälkeen."}
+{"id": "S0888", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F370", "pok": "ok", "n": "Young Gunz."}
+{"id": "S0889", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F370", "pok": "ok", "n": "Young Gunz."}
+{"id": "S0890", "l": "PELI", "a": "play", "f": "faction_rule", "p": "F370", "pok": "ok", "n": "Young Gunz."}
+{"id": "S0891", "l": "OMINAISUUS", "a": "feature", "f": "squadron_group", "p": "F369", "pok": "ok", "n": "Warlordin laivueet samaa klaania. ROADMAP 1.2: klaani ryhmätasona."}
+{"id": "S0892", "l": "KUVAUS", "a": "row", "f": "option_price", "p": "F369", "pok": "ok", "n": "Klaanipäivitys riveinä; värivaatimus on mallisääntö."}
+{"id": "S0893", "l": "TARKISTA", "a": "keep", "f": "modelling", "p": "F369", "pok": "ok", "n": "Klaanivärien tulkinta pelaajien välillä."}
+{"id": "S0894", "l": "TAUSTA", "a": "drop", "f": "intro", "p": "F369", "pok": "ok", "n": "Värit hintarivien jälkeen."}
+{"id": "S0895", "l": "TAUSTA", "a": "drop", "f": "intro", "p": "F369", "pok": "ok", "n": "Ei velvoita."}
+{"id": "S0896", "l": "RAKENNE", "a": "guaranteed", "f": "group_rule", "p": "F369", "pok": "ok", "n": "Klaani- ja Gubbins-rivit eri ryhmissä."}
+{"id": "S0897", "l": "OMINAISUUS", "a": "feature", "f": "squadron_group", "p": "F369", "pok": "ok", "n": "Kroozer-laivueen jokainen alus ostaa klaanin erikseen. Kroozerit ovat sovelluksessa erillisiä yksiköitä, joten pakkoa ei valvota."}
+{"id": "S0898", "l": "PELI", "a": "play", "f": "victory_points", "p": "F369", "pok": "ok", "n": "Voittopisteet."}
+{"id": "S0899", "l": "PELI", "a": "play", "f": "victory_points", "p": "F369", "pok": "ok", "n": "Voittopisteet."}
+{"id": "S0900", "l": "ROSKA", "a": "fix", "f": "table_merge", "p": "F369", "pok": "osittain", "x": "table", "n": "Hintarivin väri '/Black' liimattu Goffien kerronnan alkuun."}

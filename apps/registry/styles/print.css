@@ -1,0 +1,49 @@
+/* ============================================================== PRINT ====
+   The card sheet: A4 portrait, 2 cards, 144 x 135 mm. Sizes and colours
+   match the project's printed ship cards (BFG_Fleet_Cards_*_150pct_2up_A4.pdf). */
+.sheet{display:none}
+body.card-audit .topbar,body.card-audit .work,body.card-audit .swipenav{display:none!important}
+body.card-audit{background:#fff}
+body.card-audit .sheet{display:block}
+body.card-audit .page{margin:0}
+/* Without this the browser drops every background colour when printing and
+   the card comes out grey. Applies to the whole sheet and its children. */
+.sheet,.sheet *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+@media print{
+  html,body{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  /* .swipenav: the phone pill (J238) shows below 1020 px, and an A4 page is
+     narrower, so without this it printed as an extra page with the word
+     "swipe" on every sheet (found by sheet_check.py, 26.10.2026). */
+  .topbar,.work,.swipenav{display:none!important}
+  body{background:#fff;color:#000}
+  .sheet{display:block}
+}
+.page{
+  width:210mm;height:297mm;position:relative;background:#fff;
+  page-break-after:always;break-after:page;
+  font-family:"IBM Plex Sans",Arial,Helvetica,sans-serif;color:#211F20;
+  /* Current production format. A true 6 x 6 in = 152.4 mm would need 1-up A4
+     or 2-up A3, because two of them do not fit on A4's 297 mm page. */
+  --card-w:144mm;--card-h:135mm;--card-x:33mm;
+  --card-top:16.3mm;--card-bottom:156.7mm;
+}
+/* A sheet at another paper or card size (print setup, user 13.10.2026): the
+   page is the paper, each card stands in a slot of the printed size and is
+   scaled into it whole - text, lines and boxes alike. .nat takes the scale
+   off while fitCards measures: it compares scaled blocks with unscaled box
+   heights, so it must see every card at its own 144 x 135 mm. */
+/* contain:size is not for speed. A card made smaller keeps its full-size
+   layout box, which runs past the bottom of the sheet, and the print engine
+   cut such a card in two at the page boundary (seen in the PDF, 13.10.2026;
+   overflow:hidden does not stop it - when printing, a clipping box is split
+   like any other). A box under size containment is printed in one piece. */
+.page.ps{overflow:hidden}
+.page.ps .slot{position:absolute;overflow:hidden;contain:size layout paint}
+.page.ps .slot .k{left:0;top:0;transform:scale(var(--ps));transform-origin:top left}
+.sheet.nat .page.ps .slot .k{transform:none}
+.pghead{position:absolute;left:12mm;right:12mm;top:6mm;display:flex;
+  align-items:baseline;gap:6mm}
+.pghead b{font:700 8pt/1.2 var(--disp);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;flex:none}
+.pghead i{font-style:normal;font:400 5.6pt/1.3 var(--sans);color:#6B6769;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.pghead .rt{margin-left:auto;font:400 5.6pt/1.2 var(--mono);color:#6B6769;white-space:nowrap}
+

@@ -1,0 +1,626 @@
+/* ======================================================= PLAY LAYER ===== */
+/* Card identity tokens: the printed card is paper-coloured in both themes;
+   the phone card goes dark at a night table, so its surfaces are tokens. */
+:root{
+  --card:#FBF9F4; --card-ink:#211F20; --card-mute:#6B6769; --card-rule:#D8D3CB;
+  --acc:#D1792A; --cr:#F4E5E6; --cr-ink:#9A5F62; --brace:#2F6B48; --brace-wash:#DDEBE2;
+  --tap:44px; --big:56px;
+  /* squadron colours (user 30.9.2026): every squadron its own, strong
+     enough for a frame on either card colour and white tag text */
+  --sq1:#B97512; --sq2:#2C7FC4; --sq3:#8A4FC4; --sq4:#2E8A5E; --sq5:#C4492F; --sq6:#B8407E;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --card:#1B232C; --card-ink:#E4EAF0; --card-mute:#8F9CA9; --card-rule:#2C3945;
+    --acc:#E0955A; --cr:#3A2224; --cr-ink:#E5A2A6; --brace:#6FBF8E; --brace-wash:#162C21;
+  }
+}
+:root[data-theme="dark"]{
+  --card:#1B232C; --card-ink:#E4EAF0; --card-mute:#8F9CA9; --card-rule:#2C3945;
+  --acc:#E0955A; --cr:#3A2224; --cr-ink:#E5A2A6; --brace:#6FBF8E; --brace-wash:#162C21;
+}
+
+*{box-sizing:border-box}
+html{overscroll-behavior-y:none}
+body{margin:0;background:var(--ground);color:var(--ink);font:15px/1.4 var(--sans);-webkit-font-smoothing:antialiased;
+  padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}
+button,input,select,textarea{font:inherit;color:inherit}
+button{background:none;border:0;padding:0;margin:0;text-align:inherit;cursor:pointer;touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* Tap and click feedback (user 30.9.2026): every control answers the press
+   where the finger is - a short press-in and a darker fill. Only transform
+   and filter change, never the size, so nothing around the control moves.
+   Hover tints only on devices that really hover; the keyboard keeps the
+   focus ring; reduced motion keeps the tint and drops the movement. */
+:where(button,a.btn,a.tool,[role=button],[data-act]:not(.menu),summary){-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+:where(button,a.btn,a.tool,[role=button],[data-act]:not(.menu):not(span)){transition:transform .09s ease-out,filter .12s ease-out,background-color .15s,border-color .15s,color .15s}
+:where(button,a.btn,a.tool,[role=button],[data-act]:not(.menu):not(span)):not([disabled]):active{transform:scale(.96);filter:brightness(.82)}
+:where(summary):active{filter:brightness(.88)}
+@media (hover:hover){:where(button,a.btn,a.tool,[role=button]):not([disabled]):hover{filter:brightness(1.12)}}
+@media (prefers-reduced-motion:reduce){:where(button,a.btn,a.tool,[role=button],[data-act]):active{transform:none}}
+textarea,select{font-size:16px}
+h1,h2,h3{font-family:var(--disp);letter-spacing:.02em;margin:0}
+.mono{font-family:var(--mono)}
+small{font-size:12px}
+
+/* --- shell ------------------------------------------------------------ */
+.app{min-height:100vh;display:flex;flex-direction:column}
+@supports (min-height:100dvh){.app{min-height:100dvh}}
+.top{position:sticky;top:0;z-index:5;background:var(--panel);border-bottom:1px solid var(--line);
+  padding:max(8px,env(safe-area-inset-top)) 12px 8px;display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.top h1{font-size:17px;text-transform:uppercase;flex:1 1 100%;white-space:nowrap;display:flex;align-items:baseline;gap:8px}
+.top h1 .lock{font:700 12px var(--mono);color:var(--bad);letter-spacing:.04em}
+.top h1 small{display:block;font:12px/1.2 var(--mono);color:var(--ink-3);text-transform:none;letter-spacing:0;white-space:normal}
+.pill{display:inline-flex;align-items:center;gap:4px;min-height:var(--tap);padding:0 9px;border-radius:8px;
+  border:1px solid var(--line);background:var(--sunk);font:600 12px/1 var(--sans);letter-spacing:.02em;color:var(--ink-2)}
+.pill.on{background:var(--accent-wash);border-color:var(--accent);color:var(--accent-ink)}
+.pill.bad{background:var(--bad-wash);border-color:var(--bad);color:var(--bad)}
+.pill.warn{background:var(--warn-wash);border-color:var(--warn);color:var(--warn)}
+.pill b{font-size:15px}
+.ico{min-width:var(--tap);min-height:var(--tap);display:inline-flex;align-items:center;justify-content:center;
+  border-radius:8px;border:1px solid var(--line);background:var(--sunk);font:600 12px var(--mono)}
+/* The top bar's own buttons (user 30.9.2026: they looked hand-drawn): one
+   family - a group of equal buttons, each an outline icon over nothing but
+   its word, the same ink; the state (Info on) is the only colour. */
+.tools{display:flex;gap:4px;margin-left:auto}
+.tool{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 10px;
+  border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--ink-2);
+  font:600 12px/1 var(--sans);letter-spacing:.02em;text-decoration:none;cursor:pointer}
+.tool svg{width:17px;height:17px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tool:hover{background:var(--sunk);color:var(--ink)}
+.tool.on{background:var(--accent-wash);border-color:var(--accent);color:var(--accent-ink)}
+.tool[disabled]{opacity:.35;cursor:default}
+.tool[disabled]:hover{background:transparent;color:var(--ink-2)}
+@media (max-width:420px){ .tool{padding:0 8px;gap:4px} .tool span{font-size:11px} }
+/* J235: four tools in the game's top bar - on a phone the word goes under
+   the icon, so the turn keeps its room */
+@media (max-width:480px){ .top.one .tool{flex-direction:column;gap:1px;min-width:46px;padding:3px 5px} .top.one .tool span{font-size:9.5px;line-height:1} .top.one .tools{gap:3px} }
+.main{flex:1;padding:8px 8px 96px}
+.bottom{position:sticky;bottom:0;z-index:5;background:var(--panel);border-top:1px solid var(--line);
+  padding:8px 12px max(8px,env(safe-area-inset-bottom));display:flex;gap:8px;align-items:center}
+.bottom .turnbtn{flex:1;min-height:var(--big);border-radius:10px;background:var(--accent);color:#fff;
+  font:700 16px/1 var(--disp);letter-spacing:.06em;text-transform:uppercase;text-align:center}
+.bottom .turnbtn.enemy{background:var(--ink-2)}
+.bottom .vp{font:12px/1.3 var(--mono);color:var(--ink-3);text-align:right;white-space:nowrap}
+.bottom .vp b{display:block;font-size:16px;color:var(--ink)}
+.note{margin:0 0 8px;padding:8px 12px;border-radius:8px;background:var(--warn-wash);color:var(--warn);font-size:13px}
+.note.bad{background:var(--bad-wash);color:var(--bad)}
+
+/* --- load & setup ----------------------------------------------------- */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;margin:0 0 12px;box-shadow:var(--shadow)}
+.card h2{font-size:18px;text-transform:uppercase;margin-bottom:6px}
+.card p{margin:4px 0;color:var(--ink-2);font-size:14px}
+.card ul{margin:6px 0;padding-left:18px;font-size:13px;color:var(--ink-2)}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;min-height:var(--big);padding:8px 14px;border-radius:10px;
+  background:var(--accent);color:#fff;font:700 15px/1.2 var(--disp);letter-spacing:.05em;text-transform:uppercase;width:100%;margin-top:8px}
+.btn.sec{background:var(--sunk);color:var(--ink);border:1px solid var(--line)}
+.btn.warn{background:var(--warn-wash);color:var(--warn);border:1px solid var(--warn)}
+.btn[disabled]{opacity:.45}
+.btn small{font:12px var(--mono);text-transform:none;letter-spacing:0;opacity:.85}
+textarea{width:100%;min-height:120px;border-radius:8px;border:1px solid var(--line);background:var(--sunk);padding:10px;color:var(--ink);font-family:var(--mono)}
+.setrow{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--line-soft)}
+.setrow .who{flex:1 1 140px;min-width:0}
+.setrow .who b{display:block;font-family:var(--disp);font-size:16px;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.setrow .who small{color:var(--ink-3)}
+/* the ship's name, to type over (16 px: a smaller field zooms the page on iOS) */
+.setrow .who input.nm{display:block;width:100%;min-width:0;box-sizing:border-box;min-height:38px;padding:4px 2px;margin:0 0 2px;
+  font-family:var(--disp);font-size:16px;text-transform:uppercase;color:var(--ink);background:transparent;
+  border:0;border-bottom:1px dashed var(--ink-3);border-radius:0}
+.setrow .who input.nm::placeholder{color:var(--ink-3)}
+.setrow .who input.nm:focus{outline:none;border-bottom:2px solid var(--accent);background:var(--sunk)}
+.seg{display:flex;gap:4px}
+.seg button{min-width:var(--tap);min-height:var(--tap);border-radius:8px;border:1px solid var(--line);background:var(--sunk);
+  font:700 18px var(--mono);display:flex;align-items:center;justify-content:center}
+.seg button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.seg button.sq{font-size:14px;min-width:52px}
+/* J235: the squadron switch is no Ld tile - a pill of its own under the name */
+.setrow .sqb{display:inline-flex;align-items:center;min-height:32px;margin-top:5px;padding:0 13px;border-radius:999px;border:1.5px dashed var(--sq2);background:none;color:var(--sq2);font:700 12px/1 var(--mono);letter-spacing:.04em}
+.setrow .sqb.on{border-style:solid;background:var(--sqc);border-color:var(--sqc);color:#fff}
+/* a ship still without its Ld, and why Start is grey */
+.setrow.need{box-shadow:inset 3px 0 0 var(--warn);padding-left:9px}
+.setrow.need .seg.ld button{border-color:var(--warn)}
+.setrow .needs{color:var(--warn);font-weight:600}
+.why{margin:8px 0 0;font:500 13px/1.45 var(--sans);color:var(--warn)}
+.why button{border:0;background:none;padding:0;color:var(--warn);font:600 13px/1.45 var(--sans);text-decoration:underline;cursor:pointer}
+/* six Ld tiles and SQN on one line of a phone: the tiles give way, not the row */
+.setrow .ctl{display:flex;gap:8px;flex:0 1 auto;min-width:0;max-width:100%}
+.seg.ld{flex:0 1 auto;min-width:0}
+.seg.ld button{flex:0 1 auto;width:var(--tap);min-width:30px}
+select{min-height:var(--tap);border-radius:8px;border:1px solid var(--line);background:var(--sunk);padding:0 8px;max-width:100%}
+
+/* --- roster rows ------------------------------------------------------ */
+.row{background:var(--card);color:var(--card-ink);border:1px solid var(--line);border-left:6px solid var(--kd);border-radius:10px;
+  margin:0 0 6px;padding:6px 8px 6px 10px;box-shadow:var(--shadow)}
+.row.pl2{opacity:.62}
+/* A wreck (p. 71): the name, what it is now and the table button stay
+   readable; the hit boxes go, the stats and weapons are not rendered. */
+.row.dead{border-left-color:var(--ink-3);background:var(--sunk)}
+.row.dead .r1 .name b{text-decoration:line-through;text-decoration-color:var(--ink-3)}
+.row.dead .r3 .hits{display:none}
+.row.dead .r4 button{min-height:40px;color:var(--ink-2)}
+.row.dead .r4 button small{color:var(--ink-3)}
+.row.dead.gone{opacity:.55}
+.row.ingrp{margin-left:10px}
+.r1{display:flex;align-items:center;gap:8px}
+.tag{flex:0 0 auto;min-width:34px;padding:3px 6px;border-radius:5px;background:var(--km);color:#fff;font:700 12px/1 var(--mono);text-align:center;letter-spacing:.04em}
+.tag.grp{background:var(--sq)}
+.tag.sq{background:var(--sq);min-width:26px}
+/* a Clanz ship's Warlord (J233): whose re-rolls it may use */
+.tag.wl{background:var(--wl);min-width:26px}
+/* A squadron - capital ships under one header, or an escort squadron on
+   one card - is framed in its own colour: header, members and escort card
+   alike, so which ship flies with which reads at a glance. */
+.row.sqd{border-color:var(--sq);border-left-color:var(--sq);box-shadow:inset 0 0 0 1px var(--sq)}
+.row.ingrp{border-top:4px solid var(--sq)}
+.row.esc.sqd .tag:first-child{background:var(--sq)}
+.name{flex:1 1 auto;min-width:0;min-height:var(--tap);display:flex;flex-direction:column;justify-content:center}
+.name b{font:700 17px/1.1 var(--disp);text-transform:uppercase;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.name small{font:12px/1.2 var(--sans);color:var(--card-mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ldt{flex:0 0 auto;min-width:58px;min-height:var(--tap);border-radius:8px;border:1px solid var(--card-rule);background:var(--panel);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2px 6px;color:var(--ink)}
+.ldt b{font:700 20px/1 var(--mono)}
+.ldt small{font:600 12px/1.2 var(--mono);color:var(--ink-3);white-space:nowrap}
+.ldt.na b{color:var(--ink-3)}
+.played{flex:0 0 auto;min-width:66px;min-height:var(--tap);border-radius:8px;border:1px solid var(--card-rule);
+  font:700 12px/1.1 var(--mono);text-align:center;color:var(--card-mute);background:var(--panel)}
+.played.p1{background:var(--warn-wash);border-color:var(--warn);color:var(--warn)}
+.played.p2{background:var(--ok-wash);border-color:var(--ok);color:var(--ok)}
+.r2{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;margin:6px 0 0;font:600 13px/1.3 var(--mono)}
+.r2 .ac{white-space:nowrap}
+.r2 .ac s{opacity:.55}
+.r2 .ac em{font-style:normal;font-weight:400;color:var(--card-mute)}
+.w-wb{color:var(--w-wb)} .w-lan{color:var(--w-lan)} .w-nov{color:var(--w-nov)} .w-tor{color:var(--w-tor)}
+.w-bay{color:var(--w-bay)} .w-min{color:var(--w-min)} .w-pul{color:var(--w-pul)} .w-ram{color:var(--w-ram)} .w-hook{color:var(--w-hook)}
+.chip{display:inline-flex;align-items:center;min-height:24px;padding:0 7px;border-radius:12px;font:600 12px/1 var(--mono);
+  border:1px solid var(--card-rule);color:var(--card-mute);background:var(--panel)}
+.chip.crip{background:var(--cr);color:var(--cr-ink);border-color:var(--cr-ink)}
+.chip.br{background:var(--brace-wash);color:var(--brace);border-color:var(--brace)}
+.chip.ord{background:var(--accent-wash);color:var(--accent-ink);border-color:var(--accent)}
+.chip.crit{background:var(--bad-wash);color:var(--bad);border-color:var(--bad)}
+.chip.crit.fire{min-height:32px;padding:0 10px;cursor:pointer}
+.chip.lock{background:var(--warn-wash);color:var(--warn);border-color:var(--warn)}
+.r3{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:6px 0 0}
+/* the track fills its line: the boxes shrink to fit one line on a narrow
+   phone (360 px) rather than wrap a twelfth box onto a line of its own */
+.hits{display:flex;flex-wrap:wrap;gap:3px;flex:1 1 100%;min-width:0}
+.hits b{flex:1 1 0;min-width:18px;max-width:30px;height:44px;border:1px solid var(--card-mute);border-radius:4px;background:var(--panel);position:relative;
+  font:600 12px/42px var(--mono);text-align:center;color:var(--card-mute)}
+.hits.many b{max-width:22px;font-size:0}
+.hits b.cr{background:var(--cr);border-color:var(--cr-ink);color:var(--cr-ink)}
+.hits b.on{background:var(--card-ink);color:var(--card);border-color:var(--card-ink)}
+.hits b.on.cr{background:var(--cr-ink);border-color:var(--cr-ink);color:#fff}
+.hits b.first{border-left-width:3px}
+.stat{min-height:var(--tap);display:inline-flex;align-items:center;gap:4px;padding:0 8px;border-radius:6px;border:1px solid var(--card-rule);
+  background:var(--panel);font:600 12px/1 var(--mono);color:var(--card-mute)}
+.stat b{font-size:15px;color:var(--card-ink)}
+.stat.off b{color:var(--bad)}
+.stat.pill2{border-radius:22px}
+.stat.on{background:var(--ok-wash);border-color:var(--ok);color:var(--ok)}
+.stat.on b{color:var(--ok)}
+.stat.spent{opacity:.55;text-decoration:line-through}
+.mem{display:flex;flex-wrap:wrap;gap:6px}
+.mem button{min-width:var(--tap);min-height:var(--tap);border-radius:22px;border:2px solid var(--card-ink);background:var(--panel);
+  font:700 13px var(--mono);color:var(--card-ink)}
+.mem button.dead{background:var(--card-mute);border-color:var(--card-mute);color:var(--card);text-decoration:line-through}
+.r4{display:flex;gap:6px;margin:6px 0 0}
+.r4 button{flex:1 1 0;min-height:48px;border-radius:9px;border:1px solid var(--line);background:var(--sunk);
+  font:700 13px/1.1 var(--disp);letter-spacing:.04em;text-transform:uppercase;color:var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center}
+.r4 button small{font:12px/1.1 var(--mono);text-transform:none;letter-spacing:0;color:var(--ink-3)}
+.r4 button.hit{background:var(--bad-wash);border-color:var(--bad);color:var(--bad)}
+.r4 button.brace{background:var(--brace-wash);border-color:var(--brace);color:var(--brace)}
+.r4 button.brace.on{background:var(--brace);color:#fff}
+.r4 button.order.on{background:var(--accent-wash);border-color:var(--accent);color:var(--accent-ink)}
+.r4 button[disabled]{opacity:.4}
+.row .grpline{font:600 12px var(--mono);color:var(--acc);margin-top:4px}
+
+/* spec line and weapons table on the row */
+.stl{display:flex;flex-wrap:wrap;gap:2px 6px;margin:4px 0 0;font:600 12px/1.4 var(--mono);color:var(--card-mute)}
+.stl b{color:var(--card-ink);font-size:13px}
+.stl span.mod b{color:var(--cr-ink)}
+.stl em{font-style:normal;color:var(--card-rule)}
+.wt{width:100%;border-collapse:collapse;margin:6px 0 0;font-size:13px;table-layout:auto}
+.wt th{font:700 12px/1.2 var(--mono);color:var(--card-mute);text-align:left;padding:0 3px 2px;letter-spacing:.03em}
+.wt th.st,.wt th.hf{text-align:right}
+.wt th.rg{white-space:nowrap}
+.wt th.hf small{display:block;font-size:12px;font-weight:600;text-transform:none}
+.wt td{padding:3px 3px;border-top:1px solid var(--card-rule);vertical-align:middle}
+.row .wt .arcg{width:20px;height:20px}
+.wt td.bd{width:24px;padding-left:0}
+.wt .bg{display:inline-block;width:20px;height:20px;line-height:20px;text-align:center;border-radius:4px;background:var(--bd);color:#fff;font:700 12px var(--mono)}
+.wt td.nm{font-size:13.5px;line-height:1.2}
+.wt td.nm small{display:block;font-size:12px;color:var(--bad)}
+.wt td.rg{white-space:nowrap;font:12px var(--mono);color:var(--card-mute)}
+.wt td.st,.wt td.hf{text-align:right;font:700 16px/1.1 var(--mono);white-space:nowrap}
+.wt td.st small{display:block;font:600 12px var(--mono);color:var(--card-mute)}
+.wt td.st i.ea{display:block;font:600 11px/1.1 var(--mono);font-style:normal;color:var(--card-mute)}
+.wt td.hf{color:var(--card-mute)}
+.wt.crippled tr:not(.nohalf) td.st{opacity:.4;font-weight:600}
+.wt td.st.txt,.wt td.hf.txt{font:600 12px/1.2 var(--mono);white-space:normal;color:var(--card-mute);text-align:right}
+.wt td.nm{min-width:110px}
+.wt.crippled td.hf,.wt.crippled th.hf{color:var(--cr-ink)}
+.wt tr.silent td.nm,.wt tr.silent td.st,.wt tr.silent td.hf{text-decoration:line-through;color:var(--card-mute)}
+.wt tr.silent td.nm small{text-decoration:none}
+.wt td.ar{width:26px;text-align:right;padding-right:0}
+.sheet .wt{font-size:14px}
+.sheet .wt td.nm{font-size:14.5px}
+.hits.mem b.on{background:var(--card-mute);border-color:var(--card-mute);color:var(--card);text-decoration:line-through}
+.hits.mem{flex:0 1 auto}
+.hits.mem b{flex:0 0 36px;max-width:none}
+/* A star fort's four quadrants (Fleets p. 501): one is selected - its hit
+   track, shields, turrets and weapons are the ones the card shows, and the
+   next hit or critical goes to it. Each button carries its own hits left;
+   a crippled one is in the crippled colour, one at 0 is struck through. */
+.quads{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin:6px 0 0}
+.quads button{min-height:var(--tap);border-radius:8px;border:1px solid var(--card-rule);background:var(--panel);color:var(--card-ink);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;padding:2px 4px}
+.quads button b{font:700 14px/1 var(--mono)}
+.quads button small{font:600 11px/1.1 var(--mono);color:var(--card-mute);white-space:nowrap}
+.quads button.cr{background:var(--cr);border-color:var(--cr-ink)}
+.quads button.cr small{color:var(--cr-ink)}
+.quads button.gone{background:var(--sunk)}
+.quads button.gone b{text-decoration:line-through;color:var(--card-mute)}
+.quads button.on{border:2px solid var(--acc);box-shadow:inset 0 0 0 1px var(--acc)}
+.sheet .quads{margin:0 0 10px}
+/* the weapons table of a star fort: one heading per group (the selected
+   quadrant's own rows, the Basilica's); a Basilica row is not halved by
+   the quadrant's crippling, so it keeps its weight in a crippled table */
+.wt tr.zn td{padding:5px 3px 1px;font:700 11px/1.2 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--card-mute)}
+.wt.crippled tr.keep td.st{opacity:1;font-weight:700}
+.wt.crippled tr.keep td.hf{color:var(--card-mute)}
+/* a rule card (orbital mines, minefields, fire ships): what it is in one
+   line, then its steps - a heading and a sentence each */
+.lead{margin:4px 0 0;font:13px/1.35 var(--sans);color:var(--card-ink)}
+.steps{margin:6px 0 0;padding:0;list-style:none;font:13px/1.35 var(--sans);color:var(--card-ink)}
+.steps li{margin:0 0 4px}
+.steps li b{font:700 11px/1.2 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--km);margin-right:6px}
+.noarm{margin:6px 0 0;font:600 12px/1.3 var(--mono);color:var(--card-mute)}
+
+/* the wreck and the commander on the card */
+.chip.hulk{gap:4px;padding-left:5px}
+.chip.hulk svg{width:14px;height:14px;fill:currentColor}
+.chip.hulk.blazing{background:var(--bad-wash);color:var(--bad);border-color:var(--bad)}
+.chip.hulk.drifting{background:var(--sunk);color:var(--ink-2);border-color:var(--ink-3)}
+.chip.hulk.gone{background:var(--cr);color:var(--cr-ink);border-color:var(--cr-ink)}
+.hulkl{display:flex;align-items:flex-start;gap:6px;margin:6px 0 0;padding:6px 8px;border-radius:6px;background:var(--sunk);color:var(--ink-2);font:12.5px/1.35 var(--sans)}
+.hulkl svg{flex:0 0 auto;width:20px;height:20px;fill:currentColor;margin-top:1px}
+.hulkl b{font:700 12px var(--mono);letter-spacing:.04em;margin-right:4px}
+.hulkl.blazing{background:var(--bad-wash);color:var(--bad)}
+.hulkl.gone{background:var(--cr);color:var(--cr-ink)}
+.row.dead .hulkl{opacity:1}
+.band .hulkl{margin:0;background:none;padding:0;color:inherit}
+/* Re-roll boxes (user 5.10.2026): one per re-roll, tapped when it is used
+   and tapped again if that was a slip. The colour says where it came from
+   and the word under it says the same: with the price, bought, an open
+   option taken into use, or added on the counter. A dashed one is an open
+   option of the list - tap it if it was bought. */
+.rrb{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0 2px}
+.rrx{position:relative;min-width:56px;min-height:var(--tap);padding:3px 5px;border-radius:8px;border:2px solid var(--rrc);
+  background:color-mix(in srgb,var(--rrc) 16%,var(--panel));color:var(--card-ink);
+  display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.rrx b{font:700 14px/1 var(--mono)}
+.rrx small{font:600 9.5px/1 var(--sans);letter-spacing:0;color:var(--card-mute)}
+.rrx.included{--rrc:var(--brace)} .rrx.bought{--rrc:var(--acc)}
+.rrx.optional{--rrc:var(--sq2)} .rrx.added{--rrc:var(--sq3)}
+.rrx.open{--rrc:var(--card-mute);border-style:dashed;background:none}
+/* the Clanz Warlord's once-per-game +2 boarding (J233, Fleets p. 372) */
+.rrx.b2{--rrc:var(--sq3)}
+/* used: the colour stays as a faint frame so the kind still reads, the
+   cross says the rest */
+.rrx.used{background:var(--sunk);border-color:color-mix(in srgb,var(--rrc) 40%,var(--card-rule))}
+.rrx.used b,.rrx.used small{color:var(--card-mute);opacity:.55}
+.rrx.used::after{content:"";position:absolute;inset:6px;pointer-events:none;
+  background:
+    linear-gradient(to top right,transparent calc(50% - 1.25px),var(--card-mute) calc(50% - 1.25px),var(--card-mute) calc(50% + 1.25px),transparent calc(50% + 1.25px)),
+    linear-gradient(to bottom right,transparent calc(50% - 1.25px),var(--card-mute) calc(50% - 1.25px),var(--card-mute) calc(50% + 1.25px),transparent calc(50% + 1.25px))}
+.rrn{font:600 12px/1.25 var(--mono);color:var(--card-mute);flex:1 1 90px;min-width:0}
+.cmdl{display:flex;flex-wrap:wrap;align-items:center;gap:2px 6px;margin:4px 0 0;font:600 12.5px/1.2 var(--sans);color:var(--card-ink)}
+.cmdl b{white-space:nowrap}
+.cmdl .tag{min-width:30px}
+.cmdl small{color:var(--card-mute);font-family:var(--mono);font-size:12px}
+.pop.cata .tiles button{min-height:64px;align-items:flex-start;text-align:left}
+.pop.cata .tiles button small{white-space:normal}
+.pop.cata .hr{margin:10px 0 2px}
+.pop.cata ul.hulkrules{margin:0;padding-left:18px;font:12px/1.4 var(--sans);color:var(--ink-2)}
+.pop.cata ul.hulkrules li{margin:3px 0}
+.hulkl span{flex:1 1 auto;min-width:0}
+
+/* group header */
+.grp-hd{background:var(--panel);background:color-mix(in srgb,var(--sq) 12%,var(--panel));border:2px solid var(--sq);border-radius:10px;margin:0 0 6px;padding:8px 10px}
+.grp-hd .r1 .name b{color:var(--sq)}
+.grp-hd .r4 button{min-height:44px}
+/* the members line: a ship out of action is struck through with the
+   reason, a crippled one is marked (its values are already halved) */
+.grp-hd .name small{white-space:normal;overflow:visible;text-overflow:clip}
+.grp-hd .name small s{color:var(--ink-3)}
+.grp-hd .name small i{font:600 10px/1 var(--mono);font-style:normal;letter-spacing:.06em;text-transform:uppercase;color:var(--bad)}
+.grp-hd .name small i.cr{color:var(--ink-2)}
+.grp-hd .wt .nm small s{color:var(--bad)}
+
+/* --- popover (inline under the row) ---------------------------------- */
+.pop{margin:8px -8px -8px -10px;padding:10px;border-top:1px solid var(--line);background:var(--panel);border-radius:0 0 10px 10px;color:var(--ink)}
+.pop h4{margin:0 0 6px;font:700 12px/1.2 var(--mono);color:var(--ink-3);letter-spacing:.04em;text-transform:uppercase}
+.pop p{margin:4px 0 8px;font-size:13px;color:var(--ink-2)}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.tiles.c2{grid-template-columns:repeat(2,1fr)}
+.tiles.c4{grid-template-columns:repeat(4,1fr)}
+.tiles.c6{grid-template-columns:repeat(6,1fr)}
+.tiles button{min-height:52px;border-radius:8px;border:1px solid var(--line);background:var(--sunk);padding:4px 6px;
+  font:700 13px/1.15 var(--disp);letter-spacing:.03em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.tiles button small{font:11px/1.2 var(--mono);text-transform:none;letter-spacing:0;color:var(--ink-3)}
+.tiles button.on{background:var(--accent-wash);border-color:var(--accent);color:var(--accent-ink)}
+.tiles button.bad{background:var(--bad-wash);border-color:var(--bad);color:var(--bad)}
+.tiles button.warn{background:var(--warn-wash);border-color:var(--warn);color:var(--warn)}
+.tiles button.ok{background:var(--ok-wash);border-color:var(--ok);color:var(--ok)}
+.tiles button[disabled]{opacity:.4}
+.tiles button{position:relative}
+.tiles button .n{position:absolute;top:3px;right:4px;min-width:18px;padding:1px 4px;border-radius:9px;
+  background:var(--accent);color:#fff;font:700 11px/1.2 var(--mono);font-style:normal}
+/* A critical result is a pair (user 30.9.2026): the minus right beside the
+   plus. The minus takes a mis-tapped count off; with nothing to take off it
+   is plainly disabled - dashed, faded, not tappable. */
+.tiles .cp{display:flex;min-height:52px;border-radius:8px;border:1px solid var(--line);background:var(--sunk);overflow:hidden}
+.tiles .cp.has{border-color:var(--accent)}
+.tiles .cp>button{border:0;border-radius:0;min-height:52px;background:transparent}
+.tiles .cp>button.plus{flex:1 1 auto;min-width:0;padding-right:13px}
+.tiles .cp>button.minus{flex:0 0 34px;border-right:1px solid var(--line);font:700 20px/1 var(--mono);color:var(--ink);padding:0}
+.tiles .cp>button.minus[disabled]{opacity:1;color:var(--ink-3);background:repeating-linear-gradient(135deg,transparent 0 4px,var(--line-soft) 4px 5px);cursor:default}
+.tiles .cp>button.plus::after{content:"+";position:absolute;right:4px;bottom:3px;font:700 13px/1 var(--mono);color:var(--ink-3)}
+.tiles .cp.warn{background:var(--warn-wash);border-color:var(--warn)}
+.tiles .cp.warn>button.plus{color:var(--warn)}
+.tiles .cp.on{background:var(--accent-wash);border-color:var(--accent)}
+.tiles button.has{border-color:var(--accent)}
+.tiles button.just{animation:just .9s ease-out}
+@keyframes just{0%{background:var(--accent);color:#fff;box-shadow:0 0 0 3px var(--accent-wash)}100%{box-shadow:0 0 0 0 transparent}}
+.pop .last{min-height:2.6em;margin:0 0 8px;padding:6px 8px;border-radius:6px;background:var(--sunk);font:600 13px/1.35 var(--sans);color:var(--ink-3)}
+.pop .last.fresh{color:var(--ink);background:var(--accent-wash)}
+.pop .xrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:8px 0 0;padding:8px;border-radius:8px;
+  border:1px solid var(--warn);background:var(--warn-wash);font:600 13px var(--sans);color:var(--ink)}
+.pop .xrow span{flex:1 1 100%}
+.pop .xrow button{min-width:56px;min-height:40px;border-radius:8px;border:1px solid var(--line);background:var(--panel);font:700 14px var(--mono);color:var(--ink)}
+.pop .xrow button.cx{font:600 12px var(--sans);color:var(--ink-3)}
+.tiles button b{font:700 16px var(--mono)}
+.steprow{display:flex;align-items:center;gap:8px}
+.steprow button{min-width:var(--big);min-height:48px;border-radius:8px;border:1px solid var(--line);background:var(--sunk);font:700 20px var(--mono)}
+.steprow .val{flex:1;text-align:center;font:700 22px var(--mono)}
+.steprow .val small{display:block;font:12px var(--mono);color:var(--ink-3)}
+.pop .close{margin-top:8px;width:100%;min-height:40px;border-radius:8px;border:1px solid var(--line);font:600 12px var(--mono);color:var(--ink-3)}
+
+/* --- sheet (the card) ------------------------------------------------- */
+.sheet{position:fixed;inset:0;z-index:20;background:var(--card);color:var(--card-ink);overflow:auto;overscroll-behavior:contain;
+  padding-bottom:max(16px,env(safe-area-inset-bottom))}
+.sh-hd{position:sticky;top:0;z-index:2;background:var(--kd);color:#fff;padding:max(10px,env(safe-area-inset-top)) 12px 10px;display:flex;gap:10px;align-items:center}
+.sh-hd .t{flex:1;min-width:0}
+.sh-hd h2{font-size:20px;line-height:1.1;text-transform:uppercase;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sh-hd p{margin:2px 0 0;font-size:12px;opacity:.85;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.sh-hd .x{min-width:var(--tap);min-height:var(--tap);border-radius:8px;border:1px solid rgba(255,255,255,.45);font:700 18px var(--mono);color:#fff}
+.sh-hd .ldt{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.4);color:#fff}
+.sh-hd .ldt small{color:rgba(255,255,255,.8)}
+.sh-body{padding:10px 12px}
+.band{padding:8px 10px;border-radius:8px;margin:0 0 10px;font-size:13px;font-weight:600}
+.band.crip{background:var(--cr);color:var(--cr-ink)}
+.band.br{background:var(--brace-wash);color:var(--brace)}
+.band.dead{background:var(--sunk);color:var(--ink-2)}
+.band.lock{background:var(--warn-wash);color:var(--warn)}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 10px}
+.stats div{background:var(--panel);border:1px solid var(--card-rule);border-radius:8px;padding:6px 8px;min-height:56px}
+.stats span{display:block;font:700 12px/1 var(--mono);color:var(--km);letter-spacing:.05em}
+.stats b{display:block;font:700 19px/1.2 var(--mono);color:var(--card-ink);white-space:nowrap}
+.stats b s{font-size:12px;color:var(--card-mute);margin-left:4px}
+.stats b i{display:block;font:600 12px/1.2 var(--mono);color:var(--bad);font-style:normal;white-space:normal}
+.stats div.tapp{border-color:var(--accent)}
+.stats button{width:100%;text-align:left}
+.sec{margin:0 0 12px}
+.sec h3{font:700 12px/1.2 var(--mono);color:var(--km);letter-spacing:.06em;text-transform:uppercase;margin:0 0 6px;padding-bottom:3px;border-bottom:1px solid var(--card-rule)}
+.sec h3 em{font-style:normal;font-weight:400;color:var(--card-mute);text-transform:none;letter-spacing:0;margin-left:6px}
+.arm{width:100%;border-collapse:collapse;font-size:13px}
+.arm td{padding:6px 4px;border-bottom:1px solid var(--card-rule);vertical-align:middle}
+.arm td.nm{width:auto}
+.arm td.rg{color:var(--card-mute);font-family:var(--mono);font-size:12px;overflow-wrap:anywhere}
+.arm td.st{white-space:nowrap;font:700 18px var(--mono);text-align:right}
+.arm td.st s{font-size:12px;color:var(--card-mute);margin-left:3px}
+.arm td.ar{width:30px;text-align:right}
+.arm tr.silent td.nm,.arm tr.silent td.st{text-decoration:line-through;color:var(--card-mute)}
+.arm tr.silent td.nm small{text-decoration:none;color:var(--bad)}
+.arm .bg{display:inline-block;width:20px;height:20px;line-height:20px;text-align:center;border-radius:4px;background:var(--bd);color:#fff;font:700 12px var(--mono);margin-right:6px;vertical-align:middle}
+.arm td.nm small{display:block;font-size:12px;color:var(--card-mute);margin-left:26px}
+.arcg{width:24px;height:24px;vertical-align:middle}
+.arcg path{fill:var(--panel);stroke:var(--card-mute);stroke-width:.5}
+.arcg path.on{fill:var(--card-ink)}
+.arcg path.pick{fill:var(--card-mute)}
+.arcg circle{fill:none;stroke:var(--card-mute);stroke-width:.5}
+.noarc{color:var(--card-mute)}
+.sheet .hits b{max-width:36px;height:44px;font-size:13px;line-height:42px}
+.sheet .hits.many b{max-width:26px;font-size:11px}
+.crline{font:600 12px var(--mono);color:var(--cr-ink);margin:6px 0 0}
+.rules{margin:0;padding-left:18px;font-size:13px;color:var(--card-ink)}
+.rules li{margin:0 0 4px}
+.rules li b.ast{font-style:normal;color:var(--ast);margin-right:3px}
+.crtab{width:100%;border-collapse:collapse;font-size:12.5px}
+.crtab td{padding:3px 4px;border-bottom:1px solid var(--card-rule)}
+.crtab td:first-child{font:700 13px var(--mono);width:30px}
+.crtab td:last-child{color:var(--card-mute)}
+.foot{font-size:12px;color:var(--card-mute);margin:4px 0 0}
+.sheet .r4{margin:10px 0}
+.sheet .tiles{margin-top:6px}
+.flags{display:flex;flex-wrap:wrap;gap:6px}
+.flags button{min-height:40px;padding:0 10px;border-radius:8px;border:1px solid var(--card-rule);background:var(--panel);font:600 12px var(--mono);color:var(--card-mute)}
+.flags button.on{background:var(--ok-wash);border-color:var(--ok);color:var(--ok)}
+.flags button.bad.on{background:var(--bad-wash);border-color:var(--bad);color:var(--bad)}
+.ordtab{width:100%;border-collapse:collapse;font-size:12.5px}
+.ordtab td{padding:4px;border-bottom:1px solid var(--card-rule);vertical-align:top}
+.ordtab td:first-child{font:700 12px var(--mono);white-space:nowrap}
+
+/* --- menu ------------------------------------------------------------- */
+.menu{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.45);display:flex;align-items:flex-end}
+.menu .box{width:100%;background:var(--panel);border-radius:14px 14px 0 0;padding:14px 14px max(14px,env(safe-area-inset-bottom));max-height:85vh;overflow:auto}
+/* J239 (the user 25.10.2026: the Play menu is stretched on a PC and could
+   stay as a box at the edge): on a wide screen the menu and the End Phase are a
+   panel at the right edge, the phone keeps its sheet from below */
+@media (min-width:720px){
+  .menu{justify-content:flex-end;align-items:stretch}
+  .menu .box{width:420px;max-width:100%;max-height:none;height:100%;border-radius:14px 0 0 14px;padding:16px 18px;box-shadow:-8px 0 24px rgba(0,0,0,.25)}
+}
+.menu h2{font-size:17px;text-transform:uppercase;margin-bottom:8px}
+.menu .btn{margin-top:8px}
+.menu table{width:100%;border-collapse:collapse;font-size:13px;margin:6px 0}
+.menu td{padding:4px 0;border-bottom:1px solid var(--line-soft)}
+.menu td:last-child{text-align:right;font-family:var(--mono)}
+
+/* --- tracking toggles ------------------------------------------------- */
+.togs{display:flex;flex-direction:column;gap:6px;margin:6px 0 10px}
+.togs button{min-height:var(--tap);display:grid;grid-template-columns:1fr auto;align-items:center;column-gap:10px;padding:8px 12px;border-radius:8px;border:1px solid var(--line);background:var(--sunk);font:600 13px/1.2 var(--mono);text-align:left}
+.togs button i{font-style:normal;font:700 12px var(--mono);color:var(--ink-3);text-transform:uppercase}
+.togs button small{grid-column:1 / -1;font:12px/1.3 var(--sans);color:var(--ink-3)}
+.togs button.on{background:var(--accent-wash);border-color:var(--accent);color:var(--accent-ink)}
+.togs button.on i{color:var(--accent-ink)}
+
+/* --- one-line top bar, bottom strip, End Phase (19.10.2026) ----------- */
+.top.one{flex-wrap:wrap}
+.top.one h1{flex:1 1 0;min-width:0;display:block;overflow:hidden}
+.top.one h1 small{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top.one .tools{flex:0 0 auto}
+.bottom{flex-direction:column;align-items:stretch;gap:6px;padding-top:6px}
+.brow{display:flex;gap:8px;align-items:center}
+.bottom .turnbtn{min-height:48px}
+.endbtn{flex:0 1 auto;min-height:48px;min-width:96px;padding:2px 10px;border-radius:10px;border:1px solid var(--line);background:var(--sunk);color:var(--ink);
+  font:700 13px/1.1 var(--disp);letter-spacing:.04em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.endbtn small{font:600 11px/1.15 var(--mono);text-transform:none;letter-spacing:0;color:var(--warn)}
+.endbtn[disabled]{opacity:1;color:var(--ink-3)}
+.endbtn[disabled] small{color:var(--ink-3)}
+.jump{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin:0 -4px;padding:0 4px}
+.jump::-webkit-scrollbar{display:none}
+.jump button{flex:0 0 auto;min-height:40px;padding:0 10px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--card-ink);
+  font:700 12px/1 var(--mono);white-space:nowrap;display:inline-flex;align-items:center;gap:3px}
+.jump button small{font:600 11px var(--mono);color:var(--card-mute)}
+.jump button.cr{background:var(--cr);color:var(--cr-ink);border-color:var(--cr-ink)}
+.jump button.dead{color:var(--ink-3);text-decoration:line-through;background:var(--sunk)}
+.jump button.done{opacity:.55}
+/* the P+S badge on a merged port / starboard row */
+/* v1.2 card style (J183, J188): a port / starboard pair shares one tall
+   badge, one range and one strength "each" (two rows high); no line between
+   the pair's own rows, so it reads as one weapon; the range in a frame of
+   its band's colour */
+.wt td.bd[rowspan]{position:relative}
+.wt .bg.tall{position:absolute;left:0;top:5px;bottom:5px;width:20px;height:auto;line-height:1;display:flex;align-items:center;justify-content:center}
+.wt tr[data-pair="2"] td{border-top-color:transparent}
+.wt .rp{display:inline-block;min-width:2.1em;text-align:center;border:2px solid var(--rb);border-radius:6px;padding:0 4px;margin:-2px 0;
+  background:var(--panel);color:var(--card-ink);font:700 14px/18px var(--mono)}
+.wt .rp.l{font-size:12px}
+.wc .rpc{display:inline-block;border:1.5px solid var(--rb);border-radius:4px;padding:0 3px;font:700 11px/14px var(--mono);color:var(--card-ink)}
+.wc .rpc.l{font-size:10px}
+/* the compact rows: CRIT in the name line, no weapons table */
+.r1 .cmini{flex:0 0 auto;min-width:58px;min-height:var(--tap);border-radius:8px;border:1px solid var(--bad);background:var(--bad-wash);color:var(--bad);
+  font:700 13px/1.05 var(--disp);letter-spacing:.04em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.r1 .cmini small{font:600 11px/1.1 var(--mono);text-transform:none;letter-spacing:0;color:var(--bad)}
+.r1 .cmini[disabled]{opacity:.4}
+.main.compact .r1{gap:6px}
+.main.compact .r1 .played{min-width:50px;padding:0 3px;font-size:10.5px}
+.main.compact .r1 .ldt{min-width:44px;padding:2px 4px}
+.main.compact .r1 .ldt small{font-size:10px;max-width:58px;overflow:hidden;text-overflow:ellipsis}
+.main.compact .r1 .cmini{min-width:50px}
+.main.compact .cmdl small,.main.compact .rrn{display:none}
+.main.compact .rrb{margin:4px 0 0}
+.wline{display:flex;flex-wrap:wrap;gap:3px 5px;margin:4px 0 0}
+.wc{display:inline-flex;align-items:center;gap:3px;padding:1px 4px 1px 1px;border-radius:5px;border:1px solid var(--card-rule);background:var(--panel)}
+.wc i{display:inline-block;width:17px;height:17px;line-height:17px;text-align:center;border-radius:4px;background:var(--bd);color:#fff;font:700 11px var(--mono);font-style:normal}
+.wc b{font:700 14px/1 var(--mono);color:var(--card-ink)}
+.wc em{font:600 11px/1 var(--mono);font-style:normal;color:var(--card-mute)}
+.wc .arcg{width:15px;height:15px}
+.wc.half b{color:var(--cr-ink)}
+.wc.off{opacity:.55}
+.wc.off b{text-decoration:line-through}
+.main.compact .row{padding-top:4px;padding-bottom:4px}
+.main.compact .r3{margin-top:4px}
+.main.compact .stl{margin-top:2px}
+/* the End Phase panel */
+.endp .eprow{border-left:5px solid var(--kd);border-radius:8px;background:var(--sunk);padding:8px 10px;margin:0 0 8px}
+.endp .ephd b{font:700 15px/1.1 var(--disp);text-transform:uppercase}
+.endp .ephd small{display:block;font:12px/1.3 var(--mono);color:var(--ink-3)}
+.endp .eprep{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.endp .eprep button{min-height:var(--tap);padding:4px 10px;border-radius:8px;border:1px solid var(--accent);background:var(--panel);font:600 13px/1.15 var(--sans);text-align:left}
+.endp .eprep button b{font:700 13px var(--mono)}
+.endp .eprep button small{display:block;font:11px var(--mono);color:var(--ink-3)}
+.endp .perm{font:600 12px/1.3 var(--mono);color:var(--ink-3);padding:6px 0}
+.endp .fireb{width:100%;margin-top:6px;min-height:var(--tap);border-radius:8px;border:1px solid var(--bad);background:var(--bad-wash);color:var(--bad);font:700 13px/1.15 var(--sans);text-align:left;padding:6px 10px}
+.endp .fireb small{display:block;font:11px var(--mono);color:var(--bad);opacity:.85}
+.endp .fireb.done{border-style:dashed}
+/* load screen: a fleet and its side button; the phone panel */
+.fl{display:flex;gap:6px;align-items:stretch}
+.fl .btn{flex:1 1 auto;min-width:0;flex-direction:column;align-items:flex-start;justify-content:center;gap:3px;text-align:left}
+.fl .side{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.fl .side .mini{margin-top:0;min-height:44px;flex:1 1 auto}
+.card > .btn.on{box-shadow:0 0 0 2px var(--accent)}
+.fl.fresh .btn{box-shadow:0 0 0 3px var(--accent-wash)}
+.mini{flex:0 0 auto;margin-top:8px;min-width:64px;min-height:var(--big);padding:0 8px;border-radius:10px;border:1px solid var(--line);background:var(--sunk);
+  font:600 12px/1.15 var(--mono);color:var(--ink-2);text-align:center}
+.mini.on{background:var(--accent-wash);border-color:var(--accent);color:var(--accent-ink)}
+.phone{margin:8px 0 4px;padding:10px;border:1px solid var(--line);border-radius:10px;background:var(--sunk)}
+.phone .qr{background:#fff;border-radius:8px;padding:8px;max-width:min(520px,100%);margin:0 auto;cursor:zoom-in}
+.phone .qrsvg{display:block;width:100%;height:auto}
+.phone .link{width:100%;min-height:40px;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink-2);font:12px var(--mono);padding:0 8px}
+.phone .r4 button{min-height:44px}
+label.btn{cursor:pointer}
+details.paste{margin-top:10px}
+details.paste summary{min-height:var(--tap);display:flex;align-items:center;font:600 13px var(--sans);color:var(--ink-2);cursor:pointer}
+/* the menu on one screen (J235): a close button, folds that keep their state */
+.menu .mhd{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.menu .mhd h2{margin:0}
+.menu .x{min-width:var(--tap);min-height:var(--tap);border-radius:8px;border:1px solid var(--line);background:var(--sunk);font:700 18px var(--mono);color:var(--ink)}
+.menu details{margin:6px 0 10px;border:1px solid var(--line);border-radius:8px;background:var(--sunk)}
+.menu details>summary{min-height:var(--tap);display:flex;align-items:center;gap:8px;padding:6px 12px;cursor:pointer;font:600 13px/1.2 var(--mono);list-style:none}
+.menu details>summary::-webkit-details-marker{display:none}
+.menu details>summary::before{content:"+";width:12px;color:var(--ink-3)}
+.menu details[open]>summary::before{content:"\2212"}
+.menu details>summary b{margin-left:auto;font-size:15px}
+.menu details table{width:calc(100% - 24px);margin:0 12px 8px}
+.menu details .togs{margin:0 8px 8px}
+
+/* --- toast ------------------------------------------------------------ */
+#toast{position:fixed;left:12px;right:12px;bottom:calc(env(safe-area-inset-bottom) + 84px);z-index:40;display:flex;flex-direction:column;gap:6px;pointer-events:none}
+#toast div{background:var(--ink);color:var(--ground);padding:10px 12px;border-radius:8px;font-size:13px;box-shadow:var(--shadow);animation:fade 4s forwards}
+#toast div.crip{background:var(--cr-ink);color:#fff}
+@keyframes fade{0%{opacity:0;transform:translateY(6px)}8%{opacity:1;transform:none}80%{opacity:1}100%{opacity:0}}
+
+@media (hover:hover) and (pointer:fine){
+  button:hover{filter:brightness(1.06)}
+}
+.pager{display:flex;align-items:center;gap:6px}
+.pager b{font:700 13px var(--mono);min-width:44px;text-align:center}
+.pager.hide{display:none}
+.offpage{display:none}
+/* laptop: the fleet as a grid, pages instead of a scroll */
+@media (min-width:900px){
+  .main{display:grid;grid-template-columns:repeat(auto-fill,minmax(400px,1fr));gap:10px;align-items:start;padding:10px 16px 90px}
+  .row{margin:0}
+  .row.ingrp{margin-left:0}
+  .top{padding-left:20px;padding-right:20px}
+  .top h1{flex:0 1 auto;margin-right:auto}
+  .bottom{padding-left:20px;padding-right:20px}
+  .bottom .turnbtn{flex:0 0 260px}
+  .sheet{left:50%;right:auto;width:min(680px,100vw);transform:translateX(-50%);border-left:1px solid var(--line);border-right:1px solid var(--line)}
+  .card{max-width:720px;margin-left:auto;margin-right:auto}
+  /* mouse density: the 44 px tap targets are a phone need; a laptop fits
+     two rows of cards when the row is tighter */
+  .row{padding:6px 8px 6px 10px}
+  .r1 .name b{font-size:15px}
+  .ldt,.played{min-height:38px}
+  .stl{margin-top:2px}
+  .wt{margin-top:4px}
+  .wt td{padding:2px 3px}
+  .wt td.nm{font-size:13px}
+  .wt td.st,.wt td.hf{font-size:14px}
+  .wt .bg{width:18px;height:18px;line-height:18px}
+  .arcg{width:20px;height:20px}
+  .hits b{height:32px;line-height:30px}
+  .hits.mem b{width:32px}
+  .r3,.r4{margin-top:4px}
+  .r4 button{min-height:38px}
+  /* the whole fleet is on the screen (and the pager pages it): no strip */
+  .jump{display:none}
+}
+@media (max-width:360px){
+  .r4 button{font-size:12px}
+  .ldt{min-width:52px}
+}

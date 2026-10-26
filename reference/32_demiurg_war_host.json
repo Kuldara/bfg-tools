@@ -1,0 +1,257 @@
+{
+  "list": "Demiurg — War Host",
+  "book_page": 486,
+  "read_pages": [
+    482,
+    483,
+    484,
+    485,
+    486,
+    487
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "The Demiurg fleet has an Attack or Initiative rating of 2",
+      "text": "The Demiurg fleet has an Attack or Initiative rating of 2.",
+      "page": 486,
+      "status": "manual",
+      "why": "Skenaariotieto."
+    },
+    {
+      "key": "They cannot use Demiurg fleet re-rolls",
+      "text": "Vessels allied with the Demiurg rely on the basic leadership applicable to their fleets. They cannot use Demiurg fleet re-rolls, but if available they may purchase special characters with any re-rolls they come with to lead their ships.",
+      "page": 486,
+      "status": "manual",
+      "why": "The first sentence does not show (no rule word), the second does. An in-game rule."
+    },
+    {
+      "key": "These re-rolls can only be used for Demiurg vessels",
+      "text": "These re-rolls can only be used for Demiurg vessels and not with other starships they may take as allies in their war host.",
+      "page": 486,
+      "status": "manual",
+      "why": "Significant: the list has many allied ships, and the purchased re-rolls do not apply to them."
+    },
+    {
+      "key": "Demiurg vessels used with this fleet list do not attempt to disengage",
+      "text": "Demiurg vessels used with this fleet list do not attempt to disengage unless they have 2Hp or less remaining.",
+      "page": 486,
+      "status": "manual",
+      "why": "Pelinaikainen saanto."
+    },
+    {
+      "key": "Strongholds are worth 400 points, Bastions are worth 300",
+      "text": "Though their point cost remains unchanged, Strongholds are worth 400 points, Bastions are worth 300 points and Citadels are worth 200 points when determining Victory Points.",
+      "page": 486,
+      "status": "manual",
+      "why": "Victory points, not the list price. The rows' prices stay as in the book (350/255/185)."
+    },
+    {
+      "key": "one battleship for every two cruiser-class vessels",
+      "text": "Your fleet may include one battleship for every two cruiser-class vessels in the fleet.",
+      "page": 487,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 2,
+      "why": "Written by hand: 'cruiser-class vessels' does not match the section heading 'Cruisers'."
+    },
+    {
+      "key": "no more than twelve cruisers",
+      "text": "Your fleet may include no more than twelve cruisers.",
+      "page": 487,
+      "status": "enforced",
+      "kind": "cap",
+      "max": 12,
+      "why": "The book writes the cap in the form 'no more than', which the cap pattern did not know, and the number word 'twelve' was missing from the number word table. Both were added on 7.9.2026."
+    },
+    {
+      "key": "Demiurg Commerce Vessels must outnumber all non-Demiurg cruisers combined",
+      "text": "Demiurg Commerce Vessels must outnumber all non-Demiurg cruisers combined.",
+      "page": 487,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. compare: Bastion+Citadel > the Cruisers section's other ships; an empty other side is accepted. The earlier gap: a COMPARISON of two sets within the same section. This is the list's most important structural restriction - without it the list could be built almost entirely of Tau and Rogue Trader",
+      "kind": "compare",
+      "op": ">",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Kroot Vessels (0",
+      "text": "Kroot Vessels (0-3)",
+      "page": 487,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 3,
+      "why": "A subheading of the book where the count limit is AFTER THE NAME in brackets. The heading pattern knew only the form '0-3 Kroot Vessels', so the Warsphere ran into the Cruisers section - where it would have been counted towards the cruiser cap, although the book says explicitly that Warspheres do not count towards it."
+    },
+    {
+      "key": "one Kroot Warsphere in the fleet for every 750 points",
+      "text": "The fleet may have one Kroot Warsphere in the fleet for every 750 points in the fleet or portion thereof.",
+      "page": 487,
+      "status": "enforced",
+      "kind": "per_points",
+      "each": 1,
+      "per": 750,
+      "why": "Written by hand: the sentence starts with the words 'may have' and not 'may include', and the numerator is a ship class."
+    },
+    {
+      "key": "These do not count against the number of cruisers",
+      "text": "These do not count against the number of cruisers in the fleet.",
+      "page": 487,
+      "status": "manual",
+      "why": "Holds by structure: Kroot Vessels is now a section of its own, and the cruiser cap counts only the Cruisers section."
+    },
+    {
+      "key": "For every three Demiurg capital ships in the fleet, it may include one squadron",
+      "text": "For every three Demiurg capital ships in the fleet, it may include one squadron of up to six Tau or Rogue Trader escorts.",
+      "page": 487,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. ratio units=True: the numerator counts skwadrons (units), the denominator Stronghold/Bastion/Citadel. The earlier gap: a ratio whose numerator is the number of SKWADRONS, not of ships. The app counts hulls. Also the denominator is 'Demiurg capital ships', i.e. part of the Cruisers section - Tau",
+      "kind": "ratio",
+      "per": 3,
+      "allow": 1,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Nicassar Dhows, Tau Wardens or Orcas can be taken for every starship in the fleet equipped with gravitic hooks",
+      "text": "Nicassar Dhows, Tau Wardens or Orcas can be taken for every starship in the fleet equipped with gravitic hooks.",
+      "page": 487,
+      "status": "out_of_scope",
+      "why": "The capacity is read from the profiles - v1.1.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Tau, Nicassar and Rogue Trader escorts may not be mixed in the same squadrons",
+      "text": "Tau, Nicassar and Rogue Trader escorts may not be mixed in the same squadrons.",
+      "page": 487,
+      "status": "manual",
+      "why": "The app's skwadron is one list row multiplied by the number of ships, so a mixed skwadron cannot even be made by accident - different rows are different skwadrons."
+    },
+    {
+      "key": "They do not have access to boarding torpedoes but may use torpedo bombers",
+      "text": "Demiurg ships utilize highly automated versions of torpedoes, fighters, bombers and assault boats. They do not have access to boarding torpedoes but may use torpedo bombers for +10 points per launch bay.",
+      "page": 487,
+      "status": "manual",
+      "why": "Torpedo bombers is a row with its price; this list has no boarding torpedo row at all, which matches the ban."
+    }
+  ],
+  "entries": [
+    {
+      "name": "One extra re-roll",
+      "pts": 25,
+      "page": null,
+      "sec": "Re-rolls",
+      "grp": "rr"
+    },
+    {
+      "name": "Two extra re-rolls",
+      "pts": 75,
+      "page": null,
+      "sec": "Re-rolls",
+      "grp": "rr"
+    },
+    {
+      "name": "Stronghold Commerce Vessel",
+      "pts": 350,
+      "page": 488,
+      "sec": "Battleships"
+    },
+    {
+      "name": "Bastion Commerce Vessel",
+      "pts": 255,
+      "page": 489,
+      "sec": "Cruisers"
+    },
+    {
+      "name": "Citadel Commerce Vessel",
+      "pts": 185,
+      "page": 490,
+      "sec": "Cruisers"
+    },
+    {
+      "name": "Rogue Trader Cruiser",
+      "pts": 185,
+      "page": 180,
+      "sec": "Cruisers"
+    },
+    {
+      "name": "Dauntless Class Light Cruiser",
+      "pts": 125,
+      "page": 77,
+      "sec": "Cruisers"
+    },
+    {
+      "name": "Endeavour Class Light Cruiser",
+      "pts": 110,
+      "page": 181,
+      "sec": "Cruisers"
+    },
+    {
+      "name": "Kroot Warsphere",
+      "pts": 145,
+      "page": 494,
+      "sec": "Kroot Vessels"
+    },
+    {
+      "name": "Castellan class starship",
+      "pts": 50,
+      "page": 474,
+      "sec": "Tau Escorts"
+    },
+    {
+      "name": "Defender class starship",
+      "pts": 45,
+      "page": 464,
+      "sec": "Tau Escorts"
+    },
+    {
+      "name": "Warden class gunship",
+      "pts": 30,
+      "page": 475,
+      "sec": "Tau Escorts"
+    },
+    {
+      "name": "Orca class gunship",
+      "pts": 25,
+      "page": 466,
+      "sec": "Tau Escorts"
+    },
+    {
+      "name": "Nicassar Dhow",
+      "pts": 45,
+      "page": 491,
+      "sec": "Nicassar Escorts"
+    },
+    {
+      "name": "Recommissioned Escort",
+      "pts": 30,
+      "page": 189,
+      "sec": "Rogue Trader Escorts"
+    },
+    {
+      "name": "Iconoclast Destroyer",
+      "pts": 30,
+      "page": 190,
+      "sec": "Rogue Trader Escorts"
+    },
+    {
+      "name": "Cargo Vessel",
+      "pts": 20,
+      "page": 192,
+      "sec": "Rogue Trader Escorts"
+    },
+    {
+      "name": "Torpedo bombers",
+      "pts": 10,
+      "page": null,
+      "sec": "ORDNANCE"
+    }
+  ],
+  "notes": [
+    "This is the book's last list and structurally exceptional: the hull ship section has ships of three factions (Demiurg, Tau, Rogue Trader) and the escorts are split into three subsections by origin.",
+    "The list has no commander at all, like the necrons. The fleet as a whole buys the re-rolls, and they do not apply to the allied ships.",
+    "The book's subheading 'Kroot Vessels (0-3)' is the only one in the whole book with the count limit after the name in brackets. Without recognising it the Warsphere would have been counted towards the cruiser cap, which the book explicitly forbids.",
+    "The list's most important restriction - 'Demiurg Commerce Vessels must outnumber all non-Demiurg cruisers combined' - is a comparison of two sets and cannot be enforced. Without it the list could be built almost entirely of other factions' ships."
+  ]
+}

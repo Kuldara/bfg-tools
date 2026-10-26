@@ -1,0 +1,21 @@
+{
+  "name": "bfg-tools",
+  "private": true,
+  "description": "Free fan-made browser tools for Battlefleet Gothic: Remastered",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "build": "node tools/build.js",
+    "test": "node tools/test.js",
+    "test:quick": "node tools/test.js --quick",
+    "check:books": "node tools/test.js --books",
+    "serve": "node tools/serve.js",
+    "publish": "node tools/publish.js",
+    "backup": "node tools/backup.js"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}

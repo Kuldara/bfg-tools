@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Gothic Fleet Registry</title>
+<meta name="description" content="<!--@description-->">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#211F20">
+<link rel="icon" href="<!--@icon-->">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Gothic Fleet Registry">
+<meta property="og:title" content="Gothic Fleet Registry">
+<meta property="og:description" content="<!--@description-->">
+<meta name="twitter:card" content="summary_large_image">
+<!--@site-meta-->
+<!--@fonts-->
+</head>
+<body>
+<style>
+@@include ../../packages/ui/theme.css
+@@include styles/tokens.css
+@@include styles/chrome.css
+@@include styles/narrow.css
+@@include styles/layout.css
+@@include styles/borrowed.css
+@@include styles/catalogue.css
+@@include styles/fleet.css
+@@include styles/validation.css
+@@include styles/feedback.css
+@@include styles/print.css
+@@include styles/card.css
+@@include styles/star-fort.css
+@@include styles/rule-card.css
+</style>
+
+<div class="topbar">
+  <div class="tb-head">
+  <div class="brand">
+    <div class="brandrow"><!--BFGTOOLS--><!--/BFGTOOLS--><b>Gothic Fleet Registry</b></div>
+    <span id="srcline"></span>
+    <span id="loadnote" hidden></span>
+  </div>
+  <div class="field">
+    <label for="listsel">Fleet list</label>
+    <select id="listsel"></select>
+  </div>
+  <div class="field">
+    <label for="limit">Points limit</label>
+    <input type="number" id="limit" min="0" step="50" value="1500">
+  </div>
+  </div>
+  <input type="checkbox" class="tb-tog" id="tbmenu" aria-label="Keep the fleet menu on the screen">
+  <div class="tb-strip">
+  <div class="tally" id="tally"><b>0</b><i>pts</i></div>
+  <label class="tb-lab" for="tbmenu" title="Keep Saved fleets and the print, copy and play buttons on the screen while you scroll">Menu</label>
+  </div>
+  <div class="tb-acts">
+  <details class="saves" id="savenow"><summary title="Save the open fleet under a name in Saved fleets">Save <i id="savedot" hidden title="Changes that are not saved"></i></summary><div class="panel" id="savebody"></div></details>
+  <details class="saves" id="saves"><summary>Saved fleets <b id="savescount">0</b></summary><div class="panel" id="savesbody"></div></details>
+  <input type="file" id="importfile" accept=".json,application/json" hidden>
+  <div class="field">
+    <label>&nbsp;</label>
+    <div class="btnrow">
+      <span class="split"><button class="btn primary" id="printcards">Print cards</button><details class="saves" id="printset"><summary title="Sheet (paper and card size), Download for editing, Print roster, Copy list"><b id="printsum">A4 &middot; 100 %</b></summary>
+        <div class="panel" id="printbody">
+          <div class="sh">Sheet</div>
+          <div class="rowf"><span class="nm"><b>Paper</b><i>the paper in your printer</i></span>
+            <select id="ppaper" aria-label="Paper size"><option value="A4">A4</option><option value="Letter">Letter</option></select></div>
+          <div class="rowf"><span class="nm"><b>Card size</b><i id="pdesc"></i></span>
+            <input type="number" id="pscale" min="50" max="146" step="1" value="100" aria-label="Card size in percent"><span>%</span></div>
+          <div class="rowf"><span class="nm"><i>Largest card that fits</i></span>
+            <button class="go" data-fit="2">2 per sheet</button><button class="go" data-fit="1">1 per sheet</button></div>
+          <div class="rowf tools"><span class="nm"><i id="pnote"></i></span></div>
+          <div class="sh">More</div>
+          <div class="rowf"><button class="go" id="editcards" title="Download the same sheet as an editable HTML file">Download for editing</button><button class="go" id="printroster" title="The fleet roster for printing">Print roster</button><button class="go" id="copy" title="The list as text for a forum or a chat">Copy list</button></div>
+        </div></details></span>
+      <a class="btn" id="play" href="play/Gothic%20Fleet%20Play.html" style="text-decoration:none" title="Open the play page: this fleet as phone cards for the game itself - hits, criticals, current weapon values">Play</a>
+    </div>
+  </div>
+  </div>
+</div>
+
+<div class="work">
+  <div class="col">
+    <div class="wlbar" id="wlbar" hidden></div>
+    <section class="card">
+      <h2><span id="cathead">Available to this list</span> <em id="listmeta"></em></h2>
+      <div id="catalogue"></div>
+    </section>
+  </div>
+  <div class="col">
+    <section class="card">
+      <h2>Legality <em id="chkmeta"></em></h2>
+      <div class="checks" id="checks"></div>
+      <details class="chkfold" id="chkfold"><summary id="chkfoldsum"></summary>
+        <div class="checks" id="checksok"></div>
+        <div class="checks facts" id="facts"></div>
+        <div class="note" id="manualnote"></div>
+      </details>
+    </section>
+    <section class="card">
+      <h2>Your fleet <span class="h2r"><em id="fleetmeta"></em><button type="button" class="fold" id="fleetfold" aria-pressed="false" title="One line per unit: tap a unit's name to open or close it">Compact</button></span></h2>
+      <div id="fleet"></div>
+    </section>
+  </div>
+</div>
+
+<div class="sheet" id="sheet"></div>
+<nav class="swipenav" id="swipenav" aria-label="Add ships or your fleet"><button type="button" data-swipe="cat">&larr; Add ships</button><span class="swh">swipe</span><button type="button" data-swipe="fleet">Your fleet <b id="swn">0</b> &rarr;</button></nav>
+
+<script id="bfgdata" type="application/json"><!--@data--></script>
+<script><!--@script--></script>
+</body>
+</html>

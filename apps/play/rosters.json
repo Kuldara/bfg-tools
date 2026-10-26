@@ -1,0 +1,2689 @@
+[
+ {
+  "name": "Tyranids 1200",
+  "note": "own roster, 1200 pts sheet",
+  "points": 1170,
+  "expect": 1170,
+  "doc": {
+   "schemaVersion": 4,
+   "li": 28,
+   "ln": "Tyranids — Hive Fleet",
+   "limit": 1500,
+   "units": [
+    {
+     "s": 2,
+     "e": 0,
+     "ref": 432,
+     "n": 1,
+     "name": "Hive Ship A",
+     "sn": "HIVE SHIPS",
+     "el": "Hive ship (Ld 8)",
+     "oi": {
+      "432:c753667e": "take",
+      "432:6ef3cd68": "take",
+      "432:fc2c9cc4": "take",
+      "432:f7e19040": "take",
+      "432:04e62d72": "take"
+     },
+     "oqi": {},
+     "on": {
+      "432:c753667e": "Prow — Boarding torpedoes",
+      "432:6ef3cd68": "Thorax — Launch bays",
+      "432:fc2c9cc4": "Port/starboard set 1 — Launch bays",
+      "432:f7e19040": "Port/starboard set 2 — Launch bays",
+      "432:04e62d72": "Port/starboard set 3 — Launch bays"
+     },
+     "upn": {
+      "FLEET COMMANDER\u0001Hive Mind Influence re-roll": "take"
+     }
+    },
+    {
+     "s": 2,
+     "e": 0,
+     "ref": 432,
+     "n": 1,
+     "name": "Hive Ship B",
+     "sn": "HIVE SHIPS",
+     "el": "Hive ship (Ld 8)",
+     "oi": {
+      "432:c753667e": "take",
+      "432:6ef3cd68": "take",
+      "432:fc2c9cc4": "take",
+      "432:f7e19040": "take",
+      "432:04e62d72": "take"
+     },
+     "oqi": {},
+     "on": {
+      "432:c753667e": "Prow — Boarding torpedoes",
+      "432:6ef3cd68": "Thorax — Launch bays",
+      "432:fc2c9cc4": "Port/starboard set 1 — Launch bays",
+      "432:f7e19040": "Port/starboard set 2 — Launch bays",
+      "432:04e62d72": "Port/starboard set 3 — Launch bays"
+     },
+     "upn": {
+      "FLEET COMMANDER\u0001Hive Mind Influence re-roll": "take"
+     }
+    },
+    {
+     "s": 10,
+     "e": 3,
+     "ref": 437,
+     "n": 6,
+     "name": "Escort Drone squad A",
+     "sn": "ESCORTS",
+     "el": "Escort drone",
+     "oi": {
+      "437:a38d707b": "take"
+     },
+     "oqi": {},
+     "on": {
+      "437:a38d707b": "Weapon — Pyro-acid battery"
+     },
+     "upn": {}
+    },
+    {
+     "s": 10,
+     "e": 3,
+     "ref": 437,
+     "n": 6,
+     "name": "Escort Drone squad B",
+     "sn": "ESCORTS",
+     "el": "Escort drone",
+     "oi": {
+      "437:bb211d3e": "take"
+     },
+     "oqi": {},
+     "on": {
+      "437:bb211d3e": "Weapon — Bio-plasma discharge"
+     },
+     "upn": {}
+    },
+    {
+     "s": 10,
+     "e": 7,
+     "ref": 435,
+     "n": 4,
+     "name": "Kraken squad",
+     "sn": "ESCORTS",
+     "el": "Kraken",
+     "oi": {
+      "435:d9efe129": "take"
+     },
+     "oqi": {},
+     "on": {
+      "435:d9efe129": "Weapon — Massive claws"
+     },
+     "upn": {}
+    },
+    {
+     "s": 10,
+     "e": 0,
+     "ref": 436,
+     "n": 6,
+     "name": "Vanguard Drone squad",
+     "sn": "ESCORTS",
+     "el": "Vanguard drone ship",
+     "oi": {
+      "436:7b06d333": "take"
+     },
+     "oqi": {},
+     "on": {
+      "436:7b06d333": "Weapon — Feeder tentacles"
+     },
+     "upn": {}
+    }
+   ]
+  }
+ },
+ {
+  "name": "Orks 1200",
+  "note": "own roster; Brutes 4+3",
+  "points": 1200,
+  "expect": 1200,
+  "doc": {
+   "schemaVersion": 4,
+   "li": 24,
+   "ln": "Orks — Waaagh!",
+   "limit": 1500,
+   "units": [
+    {
+     "s": 4,
+     "e": 2,
+     "ref": 376,
+     "n": 1,
+     "name": "Dethdeala",
+     "sn": "BATTLESHIPS & BATTLEKROOZERS",
+     "el": "Dethdeala",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "DAKKA DAKKA\u0001Dakka Dakka: +2 turrets": "take"
+     }
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 380,
+     "n": 1,
+     "name": "Terror Ship #1",
+     "sn": "KROOZERS",
+     "el": "Terror ship",
+     "oi": {
+      "380:5ddf3409": "take"
+     },
+     "oqi": {},
+     "on": {
+      "380:5ddf3409": "May replace its prow heavy gun battery w"
+     },
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 380,
+     "n": 1,
+     "name": "Terror Ship #2",
+     "sn": "KROOZERS",
+     "el": "Terror ship",
+     "oi": {
+      "380:5ddf3409": "take"
+     },
+     "oqi": {},
+     "on": {
+      "380:5ddf3409": "May replace its prow heavy gun battery w"
+     },
+     "upn": {}
+    },
+    {
+     "s": 6,
+     "e": 1,
+     "ref": 384,
+     "n": 5,
+     "name": "Onslaught escorts",
+     "sn": "ESCORTS",
+     "el": "Onslaught attack ship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 6,
+     "e": 0,
+     "ref": 386,
+     "n": 2,
+     "name": "Ravager escorts",
+     "sn": "ESCORTS",
+     "el": "Ravager attack ship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 6,
+     "e": 4,
+     "ref": 387,
+     "n": 4,
+     "name": "Brutes 1",
+     "sn": "ESCORTS",
+     "el": "Brute ramship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 6,
+     "e": 4,
+     "ref": 387,
+     "n": 3,
+     "name": "Brutes 2",
+     "sn": "ESCORTS",
+     "el": "Brute ramship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 2,
+     "e": 0,
+     "ref": null,
+     "n": 1,
+     "name": "",
+     "sn": "WARLORD",
+     "el": "Ork Warlord",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "WARLORD\u0001Two extra re-rolls": "take",
+      "WARLORD\u0001Extra Power Fields": "take"
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "AdMech 1200",
+  "note": "own roster",
+  "points": 1180,
+  "expect": 1180,
+  "doc": {
+   "schemaVersion": 4,
+   "li": 7,
+   "ln": "Adeptus Mechanicus — Explorator",
+   "limit": 1500,
+   "units": [
+    {
+     "s": 4,
+     "e": 0,
+     "ref": 67,
+     "n": 1,
+     "name": "Dictator",
+     "sn": "Cruisers",
+     "el": "Dictator class cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "FLEET UPGRADES\u0001Mechanicus turret refit (+1 turret)": "take",
+      "FLEET UPGRADES\u0001Mechanicus dorsal lance battery": "take"
+     }
+    },
+    {
+     "s": 4,
+     "e": 6,
+     "ref": 76,
+     "n": 1,
+     "name": "Defiant #1",
+     "sn": "Cruisers",
+     "el": "Defiant class light cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "FLEET UPGRADES\u0001Mechanicus turret refit (+1 turret)": "take"
+     }
+    },
+    {
+     "s": 4,
+     "e": 6,
+     "ref": 76,
+     "n": 1,
+     "name": "Defiant #2",
+     "sn": "Cruisers",
+     "el": "Defiant class light cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "FLEET UPGRADES\u0001Mechanicus turret refit (+1 turret)": "take"
+     }
+    },
+    {
+     "s": 4,
+     "e": 4,
+     "ref": 72,
+     "n": 1,
+     "name": "Endeavour #1",
+     "sn": "Cruisers",
+     "el": "Endeavour class light cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "FLEET UPGRADES\u0001Mechanicus turret refit (+1 turret)": "take",
+      "FLEET UPGRADES\u0001Plasma-boosted batteries": "take"
+     }
+    },
+    {
+     "s": 4,
+     "e": 4,
+     "ref": 72,
+     "n": 1,
+     "name": "Endeavour #2",
+     "sn": "Cruisers",
+     "el": "Endeavour class light cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "FLEET UPGRADES\u0001Mechanicus turret refit (+1 turret)": "take",
+      "FLEET UPGRADES\u0001Plasma-boosted batteries": "take"
+     }
+    },
+    {
+     "s": 5,
+     "e": 5,
+     "ref": 109,
+     "n": 5,
+     "name": "Hunter squadron",
+     "sn": "ESCORTS",
+     "el": "Hunter Class Destroyer",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 2,
+     "ref": 108,
+     "n": 3,
+     "name": "Gladius squadron",
+     "sn": "ESCORTS",
+     "el": "Gladius Class Frigate",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 1,
+     "e": 0,
+     "ref": null,
+     "n": 1,
+     "name": "",
+     "sn": "Mechanicus Archmagos",
+     "el": "Archmagos Explorator (Ld 8)",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "Mechanicus Archmagos\u0001One re-roll": "take"
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "World Eaters 1200",
+  "note": "own roster; Chosen Terminators (+10) not taken: the builder wants the World Eaters crew first (Fleets pp. 224-225)",
+  "points": 1190,
+  "expect": 1190,
+  "doc": {
+   "schemaVersion": 4,
+   "li": 17,
+   "ln": "Chaos — Khorne",
+   "limit": 1500,
+   "units": [
+    {
+     "s": 7,
+     "e": 1,
+     "ref": 266,
+     "n": 1,
+     "name": "Despoiler",
+     "sn": "Battleships",
+     "el": "Despoiler class battleship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 9,
+     "e": 1,
+     "ref": 273,
+     "n": 1,
+     "name": "Hecate",
+     "sn": "Heavy Cruisers",
+     "el": "Hecate class heavy cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 10,
+     "e": 1,
+     "ref": 277,
+     "n": 1,
+     "name": "Carnage",
+     "sn": "Cruisers",
+     "el": "Carnage class cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 10,
+     "e": 3,
+     "ref": 279,
+     "n": 1,
+     "name": "Murder",
+     "sn": "Cruisers",
+     "el": "Murder class cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 12,
+     "e": 0,
+     "ref": 281,
+     "n": 2,
+     "name": "Idolator squadron",
+     "sn": "ESCORTS",
+     "el": "Idolator class raider",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 1,
+     "e": 0,
+     "ref": null,
+     "n": 1,
+     "name": "",
+     "sn": "Chaos Warmaster of Khorne",
+     "el": "Chaos Warmaster (Ld +2)",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "Chaos Warmaster of Khorne\u0001The Mark of Khorne": "take"
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "Space Marines 1200",
+  "note": "own roster; Styx Venerable Battle Barge",
+  "points": 1195,
+  "expect": 1195,
+  "doc": {
+   "schemaVersion": 4,
+   "li": 5,
+   "ln": "Space Marines — Crusade",
+   "limit": 1500,
+   "units": [
+    {
+     "s": 4,
+     "e": 0,
+     "ref": 272,
+     "n": 1,
+     "name": "First Covenant",
+     "sn": "Battle Barges",
+     "el": "Venerable battle barge",
+     "hn": "STYX CLASS HEAVY CRUISER",
+     "custom": 450,
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 105,
+     "n": 1,
+     "name": "Strike Cruiser 1",
+     "sn": "Cruisers",
+     "el": "Strike cruisers",
+     "oi": {
+      "105:6e3907f8": "take"
+     },
+     "oqi": {},
+     "on": {
+      "105:6e3907f8": "May take an additional shield for +15 po"
+     },
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 105,
+     "n": 1,
+     "name": "Strike Cruiser 2",
+     "sn": "Cruisers",
+     "el": "Strike cruisers",
+     "oi": {
+      "105:6e3907f8": "take"
+     },
+     "oqi": {},
+     "on": {
+      "105:6e3907f8": "May take an additional shield for +15 po"
+     },
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 105,
+     "n": 1,
+     "name": "Strike Cruiser 3",
+     "sn": "Cruisers",
+     "el": "Strike cruisers",
+     "oi": {
+      "105:6e3907f8": "take"
+     },
+     "oqi": {},
+     "on": {
+      "105:6e3907f8": "May take an additional shield for +15 po"
+     },
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 105,
+     "n": 1,
+     "name": "Strike Cruiser T1",
+     "sn": "Cruisers",
+     "el": "Strike cruisers",
+     "oi": {
+      "105:202ba968": "take",
+      "105:6e3907f8": "take"
+     },
+     "oqi": {},
+     "on": {
+      "105:202ba968": "May replace its launch bays for strength",
+      "105:6e3907f8": "May take an additional shield for +15 po"
+     },
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 105,
+     "n": 1,
+     "name": "Strike Cruiser T2",
+     "sn": "Cruisers",
+     "el": "Strike cruisers",
+     "oi": {
+      "105:202ba968": "take",
+      "105:6e3907f8": "take"
+     },
+     "oqi": {},
+     "on": {
+      "105:202ba968": "May replace its launch bays for strength",
+      "105:6e3907f8": "May take an additional shield for +15 po"
+     },
+     "upn": {}
+    },
+    {
+     "s": 1,
+     "e": 0,
+     "ref": null,
+     "n": 1,
+     "name": "",
+     "sn": "Master of the Fleet",
+     "el": "Master of the Fleet (Ld 10)",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "Master of the Fleet\u0001Two re-rolls": "take"
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "Eldar Corsairs 1200",
+  "note": "own roster; mixed squadrons as 2+2",
+  "points": 1200,
+  "expect": 1200,
+  "doc": {
+   "schemaVersion": 4,
+   "li": 20,
+   "ln": "Eldar Corsairs — Later Gothic War",
+   "limit": 1500,
+   "units": [
+    {
+     "s": 3,
+     "e": 0,
+     "ref": 320,
+     "n": 1,
+     "name": "Bright Star",
+     "sn": "Battleships",
+     "el": "Void Stalker class battleship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 3,
+     "ref": 328,
+     "n": 2,
+     "name": "Nightshades A",
+     "sn": "ESCORTS",
+     "el": "Nightshade class destroyer",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 325,
+     "n": 2,
+     "name": "Hellebores A",
+     "sn": "ESCORTS",
+     "el": "Hellebore class frigate",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 3,
+     "ref": 328,
+     "n": 2,
+     "name": "Nightshades B",
+     "sn": "ESCORTS",
+     "el": "Nightshade class destroyer",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 325,
+     "n": 2,
+     "name": "Hellebores B",
+     "sn": "ESCORTS",
+     "el": "Hellebore class frigate",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 1,
+     "ref": 326,
+     "n": 5,
+     "name": "Aconite squadron",
+     "sn": "ESCORTS",
+     "el": "Aconite class frigate",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 1,
+     "e": 0,
+     "ref": null,
+     "n": 1,
+     "name": "",
+     "sn": "Pirate Prince",
+     "el": "Pirate Prince (+2 Ld)",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "Pirate Prince\u0001One re-roll": "take"
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "Necrons 1200",
+  "note": "own roster",
+  "points": 1200,
+  "expect": 1200,
+  "doc": {
+   "schemaVersion": 4,
+   "li": 26,
+   "ln": "Necrons — Harvest Fleet",
+   "limit": 1500,
+   "units": [
+    {
+     "s": 4,
+     "e": 0,
+     "ref": 405,
+     "n": 1,
+     "name": "Cairn",
+     "sn": "Tombships",
+     "el": "Cairn class tombship",
+     "oi": {
+      "405:23f1e8b0": "take"
+     },
+     "oqi": {},
+     "on": {
+      "405:23f1e8b0": "A single tombship may be upgraded to car"
+     },
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 406,
+     "n": 1,
+     "name": "Scythe #1",
+     "sn": "Cruisers",
+     "el": "Scythe class harvest ship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 406,
+     "n": 1,
+     "name": "Scythe #2",
+     "sn": "Cruisers",
+     "el": "Scythe class harvest ship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 6,
+     "e": 0,
+     "ref": 408,
+     "n": 2,
+     "name": "Jackal squadron",
+     "sn": "Raiders",
+     "el": "Jackal class raiders",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    }
+   ]
+  }
+ },
+ {
+  "name": "Tyranids 1500",
+  "note": "1500 expansions tab; the builder counts 25 escorts against 2 x 12 per hive ship",
+  "points": 1495,
+  "expect": 1495,
+  "doc": {
+   "schemaVersion": 4,
+   "li": 28,
+   "ln": "Tyranids — Hive Fleet",
+   "limit": 1500,
+   "units": [
+    {
+     "s": 2,
+     "e": 0,
+     "ref": 432,
+     "n": 1,
+     "name": "Hive Ship A",
+     "sn": "HIVE SHIPS",
+     "el": "Hive ship (Ld 8)",
+     "oi": {
+      "432:c753667e": "take",
+      "432:6ef3cd68": "take",
+      "432:fc2c9cc4": "take",
+      "432:f7e19040": "take",
+      "432:04e62d72": "take"
+     },
+     "oqi": {},
+     "on": {
+      "432:c753667e": "Prow — Boarding torpedoes",
+      "432:6ef3cd68": "Thorax — Launch bays",
+      "432:fc2c9cc4": "Port/starboard set 1 — Launch bays",
+      "432:f7e19040": "Port/starboard set 2 — Launch bays",
+      "432:04e62d72": "Port/starboard set 3 — Launch bays"
+     },
+     "upn": {
+      "FLEET COMMANDER\u0001Hive Mind Influence re-roll": "take"
+     }
+    },
+    {
+     "s": 2,
+     "e": 0,
+     "ref": 432,
+     "n": 1,
+     "name": "Hive Ship B",
+     "sn": "HIVE SHIPS",
+     "el": "Hive ship (Ld 8)",
+     "oi": {
+      "432:c753667e": "take",
+      "432:6ef3cd68": "take",
+      "432:fc2c9cc4": "take",
+      "432:f7e19040": "take",
+      "432:04e62d72": "take"
+     },
+     "oqi": {},
+     "on": {
+      "432:c753667e": "Prow — Boarding torpedoes",
+      "432:6ef3cd68": "Thorax — Launch bays",
+      "432:fc2c9cc4": "Port/starboard set 1 — Launch bays",
+      "432:f7e19040": "Port/starboard set 2 — Launch bays",
+      "432:04e62d72": "Port/starboard set 3 — Launch bays"
+     },
+     "upn": {
+      "FLEET COMMANDER\u0001Hive Mind Influence re-roll": "take"
+     }
+    },
+    {
+     "s": 10,
+     "e": 3,
+     "ref": 437,
+     "n": 6,
+     "name": "Escort Drone squad A",
+     "sn": "ESCORTS",
+     "el": "Escort drone",
+     "oi": {
+      "437:a38d707b": "take"
+     },
+     "oqi": {},
+     "on": {
+      "437:a38d707b": "Weapon — Pyro-acid battery"
+     },
+     "upn": {}
+    },
+    {
+     "s": 10,
+     "e": 3,
+     "ref": 437,
+     "n": 6,
+     "name": "Escort Drone squad B",
+     "sn": "ESCORTS",
+     "el": "Escort drone",
+     "oi": {
+      "437:bb211d3e": "take"
+     },
+     "oqi": {},
+     "on": {
+      "437:bb211d3e": "Weapon — Bio-plasma discharge"
+     },
+     "upn": {}
+    },
+    {
+     "s": 10,
+     "e": 7,
+     "ref": 435,
+     "n": 4,
+     "name": "Kraken squad",
+     "sn": "ESCORTS",
+     "el": "Kraken",
+     "oi": {
+      "435:d9efe129": "take"
+     },
+     "oqi": {},
+     "on": {
+      "435:d9efe129": "Weapon — Massive claws"
+     },
+     "upn": {}
+    },
+    {
+     "s": 10,
+     "e": 0,
+     "ref": 436,
+     "n": 6,
+     "name": "Vanguard Drone squad",
+     "sn": "ESCORTS",
+     "el": "Vanguard drone ship",
+     "oi": {
+      "436:7b06d333": "take"
+     },
+     "oqi": {},
+     "on": {
+      "436:7b06d333": "Weapon — Feeder tentacles"
+     },
+     "upn": {}
+    },
+    {
+     "s": 6,
+     "e": 0,
+     "ref": 434,
+     "n": 1,
+     "name": "Cruiser A",
+     "sn": "CAPITAL SHIPS",
+     "el": "Cruiser",
+     "oi": {
+      "434:7a83c8b5": "take",
+      "434:e22840db": "take",
+      "434:fbe5e8a8": "take"
+     },
+     "oqi": {},
+     "on": {
+      "434:7a83c8b5": "Prow — Massive claws",
+      "434:e22840db": "Thorax — Massive claws",
+      "434:fbe5e8a8": "Port/starboard set 1 — Bio-plasma discha"
+     },
+     "upn": {}
+    },
+    {
+     "s": 6,
+     "e": 0,
+     "ref": 434,
+     "n": 1,
+     "name": "Cruiser B",
+     "sn": "CAPITAL SHIPS",
+     "el": "Cruiser",
+     "oi": {
+      "434:7a83c8b5": "take",
+      "434:e22840db": "take",
+      "434:fbe5e8a8": "take"
+     },
+     "oqi": {},
+     "on": {
+      "434:7a83c8b5": "Prow — Massive claws",
+      "434:e22840db": "Thorax — Massive claws",
+      "434:fbe5e8a8": "Port/starboard set 1 — Bio-plasma discha"
+     },
+     "upn": {}
+    },
+    {
+     "s": 10,
+     "e": 7,
+     "ref": 435,
+     "n": 1,
+     "name": "Kraken claw +1",
+     "sn": "ESCORTS",
+     "el": "Kraken",
+     "oi": {
+      "435:d9efe129": "take"
+     },
+     "oqi": {},
+     "on": {
+      "435:d9efe129": "Weapon — Massive claws"
+     },
+     "upn": {}
+    },
+    {
+     "s": 10,
+     "e": 7,
+     "ref": 435,
+     "n": 2,
+     "name": "Bio-plasma Kraken",
+     "sn": "ESCORTS",
+     "el": "Kraken",
+     "oi": {
+      "435:bb211d3e": "take"
+     },
+     "oqi": {},
+     "on": {
+      "435:bb211d3e": "Weapon — Bio-plasma discharge"
+     },
+     "upn": {}
+    }
+   ]
+  }
+ },
+ {
+  "name": "Orks 1500",
+  "note": "1500 expansions tab: +3 Onslaught +3 Ravager +3 Brute (Onslaughts 5+3)",
+  "points": 1500,
+  "expect": 1500,
+  "doc": {
+   "schemaVersion": 4,
+   "li": 24,
+   "ln": "Orks — Waaagh!",
+   "limit": 1500,
+   "units": [
+    {
+     "s": 4,
+     "e": 2,
+     "ref": 376,
+     "n": 1,
+     "name": "Dethdeala",
+     "sn": "BATTLESHIPS & BATTLEKROOZERS",
+     "el": "Dethdeala",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "DAKKA DAKKA\u0001Dakka Dakka: +2 turrets": "take"
+     }
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 380,
+     "n": 1,
+     "name": "Terror Ship #1",
+     "sn": "KROOZERS",
+     "el": "Terror ship",
+     "oi": {
+      "380:5ddf3409": "take"
+     },
+     "oqi": {},
+     "on": {
+      "380:5ddf3409": "May replace its prow heavy gun battery w"
+     },
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 380,
+     "n": 1,
+     "name": "Terror Ship #2",
+     "sn": "KROOZERS",
+     "el": "Terror ship",
+     "oi": {
+      "380:5ddf3409": "take"
+     },
+     "oqi": {},
+     "on": {
+      "380:5ddf3409": "May replace its prow heavy gun battery w"
+     },
+     "upn": {}
+    },
+    {
+     "s": 6,
+     "e": 1,
+     "ref": 384,
+     "n": 5,
+     "name": "Onslaught escorts",
+     "sn": "ESCORTS",
+     "el": "Onslaught attack ship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 6,
+     "e": 0,
+     "ref": 386,
+     "n": 5,
+     "name": "Ravager escorts",
+     "sn": "ESCORTS",
+     "el": "Ravager attack ship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 6,
+     "e": 4,
+     "ref": 387,
+     "n": 4,
+     "name": "Brutes 1",
+     "sn": "ESCORTS",
+     "el": "Brute ramship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 6,
+     "e": 4,
+     "ref": 387,
+     "n": 3,
+     "name": "Brutes 2",
+     "sn": "ESCORTS",
+     "el": "Brute ramship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 2,
+     "e": 0,
+     "ref": null,
+     "n": 1,
+     "name": "",
+     "sn": "WARLORD",
+     "el": "Ork Warlord",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "WARLORD\u0001Two extra re-rolls": "take",
+      "WARLORD\u0001Extra Power Fields": "take"
+     }
+    },
+    {
+     "s": 6,
+     "e": 1,
+     "ref": 384,
+     "n": 3,
+     "name": "Onslaughts 2",
+     "sn": "ESCORTS",
+     "el": "Onslaught attack ship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 6,
+     "e": 4,
+     "ref": 387,
+     "n": 3,
+     "name": "Brutes 3",
+     "sn": "ESCORTS",
+     "el": "Brute ramship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    }
+   ]
+  }
+ },
+ {
+  "name": "AdMech 1500",
+  "note": "1500 expansions tab: +6 Gladius +2 Hunter (Hunters 4+3, Gladius 6+3)",
+  "points": 1490,
+  "expect": 1490,
+  "doc": {
+   "schemaVersion": 4,
+   "li": 7,
+   "ln": "Adeptus Mechanicus — Explorator",
+   "limit": 1500,
+   "units": [
+    {
+     "s": 4,
+     "e": 0,
+     "ref": 67,
+     "n": 1,
+     "name": "Dictator",
+     "sn": "Cruisers",
+     "el": "Dictator class cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "FLEET UPGRADES\u0001Mechanicus turret refit (+1 turret)": "take",
+      "FLEET UPGRADES\u0001Mechanicus dorsal lance battery": "take"
+     }
+    },
+    {
+     "s": 4,
+     "e": 6,
+     "ref": 76,
+     "n": 1,
+     "name": "Defiant #1",
+     "sn": "Cruisers",
+     "el": "Defiant class light cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "FLEET UPGRADES\u0001Mechanicus turret refit (+1 turret)": "take"
+     }
+    },
+    {
+     "s": 4,
+     "e": 6,
+     "ref": 76,
+     "n": 1,
+     "name": "Defiant #2",
+     "sn": "Cruisers",
+     "el": "Defiant class light cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "FLEET UPGRADES\u0001Mechanicus turret refit (+1 turret)": "take"
+     }
+    },
+    {
+     "s": 4,
+     "e": 4,
+     "ref": 72,
+     "n": 1,
+     "name": "Endeavour #1",
+     "sn": "Cruisers",
+     "el": "Endeavour class light cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "FLEET UPGRADES\u0001Mechanicus turret refit (+1 turret)": "take",
+      "FLEET UPGRADES\u0001Plasma-boosted batteries": "take"
+     }
+    },
+    {
+     "s": 4,
+     "e": 4,
+     "ref": 72,
+     "n": 1,
+     "name": "Endeavour #2",
+     "sn": "Cruisers",
+     "el": "Endeavour class light cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "FLEET UPGRADES\u0001Mechanicus turret refit (+1 turret)": "take",
+      "FLEET UPGRADES\u0001Plasma-boosted batteries": "take"
+     }
+    },
+    {
+     "s": 5,
+     "e": 5,
+     "ref": 109,
+     "n": 4,
+     "name": "Hunter squadron",
+     "sn": "ESCORTS",
+     "el": "Hunter Class Destroyer",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 2,
+     "ref": 108,
+     "n": 6,
+     "name": "Gladius squadron",
+     "sn": "ESCORTS",
+     "el": "Gladius Class Frigate",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 1,
+     "e": 0,
+     "ref": null,
+     "n": 1,
+     "name": "",
+     "sn": "Mechanicus Archmagos",
+     "el": "Archmagos Explorator (Ld 8)",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "Mechanicus Archmagos\u0001One re-roll": "take"
+     }
+    },
+    {
+     "s": 5,
+     "e": 5,
+     "ref": 109,
+     "n": 3,
+     "name": "Hunters 2",
+     "sn": "ESCORTS",
+     "el": "Hunter Class Destroyer",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 2,
+     "ref": 108,
+     "n": 3,
+     "name": "Gladius 2",
+     "sn": "ESCORTS",
+     "el": "Gladius Class Frigate",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    }
+   ]
+  }
+ },
+ {
+  "name": "World Eaters 1500",
+  "note": "1500 expansions tab: +Slaughter +Idolator +2 Infidel; Chosen Terminators not taken (see 1200)",
+  "points": 1480,
+  "expect": 1480,
+  "doc": {
+   "schemaVersion": 4,
+   "li": 17,
+   "ln": "Chaos — Khorne",
+   "limit": 1500,
+   "units": [
+    {
+     "s": 7,
+     "e": 1,
+     "ref": 266,
+     "n": 1,
+     "name": "Despoiler",
+     "sn": "Battleships",
+     "el": "Despoiler class battleship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 9,
+     "e": 1,
+     "ref": 273,
+     "n": 1,
+     "name": "Hecate",
+     "sn": "Heavy Cruisers",
+     "el": "Hecate class heavy cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 10,
+     "e": 1,
+     "ref": 277,
+     "n": 1,
+     "name": "Carnage",
+     "sn": "Cruisers",
+     "el": "Carnage class cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 10,
+     "e": 3,
+     "ref": 279,
+     "n": 1,
+     "name": "Murder",
+     "sn": "Cruisers",
+     "el": "Murder class cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 12,
+     "e": 0,
+     "ref": 281,
+     "n": 3,
+     "name": "Idolator squadron",
+     "sn": "ESCORTS",
+     "el": "Idolator class raider",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 1,
+     "e": 0,
+     "ref": null,
+     "n": 1,
+     "name": "",
+     "sn": "Chaos Warmaster of Khorne",
+     "el": "Chaos Warmaster (Ld +2)",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "Chaos Warmaster of Khorne\u0001The Mark of Khorne": "take"
+     }
+    },
+    {
+     "s": 10,
+     "e": 4,
+     "ref": 280,
+     "n": 1,
+     "name": "Killfrenzy",
+     "sn": "Cruisers",
+     "el": "Slaughter class cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 12,
+     "e": 1,
+     "ref": 282,
+     "n": 2,
+     "name": "Infidels",
+     "sn": "ESCORTS",
+     "el": "Infidel class raider",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    }
+   ]
+  }
+ },
+ {
+  "name": "Space Marines 1500",
+  "note": "1500 expansions tab: 4+3 Strike Cruisers, 1 bought re-roll, Honour Guard",
+  "points": 1500,
+  "expect": 1500,
+  "doc": {
+   "schemaVersion": 4,
+   "li": 5,
+   "ln": "Space Marines — Crusade",
+   "limit": 1500,
+   "units": [
+    {
+     "s": 4,
+     "e": 0,
+     "ref": 272,
+     "n": 1,
+     "name": "First Covenant",
+     "sn": "Battle Barges",
+     "el": "Venerable battle barge",
+     "hn": "STYX CLASS HEAVY CRUISER",
+     "custom": 450,
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 105,
+     "n": 1,
+     "name": "Strike Cruiser 1",
+     "sn": "Cruisers",
+     "el": "Strike cruisers",
+     "oi": {
+      "105:6e3907f8": "take"
+     },
+     "oqi": {},
+     "on": {
+      "105:6e3907f8": "May take an additional shield for +15 po"
+     },
+     "upn": {
+      "ORDNANCE\u0001Honour Guard": "take"
+     }
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 105,
+     "n": 1,
+     "name": "Strike Cruiser 2",
+     "sn": "Cruisers",
+     "el": "Strike cruisers",
+     "oi": {
+      "105:6e3907f8": "take"
+     },
+     "oqi": {},
+     "on": {
+      "105:6e3907f8": "May take an additional shield for +15 po"
+     },
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 105,
+     "n": 1,
+     "name": "Strike Cruiser 3",
+     "sn": "Cruisers",
+     "el": "Strike cruisers",
+     "oi": {
+      "105:6e3907f8": "take"
+     },
+     "oqi": {},
+     "on": {
+      "105:6e3907f8": "May take an additional shield for +15 po"
+     },
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 105,
+     "n": 1,
+     "name": "Strike Cruiser 4",
+     "sn": "Cruisers",
+     "el": "Strike cruisers",
+     "oi": {
+      "105:6e3907f8": "take"
+     },
+     "oqi": {},
+     "on": {
+      "105:6e3907f8": "May take an additional shield for +15 po"
+     },
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 105,
+     "n": 1,
+     "name": "Strike Cruiser T1",
+     "sn": "Cruisers",
+     "el": "Strike cruisers",
+     "oi": {
+      "105:202ba968": "take",
+      "105:6e3907f8": "take"
+     },
+     "oqi": {},
+     "on": {
+      "105:202ba968": "May replace its launch bays for strength",
+      "105:6e3907f8": "May take an additional shield for +15 po"
+     },
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 105,
+     "n": 1,
+     "name": "Strike Cruiser T2",
+     "sn": "Cruisers",
+     "el": "Strike cruisers",
+     "oi": {
+      "105:202ba968": "take",
+      "105:6e3907f8": "take"
+     },
+     "oqi": {},
+     "on": {
+      "105:202ba968": "May replace its launch bays for strength",
+      "105:6e3907f8": "May take an additional shield for +15 po"
+     },
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 105,
+     "n": 1,
+     "name": "Strike Cruiser T3",
+     "sn": "Cruisers",
+     "el": "Strike cruisers",
+     "oi": {
+      "105:202ba968": "take",
+      "105:6e3907f8": "take"
+     },
+     "oqi": {},
+     "on": {
+      "105:202ba968": "May replace its launch bays for strength",
+      "105:6e3907f8": "May take an additional shield for +15 po"
+     },
+     "upn": {}
+    },
+    {
+     "s": 1,
+     "e": 0,
+     "ref": null,
+     "n": 1,
+     "name": "",
+     "sn": "Master of the Fleet",
+     "el": "Master of the Fleet (Ld 10)",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "Master of the Fleet\u0001One re-roll": "take"
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "Eldar Corsairs 1500",
+  "note": "1500 expansions tab: +Eclipse +1 Nightshade (3+2)",
+  "points": 1490,
+  "expect": 1490,
+  "doc": {
+   "schemaVersion": 4,
+   "li": 20,
+   "ln": "Eldar Corsairs — Later Gothic War",
+   "limit": 1500,
+   "units": [
+    {
+     "s": 3,
+     "e": 0,
+     "ref": 320,
+     "n": 1,
+     "name": "Bright Star",
+     "sn": "Battleships",
+     "el": "Void Stalker class battleship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 4,
+     "e": 0,
+     "ref": 321,
+     "n": 1,
+     "name": "Silent Warrior",
+     "sn": "Cruisers",
+     "el": "Eclipse class cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 3,
+     "ref": 328,
+     "n": 3,
+     "name": "Nightshades A",
+     "sn": "ESCORTS",
+     "el": "Nightshade class destroyer",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 325,
+     "n": 2,
+     "name": "Hellebores A",
+     "sn": "ESCORTS",
+     "el": "Hellebore class frigate",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 3,
+     "ref": 328,
+     "n": 2,
+     "name": "Nightshades B",
+     "sn": "ESCORTS",
+     "el": "Nightshade class destroyer",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 325,
+     "n": 2,
+     "name": "Hellebores B",
+     "sn": "ESCORTS",
+     "el": "Hellebore class frigate",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 1,
+     "ref": 326,
+     "n": 5,
+     "name": "Aconite squadron",
+     "sn": "ESCORTS",
+     "el": "Aconite class frigate",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 1,
+     "e": 0,
+     "ref": null,
+     "n": 1,
+     "name": "",
+     "sn": "Pirate Prince",
+     "el": "Pirate Prince (+2 Ld)",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "Pirate Prince\u0001One re-roll": "take"
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "Necrons 1500",
+  "note": "1500 expansions tab: +Scythe +1 bought re-roll",
+  "points": 1500,
+  "expect": 1500,
+  "doc": {
+   "schemaVersion": 4,
+   "li": 26,
+   "ln": "Necrons — Harvest Fleet",
+   "limit": 1500,
+   "units": [
+    {
+     "s": 4,
+     "e": 0,
+     "ref": 405,
+     "n": 1,
+     "name": "Cairn",
+     "sn": "Tombships",
+     "el": "Cairn class tombship",
+     "oi": {
+      "405:23f1e8b0": "take"
+     },
+     "oqi": {},
+     "on": {
+      "405:23f1e8b0": "A single tombship may be upgraded to car"
+     },
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 406,
+     "n": 1,
+     "name": "Scythe #1",
+     "sn": "Cruisers",
+     "el": "Scythe class harvest ship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 406,
+     "n": 1,
+     "name": "Scythe #2",
+     "sn": "Cruisers",
+     "el": "Scythe class harvest ship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 6,
+     "e": 0,
+     "ref": 408,
+     "n": 2,
+     "name": "Jackal squadron",
+     "sn": "Raiders",
+     "el": "Jackal class raiders",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 406,
+     "n": 1,
+     "name": "Yuctan",
+     "sn": "Cruisers",
+     "el": "Scythe class harvest ship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "Re-rolls\u0001One extra re-roll": "take"
+     }
+    }
+   ]
+  }
+ },
+ {
+  "name": "Bastion Fleet 1200",
+  "note": "own roster v22; 2 Exorcist + 2 Defiant = 12 launch bays, 6 Cobras",
+  "points": 1200,
+  "expect": 1200,
+  "doc": {
+   "schemaVersion": 4,
+   "li": 1,
+   "ln": "Imperial Navy — Bastion Fleets",
+   "limit": 1500,
+   "units": [
+    {
+     "s": 1,
+     "e": 1,
+     "ref": null,
+     "n": 1,
+     "name": "",
+     "sn": "Admiral",
+     "el": "Admiral (Ld 9)",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 3,
+     "e": 3,
+     "ref": 59,
+     "n": 1,
+     "name": "Exorcist #1",
+     "sn": "Battleships",
+     "el": "Exorcist class grand cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 3,
+     "e": 3,
+     "ref": 59,
+     "n": 1,
+     "name": "Exorcist #2",
+     "sn": "Battleships",
+     "el": "Exorcist class grand cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 4,
+     "e": 5,
+     "ref": 72,
+     "n": 1,
+     "name": "Endeavour #1",
+     "sn": "Cruisers",
+     "el": "Endeavour Class Light Cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 4,
+     "e": 5,
+     "ref": 72,
+     "n": 1,
+     "name": "Endeavour #2",
+     "sn": "Cruisers",
+     "el": "Endeavour Class Light Cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 4,
+     "e": 7,
+     "ref": 76,
+     "n": 1,
+     "name": "Defiant #1",
+     "sn": "Cruisers",
+     "el": "Defiant Class Light Cruiser*",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 4,
+     "e": 7,
+     "ref": 76,
+     "n": 1,
+     "name": "Defiant #2",
+     "sn": "Cruisers",
+     "el": "Defiant Class Light Cruiser*",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 2,
+     "ref": 84,
+     "n": 6,
+     "name": "Cobra squadron",
+     "sn": "ESCORTS",
+     "el": "Cobra class destroyer",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    }
+   ]
+  }
+ },
+ {
+  "name": "Dark Eldar 1200",
+  "note": "own roster v22; 2 carrier Tortures, 5 battery + 4 Impaler Corsairs, all with Mimic Engines",
+  "points": 1185,
+  "expect": 1185,
+  "doc": {
+   "schemaVersion": 4,
+   "li": 22,
+   "ln": "Dark Eldar — Pirates",
+   "limit": 1500,
+   "units": [
+    {
+     "s": 1,
+     "e": 0,
+     "ref": null,
+     "n": 1,
+     "name": "",
+     "sn": "Dread Archon",
+     "el": "Dread Archon (+2 Ld)",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "Dread Archon\u0001Two re-rolls": "take"
+     }
+    },
+    {
+     "s": 2,
+     "e": 0,
+     "ref": 352,
+     "n": 1,
+     "name": "Torture A",
+     "sn": "Cruisers",
+     "el": "Torture class cruiser",
+     "oi": {
+      "352:31356f5a": "take",
+      "352:7412e15b": "take"
+     },
+     "oqi": {},
+     "on": {
+      "352:31356f5a": "Additional armament — launch bays",
+      "352:7412e15b": "May add Mimic engines for +20 pts"
+     },
+     "upn": {}
+    },
+    {
+     "s": 2,
+     "e": 0,
+     "ref": 352,
+     "n": 1,
+     "name": "Torture B",
+     "sn": "Cruisers",
+     "el": "Torture class cruiser",
+     "oi": {
+      "352:31356f5a": "take",
+      "352:7412e15b": "take"
+     },
+     "oqi": {},
+     "on": {
+      "352:31356f5a": "Additional armament — launch bays",
+      "352:7412e15b": "May add Mimic engines for +20 pts"
+     },
+     "upn": {}
+    },
+    {
+     "s": 3,
+     "e": 0,
+     "ref": 353,
+     "n": 5,
+     "name": "Corsair battery squadron",
+     "sn": "ESCORTS",
+     "el": "Corsair Class Escort",
+     "oi": {
+      "353:e0fd8e98": "take",
+      "353:34935a25": "take"
+     },
+     "oqi": {},
+     "on": {
+      "353:e0fd8e98": "Additional armament — weapons battery",
+      "353:34935a25": "May add Mimic engines for +5 pts"
+     },
+     "upn": {}
+    },
+    {
+     "s": 3,
+     "e": 0,
+     "ref": 353,
+     "n": 4,
+     "name": "Corsair Impaler squadron",
+     "sn": "ESCORTS",
+     "el": "Corsair Class Escort",
+     "oi": {
+      "353:d9209832": "take",
+      "353:34935a25": "take"
+     },
+     "oqi": {},
+     "on": {
+      "353:d9209832": "Additional armament — Impaler module",
+      "353:34935a25": "May add Mimic engines for +5 pts"
+     },
+     "upn": {}
+    }
+   ]
+  }
+ },
+ {
+  "name": "Tau 1200",
+  "note": "own roster v22; Mesme + Custodian + 2 Explorers, 4 Castellan + 3 Warden; no torpedo bombers",
+  "points": 1200,
+  "expect": 1200,
+  "doc": {
+   "schemaVersion": 4,
+   "li": 30,
+   "ln": "Tau — Commerce Protection",
+   "limit": 1500,
+   "units": [
+    {
+     "s": 1,
+     "e": 2,
+     "ref": null,
+     "n": 1,
+     "name": "",
+     "sn": "Commander",
+     "el": "Kor’O’Mesme* (Ld 9)",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 2,
+     "e": 0,
+     "ref": 468,
+     "n": 1,
+     "name": "Custodian",
+     "sn": "Battleships",
+     "el": "Custodian class starship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "FLEET UPGRADES\u0001Improved Logic Engines": "take"
+     }
+    },
+    {
+     "s": 2,
+     "e": 1,
+     "ref": 458,
+     "n": 1,
+     "name": "Explorer #1",
+     "sn": "Battleships",
+     "el": "Explorer class starship — Vash’ya Mk XXIII configuration",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 2,
+     "e": 1,
+     "ref": 458,
+     "n": 1,
+     "name": "Explorer #2",
+     "sn": "Battleships",
+     "el": "Explorer class starship — Vash’ya Mk XXIII configuration",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 4,
+     "e": 0,
+     "ref": 474,
+     "n": 4,
+     "name": "Castellan squadron",
+     "sn": "ESCORTS",
+     "el": "Castellan class starship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 4,
+     "e": 3,
+     "ref": 475,
+     "n": 3,
+     "name": "Warden squadron",
+     "sn": "ESCORTS",
+     "el": "Warden class gunship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    }
+   ]
+  }
+ },
+ {
+  "name": "Bastion Fleet 1500",
+  "note": "1500 expansions tab: +Tyrant (45 cm batteries), +Siluria reserve from Bakka, Power Ram on one Endeavour; the ram needs a 6+ prow (Fleets p. 32), so that Endeavour takes its free 6+ prow option and turns 45 degrees (p. 72)",
+  "points": 1500,
+  "expect": 1500,
+  "doc": {
+   "schemaVersion": 4,
+   "li": 1,
+   "ln": "Imperial Navy — Bastion Fleets",
+   "limit": 1500,
+   "units": [
+    {
+     "s": 1,
+     "e": 1,
+     "ref": null,
+     "n": 1,
+     "name": "",
+     "sn": "Admiral",
+     "el": "Admiral (Ld 9)",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 3,
+     "e": 3,
+     "ref": 59,
+     "n": 1,
+     "name": "Exorcist #1",
+     "sn": "Battleships",
+     "el": "Exorcist class grand cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 3,
+     "e": 3,
+     "ref": 59,
+     "n": 1,
+     "name": "Exorcist #2",
+     "sn": "Battleships",
+     "el": "Exorcist class grand cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 4,
+     "e": 5,
+     "ref": 72,
+     "n": 1,
+     "name": "Endeavour #1",
+     "sn": "Cruisers",
+     "el": "Endeavour Class Light Cruiser",
+     "oi": {
+      "72:681dec1c": "take"
+     },
+     "oqi": {},
+     "on": {
+      "72:681dec1c": "May increase the prow armour to 6+ for n"
+     },
+     "upn": {
+      "FLEET UPGRADES\u0001Imperial Power Ram": "take"
+     }
+    },
+    {
+     "s": 4,
+     "e": 5,
+     "ref": 72,
+     "n": 1,
+     "name": "Endeavour #2",
+     "sn": "Cruisers",
+     "el": "Endeavour Class Light Cruiser",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 4,
+     "e": 7,
+     "ref": 76,
+     "n": 1,
+     "name": "Defiant #1",
+     "sn": "Cruisers",
+     "el": "Defiant Class Light Cruiser*",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 4,
+     "e": 7,
+     "ref": 76,
+     "n": 1,
+     "name": "Defiant #2",
+     "sn": "Cruisers",
+     "el": "Defiant Class Light Cruiser*",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 2,
+     "ref": 84,
+     "n": 6,
+     "name": "Cobra squadron",
+     "sn": "ESCORTS",
+     "el": "Cobra class destroyer",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 4,
+     "e": 1,
+     "ref": 69,
+     "n": 1,
+     "name": "Tyrant",
+     "sn": "Cruisers",
+     "el": "Tyrant class cruiser",
+     "oi": {
+      "69:b29b3bbf": "take"
+     },
+     "oqi": {},
+     "on": {
+      "69:b29b3bbf": "Can replace its 30 cm range weapons batt"
+     },
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 6,
+     "ref": 78,
+     "n": 1,
+     "name": "Siluria",
+     "sn": "Cruisers",
+     "el": "Siluria Class Light Cruiser",
+     "lst": "Imperial Navy — Bakka Sector",
+     "role": "reserve",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    }
+   ]
+  }
+ },
+ {
+  "name": "Dark Eldar 1500",
+  "note": "1500 expansions tab: +1 battery +2 Impaler Corsairs, +3 torpedo Corsairs without Mimic Engines",
+  "points": 1500,
+  "expect": 1500,
+  "doc": {
+   "schemaVersion": 4,
+   "li": 22,
+   "ln": "Dark Eldar — Pirates",
+   "limit": 1500,
+   "units": [
+    {
+     "s": 1,
+     "e": 0,
+     "ref": null,
+     "n": 1,
+     "name": "",
+     "sn": "Dread Archon",
+     "el": "Dread Archon (+2 Ld)",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "Dread Archon\u0001Two re-rolls": "take"
+     }
+    },
+    {
+     "s": 2,
+     "e": 0,
+     "ref": 352,
+     "n": 1,
+     "name": "Torture A",
+     "sn": "Cruisers",
+     "el": "Torture class cruiser",
+     "oi": {
+      "352:31356f5a": "take",
+      "352:7412e15b": "take"
+     },
+     "oqi": {},
+     "on": {
+      "352:31356f5a": "Additional armament — launch bays",
+      "352:7412e15b": "May add Mimic engines for +20 pts"
+     },
+     "upn": {}
+    },
+    {
+     "s": 2,
+     "e": 0,
+     "ref": 352,
+     "n": 1,
+     "name": "Torture B",
+     "sn": "Cruisers",
+     "el": "Torture class cruiser",
+     "oi": {
+      "352:31356f5a": "take",
+      "352:7412e15b": "take"
+     },
+     "oqi": {},
+     "on": {
+      "352:31356f5a": "Additional armament — launch bays",
+      "352:7412e15b": "May add Mimic engines for +20 pts"
+     },
+     "upn": {}
+    },
+    {
+     "s": 3,
+     "e": 0,
+     "ref": 353,
+     "n": 6,
+     "name": "Corsair battery squadron",
+     "sn": "ESCORTS",
+     "el": "Corsair Class Escort",
+     "oi": {
+      "353:e0fd8e98": "take",
+      "353:34935a25": "take"
+     },
+     "oqi": {},
+     "on": {
+      "353:e0fd8e98": "Additional armament — weapons battery",
+      "353:34935a25": "May add Mimic engines for +5 pts"
+     },
+     "upn": {}
+    },
+    {
+     "s": 3,
+     "e": 0,
+     "ref": 353,
+     "n": 6,
+     "name": "Corsair Impaler squadron",
+     "sn": "ESCORTS",
+     "el": "Corsair Class Escort",
+     "oi": {
+      "353:d9209832": "take",
+      "353:34935a25": "take"
+     },
+     "oqi": {},
+     "on": {
+      "353:d9209832": "Additional armament — Impaler module",
+      "353:34935a25": "May add Mimic engines for +5 pts"
+     },
+     "upn": {}
+    },
+    {
+     "s": 3,
+     "e": 0,
+     "ref": 353,
+     "n": 3,
+     "name": "Corsair torpedo squadron",
+     "sn": "ESCORTS",
+     "el": "Corsair Class Escort",
+     "oi": {
+      "353:a2b207aa": "take"
+     },
+     "oqi": {},
+     "on": {
+      "353:a2b207aa": "Additional armament — torpedoes"
+     },
+     "upn": {}
+    }
+   ]
+  }
+ },
+ {
+  "name": "Tau 1500",
+  "note": "1500 expansions tab: -3 Castellan -1 Warden, +2 Protector (T'olku) +1 Emissary (Dal'yth)",
+  "points": 1500,
+  "expect": 1500,
+  "doc": {
+   "schemaVersion": 4,
+   "li": 30,
+   "ln": "Tau — Commerce Protection",
+   "limit": 1500,
+   "units": [
+    {
+     "s": 1,
+     "e": 2,
+     "ref": null,
+     "n": 1,
+     "name": "",
+     "sn": "Commander",
+     "el": "Kor’O’Mesme* (Ld 9)",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 2,
+     "e": 0,
+     "ref": 468,
+     "n": 1,
+     "name": "Custodian",
+     "sn": "Battleships",
+     "el": "Custodian class starship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "FLEET UPGRADES\u0001Improved Logic Engines": "take"
+     }
+    },
+    {
+     "s": 2,
+     "e": 1,
+     "ref": 458,
+     "n": 1,
+     "name": "Explorer #1",
+     "sn": "Battleships",
+     "el": "Explorer class starship — Vash’ya Mk XXIII configuration",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 2,
+     "e": 1,
+     "ref": 458,
+     "n": 1,
+     "name": "Explorer #2",
+     "sn": "Battleships",
+     "el": "Explorer class starship — Vash’ya Mk XXIII configuration",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 4,
+     "e": 0,
+     "ref": 474,
+     "n": 1,
+     "name": "Castellan squadron",
+     "sn": "ESCORTS",
+     "el": "Castellan class starship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 4,
+     "e": 3,
+     "ref": 475,
+     "n": 2,
+     "name": "Warden squadron",
+     "sn": "ESCORTS",
+     "el": "Warden class gunship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 3,
+     "e": 0,
+     "ref": 470,
+     "n": 1,
+     "name": "Protector #1",
+     "sn": "Cruisers",
+     "el": "Protector class starship — T’olku configuration",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 3,
+     "e": 0,
+     "ref": 470,
+     "n": 1,
+     "name": "Protector #2",
+     "sn": "Cruisers",
+     "el": "Protector class starship — T’olku configuration",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 3,
+     "e": 4,
+     "ref": 472,
+     "n": 1,
+     "name": "Emissary",
+     "sn": "Cruisers",
+     "el": "Emissary class starship — Dal’yth configuration",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    }
+   ]
+  }
+ },
+ {
+  "name": "Orks Da Slow 'n' Furius 1500",
+  "note": "ORKS ALT sheet: Hulk + 2 Terror + Rok + 5 Brutes, two Warlords (aboard the Hulk and Terror #1) with 3 re-rolls and Extra Power Fields each; aboard the Hulk they cost +50 (Fleets p. 390)",
+  "points": 1500,
+  "expect": 1500,
+  "doc": {
+   "schemaVersion": 4,
+   "li": 24,
+   "ln": "Orks — Waaagh!",
+   "limit": 1500,
+   "units": [
+    {
+     "s": 3,
+     "e": 0,
+     "ref": 389,
+     "n": 1,
+     "name": "Ork Space Hulk",
+     "sn": "SPACE HULKS",
+     "el": "Ork hulk",
+     "uid": "u151",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 380,
+     "n": 1,
+     "name": "Terror Ship #1",
+     "sn": "KROOZERS",
+     "el": "Terror ship",
+     "uid": "u152",
+     "oi": {
+      "380:5ddf3409": "take",
+      "380:b132d3ba": "take"
+     },
+     "oqi": {},
+     "on": {
+      "380:5ddf3409": "May replace its prow heavy gun battery w",
+      "380:b132d3ba": "If fitted with a torpedo launcha, it may"
+     },
+     "upn": {
+      "FLEET UPGRADES\u0001Torpedo-bommas": "take"
+     }
+    },
+    {
+     "s": 5,
+     "e": 0,
+     "ref": 380,
+     "n": 1,
+     "name": "Terror Ship #2",
+     "sn": "KROOZERS",
+     "el": "Terror ship",
+     "oi": {
+      "380:5ddf3409": "take",
+      "380:b132d3ba": "take"
+     },
+     "oqi": {},
+     "on": {
+      "380:5ddf3409": "May replace its prow heavy gun battery w",
+      "380:b132d3ba": "If fitted with a torpedo launcha, it may"
+     },
+     "upn": {
+      "FLEET UPGRADES\u0001Torpedo-bommas": "take"
+     }
+    },
+    {
+     "s": 7,
+     "e": 0,
+     "ref": 392,
+     "n": 1,
+     "name": "Rok",
+     "sn": "ORK ROKS",
+     "el": "Rok",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 6,
+     "e": 4,
+     "ref": 387,
+     "n": 5,
+     "name": "Brute Ram Ships",
+     "sn": "ESCORTS",
+     "el": "Brute ramship",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {}
+    },
+    {
+     "s": 2,
+     "e": 0,
+     "ref": null,
+     "n": 1,
+     "name": "Warlord (Hulk)",
+     "sn": "WARLORD",
+     "el": "Ork Warlord",
+     "aboard": "u151",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "WARLORD\u0001Two extra re-rolls": "take",
+      "WARLORD\u0001Extra Power Fields (Space Hulk)": "take"
+     }
+    },
+    {
+     "s": 2,
+     "e": 0,
+     "ref": null,
+     "n": 1,
+     "name": "Warlord (Terror #1)",
+     "sn": "WARLORD",
+     "el": "Ork Warlord",
+     "aboard": "u152",
+     "oi": {},
+     "oqi": {},
+     "on": {},
+     "upn": {
+      "WARLORD\u0001Two extra re-rolls": "take",
+      "WARLORD\u0001Extra Power Fields": "take"
+     }
+    }
+   ]
+  }
+ }
+]

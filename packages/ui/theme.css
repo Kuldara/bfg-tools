@@ -1,0 +1,49 @@
+/* ============================================================ TOKENS ===== */
+:root{
+  --ground:#E6E9ED; --panel:#F4F6F8; --sunk:#DCE1E6; --line:#C3CBD3;
+  --line-soft:#D6DCE2; --ink:#141A21; --ink-2:#3E4A57; --ink-3:#6B7885;
+  --accent:#1F6F63; --accent-ink:#12463E; --accent-wash:#DCEAE7;
+  --brass:#8A6A26; --brass-wash:#F0E7D2;
+  --ok:#2F6B48; --ok-wash:#DDEBE2;
+  --warn:#8A5B12; --warn-wash:#F5E9D5;
+  --bad:#993330; --bad-wash:#F6DEDC;
+  --shadow:0 1px 2px rgba(20,26,33,.08), 0 8px 24px -16px rgba(20,26,33,.35);
+  /* Weapon colours of the card (DOMAIN.WEP), so a ship reads the same in the
+     picker and on paper. The card's own values are for ink on white; the dark
+     theme lightens them below rather than inventing a second scheme. */
+  --w-wb:#96590E; --w-lan:#1F6F8B; --w-nov:#A33A2E; --w-tor:#4E5760;
+  --w-bay:#70469A; --w-min:#5F621A; --w-pul:#2E6B4A; --w-ram:#7A5230;
+  --w-hook:#0A6B5E;
+  --r:3px;
+  --sans:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --disp:"Archivo Narrow","Arial Narrow",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,"Cascadia Mono",Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F151B; --panel:#161E26; --sunk:#0B1116; --line:#2C3945;
+    --line-soft:#222D38; --ink:#E4EAF0; --ink-2:#A9B6C3; --ink-3:#778695;
+    --accent:#5FB3A3; --accent-ink:#A5D8CD; --accent-wash:#15302C;
+    --brass:#C9A45C; --brass-wash:#2C2517;
+    --ok:#6FBF8E; --ok-wash:#162C21;
+    --warn:#D6A340; --warn-wash:#2E2415;
+    --bad:#E5807A; --bad-wash:#331A19;
+    --w-wb:#E4B25E; --w-lan:#6FB6D4; --w-nov:#E8897B; --w-tor:#A7B3BF;
+    --w-bay:#B693DE; --w-min:#C2C66A; --w-pul:#73C69C; --w-ram:#CC9C6E;
+    --w-hook:#5FC9B4;
+    --shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -16px rgba(0,0,0,.8);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F151B; --panel:#161E26; --sunk:#0B1116; --line:#2C3945;
+  --line-soft:#222D38; --ink:#E4EAF0; --ink-2:#A9B6C3; --ink-3:#778695;
+  --accent:#5FB3A3; --accent-ink:#A5D8CD; --accent-wash:#15302C;
+  --brass:#C9A45C; --brass-wash:#2C2517;
+  --ok:#6FBF8E; --ok-wash:#162C21;
+  --warn:#D6A340; --warn-wash:#2E2415;
+  --bad:#E5807A; --bad-wash:#331A19;
+  --w-wb:#E4B25E; --w-lan:#6FB6D4; --w-nov:#E8897B; --w-tor:#A7B3BF;
+  --w-bay:#B693DE; --w-min:#C2C66A; --w-pul:#73C69C; --w-ram:#CC9C6E;
+  --w-hook:#5FC9B4;
+  --shadow:0 1px 2px rgba(0,0,0,.5), 0 8px 24px -16px rgba(0,0,0,.8);
+}

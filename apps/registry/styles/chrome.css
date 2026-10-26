@@ -1,0 +1,120 @@
+/* ============================================================= CHROME ==== */
+.topbar{
+  position:sticky; top:0; z-index:20; background:var(--panel);
+  border-bottom:1px solid var(--line);
+  display:flex; flex-wrap:wrap; gap:14px 18px; align-items:flex-end;
+  padding:12px 20px;
+}
+/* The bar's three parts: the heading with the list and the limit, the points
+   total, and the saved fleets with the buttons. On a wide screen they are not
+   boxes at all - what is inside them is laid out as the bar's own flex items,
+   exactly as before the parts existed. A narrow screen gives each a box of
+   its own (NARROW SCREENS below). */
+.tb-head,.tb-strip,.tb-acts{display:contents}
+.tb-tog,.tb-lab{display:none}
+.brand{display:flex;flex-direction:column;gap:1px;margin-right:auto}
+.brand b{
+  font:600 20px/1 var(--disp); letter-spacing:.055em; text-transform:uppercase;
+}
+.brand span{font:400 11px/1.35 var(--mono);color:var(--ink-3);letter-spacing:.02em}
+/* The family badge (BFG Tools, packages/ui/tools-badge.html) sits on the
+   title line, before the name: the family first, then the product. */
+.brandrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.field{display:flex;flex-direction:column;gap:4px}
+.field>label{
+  font:600 10px/1 var(--sans); letter-spacing:.11em; text-transform:uppercase;
+  color:var(--ink-3);
+}
+select,input[type=number],input[type=text]{
+  background:var(--ground); border:1px solid var(--line); border-radius:var(--r);
+  padding:7px 9px;
+}
+select{max-width:320px}
+input[type=number]{width:104px;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.btn{
+  background:var(--ground); border:1px solid var(--line); border-radius:var(--r);
+  padding:7px 12px; cursor:pointer;
+  font:600 12px/1.2 var(--sans); letter-spacing:.03em;
+}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+:root[data-theme="dark"] .btn.primary,
+:root:not([data-theme="light"]) .btn.primary{color:#08120F}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) .btn.primary{color:#fff}}
+.btn.primary:hover{filter:brightness(1.08);color:#fff}
+:root[data-theme="dark"] .btn.primary:hover{color:#08120F}
+.btnrow{display:flex;gap:8px;flex-wrap:wrap}
+
+.tally{
+  display:flex;align-items:baseline;gap:8px;
+  font-family:var(--mono);font-variant-numeric:tabular-nums;
+  border-left:3px solid var(--accent); padding-left:12px;
+}
+.tally b{font:600 26px/1 var(--mono)}
+.tally i{font-style:normal;font-size:12px;color:var(--ink-3)}
+.tally.over b{color:var(--bad)}
+/* The saved fleets (one per list, J146) behind one dropdown: the count in
+   its title, and inside a row per fleet with Open and Delete. It answers
+   "where did my fleet go" without opening the list menu, and gives the only
+   deliberate way to throw a kept fleet away - Clear is for the fleet in
+   front of you and must not sweep these (user 28.9.2026: the chip row had
+   become an unbrowsable cluster). */
+.saves{position:relative}
+.saves summary{list-style:none;cursor:pointer;display:inline-flex;align-items:center;gap:8px;
+  min-height:32px;padding:0 10px;border:1px solid var(--line);border-radius:var(--r);
+  background:var(--sunk);font:600 12px/1 var(--mono);color:var(--ink-2);user-select:none}
+.saves summary::-webkit-details-marker{display:none}
+.saves summary b{font:600 14px/1 var(--mono);color:var(--ink)}
+.saves summary::after{content:"\25BE";color:var(--ink-3)}
+.saves[open] summary::after{content:"\25B4"}
+.saves .panel{position:absolute;left:0;top:calc(100% + 6px);z-index:30;min-width:min(340px,92vw);max-width:min(520px,92vw);
+  overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:6px}
+.saves .rowf{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:var(--r);font:13px/1.3 var(--sans)}
+.saves .rowf+.rowf{border-top:1px solid var(--line-soft)}
+.saves .rowf.open{background:var(--accent-wash)}
+.saves .rowf .nm{flex:1;min-width:0}
+.saves .rowf .nm b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.saves .rowf .nm i{font:11px/1.3 var(--mono);color:var(--ink-3);font-style:normal}
+.saves .rowf button,.saves .phonebox button{border:1px solid var(--line);background:var(--sunk);border-radius:var(--r);cursor:pointer;
+  color:var(--ink);font:600 11px/1 var(--sans);padding:6px 9px;letter-spacing:.03em;text-transform:uppercase}
+.saves .rowf button.del:hover{background:var(--bad-wash);color:var(--bad);border-color:var(--bad)}
+.saves .rowf button.go:hover,.saves .phonebox button.go:hover{background:var(--accent-wash);color:var(--accent-ink);border-color:var(--accent)}
+.saves .phonebox button[disabled]{opacity:.45;cursor:default}
+.saves .empty{padding:8px;font:12px/1.4 var(--sans);color:var(--ink-3)}
+.saves .rowf.tools{border-top:1px solid var(--line-soft);margin-top:4px}
+.saves .rowf.tools .nm i{white-space:normal}
+/* the fleets to a phone (19.10.2026): the buttons wrap under the name on a
+   narrow screen; the QR panel opens under the button's row */
+.saves .rowf{flex-wrap:wrap;row-gap:6px}
+.saves .rowf .nm{flex:1 1 100%}
+.saves .rowf button.del{margin-left:auto}
+.saves .panel{min-width:min(400px,92vw)}
+.saves .rowf button.on{background:var(--accent-wash);color:var(--accent-ink);border-color:var(--accent)}
+.saves .phonebox{margin:2px 0 8px;padding:8px;border:1px solid var(--line);border-radius:var(--r);background:var(--sunk);font:12px/1.4 var(--sans);color:var(--ink-2)}
+.saves .phonebox p{margin:4px 0}
+.saves .phonebox .qr{background:#fff;padding:6px;border-radius:6px;width:min(340px,100%);margin:0 auto 4px;cursor:zoom-in}
+.saves .phonebox .qr.big{width:min(480px,100%)}
+.saves .phonebox .qr svg{display:block;width:100%;height:auto}
+.saves .phonebox .plink{width:100%;font:11px var(--mono);padding:5px 6px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);color:var(--ink-2)}
+.saves .phonebox .pbtns{display:flex;gap:6px;margin-top:6px}
+.saves .phonebox .perr{color:var(--bad)}
+/* the named library and the Save button (J208) */
+.saves .sh{font:600 10px/1 var(--sans);letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);padding:9px 8px 3px}
+.saves .rowf.fresh{box-shadow:inset 3px 0 0 var(--accent)}
+.saves .rowf button.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.saves .rowf input[type=text]{flex:1 1 220px;min-width:0;font:13px var(--sans)}
+.saves .rowf .msg{font:11px/1.3 var(--mono);color:var(--ok)}
+/* a phone: the five buttons of a saved fleet on one line (345 px panel) */
+@media (max-width:420px){.saves .rowf{gap:6px}.saves .rowf button{padding:6px 7px}}
+#savedot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--warn);font-style:normal}
+#savedot[hidden]{display:none}
+/* Print cards and its menu are one control: the sheet in force on the
+   menu's half, the rest of the print and copy actions inside */
+.split{display:inline-flex;align-items:stretch}
+.split>.btn{border-top-right-radius:0;border-bottom-right-radius:0}
+.split>.saves>summary{height:100%;min-height:0;border-top-left-radius:0;border-bottom-left-radius:0;border-left:0}
+/* The print setup shares the dropdown: paper, card size, what that gives. */
+#printset .rowf .nm i{display:block;white-space:normal}
+#printset select{padding:5px 7px;font-size:13px}
+#printset input[type=number]{width:74px;padding:5px 7px;font-size:13px}
+

@@ -1,0 +1,242 @@
+{
+  "list": "Space Marines — Dominion",
+  "book_page": 100,
+  "read_pages": [
+    100,
+    101,
+    102
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Master of the Fleet",
+      "text": "0-1 Master of the Fleet",
+      "page": 100,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "worth over 750 points, a Master of the Fleet must be included",
+      "text": "If the fleet is worth over 750 points, a Master of the Fleet must be included to lead it.",
+      "page": 100,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "over": true
+    },
+    {
+      "key": "If a Venerable battle barge is included in the fleet, the Master of the Fleet must be assigned to it",
+      "text": "If a Venerable battle barge is included in the fleet, the Master of the Fleet must be assigned to it.",
+      "page": 100,
+      "status": "manual",
+      "why": "The placement is done at the table. Note the difference: in the Codex Astartes the placement is 'in preference to', here a requirement."
+    },
+    {
+      "key": "Any Imperial Navy battleship, grand cruiser or battlecruiser may have a Space Marine Captain",
+      "text": "Any Imperial Navy battleship, grand cruiser or battlecruiser may have a Space Marine Captain assigned to it.",
+      "page": 100,
+      "status": "manual",
+      "why": "Concerns Imperial Navy ships that come to this list as reserves; they are not rows of this list."
+    },
+    {
+      "key": "Space Marine Captains roll against the Space Marines leadership table",
+      "text": "Space Marine Captains roll against the Space Marines leadership table instead of the normal leadership table.",
+      "page": 100,
+      "status": "manual",
+      "why": "The leadership is rolled at the start of the game."
+    },
+    {
+      "key": "Imperial Navy ships led by a Space Marine Captain do not benefit from any of the Space Marines special rules",
+      "text": "Except for this bonus, Imperial Navy ships led by a Space Marine Captain do not benefit from any of the Space Marines special rules concerning boarding, hit and run attacks, ordnance, etc.",
+      "page": 100,
+      "status": "manual",
+      "why": "An important limit: the captain gives only the leadership table, not the other Space Marine rules."
+    },
+    {
+      "key": "0-3 Battle Barges",
+      "text": "0-3 Battle Barges",
+      "page": 101,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 3
+    },
+    {
+      "key": "one Space Marine battle barge for every 1,000 points or part thereof",
+      "text": "You may include one Space Marine battle barge for every 1,000 points or part thereof in your fleet.",
+      "page": 101,
+      "status": "enforced",
+      "kind": "per_points",
+      "each": 1,
+      "per": 1000,
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. per_points pick=the Battle Barges section (the Venerable counts as one of the three). The earlier gap: resolve_sections does not link the phrase 'Space Marine battle barge' to the section 'Battle Barges'. The same in all three Space Marine lists.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "must be worth at least 1,000 points to include a single Venerable battle barge",
+      "text": "The fleet must be worth at least 1,000 points to include a single Venerable battle barge (counting as one of the three allowed), chosen from any available Imperial or Chaos battleship, grand cruiser, battlecruiser or heavy cruiser at the listed cost, plus an additional +35 points for its Space Marine crew.",
+      "page": 101,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. The sentence is kept visible (keep_text). The earlier gap: a permission tied to a points limit, for which there was no rule type. The number one is enforced as the row limit mx=1.",
+      "kind": "allowed_at",
+      "points": 1000,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "0-10 Cruisers",
+      "text": "0-10 Cruisers",
+      "page": 101,
+      "status": "enforced",
+      "kind": "conditional_cap",
+      "why": "1.1 (14.9.2026): the limit is conditional, because p.101 says 'When reserves are taken in this manner, the fleet can have up to twelve cruisers'. The condition is the fleet's ROLE (does it have a reserve), not a row.",
+      "max_unmet": 10,
+      "max_met": 12
+    },
+    {
+      "key": "escorts in your fleet in squadrons of 2",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "page": 101,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "cannot be given any form of Space Marine upgrade",
+      "text": "Imperial Navy, Adeptus Mechanicus and Rogue Trader vessels are equipped with their own standard ordnance (even if they have Space Marine Captains) and cannot be given any form of Space Marine upgrade.",
+      "page": 101,
+      "status": "manual",
+      "why": "Koskee toisen listan aluksia."
+    },
+    {
+      "key": "This is reduced to 2 if the fleet has any Imperial Navy, Mechanicus or Rogue Trader vessels",
+      "text": "A Space Marine Dominion Fleet has an attack rating of 3. This is reduced to 2 if the fleet has any Imperial Navy, Mechanicus or Rogue Trader vessels at all.",
+      "page": 101,
+      "status": "manual",
+      "why": "Attack rating on pelinaikainen arvo."
+    },
+    {
+      "key": "When reserves are taken in this manner, the fleet can have up to twelve cruisers",
+      "text": "When reserves are taken in this manner, the fleet can have up to twelve cruisers.",
+      "page": 101,
+      "status": "enforced",
+      "why": "1.1 (14.9.2026): the same rule as the previous row - a conditional_cap whose cond_role is 'reserve'. Reserves are now in the engine, so raising the limit is enforced.",
+      "kind": "conditional_cap"
+    },
+    {
+      "key": "a Dominion Fleet cannot take reinforcements from the Space Marines table",
+      "text": "However, in the course of a campaign, a Dominion Fleet cannot take reinforcements from the Space Marines table listed on ... of the Battlefleet Gothic rulebook.",
+      "page": 101,
+      "status": "manual",
+      "why": "Kampanjasaanto."
+    },
+    {
+      "key": "a dominion fleet can take Imperial Navy vessels as normal reserves",
+      "text": "A Space Marine Dominion Fleet has close ties with nearby Imperial Navy forces. Contrary to the normal rules, a dominion fleet can take Imperial Navy vessels as normal reserves and reinforcements, including Adeptus Mechanicus and non-xenos Rogue Trader vessels.",
+      "page": 101,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "dominion-takes-imperial-navy-reserves",
+        "dominion-reserve-grant-does-not-cover-chaos",
+        "dominion-rogue-trader-cruiser-as-reserve",
+        "dominion-cannot-take-xenos-rogue-trader-vessels"
+      ],
+      "why": "1.1 (14.9.2026): the list's field res_ok = a named reserve permission, which overrides the race gate only from the named sources (race imperial navy and the three Rogue Traders lists); xenos rows are excluded (p.101 'non-xenos'). Without it the race gate (p.15) would prevent the whole thing, because the Dominion is space marines by race."
+    }
+  ],
+  "entries": [
+    {
+      "name": "Master of the Fleet (Ld 10)",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "One re-roll",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Two re-rolls",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Three re-rolls",
+      "pts": 75,
+      "page": null
+    },
+    {
+      "name": "Terminator boarding party",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Space Marine Captain",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Honour Guard",
+      "pts": 10,
+      "page": null
+    },
+    {
+      "name": "Venerable battle barge",
+      "pts": null,
+      "page": 103
+    },
+    {
+      "name": "Battle barge",
+      "pts": 425,
+      "page": 104
+    },
+    {
+      "name": "Strike cruiser",
+      "pts": 145,
+      "page": 105
+    },
+    {
+      "name": "Nova class Frigate",
+      "pts": 50,
+      "page": 107
+    },
+    {
+      "name": "Gladius class Frigate",
+      "pts": 45,
+      "page": 108
+    },
+    {
+      "name": "Hunter class Destroyer",
+      "pts": 40,
+      "page": 109
+    },
+    {
+      "name": "Rapid strike vessel (Firestorm)",
+      "pts": 45,
+      "page": 79
+    },
+    {
+      "name": "Rapid strike vessel (Falchion)",
+      "pts": 40,
+      "page": 80
+    },
+    {
+      "name": "Rapid strike vessel (Sword)",
+      "pts": 40,
+      "page": 82
+    },
+    {
+      "name": "Rapid strike vessel (Cobra)",
+      "pts": 35,
+      "page": 84
+    }
+  ],
+  "notes": [
+    "The Dominion is the only Space Marine list with a Rapid strike vessel (Falchion). The book p.101.",
+    "The book writes this list's row as 'Strike cruiser' in the singular, while the Codex Astartes and the Crusade use the plural 'Strike cruisers'. The app keeps the book's wording per list.",
+    "The reserve rule allows a fleet of twelve cruisers, but only with reserves. The app enforces the basic limit 0-10."
+  ]
+}

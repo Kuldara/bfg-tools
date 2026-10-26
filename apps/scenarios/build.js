@@ -1,0 +1,71 @@
+/* Builds the Scenario Library.
+
+   dist/scenarios/index.html               the page (plain scripts, no bundling)
+   dist/scenarios/scenarios/*.js           one file per publication; each adds its
+                                           scenarios to the library when loaded
+   dist/scenarios/battlezone-core.js       the terrain core, from packages/battlezone
+   dist/scenarios/favicon.png, apple-touch-icon.png
+
+   dist/scenarios/lab/lab.js               the discovery lab, only when BFG_LAB=1
+
+   Every local script gets ?v=<content hash>, so a browser never keeps an old
+   copy after a release and nobody bumps version query strings by hand. */
+"use strict";
+const path = require("path"), fs = require("fs");
+const kit = require("../../tools/lib/kit.js");
+const battlezone = require("../../packages/battlezone/index.js");
+const APP = require("./app.json");
+
+const HERE = "apps/scenarios";
+const OUT = "dist/scenarios/";
+const BADGE_HOSTS = ["bfgtools.kuldare.com", "bfgtools.boarding.kuldare.com", "terrain-generator.kuldare.com",
+  "bfgtools.meta.kuldare.com", "scenario-library.kuldare.com", "github.com"];
+/* The discovery lab (lab/) is a prototype and never published by default: only
+   a build with BFG_LAB=1 links it, for trying it locally (lab/README.md). */
+const LAB = process.env.BFG_LAB === "1";
+/* Links to where a scenario was published ("Open the original"); nothing is
+   fetched from them. */
+const ALLOWED = ["http://www.w3.org", "https://drive.google.com", "https://specialist-arms.com", "https://www.specialist-arms.com"];
+
+async function build() {
+  const files = { "battlezone-core.js": battlezone.asNamespace() };
+  for (const f of fs.readdirSync(kit.abs(HERE + "/scenarios")).filter(f => f.endsWith(".js")).sort())
+    files["scenarios/" + f] = kit.read(HERE + "/scenarios/" + f);
+
+  if (LAB)
+    for (const f of fs.readdirSync(kit.abs(HERE + "/lab")).filter(f => f.endsWith(".js")).sort())
+      files["lab/" + f] = kit.read(HERE + "/lab/" + f);
+  else fs.rmSync(kit.abs(OUT + "lab"), { recursive: true, force: true });   /* no stale copy to publish */
+
+  let page = kit.read(HERE + "/index.html");
+  page = kit.fill(page, "version", APP.version);
+  page = kit.fill(page, "lab", LAB ? '<script src="lab/lab.js"></script>' : "");
+  page = page.replace("<!--BFGTOOLS--><!--/BFGTOOLS-->", "<!--BFGTOOLS-->" + kit.badge("scenarios") + "<!--/BFGTOOLS-->");
+  const linked = new Set();
+  page = page.replace(/<script src="([^"?:]+\.js)">/g, (m, src) => {
+    if (!(src in files)) throw new Error("index.html loads " + src + ", which the build does not make");
+    linked.add(src);
+    return `<script src="${src}?v=${kit.sha(files[src]).slice(0, 10)}">`;
+  });
+  const unlinked = Object.keys(files).filter(f => !linked.has(f));
+  if (unlinked.length) throw new Error("not loaded by index.html: " + unlinked.join(", "));
+
+  kit.guards.controlChars(page, "scenarios");
+  kit.guards.cssVars(page, "scenarios");
+  const b = kit.guards.badge(page, "scenarios", BADGE_HOSTS);
+  kit.guards.externalUrls(page, "scenarios", ALLOWED, b);
+  for (const [f, text] of Object.entries(files)) {
+    kit.guards.controlChars(text, f);
+    kit.guards.externalUrls(text, f, ALLOWED);
+  }
+
+  const out = [kit.write(OUT + "index.html", page)];
+  for (const [f, text] of Object.entries(files)) out.push(kit.write(OUT + f, text));
+  for (const f of ["favicon.png", "apple-touch-icon.png"]) out.push(kit.copy(HERE + "/" + f, OUT + f));
+  return { out };
+}
+
+module.exports = { build };
+
+if (require.main === module) build().then(r => console.log(r.out.length + " files in dist/scenarios"))
+  .catch(e => { console.error(e.message); process.exit(1); });

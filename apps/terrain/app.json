@@ -1,0 +1,6 @@
+{
+  "id": "terrain",
+  "name": "Battlezone Generator",
+  "url": "https://terrain-generator.kuldare.com",
+  "worker": "terrain-generator"
+}

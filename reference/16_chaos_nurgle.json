@@ -1,0 +1,382 @@
+{
+  "list": "Chaos — Nurgle",
+  "book_page": 240,
+  "read_pages": [
+    240,
+    241
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "0-1 Chaos Warmaster",
+      "text": "0-1 Chaos Warmaster of Nurgle",
+      "page": 240,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "must be taken in fleets of 750 points or more",
+      "text": "A Chaos Warmaster (and their required capital ship) must be taken in fleets of 750 points or more.",
+      "page": 240,
+      "status": "enforced",
+      "kind": "mandatory_at",
+      "points": 750,
+      "over": false,
+      "why": "The book's wording is 'in fleets of 750 points or more', not 'worth ... or more'. MAND_GE was widened on 7.9.2026, and at the same time the guard was changed: it now compares the sentence's words with the SECTION's heading and does not look for a word referring to leading. Without the change this rule was missing from five lists."
+    },
+    {
+      "key": "You can only include a Chaos Warmaster in your fleet if it includes any capital ships",
+      "text": "You can only include a Chaos Warmaster in your fleet if it includes any capital ships.",
+      "page": 240,
+      "status": "manual",
+      "why": "The condition depends on whether the fleet has hull ships; the engine has no conditional commander limits."
+    },
+    {
+      "key": "Any capital ship can be designated as having",
+      "text": "Any capital ship can be designated as having a Death Guard Chaos Space Marine crew at +35 points.",
+      "page": 240,
+      "status": "manual",
+      "why": "A priced option; the row can be chosen."
+    },
+    {
+      "key": "battleships and grand cruisers with Chaos Space Marine",
+      "text": "For +10 points, battleships and grand cruisers with Chaos Space Marine Warmasters, Lords or crews may include Chosen Terminators.",
+      "page": 240,
+      "status": "manual",
+      "why": "A priced option whose condition concerns the ship's type and crew."
+    },
+    {
+      "key": "A fleet of 1,000 points or more may include the Planet Killer",
+      "text": "A fleet of 1,000 points or more may include the Planet Killer.",
+      "page": 241,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. allowed_at: the Planet Killer is allowed only from the 1000 point limit. The earlier gap: a PERMISSION tied to a points limit, not a requirement. The same missing rule type as for the Space Marines' Fortress-Monastery and the Inquisition's Inquisitor Lord.",
+      "kind": "allowed_at",
+      "points": 1000,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "0-1 Planet Killer",
+      "text": "0-1 Planet Killer",
+      "page": 241,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1
+    },
+    {
+      "key": "You may include up to one Space Hulk in the fleet",
+      "text": "You may include up to one Space Hulk in the fleet. See its profile for restrictions and how to include it.",
+      "page": 241,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 1,
+      "why": "The book writes this limit twice: as a heading and as a sentence. The app showed two identical rows of them until they were merged on 7.9.2026. One check is left, whose source sentence is the book's full sentence."
+    },
+    {
+      "key": "one battleship in your fleet for every three cruisers or heavy cruisers",
+      "text": "You may include up to one battleship in your fleet for every three cruisers or heavy cruisers.",
+      "page": 241,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 3,
+      "per_types": [
+        "cruisers",
+        "heavy cruisers"
+      ],
+      "why": "The denominator covers both types only after 7.9.2026; before that 'or heavy cruisers' was cut off and the check was too strict."
+    },
+    {
+      "key": "one grand cruiser in your fleet for every three cruisers or heavy cruisers",
+      "text": "You may include up to one grand cruiser in your fleet for every three cruisers or heavy cruisers.",
+      "page": 241,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 3,
+      "per_types": [
+        "cruisers",
+        "heavy cruisers"
+      ]
+    },
+    {
+      "key": "one heavy cruiser in your fleet for every two cruisers",
+      "text": "You may include up to one heavy cruiser in your fleet for every two cruisers.",
+      "page": 241,
+      "status": "enforced",
+      "kind": "ratio",
+      "allow": 1,
+      "per": 2,
+      "per_types": [
+        "cruisers"
+      ]
+    },
+    {
+      "key": "0-12 Cruisers",
+      "text": "0-12 Cruisers",
+      "page": 241,
+      "status": "enforced",
+      "kind": "section_count",
+      "min": 0,
+      "max": 12
+    },
+    {
+      "key": "escorts in your fleet in squadrons of 2",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "page": 241,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 2,
+      "max": 6
+    },
+    {
+      "key": "Ships with launch bays can have a mixture",
+      "text": "Ships with launch bays can have a mixture of Swiftdeath fighters, Doomfire bombers and Dreadclaw assault craft. Ships with torpedo tubes are armed with normal and boarding torpedoes.",
+      "page": 241,
+      "status": "manual",
+      "why": "The book's sentence shows as the section's text. The ordnance type is chosen during the game, so there is nothing to enforce. (Earlier 'not_shown': RULEY did not know the word 'can', fixed 7.9.2026.)"
+    },
+    {
+      "key": "Up to a third of the capital ships (not the Terminus Est or flagship) ",
+      "text": "Up to a third of the capital ships (not the Terminus Est or flagship) in a Plaguefleet may be upgraded to Daemonships at the additional points cost shown, based upon the type of vessel chosen.",
+      "page": 241,
+      "status": "manual",
+      "why": "The sentence shows; the share is not enforced, because the flagship (the Warmaster's ship) is not modelled and the Terminus Est's exclusion cannot then be counted. The player's responsibility.",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "A Daemonship may not be commanded by a Warmaster or a Chaos Lord",
+      "text": "A Daemonship may not be commanded by a Warmaster or a Chaos Lord, even if it is the largest ship in the fleet ... A Daemonship may not have a Chaos Space Marine crew.",
+      "page": 241,
+      "status": "manual",
+      "why": "The app does not tie a commander to a single ship, so the ban cannot be enforced."
+    },
+    {
+      "key": "may not have a Chaos Space Marine crew",
+      "text": "A Daemonship may not be commanded by a Warmaster or a Chaos Lord, even if it is the largest ship in the fleet ... A Daemonship may not have a Chaos Space Marine crew.",
+      "page": 241,
+      "status": "manual",
+      "why": "Two upgrades that exclude each other. Both are list rows, but the exclusion is left to the player: they are in different sections and do not share a group."
+    },
+    {
+      "key": "Up to three capital ships with the Mark of Nurgle",
+      "text": "Up to three capital ships with the Mark of Nurgle (including the flagship) may also become Arks of Pestilence.",
+      "page": 241,
+      "status": "manual",
+      "why": "Enforced as a per-row limit (mx=3): the count goes through all ships and sees how many have taken this upgrade. The book does not write '0-3' in front of the row, so the limit was set by hand."
+    },
+    {
+      "key": "A fleet 1,000 points or more may include the Terminus Est",
+      "text": "A fleet 1,000 points or more may include the Terminus Est as one of its battleships, subject to normal restrictions.",
+      "page": 241,
+      "status": "enforced",
+      "kind": "allowed_at",
+      "points": 1000,
+      "why": "Enforced 10.9.2026 (fleet spot check, report 17): the sentence was plain text, made a rule in build_data.py's RULE_PICKS table; resolveFleet checks it (allowed_at).",
+      "classified_on": "2026-09-10"
+    },
+    {
+      "key": "one cruiser from any Imperial Navy fleet list up to 185 points",
+      "text": "For every 1,500 points in a Chaos fleet, one cruiser from any Imperial Navy fleet list up to 185 points and/or up to six Imperial Navy escorts may be taken. Special weapon rules, Nova Cannon, Chaos Lords, Chaos Space Marines, Chaos ordnance or Daemonship upgrades may not be taken for Imperial Navy vessels used in this manner, and cruisers suffer -1Ld for going renegade. Imperial Navy escorts need not be in a single squadron and may be interspersed within other Chaos escort squadrons if desired. These vessels may not take any upgrade listed in their profile and do not count as reserves; they count as Chaos vessels in all respects.",
+      "page": 222,
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "chaos-renegade-cruiser-per-1500-points",
+        "chaos-renegade-cruiser-under-1500-points",
+        "chaos-renegade-escorts-seven-is-too-many",
+        "chaos-renegade-cruiser-fills-the-chaos-limit"
+      ],
+      "why": "1.1 (14.9.2026): a section of its own RENEGADE IMPERIAL VESSELS with Imperial hulls (cruisers at most 185 p and escorts) without profile upgrades (noopt). Two per_points rules: one cruiser and six escorts per FULL 1500 points (the sentence does not say 'or part thereof'). The end of the sentence 'they count as Chaos vessels in all respects' holds because the list's own 0-12 Cruisers and the escort squadron rule count these in (section_count.pick). Page 222 does not fit in the lists' rule window (lists.py rules_pages, six pages), so the section's text carries the sentence to the player."
+    },
+    {
+      "key": "Abaddon can be chosen to act as fleet commander in any game in which the Chaos fleet is worth 1,000 points or more",
+      "text": "Abaddon can be chosen to act as fleet commander in any game in which the Chaos fleet is worth 1,000 points or more.",
+      "page": 231,
+      "status": "enforced",
+      "kind": "allowed_at",
+      "points": 1000,
+      "why": "The user's decision 13.10.2026 (BACKLOG J162): Abaddon's general rule p.231 concerns any Chaos fleet. The list's Fleet Commander section does not list him, but the list's own Planet Killer row (p.241: 'If Abaddon is present, he must be aboard the Planet Killer') and the god's barge profile allow for him. The same sentence carries the limit Warmaster or Abaddon (cap 1), and the required Warmaster is met by him. The row is a copy of the Black Crusade's row.",
+      "classified_on": "2026-10-13"
+    }
+  ],
+  "entries": [
+    {
+      "name": "Chaos Warmaster (Ld +2)",
+      "pts": 100,
+      "page": null
+    },
+    {
+      "name": "Chaos Lord (Ld +1)",
+      "pts": 25,
+      "page": null
+    },
+    {
+      "name": "Terminus Est",
+      "pts": 430,
+      "page": 262,
+      "mx": 1,
+      "why": "The book writes the row in the form '0-1 Name' WITHOUT brackets. The parser knew only the form '(0-1) Name', so '0-1' stayed part of the name and the count limit went unenforced. Fixed 7.9.2026; concerned nine rows in five lists."
+    },
+    {
+      "name": "Hives of Nurgle",
+      "pts": 10,
+      "page": null
+    },
+    {
+      "name": "Ark of Pestilence",
+      "pts": 5,
+      "page": null,
+      "mx": 3
+    },
+    {
+      "name": "Chaos Space Hulk",
+      "pts": 650,
+      "page": 286
+    },
+    {
+      "name": "Chaos battle barge",
+      "pts": 410,
+      "page": 255
+    },
+    {
+      "name": "Despoiler class battleship",
+      "pts": 400,
+      "page": 266
+    },
+    {
+      "name": "Desolator class battleship",
+      "pts": 300,
+      "page": 267
+    },
+    {
+      "name": "Repulsive class grand cruiser",
+      "pts": 230,
+      "page": 269
+    },
+    {
+      "name": "Styx class heavy cruiser",
+      "pts": 260,
+      "page": 272
+    },
+    {
+      "name": "Hecate class heavy cruiser",
+      "pts": 230,
+      "page": 273
+    },
+    {
+      "name": "Hades class heavy cruiser",
+      "pts": 200,
+      "page": 274
+    },
+    {
+      "name": "Acheron class heavy cruiser",
+      "pts": 190,
+      "page": 275
+    },
+    {
+      "name": "Devastation class cruiser",
+      "pts": 190,
+      "page": 276
+    },
+    {
+      "name": "Carnage class cruiser",
+      "pts": 180,
+      "page": 277
+    },
+    {
+      "name": "Inferno class cruiser",
+      "pts": 180,
+      "page": 278
+    },
+    {
+      "name": "Murder class cruiser",
+      "pts": 170,
+      "page": 279
+    },
+    {
+      "name": "Slaughter class cruiser",
+      "pts": 165,
+      "page": 280
+    },
+    {
+      "name": "Idolator class raider",
+      "pts": 45,
+      "page": 281
+    },
+    {
+      "name": "Infidel class raider",
+      "pts": 40,
+      "page": 282
+    },
+    {
+      "name": "Iconoclast class destroyer",
+      "pts": 30,
+      "page": 283
+    },
+    {
+      "name": "Retaliator class grand cruiser",
+      "pts": 260,
+      "page": 268
+    },
+    {
+      "name": "Vengeance class grand cruiser",
+      "pts": 230,
+      "page": 270
+    },
+    {
+      "name": "Executor class grand cruiser",
+      "pts": 210,
+      "page": 271
+    },
+    {
+      "name": "Planet Killer",
+      "pts": 505,
+      "page": 252
+    },
+    {
+      "name": "Daemonship: Battleship",
+      "pts": 85,
+      "page": null,
+      "sec": "DAEMONSHIPS",
+      "grp": "daemon"
+    },
+    {
+      "name": "Daemonship: Grand cruiser",
+      "pts": 65,
+      "page": null,
+      "sec": "DAEMONSHIPS",
+      "grp": "daemon"
+    },
+    {
+      "name": "Daemonship: Heavy cruiser",
+      "pts": 60,
+      "page": null,
+      "sec": "DAEMONSHIPS",
+      "grp": "daemon"
+    },
+    {
+      "name": "Daemonship: Cruiser",
+      "pts": 55,
+      "page": null,
+      "sec": "DAEMONSHIPS",
+      "grp": "daemon"
+    },
+    {
+      "name": "Abaddon (Ld 10)",
+      "pts": 195,
+      "page": null
+    }
+  ],
+  "notes": [
+    "Plaguefleet. The daemonship prices are the highest of all the cults.",
+    "The frame is the same as in the Chaos Incursion: the same Space Hulk limit, the same three ratios and the same 0-12 cruisers.",
+    "The daemonship price list is a table of its own in the book; the app offers the rows 'Battleship / Grand cruiser / Heavy cruiser / Cruiser' in its own DAEMONSHIPS section.",
+    "The DAEMON SHIPS price list is printed in the book as ship classes only, because the section heading tells what is bought: 'Battleship +50 / Grand cruiser +30 / Heavy cruiser +25 / Cruiser +20'. In the app the row showed until 7.9.2026 under the name 'Grand Cruiser +50', which tells nothing - and because the section has no ships, the rows were offered to EVERY ship. A grand cruiser was thus offered three different prices at once. Now the row is 'Daemonship: <class>' and attached to the section whose heading is the same class in the plural.",
+    "13.10.2026 (J162): Abaddon added by the user's decision on the basis of p.231's general rule; the price 195 is printed only in the Black Crusade list (p.234)."
+  ]
+}

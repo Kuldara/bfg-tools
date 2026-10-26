@@ -1,0 +1,242 @@
+{
+  "list": "Tyranids — Vanguard Fleet",
+  "book_page": 429,
+  "read_pages": [
+    423,
+    424,
+    425,
+    426,
+    427,
+    428,
+    429
+  ],
+  "read_on": "2026-09-07",
+  "rules": [
+    {
+      "key": "Your fleet may include any number of Vanguard drone ships",
+      "text": "Your fleet may include any number of Vanguard drone ships.",
+      "page": 429,
+      "status": "manual",
+      "why": "Limits nothing."
+    },
+    {
+      "key": "A Vanguard drone ship must be armed with one weapon chosen",
+      "text": "A Vanguard drone ship must be armed with one weapon chosen from the following list:",
+      "page": 429,
+      "status": "manual",
+      "why": "The exclusion is implemented: the weapon rows share a group id derived from the attachment target, so choosing one switches the others off. THAT a weapon must be taken is left to the player - the app cannot choose which."
+    },
+    {
+      "key": "Your fleet may include any number of Kraken",
+      "text": "Your fleet may include any number of Kraken.",
+      "page": 429,
+      "status": "manual",
+      "why": "Limits nothing."
+    },
+    {
+      "key": "A Kraken must be armed with one weapon chosen",
+      "text": "A Kraken must be armed with one weapon chosen from the following list:",
+      "page": 429,
+      "status": "manual",
+      "why": "The same exclusive group as on the drone ship, separately."
+    },
+    {
+      "key": "Tyranids do not follow the normal squadron rules",
+      "text": "Tyranids do not follow the normal squadron rules when forming up the fleet.",
+      "page": 429,
+      "status": "manual",
+      "why": "An introduction to the next sentence."
+    },
+    {
+      "key": "squadrons of 6 to 12 models",
+      "text": "Vanguard drone ships and Kraken may be deployed in squadrons of 6 to 12 models.",
+      "page": 429,
+      "status": "enforced",
+      "kind": "squadron",
+      "min": 6,
+      "max": 12,
+      "why": "Two reasons why this is written by hand: the book writes the range as a word ('6 to 12') and not with a dash, and the sentence is in its own SQUADRONS section, which has no ships at all - so the rule must be pointed at the VANGUARD DRONE SHIPS and KRAKEN sections. Until 7.9.2026 the browser followed the section the rule is in, not the one it concerns; that was fixed too."
+    },
+    {
+      "key": "You may combine the two types in a single squadron",
+      "text": "You may combine the two types in a single squadron if you wish.",
+      "page": 429,
+      "status": "manual",
+      "why": "The app's escort skwadron is one list row multiplied by the number of ships, so a mixed skwadron must be entered as two rows. The size check then looks at each separately and may complain about a too-small skwadron although the total is legal."
+    },
+    {
+      "key": "Leadership value equal to the number of vessels remaining",
+      "text": "Escort squadrons in a Tyranid Vanguard fleet each have a Leadership value equal to the number of vessels remaining in the squadron (up to a maximum of 10).",
+      "page": 429,
+      "status": "manual",
+      "why": "Leadership changes during the game; not fleet building."
+    },
+    {
+      "key": "may take a Leadership test at the start of each turn in order to override their Instinctive Behaviour",
+      "text": "Escort squadrons in a Tyranid Vanguard fleet may take a Leadership test at the start of each turn in order to override their Instinctive Behaviour, just as if they were in range of a hive ship.",
+      "page": 429,
+      "status": "manual",
+      "why": "Pelinaikainen saanto."
+    },
+    {
+      "key": "No hive ship may ever have more than three different special refits",
+      "text": "No hive ship may ever have more than three different special refits, no cruiser more than two and no escort more than one.",
+      "page": 426,
+      "status": "enforced",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. On the Vanguard list only escorts: max 1. The earlier gap: the bio-enhancements' count limit by ship type. The app does not count how many different refits one ship has, so the limit is left to the player. It reads BIO-ENHANCEME",
+      "kind": "unit_upgrade_max",
+      "max": 1,
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "no single bio-enhancement may be granted more than once",
+      "text": "With the exception of reinforced carapace and extra spore cysts, no single bio-enhancement may be granted more than once.",
+      "page": 426,
+      "status": "manual",
+      "why": "The structure allows every row once (a row is take/off), so the main rule holds by itself; the exceptions (carapace and spore cysts several times) cannot be bought in v1 - repeatable list upgrades are a v1.1 feature (docs/history/registry/BACKLOG.md).",
+      "classified_on": "2026-09-09"
+    },
+    {
+      "key": "Tyranids cannot use the torpedo refits available to other races",
+      "text": "Because the equivalent of Tyranid torpedoes are always boarding torpedoes, Tyranids cannot use the torpedo refits available to other races.",
+      "page": 426,
+      "status": "manual",
+      "why": "The ban concerns other factions' refit tables, which this list does not offer at all."
+    }
+  ],
+  "entries": [
+    {
+      "name": "Vanguard drone ship",
+      "pts": 20,
+      "page": 436,
+      "sec": "VANGUARD DRONE SHIPS"
+    },
+    {
+      "name": "Pyro-acid battery",
+      "pts": 5,
+      "page": null,
+      "sec": "VANGUARD DRONE SHIPS",
+      "grp": true
+    },
+    {
+      "name": "Feeder tentacles",
+      "pts": 5,
+      "page": null,
+      "sec": "VANGUARD DRONE SHIPS",
+      "grp": true
+    },
+    {
+      "name": "Kraken",
+      "pts": 25,
+      "page": 435,
+      "sec": "KRAKEN"
+    },
+    {
+      "name": "Pyro-acid battery",
+      "pts": 15,
+      "page": null,
+      "sec": "KRAKEN",
+      "grp": true
+    },
+    {
+      "name": "Feeder tentacles",
+      "pts": 5,
+      "page": null,
+      "sec": "KRAKEN",
+      "grp": true
+    },
+    {
+      "name": "Massive claws",
+      "pts": 10,
+      "page": null,
+      "sec": "KRAKEN",
+      "grp": true
+    },
+    {
+      "name": "Bio-plasma discharge",
+      "pts": 10,
+      "page": null,
+      "sec": "KRAKEN",
+      "grp": true
+    },
+    {
+      "name": "Torpedoes",
+      "pts": 15,
+      "page": null,
+      "sec": "KRAKEN",
+      "grp": true
+    },
+    {
+      "name": "Solar Vanes",
+      "pts": 15,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Adrenaline Sacs",
+      "pts": 10,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Psychic Scream",
+      "pts": 20,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "More Discharge Vents",
+      "pts": 15,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Extra Spore Cysts (each)",
+      "pts": 10,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Reinforced Carapace (each)",
+      "pts": 10,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Mucous Membrane",
+      "pts": 20,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Accelerated Healing",
+      "pts": 10,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Drone Link",
+      "pts": 20,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Tenacity",
+      "pts": 20,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    },
+    {
+      "name": "Mega-Spore Mines",
+      "pts": 10,
+      "page": null,
+      "sec": "BIO-ENHANCEMENTS"
+    }
+  ],
+  "notes": [
+    "The list has no hive ships and no hull ships at all - only the Vanguard drone ship and the Kraken. The book gives the reason on page 429: 'Vanguard fleets lack hive ships, but do allow their vessels to have some degree of autonomy.'",
+    "The Kraken's fifth weapon is called 'Torpedoes' (+15) on this list, but on the Hive list on page 431 exactly the same row is 'Boarding torpedoes' (+15). The difference is the book's own; both are left in the book's wording.",
+    "The bio-enhancements are on the book's pages 426-427 and not on the list page. They are copied to both tyranid lists as a section of their own; the note's page reference was wrong until 7.9.2026 (429-431).",
+    "All of the ship's weapons exclude each other. Before 7.9.2026 the app allowed taking them at once, which made an 80 point ship out of a 25 point Kraken."
+  ]
+}
