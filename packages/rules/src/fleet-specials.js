@@ -300,9 +300,15 @@ export function checkOrkClanz(F){
     /* every capital ship of a skwadron takes the clan (Fleets p. 369), and so
        does every Rok of a Rok skwadron (ruling T58: p. 369 counts Rok
        skwadrons among the capital ship skwadrons, and only a tiddla skwadron
-       pays once). sqTags holds every non-escort skwadron, Roks included. */
+       pays once). sqTags holds every non-escort skwadron, Roks included.
+       A ship of one clan by itself counts with that clan (J242, user
+       27.10.2026: Zukov's Klaw is a Goff with no clan row to buy, so Zukov
+       and a kroozer that bought Goffs are one Goff skwadron - this used to
+       read "none / Goffs"). */
     sqTags.forEach(function(tag){
-      var ms = sqOf[tag], sets = ms.map(function(m){ return clansOf(m).sort().join(","); });
+      var ms = sqOf[tag], sets = ms.map(function(m){
+        var cs = clansOf(m); bornClan(m).forEach(function(c){ if(cs.indexOf(c) < 0) cs.push(c); });
+        return cs.sort().join(","); });
       if(sets.some(function(x){ return x; }) && sets.some(function(x){ return x !== sets[0]; }))
         out.push({ ok: false, t: "Squadron " + tag + ": the clan on every ship",
           v: sets.map(function(x){ return x || "none"; }).join(" / "), s: citeText(C.clan_sq) });

@@ -8288,6 +8288,87 @@
         ]
       },
       "why": "Fleets p. 369: “If taken, every capital ship in the skwadron must separately take and pay for the clan upgrade, not just individual ships. The point cost for clan upgrades for tiddla skwadrons count for the whole skwadron (regardless of how large it is!), not individual escorts.” Ruling T58 (user 26.10.2026): a Rok skwadron is not a tiddla skwadron (p. 372 lists it separately), and p. 369 counts Roks among the capital ship skwadrons (Snakebites: “Snakebite capital ship skwadrons can only use space hulks or roks”), so every Rok pays the clan upgrade. One Rok of three paying for the skwadron is the flat price p. 369 allows only a tiddla skwadron. 3 x Ravager attack ship 40 + 3 x Rok 80 + Evil Sunz 20 = 380."
+    },
+    {
+      "id": "clanz-zukov-skwadron-with-a-goff-kroozer",
+      "page": 381,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 500,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Ravager attack ship",
+            "n": 3
+          },
+          {
+            "entry": "^Zukov",
+            "sq": "A"
+          },
+          {
+            "entry": "^Lite kroozer",
+            "sq": "A",
+            "ups": [
+              {
+                "upgrade": "^Clan: Goffs"
+              }
+            ]
+          }
+        ]
+      },
+      "expect": {
+        "total": 440,
+        "checks": [
+          {
+            "label": "^Squadron A: the clan on every ship",
+            "absent": true
+          },
+          {
+            "label": "^Warlord 1: one clan",
+            "ok": true,
+            "v": "Goffs"
+          }
+        ]
+      },
+      "why": "Fleets p. 369: “If taken, every capital ship in the skwadron must separately take and pay for the clan upgrade, not just individual ships.” p. 381: Zukov’s Klaw “is of the Goff Clan” as part of its 210 points, and p. 372 lists it as “(0–1) Zukov's Klaw (Goff only)” in the Big ship skwadron (1-2 kroozers). Zukov is a Goff by itself and the Lite kroozer bought Goffs, so the skwadron is all Goff (J242: the check read “none / Goffs” before). 3 x Ravager attack ship 40 + Zukov's Klaw 210 + Lite kroozer 90 + Goffs 20 = 440."
+    },
+    {
+      "id": "clanz-zukov-skwadron-kroozer-without-the-clan",
+      "page": 381,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 500,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Ravager attack ship",
+            "n": 3
+          },
+          {
+            "entry": "^Zukov",
+            "sq": "A"
+          },
+          {
+            "entry": "^Lite kroozer",
+            "sq": "A"
+          }
+        ]
+      },
+      "expect": {
+        "total": 420,
+        "checks": [
+          {
+            "label": "^Squadron A: the clan on every ship",
+            "ok": false,
+            "v": "Goffs / none"
+          }
+        ]
+      },
+      "why": "Fleets p. 369: “If taken, every capital ship in the skwadron must separately take and pay for the clan upgrade, not just individual ships.” p. 381: Zukov’s Klaw “is of the Goff Clan” as part of its 210 points, and p. 372 lists it as “(0–1) Zukov's Klaw (Goff only)” in the Big ship skwadron (1-2 kroozers). The skwadron's clan is taken (Zukov's own Goffs), so the other kroozer of the skwadron takes and pays for it too, or goes in a skwadron of its own. 3 x Ravager attack ship 40 + Zukov's Klaw 210 + Lite kroozer 90 = 420."
     }
   ]
 }

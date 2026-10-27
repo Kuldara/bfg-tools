@@ -6787,7 +6787,11 @@ var __rules = (() => {
       });
       sqTags.forEach(function(tag) {
         var ms = sqOf[tag], sets = ms.map(function(m) {
-          return clansOf(m).sort().join(",");
+          var cs = clansOf(m);
+          bornClan(m).forEach(function(c) {
+            if (cs.indexOf(c) < 0) cs.push(c);
+          });
+          return cs.sort().join(",");
         });
         if (sets.some(function(x) {
           return x;

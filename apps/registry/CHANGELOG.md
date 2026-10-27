@@ -23,6 +23,12 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   the one-file engine, as do the golden cases, Play and the simulator.
 
 ### Fixed
+- Da Ork Clanz: Zukov's Klaw in a skwadron with another kroozer showed a false red
+  "the clan on every ship: none / Goffs" when that kroozer had bought Goffs. Zukov
+  is a Goff by itself (Fleets p. 381, no clan row to buy), and the skwadron check
+  now counts that, as the Warlord's one-clan check already did. A partner kroozer
+  without Goffs is still red: p. 369 has every capital ship of the skwadron take
+  and pay for the clan (J242).
 - **Friends' fleet links opened one after another (J240, J241).** A link worked
   once, and later links showed the same fleet again: a second link in an open tab
   changed only the address after # and was never read, and the first link's fleet,
