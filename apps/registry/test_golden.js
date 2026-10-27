@@ -703,6 +703,9 @@ function buildFleet(f, r) {
       /* J216: squadron (same tag = same squadron) and a Clanz Warlord
          (cmd = which commander unit in fleet order, 0 = the first) */
       if (u && spec.sq) u.sq = String(spec.sq);
+      /* a Clanz Warlord's own clan as the player picked it (RAW-04), without
+         buying it for his skwadrons: those are the case's own ups */
+      if (u && spec.clan) u.clan = String(spec.clan);
       /* J218: hull choice (hc row), profile page as in the unit cases */
       if (u && spec.hull != null) api.setHull(u, spec.hull);
       if (u && spec.cmd != null) aboardSpecs.push({ u: u, cmd: spec.cmd | 0 });

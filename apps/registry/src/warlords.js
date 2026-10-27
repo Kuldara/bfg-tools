@@ -58,22 +58,29 @@ export function orkPlain(s){
   ORK_WORDS.forEach(([re, en]) => { s = s.replace(re, m => m + " (" + en + ")"); });
   return s;
 }
-/* J232: a Warlord's skwadrons as the book counts them (Fleets p. 372): a
-   tiddla, an 'Uge ship and a hulk each by itself, 1-2 kroozers and 1-4 Roks
-   by their tag (the domain reads them the same way). */
-export const SKW_MAX = { kroozer: 2, rok: 4 };
+/* J232: a Warlord's skwadrons as the book counts them (Fleets p. 372): an
+   'Uge ship and a hulk each by itself, 1-2 kroozers, 1-4 Roks and 3-10
+   tiddla escorts "in any mix desired" by their tag, a card without a tag by
+   itself (the domain reads them the same way, clanzTiddlas). */
+export const SKW_MAX = { tiddla: 10, kroozer: 2, rok: 4 };
 export const SKW_LABEL = { tiddla: "tiddla (escorts)", kroozer: "kroozers (cruisers)", uge: "'Uge ship (battleship)", rok: "Roks", hulk: "Space Hulk" };
+const SKW_TIP = { tiddla: "A tiddla skwadron is 3-10 escorts in any mix; the same letter on two cards makes them one (Fleets p. 372)",
+  kroozer: "A big ship skwadron is 1-2 kroozers (Fleets p. 372)", rok: "A Rok skwadron is 1-4 Roks (Fleets p. 372)" };
 export function skwKind(u){
   const C = L().clanz;
   if(!C || !u || u.lst) return "";
   return clanzIn(u.s, C.tiddla) ? "tiddla" : clanzIn(u.s, C.big) ? "kroozer" : clanzIn(u.s, C.uge) ? "uge"
     : clanzIn(u.s, C.rok) ? "rok" : clanzIn(u.s, C.hulk) ? "hulk" : "";
 }
+/* a Blood Axe tiddla's commandeered escorts are members of the tiddla of
+   their tag (Fleets p. 369), in its count and its line */
+export function isCommandeered(u){ const BA = L().bloodaxe; return !!(BA && u && !u.lst && clanzIn(u.s, BA.sec)); }
+const comKind = u => isCommandeered(u) && u.sq ? "tiddla" : "";
 export function warlordSkwadrons(RF, wi){
   const out = [], byTag = {};
   appState.S.units.forEach((u, i) => {
     if(!RF.command || RF.command[i] !== wi) return;
-    const k = skwKind(u);
+    const k = skwKind(u) || comKind(u);
     if(!k) return;
     const h = RF.units[i] ? Math.max(1, RF.units[i].hulls | 0) : 1;
     const key = SKW_MAX[k] && u.sq ? k + ":" + u.sq : "";
@@ -107,12 +114,19 @@ export function skwadronsHTML(RF, wi){
     const max = SKW_MAX[g.kind];
     let pick = "";
     if(max){
+      const tid = g.kind === "tiddla";
       const opts = [`<option value="" selected>${g.units.length > 1 ? "in one skwadron" : "on its own"}</option>`];
-      if(g.units.length > 1 || g.tag) opts.push(`<option value="split">split into single ships</option>`);
+      if(g.units.length > 1 || g.tag) opts.push(`<option value="split">${tid ? "split into its cards" : "split into single ships"}</option>`);
       gs.forEach(h => { if(h !== g && h.kind === g.kind && g.hulls + h.hulls <= max)
         opts.push(`<option value="join:${h.units[0]}">join ${esc(skwNames(RF, h))}</option>`); });
+      /* UX-01 (ChatGPT audit 27.10.2026): a second tiddla of the same
+         escorts in one choice, instead of filling the first card to ten to
+         get a new one - the book's smallest Warlord is "two tiddla
+         skwadrons, each with three escorts" (Fleets p. 373) */
+      const ork = tid ? g.units.filter(i => skwKind(appState.S.units[i]) === "tiddla") : [];
+      if(ork.length) opts.push(`<option value="again:${ork[ork.length - 1]}">new tiddla of ${esc(shipCall(RF.units[ork[ork.length - 1]]))}</option>`);
       if(opts.length > 1) pick = `<select class="wlsq" data-wlsq="${g.units.join(",")}" aria-label="${esc("Skwadron of " + skwNames(RF, g))}"
-        title="${esc(g.kind === "kroozer" ? "A big ship skwadron is 1-2 kroozers (Fleets p. 372)" : "A Rok skwadron is 1-4 Roks (Fleets p. 372)")}">${opts.join("")}</select>`;
+        title="${esc(SKW_TIP[g.kind])}">${opts.join("")}</select>`;
     }
     return `<li><span class="skk">${esc(SKW_LABEL[g.kind])}${max ? " " + g.hulls + "/" + max : ""}</span><span class="skn">${esc(skwNames(RF, g))}</span>${pick}</li>`;
   }).join("")}</ol>`;
@@ -123,7 +137,8 @@ export function skwadronsHTML(RF, wi){
    then differs turns "one clan" red (Fleets p. 369). */
 export function handToWarlord(us, to){
   const w = appState.S.units[to];
-  us.forEach(x => { x.cmd = w.uid; if(w.clan) setClan(x, w.clan); });
+  /* a commandeered escort is in its tiddla, which pays the clan once (p. 369) */
+  us.forEach(x => { x.cmd = w.uid; if(w.clan && !isCommandeered(x)) setClan(x, w.clan, true); });
 }
 /* Every Warlord's skwadrons right under him, in his order; a row no Warlord
    leads keeps its place (J232). order: the Warlords' unit indexes in the
@@ -239,12 +254,18 @@ export const HULK_CLAN_FX = {
 };
 /* Take one clan's row on a unit, where the unit is offered it; "" takes
    none of them (the rows go back to their open state). */
-export function setClan(u, name){
+/* keepOff: a move to another Warlord keeps a skwadron's own "not this
+   benefit" (its clan row set off): being of a clan does not oblige it to pay
+   for the benefit (Fleets p. 369, ChatGPT audit UX-02). The Warlord's clan
+   button buys it for all, which is what it says. */
+export function setClan(u, name, keepOff){
   const ups = upgradesFor(u);
   ups.own.concat(ups.other).forEach(x => {
     const m = /^Clan: (.+?) \(/i.exec(String(x[2].l));
     if(!m) return;
-    if(name && m[1].toLowerCase() === name.toLowerCase()) setUpState(u, x[0], x[1], "take");
+    if(name && m[1].toLowerCase() === name.toLowerCase()){
+      if(!(keepOff && upState(u, x[0], x[1]) === "off")) setUpState(u, x[0], x[1], "take");
+    }
     else if(upState(u, x[0], x[1]) === "take") setUpState(u, x[0], x[1], "opt");
   });
 }
@@ -508,10 +529,13 @@ export function fleetControlsHTML(RF){
      (Fleets p. 369, J220) */
   const BA = L().bloodaxe, inSecU = (u, re) => { const sc = listOf(u).secs[u.s]; return !!sc && new RegExp(re, "i").test(String(sc.t).trim()); };
   const com = BA ? appState.S.units.map((u, i) => !u.lst && inSecU(u, BA.sec) ? i : -1).filter(i => i >= 0) : [];
-  const tid = com.length ? appState.S.units.map((u, i) => !u.lst && inSecU(u, L().clanz.tiddla) ? i : -1).filter(i => i >= 0) : [];
+  /* ...and so do tiddla cards of one mixed tiddla ("in any mix desired",
+     Fleets p. 372): the letter is what makes two cards one skwadron, since
+     a short card no longer joins one by itself (ChatGPT audit RAW-01) */
+  const tid = L().clanz ? appState.S.units.map((u, i) => !u.lst && inSecU(u, L().clanz.tiddla) ? i : -1).filter(i => i >= 0) : [];
   /* Clanz (J226): kroozers pair with a button of their own (below), and
      an 'Uge ship, a Rok or a hulk is a skwadron by itself - no letters */
-  const caps = L().clanz ? (com.length ? com.concat(tid) : []) : caps0.length >= 2 ? caps0.concat(com, tid) : com.concat(tid);
+  const caps = L().clanz ? com.concat(tid) : caps0.length >= 2 ? caps0.concat(com, tid) : com.concat(tid);
   if(caps.length >= 2){
     const tags = [];
     caps.forEach(i => { const t = appState.S.units[i].sq; if(t && tags.indexOf(t) < 0) tags.push(t); });
@@ -544,7 +568,8 @@ export function fleetControlsHTML(RF){
       <div class="wlrow"><span class="abl">Clan</span><span class="seg wrap">${seg("data-wlclan", `data-c=""`, "None", !clan && !(W && W.clans && W.clans.length > 1))}${
         CLANS.map(c => seg("data-wlclan", `data-c="${esc(c)}"`, c, clan === c,
           hulk && c === "Evil Sunz" ? "Not for a hulk: it gives speed (Fleets p. 390)"
-            : (CI[c] ? CI[c].desc + " (" + clanCost(CI[c]) + ")" : "") + " Every skwadron of his takes the clan (Fleets p. 369).",
+            : (CI[c] ? CI[c].desc + " (" + clanCost(CI[c]) + ")" : "") + " His clan, bought for every skwadron of his;" +
+              " a skwadron may leave the benefit unpaid (Fleets p. 369): set its Clan row off under Other fleet-list upgrades.",
           hulk && c === "Evil Sunz" && clan !== c)).join("")}</span></div>
       <div class="wlrow"><span class="abl"></span><ul class="wlclans">${(clan && CI[clan] ? [clan] : CLANS.filter(c => CI[c]))
         .map(c => clanLineHTML(c, CI[c], hulk)).join("")}</ul></div>

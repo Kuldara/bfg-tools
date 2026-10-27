@@ -88,6 +88,19 @@ export function optionsOf(sel){
           blockedBy.push(upgradeId(listOfSec(sel, x[0]).nm, secOf(sel, x[0]).t, en3.l));
       });
     }
+    /* ...and the covered row's own exclusions too: the Terror ship's +5
+       boarding torpedoes are the list's boarding torpedoes row, which gives
+       way to an Assault Karrier that "takes boarding torpedoes for free"
+       (Fleets p. 371, ChatGPT audit RAW-06). The words decide the cover here
+       (optionCoversRow), so this does not need o.cov. */
+    if(st !== "take" && sel.list){
+      var ups4 = upgradesFor(sel);
+      ups4.own.concat(ups4.other).forEach(function(x){
+        if(upState(sel, x[0], x[1]) !== "take") return;
+        var uid4 = upgradeId(listOfSec(sel, x[0]).nm, secOf(sel, x[0]).t, x[2].l);
+        if(blockedBy.indexOf(uid4) < 0 && coveredRowExcludes(sel.list, o, x[2].l)) blockedBy.push(uid4);
+      });
+    }
     var dep = o.dep != null && ol[o.dep] ? ol[o.dep].id : null;
     return {
       id: o.id, text: o.t, cost: o.c == null ? null : o.c, variable: !!o.var,
@@ -100,6 +113,15 @@ export function optionsOf(sel){
   });
 }
 
+/* Does option o cover a list row whose own noup names this label? */
+export function coveredRowExcludes(list, o, label){
+  var hit = false;
+  (list ? list.secs : []).forEach(function(sec){ (sec.ents || []).forEach(function(en){
+    if(!hit && isUpgradeEnt(en) && en.cond && en.cond.noup && new RegExp(en.cond.noup, "i").test(String(label || "")) &&
+       optionCoversRow(o, en)) hit = true;
+  }); });
+  return hit;
+}
 /* Does option o cover a list row whose label the noup pattern names? */
 export function coversExcludedRow(list, o, noup){
   var rx = new RegExp(String(noup), "i"), hit = false;

@@ -573,6 +573,11 @@ _CZL["clanz"] = dict(
                "in a single fleet.", 369),
     clan_sq=_cite("If taken, every capital ship in the skwadron must separately take and pay for the clan upgrade, not "
                   "just individual ships.", 369),
+    # ChatGPT audit RAW-04 (27.10.2026): a Snakebite Warlord's capital ship skwadrons are hulks or Roks, whether
+    # or not they buy the clan (being of a clan does not oblige buying it, p.369, but the clan is the Warlord's)
+    snake_clan="^snakebites",
+    snake=_cite("Snakebite capital ship skwadrons can only use space hulks or roks – no other kind of capital "
+                "ship skwadrons are permitted to bear the clan colours.", 369),
     gub=_cite("A Warlord may choose for his own ship or escort skwadron one upgrade from the Gubbins list for every "
               "re-roll he has at its listed cost.", 372),
     # J232: a skwadron belongs to one Warlord and is not split (p.373)

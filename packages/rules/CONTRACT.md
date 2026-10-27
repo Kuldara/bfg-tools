@@ -47,7 +47,8 @@ CanonicalUnitIntent = {
   members: [],                               // names of a squadron's ships
   options:  { [optionId]: { state: "take" | "opt" | "off", qty: 1 } },
   upgrades: { [upgradeId]: "take" | "off" },
-  /* optional, for fleets (docs: save schema): uid, aboard, sq, cmd */
+  /* optional, for fleets (docs: save schema): uid, aboard, sq, cmd,
+     clan (a Da Ork Clanz Warlord's own clan, "Goffs") */
 }
 ```
 

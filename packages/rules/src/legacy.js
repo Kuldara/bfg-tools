@@ -183,6 +183,8 @@ export function fromLegacyUnit(u, ctx, catalog){
      Ork Clanz, the Warlord whose command it is (his uid) */
   if(u.sq) intent.sq = String(u.sq);
   if(u.cmd) intent.cmd = String(u.cmd);
+  /* J226/RAW-04: a Clanz Warlord's own clan, which his skwadrons are of */
+  if(u.clan) intent.clan = String(u.clan);
   var ol = (sh && sh.ol) || [];
   ol.forEach(function(o, i){
     var st = (u.os && u.os[i]) || null;
@@ -238,6 +240,7 @@ export function toLegacyUnit(intent, ctx, catalog){
   if(intent.aboard) u.aboard = String(intent.aboard);
   if(intent.sq) u.sq = String(intent.sq);
   if(intent.cmd) u.cmd = String(intent.cmd);
+  if(intent.clan) u.clan = String(intent.clan);
   Object.keys(intent.options || {}).forEach(function(id){
     var o = intent.options[id];
     var i = optionIndex(sh, id, null);

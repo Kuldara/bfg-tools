@@ -58,6 +58,8 @@ for Lx in lists_out:
     if Lx["nm"].startswith("Orks"):
         # p.360 not the Ork Space Hulk; Zukov's Klaw's bays are an Assault Karrier (p.381)
         _omcond["nmno"] = r"hulk|zukov"
+        # p.371: an Assault Karrier "may only use assault boats" (RAW-06)
+        _omcond["noup"] += r"|^assault karrier"
     _sec["ents"].append(dict(l="Orbital mines", r=None, p=5, a=1, u=1, mx=None, k="up", per="bay",
                              nt="Per launch bay strength.", prose=1, src_page=23,
                              cond=_omcond, desc=_OM_DESC,

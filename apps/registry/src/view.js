@@ -1,14 +1,14 @@
 import { $, APP_VERSION } from "./boot.js";
 import { optCount } from "./card-model.js";
 import { resolveUnit } from "./cards.js";
-import { ARM_CLS, FLEET_FOLD_KEY, FOLDS, FOLD_KEY, L, LAST_PTS, LEND_TAG, SRC, UOPEN, applyRequired, applyTransition, armLineHTML, foldKey, hulls, isUpgradeEnt, lendCount, lendOf, midY, routeNeedsMet, routeOf, routeTag, rowLendOf, rowSelOf, rowStepFor, rowUnits, setHull, setOptState, setUpState, shipOf, total, totalMax, unitPts } from "./model.js";
+import { ARM_CLS, FLEET_FOLD_KEY, FOLDS, FOLD_KEY, L, LAST_PTS, LEND_TAG, SRC, UOPEN, applyRequired, applyTransition, armLineHTML, foldKey, isUpgradeEnt, lendCount, lendOf, midY, routeNeedsMet, routeOf, routeTag, rowLendOf, rowSelOf, rowStepFor, rowUnits, setHull, setOptState, setUpState, shipOf, total, totalMax, unitPts } from "./model.js";
 import { placeSaves } from "./panels.js";
 import { renderPrintSetup } from "./print.js";
 import { STASH_PTS, ensureUids, save, stashUnits } from "./save.js";
 import { renderSaves } from "./saved-fleets.js";
 import { appState } from "./state.js";
 import { aboardHTML, fleetResolved } from "./validation.js";
-import { SKW_MAX, activeWarlordIdx, clanzAfterMove, clanzHiddenUps, clanzIn, clanzMoveBlock, clanzPin, clanzSkwadronSec, factRowsHTML, fleetControlsHTML, freeSqTag, fxTagsHTML, isOrkHulkUnit, optFxHTML, orkPlain, orkSecGloss, sendSkwadron, setClan, setWarlordRerolls, upFx, warlordColor, warlordIdx, warlordNeeds, warlordSkwadrons } from "./warlords.js";
+import { SKW_MAX, activeWarlordIdx, clanzAfterMove, clanzHiddenUps, clanzIn, clanzMoveBlock, clanzPin, clanzSkwadronSec, factRowsHTML, fleetControlsHTML, freeSqTag, fxTagsHTML, isCommandeered, isOrkHulkUnit, optFxHTML, orkPlain, orkSecGloss, sendSkwadron, setClan, setWarlordRerolls, upFx, warlordColor, warlordIdx, warlordNeeds, warlordSkwadrons } from "./warlords.js";
 import { DATA, LISTS, SHIPS } from "../../../packages/ui/catalog.js";
 import { arcGlyph, arcParts, esc, optCostLabel, shortRange, title, upCostText } from "../../../packages/ui/format.js";
 import DOMAIN from "../../../packages/rules/domain.js";
@@ -928,7 +928,7 @@ export function renderFleet(){
   }
   const frr = L().frr ? DOMAIN.fleetRerolls(L(), appState.S.units.map(u => resolveUnit(u))) : null;
   $("#fleetmeta").textContent = appState.S.units.length + " units \u00b7 " +
-    appState.S.units.reduce((a,u) => a + hulls(u), 0) + " hulls" +
+    fleetResolved().totals.hulls + " hulls" +
     (frr ? " \u00b7 fleet: " + frr.text : "") +
     (appState.NOTICE && appState.S.units.indexOf(appState.NOTICE.u) >= 0
       ? " \u00b7 Adjusted: " + appState.NOTICE.items.map(n => n.message).join("; ") : "");
@@ -987,6 +987,16 @@ export function renderFleet(){
       const tag = t2.sq || freeSqTag();
       t2.sq = tag; us.forEach(u => { u.sq = tag; });
     }
+    /* UX-01: a new tiddla of these escorts at its minimum, his and with his
+       clan, as + from the catalogue gives it */
+    else if(/^again:/.test(v)){
+      const src = appState.S.units[+v.slice(6)], RF = fleetResolved();
+      const wi = src && RF.command ? RF.command[appState.S.units.indexOf(src)] : -1;
+      if(wi < 0) return;
+      appState.ACTIVE_WL = appState.S.units[wi].uid;
+      addUnitFrom(appState.S.li, src.s, src.e, null);
+      return;
+    }
     appState.JUST = { unit: us[0] };
     render();
   });
@@ -1002,7 +1012,8 @@ export function renderFleet(){
     const wi = +b.dataset.wlclan, R0 = fleetResolved(), w = appState.S.units[wi];
     const W = (R0.warlords || []).filter(x => x.unit === wi)[0]; if(!W || !w) return;
     if(b.dataset.c) w.clan = b.dataset.c; else delete w.clan;
-    W.units.forEach(i => setClan(appState.S.units[i], b.dataset.c));
+    /* a commandeered escort's tiddla pays the clan once (Fleets p. 369) */
+    W.units.forEach(i => { if(!isCommandeered(appState.S.units[i])) setClan(appState.S.units[i], b.dataset.c); });
     render(); });
   /* Aboard (J215): the player's pick is the ship's uid; Automatic drops it. */
   box.querySelectorAll(".abin").forEach(sel => sel.onchange = () => {

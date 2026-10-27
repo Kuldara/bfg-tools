@@ -13,6 +13,7 @@
      option_ratio     units that took an own option (opt_re), per N hulls
    A pick is [{sec, re?}]: a section index and an optional name filter. */
 
+import { clanzTiddlas } from "./fleet.js";
 import { upCost } from "./pricing.js";
 import { HOST_OFF, isUpgradeEnt, optState, upState, upgradeTakenAnyWay, upgradesFor } from "./upgrades.js";
 import { secNameIssues } from "./validation.js";
@@ -268,6 +269,28 @@ function ruleMandatoryAt(F, r, sec, si, lab){
 function ruleSquadron(F, r, sec, si, lab){
   var members = F.members, out = F.out, pickHas = F.pickHas;
   var insec = r.sec || [si];
+  /* Da Ork Clanz tiddla skwadrons are the player's own (clanzTiddlas): the
+     rows of one tag in any mix (Fleets p. 372) with a Blood Axe tiddla's
+     commandeered escorts (p. 369), a row without a tag by itself. A short row
+     does not join a squadron the player did not make, because the Warlord's
+     count reads the same skwadrons (ChatGPT audit RAW-01: two Brutes and two
+     Onslaughts were green as one mixed tiddla here and two tiddlas there). */
+  var CZ = F.L.clanz;
+  if(CZ && !r.pick && insec.some(function(i){
+        return F.L.secs[i] && new RegExp(CZ.tiddla, "i").test(String(F.L.secs[i].t).trim()); })){
+    clanzTiddlas(F.L, members).forEach(function(t){
+      var ok = t.n >= r.min && t.n <= r.max;
+      if(!t.tag){
+        var m = members[t.ork[0]];
+        out.push({ ok: ok, t: m.sel.sh.nm, v: t.n + " ships", s: "Squadrons of " + r.min + "–" + r.max + ". " + r.src });
+        return;
+      }
+      var names = t.ork.concat(t.com).map(function(i){ return members[i].hulls + " " + members[i].en.l; });
+      out.push({ ok: ok, t: "Tiddla skwadron " + t.tag, v: t.n + " escorts: " + names.join(" + "),
+        s: "Squadrons of " + r.min + "–" + r.max + ". " + r.src });
+    });
+    return;
+  }
   /* pick: the rule names a class rather than a heading. Tau p.455
      "Defenders are fielded in squadrons of 2-6 ships" sits under
      SQUADRONS, which lists no ships, and Messengers may operate alone. */

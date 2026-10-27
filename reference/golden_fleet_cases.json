@@ -8369,6 +8369,510 @@
         ]
       },
       "why": "Fleets p. 369: “If taken, every capital ship in the skwadron must separately take and pay for the clan upgrade, not just individual ships.” p. 381: Zukov’s Klaw “is of the Goff Clan” as part of its 210 points, and p. 372 lists it as “(0–1) Zukov's Klaw (Goff only)” in the Big ship skwadron (1-2 kroozers). The skwadron's clan is taken (Zukov's own Goffs), so the other kroozer of the skwadron takes and pays for it too, or goes in a skwadron of its own. 3 x Ravager attack ship 40 + Zukov's Klaw 210 + Lite kroozer 90 = 420."
+    },
+    {
+      "id": "clanz-two-short-tiddlas-are-not-two-tiddlas",
+      "page": 372,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Brute ramship",
+            "n": 2
+          },
+          {
+            "entry": "^Onslaught attack ship",
+            "n": 2
+          }
+        ]
+      },
+      "expect": {
+        "total": 120,
+        "checks": [
+          {
+            "label": "^BRUTE RAM SHIP$",
+            "ok": false,
+            "v": "2 ships"
+          },
+          {
+            "label": "^ONSLAUGHT ATTACK SHIP$",
+            "ok": false,
+            "v": "2 ships"
+          }
+        ]
+      },
+      "why": "Fleets p. 372: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”; p. 373: “Thus, the smallest fleet a single Warlord with only the one free re-roll may command is two tiddla skwadrons, each with three escorts.” ChatGPT audit RAW-01: two Brutes and two Onslaughts, each its own skwadron, are two tiddlas of two - the size check used to pool them into one mixed tiddla while the Warlord's count saw two. 2 x Brute ramship 25 + 2 x Onslaught attack ship 35 = 120."
+    },
+    {
+      "id": "clanz-mixed-tiddla-of-four-is-one-skwadron",
+      "page": 372,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Brute ramship",
+            "n": 2,
+            "sq": "T"
+          },
+          {
+            "entry": "^Onslaught attack ship",
+            "n": 2,
+            "sq": "T"
+          }
+        ]
+      },
+      "expect": {
+        "total": 120,
+        "checks": [
+          {
+            "label": "^Tiddla skwadron T",
+            "ok": true,
+            "v": "4 escorts: 2 Brute ramship + 2 Onslaught attack ship"
+          },
+          {
+            "label": "^Warlord 1: skwadrons",
+            "ok": false,
+            "v": "1 tiddla + 0 other / 1 + 1"
+          }
+        ]
+      },
+      "why": "Fleets p. 372: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”; p. 373: “Thus, the smallest fleet a single Warlord with only the one free re-roll may command is two tiddla skwadrons, each with three escorts.” The same four escorts in one tag are one mixed tiddla (any mix desired), so the Warlord still lacks his other skwadron (RAW-01). 2 x 25 + 2 x 35 = 120."
+    },
+    {
+      "id": "clanz-mixed-tiddla-from-two-rows-and-a-rok",
+      "page": 372,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Brute ramship",
+            "n": 1,
+            "sq": "T"
+          },
+          {
+            "entry": "^Savage gunship",
+            "n": 2,
+            "sq": "T"
+          },
+          {
+            "entry": "^Rok"
+          }
+        ]
+      },
+      "expect": {
+        "total": 165,
+        "checks": [
+          {
+            "label": "^Tiddla skwadron T",
+            "ok": true,
+            "v": "3 escorts: 1 Brute ramship + 2 Savage gunship"
+          },
+          {
+            "label": "^Warlord 1: skwadrons",
+            "ok": true,
+            "v": "1 tiddla + 1 other / 1 + 1"
+          }
+        ]
+      },
+      "why": "Fleets p. 372: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”; p. 373: “Thus, the smallest fleet a single Warlord with only the one free re-roll may command is two tiddla skwadrons, each with three escorts.” One Brute and two Savages in one tag are one tiddla of three, and the Rok is the other skwadron; the Warlord's count used to see two tiddlas and a Rok. Brute 25 + 2 x Savage gunship 30 + Rok 80 = 165."
+    },
+    {
+      "id": "clanz-blood-axe-three-ork-three-commandeered",
+      "page": 369,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Rok"
+          },
+          {
+            "entry": "^Brute ramship",
+            "n": 3,
+            "sq": "A",
+            "ups": [
+              {
+                "upgrade": "^Clan: Blood Axes"
+              }
+            ]
+          },
+          {
+            "entry": "^Cobra class destroyer",
+            "n": 3,
+            "sq": "A"
+          }
+        ]
+      },
+      "expect": {
+        "total": 245,
+        "checks": [
+          {
+            "label": "^Blood Axe tiddla A",
+            "ok": true,
+            "v": "3 Ork + 3 commandeered"
+          },
+          {
+            "label": "^Tiddla skwadron A",
+            "ok": true,
+            "v": "6 escorts: 3 Brute ramship + 3 Cobra class destroyer"
+          },
+          {
+            "label": "^Warlord 1: skwadrons",
+            "ok": true,
+            "v": "1 tiddla + 1 other / 1 + 1"
+          }
+        ]
+      },
+      "why": "Fleets p. 369: “A Blood Axe tiddla skwadron of at least six escorts may include up to three Imperial Navy and/or Chaos escorts from any fleet list at their listed cost.” Ruling T59 (ChatGPT audit RAW-02): the skwadron of at least six is the skwadron as fielded, the commandeered escorts included, so three Brutes and three Cobras are a Blood Axe tiddla of six. Rok 80 + 3 x Brute ramship 25 + Blood Axes 0 + 3 x Cobra class destroyer 30 = 245."
+    },
+    {
+      "id": "clanz-blood-axe-tiddla-of-thirteen",
+      "page": 370,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Rok"
+          },
+          {
+            "entry": "^Brute ramship",
+            "n": 10,
+            "sq": "A",
+            "ups": [
+              {
+                "upgrade": "^Clan: Blood Axes"
+              }
+            ]
+          },
+          {
+            "entry": "^Cobra class destroyer",
+            "n": 3,
+            "sq": "A"
+          }
+        ]
+      },
+      "expect": {
+        "total": 420,
+        "checks": [
+          {
+            "label": "^Tiddla skwadron A",
+            "ok": false,
+            "v": "13 escorts: 10 Brute ramship + 3 Cobra class destroyer"
+          }
+        ]
+      },
+      "why": "Fleets p. 369: “A Blood Axe tiddla skwadron of at least six escorts may include up to three Imperial Navy and/or Chaos escorts from any fleet list at their listed cost.” p. 370: “the maximum number of escorts in an Ork squadron can be up to ten.” The three commandeered escorts are in the tiddla, not beside it (RAW-03). Rok 80 + 10 x 25 + 3 x 30 = 420."
+    },
+    {
+      "id": "clanz-blood-axe-seven-ork-three-commandeered",
+      "page": 370,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Rok"
+          },
+          {
+            "entry": "^Brute ramship",
+            "n": 7,
+            "sq": "A",
+            "ups": [
+              {
+                "upgrade": "^Clan: Blood Axes"
+              }
+            ]
+          },
+          {
+            "entry": "^Cobra class destroyer",
+            "n": 3,
+            "sq": "A"
+          }
+        ]
+      },
+      "expect": {
+        "total": 345,
+        "checks": [
+          {
+            "label": "^Tiddla skwadron A",
+            "ok": true,
+            "v": "10 escorts: 7 Brute ramship + 3 Cobra class destroyer"
+          },
+          {
+            "label": "^Blood Axe tiddla A",
+            "ok": true,
+            "v": "7 Ork + 3 commandeered"
+          }
+        ]
+      },
+      "why": "Fleets p. 369: “A Blood Axe tiddla skwadron of at least six escorts may include up to three Imperial Navy and/or Chaos escorts from any fleet list at their listed cost.” Ten escorts in all with three commandeered is the largest Blood Axe tiddla (p. 370). Rok 80 + 7 x 25 + 3 x 30 = 345."
+    },
+    {
+      "id": "clanz-commandeered-escorts-in-the-warlords-command",
+      "page": 372,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Brute ramship",
+            "n": 3,
+            "sq": "A",
+            "ups": [
+              {
+                "upgrade": "^Clan: Blood Axes"
+              }
+            ]
+          },
+          {
+            "entry": "^Idolator class raider",
+            "n": 3,
+            "sq": "A"
+          },
+          {
+            "entry": "^Savage gunship",
+            "n": 3
+          }
+        ]
+      },
+      "expect": {
+        "total": 300,
+        "aboard": [
+          {
+            "cmd": "^Ork Warlord",
+            "nth": 0,
+            "ship": "^Idolator class raider",
+            "choices": 1
+          }
+        ],
+        "checks": [
+          {
+            "label": "^Warlord 1: skwadrons",
+            "ok": true,
+            "v": "1 tiddla + 1 other / 1 + 1"
+          }
+        ]
+      },
+      "why": "Fleets p. 372: “He must be embarked on the most expensive ship under his own command (as opposed to the whole fleet), even if it is an escort - annotate which one it is.” Fleets p. 369: “A Blood Axe tiddla skwadron of at least six escorts may include up to three Imperial Navy and/or Chaos escorts from any fleet list at their listed cost.” The Idolators are in the Warlord's Blood Axe tiddla, so they are his and the dearest ship of his command (RAW-03). 3 x Brute ramship 25 + 3 x Idolator class raider 45 + 3 x Savage gunship 30 = 300."
+    },
+    {
+      "id": "clanz-snakebite-warlord-with-a-kroozer",
+      "page": 369,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord",
+            "clan": "Snakebites"
+          },
+          {
+            "entry": "^Kill kroozer"
+          },
+          {
+            "entry": "^Brute ramship",
+            "n": 3
+          }
+        ]
+      },
+      "expect": {
+        "total": 230,
+        "checks": [
+          {
+            "label": "^Warlord 1: Snakebite capital ships",
+            "ok": false,
+            "v": "Kill kroozer: not a hulk or Rok"
+          }
+        ]
+      },
+      "why": "Fleets p. 369: “Snakebite capital ship skwadrons can only use space hulks or roks – no other kind of capital ship skwadrons are permitted to bear the clan colours.” Fleets p. 369: “A Warlord and his skwadrons may only be from one clan, but as many different clans as desired can be in a single fleet.” A Snakebite Warlord's kroozer is of his clan whether or not it buys the clan (ChatGPT audit RAW-04). Kill kroozer 155 + 3 x Brute ramship 25 = 230."
+    },
+    {
+      "id": "clanz-snakebite-warlord-with-a-rok",
+      "page": 369,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord",
+            "clan": "Snakebites"
+          },
+          {
+            "entry": "^Rok"
+          },
+          {
+            "entry": "^Brute ramship",
+            "n": 3
+          }
+        ]
+      },
+      "expect": {
+        "total": 155,
+        "checks": [
+          {
+            "label": "^Warlord 1: Snakebite capital ships",
+            "ok": true,
+            "v": "hulks and Roks only"
+          }
+        ]
+      },
+      "why": "Fleets p. 369: “Snakebite capital ship skwadrons can only use space hulks or roks – no other kind of capital ship skwadrons are permitted to bear the clan colours.” A Rok is allowed. Rok 80 + 3 x Brute ramship 25 = 155."
+    },
+    {
+      "id": "clanz-warlord-clan-and-a-kroozer-of-another",
+      "page": 369,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord",
+            "clan": "Goffs"
+          },
+          {
+            "entry": "^Kill kroozer",
+            "ups": [
+              {
+                "upgrade": "^Clan: Evil Sunz"
+              }
+            ]
+          },
+          {
+            "entry": "^Brute ramship",
+            "n": 3
+          }
+        ]
+      },
+      "expect": {
+        "total": 270,
+        "checks": [
+          {
+            "label": "^Warlord 1: one clan",
+            "ok": false,
+            "v": "Goffs, Evil Sunz"
+          }
+        ]
+      },
+      "why": "Fleets p. 369: “A Warlord and his skwadrons may only be from one clan, but as many different clans as desired can be in a single fleet.” The Warlord is a Goff, so his kroozer that bought Evil Sunz is a second clan (RAW-04). The Brutes take their Warlord's Goffs as they are added (J226). Kill kroozer 155 + Evil Sunz 20 + 3 x Brute ramship 25 + Goffs 20 = 270."
+    },
+    {
+      "id": "clanz-goff-warlord-zukov-and-a-goff-kill",
+      "page": 381,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord",
+            "clan": "Goffs"
+          },
+          {
+            "entry": "^Brute ramship",
+            "n": 3,
+            "ups": [
+              {
+                "upgrade": "^Clan: Goffs"
+              }
+            ]
+          },
+          {
+            "entry": "^Kill kroozer",
+            "sq": "A",
+            "ups": [
+              {
+                "upgrade": "^Clan: Goffs"
+              }
+            ]
+          },
+          {
+            "entry": "^Zukov",
+            "sq": "A"
+          }
+        ]
+      },
+      "expect": {
+        "total": 480,
+        "checks": [
+          {
+            "label": "^Squadron A: the clan on every ship",
+            "absent": true
+          },
+          {
+            "label": "^Warlord 1: one clan",
+            "ok": true,
+            "v": "Goffs"
+          }
+        ]
+      },
+      "why": "Fleets p. 381: Zukov's Klaw “is of the Goff Clan” at its 210 points. ChatGPT audit RAW-05 fixture (fixed by J242): a Goff Warlord, a Goff tiddla and a Goff Kill kroozer in Zukov's big ship skwadron. 3 x Brute ramship 25 + Goffs 20 + Kill kroozer 155 + Goffs 20 + Zukov's Klaw 210 = 480."
+    },
+    {
+      "id": "clanz-assault-karrier-boarding-torpedoes-free",
+      "page": 371,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Brute ramship",
+            "n": 3
+          },
+          {
+            "entry": "^Terror ship",
+            "opts": [
+              {
+                "option": "^May replace its prow heavy gun battery"
+              },
+              {
+                "option": "^If fitted with a torpedo launcha"
+              }
+            ],
+            "ups": [
+              {
+                "upgrade": "^Assault Karrier$"
+              }
+            ],
+            "no_ups_after": [
+              "^Boarding torpedoes",
+              "^Torpedo-bommas",
+              "^Orbital mines"
+            ]
+          }
+        ]
+      },
+      "expect": {
+        "total": 260
+      },
+      "why": "Fleets p. 371, Assault Karrier: “It takes boarding torpedoes for free, but it may only use assault boats.” ChatGPT audit RAW-06: bought after the Terror ship's own +5 boarding torpedoes, the Karrier takes them for free (the option reopens), and torpedo-bommas and orbital mines are not offered beside it. 3 x Brute ramship 25 + Terror ship 185 + torpedo launcha 0 + Assault Karrier 0 = 260."
     }
   ]
 }

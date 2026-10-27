@@ -206,8 +206,14 @@ ROW_EFFECTS = [
      dict(swp=dict(f=r"prow heavy gunz", nmf=r"heavy gunz(?: battery)?", nm="shokk-attack lance", rg="30 cm", st="Special"),
           cond=dict(has="prow heavy gunz"),
           desc="Replaces the prow heavy gunz. Not while crippled or braced; only against a ship with shields down. Hits on 4+ at 30 cm (holofields and bracing save): D3+1 snotling hordes board it, each adding an extra D6 to its next Leadership check or special order until cleared; a miss places a Blast Marker on the Ork ship. Against escorts: D6, 1-3 destroys the nearest unshielded escort, 4+ places a Blast Marker.")),
+    # p.371 "It takes boarding torpedoes for free, but it may only use assault
+    # boats": no torpedo-bommas or orbital mines beside it (each excludes the
+    # other, the later choice wins), and the boarding torpedoes rows give way
+    # to it (their noup below; frees words the notice). ChatGPT audit RAW-06,
+    # 27.10.2026: a Terror with a Karrier still paid +5 for them.
     (_CLANZ, _GUB, re.compile(r"^Assault Karrier$", re.I),
-     dict(cond=dict(has=["launch bay", "torpedo"]),
+     dict(cond=dict(has=["launch bay", "torpedo"], noup=r"^torpedo[\s-]*bom|^orbital mines$"),
+          frees=r"^boarding torpedoes",
           desc="Takes boarding torpedoes for free but may only use assault boats. It may launch +1 assault boat marker each time it launches attack craft (even if crippled or braced, but not both).")),
     # --- Da Ork Clanz: clans (p.369) ---
     (_CLANZ, _CLAN, re.compile(r"^Clan: Goffs", re.I),
@@ -487,8 +493,9 @@ EXTRA = [
          sent=r"capital ships that use torpedoes may use boarding torpedoes for \+?(\d+)\s*points",
          # The sentence limits itself: "capital ships that use torpedoes". Without the condition
          # the row was offered to the Onslaught escort (spot check 6 row 71).
+         # noup: Da Ork Clanz p.371, an Assault Karrier "takes boarding torpedoes for free" (RAW-06).
          rows=[dict(l="Boarding torpedoes", p="$1", a=1,
-                    cond=dict(cap=1, ty=r"battleship|cruiser", has="torpedo", nmno="hulk"))]),
+                    cond=dict(cap=1, ty=r"battleship|cruiser", has="torpedo", nmno="hulk", noup=r"^assault karrier"))]),
     dict(lst=r"Bakka", sec=r"^ORDNANCE$",
          sent=r"Emperor class battleship may carry Shark assault boats at an additional cost of \+?(\d+)\s*points",
          # The sentence limits itself: "An Emperor class battleship may carry Shark assault
@@ -736,16 +743,19 @@ EXTRA = [
     dict(lst=r"Ork", src=r"Cyclops", sec=r"^FLEET RULES",
          sent=r"Torpedo-bommas may be taken by any ship equipped with launch bays for \+?(\d+)\s*points per launch bay strength",
          rows=[dict(l="Torpedo-bommas", p="$1", a=1, per="bay",
-                    cond=dict(has="launch bay"),
+                    # Da Ork Clanz p.371: an Assault Karrier "may only use assault boats"
+                    cond=dict(has="launch bay", noup=r"^assault karrier"),
                     x="Per launch bay strength.")]),
+    # Da Ork Clanz p.371: an Assault Karrier "takes boarding torpedoes for
+    # free", so the paid rows give way to it (RAW-06; the Waaagh! list has no Karrier)
     dict(lst=r"Ork", src=r"Cyclops", sec=r"^FLEET RULES",
          sent=r"capital ship in the Ork fleet list armed with torpedoes can use boarding torpedoes for \+?(\d+)\s*points",
          rows=[dict(l="Boarding torpedoes", p="$1", a=1,
-                    cond=dict(cap=1, ty=r"battleship|cruiser", has="torpedo", nmno="hulk"))]),
+                    cond=dict(cap=1, ty=r"battleship|cruiser", has="torpedo", nmno="hulk", noup=r"^assault karrier"))]),
     dict(lst=r"Ork", src=r"Cyclops", sec=r"^FLEET RULES",
          sent=r"A Space Hulk may use boarding torpedoes for \+?(\d+)\s*points",
          rows=[dict(l="Boarding torpedoes (Space Hulk)", p="$1", a=1,
-                    cond=dict(nm="hulk"))]),
+                    cond=dict(nm="hulk", noup=r"^assault karrier"))]),
 
     # Da Ork Clanz: "Ork Warlord....Free" used to come here, because
     # the list extractor dropped the row - a price in words without "pts"

@@ -757,7 +757,46 @@ var __rules = (() => {
       var w = m.intent && m.intent.cmd && byUid[m.intent.cmd] || last || ws[0];
       of[i] = members.indexOf(w);
     });
+    clanzTiddlas(L, members).forEach(function(t) {
+      var wi = of[t.ork[0]];
+      t.com.forEach(function(i) {
+        of[i] = wi;
+      });
+    });
     return { warlords: ws, of };
+  }
+  function clanzTiddlas(L, members) {
+    var C = L && L.clanz;
+    if (!C) return [];
+    var inS = function(m, re) {
+      return !!re && m.own && m.unitRow && !!L.secs[m.si] && new RegExp(re, "i").test(String(L.secs[m.si].t).trim());
+    };
+    var out = [], byTag = {};
+    members.forEach(function(m, i) {
+      if (!inS(m, C.tiddla)) return;
+      var tg = m.intent && m.intent.sq || null, t = tg && byTag[tg];
+      if (!t) {
+        t = { tag: tg, ork: [], com: [] };
+        out.push(t);
+        if (tg) byTag[tg] = t;
+      }
+      t.ork.push(i);
+    });
+    members.forEach(function(m, i) {
+      var tg = m.intent && m.intent.sq;
+      if (tg && byTag[tg] && inS(m, L.bloodaxe && L.bloodaxe.sec)) byTag[tg].com.push(i);
+    });
+    var hullsOf = function(ix) {
+      return ix.reduce(function(a, i) {
+        return a + Math.max(1, members[i].hulls);
+      }, 0);
+    };
+    out.forEach(function(t) {
+      t.orkN = hullsOf(t.ork);
+      t.comN = hullsOf(t.com);
+      t.n = t.orkN + t.comN;
+    });
+    return out;
   }
   function placeCommanders(L, members, cmdOf) {
     var P = L && L.place || [];
@@ -3083,6 +3122,10 @@ var __rules = (() => {
   }
 
   // packages/rules/src/validation.js
+  function inclIn(en, text, anywhere) {
+    if (!en || !en.frees) return false;
+    return new RegExp(anywhere ? String(en.frees).replace(/^\^/, "") : en.frees, "i").test(String(text || ""));
+  }
   function issue(code, severity, path, message, page) {
     return { code, severity, path, message, sourcePage: page == null ? null : page };
   }
@@ -3404,19 +3447,15 @@ var __rules = (() => {
           if (!hit) return;
           if (e5.dflt) it.upgrades[id5] = "off";
           else delete it.upgrades[id5];
-          note("upgrade.conflict", "upgrades." + id5, "'" + e5.l + "' dropped: it may not be combined with '" + e2.l + "'");
+          note("upgrade.conflict", "upgrades." + id5, "'" + e5.l + "' dropped: " + (inclIn(e2, e5.l) ? "'" + e2.l + "' includes it for free" : "it may not be combined with '" + e2.l + "'"));
         });
       }
-      if (action.state === "take" && e2 && e2.cond && e2.cond.noup) {
+      if (action.state === "take" && e2) {
         ol.forEach(function(p) {
-          if (!p.cov || stateOf(p) !== "take") return;
-          if (coversExcludedRow(L, p, e2.cond.noup)) {
+          if (stateOf(p) !== "take") return;
+          if (p.cov && e2.cond && e2.cond.noup && coversExcludedRow(L, p, e2.cond.noup) || coveredRowExcludes(L, p, e2.l)) {
             setState(p, "opt");
-            note(
-              "option.conflict",
-              "options." + p.id,
-              "'" + shortText(p.t) + "' reopened: it may not be combined with '" + e2.l + "'"
-            );
+            note("option.conflict", "options." + p.id, "'" + shortText(p.t) + "' reopened: " + (inclIn(e2, p.t, true) ? "'" + e2.l + "' includes it for free" : "it may not be combined with '" + e2.l + "'"));
           }
         });
       }
@@ -3561,6 +3600,14 @@ var __rules = (() => {
             blockedBy.push(upgradeId(listOfSec(sel, x[0]).nm, secOf(sel, x[0]).t, en3.l));
         });
       }
+      if (st !== "take" && sel.list) {
+        var ups4 = upgradesFor(sel);
+        ups4.own.concat(ups4.other).forEach(function(x) {
+          if (upState(sel, x[0], x[1]) !== "take") return;
+          var uid4 = upgradeId(listOfSec(sel, x[0]).nm, secOf(sel, x[0]).t, x[2].l);
+          if (blockedBy.indexOf(uid4) < 0 && coveredRowExcludes(sel.list, o, x[2].l)) blockedBy.push(uid4);
+        });
+      }
       var dep = o.dep != null && ol[o.dep] ? ol[o.dep].id : null;
       return {
         id: o.id,
@@ -3579,6 +3626,15 @@ var __rules = (() => {
         forbidden: !!(sel.en && sel.en.optno && new RegExp(sel.en.optno, "i").test(String(o.t || "")))
       };
     });
+  }
+  function coveredRowExcludes(list, o, label) {
+    var hit = false;
+    (list ? list.secs : []).forEach(function(sec) {
+      (sec.ents || []).forEach(function(en) {
+        if (!hit && isUpgradeEnt(en) && en.cond && en.cond.noup && new RegExp(en.cond.noup, "i").test(String(label || "")) && optionCoversRow(o, en)) hit = true;
+      });
+    });
+    return hit;
   }
   function coversExcludedRow(list, o, noup) {
     var rx = new RegExp(String(noup), "i"), hit = false;
@@ -5114,6 +5170,7 @@ var __rules = (() => {
     if (u.aboard) intent.aboard = String(u.aboard);
     if (u.sq) intent.sq = String(u.sq);
     if (u.cmd) intent.cmd = String(u.cmd);
+    if (u.clan) intent.clan = String(u.clan);
     var ol = sh && sh.ol || [];
     ol.forEach(function(o, i) {
       var st = u.os && u.os[i] || null;
@@ -5175,6 +5232,7 @@ var __rules = (() => {
     if (intent.aboard) u.aboard = String(intent.aboard);
     if (intent.sq) u.sq = String(intent.sq);
     if (intent.cmd) u.cmd = String(intent.cmd);
+    if (intent.clan) u.clan = String(intent.clan);
     Object.keys(intent.options || {}).forEach(function(id) {
       var o = intent.options[id];
       var i = optionIndex(sh, id, null);
@@ -6024,6 +6082,29 @@ var __rules = (() => {
   function ruleSquadron(F, r, sec, si, lab) {
     var members = F.members, out = F.out, pickHas = F.pickHas;
     var insec = r.sec || [si];
+    var CZ = F.L.clanz;
+    if (CZ && !r.pick && insec.some(function(i) {
+      return F.L.secs[i] && new RegExp(CZ.tiddla, "i").test(String(F.L.secs[i].t).trim());
+    })) {
+      clanzTiddlas(F.L, members).forEach(function(t) {
+        var ok = t.n >= r.min && t.n <= r.max;
+        if (!t.tag) {
+          var m = members[t.ork[0]];
+          out.push({ ok, t: m.sel.sh.nm, v: t.n + " ships", s: "Squadrons of " + r.min + "\u2013" + r.max + ". " + r.src });
+          return;
+        }
+        var names = t.ork.concat(t.com).map(function(i) {
+          return members[i].hulls + " " + members[i].en.l;
+        });
+        out.push({
+          ok,
+          t: "Tiddla skwadron " + t.tag,
+          v: t.n + " escorts: " + names.join(" + "),
+          s: "Squadrons of " + r.min + "\u2013" + r.max + ". " + r.src
+        });
+      });
+      return;
+    }
     var inRule = members.filter(function(m) {
       return m.escort && (r.pick ? r.pick.some(function(p) {
         return pickHas(m, p);
@@ -6552,31 +6633,27 @@ var __rules = (() => {
         });
         else if (tagsB.indexOf(tg) < 0) tagsB.push(tg);
       });
+      var tids = clanzTiddlas(L, members);
       tagsB.sort().forEach(function(tg) {
-        var inTag = members.filter(function(m) {
-          return m.unitRow && m.intent && m.intent.sq === tg;
-        });
-        var ork = inTag.filter(function(m) {
-          return inSecB(m, CZd.tiddla);
-        });
-        var orkN = ork.reduce(function(a, m) {
-          return a + Math.max(1, m.hulls);
-        }, 0);
-        var comN = inTag.filter(function(m) {
-          return inSecB(m, BA.sec);
+        var T = tids.filter(function(t) {
+          return t.tag === tg;
+        })[0];
+        var orkN = T ? T.orkN : 0;
+        var comN = com.filter(function(m) {
+          return m.intent && m.intent.sq === tg;
         }).reduce(function(a, m) {
           return a + Math.max(1, m.hulls);
         }, 0);
-        var axe = ork.some(function(m) {
+        var axe = !!T && T.ork.some(function(i) {
           return baClan.some(function(x) {
-            return tookUp(m, x[0], x[1]);
+            return tookUp(members[i], x[0], x[1]);
           });
         });
         out.push({
-          ok: axe && orkN >= BA.min && comN <= BA.max,
+          ok: axe && orkN + comN >= BA.min && comN <= BA.max,
           t: "Blood Axe tiddla " + tg,
           v: orkN + " Ork + " + comN + " commandeered" + (axe ? "" : ", no Blood Axe clan"),
-          s: citeText(BA.cite)
+          s: citeText(BA.cite) + " Ruling T59: the six include the commandeered escorts."
         });
       });
     }
@@ -6674,6 +6751,7 @@ var __rules = (() => {
         return m.own && L.secs[m.si] && new RegExp(re, "i").test(String(L.secs[m.si].t).trim());
       };
       var clanRows = upRows(secIx(C.clan_sec)), gubRows = upRows(secIx(C.gub_sec), new RegExp(C.gub_re, "i"));
+      var tids = clanzTiddlas(L, members);
       var clansOf = function(m) {
         return clanRows.filter(function(x) {
           return tookUp(m, x[0], x[1]);
@@ -6712,12 +6790,12 @@ var __rules = (() => {
             s: citeText(C.hulk1) + " " + citeText(C.hulk2)
           });
         } else {
-          var tid = mine.filter(function(m) {
-            return inSec(m, C.tiddla);
+          var tid = tids.filter(function(t) {
+            return CZ.of[t.ork[0]] === wi;
           }).length;
           var groups = {};
           mine.forEach(function(m) {
-            if (inSec(m, C.tiddla)) return;
+            if (inSec(m, C.tiddla) || L.bloodaxe && inSec(m, L.bloodaxe.sec)) return;
             var g2 = (inSec(m, C.big) || inSec(m, C.rok)) && m.intent && m.intent.sq ? "sq:" + m.intent.sq : "u:" + members.indexOf(m);
             groups[g2] = 1;
           });
@@ -6754,12 +6832,26 @@ var __rules = (() => {
           v: uge + " / 1, " + kro + (kro === 1 ? " kroozer" : " kroozers"),
           s: citeText(C.uge1) + " " + citeText(C.uge2)
         });
-        var clans = [];
+        var wClan = w.intent && w.intent.clan ? String(w.intent.clan) : "";
+        var clans = wClan ? [wClan] : [];
         mine.concat([w]).forEach(function(m) {
           clansOf(m).concat(bornClan(m)).forEach(function(c) {
             if (clans.indexOf(c) < 0) clans.push(c);
           });
         });
+        if (C.snake && wClan && new RegExp(C.snake_clan, "i").test(wClan)) {
+          var notSnake = mine.filter(function(m) {
+            return !m.escort && !inSec(m, C.tiddla) && !inSec(m, C.hulk) && !inSec(m, C.rok) && !(L.bloodaxe && inSec(m, L.bloodaxe.sec));
+          });
+          out.push({
+            ok: !notSnake.length,
+            t: tag + "Snakebite capital ships",
+            v: notSnake.length ? notSnake.map(function(m) {
+              return m.en.l;
+            }).join(", ") + ": not a hulk or Rok" : "hulks and Roks only",
+            s: citeText(C.snake)
+          });
+        }
         if (clans.length) out.push({ ok: clans.length <= 1, t: tag + "one clan", v: clans.join(", "), s: citeText(C.clan) });
         S1.clans = clans;
         var ab = aboard.filter(function(a) {
@@ -6807,21 +6899,31 @@ var __rules = (() => {
             s: citeText(C.clan_sq)
           });
       });
-      if (C.split) sqTags.forEach(function(tag) {
+      var splitOf = function(label, ixs) {
         var wl = [];
-        sqOf[tag].forEach(function(m) {
-          var w = CZ.of[members.indexOf(m)];
+        ixs.forEach(function(i) {
+          var w = CZ.of[i];
           if (w >= 0 && wl.indexOf(w) < 0) wl.push(w);
         });
         if (wl.length > 1) out.push({
           ok: false,
-          t: "Squadron " + tag + ": one Warlord",
+          t: label + ": one Warlord",
           v: wl.map(function(w) {
             return "Warlord " + (CZ.warlords.indexOf(members[w]) + 1);
           }).join(" + "),
           s: citeText(C.split)
         });
-      });
+      };
+      if (C.split) {
+        sqTags.forEach(function(tag) {
+          splitOf("Squadron " + tag, sqOf[tag].map(function(m) {
+            return members.indexOf(m);
+          }));
+        });
+        tids.forEach(function(t) {
+          if (t.tag) splitOf("Tiddla skwadron " + t.tag, t.ork);
+        });
+      }
     }
     return wsum;
   }
@@ -6963,11 +7065,13 @@ var __rules = (() => {
       units: members.map(function(m) {
         return m.R;
       }),
+      /* hulls: the ships on the table, not a commander or a bought row
+         (ChatGPT audit UX-06: four escorts and a Warlord said 5 hulls) */
       totals: {
         points: tot,
         maxPoints: totMax,
         hulls: members.reduce(function(a, m) {
-          return a + m.hulls;
+          return a + (m.R && m.R.kind === "ship" ? m.hulls : 0);
         }, 0)
       },
       checks: out,

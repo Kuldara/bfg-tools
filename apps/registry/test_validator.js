@@ -781,12 +781,17 @@ eq(cargoSq(), true, "Exploration: a one-ship cargo squadron fails");
 build(exl, 1500, [["Rogue Trader cruiser", 1], ["Cargo Transport", 2]]);
 eq(cargoSq(), false, "Exploration: a two-ship cargo squadron is fine");
 /* J62 p.372: "Tiddla skwadron 3-10 Escorts, chosen from the following list in
-   any mix desired" */
+   any mix desired". The mix is the player's: the same squadron letter makes
+   two cards one tiddla, and a card without one is a tiddla by itself
+   (ChatGPT audit RAW-01, 27.10.2026; J62 pooled short cards by itself, so
+   the same two cards were one skwadron here and two in the Warlord's count). */
 const tidSq = () => failed().some(c => /Squadrons of 3.10/.test(c.s || ""));
 build(cll, 1000, [["Ork Warlord", 1], ["Ork Warlord", 1], ["Ravager attack ship", 2]]);
 eq(tidSq(), true, "Clanz: a two-ship tiddla skwadron fails");
 build(cll, 1000, [["Ork Warlord", 1], ["Ork Warlord", 1], ["Ravager attack ship", 2], ["Grunt assault ship", 1]]);
-eq(tidSq(), false, "Clanz: two Ravagers and a Grunt in one skwadron is fine");
+eq(tidSq(), true, "Clanz: two Ravagers and a Grunt on cards of their own are two short tiddlas");
+api.S.units[2].sq = "A"; api.S.units[3].sq = "A";
+eq(tidSq(), false, "Clanz: two Ravagers and a Grunt in one skwadron (one letter) is fine");
 build(cll, 1000, [["Ork Warlord", 1], ["Ork Warlord", 1], ["Ravager attack ship", 11]]);
 eq(tidSq(), true, "Clanz: an eleven-ship tiddla skwadron fails");
 /* J63 p.318: "If the fleet is worth over 750 points, an Autarch must be

@@ -108,8 +108,10 @@ export function resolveFleet(fleetIntent, catalog){
       s: a.cite ? citeText(a.cite) : "" });
   });
   return { list: L.nm, limit: lim, units: members.map(function(m){ return m.R; }),
+           /* hulls: the ships on the table, not a commander or a bought row
+              (ChatGPT audit UX-06: four escorts and a Warlord said 5 hulls) */
            totals: { points: tot, maxPoints: totMax,
-                     hulls: members.reduce(function(a, m){ return a + m.hulls; }, 0) },
+                     hulls: members.reduce(function(a, m){ return a + (m.R && m.R.kind === "ship" ? m.hulls : 0); }, 0) },
            checks: out, facts: fleetFacts(L, members), aboard: aboard,
            /* Clanz (J216): the Warlord of each unit (unit index -> Warlord's
               unit index, -1 = none) */

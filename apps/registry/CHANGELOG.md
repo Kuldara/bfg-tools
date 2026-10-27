@@ -23,6 +23,42 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   the one-file engine, as do the golden cases, Play and the simulator.
 
 ### Fixed
+- **Da Ork Clanz, from an outside audit of the live site (ChatGPT, 27.10.2026).**
+  Each finding was checked against Fleets pp. 369-373 and 381 before it was
+  changed; golden cases lock each one and were red before the fix.
+  - Tiddla skwadrons are the player's own: cards with the same Squadron letter
+    are one tiddla "in any mix desired" (p. 372), a card without a letter is one
+    by itself, and every check reads the same skwadrons. Two Brutes and two
+    Onslaughts on two cards were green before - the size check pooled them into
+    one mixed tiddla while the Warlord's count saw two (RAW-01). A tiddla's line
+    lists its members: "Tiddla skwadron A: 6 escorts: 3 Brute ramship + 3 Cobra
+    class destroyer". Every tiddla card has the Squadron menu now, not only in a
+    Blood Axe fleet.
+  - **Ruling T59** (open interpretation, 27.10.2026): "A Blood Axe tiddla skwadron
+    of at least six escorts may include up to three Imperial Navy and/or Chaos
+    escorts" (p. 369) counts the skwadron as fielded, so three Brutes and three
+    Cobras are a Blood Axe tiddla. J220 counted the Ork escorts only (RAW-02).
+  - The commandeered escorts count toward the tiddla's ten (p. 370): ten Brutes
+    and three Cobras are red (RAW-03). They are in their tiddla's Warlord's
+    command, so his summary lists them and he can be aboard one when it is his
+    dearest ship (p. 372).
+  - A Warlord's own clan (the clan picked for him) is his skwadrons' clan whether
+    or not they pay for its benefit (p. 369). A Snakebite Warlord with a kroozer
+    is red - "Snakebite capital ship skwadrons can only use space hulks or roks"
+    - and a kroozer that bought another clan than its Warlord's is a second clan
+    (RAW-04). The Warlord's clan is now part of the rules engine's unit
+    (`intent.clan`); saves already kept it.
+  - An Assault Karrier "takes boarding torpedoes for free, but it may only use
+    assault boats" (p. 371): bought after the Terror ship's own +5 boarding
+    torpedoes it takes them over with the notice "included for free", the paid
+    rows are not offered beside it, and torpedo-bommas and orbital mines exclude
+    it the way they exclude each other (RAW-06; a Terror with a Karrier cost 190).
+  - The fleet's "hulls" count ships only; a Warlord was counted as a hull
+    (UX-06).
+  - Not changed, as the audit itself advised: Zukov's 210 points (p. 381, the
+    list's "2310" is a misprint), clan benefits stay optional, Mega-Armoured
+    Boarding Parties stays allowed on a hulk, Young Gunz is not given
+    automatically. The Rulebook stays v1.10.
 - Da Ork Clanz: Zukov's Klaw in a skwadron with another kroozer showed a false red
   "the clan on every ship: none / Goffs" when that kroozer had bought Goffs. Zukov
   is a Goff by itself (Fleets p. 381, no clan row to buy), and the skwadron check
@@ -59,6 +95,14 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   (`clanz-bad-moonz-paid-per-rok`: three Bad Moonz Roks cost +90, not +30).
 
 ### Added
+- Da Ork Clanz (from the same audit): the Warlord block's skwadron menu works on
+  tiddlas too - *new tiddla of …* adds a second card of the same escorts at
+  three, under that Warlord and with his clan, and *join* / *split into its
+  cards* make or undo a mixed tiddla (UX-01). *Copy list* writes the commands:
+  each Warlord with his clan, re-rolls, ship and points, then his skwadrons and
+  their ships (UX-03). Moving a skwadron to another Warlord keeps a clan benefit
+  it had turned off; the Warlord's clan button says it buys the clan for all
+  (UX-02).
 - The ship data is published on its own at `/bfg_data.json` (CORS open), with a
   version (`schemaVersion` 1.0) and a documented contract (`data/README.md`).
 

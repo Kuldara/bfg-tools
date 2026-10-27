@@ -183,7 +183,42 @@ export function clanzCommand(L, members){
     var w = (m.intent && m.intent.cmd && byUid[m.intent.cmd]) || last || ws[0];
     of[i] = members.indexOf(w);
   });
+  /* A Blood Axe tiddla's commandeered escorts (Fleets p. 369) are in the
+     command of their tiddla's Warlord: his summary, his dearest ship (p. 372)
+     and his checks see them (ChatGPT audit RAW-03, 27.10.2026). */
+  clanzTiddlas(L, members).forEach(function(t){
+    var wi = of[t.ork[0]];
+    t.com.forEach(function(i){ of[i] = wi; });
+  });
   return { warlords: ws, of: of };
+}
+/* Da Ork Clanz tiddla skwadrons: "3-10 Escorts, chosen from the following
+   list in any mix desired" (Fleets p. 372). Escort rows of one tag are one
+   skwadron, a row without a tag is a skwadron by itself, and a Blood Axe
+   tiddla's commandeered Imperial Navy and Chaos escorts (p. 369) are members
+   of the tiddla of their tag. Every Clanz check reads these, so two rows are
+   never one skwadron for the size check and two for the Warlord's count
+   (ChatGPT audit RAW-01, 27.10.2026). Returns [{ tag, ork: [member index],
+   com: [member index], orkN, comN, n }] - n counts the escorts. */
+export function clanzTiddlas(L, members){
+  var C = L && L.clanz;
+  if(!C) return [];
+  var inS = function(m, re){
+    return !!re && m.own && m.unitRow && !!L.secs[m.si] && new RegExp(re, "i").test(String(L.secs[m.si].t).trim()); };
+  var out = [], byTag = {};
+  members.forEach(function(m, i){
+    if(!inS(m, C.tiddla)) return;
+    var tg = (m.intent && m.intent.sq) || null, t = tg && byTag[tg];
+    if(!t){ t = { tag: tg, ork: [], com: [] }; out.push(t); if(tg) byTag[tg] = t; }
+    t.ork.push(i);
+  });
+  members.forEach(function(m, i){
+    var tg = m.intent && m.intent.sq;
+    if(tg && byTag[tg] && inS(m, L.bloodaxe && L.bloodaxe.sec)) byTag[tg].com.push(i);
+  });
+  var hullsOf = function(ix){ return ix.reduce(function(a, i){ return a + Math.max(1, members[i].hulls); }, 0); };
+  out.forEach(function(t){ t.orkN = hullsOf(t.ork); t.comN = hullsOf(t.com); t.n = t.orkN + t.comN; });
+  return out;
 }
 export function placeCommanders(L, members, cmdOf){
   var P = (L && L.place) || [];

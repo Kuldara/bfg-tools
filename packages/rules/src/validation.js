@@ -1,6 +1,15 @@
 import { findEntry, findUpgradeEntry, optionIndex, shipFor, splitUpgradeId } from "./legacy.js";
 import { listOfIntent } from "./lending.js";
-import { coversExcludedRow } from "./unit.js";
+import { coveredRowExcludes, coversExcludedRow } from "./unit.js";
+
+/* frees: what a row includes for free, so a purchase it replaces is said to
+   be included rather than in conflict (Assault Karrier, Fleets p. 371). A
+   row label is read as it is; an option's sentence anywhere ("it may carry
+   boarding torpedoes"). */
+function inclIn(en, text, anywhere){
+  if(!en || !en.frees) return false;
+  return new RegExp(anywhere ? String(en.frees).replace(/^\^/, "") : en.frees, "i").test(String(text || ""));
+}
 import { HOST_OFF, condOK, coveredByShipOption, hostUpgradesAllowed, optCount, optState, rowAttached, secOf, selectionOf } from "./upgrades.js";
 
 /* ===================== P1-8e: validation and transitions =====================
@@ -269,19 +278,23 @@ export function transition(intent, action, ctx, catalog){
                   (e5.cond && e5.cond.noup && new RegExp(e5.cond.noup, "i").test(String(e2.l)));
         if(!hit) return;
         if(e5.dflt) it.upgrades[id5] = "off"; else delete it.upgrades[id5];
-        note("upgrade.conflict", "upgrades." + id5, "'" + e5.l + "' dropped: it may not be combined with '" + e2.l + "'");
+        note("upgrade.conflict", "upgrades." + id5, "'" + e5.l + "' dropped: " + (inclIn(e2, e5.l) ?
+          "'" + e2.l + "' includes it for free" : "it may not be combined with '" + e2.l + "'"));
       });
     }
     /* The upgrade excludes a row (noup) that a taken option covers: the
        option reopens with a notice (Daemonship vs. embarked Chaos Space
-       Marines, Fleets pp. 249, 255). */
-    if(action.state === "take" && e2 && e2.cond && e2.cond.noup){
+       Marines, Fleets pp. 249, 255). The other way too: a covered row that
+       gives way to this upgrade (the Terror ship's boarding torpedoes and an
+       Assault Karrier that "takes boarding torpedoes for free", Fleets
+       p. 371, RAW-06). */
+    if(action.state === "take" && e2){
       ol.forEach(function(p){
-        if(!p.cov || stateOf(p) !== "take") return;
-        if(coversExcludedRow(L, p, e2.cond.noup)){
+        if(stateOf(p) !== "take") return;
+        if((p.cov && e2.cond && e2.cond.noup && coversExcludedRow(L, p, e2.cond.noup)) || coveredRowExcludes(L, p, e2.l)){
           setState(p, "opt");
-          note("option.conflict", "options." + p.id,
-            "'" + shortText(p.t) + "' reopened: it may not be combined with '" + e2.l + "'");
+          note("option.conflict", "options." + p.id, "'" + shortText(p.t) + "' reopened: " + (inclIn(e2, p.t, true) ?
+            "'" + e2.l + "' includes it for free" : "it may not be combined with '" + e2.l + "'"));
         }
       });
     }

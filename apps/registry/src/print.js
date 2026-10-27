@@ -1,11 +1,12 @@
 import { $ } from "./boot.js";
 import { resolveUnit, unitCards } from "./cards.js";
-import { L, hulls, isUpgradeEnt, total } from "./model.js";
+import { L, isUpgradeEnt, total } from "./model.js";
 import { fitCards } from "./rule-card.js";
 import { KEY } from "./save.js";
 import { appState } from "./state.js";
 import { fleetResolved, isEscort, shipCall } from "./validation.js";
 import { render } from "./view.js";
+import { warlordIdx, warlordSkwadrons } from "./warlords.js";
 import { DATA, LISTS, SHIPS } from "../../../packages/ui/catalog.js";
 import { esc, listLineOf, title } from "../../../packages/ui/format.js";
 import DOMAIN from "../../../packages/rules/domain.js";
@@ -312,7 +313,7 @@ export function printRoster(){
   $("#sheet").innerHTML = `<div class="rost">
     <h1>${esc(L().nm)}</h1>
     <p class="sub">${total()} / ${appState.S.limit|0} pts \u00b7 ${appState.S.units.length} units \u00b7
-      ${appState.S.units.reduce((a,u)=>a+hulls(u),0)} hulls \u00b7 ${esc(DATA.src)}</p>
+      ${fleetResolved().totals.hulls} hulls \u00b7 ${esc(DATA.src)}</p>
     <table><thead><tr><th>Name</th><th>Class &amp; options</th><th>Type</th><th>Hits</th><th>Pts</th></tr></thead>
       <tbody>${rows}
       <tr class="tot"><td colspan="4">Total</td><td class="n">${total()}</td></tr></tbody></table>
@@ -347,6 +348,34 @@ export function listText(){
     ln[0] += " \u00b7 aboard " + shipCall(RF.units[a.ship]);
     lines[a.unit + 2] = ln.join("\n");
   });
+  /* Da Ork Clanz: the list is read by its commands, so the copy says them -
+     each Warlord with his clan, re-rolls, ship and points, then his
+     skwadrons with their ships (ChatGPT audit UX-03: a flat list could not
+     show which kroozers were one big ship skwadron, or whose they were) */
+  const ws = warlordIdx(RF);
+  const SKW_NAME = { tiddla: "Tiddla skwadron", kroozer: "Big ship skwadron", uge: "'Uge ship skwadron", rok: "Rok skwadron", hulk: "Space Hulk" };
+  if(ws.length){
+    const ind = (s, pad) => s.split("\n").map(l => pad + l).join("\n");
+    const done = new Set();
+    const body = [];
+    ws.forEach((wi, k) => {
+      const W = (RF.warlords || []).filter(x => x.unit === wi)[0] || {};
+      const own = appState.S.units[wi].clan || ((W.clans || []).length === 1 ? W.clans[0] : "");
+      const pts = [wi].concat(W.units || []).reduce((a, i) => a + (Rs[i] ? Rs[i].points : 0), 0);
+      const ab = (RF.aboard || []).filter(a => a.unit === wi)[0];
+      body.push("", ["Warlord " + (k + 1), own, Rs[wi].rerolls && Rs[wi].rerolls.text,
+        ab && ab.ship != null ? "aboard " + shipCall(RF.units[ab.ship]) : "", pts + " pts"].filter(Boolean).join(" \u2014 "));
+      body.push(ind(lines[wi + 2], "  ")); done.add(wi);
+      warlordSkwadrons(RF, wi).forEach(g => {
+        body.push("  " + SKW_NAME[g.kind] + (g.tag ? " " + g.tag : "") + ":");
+        g.units.forEach(i => { body.push(ind(lines[i + 2], "    ")); done.add(i); });
+      });
+      (W.units || []).forEach(i => { if(!done.has(i)){ body.push(ind(lines[i + 2], "  ")); done.add(i); } });
+    });
+    const rest = appState.S.units.map((u, i) => i).filter(i => !done.has(i));
+    if(rest.length) body.push("", "Not in a Warlord's command:", ...rest.map(i => lines[i + 2]));
+    lines.splice(2, appState.S.units.length, ...body.slice(1));
+  }
   /* Fleet facts (J214): the attack rating and what the enemy gets, for the
      opponent reading the list */
   if((RF.facts || []).length) lines.push("", ...RF.facts.map(f => f.t + ": " + f.v));

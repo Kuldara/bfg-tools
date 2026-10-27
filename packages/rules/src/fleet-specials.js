@@ -1,7 +1,7 @@
 /* Squadrons and the rules of single lists: Demiurg, Rogue Traders,
    auxiliaries, Blood Axes, Wardens, Clanz, space hulks. Called by resolveFleet. */
 
-import { DEMIURG_CMD, SQ_BIG, SQ_CR, citeText, isDemiurg, placeRe, placeTaken, sqClass } from "./fleet.js";
+import { DEMIURG_CMD, SQ_BIG, SQ_CR, citeText, clanzTiddlas, isDemiurg, placeRe, placeTaken, sqClass } from "./fleet.js";
 
 /* Squadrons by tag: sizes and classes. Returns the tags and their ships. */
 export function checkSquadrons(F){
@@ -143,7 +143,12 @@ export function checkListSpecials(F){
   var L = F.L, members = F.members, out = F.out, tookUp = F.tookUp, upRows = F.upRows, allySpecial = F.allySpecial, aboard = F.aboard, sqTags = F.sqTags, sqOf = F.sqOf;
   /* Blood Axe tiddla (Fleets p. 369, J220): commandeered Imperial Navy and
      Chaos escorts join a Blood Axe tiddla of at least six (squadron tag), at
-     most three of them */
+     most three of them. Ruling T59 (ChatGPT audit RAW-02, 27.10.2026): "A
+     Blood Axe tiddla skwadron of at least six escorts may include up to
+     three" counts the skwadron as fielded, the commandeered escorts too, so
+     three Brutes and three Cobras are a Blood Axe tiddla; J220 counted the
+     Ork escorts only. The tiddla's 3-10 (p. 372, p. 370 "up to ten") is the
+     size check's, over the same members (RAW-03). */
   if(L.bloodaxe){
     var BA = L.bloodaxe, CZd = L.clanz;
     var baIx = function(re){ var x = new RegExp(re, "i"); return L.secs.findIndex(function(sc){ return x.test(String(sc.t).trim()); }); };
@@ -157,14 +162,16 @@ export function checkListSpecials(F){
         s: citeText(BA.cite) });
       else if(tagsB.indexOf(tg) < 0) tagsB.push(tg);
     });
+    var tids = clanzTiddlas(L, members);
     tagsB.sort().forEach(function(tg){
-      var inTag = members.filter(function(m){ return m.unitRow && m.intent && m.intent.sq === tg; });
-      var ork = inTag.filter(function(m){ return inSecB(m, CZd.tiddla); });
-      var orkN = ork.reduce(function(a, m){ return a + Math.max(1, m.hulls); }, 0);
-      var comN = inTag.filter(function(m){ return inSecB(m, BA.sec); }).reduce(function(a, m){ return a + Math.max(1, m.hulls); }, 0);
-      var axe = ork.some(function(m){ return baClan.some(function(x){ return tookUp(m, x[0], x[1]); }); });
-      out.push({ ok: axe && orkN >= BA.min && comN <= BA.max, t: "Blood Axe tiddla " + tg,
-        v: orkN + " Ork + " + comN + " commandeered" + (axe ? "" : ", no Blood Axe clan"), s: citeText(BA.cite) });
+      var T = tids.filter(function(t){ return t.tag === tg; })[0];
+      var orkN = T ? T.orkN : 0;
+      var comN = com.filter(function(m){ return m.intent && m.intent.sq === tg; })
+        .reduce(function(a, m){ return a + Math.max(1, m.hulls); }, 0);
+      var axe = !!T && T.ork.some(function(i){ return baClan.some(function(x){ return tookUp(members[i], x[0], x[1]); }); });
+      out.push({ ok: axe && orkN + comN >= BA.min && comN <= BA.max, t: "Blood Axe tiddla " + tg,
+        v: orkN + " Ork + " + comN + " commandeered" + (axe ? "" : ", no Blood Axe clan"),
+        s: citeText(BA.cite) + " Ruling T59: the six include the commandeered escorts." });
     });
   }
   /* Wardens ride on ships of their own (Fleets p. 454, J220): the fleet's
@@ -235,6 +242,7 @@ export function checkOrkClanz(F){
     var secIx = function(re){ var x = new RegExp(re, "i"); return L.secs.findIndex(function(sc){ return x.test(String(sc.t).trim()); }); };
     var inSec = function(m, re){ return m.own && L.secs[m.si] && new RegExp(re, "i").test(String(L.secs[m.si].t).trim()); };
     var clanRows = upRows(secIx(C.clan_sec)), gubRows = upRows(secIx(C.gub_sec), new RegExp(C.gub_re, "i"));
+    var tids = clanzTiddlas(L, members);
     var clansOf = function(m){ return clanRows.filter(function(x){ return tookUp(m, x[0], x[1]); })
       .map(function(x){ return String(x[2].l).replace(/^clan:\s*/i, "").replace(/\s*\(.*$/, ""); }); };
     /* a ship of one clan by itself (J232): "(0-1) Zukov's Klaw (Goff only)"
@@ -257,10 +265,13 @@ export function checkOrkClanz(F){
           v: others === 0 && hulks.length === 1 ? "only the hulk" : "hulk + " + others + " other",
           s: citeText(C.hulk1) + " " + citeText(C.hulk2) });
       }else{
-        var tid = mine.filter(function(m){ return inSec(m, C.tiddla); }).length;
+        /* tiddlas as the player made them (clanzTiddlas, RAW-01): a tag of
+           Brutes and Onslaughts is one, an untagged row is one; commandeered
+           escorts are in their tiddla, not a skwadron of their own (J220) */
+        var tid = tids.filter(function(t){ return CZ.of[t.ork[0]] === wi; }).length;
         var groups = {};
         mine.forEach(function(m){
-          if(inSec(m, C.tiddla)) return;
+          if(inSec(m, C.tiddla) || (L.bloodaxe && inSec(m, L.bloodaxe.sec))) return;
           /* a big ship skwadron (1-2 kroozers) and a Rok skwadron (1-4 Roks,
              Fleets p. 372, J232) are one skwadron by their tag */
           var g = (inSec(m, C.big) || inSec(m, C.rok)) && m.intent && m.intent.sq ? "sq:" + m.intent.sq : "u:" + members.indexOf(m);
@@ -284,8 +295,25 @@ export function checkOrkClanz(F){
       if(uge) out.push({ ok: uge <= 1 && kro >= 2, t: tag + "'Uge ship",
         v: uge + " / 1, " + kro + (kro === 1 ? " kroozer" : " kroozers"),
         s: citeText(C.uge1) + " " + citeText(C.uge2) });
-      var clans = [];
+      /* the Warlord's own clan (intent.clan, the clan picked for him) is
+         his skwadrons' clan whether or not they buy its benefit (p. 369:
+         being of a clan "does not obligate the skwadron to take the
+         benefits"), so a ship that bought another clan is a second clan
+         (ChatGPT audit RAW-04, 27.10.2026) */
+      var wClan = w.intent && w.intent.clan ? String(w.intent.clan) : "";
+      var clans = wClan ? [wClan] : [];
       mine.concat([w]).forEach(function(m){ clansOf(m).concat(bornClan(m)).forEach(function(c){ if(clans.indexOf(c) < 0) clans.push(c); }); });
+      /* "Snakebite capital ship skwadrons can only use space hulks or roks"
+         (p. 369): a Snakebite Warlord's kroozer is red even when it did not
+         buy the clan, because it is of his clan all the same */
+      if(C.snake && wClan && new RegExp(C.snake_clan, "i").test(wClan)){
+        var notSnake = mine.filter(function(m){
+          return !m.escort && !inSec(m, C.tiddla) && !inSec(m, C.hulk) && !inSec(m, C.rok) &&
+            !(L.bloodaxe && inSec(m, L.bloodaxe.sec)); });
+        out.push({ ok: !notSnake.length, t: tag + "Snakebite capital ships",
+          v: notSnake.length ? notSnake.map(function(m){ return m.en.l; }).join(", ") + ": not a hulk or Rok" : "hulks and Roks only",
+          s: citeText(C.snake) });
+      }
       if(clans.length) out.push({ ok: clans.length <= 1, t: tag + "one clan", v: clans.join(", "), s: citeText(C.clan) });
       S1.clans = clans;
       var ab = aboard.filter(function(a){ return a.unit === wi; })[0];
@@ -315,12 +343,16 @@ export function checkOrkClanz(F){
     });
     /* a skwadron is one Warlord's (J232, Fleets p. 373: "you can't split up
        skwadrons"); a tag across two Warlords is a split skwadron */
-    if(C.split) sqTags.forEach(function(tag){
+    var splitOf = function(label, ixs){
       var wl = [];
-      sqOf[tag].forEach(function(m){ var w = CZ.of[members.indexOf(m)]; if(w >= 0 && wl.indexOf(w) < 0) wl.push(w); });
-      if(wl.length > 1) out.push({ ok: false, t: "Squadron " + tag + ": one Warlord",
+      ixs.forEach(function(i){ var w = CZ.of[i]; if(w >= 0 && wl.indexOf(w) < 0) wl.push(w); });
+      if(wl.length > 1) out.push({ ok: false, t: label + ": one Warlord",
         v: wl.map(function(w){ return "Warlord " + (CZ.warlords.indexOf(members[w]) + 1); }).join(" + "), s: citeText(C.split) });
-    });
+    };
+    if(C.split){
+      sqTags.forEach(function(tag){ splitOf("Squadron " + tag, sqOf[tag].map(function(m){ return members.indexOf(m); })); });
+      tids.forEach(function(t){ if(t.tag) splitOf("Tiddla skwadron " + t.tag, t.ork); });
+    }
   }
   return wsum;
 }
