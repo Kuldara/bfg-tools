@@ -5263,12 +5263,12 @@
       "select": [],
       "expect": {
         "points": 210,
-        "upgrade_not_offered": "^(Clan: |Torpedo-bommas|Klaws|Boarding torpedoes|Assault Karrier)",
+        "upgrade_not_offered": "^(Clan: (?!Goffs \\(included\\)$)|Torpedo-bommas|Klaws|Boarding torpedoes|Assault Karrier)",
         "card_contains": [
           "Klaws (included in the cost)"
         ]
       },
-      "why": "p.381: 'It is of the Goff Clan', 'It is upgraded to be an Assault Karrier with boarding torpedoes ... but it may not use any other types of attack craft', 'It is also equipped with Klaws as part of its point cost'."
+      "why": "p.381: 'It is of the Goff Clan', 'It is upgraded to be an Assault Karrier with boarding torpedoes ... but it may not use any other types of attack craft', 'It is also equipped with Klaws as part of its point cost'. No clan is offered to buy; its Goffs show as a locked free info row, Clan: Goffs (included) (user 27.10.2026, as a battle barge's built-in Mark)."
     },
     {
       "id": "clanz-terror-ship-clans-offered",

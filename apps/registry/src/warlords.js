@@ -262,7 +262,8 @@ export function setClan(u, name, keepOff){
   const ups = upgradesFor(u);
   ups.own.concat(ups.other).forEach(x => {
     const m = /^Clan: (.+?) \(/i.exec(String(x[2].l));
-    if(!m) return;
+    /* an included clan (Zukov's Goffs, p. 381) is locked: not bought, not dropped */
+    if(!m || x[2].incl) return;
     if(name && m[1].toLowerCase() === name.toLowerCase()){
       if(!(keepOff && upState(u, x[0], x[1]) === "off")) setUpState(u, x[0], x[1], "take");
     }
@@ -289,7 +290,7 @@ export function clanInfo(){
   const out = {};
   L().secs.forEach(sec => (sec.ents || []).forEach(en => {
     const m = /^Clan: (.+?) \(/i.exec(String(en.l || ""));
-    if(m && en.k === "up") out[m[1]] = { desc: en.desc || "", p: en.p | 0 };
+    if(m && en.k === "up" && !en.incl) out[m[1]] = { desc: en.desc || "", p: en.p | 0 };
   }));
   return out;
 }

@@ -2223,12 +2223,40 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
   catalog.lists.forEach(function(L){
     L.secs.forEach(function(sec){ sec.ents.forEach(function(en){
       if(en.incl) incl.push({ L: L, en: en }); }); }); });
-  check("there are 7 info rows for a Mark that comes built in", incl.length === 7, String(incl.length));
+  /* ...and since 27.10.2026 Zukov's Klaw's Goffs (Fleets p. 381 "It is of
+     the Goff Clan"), "Clan: Goffs (included)": the user asked to see it in
+     the upgrade list as the barges' Marks are */
+  check("there are 8 info rows: 7 Marks that come built in and Zukov's Goffs", incl.length === 8, String(incl.length));
   const bad = incl.filter(function(x){ const e = x.en;
     return !(e.k === "up" && e.req && e.p === 0 && !e.mod && !e.add && !e.swp &&
-             /^Mark of /.test(e.l) && !/^The /.test(e.l)); });
+             (/^Mark of /.test(e.l) || /^Clan: .+ \(included\)$/.test(e.l)) && !/^The /.test(e.l)); });
   check("info rows are locked, free and change no profile", bad.length === 0,
         bad.map(x => x.L.nm + "/" + x.en.l).join(" | "));
+  /* Zukov shows his clan locked and free; price, profile and card unchanged */
+  (function(){
+    const L = catalog.lists.filter(x => /Da Ork Clanz/.test(x.nm))[0];
+    let si = -1, ei = -1;
+    L.secs.forEach(function(s, i){ s.ents.forEach(function(e, j){ if(e.k === "unit" && /^Zukov/.test(e.l)){ si = i; ei = j; } }); });
+    const mk = function(applyReq){
+      const u = { schemaVersion: 3, role: "core", entry: { list: L.nm, section: L.secs[si].t, label: L.secs[si].ents[ei].l },
+        ref: String(L.secs[si].ents[ei].r), hull: null, hulls: 1, name: "", note: "", adjust: 0, custom: null,
+        members: [], options: {}, upgrades: {} };
+      if(applyReq) DOMAIN.requiredUpgradeKeys(DOMAIN.selectionOf(u, { list: L, host: L }, catalog)).forEach(function(k){
+        const p = k.split(":").map(Number);
+        u.upgrades[DOMAIN.upgradeId(L.nm, L.secs[p[0]].t, L.secs[p[0]].ents[p[1]].l)] = "take"; });
+      return DOMAIN.resolveUnit(u, { list: L, host: L }, catalog);
+    };
+    const R0 = mk(false), R1 = mk(true);
+    const row = (R1.upgrades || []).filter(x => x.label === "Clan: Goffs (included)")[0];
+    check("Zukov's Klaw shows its Goffs locked and free", !!row && row.state === "take" && row.required && row.included,
+          row ? JSON.stringify({ state: row.state, req: row.required, incl: row.included }) : "no row");
+    check("Zukov: price, profile and card rules unchanged", R0.points === 210 && R1.points === 210 &&
+          JSON.stringify(R0.stats) === JSON.stringify(R1.stats) &&
+          JSON.stringify(R0.rules.map(r => r.t)) === JSON.stringify(R1.rules.map(r => r.t)),
+          R1.points + " / rules " + R0.rules.length + "->" + R1.rules.length);
+    const buyable = (R1.upgrades || []).filter(x => /^Clan: /.test(x.label) && !x.included);
+    check("Zukov: no clan to buy", buyable.length === 0, buyable.map(x => x.label).join(", "));
+  })();
 
   const by = nm => catalog.lists.filter(x => x.nm === nm)[0];
   const resolve = function(L, secRe, rowRe, upRe, applyReq){

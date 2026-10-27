@@ -95,6 +95,11 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   (`clanz-bad-moonz-paid-per-rok`: three Bad Moonz Roks cost +90, not +30).
 
 ### Added
+- Zukov's Klaw shows its clan in the upgrade list: a locked, free row *Clan:
+  Goffs (included)*, as a battle barge shows its built-in Mark. The Goffs are
+  part of its 210 points ("It is of the Goff Clan", Fleets p. 381), so no clan
+  is offered to buy; the clan choice and the clan prices leave the row alone
+  (user 27.10.2026).
 - Da Ork Clanz (from the same audit): the Warlord block's skwadron menu works on
   tiddlas too - *new tiddla of …* adds a second card of the same escorts at
   three, under that Warlord and with his clan, and *join* / *split into its

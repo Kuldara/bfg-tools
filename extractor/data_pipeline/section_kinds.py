@@ -623,6 +623,24 @@ for _k, _c in _CZL["clanz"].items():
         assert _text_key(_c["s"]) in _all_text, "J216: the sentence is not in the book's text: %s" % _c["s"]
 print("J216: squadron exceptions on 2 lists (in Clanz kroozers and Roks, J232), the Daemonship ban on %d lists, the Clanz command" % _nsq)
 
+# Zukov's Klaw is a Goff as part of its 210 points (p.381 "It is of the Goff Clan, ..."), so no clan row is
+# buyable for it (row_texts.py, the Zukov limits) - and the user asked (27.10.2026) to see it in the upgrade list
+# anyway: a locked free info row, as a battle barge's built-in Mark (chapters_marks.py, req + incl). Added here,
+# after the Zukov limits, so it keeps its own nm condition; "(included)" keeps it apart from the buyable
+# "Clan: Goffs (Black)" row, and the app's clan choice and clan prices skip incl rows.
+from .ships import ships as _SHIPS
+_ZK = [s for s in _SHIPS.values() if re.match(r"^zukov", s.get("nm", ""), re.I)]
+assert len(_ZK) == 1, "Zukov's Klaw profiles: %d" % len(_ZK)
+_ZK_S = ("It is of the Goff Clan, giving it both a +1 leadership modifier when attempting to ram and an additional "
+         "+1 modifier during boarding actions.")
+assert _text_key(_ZK_S) in _text_key(_ZK[0].get("sr") or ""), "Zukov's Goff sentence is not in its profile"
+_czc = [s for s in _CZL["secs"] if re.search(_CZL["clanz"]["clan_sec"], s["t"].strip(), re.I)]
+assert len(_czc) == 1
+_czc[0]["ents"].append({"l": "Clan: Goffs (included)", "r": None, "p": 0, "a": 1, "u": 1, "mx": None, "nt": None,
+                        "prose": 1, "cond": {"nm": "^zukov"}, "k": "up", "req": 1, "incl": 1,
+                        "desc": _ZK_S, "src_page": 381})
+print("Zukov's Klaw: the included Goffs as a locked info row")
+
 # J224: the Waaagh! list's hulk Warlord pays +50 for Extra Power Fields
 # (p.390). The row "Extra Power Fields (Space Hulk)" comes from upgrades.py;
 # resolveFleet compares the row the Warlord took with the ship he is aboard (J215):
