@@ -23,6 +23,24 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   the one-file engine, as do the golden cases, Play and the simulator.
 
 ### Fixed
+- **Escort squadrons in the five lists whose rules count them** (user 27.10.2026,
+  after the Clanz audit): Rogue Traders (p. 174), Exploration (p. 177), Pirates
+  and Wolf Packs (p. 179), Tau Commerce Protection (p. 457) and Demiurg War Host
+  (p. 487). There a short escort card joined a mixed squadron by itself for the
+  size check while the counting rule saw every card as a squadron, so the two
+  disagreed: in Pirates and Wolf Packs two cruisers with two Swords and two
+  Cobras were green, though four escorts cannot be "at least one squadron of
+  3-6 escort vessels ... for each cruiser". Now the squadrons are the player's,
+  as the Clanz tiddlas are: escort cards with the same Squadron letter are one
+  squadron in any mix ("Escort squadron A: 4 ships: 2 Sword Frigate + 2 Cobra
+  Destroyer"), a card without one is a squadron by itself, and size and count
+  read the same squadrons. Rogue Traders' rule counts squadrons, one per
+  capital ship (it counted six escorts per ship, so two squadrons of three
+  behind one cruiser were green). Demiurg: "Tau, Nicassar and Rogue Trader
+  escorts may not be mixed in the same squadrons" is checked on the letters.
+  Escort cards in these lists have the Squadron menu, with escort letters only.
+  Other lists are unchanged: nothing there counts escort squadrons, so a short
+  card still joins a mixed squadron by itself (p. 13).
 - **Da Ork Clanz, from an outside audit of the live site (ChatGPT, 27.10.2026).**
   Each finding was checked against Fleets pp. 369-373 and 381 before it was
   changed; golden cases lock each one and were red before the fix.

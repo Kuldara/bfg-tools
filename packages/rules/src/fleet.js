@@ -192,6 +192,17 @@ export function clanzCommand(L, members){
   });
   return { warlords: ws, of: of };
 }
+/* Explicit escort squadrons (L.esq, 27.10.2026): in a list whose rules count
+   escort squadrons - Rogue Traders p. 174, Exploration p. 177, Pirates and
+   Wolf Packs p. 179, Tau Commerce Protection p. 457, Demiurg War Host
+   p. 487 - escort cards with the same squadron letter are one squadron, a
+   card without one is a squadron by itself. The size check (ruleSquadron)
+   and the counting rules (count with units) both read these keys, as the
+   Clanz tiddlas do. Returns each member's key: "sq:<letter>" or "u:<index>". */
+export function escortSquadronKeys(L, members){
+  return members.map(function(m, i){
+    return L && L.esq && m.escort && !m.defence && m.unitRow && m.intent && m.intent.sq ? "sq:" + m.intent.sq : "u:" + i; });
+}
 /* Da Ork Clanz tiddla skwadrons: "3-10 Escorts, chosen from the following
    list in any mix desired" (Fleets p. 372). Escort rows of one tag are one
    skwadron, a row without a tag is a skwadron by itself, and a Blood Axe

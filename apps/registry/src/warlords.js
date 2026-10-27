@@ -536,14 +536,24 @@ export function fleetControlsHTML(RF){
   const tid = L().clanz ? appState.S.units.map((u, i) => !u.lst && inSecU(u, L().clanz.tiddla) ? i : -1).filter(i => i >= 0) : [];
   /* Clanz (J226): kroozers pair with a button of their own (below), and
      an 'Uge ship, a Rok or a hulk is a skwadron by itself - no letters */
-  const caps = L().clanz ? com.concat(tid) : caps0.length >= 2 ? caps0.concat(com, tid) : com.concat(tid);
+  /* A list whose rules count escort squadrons (L.esq: Rogue Traders,
+     Exploration, Pirates and Wolf Packs, Tau Commerce Protection, Demiurg War
+     Host): its escort cards take a letter too, since there the letter, not a
+     short card by itself, makes a mixed squadron (27.10.2026) */
+  const escs = L().esq ? appState.S.units.map((u, i) => { const R = RF.units[i];
+    return !u.lst && R && R.kind === "ship" && R.squadron && !R.defence ? i : -1; }).filter(i => i >= 0) : [];
+  const caps = L().clanz ? com.concat(tid) : caps0.length >= 2 || escs.length ? caps0.concat(com, tid, escs) : com.concat(tid);
   if(caps.length >= 2){
-    const tags = [];
-    caps.forEach(i => { const t = appState.S.units[i].sq; if(t && tags.indexOf(t) < 0) tags.push(t); });
-    tags.sort();
-    const next = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").filter(c => tags.indexOf(c) < 0)[0] || "Z";
+    /* escorts and capital ships never share a squadron: each card is offered
+       the letters of its own kind, and a new letter is free in both */
+    const isEsc = i => !!(RF.units[i] && RF.units[i].squadron);
+    const all = [], tagsOf = { true: [], false: [] };
+    caps.forEach(i => { const t = appState.S.units[i].sq, g = tagsOf[isEsc(i)];
+      if(t && all.indexOf(t) < 0) all.push(t); if(t && g.indexOf(t) < 0) g.push(t); });
+    tagsOf[true].sort(); tagsOf[false].sort();
+    const next = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").filter(c => all.indexOf(c) < 0)[0] || "Z";
     caps.forEach(i => {
-      const cur = appState.S.units[i].sq || "";
+      const cur = appState.S.units[i].sq || "", tags = tagsOf[isEsc(i)];
       const opts = [""].concat(tags, tags.indexOf(next) < 0 ? [next] : []);
       add(i, `<div class="uctl aboard"><span class="abl">Squadron</span><select class="sqin" data-u="${i}"
         title="Ships with the same letter form one squadron (Fleets p. 13)">${opts.map(t =>

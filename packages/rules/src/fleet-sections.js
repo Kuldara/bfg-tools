@@ -13,7 +13,7 @@
      option_ratio     units that took an own option (opt_re), per N hulls
    A pick is [{sec, re?}]: a section index and an optional name filter. */
 
-import { clanzTiddlas } from "./fleet.js";
+import { citeText, clanzTiddlas, escortSquadronKeys } from "./fleet.js";
 import { upCost } from "./pricing.js";
 import { HOST_OFF, isUpgradeEnt, optState, upState, upgradeTakenAnyWay, upgradesFor } from "./upgrades.js";
 import { secNameIssues } from "./validation.js";
@@ -78,7 +78,18 @@ export function fleetCounters(L, catalog, members){
   };
   /* A pick narrows a section by ship name where the heading alone counts
      the wrong hulls (Bastion Fleets prints three kinds under "Battleships"). */
+  /* units in a list of explicit escort squadrons (L.esq): squadrons, not
+     cards - escort cards with one letter are one squadron, whichever picks
+     they match (escortSquadronKeys) */
+  var esqKeys = L.esq ? escortSquadronKeys(L, members) : null;
   var count = function(pick, secs, units){
+    if(units && esqKeys){
+      var seen = {};
+      members.forEach(function(m, i){
+        if(pick ? pick.some(function(p){ return pickHas(m, p); }) : (secs || []).some(function(si){ return matches(m, si, null); }))
+          seen[esqKeys[i]] = 1; });
+      return Object.keys(seen).length;
+    }
     var f = units ? secUnits : secShips;
     return pick ? pick.reduce(function(a, p){
                     var ms = members.filter(function(m){ return pickHas(m, p); });
@@ -314,6 +325,39 @@ function ruleSquadron(F, r, sec, si, lab){
      one of "the escorts in the fleet" that p. 13 speaks of. */
   var escortsInFleet = members.filter(function(m){ return m.escort && !m.defence; })
     .reduce(function(a, m){ return a + m.hulls; }, 0);
+  /* A list whose rules count escort squadrons (L.esq) has the player's own
+     squadrons, as the Clanz tiddlas above: one letter is one squadron in any
+     mix, a card without one is a squadron by itself, and the counting rules
+     read the same squadrons. A short card used to join a mixed squadron here
+     while the count saw it as a squadron of its own: two cruisers with two
+     Swords and two Cobras were green in Pirates and Wolf Packs, which asks
+     for "at least one squadron of 3-6 escort vessels ... for each cruiser"
+     (Fleets p. 179). A squadron of several rules (a Messenger beside
+     Defenders) is said once; sep names sections that may not share one
+     (Demiurg p. 487). */
+  if(F.L.esq && inRule.length && !inRule.some(function(m){ return m.defence; })){
+    var ek = escortSquadronKeys(F.L, members), said = F.esqSaid || (F.esqSaid = {});
+    var srcOf = "Squadrons of " + r.min + "–" + r.max + ". " + r.src;
+    inRule.forEach(function(m){
+      var k = ek[members.indexOf(m)];
+      if(k.indexOf("sq:") !== 0){
+        var n = m.hulls, ok = n >= r.min && n <= r.max, v = n + " ships";
+        if(n < r.min && !!r.lone && escortsInFleet === 1){ ok = true; v += " (the only escort in the fleet)"; }
+        out.push({ ok: ok, t: m.sel.sh.nm, v: v, s: srcOf });
+        return;
+      }
+      if(said[k]) return;
+      said[k] = 1;
+      var g = members.filter(function(x, j){ return ek[j] === k; });
+      var gn = g.reduce(function(a, x){ return a + x.hulls; }, 0);
+      var sep = ((F.L.esq.sep) || []).filter(function(re){
+        return g.some(function(x){ return x.own && F.L.secs[x.si] && new RegExp(re, "i").test(String(F.L.secs[x.si].t).trim()); }); });
+      out.push({ ok: gn >= r.min && gn <= r.max && sep.length <= 1, t: "Escort squadron " + k.slice(3),
+        v: gn + " ships: " + g.map(function(x){ return x.hulls + " " + x.en.l; }).join(" + ") + (sep.length > 1 ? " - may not be mixed" : ""),
+        s: srcOf + (sep.length > 1 ? " " + citeText(F.L.esq.sep_cite) : "") });
+    });
+    return;
+  }
   var poolKey = function(m){ return r.split_fl ? String((m.sel.sh && m.sel.sh.fl) || "") : ""; };
   var pools = {};
   inRule.forEach(function(m){ var k = poolKey(m); (pools[k] = pools[k] || []).push(m); });

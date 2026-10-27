@@ -8873,6 +8873,380 @@
         "total": 260
       },
       "why": "Fleets p. 371, Assault Karrier: “It takes boarding torpedoes for free, but it may only use assault boats.” ChatGPT audit RAW-06: bought after the Terror ship's own +5 boarding torpedoes, the Karrier takes them for free (the option reopens), and torpedo-bommas and orbital mines are not offered beside it. 3 x Brute ramship 25 + Terror ship 185 + torpedo launcha 0 + Assault Karrier 0 = 260."
+    },
+    {
+      "id": "pirates-two-short-escort-cards-are-two-squadrons",
+      "page": 179,
+      "fleet": {
+        "list": "Rogue Traders — Pirates and Wolf Packs",
+        "limit": 1500,
+        "units": [
+          {
+            "entry": "^Rogue Trader cruiser"
+          },
+          {
+            "entry": "^Gothic class cruiser"
+          },
+          {
+            "entry": "^Sword Frigate",
+            "n": 2
+          },
+          {
+            "entry": "^Cobra Destroyer",
+            "n": 2
+          }
+        ]
+      },
+      "expect": {
+        "total": 495,
+        "checks": [
+          {
+            "label": "^SWORD",
+            "ok": false,
+            "v": "2 ships"
+          },
+          {
+            "label": "^COBRA",
+            "ok": false,
+            "v": "2 ships"
+          }
+        ]
+      },
+      "why": "Fleets p. 179: “At least one squadron of 3–6 escort vessels must be included for each cruiser in the fleet, organized in any mix desired.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. Two cards of two are two squadrons of two; they used to join one mixed squadron for the size check while the count saw two. Rogue Trader cruiser 185 + Gothic class cruiser 180 + 2 x Sword 35 + 2 x Cobra 30 = 495."
+    },
+    {
+      "id": "pirates-one-mixed-squadron-for-two-cruisers",
+      "page": 179,
+      "fleet": {
+        "list": "Rogue Traders — Pirates and Wolf Packs",
+        "limit": 1500,
+        "units": [
+          {
+            "entry": "^Rogue Trader cruiser"
+          },
+          {
+            "entry": "^Gothic class cruiser"
+          },
+          {
+            "entry": "^Sword Frigate",
+            "n": 2,
+            "sq": "A"
+          },
+          {
+            "entry": "^Cobra Destroyer",
+            "n": 2,
+            "sq": "A"
+          }
+        ]
+      },
+      "expect": {
+        "total": 495,
+        "checks": [
+          {
+            "label": "^Escort squadron A",
+            "ok": true,
+            "v": "4 ships: 2 Sword Frigate + 2 Cobra Destroyer"
+          },
+          {
+            "label": "^Escort squadrons per cruiser",
+            "ok": false,
+            "v": "1 / 2 min"
+          }
+        ]
+      },
+      "why": "Fleets p. 179: “At least one squadron of 3–6 escort vessels must be included for each cruiser in the fleet, organized in any mix desired.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. Four escorts in one squadron are one squadron, and two cruisers need two. 185 + 180 + 70 + 60 = 495."
+    },
+    {
+      "id": "pirates-two-squadrons-of-three",
+      "page": 179,
+      "fleet": {
+        "list": "Rogue Traders — Pirates and Wolf Packs",
+        "limit": 1500,
+        "units": [
+          {
+            "entry": "^Rogue Trader cruiser"
+          },
+          {
+            "entry": "^Gothic class cruiser"
+          },
+          {
+            "entry": "^Sword Frigate",
+            "n": 3
+          },
+          {
+            "entry": "^Cobra Destroyer",
+            "n": 3
+          }
+        ]
+      },
+      "expect": {
+        "total": 560,
+        "checks": [
+          {
+            "label": "^Escort squadrons per cruiser",
+            "ok": true,
+            "v": "2 / 2 min"
+          }
+        ]
+      },
+      "why": "Fleets p. 179: “At least one squadron of 3–6 escort vessels must be included for each cruiser in the fleet, organized in any mix desired.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. 185 + 180 + 3 x 35 + 3 x 30 = 560."
+    },
+    {
+      "id": "rt-two-escort-squadrons-for-one-capital-ship",
+      "page": 174,
+      "fleet": {
+        "list": "Rogue Traders",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Rogue Trader Cruiser"
+          },
+          {
+            "entry": "^Xenos Vessel$",
+            "n": 3
+          },
+          {
+            "entry": "^Recommissioned Escort",
+            "n": 3
+          }
+        ]
+      },
+      "expect": {
+        "total": 425,
+        "checks": [
+          {
+            "label": "^Rogue Trader escort squadrons per capital ship",
+            "ok": false
+          }
+        ]
+      },
+      "why": "Fleets p. 174: “A single squadron of 2-6 Rogue Trader escorts and auxiliary vessels may accompany each Rogue Trader capital ship in a fleet, in any mix desired.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. Two cards of three are two squadrons for one capital ship; the check counted six escorts per ship and was green. Rogue Trader Cruiser 185 + 3 x Xenos Vessel 50 + 3 x Recommissioned Escort 30 = 425."
+    },
+    {
+      "id": "rt-one-mixed-escort-squadron-for-one-capital-ship",
+      "page": 174,
+      "fleet": {
+        "list": "Rogue Traders",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Rogue Trader Cruiser"
+          },
+          {
+            "entry": "^Xenos Vessel$",
+            "n": 3,
+            "sq": "A"
+          },
+          {
+            "entry": "^Recommissioned Escort",
+            "n": 3,
+            "sq": "A"
+          }
+        ]
+      },
+      "expect": {
+        "total": 425,
+        "checks": [
+          {
+            "label": "^Rogue Trader escort squadrons per capital ship",
+            "ok": true
+          },
+          {
+            "label": "^Escort squadron A",
+            "ok": true,
+            "v": "6 ships: 3 Xenos Vessel + 3 Recommissioned Escort"
+          }
+        ]
+      },
+      "why": "Fleets p. 174: “A single squadron of 2-6 Rogue Trader escorts and auxiliary vessels may accompany each Rogue Trader capital ship in a fleet, in any mix desired.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. One squadron of six in any mix. 185 + 150 + 90 = 425."
+    },
+    {
+      "id": "tau-commerce-two-cards-one-xenos-squadron",
+      "page": 457,
+      "fleet": {
+        "list": "Tau — Commerce Protection",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Xenos Vessel$",
+            "n": 1,
+            "sq": "A"
+          },
+          {
+            "entry": "^Recommissioned Escort",
+            "n": 1,
+            "sq": "A"
+          }
+        ]
+      },
+      "expect": {
+        "total": 80,
+        "checks": [
+          {
+            "label": "^Rogue Trader escort squadrons",
+            "ok": true
+          },
+          {
+            "label": "^Escort squadron A",
+            "ok": true,
+            "v": "2 ships: 1 Xenos Vessel + 1 Recommissioned Escort"
+          }
+        ]
+      },
+      "why": "Fleets p. 457: “Additionally, a single squadron of up to six Xenos escorts can be taken as per the Rogue Trader rules and fleet list.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. Two cards in one squadron are the single squadron the list allows without a Rogue Trader cruiser; the count read two cards as two squadrons. Xenos Vessel 50 + Recommissioned Escort 30 = 80."
+    },
+    {
+      "id": "demiurg-two-tau-cards-one-squadron",
+      "page": 487,
+      "fleet": {
+        "list": "Demiurg — War Host",
+        "limit": 1500,
+        "units": [
+          {
+            "entry": "^Stronghold Commerce Vessel"
+          },
+          {
+            "entry": "^Bastion Commerce Vessel"
+          },
+          {
+            "entry": "^Citadel Commerce Vessel"
+          },
+          {
+            "entry": "^Defender class starship",
+            "n": 1,
+            "sq": "A"
+          },
+          {
+            "entry": "^Castellan class starship",
+            "n": 1,
+            "sq": "A"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Tau & Rogue Trader escort squadrons",
+            "ok": true
+          },
+          {
+            "label": "^Escort squadron A",
+            "ok": true
+          }
+        ]
+      },
+      "why": "Fleets p. 487: “For every three Demiurg capital ships in the fleet, it may include one squadron of up to six Tau or Rogue Trader escorts.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. A Defender and a Castellan in one squadron are one squadron for three Demiurg capital ships; the count read the two cards as two squadrons."
+    },
+    {
+      "id": "demiurg-tau-and-rogue-trader-escorts-not-mixed",
+      "page": 487,
+      "fleet": {
+        "list": "Demiurg — War Host",
+        "limit": 1500,
+        "units": [
+          {
+            "entry": "^Stronghold Commerce Vessel"
+          },
+          {
+            "entry": "^Bastion Commerce Vessel"
+          },
+          {
+            "entry": "^Citadel Commerce Vessel"
+          },
+          {
+            "entry": "^Defender class starship",
+            "n": 1,
+            "sq": "A"
+          },
+          {
+            "entry": "^Xenos Vessel$",
+            "n": 1,
+            "sq": "A"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Escort squadron A",
+            "ok": false
+          }
+        ]
+      },
+      "why": "Fleets p. 487: “Tau, Nicassar and Rogue Trader escorts may not be mixed in the same squadrons.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. A Defender and a Xenos Vessel in one squadron mix Tau and Rogue Trader escorts."
+    },
+    {
+      "id": "exploration-two-single-cargo-cards",
+      "page": 177,
+      "fleet": {
+        "list": "Rogue Traders — Exploration",
+        "limit": 1500,
+        "units": [
+          {
+            "entry": "^Rogue Trader cruiser"
+          },
+          {
+            "entry": "^Cargo Transport",
+            "n": 1
+          },
+          {
+            "entry": "^Armed Freighter",
+            "n": 1
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^TRANSPORT$",
+            "ok": false,
+            "v": "1 ships"
+          },
+          {
+            "label": "^ARMED FREIGHTER$",
+            "ok": false,
+            "v": "1 ships"
+          }
+        ]
+      },
+      "why": "Fleets p. 177: “The fleet must include at least one squadron of escort-sized cargo ships of any type (whether or not the scenario requires transports), in a squadron of 2 to 6 ships.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. Two single cargo cards are two squadrons of one, short of two; they used to join one mixed squadron by themselves."
+    },
+    {
+      "id": "exploration-cargo-cards-in-one-squadron",
+      "page": 177,
+      "fleet": {
+        "list": "Rogue Traders — Exploration",
+        "limit": 1500,
+        "units": [
+          {
+            "entry": "^Rogue Trader cruiser"
+          },
+          {
+            "entry": "^Cargo Transport",
+            "n": 1,
+            "sq": "A"
+          },
+          {
+            "entry": "^Armed Freighter",
+            "n": 1,
+            "sq": "A"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Escort squadron A",
+            "ok": true,
+            "v": "2 ships: 1 Cargo Transport + 1 Armed Freighter"
+          },
+          {
+            "label": "^Cargo ship squadron",
+            "ok": true
+          }
+        ]
+      },
+      "why": "Fleets p. 177: “The fleet must include at least one squadron of escort-sized cargo ships of any type (whether or not the scenario requires transports), in a squadron of 2 to 6 ships.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. The same two cargo ships with one letter are the one cargo squadron of two."
     }
   ]
 }

@@ -765,6 +765,11 @@ var __rules = (() => {
     });
     return { warlords: ws, of };
   }
+  function escortSquadronKeys(L, members) {
+    return members.map(function(m, i) {
+      return L && L.esq && m.escort && !m.defence && m.unitRow && m.intent && m.intent.sq ? "sq:" + m.intent.sq : "u:" + i;
+    });
+  }
   function clanzTiddlas(L, members) {
     var C = L && L.clanz;
     if (!C) return [];
@@ -5899,7 +5904,20 @@ var __rules = (() => {
       if (p.hull != null && !(m.sel.sh && new RegExp(p.hull, "i").test(String(m.sel.sh.nm || "")))) return false;
       return !p.re || rx(p).test(m.en.l);
     };
+    var esqKeys = L.esq ? escortSquadronKeys(L, members) : null;
     var count = function(pick, secs, units) {
+      if (units && esqKeys) {
+        var seen = {};
+        members.forEach(function(m, i) {
+          if (pick ? pick.some(function(p) {
+            return pickHas(m, p);
+          }) : (secs || []).some(function(si) {
+            return matches(m, si, null);
+          }))
+            seen[esqKeys[i]] = 1;
+        });
+        return Object.keys(seen).length;
+      }
       var f = units ? secUnits : secShips;
       return pick ? pick.reduce(function(a, p) {
         var ms = members.filter(function(m) {
@@ -6115,6 +6133,46 @@ var __rules = (() => {
     }).reduce(function(a, m) {
       return a + m.hulls;
     }, 0);
+    if (F.L.esq && inRule.length && !inRule.some(function(m) {
+      return m.defence;
+    })) {
+      var ek = escortSquadronKeys(F.L, members), said = F.esqSaid || (F.esqSaid = {});
+      var srcOf = "Squadrons of " + r.min + "\u2013" + r.max + ". " + r.src;
+      inRule.forEach(function(m) {
+        var k = ek[members.indexOf(m)];
+        if (k.indexOf("sq:") !== 0) {
+          var n = m.hulls, ok = n >= r.min && n <= r.max, v = n + " ships";
+          if (n < r.min && !!r.lone && escortsInFleet === 1) {
+            ok = true;
+            v += " (the only escort in the fleet)";
+          }
+          out.push({ ok, t: m.sel.sh.nm, v, s: srcOf });
+          return;
+        }
+        if (said[k]) return;
+        said[k] = 1;
+        var g = members.filter(function(x, j) {
+          return ek[j] === k;
+        });
+        var gn = g.reduce(function(a, x) {
+          return a + x.hulls;
+        }, 0);
+        var sep = (F.L.esq.sep || []).filter(function(re) {
+          return g.some(function(x) {
+            return x.own && F.L.secs[x.si] && new RegExp(re, "i").test(String(F.L.secs[x.si].t).trim());
+          });
+        });
+        out.push({
+          ok: gn >= r.min && gn <= r.max && sep.length <= 1,
+          t: "Escort squadron " + k.slice(3),
+          v: gn + " ships: " + g.map(function(x) {
+            return x.hulls + " " + x.en.l;
+          }).join(" + ") + (sep.length > 1 ? " - may not be mixed" : ""),
+          s: srcOf + (sep.length > 1 ? " " + citeText(F.L.esq.sep_cite) : "")
+        });
+      });
+      return;
+    }
     var poolKey = function(m) {
       return r.split_fl ? String(m.sel.sh && m.sel.sh.fl || "") : "";
     };

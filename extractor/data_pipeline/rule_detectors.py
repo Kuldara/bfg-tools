@@ -402,11 +402,13 @@ RULE_PICKS = [
     # mix desired. Separately, ... cargo ships ... these squadrons can only
     # contain cargo ships". The size is the parser's squadron rule; the number per
     # ship is added as a ratio. Nate Montes: the Siluria "as a cruiser",
-    # the Havoc "an escort".
+    # the Havoc "an escort". It counts SQUADRONS (units, the list's explicit
+    # escort squadrons, esq): one per capital ship. It counted six escorts per
+    # ship, so one cruiser with two squadrons of three was green (27.10.2026).
     dict(list_has="Rogue Traders", list_is="Rogue Traders", sec="ESCORTS",
          match_src="A single squadron of 2-6 Rogue Trader escorts and auxiliary vessels may accompany each Rogue Trader capital ship",
-         add=[dict(kind="ratio", allow=6, per=1, label="Rogue Trader escorts per capital ship",
-                   allow_type="Rogue Trader escorts and auxiliary vessels",
+         add=[dict(kind="ratio", allow=1, per=1, units=True, label="Rogue Trader escort squadrons per capital ship",
+                   allow_type="squadron of Rogue Trader escorts and auxiliary vessels",
                    per_type="Rogue Trader capital ships",
                    allow_pick=[dict(sec="ESCORTS", re="^(?!armed cargo)"),
                                dict(sec="NOTES FROM NATE MONTES", re="^havoc")],

@@ -391,14 +391,20 @@ console.log("\n=== Tau Defender squadrons and Rogue Trader escorts = ===========
    may accompany each Rogue Trader capital ship in a fleet, in any mix desired.
    Separately, it may also be accompanied by any number of cargo ships of any
    type (...), organized in squadrons of 2-6 ships, but these squadrons can
-   only contain cargo ships (...)." A mixed squadron cannot be marked in the unit
-   model, so the limit checked is at most six escorts per RT ship. */
+   only contain cargo ships (...)." Since 27.10.2026 a mixed squadron is marked
+   by its letter (sq, the list's explicit escort squadrons), and the rule
+   counts squadrons, one per capital ship; it used to count six escorts per
+   ship, as a mixed squadron could not be marked. */
 const rtl = LISTS.findIndex(l => l.nm === "Rogue Traders");
-const rtCap = () => failed().some(c => /escorts/i.test(c.t) && !/ ships$/.test(c.v));
+const rtCap = () => failed().some(c => /^Rogue Trader escort squadrons per capital ship/.test(c.t));
+const rtSize = () => failed().some(c => /^Escort squadron A/.test(c.t));
 build(rtl, 1000, [["Rogue Trader Cruiser", 1], ["Iconoclast", 3], ["Recommissioned", 3]]);
-eq(rtCap(), false, "RT: one ship + six escorts as a mixed squadron is fine");
+eq(rtCap(), true, "RT: one ship + two squadrons of three (no letter) fails");
+api.S.units[1].sq = "A"; api.S.units[2].sq = "A";
+eq(rtCap() || rtSize(), false, "RT: one ship + six escorts in one mixed squadron (one letter) is fine");
 build(rtl, 1000, [["Rogue Trader Cruiser", 1], ["Iconoclast", 4], ["Recommissioned", 3]]);
-eq(rtCap(), true, "RT: one ship + seven escorts fails");
+api.S.units[1].sq = "A"; api.S.units[2].sq = "A";
+eq(rtSize(), true, "RT: one ship + a squadron of seven escorts fails");
 build(rtl, 1000, [["Rogue Trader Cruiser", 1], ["Iconoclast", 6], ["Armed Cargo Vessel", 4]]);
 eq(rtCap(), false, "RT: cargo ships do not belong to the escort squadron");
 /* p.174: "If a fleet has more than one Rogue Trader cruiser or also includes
@@ -703,10 +709,15 @@ build(arl, 1500, [["Lunar class cruiser", 1], ["Firestorm Class Frigate", 1], ["
 eq(sqFail(), true, "Armageddon: a Space Marine escort and a fleet escort do not form a squadron");
 /* Tau p.455: "Defenders are fielded in squadrons of 2-6 ships. They may be
    combined in squadrons with Messengers if you wish." */
-["Tau — Merchant Fleet", "Tau — Commerce Protection"].forEach(nm => {
-  build(listIndex(nm), 1500, [["Defender class starship", 1], ["Messenger class starship", 1]]);
-  eq(failed().some(c => /defender/i.test(c.t) && / ships/.test(c.v)), false, nm + ": Defender and Messenger in one squadron is fine");
-});
+build(listIndex("Tau — Merchant Fleet"), 1500, [["Defender class starship", 1], ["Messenger class starship", 1]]);
+eq(failed().some(c => /defender/i.test(c.t) && / ships/.test(c.v)), false, "Tau — Merchant Fleet: Defender and Messenger in one squadron is fine");
+/* Commerce Protection counts its escort squadrons (p. 457), so there the
+   squadron is the player's letter (27.10.2026): without one the Defender is
+   a squadron of one */
+build(listIndex("Tau — Commerce Protection"), 1500, [["Defender class starship", 1], ["Messenger class starship", 1]]);
+eq(failed().some(c => /defender/i.test(c.t) && / ships/.test(c.v)), true, "Tau — Commerce Protection: a lone Defender card (no letter) fails");
+api.S.units[0].sq = "A"; api.S.units[1].sq = "A";
+eq(failed().some(c => /^Escort squadron A/.test(c.t)), false, "Tau — Commerce Protection: Defender and Messenger in one squadron (one letter) is fine");
 /* Vanguard: "Vanguard drone ships and Kraken may be deployed in squadrons of
    6 to 12 models. You may combine the two types in a single squadron if you
    wish." */

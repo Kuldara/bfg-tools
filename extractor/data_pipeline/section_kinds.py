@@ -593,6 +593,23 @@ _CZL["sqx"] = [dict(sec="^big ship skwadron$", min=1, max=2, only=True, name="kr
 _CZL["place"] = [dict(cmd="^ork warlord", dearest=dict(own=True, cite=_cite(
     "He must be embarked on the most expensive ship under his own command (as opposed to the whole fleet), even if it "
     "is an escort - annotate which one it is.", 372)))]
+# esq (user 27.10.2026, after the Clanz audit): lists whose rules count ESCORT SQUADRONS - p.174 "A single
+# squadron of 2-6 ... may accompany each Rogue Trader capital ship", p.177 "at least one squadron of escort-sized
+# cargo ships", p.179 "At least one squadron of 3-6 escort vessels ... for each cruiser", p.457 "a single squadron
+# of up to six Xenos escorts", p.487 "one squadron of up to six Tau or Rogue Trader escorts". There the squadrons
+# are the player's: the same letter (sq) is one squadron in any mix, a card without one is a squadron by itself,
+# and the size and the counting rules read the same squadrons (domain.js escortSquadronKeys). Elsewhere a short
+# card still joins a mixed squadron by itself (p.13), since nothing counts the squadrons there.
+# sep: sections whose escorts may not share a squadron (p.487).
+_ESQ = ("Rogue Traders", "Rogue Traders — Exploration", "Rogue Traders — Pirates and Wolf Packs",
+        "Tau — Commerce Protection", "Demiurg — War Host")
+for _nm in _ESQ:
+    _p18_list(_nm)["esq"] = dict()
+_p18_list("Demiurg — War Host")["esq"] = dict(
+    sep=["^tau escorts$", "^nicassar escorts$", "^rogue trader escorts$"],
+    sep_cite=_cite("Tau, Nicassar and Rogue Trader escorts may not be mixed in the same squadrons.", 487))
+for _re in _p18_list("Demiurg — War Host")["esq"]["sep"]:
+    assert sum(1 for _s in _p18_list("Demiurg — War Host")["secs"] if re.search(_re, _s["t"].strip(), re.I)) == 1, _re
 _WAL = _p18_list("Orks — Waaagh!")
 _WAL["sqx"] = [dict(sec="^ork roks$", min=2, max=4, only=True, name="Roks", cite=_cite(
     "Ork Roks may be squadroned with up to three other Roks (total squadron size of four), but not with any other "
@@ -621,6 +638,8 @@ for _L in lists_out:
 for _k, _c in _CZL["clanz"].items():
     if isinstance(_c, dict):
         assert _text_key(_c["s"]) in _all_text, "J216: the sentence is not in the book's text: %s" % _c["s"]
+_sc = _p18_list("Demiurg — War Host")["esq"]["sep_cite"]["s"]
+assert _text_key(_sc) in _all_text, "esq: the sentence is not in the book's text: %s" % _sc
 print("J216: squadron exceptions on 2 lists (in Clanz kroozers and Roks, J232), the Daemonship ban on %d lists, the Clanz command" % _nsq)
 
 # Zukov's Klaw is a Goff as part of its 210 points (p.381 "It is of the Goff Clan, ..."), so no clan row is
