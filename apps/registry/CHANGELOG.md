@@ -29,8 +29,8 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   left unsaved on its list, sent every later link of that list quietly into Saved
   fleets. Now every link shows a dialog with the fleet's name, list, points and
   ships, and *Open it*, *Save to Saved fleets* and *Close*; nothing is saved by
-  itself, and before Open it says when your fleet on that list is not saved and
-  would be replaced. Each tab keeps its own fleet, so four links in four tabs stay
+  itself; when your fleet on that list is not saved, the choice is *Save mine,
+  then open* or *Open over mine*. Each tab keeps its own fleet, so four links in four tabs stay
   four fleets, also after a reload, and Play opened from a tab plays that tab's
   fleet. (J240, live for a few hours on 26.10.2026, saved every linked fleet and
   made the tabs follow each other; the user asked for the dialog and separate tabs

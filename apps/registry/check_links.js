@@ -61,7 +61,8 @@ const DIALOG = `(() => {
   const d = document.getElementById("linkdlg");
   return { shown: !!d && !d.hidden, name: (d.querySelector(".ld-what b") || {}).textContent || "",
            warn: !!d.querySelector(".ld-warn"), msg: (d.querySelector(".ld-msg") || {}).textContent || "",
-           saveDisabled: !!(d.querySelector('[data-link="save"]') || {}).disabled };
+           saveDisabled: !!(d.querySelector('[data-link="save"]') || {}).disabled,
+           buttons: [...d.querySelectorAll("button[data-link]")].map(b => b.dataset.link) };
 })()`;
 const press = what => `document.querySelector('#linkdlg [data-link="${what}"]').click()`;
 const ERRS = "window.__errs = []; addEventListener('error', e => __errs.push(String(e.message)));";
@@ -113,17 +114,22 @@ const dialogUp = `!document.getElementById("linkdlg").hidden`;
 
     console.log("\nFour links, four tabs");
     const opened = {};
-    for (const [k, n] of [["A", 2], ["B", 3], ["C", 1], ["D", 4]]) {
+    /* A: "Save mine, then open"; the others "Open over mine" or plain Open */
+    for (const [k, n, act] of [["A", 2, "keepopen"], ["B", 3, "open"], ["C", 1, "open"], ["D", 4, "open"]]) {
       const t = await newTab();
       await open(t, URL0 + "#" + L[k], "window.GFR && " + dialogUp);
       const d = await t.evaluate(DIALOG);
-      await t.evaluate(press("open"));
+      await t.evaluate(press(act));
       await until(t, "GFR.appState.S.units.length === " + n + " && document.getElementById('linkdlg').hidden");
       opened[k] = { t, d, s: await t.evaluate(STATE) };
     }
     check("the dialog names the link's fleet", ["A", "B", "C", "D"].map(k => opened[k].d.name), ["Friend A", "Friend B", "Friend C", "Friend D"]);
     check("it warns when Open replaces an unsaved fleet of the list, not when the list is empty",
           ["A", "B", "C", "D"].map(k => opened[k].d.warn), [true, true, false, true]);
+    check("with an unsaved fleet the choice is Save mine, then open / Open over mine; else Open it",
+          [opened.A.d.buttons, opened.C.d.buttons], [["keepopen", "open", "save", "close"], ["open", "save", "close"]]);
+    const kept = await opened.A.t.evaluate("GFR.libRead().saves.map(s => s.name + ':' + s.units.length)");
+    check("Save mine, then open kept the player's own fleet in Saved fleets", kept, ["Imperial Navy — Gothic Sector 185:1"]);
     check("each tab opened its own link's fleet", ["A", "B", "C", "D"].map(k => opened[k].s.units[0] + " x" + opened[k].s.units.length),
           ["Lunar x2", "Dauntless x3", "Terror ship x1", "Gothic x4"]);
     const now = [];
@@ -143,8 +149,8 @@ const dialogUp = `!document.getElementById("linkdlg").hidden`;
     check("the dialog comes up for a link in an open tab; Save answers in it", [shownAgain, ds.shown, /^Saved Friend A/.test(ds.msg), ds.saveDisabled], [true, true, true, true]);
     await tB.evaluate(press("close"));
     check("Close closes it, and the screen kept its fleet", [await tB.evaluate("document.getElementById('linkdlg').hidden"), (await tB.evaluate(STATE)).units.length], [true, 3]);
-    check("Saved fleets in that tab", await tB.evaluate("GFR.libRead().saves.map(s => s.name)"), ["Friend A"]);
-    const seen = await until(t1, "document.getElementById('savescount').textContent === '1'");
+    check("Saved fleets in that tab", await tB.evaluate("GFR.libRead().saves.map(s => s.name)"), ["Friend A", "Imperial Navy — Gothic Sector 185"]);
+    const seen = await until(t1, "document.getElementById('savescount').textContent === '2'");
     check("the other tabs' Saved fleets list sees it", [seen, (await t1.evaluate(STATE)).units], [true, ["Tyrant"]]);
 
     console.log("\nPlay from a tab");

@@ -102,8 +102,9 @@ untouched by it.
 - **A link or QR code with one fleet** (J241) shows a dialog and saves nothing by
   itself: *Open it* puts the fleet on its own list in this tab, *Save to Saved
   fleets* adds it to the library (`"from": "link"`) and leaves the screen, *Close*
-  does neither. Before Open the dialog says when the tab's fleet on that list is not
-  in the library and would be replaced. A link is read when the page opens and
+  does neither. When the tab's fleet on that list is not in the library, the
+  dialog says so and the choice is *Save mine, then open* (the Save button's save:
+  over the save it came from, or a new one) or *Open over mine*. A link is read when the page opens and
   whenever the address gets a new one. (For a few hours on 26.10.2026, J240 saved
   every linked fleet on arrival, and the fleet it replaced with `"from": "kept"`;
   such saves are ordinary saves.)

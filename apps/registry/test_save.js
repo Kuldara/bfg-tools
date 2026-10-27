@@ -702,15 +702,30 @@ const ASYNC = [];
   linkSave(linkOffer(A));
   check("Save keeps A and the screen stays on B", [libRead().saves.map(s => s.name), screen()[1].length], [["Friend A"], 3]);
   check("A again offers Open, and says it is saved", linkOffer(A).saved, "Friend A");
+  /* "Save mine, then open" (user 26.10.2026): B on screen is not saved */
+  const { linkKeepMine } = api;
+  const oA = linkOffer(A);
+  const keptB = linkKeepMine(oA); linkOpen(oA);
+  check("Save mine, then open: B is saved under its name, A opens", [keptB, screen()[1].length, libRead().saves.map(s => s.name + ":" + s.units.length).sort()],
+        ["Friend B", 2, ["Friend A:2", "Friend B:3"]]);
+  /* the same from another list: A, edited, waits on its list while C is open */
+  getS().units.pop(); save();
+  open(C);
+  const oB2 = linkOffer(B);
+  check("an edited fleet waiting on its list is named in the offer", [oB2.replaces.saved, oB2.replaces.ships], [null, 1]);
+  const keptA = linkKeepMine(oB2); linkOpen(oB2);
+  check("Save mine, then open from another list: the edit goes over the save it came from, B opens",
+        [keptA, screen()[0], screen()[1].length, libRead().saves.filter(s => s.name === "Friend A")[0].units.length], ["Friend A", IN, 3, 1]);
+  check("Open over mine saves nothing", (() => { const n = libRead().saves.length; getS().units.pop(); save(); linkOpen(linkOffer(C)); linkOpen(linkOffer(A)); return [libRead().saves.length - n, screen()[1].length]; })(), [0, 2]);
   /* each tab has its own copy (sessionStorage per tab): a reload brings back
      this tab's fleet even when another tab saved the shared copy since */
   const tab = {}; global.sessionStorage = { getItem: k => (k in tab ? tab[k] : null), setItem: (k, v) => { tab[k] = v; }, removeItem: k => { delete tab[k]; } };
   try {
     save();
-    const mine = tabGet();
+    const mine = tabGet(), was = screen();
     store[KEY] = makeSave(ORK, [["KROOZERS", /^Terror ship/]]);   /* another tab saved since */
     setS({ li: 0, limit: 1500, units: [] }); load();
-    check("this tab reloads its own fleet, not the other tab's", [mine !== null, screen()[0], screen()[1].length], [true, IN, 3]);
+    check("this tab reloads its own fleet, not the other tab's", [mine !== null, screen()], [true, was]);
     delete tab[KEY];
     setS({ li: 0, limit: 1500, units: [] }); load();
     check("a new tab starts from the shared copy", screen()[0], ORK);

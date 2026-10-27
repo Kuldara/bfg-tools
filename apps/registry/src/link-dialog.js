@@ -2,7 +2,7 @@ import { $ } from "./boot.js";
 import { fileNote } from "./fleet-files.js";
 import { fleetPoints, switchList, total } from "./model.js";
 import { STASH_PTS, stashUnits, unitDocs } from "./save.js";
-import { libAdd, libFind, libKey, libRead, libWrite, openDoc, stashDoc } from "./saved-fleets.js";
+import { libAdd, libFind, libId, libKey, libName, libRead, libToday, libWrite, openDoc, openSave, saveOpenAs, stashDoc } from "./saved-fleets.js";
 import { appState } from "./state.js";
 import { render } from "./view.js";
 import { LISTS } from "../../../packages/ui/catalog.js";
@@ -22,7 +22,10 @@ import DOMAIN from "../../../packages/rules/domain.js";
    that list is not in Saved fleets. Nothing closes by itself: Open and Close
    close it, Save answers in place. A link with several fleets can only be
    saved (they are not one screen). Replaces J240, which saved every linked
-   fleet on arrival. */
+   fleet on arrival.
+   When the tab has an unsaved fleet of its own on that list, the choice is
+   the user's (26.10.2026: "save your old one and open the new one, or just
+   open the new one over it?"): Save mine, then open / Open over mine. */
 
 const shipsIn = units => (units || []).reduce((a, u) => a + (u.n || 1), 0);
 const nOf = (n, one, many) => n + " " + (n === 1 ? one : many);
@@ -77,6 +80,29 @@ export function linkOpen(offer){
     (lost.length ? " " + nOf(lost.length, "entry", "entries") + " could not be matched (" + lost.slice(0, 3).join(", ") + ")." : "");
 }
 
+/* Save mine: the fleet this tab has on the link's list goes into Saved fleets
+   first - over the save it came from, as the Save button does, or as a new
+   one. Returns its name, or null when there was nothing to save. */
+export function linkKeepMine(offer){
+  const ln = offer.ln;
+  if(offer.li === appState.S.li){
+    if(!appState.S.units.length) return null;
+    const was = openSave();
+    const s = saveOpenAs(appState.SAVE_NAME || (was ? was.name : ln + " " + total()));
+    return s ? s.name : null;
+  }
+  const cur = stashDoc(ln);
+  if(!cur.units.length) return null;
+  const lib = libRead(), was = lib.saves.filter(x => x.id === lib.open[ln])[0];
+  const pts = STASH_PTS[ln] || fleetPoints(stashUnits(ln), ln);
+  const s = was || { id: libId(), name: libName(lib, ln + " " + pts), ln: ln };
+  s.limit = cur.limit; s.units = cur.units; s.pts = pts; s.saved = libToday(); delete s.from;
+  if(!was) lib.saves.unshift(s);
+  lib.open[ln] = s.id;
+  libWrite(lib);
+  return s.name;
+}
+
 /* Save: into Saved fleets, the screen as it was. Returns what to say. */
 export function linkSave(offer){
   const r = libAdd(offer.kind === "one" ? Object.assign({}, offer.raw, { name: offer.name }) : offer.doc, "link");
@@ -102,17 +128,23 @@ function dialogHTML(st){
       <button type="button" class="btn" data-link="close">Close</button></div>`;
   }
   const r = o.replaces;
+  /* mine: the tab has a fleet of its own on that list that is not saved */
+  const mine = !!r && !r.same && !r.saved;
   const warn = !r || r.same ? "" : r.saved
     ? `<p class="ld-note">Opening it replaces your ${esc(o.ln)} fleet on this tab (${r.pts} pts). That one is in Saved fleets as ${esc(r.saved)}.</p>`
-    : `<p class="ld-warn"><b>Opening it replaces your ${esc(o.ln)} fleet on this tab</b> (${r.pts} pts, ${esc(nOf(r.ships, "ship", "ships"))}), which is not in Saved fleets. Save yours first if you want to keep it.</p>`;
+    : `<p class="ld-warn"><b>You have an unsaved ${esc(o.ln)} fleet on this tab</b> (${r.pts} pts, ${esc(nOf(r.ships, "ship", "ships"))}). Save it first, or open the new one over it?</p>`;
   const same = r && r.same ? `<p class="ld-note">This fleet is already open on this tab.</p>` : "";
   const known = o.saved && !st.saved ? `<p class="ld-note">It is in Saved fleets already, as ${esc(o.saved)}.</p>` : "";
+  const saveBtn = `<button type="button" class="btn" data-link="save"${st.saved || o.saved ? " disabled" : ""}>${st.saved ? "Saved" : mine ? "Only save the new one" : "Save to Saved fleets"}</button>`;
+  const acts = mine
+    ? `<button type="button" class="btn primary" data-link="keepopen">Save mine, then open</button>
+       <button type="button" class="btn" data-link="open">Open over mine</button>${saveBtn}`
+    : `<button type="button" class="btn primary" data-link="open">Open it</button>${saveBtn}`;
   return `<h3 id="linkdlg-h">A fleet from a link</h3>
     <p class="ld-what"><b>${esc(o.name)}</b><i>${esc(o.ln)} &middot; ${o.pts} pts &middot; ${esc(nOf(o.ships, "ship", "ships"))}</i></p>
     ${warn}${same}${known}${o.lost.length ? `<p class="ld-note">${esc(nOf(o.lost.length, "entry", "entries"))} could not be matched (${esc(o.lost.slice(0, 3).join(", "))}).</p>` : ""}
     ${st.msg ? `<p class="ld-msg">${esc(st.msg)}</p>` : ""}
-    <div class="ld-acts"><button type="button" class="btn primary" data-link="open">Open it</button>
-    <button type="button" class="btn" data-link="save"${st.saved || o.saved ? " disabled" : ""}>${st.saved ? "Saved" : "Save to Saved fleets"}</button>
+    <div class="ld-acts">${acts}
     <button type="button" class="btn" data-link="close">Close</button></div>`;
 }
 function draw(){
@@ -128,7 +160,7 @@ export function showLinkDialog(o){
   if(!offer) return false;
   appState.LINK = { offer: offer, saved: false, msg: "" };
   draw();
-  const b = box(), first = b && b.querySelector ? b.querySelector('[data-link="open"],[data-link="save"]') : null;
+  const b = box(), first = b && b.querySelector ? b.querySelector('[data-link="keepopen"],[data-link="open"],[data-link="save"]') : null;
   if(first && first.focus) try{ first.focus(); }catch(e){}
   return true;
 }
@@ -140,6 +172,12 @@ export function linkAction(what){
     const offer = st.offer;
     closeLinkDialog();
     return linkOpen(offer);
+  }
+  if(what === "keepopen" && st.offer.kind === "one"){
+    const offer = st.offer;
+    const kept = linkKeepMine(offer);
+    closeLinkDialog();
+    return (kept ? "Saved yours as " + kept + ". " : "") + linkOpen(offer);
   }
   if(what === "save"){
     st.msg = linkSave(st.offer); st.saved = true;
@@ -156,7 +194,7 @@ if(typeof document !== "undefined" && document.addEventListener){
     if(!t || t.disabled) return;
     const said = linkAction(t.dataset.link);
     /* what Open did goes in the note under the title, as for a file */
-    if(t.dataset.link === "open" && said) fileNote(said);
+    if((t.dataset.link === "open" || t.dataset.link === "keepopen") && said) fileNote(said);
   });
   document.addEventListener("keydown", e => { if(e.key === "Escape" && linkDialogOpen()) closeLinkDialog(); });
 }
