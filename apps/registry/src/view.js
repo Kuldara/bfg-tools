@@ -8,7 +8,7 @@ import { STASH_PTS, ensureUids, save, stashUnits } from "./save.js";
 import { renderSaves } from "./saved-fleets.js";
 import { appState } from "./state.js";
 import { aboardHTML, fleetResolved } from "./validation.js";
-import { SKW_MAX, activeWarlordIdx, clanzAfterMove, clanzHiddenUps, clanzIn, clanzMoveBlock, clanzPin, clanzSkwadronSec, factRowsHTML, fleetControlsHTML, freeSqTag, fxTagsHTML, isCommandeered, isOrkHulkUnit, optFxHTML, orkPlain, orkSecGloss, sendSkwadron, setClan, setWarlordRerolls, upFx, warlordColor, warlordIdx, warlordNeeds, warlordSkwadrons } from "./warlords.js";
+import { SKW_MAX, activeWarlordIdx, clanzAfterMove, clanzHiddenUps, clanzIn, clanzMoveBlock, clanzPin, clanzSkwadronSec, factRowsHTML, fleetControlsHTML, freeSqTag, fxTagsHTML, isCommandeered, isOrkHulkUnit, optFxHTML, upKind, orkPlain, orkSecGloss, sendSkwadron, setClan, setWarlordRerolls, upFx, warlordColor, warlordIdx, warlordNeeds, warlordSkwadrons } from "./warlords.js";
 import { DATA, LISTS, SHIPS } from "../../../packages/ui/catalog.js";
 import { arcGlyph, arcParts, esc, optCostLabel, shortRange, title, upCostText } from "../../../packages/ui/format.js";
 import DOMAIN from "../../../packages/rules/domain.js";
@@ -682,10 +682,12 @@ export function unitHTML(R, ui, st){
     /* J229: game effects as tags in place of the source note; the book's
        text and the note go to the tooltip */
     const fx = upFx(up, R.entry && R.entry.label, st.ab && st.ab.hulk);
+    /* the kind the book names (Gubbin, More Gubbins, clan, bio-enhancement ...) */
+    const kind = upKind(up);
     return `<div class="opt${up.required ? " req" : ""}">
       <span class="tri">${b("take","Take")}${b("opt","Option")}${b("off","Hide","off")}</span>
-      <span${fx ? ` title="${esc([up.description, up.note].filter(Boolean).join(" "))}"` : ""}>${esc(title(up.label))}${up.included ? " \u2014 included, no cost"
-        : up.required ? " \u2014 required by the fleet list" : ""}
+      <span${fx ? ` title="${esc([up.description, up.note].filter(Boolean).join(" "))}"` : ""}>${kind ? `<span class="ukind">${esc(kind)}</span>` : ""}${esc(title(up.label))}${up.included ? " \u2014 included, no cost"
+        : up.required ? " \u2014 automatic, required by the fleet list" : ""}
         ${!fx && up.note ? `<span class="src">${esc(up.note)}</span>` : ""}</span>
       <span class="c">${c}</span>${fx ? `
       <span class="upfx"${fx.color ? ` style="--wl:${fx.color}"` : ""}>${fxTagsHTML(fx.tags)}</span>` : ""}</div>`;
@@ -728,19 +730,28 @@ export function unitHTML(R, ui, st){
         type="button" class="rolebtn" data-u="${ui}" data-role="ally"
         aria-pressed="${st.role === "ally"}" title="Counted against the allied budget (Fleets pg. 16)">A</button>
     </span>` : "";
-  /* J234: in Compact the name opens and closes the unit */
+  /* J234: in Compact the name opens and closes the unit, and so does the
+     + / − beside it, which says which way it is (user 27.10.2026: the name
+     alone did not look like it would) */
   const fold = (st.ab && st.ab.fold) || "";
+  const foldTip = fold === "open" ? "Close this unit to one line" : "Open this unit";
+  /* a squadron's count and the price of one (user 27.10.2026: "40 x 3",
+     smaller), and what the squadron bought on top, so the total adds up */
+  const unitPrice = R.entry && R.entry.price > 0 ? R.entry.price : 0, extraPts = R.points - unitPrice * R.hulls;
+  const each = unitPrice && R.hulls > 1 ? `<span class="each" title="${R.hulls} ships at ${unitPrice} pts each${
+    extraPts ? ", " + (extraPts > 0 ? "+" : "") + extraPts + " pts of options and upgrades" : ""}">${R.hulls} × ${unitPrice}${
+    extraPts ? (extraPts > 0 ? " + " : " − ") + Math.abs(extraPts) : ""}</span>` : "";
   const head = `<div class="uhead">
       <button type="button" class="grip" data-grip="${ui}" draggable="true" aria-label="Move this unit"
         title="Drag to reorder, or move it a step with the arrow keys">${GRIP}</button>${st.ab && st.ab.send || ""}
-      ${fold ? `<button type="button" class="cls" data-unfold="${ui}" aria-expanded="${fold === "open"}" title="${fold === "open" ? "Close this unit to one line" : "Open this unit"}">${esc(title(R.className))}</button>`
+      ${fold ? `<button type="button" class="ufold" data-unfold="${ui}" aria-expanded="${fold === "open"}" aria-label="${foldTip}" title="${foldTip}">${fold === "open" ? "−" : "+"}</button><button type="button" class="cls" data-unfold="${ui}" aria-expanded="${fold === "open"}" title="${foldTip}">${esc(title(R.className))}</button>`
              : `<span class="cls">${esc(title(R.className))}</span>`}${role}
       ${R.entry && R.entry.badRef ? '<span class="ty" style="color:var(--bad)">source page ref wrong</span>' : ""}
       <span class="ty">${esc(ship ? R.stats.type
         : R.kind === "commander" ? "commander"
         : R.defence ? (R.defence.ground ? "low orbit defence" : "high orbit defence")
         : "fleet option")}${grouped ? " squadron" : ""}</span>
-      <span class="pts">${R.points} pts${
+      <span class="pts">${R.points} pts${each}${
         R.maxPoints > R.points ? `<span class="maxp">max ${R.maxPoints}</span>` : ""}</span>
       <button class="del" data-del="${ui}" title="Remove this unit">Remove</button>
     </div>`;
@@ -920,6 +931,19 @@ export function renderFleet(){
     try{ localStorage.setItem(FLEET_FOLD_KEY, appState.FLEET_FOLD ? "1" : "0"); }catch(e){}
     render();
   };
+  /* Open all / Close all beside Compact (user 27.10.2026): every unit at
+     once, the way the + / − opens one; shown only in Compact */
+  const fa = $("#fleetall");
+  if(fa){
+    const allOpen = appState.S.units.length > 0 && appState.S.units.every(u => UOPEN.has(u));
+    fa.hidden = !appState.FLEET_FOLD || !appState.S.units.length;
+    fa.textContent = allOpen ? "Close all" : "Open all";
+    fa.title = allOpen ? "Every unit to one line" : "Open every unit";
+    fa.onclick = () => {
+      appState.S.units.forEach(u => { if(allOpen) UOPEN.delete(u); else UOPEN.add(u); });
+      render();
+    };
+  }
   if(!appState.S.units.length){
     box.innerHTML = `<p class="empty">Nothing added yet. Pick ships from the list on the left \u2014
       only entries this fleet list allows are shown.</p>`;

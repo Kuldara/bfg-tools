@@ -23,6 +23,12 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   the one-file engine, as do the golden cases, Play and the simulator.
 
 ### Fixed
+- Da Ork Clanz: a Warlord's own ship is not offered another Gubbin once he has
+  one for every re-roll ("one upgrade from the Gubbins list for every re-roll he
+  has", Fleets p. 372; user 27.10.2026). The Warlord block says "all used:
+  another needs another re-roll"; a taken Gubbin stays, so a fleet with too many
+  can still drop one. More Gubbins (Klaws, Shokk-Attack Lance, Assault Karrier)
+  and Deathskullz's free looted rows are not counted and stay offered.
 - **Escort squadrons in the five lists whose rules count them** (user 27.10.2026,
   after the Clanz audit): Rogue Traders (p. 174), Exploration (p. 177), Pirates
   and Wolf Packs (p. 179), Tau Commerce Protection (p. 457) and Demiurg War Host
@@ -113,6 +119,20 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   (`clanz-bad-moonz-paid-per-rok`: three Bad Moonz Roks cost +90, not +30).
 
 ### Added
+- Your fleet in *Compact* (user 27.10.2026): a + / - box beside each unit's name
+  says whether it is open and opens or closes it, as the name still does; *Open
+  all* / *Close all* beside the Compact button does every unit at once. A
+  squadron's points show the count and the price of one in small type, "120 pts
+  3 x 40" (and "+ 20" for what the squadron bought on top).
+- An upgrade row names its kind where the book names one: *Gubbin*, *More
+  Gubbins* and *clan* (Orks), *bio-enhancement* (Tyranids), *Chaos Space Marine
+  crew* and *Daemonship* (Chaos), *The Best Money Can Buy* (Rogue Traders);
+  ordnance and fleet upgrades say nothing. A required row reads "automatic,
+  required by the fleet list" (the Mechanicus refits).
+- Maniac Turrets in plain words: the tag "turrets: roll D3 (1-3)" and the text
+  "Turrets: roll a D3 (1-3) instead of the ship's printed turret value. Not with
+  Extra Turrets." (the book: "The ship's turret value is replaced by D3 turrets",
+  Fleets p. 370). The card's stat line already showed Turrets D3.
 - Zukov's Klaw shows its clan in the upgrade list: a locked, free row *Clan:
   Goffs (included)*, as a battle barge shows its built-in Mark. The Goffs are
   part of its 210 points ("It is of the Goff Clan", Fleets p. 381), so no clan

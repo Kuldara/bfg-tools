@@ -47,6 +47,10 @@
 .unit.folded{padding:7px 14px}
 .uhead button.cls{border:0;background:none;padding:0;margin:0;color:inherit;cursor:pointer;text-align:left;
   text-decoration:underline dotted var(--ink-3);text-underline-offset:3px}
+/* the open/closed sign beside the name in Compact, as the checks' folds have */
+.uhead button.ufold{align-self:center;flex:none;width:22px;height:22px;padding:0;border:1px solid var(--line);
+  border-radius:var(--r);background:var(--panel);color:var(--ink-2);font:600 14px/1 var(--mono);cursor:pointer}
+.uhead button.ufold[aria-expanded="true"]{border-color:var(--accent);color:var(--ink)}
 .usum{margin-top:3px;font:400 12px/1.4 var(--sans);color:var(--ink-2)}
 .usum b{color:var(--ink);font-weight:600}
 

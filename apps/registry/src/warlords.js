@@ -3,6 +3,7 @@ import { L, listOf, setUpState, upState, upgradesFor } from "./model.js";
 import { save } from "./save.js";
 import { appState } from "./state.js";
 import { fleetResolved, shipCall } from "./validation.js";
+import { LISTS } from "../../../packages/ui/catalog.js";
 import { esc } from "../../../packages/ui/format.js";
 
 /* Da Ork Clanz (J226): the Warlord new skwadrons go to. The catalogue's +
@@ -333,7 +334,7 @@ export const UP_FX = [
   [/^Extra Power Fields/, null, ["+1 shield"]],
   [/^Extra Turrets \(escorts/, null, ["+1 turret"]],
   [/^Extra Turrets/, null, ["+2 turrets"]],
-  [/^Maniac Turrets/, null, ["turrets become D3"]],
+  [/^Maniac Turrets/, null, ["turrets: roll D3 (1–3)"]],
   [/^Looted Lances \(escorts/, null, ["heavy gunz \u2192 S2 lance, 15cm"]],
   [/^Looted Lances/, null, ["heavy gunz \u2192 S2 lance, 30cm"]],
   [/^Looted Torpedoes/, null, ["re-roll torpedo strength"]],
@@ -409,6 +410,30 @@ export const ROK_FX = [
   [/^Clan: Evil Sunz/, ["!Rok: stays 10 cm (p. 393)"]],
   [/^Soopa Boostas/, ["!Rok: stays 10 cm (p. 393)", "4D6 on All Ahead Full"]]
 ];
+/* What kind of a list's own upgrade a row is, by the heading it is printed
+   under, where the book names the kind (user 27.10.2026: "the Ork gubbins
+   could say they are gubbins; the same in other factions, not the generic
+   ones"). Ordnance, fleet upgrades and a commander's own rows say nothing.
+   In Da Ork Clanz the GUBBINS heading also holds More Gubbins (Klaws,
+   Shokk-Attack Lance, Assault Karrier: any capital ship, not from the
+   Warlord's re-rolls, Fleets p. 371) and Deathskullz's free looted rows
+   (p. 369), which are told apart because only Gubbins use up re-rolls. */
+const UP_KIND = [
+  [/^gubbins$/i, up => /^(Klaws|Shokk-Attack Lance|Assault Karrier)\b/.test(up.label) ? "More Gubbins"
+    : /Deathskullz: free/.test(up.label) ? "clan benefit" : "Gubbin"],
+  [/^clan upgrades$/i, up => up.included ? "" : "clan"],
+  [/^dakka dakka$/i, () => "Dakka Dakka"],
+  [/^bio-enhancements$/i, () => "bio-enhancement"],
+  [/^chaos space marine crews$/i, () => "Chaos Space Marine crew"],
+  [/^daemon ?ships$/i, () => "Daemonship"],
+  [/^the best money can buy$/i, () => "The Best Money Can Buy"]
+];
+export function upKind(up){
+  const Lx = LISTS.filter(x => x.nm === up.list)[0], si = +String(up.key || "").split(":")[0];
+  const sec = Lx && Lx.secs[si];
+  const k = sec ? UP_KIND.filter(x => x[0].test(String(sec.t).trim()))[0] : null;
+  return k ? k[1](up) : "";
+}
 export function upFx(up, who, hulk){
   const lab = String(up.label || ""), list = String(up.list || ""), cm = /^Clan: (.+?) \(/.exec(lab);
   if(/^\s*Rok\s*$/i.test(String(who || ""))){
@@ -481,11 +506,16 @@ export function warlordNeeds(W, RF){
    The Warlord's re-rolls are his block's 1-2-3, and the Gubbins his re-rolls
    pay for go on his own ship only (Fleets p. 372): another ship is not
    offered them unless one is already taken there, so the red check can be
-   put right where it is. */
+   put right where it is. Nor is his own ship offered another once he has
+   one for every re-roll (user 27.10.2026: "one upgrade from the Gubbins list
+   for every re-roll he has", p. 372) - a taken one stays, so a fleet that
+   has too many can still drop one. More Gubbins and Deathskullz's free
+   looted rows are not Gubbins of his (gub_re) and stay. */
 export function clanzHiddenUps(RF){
   const C = L().clanz, out = [];
   if(!C) return out;
   const wsI = warlordIdx(RF), ships = (RF.warlords || []).map(W => W.ship);
+  const full = (RF.warlords || []).filter(W => W.ship != null && (W.gub || 0) >= (W.rr || 1)).map(W => W.ship);
   appState.S.units.forEach((u, i) => {
     const R = RF.units[i];
     if(!R || u.lst) return;
@@ -495,7 +525,7 @@ export function clanzHiddenUps(RF){
       if(!sc) return;
       if(wsI.indexOf(i) >= 0 && /re-roll/i.test(String(up.label))) keys.push(up.key);
       else if(new RegExp(C.gub_sec, "i").test(String(sc.t).trim()) && new RegExp(C.gub_re, "i").test(String(up.label)) &&
-              ships.indexOf(i) < 0 && up.state !== "take") keys.push(up.key);
+              (ships.indexOf(i) < 0 || full.indexOf(i) >= 0) && up.state !== "take") keys.push(up.key);
     });
     out[i] = keys;
   });
@@ -586,7 +616,8 @@ export function fleetControlsHTML(RF){
         .map(c => clanLineHTML(c, CI[c], hulk)).join("")}</ul></div>
       <div class="wlrow"><span class="abl">Skwadrons</span>${skwadronsHTML(RF, wi)}</div>
       <div class="wlrow"><span class="abl">${need.ok ? "Done" : "Needs"}</span><span class="wlneed ${need.ok ? "ok" : "bad"}">${esc(need.text)}</span></div>
-      ${ship ? `<div class="wlrow"><span class="abl">Gubbins</span><span class="wlhint">upgrades on his own ship only: ${W.gub || 0} / ${rr}, ${esc(ship)}${
+      ${ship ? `<div class="wlrow"><span class="abl">Gubbins</span><span class="wlhint">upgrades on his own ship only: ${W.gub || 0} / ${rr}${
+        (W.gub || 0) >= rr ? " (all used: another needs another re-roll)" : ""}, ${esc(ship)}${
         hulk ? " \u00b7 double cost, none for speed, turning or boarding value (Fleets pp. 372, 390)" : ""} \u00b7 Klaws, Shokk-Attack Lance and Assault Karrier on any capital ship (p. 371)</span></div>` : ""}
     </div>`);
   });

@@ -181,8 +181,9 @@ ROW_EFFECTS = [
      dict(mod=dict(tu=2), cond=dict(cap=1, noup=r"^maniac turrets"),
           desc="The ship gains +2 Turrets. This cannot be combined with Maniac Turrets.")),
     (_CLANZ, _GUB, re.compile(r"^Maniac Turrets$", re.I),
+     # p.370 "The ship's turret value is replaced by D3 turrets", in plainer words (user 27.10.2026)
      dict(set=dict(tu="D3"), cond=dict(noup=r"^extra turrets"),
-          desc="The ship's turret value is replaced by D3 turrets. This cannot be combined with Extra Turrets.")),
+          desc="Turrets: roll a D3 (1-3) instead of the ship's printed turret value. Not with Extra Turrets.")),
     (_CLANZ, _GUB, re.compile(r"^Looted Lances$", re.I),
      dict(swp=dict(f=r"heavy gunz", nmf=r"heavy gunz(?: battery)?", nm="lance battery", rg="30 cm", st="2"),
           cond=dict(cap=1, has="heavy gunz"),
