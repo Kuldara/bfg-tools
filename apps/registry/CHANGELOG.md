@@ -119,8 +119,8 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   (`clanz-bad-moonz-paid-per-rok`: three Bad Moonz Roks cost +90, not +30).
 
 ### Added
-- Your fleet in *Compact* (user 27.10.2026): a + / - box beside each unit's name
-  says whether it is open and opens or closes it, as the name still does; *Open
+- Your fleet in *Compact* (user 27.10.2026): an arrow beside each unit's name
+  (right: closed, down: open) opens or closes it, as the name still does; *Open
   all* / *Close all* beside the Compact button does every unit at once. A
   squadron's points show the count and the price of one in small type, "120 pts
   3 x 40" (and "+ 20" for what the squadron bought on top).

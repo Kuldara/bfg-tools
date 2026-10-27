@@ -731,8 +731,9 @@ export function unitHTML(R, ui, st){
         aria-pressed="${st.role === "ally"}" title="Counted against the allied budget (Fleets pg. 16)">A</button>
     </span>` : "";
   /* J234: in Compact the name opens and closes the unit, and so does the
-     + / − beside it, which says which way it is (user 27.10.2026: the name
-     alone did not look like it would) */
+     arrow beside it, which says which way it is (user 27.10.2026: the name
+     alone did not look like it would; an arrow, not + / -, which reads as
+     "add" everywhere else) */
   const fold = (st.ab && st.ab.fold) || "";
   const foldTip = fold === "open" ? "Close this unit to one line" : "Open this unit";
   /* a squadron's count and the price of one (user 27.10.2026: "40 x 3",
@@ -744,7 +745,7 @@ export function unitHTML(R, ui, st){
   const head = `<div class="uhead">
       <button type="button" class="grip" data-grip="${ui}" draggable="true" aria-label="Move this unit"
         title="Drag to reorder, or move it a step with the arrow keys">${GRIP}</button>${st.ab && st.ab.send || ""}
-      ${fold ? `<button type="button" class="ufold" data-unfold="${ui}" aria-expanded="${fold === "open"}" aria-label="${foldTip}" title="${foldTip}">${fold === "open" ? "−" : "+"}</button><button type="button" class="cls" data-unfold="${ui}" aria-expanded="${fold === "open"}" title="${foldTip}">${esc(title(R.className))}</button>`
+      ${fold ? `<button type="button" class="ufold" data-unfold="${ui}" aria-expanded="${fold === "open"}" aria-label="${foldTip}" title="${foldTip}">${fold === "open" ? "▾" : "▸"}</button><button type="button" class="cls" data-unfold="${ui}" aria-expanded="${fold === "open"}" title="${foldTip}">${esc(title(R.className))}</button>`
              : `<span class="cls">${esc(title(R.className))}</span>`}${role}
       ${R.entry && R.entry.badRef ? '<span class="ty" style="color:var(--bad)">source page ref wrong</span>' : ""}
       <span class="ty">${esc(ship ? R.stats.type
@@ -932,7 +933,7 @@ export function renderFleet(){
     render();
   };
   /* Open all / Close all beside Compact (user 27.10.2026): every unit at
-     once, the way the + / − opens one; shown only in Compact */
+     once, the way the arrow opens one; shown only in Compact */
   const fa = $("#fleetall");
   if(fa){
     const allOpen = appState.S.units.length > 0 && appState.S.units.every(u => UOPEN.has(u));
