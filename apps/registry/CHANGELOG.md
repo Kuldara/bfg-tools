@@ -26,11 +26,17 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 - **The catalogue's + on an escort row adds a new squadron card** (user
   28.10.2026: + added one ship to the row's bottom card, "it should always add
   a new squadron card; now it is confusing"). Each + is a new card at the
-  squadron's minimum (two Cobras, a defence platform alone); the card's own
-  − and + in Your fleet set its size, and the catalogue's − takes the row's
-  last card away. The button's tooltip says so. This replaces 18.10.2026's
-  one ship a press for squadron cards. A row sold on one card - orbital mines,
-  minefields, silos - still adds one to that card a press.
+  squadron's minimum (two Cobras, a defence platform alone), and the row then
+  shows that newest card's own − n + under the name ("Newest card − 2 +",
+  with its squadron letter or name), so it grows right there; the card's
+  stepper in Your fleet does the same. The catalogue's − beside the + takes
+  the row's last card away. The newest card is the row's last plain one: not a
+  mixed squadron's, in Da Ork Clanz the active Warlord's; while a mixed
+  squadron is filling the row has no stepper. The buttons' tooltips say so.
+  This replaces 18.10.2026's one ship a press for squadron cards. A row sold
+  on one card - orbital mines, minefields, silos - still adds one to that card
+  a press. Building the Clanz meter's fleet on a 375 px phone takes 37 inputs
+  (was 36); growing the cards in Your fleet instead would have taken 52.
 
 ### Fixed
 - Da Ork Clanz: a Warlord's own ship cannot take another Gubbin once he has

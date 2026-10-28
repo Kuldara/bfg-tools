@@ -207,6 +207,12 @@ export function rowStepFor(b, dir, skip){
   const sec = L2.secs[si], en = sec && sec.ents[ei];
   if(!en) return null;
   const sh = en.r ? SHIPS[String(en.r)] : null;
+  return DOMAIN.rowStep(DOMAIN.rowPurchase(L2, si, en, sh), rowCards(L2, lst, si, ei, dir, skip), dir);
+}
+/* The row's cards its catalogue buttons work on, in fleet order - the -,
+   and the newest card's own - n + beside it (28.10.2026). L2: the list the
+   row is on; lst: its name when it lends, else null. */
+export function rowCards(L2, lst, si, ei, dir, skip){
   let units = rowUnits(lst, si, ei);
   /* a card in a mixed squadron is that squadron's, not this row's last card
      (mixed.js mixMember): + and - here keep to the plain cards */
@@ -219,7 +225,7 @@ export function rowStepFor(b, dir, skip){
     /* a minus with none of his on the row takes the row's last, as before */
     units = dir > 0 || his.length ? his : units;
   }
-  return DOMAIN.rowStep(DOMAIN.rowPurchase(L2, si, en, sh), units, dir);
+  return units;
 }
 export function applyTransition(u, action){
   /* The unit's own list, not the fleet's: a borrowed ship's options and

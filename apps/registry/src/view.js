@@ -1,7 +1,7 @@
 import { $, APP_VERSION } from "./boot.js";
 import { optCount } from "./card-model.js";
 import { resolveUnit } from "./cards.js";
-import { ARM_CLS, FLEET_FOLD_KEY, FOLDS, FOLD_KEY, L, LAST_PTS, LEND_TAG, SRC, UOPEN, applyRequired, applyTransition, armLineHTML, foldKey, isUpgradeEnt, lendCount, lendOf, midY, routeNeedsMet, routeOf, routeTag, rowLendOf, rowSelOf, rowStepFor, rowUnits, setHull, setOptState, setUpState, shipOf, total, totalMax, unitPts } from "./model.js";
+import { ARM_CLS, FLEET_FOLD_KEY, FOLDS, FOLD_KEY, L, LAST_PTS, LEND_TAG, SRC, UOPEN, applyRequired, applyTransition, armLineHTML, foldKey, isUpgradeEnt, lendCount, lendOf, midY, routeNeedsMet, routeOf, routeTag, rowLendOf, rowCards, rowSelOf, rowStepFor, rowUnits, setHull, setOptState, setUpState, shipOf, total, totalMax, unitPts } from "./model.js";
 import { placeSaves } from "./panels.js";
 import { renderPrintSetup } from "./print.js";
 import { STASH_PTS, ensureUids, save, stashUnits } from "./save.js";
@@ -467,12 +467,14 @@ export function renderCatalogue(){
          a press is one squadron card again (user: + grew the row's bottom
          card, "it should always add a new squadron card; now it is
          confusing"): + opens a new card at the squadron's minimum, - takes
-         the row's last card, and the card's own - n + in Your fleet sets its
-         size - which is what four presses for four frigates (four squadrons
-         of two, 13.10.2026) lacked. A row sold on one card (orbital mines, a
-         ground unit) is still one a press (18.10.2026; DOMAIN.rowStep). The
-         row says it before the press: a tag by the name, "each" under the
-         price, the buttons' titles; the count on the + is ships. */
+         the row's last card, and the newest card's own - n + stands on the
+         row (user 28.10.2026: "so it can be grown there without going to Your
+         fleet") as well as on the card in Your fleet - which is what four
+         presses for four frigates (four squadrons of two, 13.10.2026) lacked.
+         A row sold on one card (orbital mines, a ground unit) is still one a
+         press (18.10.2026; DOMAIN.rowStep). The row says it before the
+         press: a tag by the name, "each" under the price, the buttons'
+         titles; the count on the + is ships. */
       const buy = up || noChar ? null : DOMAIN.rowPurchase(rowList, hostEn ? hostAt.si : si, hostEn || en, sh);
       const many = !!buy && buy.kind !== "single";
       const nCards = rowUs.length;
@@ -484,10 +486,26 @@ export function renderCatalogue(){
       const minOn = !many ? 1 : Math.max(1, buy.min || 1);
       const buyTip = !many ? "" : buy.kind === "squadron"
         ? "A squadron card, " + perCard + " ships. Each + is a new squadron card of " + minOn +
-          "; set its size with the card's own \u2212 and + in Your fleet. Each \u2212 here takes this row's last card away"
+          "; the newest card's own \u2212 and + under the name set its size. Each \u2212 beside the + takes this row's last card away"
         : "Sold by the card, " + perCard + " on a card. Each + is one more on this row's last " +
           cardName + (buy.max == null ? "" : ", and a full card is followed by a new one") +
           "; each \u2212 is one less, and at " + minOn + " the card goes";
+      /* The newest card of a squadron row, with its own - n + under the
+         name: the card + just made, so it grows here (28.10.2026). The cards
+         the row's buttons work on (rowCards): not a mixed squadron's, in
+         Clanz the active Warlord's. Not while a mixed squadron is filling,
+         when this section's + puts ships into that. */
+      const newest = !buy || buy.kind !== "squadron" || mixFill ? null
+        : rowCards(hostEn ? L() : SL, hostEn || !foreign ? null : SL.nm, hostEn ? hostAt.si : si, hostEn ? hostAt.ei : ei, 1, mixMember).slice(-1)[0];
+      const newestAt = newest ? appState.S.units.indexOf(newest) : -1;
+      const rowCard = newestAt < 0 ? "" : (() => {
+        const n = newest.n || 1, max = buy.max == null ? Infinity : buy.max;
+        const which = [newest.sq ? "squadron " + newest.sq : "", newest.name || ""].filter(Boolean).join(" \u00b7 ");
+        return `<div class="rowcard"><span>${nCards > 1 ? "Newest card" : "Its card"}${which ? " <i>" + esc(which) + "</i>" : ""}</span>
+          <span class="stepper"><button type="button" data-rcu="${newestAt}" data-d="-1"${n <= 1 ? " disabled" : ""} title="One ship less on this card">&minus;</button><span>${n}</span><button
+            type="button" data-rcu="${newestAt}" data-d="1" data-max="${max === Infinity ? "" : max}"${n >= max ? " disabled" : ""} title="One ship more on this card">+</button></span>
+          <small>squadron ${buy.min}&ndash;${buy.max}</small></div>`;
+      })();
       /* the ship's info popup shows the unit + would add (info.js) */
       const infoKey = up || !rowHasInfo(hostEn || en) ? null : hostEn ? "c:" + appState.S.li + "." + hostAt.si + "." + hostAt.ei
         : "c:" + (appState.SRC_LI == null ? appState.S.li : appState.SRC_LI) + "." + si + "." + ei;
@@ -502,19 +520,21 @@ export function renderCatalogue(){
           esc(routeTag(via.title))}</span>` : ""}
         <small>${esc(noChar
           ? "Fleets pg. 14: you may not take special characters from a reserve fleet list"
-          : sub)}</small>${noChar ? "" : armLineHTML(sh, hostEn || en, rowList)}</div>
+          : sub)}</small>${noChar ? "" : armLineHTML(sh, hostEn || en, rowList)}${rowCard}</div>
         <div class="p">${cost}${many ? "<small>each</small>" : ""}</div>
         ${up || noChar ? "" : `<span class="acts">${
           /* The count on the + has its way back beside it: one of this row
              out of the fleet again. Only where there is one to take. */
           nIn ? `<button class="sub" data-s="${si}" data-e="${ei}"${
             hostEn ? ` data-hs="${hostAt.si}" data-he="${hostAt.ei}"` : ""} title="${
-            many ? "One less on this row's last " + cardName + "; at " + minOn + " the card goes" : "Remove one from your fleet"}">&minus;</button>` : ""
+            buy.kind === "squadron" ? "Take this row's last squadron card away"
+            : many ? "One less on this row's last " + cardName + "; at " + minOn + " the card goes" : "Remove one from your fleet"}">&minus;</button>` : ""
         }<button class="add${rowNo ? " no" : ""}${mixFill ? " into" : ""}" data-s="${si}" data-e="${ei}"${
           hostEn ? ` data-hs="${hostAt.si}" data-he="${hostAt.ei}"` : ""}${nIn ? ` data-n="${nIn}"` : ""} title="${
           rowNo ? esc(rv.why) : hostEn ? esc("Add from " + viaTitle)
           : (foreign ? "Add as " + esc(appState.SRC_ROLE) : "Add")}${
-          many ? " one more to this row's last " + cardName + " (" + perCard + " on a card)" : ""}${
+          buy && buy.kind === "squadron" ? " a new squadron card of " + minOn + " (" + perCard + " on a card)"
+          : many ? " one more to this row's last " + cardName + " (" + perCard + " on a card)" : ""}${
           nIn ? " &middot; " + nIn + " in your fleet" + (many ? " on " + nCards + " card" + (nCards > 1 ? "s" : "") : "") : ""}">+</button></span>`}
         ${warn}</div>`;
     }).join("");
@@ -575,6 +595,14 @@ export function renderCatalogue(){
   /* Minus takes out the unit of this row that was added last - the same
      units the count on the + counts. When that was the only one the minus
      itself goes, and the + beside it is what must not move. */
+  /* the newest card's own - n + on its row: as the card's in Your fleet */
+  wrap.querySelectorAll("[data-rcu]").forEach(b => b.onclick = () => {
+    const u = appState.S.units[+b.dataset.rcu];
+    if(!u) return;
+    u.n = Math.min(+b.dataset.max || Infinity, Math.max(1, (u.n || 1) + (+b.dataset.d)));
+    appState.JUST = { unit: u, keep: [{ sel: `#catalogue [data-rcu="${b.dataset.rcu}"][data-d="${b.dataset.d}"]`, mid: midY(b) }] };
+    render();
+  });
   wrap.querySelectorAll("[data-mixstart]").forEach(b => b.onclick = () => { mixStart(+b.dataset.mixstart); render(); });
   wrap.querySelectorAll("[data-mixdone]").forEach(b => b.onclick = () => { mixStop(); render(); });
   wrap.querySelectorAll(".sub").forEach(b => b.onclick = () => {

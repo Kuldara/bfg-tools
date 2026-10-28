@@ -84,8 +84,8 @@ const OLD = {
 /* The new Warlord block (J226): re-rolls and clan in the block heading, the catalogue's +
    adds to the active Warlord, a kroozer is paired by itself when a separate
    skwadron would not fit, Gubbins only on the Warlord's ship. A tiddla's
-   further ships go on with its card's own + (grow; 28.10.2026 the catalogue's
-   + opens a new squadron card). */
+   further ships go on with the + of its card's own - n + under the row's name
+   (grow; 28.10.2026 the catalogue's + opens a new squadron card). */
 const NEW = {
   planned: [
     ["add", /^Ork Warlord$/, "W1"], ["rr", "W1", 2], ["clan", "W1", "Goffs"],
@@ -204,14 +204,12 @@ function inPage(){
       if(as){ if(nu.length !== 1) throw new Error("the add did not make exactly one unit " + re); NAMES[as] = nu[0]; } },
     more(re, as){ OPS.add(re, as); },
     /* one more ship on a skwadron's card: since 28.10.2026 the catalogue's
-       + opens a new squadron card, so the ship goes on with the card's own +
-       in Your fleet - the last card of that row the active Warlord has */
+       + opens a new squadron card, and the row's newest card (the active
+       Warlord's) has its own - n + under the row's name */
     grow(re){
-      const [si, ei] = entry(re), RF = fleetResolved(), wa = activeWarlordIdx(RF);
-      const mine = S.units.map((u, i) => i).filter(i => { const u = S.units[i];
-        return !u.lst && u.s === si && u.e === ei && (wa < 0 || (RF.command && RF.command[i] === wa)); });
-      if(!mine.length) throw new Error("no card to grow " + re);
-      tap(Q('#fleet .stepper button[data-u="' + mine[mine.length - 1] + '"][data-d="1"]'));
+      const row = addBtn(re).closest(".pick"), b = row && row.querySelector('[data-rcu][data-d="1"]');
+      if(!b) throw new Error("no card to grow on the row " + re);
+      tap(b);
     },
     up(nm, re){
       let b = upButton(nm, re);

@@ -82,6 +82,12 @@
   border:1px solid var(--line);border-radius:2px;padding:0 4px}
 .arms .opts.pick{color:var(--ink-2);border-color:var(--ink-3)}
 .pick .p{font:600 13px/1 var(--mono);font-variant-numeric:tabular-nums;color:var(--brass)}
+/* a squadron row's newest card and its own - n + (28.10.2026) */
+.rowcard{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin-top:4px;font:500 11px/1.3 var(--sans);color:var(--ink-2)}
+.rowcard i{font-style:normal;color:var(--ink-3)}
+.rowcard small{display:inline;font:400 11px/1.3 var(--mono);color:var(--ink-3)}
+.rowcard .stepper button{width:26px;height:24px}
+.rowcard .stepper button[disabled]{color:var(--ink-3);opacity:.45;cursor:default}
 .pick .warn{
   grid-column:1/-1; margin:2px 0 4px;
   font:400 11px/1.45 var(--sans); color:var(--warn);
