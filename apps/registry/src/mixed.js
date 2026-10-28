@@ -17,6 +17,7 @@ import { L } from "./model.js";
 import { SHIPS } from "../../../packages/ui/catalog.js";
 import { appState } from "./state.js";
 import { checks } from "./validation.js";
+import { infoBtnHTML } from "./info.js";
 import { clanzIn, freeSqTag, orkTiddlaHint } from "./warlords.js";
 import { esc, title } from "../../../packages/ui/format.js";
 
@@ -114,7 +115,7 @@ export function mixGroupHTML(g, open){
   return `<div class="unit mixg${g.filling ? " filling" : ""}${errs ? " bad" : ""}" data-mixui="${g.first}" data-mixtag="${esc(g.tag)}">
     <div class="uhead">
       ${g.idx.length ? `<button type="button" class="ufold" data-mixfold="${esc(g.tag)}" aria-expanded="${!!open}" title="${open ? "Hide the cards" : "Show the cards"}">${open ? "▾" : "▸"}</button>` : `<span class="ufold"></span>`}
-      <span class="cls">${kindWord(g)} ${esc(g.tag)}</span>
+      <span class="cls">${kindWord(g)} ${esc(g.tag)}</span>${g.idx.length ? infoBtnHTML("m:" + g.tag, "Everything about this squadron") : ""}
       <span class="ty">${g.hulls} escort${g.hulls === 1 ? "" : "s"} &middot; mixed${g.filling ? " &middot; filling" : ""}</span>
       <span class="pts">${pts} pts</span>
       ${g.filling ? `<button type="button" class="del mixdone" data-mixdone title="Stop filling; the squadron stays">Done</button>`

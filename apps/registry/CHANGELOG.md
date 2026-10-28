@@ -122,6 +122,21 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   (`clanz-bad-moonz-paid-per-rok`: three Bad Moonz Roks cost +90, not +30).
 
 ### Added
+- **Ship info** (user 28.10.2026, prototype C of three): an *i* beside the
+  class name on every ship row of the catalogue, on every ship in Your fleet
+  and on a mixed squadron's row opens everything about it. On a wide screen
+  it is the printed card itself, made and fitted as the print makes it: a ship
+  in the fleet with its options, names and squadron, a catalogue row as +
+  would add it (its own list when borrowed, an escort at its squadron's
+  minimum, the options still open), a mixed squadron its one card, a star
+  fort both cards. Below 700 px the card's text would be too small, so the
+  popup lays the same details out for the screen (profile, armament with its
+  range colours, special rules with their pages, options and upgrades with
+  what is taken, damage) and one button, *Printed card*, shows the card. It
+  closes with x, Escape or a tap outside; it only shows, so nothing is lost.
+  In Compact the *i* leaves the unit open or closed as it was. Checked in a
+  browser for all 1,102 ship rows of every list (`check_info.js`, in
+  `npm test`).
 - **Mixed squadron** (prototype, user 28.10.2026), an addition beside the
   per-class cards, which work as before. In every escort section with two or
   more escort classes (escorts only, user 28.10.2026) and in Da Ork Clanz's

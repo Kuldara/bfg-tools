@@ -9,6 +9,7 @@ import { renderSaves } from "./saved-fleets.js";
 import { appState } from "./state.js";
 import { mixActive, mixGroups, mixGroupHTML, mixHulls, mixMember, mixRowHTML, mixRule, mixSec, mixStart, mixStop, mixUnits, sqErrorsHTML } from "./mixed.js";
 import { aboardHTML, fleetResolved } from "./validation.js";
+import { infoBtnHTML, rowHasInfo } from "./info.js";
 import { SKW_MAX, activeWarlordIdx, clanzAfterMove, clanzDimUps, clanzHiddenUps, clanzIn, clanzMoveBlock, clanzPin, clanzSkwadronSec, factRowsHTML, fleetControlsHTML, freeSqTag, fxTagsHTML, isCommandeered, isOrkHulkUnit, optFxHTML, orkTiddlaHint, skwKind, upKind, orkPlain, orkSecGloss, sendSkwadron, setClan, setWarlordRerolls, upFx, warlordColor, warlordIdx, warlordNeeds, warlordSkwadrons } from "./warlords.js";
 import { DATA, LISTS, SHIPS } from "../../../packages/ui/catalog.js";
 import { arcGlyph, arcParts, esc, optCostLabel, shortRange, title, upCostText } from "../../../packages/ui/format.js";
@@ -481,7 +482,11 @@ export function renderCatalogue(){
       const buyTip = !many ? "" : "Sold by the card, " + perCard + " on a card. Each + is one more on this row's last " +
         cardName + (buy.max == null ? "" : ", and a full card is followed by a new one") +
         "; each \u2212 is one less, and at " + minOn + " the card goes";
+      /* the ship's info popup shows the unit + would add (info.js) */
+      const infoKey = up || !rowHasInfo(hostEn || en) ? null : hostEn ? "c:" + appState.S.li + "." + hostAt.si + "." + hostAt.ei
+        : "c:" + (appState.SRC_LI == null ? appState.S.li : appState.SRC_LI) + "." + si + "." + ei;
       return `<div class="pick${up ? " upg" : ""}${rowNo ? " lend-no" : ""}"><div class="nm">${esc(title(en.l))}${
+        infoKey ? infoBtnHTML(infoKey, "Everything about this ship") : ""}${
         up ? `<span class="tag">${en.incl ? "included" : en.req ? "required" : "upgrade"}</span>` : ""}${
         rrO && rrO.included ? `<span class="tag rr" title="${esc("Included in the points cost" + (rrO.scope ? " - " + rrO.scope : ""))}">${esc(rrO.head)}</span>` : ""}${
         noChar ? `<span class="tag">own fleet only</span>` : ""}${
@@ -770,7 +775,7 @@ export function unitHTML(R, ui, st){
       <button type="button" class="grip" data-grip="${ui}" draggable="true" aria-label="Move this unit"
         title="Drag to reorder, or move it a step with the arrow keys">${GRIP}</button>${st.ab && st.ab.send || ""}
       ${fold ? `<button type="button" class="ufold" data-unfold="${ui}" aria-expanded="${fold === "open"}" aria-label="${foldTip}" title="${foldTip}">${fold === "open" ? "▾" : "▸"}</button><button type="button" class="cls" data-unfold="${ui}" aria-expanded="${fold === "open"}" title="${foldTip}">${esc(title(R.className))}</button>`
-             : `<span class="cls">${esc(title(R.className))}</span>`}${role}
+             : `<span class="cls">${esc(title(R.className))}</span>`}${ship ? infoBtnHTML("u:" + ui, "Everything about this ship") : ""}${role}
       ${R.entry && R.entry.badRef ? '<span class="ty" style="color:var(--bad)">source page ref wrong</span>' : ""}
       <span class="ty">${esc(ship ? R.stats.type
         : R.kind === "commander" ? "commander"
@@ -1360,33 +1365,9 @@ function mixAddOne(M, si, ei){
 }
 export function addUnitFrom(li2, si, ei, role){
   const L2 = LISTS[li2] || L();
-  const sec = L2.secs[si], en = sec && sec.ents[ei];
-  if(!en || isUpgradeEnt(en)) return;
-  const sh = en.r ? SHIPS[String(en.r)] : null;
-  const u = { s:si, e:ei, ref:en.r || null, n:1, opts:[], name:"" };
-  /* Stamped BEFORE applyRequired: selOf(u) resolves through u.lst, so the
-     required upgrades come from the list the ship was actually bought on. */
-  if(L2 !== L()){
-    u.lst = L2.nm;
-    u.role = role === "ally" ? "ally" : "reserve";
-  }
-  /* An open price ("varies") starts from the profile's own price: the book
-     leaves the list row open, but the ship's page gives a number. The player
-     can type over it - that is what an open price is for. */
-  if(en.p == null && sh && sh.bp != null) u.custom = sh.bp;
-  /* A unit bought N to a card starts at its section's squadron minimum: an
-     escort by its book type, a one-hit planetary defence by the profile flag
-     sq (same test as isEscort). The defence section's own rule says one to
-     six (Rulebook p. 100), so a platform starts at one and not at the
-     escorts' two. */
-  if(sh && (sh.sq || /escort/i.test(sh.ty))){
-    /* Look for the squadron rule that governs THIS section, wherever the
-       sentence itself was printed. */
-    const sq = L2.secs.reduce((f, s2) => f || (s2.rules||[]).find(r =>
-      r.kind === "squadron" && (r.sec || []).indexOf(si) >= 0), null);
-    u.n = sq ? sq.min : 2;
-  }
-  applyRequired(u);
+  const u = newUnit(li2, si, ei, role);
+  if(!u) return;
+  const en = L2.secs[si].ents[ei];
   ensureUids(appState.S.units);
   u.uid = "u" + (++appState.UID_N);
   /* Da Ork Clanz (J226): a skwadron goes to the Warlord new skwadrons go
@@ -1418,6 +1399,39 @@ export function addUnitFrom(li2, si, ei, role){
   appState.S.units.splice(at, 0, u);
   appState.JUST = Object.assign(appState.JUST || {}, { unit: u });
   render();
+}
+/* addUnitFrom's new unit, not yet in the fleet (the ship info popup shows a
+   catalogue row as this). */
+export function newUnit(li2, si, ei, role){
+  const L2 = LISTS[li2] || L();
+  const sec = L2.secs[si], en = sec && sec.ents[ei];
+  if(!en || isUpgradeEnt(en)) return null;
+  const sh = en.r ? SHIPS[String(en.r)] : null;
+  const u = { s:si, e:ei, ref:en.r || null, n:1, opts:[], name:"" };
+  /* Stamped BEFORE applyRequired: selOf(u) resolves through u.lst, so the
+     required upgrades come from the list the ship was actually bought on. */
+  if(L2 !== L()){
+    u.lst = L2.nm;
+    u.role = role === "ally" ? "ally" : "reserve";
+  }
+  /* An open price ("varies") starts from the profile's own price: the book
+     leaves the list row open, but the ship's page gives a number. The player
+     can type over it - that is what an open price is for. */
+  if(en.p == null && sh && sh.bp != null) u.custom = sh.bp;
+  /* A unit bought N to a card starts at its section's squadron minimum: an
+     escort by its book type, a one-hit planetary defence by the profile flag
+     sq (same test as isEscort). The defence section's own rule says one to
+     six (Rulebook p. 100), so a platform starts at one and not at the
+     escorts' two. */
+  if(sh && (sh.sq || /escort/i.test(sh.ty))){
+    /* Look for the squadron rule that governs THIS section, wherever the
+       sentence itself was printed. */
+    const sq = L2.secs.reduce((f, s2) => f || (s2.rules||[]).find(r =>
+      r.kind === "squadron" && (r.sec || []).indexOf(si) >= 0), null);
+    u.n = sq ? sq.min : 2;
+  }
+  applyRequired(u);
+  return u;
 }
 export function addUnit(si, ei){ addUnitFrom(appState.S.li, si, ei, null); }
 

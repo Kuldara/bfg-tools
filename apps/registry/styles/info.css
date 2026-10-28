@@ -1,0 +1,63 @@
+/* ------------------------------------------------- a ship's info popup --
+   The "i" beside a class name and the popup it opens (src/info.js): the
+   printed card on a wide screen, the same details laid out for a phone. */
+.ibtn{display:inline-grid;place-items:center;width:18px;height:18px;margin:0 0 0 7px;padding:0;vertical-align:1px;flex:0 0 18px;
+  border:1px solid var(--line);border-radius:50%;background:var(--panel);color:var(--ink-3);cursor:pointer;
+  font:italic 700 11px/1 Georgia,"Times New Roman",serif}
+.ibtn:hover,.ibtn:focus-visible{border-color:var(--accent);color:var(--accent)}
+/* a thumb needs more than 18 px: the hit area grows, the circle does not */
+@media (pointer:coarse){ .ibtn{position:relative} .ibtn::after{content:"";position:absolute;inset:-11px} }
+
+.infodlg{position:fixed;inset:0;z-index:61;display:grid;place-items:center;padding:16px;background:rgba(11,17,22,.6)}
+.infodlg[hidden]{display:none}
+.if-box{width:min(640px,100%);max-height:calc(100vh - 32px);display:flex;flex-direction:column;overflow:hidden;
+  background:var(--panel);color:var(--ink);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow)}
+.if-box.card{width:auto;max-width:calc(100vw - 32px)}
+.if-hd{display:flex;align-items:flex-start;gap:12px;padding:12px 14px 10px;border-bottom:1px solid var(--line)}
+.if-hd .t{flex:1;min-width:0}
+.if-hd b{display:block;font:600 16px/1.2 var(--disp);letter-spacing:.04em;text-transform:uppercase;overflow-wrap:anywhere}
+.if-hd i{display:block;margin-top:3px;font:400 12px/1.35 var(--mono);font-style:normal;color:var(--ink-3)}
+.if-hd .pts{font:600 15px/1.2 var(--mono);color:var(--accent);white-space:nowrap;padding-top:1px}
+.if-x{width:34px;height:34px;flex:0 0 34px;border:1px solid var(--line);border-radius:var(--r);background:transparent;color:var(--ink-2);
+  font:400 20px/1 var(--sans);cursor:pointer}
+.if-x:hover{border-color:var(--accent);color:var(--accent)}
+.if-bd{overflow:auto;padding:14px}
+.if-ft{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:10px 14px;border-top:1px solid var(--line);
+  font:400 12px/1.4 var(--sans);color:var(--ink-3)}
+.if-ft span{flex:1 1 200px}
+.if-ft .btn{min-height:36px;padding:7px 12px}
+@media (max-width:520px){ .if-ft span{display:none} .if-ft .btn{flex:1 1 0;min-height:42px} }
+
+/* the printed card: its own page box at the card's size, scaled as a whole */
+.if-cards{display:flex;flex-direction:column;gap:14px;align-items:center}
+.if-card{position:relative;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.35)}
+.if-card .page{position:absolute;left:0;top:0;width:144mm;height:135mm;margin:0;background:transparent;transform-origin:top left;
+  --card-x:0mm;--card-top:0mm;--card-bottom:0mm}
+
+/* the details for a phone */
+.if-cls{margin:4px 0 10px;padding-top:10px;border-top:1px solid var(--line);font:600 14px/1.3 var(--disp);letter-spacing:.04em;text-transform:uppercase}
+.if-cls:first-child{border-top:0;padding-top:0}
+.if-cls span{font:500 12px/1.3 var(--mono);text-transform:none;letter-spacing:0;color:var(--ink-3)}
+.if-sec{margin:0 0 14px}
+.if-sec h4{margin:0 0 6px;font:600 11px/1.2 var(--disp);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.if-stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:6px}
+.if-stats div{background:var(--sunk);border-radius:var(--r);padding:6px 8px}
+.if-stats small{display:block;font:600 9.5px/1.2 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3)}
+.if-stats b{display:block;margin-top:2px;font:600 14px/1.25 var(--mono);color:var(--ink)}
+.if-arm{width:100%;border-collapse:collapse;font:400 13px/1.35 var(--sans)}
+.if-arm th{text-align:left;font:600 10px/1.2 var(--sans);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);padding:0 6px 4px 0}
+.if-arm td{padding:5px 6px 5px 0;border-top:1px solid var(--line);vertical-align:top}
+.if-arm td.n{font-family:var(--mono);white-space:nowrap}
+.if-arm .rd{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:0}
+.if-tag{margin-left:6px;font:600 9.5px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);
+  border:1px solid var(--line);border-radius:var(--r);padding:1px 4px}
+.if-rules{margin:0;padding-left:18px;font:400 13px/1.45 var(--sans);color:var(--ink-2)}
+.if-rules li{margin:0 0 5px}
+.if-opts{display:flex;flex-direction:column;gap:5px;font:400 13px/1.4 var(--sans)}
+.if-opts div{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:start}
+.if-opts .st{font:600 10px/1.6 var(--sans);letter-spacing:.06em;text-transform:uppercase;border:1px solid var(--line);
+  border-radius:var(--r);padding:0 5px;color:var(--ink-3);white-space:nowrap}
+.if-opts .st.on{border-color:var(--accent);color:var(--accent)}
+.if-opts .c{font-family:var(--mono);color:var(--ink-2);white-space:nowrap}
+.if-dmg{margin:0;font:400 13px/1.45 var(--sans);color:var(--ink-2)}
+@media print{ .infodlg{display:none!important} }
