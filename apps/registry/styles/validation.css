@@ -79,6 +79,9 @@
 @media (max-width:640px){.opt .c{white-space:normal;max-width:84px;text-align:right}}
 .upfx .fx{padding:0 6px;border:1px solid var(--wl,var(--line));border-radius:3px;background:var(--sunk);color:var(--ink);font-size:11.5px;font-weight:600;line-height:1.6}
 .upfx .fx.lim{font-weight:400;color:var(--ink-2);border-style:dashed}
+/* hover text: how the effect works, or the book's sentence */
+.upfx .fx[title]{cursor:help}
+.upfx .fx.how{text-decoration:underline dotted var(--ink-3);text-underline-offset:2px}
 /* Aboard line of a commander (J215) */
 .uctl.aboard{align-items:center}
 .uctl.aboard .abl{font:500 11px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}

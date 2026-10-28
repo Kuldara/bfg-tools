@@ -23,6 +23,16 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   the one-file engine, as do the golden cases, Play and the simulator.
 
 ### Changed
+- **Effect tags explain themselves on hover** (user 28.10.2026). Da Ork Clanz's
+  Shokk-Attack Lance said "shields down: 4+ at 30cm", which read as if the
+  lance took the target's shields down; the book has it the other way round:
+  it "is only effective against ships with shields down in the same manner as
+  teleporters" (Fleets p. 371). Its tags are now "replaces prow heavy gunz",
+  "only at a target with shields down" and "not while crippled or braced" as
+  limits, "4+ to hit, 30cm" and "hit: D3+1 snotling hordes, +D6 to its Ld",
+  and each says on hover how it works, with its pages (misses, escorts, how
+  the hordes go away). A tag with its own explanation is underlined with
+  dots; every other effect tag shows the book's sentence on hover.
 - **The catalogue's + on an escort row adds a new squadron card** (user
   28.10.2026: + added one ship to the row's bottom card, "it should always add
   a new squadron card; now it is confusing"). Each + is a new card at the

@@ -755,7 +755,7 @@ export function unitHTML(R, ui, st){
         : up.required ? " \u2014 automatic, required by the fleet list" : ""}
         ${!fx && up.note ? `<span class="src">${esc(up.note)}</span>` : ""}</span>
       <span class="c">${c}</span>${fx ? `
-      <span class="upfx"${fx.color ? ` style="--wl:${fx.color}"` : ""}>${fxTagsHTML(fx.tags)}</span>` : ""}</div>`;
+      <span class="upfx"${fx.color ? ` style="--wl:${fx.color}"` : ""}>${fxTagsHTML(fx.tags, [up.description, up.note].filter(Boolean).join(" "))}</span>` : ""}</div>`;
   };
   /* Rows the fleet pane leaves out (Clanz, J226: clanzHiddenUps) */
   const hideKeys = (st.ab && st.ab.hide) || [];

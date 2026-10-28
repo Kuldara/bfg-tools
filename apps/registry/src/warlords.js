@@ -322,7 +322,9 @@ export const CLAN_FX = {
    ("+1 turret", "Increase to Ld 9", re-rolls, Tyranid weapons) gets none.
    [label, list or null, tags, the unit's own entry or omitted]; "!" marks a
    drawback; first match wins; the book's text and the row's note stay in
-   its tooltip. Pages (Fleets unless said): Ork Gubbins 370-371, Waaagh! and
+   its tooltip. A tag can be [text, how it works]: that is its own hover
+   text; a tag without one shows the book's text on hover (user 28.10.2026:
+   "on hover more about how these work"). Pages (Fleets unless said): Ork Gubbins 370-371, Waaagh! and
    Cyclops Warlord 365-366 (their Mega-armoured Boarding Parties is "+1
    modifier on boarding" only), Torpedo-bommas 359, boarding torpedoes 360
    and Rulebook 78, special torpedoes 19, torpedo bombers 22, orbital mines
@@ -352,7 +354,14 @@ export const UP_FX = [
   [/^Prow Ram/, null, ["+1 Ld to ram", "+1 hit when ramming"]],
   [/^Tellyporta/, null, ["teleport hit-and-run to 30cm"]],
   [/^Klaws/, null, ["base contact: 2D6, each 4+ hits past shields", "both hit: latched on"]],
-  [/^Shokk-Attack Lance/, null, ["replaces prow heavy gunz", "shields down: 4+ at 30cm", "D3+1 snotling hordes: +D6 to its Ld"]],
+  /* user 28.10.2026: "shields down: 4+ at 30cm" read as if the lance took the
+     target's shields down; the book (p. 371) has it the other way round */
+  [/^Shokk-Attack Lance/, null, [
+    ["replaces prow heavy gunz", "The ship's prow heavy gunz batteries are replaced with the lance. Capital ships only, not escorts. (Fleets p. 371)"],
+    ["!only at a target with shields down", "Like a teleport attack, it works only against a ship whose shields are already down: they have stopped as many hits as it has shields this turn. It does not take shields down itself. (Fleets p. 371; shields down, Rulebook p. 70; teleport attacks p. 92)"],
+    ["4+ to hit, 30cm", "Roll a D6 for a target within 30 cm: 4+ hits. Holofields and a braced target save normally. A miss puts a blast marker in contact with the target. At escorts the squadron rolls a D6 instead: 4+ puts a blast marker on the closest; 1-3 destroys the nearest escort in range without shields (bracing saves normally). (Fleets p. 371)"],
+    ["hit: D3+1 snotling hordes, +D6 to its Ld", "No damage: D3+1 snotling hordes are teleported aboard. Its next Leadership test or special order rolls an extra D6 (3D6, or one more when it already rolls 3D6). More hits only add hordes. Each special order, passed or failed, gets rid of one horde, and each can be repaired in the End phase like critical damage. (Fleets p. 371)"],
+    ["!not while crippled or braced", "The ship firing the lance cannot use it while crippled or braced. (Fleets p. 371)"]]],
   [/^Assault Karrier/, null, ["free boarding torpedoes", "+1 assault boat per launch", "!assault boats only"]],
   [/^Torpedo-bommas/i, null, ["20cm bombers, no fighter role", "later turns: S2 torpedo salvo each", "added to fighta-bommas"]],
   [/^Boarding torpedoes/, /^Orks/, ["torpedo hits are hit-and-run attacks"]],
@@ -461,9 +470,13 @@ export const OPT_FX = [[/\bmimic engines\b/i, "Mimic Engines"], [/\bSepulchre\b/
 export function optFxHTML(text, list){
   const o = OPT_FX.find(x => x[0].test(String(text || "")));
   const fx = o ? upFx({ label: o[1], list: list || "" }) : null;
-  return fx ? `<span class="upfx">${fxTagsHTML(fx.tags)}</span>` : "";
+  return fx ? `<span class="upfx">${fxTagsHTML(fx.tags, text)}</span>` : "";
 }
-export const fxTagsHTML = tags => tags.map(t => t[0] === "!" ? `<span class="fx lim">${esc(t.slice(1))}</span>` : `<span class="fx">${esc(t)}</span>`).join("");
+/* tip: the book's text, the hover of a tag without its own [text, how] */
+export const fxTagsHTML = (tags, tip) => tags.map(x => {
+  const [t, how] = Array.isArray(x) ? x : [x, ""], lim = t[0] === "!", hover = how || tip || "";
+  return `<span class="fx${lim ? " lim" : ""}${how ? " how" : ""}"${hover ? ` title="${esc(hover)}"` : ""}>${esc(lim ? t.slice(1) : t)}</span>`;
+}).join("");
 export function clanLineHTML(c, I, hulk){
   const fx = (hulk && HULK_CLAN_FX[c]) || CLAN_FX[c] || [I.desc];
   return `<li style="--wl:${CLAN_COLOR[c] || "var(--ink-3)"}" title="${esc(I.desc + " (" + clanCost(I) + ", Fleets p. 369)")}"><b>${esc(c)}<span class="wlhint">${I.p ? "+" + I.p + " pts" : "free"}</span></b><span class="fxs">${
