@@ -582,6 +582,20 @@ const ASYNC = [];
   check("Save updates the same save", [libRead().saves.length, a2.id === a.id, a2.units.length], [1, true, 1]);
   const b = saveOpenAs("Orks tournament", true);
   check("Save as new: a second save, the name does not clash", [libRead().saves.length, b.name, b.id !== a.id], [2, "Orks tournament (2)", true]);
+  /* user 28.10.2026: a changed name is a new save, the old one stays as it was */
+  getS().units.push(JSON.parse(JSON.stringify(getS().units[0]))); save();
+  const nb = saveOpenAs("Orks league");
+  const kept = libRead().saves.filter(x => x.id === b.id)[0];
+  check("Save under a new name: a new save; the old one keeps its name and ships",
+        [libRead().saves.length, nb.id !== b.id, nb.name, nb.units.length, kept.name, kept.units.length, libRead().open[ORK] === nb.id],
+        [3, true, "Orks league", 2, "Orks tournament (2)", 1, true]);
+  const nb2 = saveOpenAs("Orks league");
+  check("Save again under that name: updates it", [libRead().saves.length, nb2.id === nb.id], [3, true]);
+  /* back as before for the checks below: one ship, the open fleet saved as b */
+  api.libDelete(nb.id);
+  getS().units.pop(); save();
+  { const lb = libRead(); lb.open[ORK] = b.id; api.libWrite(lb); }
+  check("(the library is back: two saves, b open)", [libRead().saves.length, openUnsaved()], [2, false]);
   /* another list: Tau into the library as a file, the Orks stay open for editing */
   const tau = JSON.parse(makeSave(TAU, [["ESCORTS", /^Defender/]]));
   let r = libAddText(JSON.stringify(Object.assign({ app: "Gothic Fleet Registry fleet", name: "Tau patrol" }, tau)), "file");

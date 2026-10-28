@@ -23,6 +23,11 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   the one-file engine, as do the golden cases, Play and the simulator.
 
 ### Changed
+- **Save under a new name is a new save** (user 28.10.2026: "changing the name
+  should always make a save, not over the old one"). In the Save drop-down,
+  Save updates the saved fleet the open one came from only while the name is
+  the same; with another name it saves a new one, and the old one stays as it
+  was, under its name. The panel says so. Save as new works as before.
 - **Effect tags explain themselves on hover** (user 28.10.2026). Da Ork Clanz's
   Shokk-Attack Lance said "shields down: 4+ at 30cm", which read as if the
   lance took the target's shields down; the book has it the other way round:

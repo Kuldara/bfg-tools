@@ -68,15 +68,18 @@ export function openUnsaved(lib){
   const s = openSave(lib);
   return !s || libKey(s) !== libKey(openDoc());
 }
-/* Save the open fleet: over the saved fleet it came from (renamed if the
-   name changed), or as a new one. Returns the saved fleet. */
+/* Save the open fleet: over the saved fleet it came from while the name is
+   the same, else as a new one (user 28.10.2026: a changed name is always a
+   new save, not one over the old - the old one stays as it was). Returns
+   the saved fleet. */
 export function saveOpenAs(name, asNew){
   if(!appState.S.units.length) return null;
   const lib = libRead(), doc = openDoc();
   const nm = String(name == null ? "" : name).trim() || (L().nm + " " + total());
   let s = asNew ? null : openSave(lib);
+  if(s && s.name !== nm) s = null;
   if(s){
-    s.name = libName(lib, nm, s.id); s.ln = doc.ln; s.limit = doc.limit; s.units = doc.units;
+    s.ln = doc.ln; s.limit = doc.limit; s.units = doc.units;
     s.pts = total(); s.saved = libToday(); delete s.from;
   }else{
     s = { id: libId(), name: libName(lib, nm), ln: doc.ln, limit: doc.limit, units: doc.units, pts: total(), saved: libToday() };
@@ -217,8 +220,8 @@ export function renderSaveNow(lib){
   if(!box) return;
   if(!appState.S.units.length){ box.innerHTML = `<div class="empty">Add ships first. Save keeps the open fleet in Saved fleets under a name, and Open there brings it back.</div>`; return; }
   const nm = appState.SAVE_NAME != null ? appState.SAVE_NAME : (s ? s.name : (L().nm + " " + total()));
-  const state = s ? (unsaved ? "Changed since it was saved as " + esc(s.name) + " (" + esc(s.saved) + "). Save updates it; Save as new keeps both."
-                             : "Saved as " + esc(s.name) + " (" + esc(s.saved) + ").")
+  const state = s ? (unsaved ? "Changed since it was saved as " + esc(s.name) + " (" + esc(s.saved) + "). Save updates it; a new name, or Save as new, keeps both."
+                             : "Saved as " + esc(s.name) + " (" + esc(s.saved) + "). Saving under a new name keeps this one and makes a new save.")
                   : "Not saved yet: it goes into Saved fleets. Every list also remembers its unsaved fleet by itself, as before.";
   box.innerHTML = `<div class="rowf"><span class="nm"><b>Save the open fleet as</b><i>${state}</i></span>
       <input type="text" id="savename" value="${esc(nm)}" maxlength="80" aria-label="Name of the saved fleet"></div>
