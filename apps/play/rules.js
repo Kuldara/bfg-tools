@@ -842,6 +842,23 @@ function conceded(R, st, plus){
   return cr ? Math.ceil(pts * 0.25) : 0;
 }
 
+/* A mixed escort squadron of several cards (the builder's letter, 28.10.2026)
+   concedes as ONE squadron (p. 123): "Each destroyed escort earns its value
+   in victory points provided the entire escort squadron is destroyed", and
+   a disengaged squadron 25 % of its total value if it lost half of its
+   ships (escortCrippled's count), else 10 %. units: [{ R, st, plus }]. */
+function squadronConceded(units){
+  if(!units || !units.length) return 0;
+  var pts = units.reduce(function(a, u){
+    var w = u.R && u.R.victory && u.R.victory.points != null ? u.R.victory.points : ((u.R && u.R.points) | 0);
+    return a + w + (u.plus | 0); }, 0);
+  var live = units.filter(function(u){ return !destroyed(u.R, u.st); });
+  if(!live.length) return pts;
+  if(!live.every(function(u){ return u.st.disengaged; })) return 0;
+  var ms = [].concat.apply([], units.map(function(u){ return u.st.members || []; }));
+  return Math.ceil(pts * (escortCrippled({ members: ms }) ? 0.25 : 0.10));
+}
+
 /* The page the conceded figure comes from, for the card's own line:
    Necron losses are counted on Fleets p. 402, an escort's disengage on
    p. 57, everything else on p. 123. */
@@ -1245,7 +1262,7 @@ return {
   crippled: crippled, destroyed: destroyed, remaining: remaining,
   shields: shields, turrets: turrets, speed: speed, turns: turns, leadership: leadership,
   armament: armament, braced: braced, repairDice: repairDice, boardingValue: boardingValue,
-  conceded: conceded, addCrit: addCrit, repairCrit: repairCrit, removeCrit: removeCrit, activeCrits: activeCrits,
+  conceded: conceded, squadronConceded: squadronConceded, addCrit: addCrit, repairCrit: repairCrit, removeCrit: removeCrit, activeCrits: activeCrits,
   standardCrits: standardCrits, critTarget: critTarget, hasLocation: hasLocation,
   catastrophic: catastrophic, hulkRules: hulkRules, isFort: isFort, staysInPlace: staysInPlace, concededPage: concededPage, fireDamage: fireDamage,
   reactiveHull: reactiveHull, escortCrippled: escortCrippled, flagshipBridgeSmashed: flagshipBridgeSmashed, setRerolls: setRerolls, rerollsJoinFleet: rerollsJoinFleet, refreshRerolls: refreshRerolls,

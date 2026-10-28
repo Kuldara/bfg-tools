@@ -27,4 +27,5 @@ export * from "./saved-fleets.js";
 export * from "./phone.js";
 export * from "./panels.js";
 export * from "./link-dialog.js";
+export * from "./mixed.js";
 export * from "./main.js";

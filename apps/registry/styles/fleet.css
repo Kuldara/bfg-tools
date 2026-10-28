@@ -130,6 +130,28 @@ details.rules.auto[open]>summary::after{content:" \2013"}
 .uhead .pts .each{font:400 11px/1 var(--mono);color:var(--ink-3);margin-left:6px}
 .opt .ukind{display:inline-block;margin-right:6px;padding:1px 5px;border:1px solid var(--line);border-radius:var(--r);
   font:500 10px/1.3 var(--mono);letter-spacing:.03em;color:var(--ink-3);vertical-align:1px}
+/* Mixed squadron (prototype): the section's top row and the fleet's group row */
+.pick.mixrow{border:1px dashed var(--accent);border-radius:var(--r);margin:6px 0 8px;background:var(--accent-wash)}
+.pick.mixrow.on{border-style:solid}
+.pick.mixrow .nm{color:var(--ink)}
+.pick.mixrow .acts .mixdone,.uhead .del.mixdone{border:1px solid var(--accent);background:var(--accent);color:#0d1418;font:600 11px/1 var(--sans);
+  letter-spacing:.06em;text-transform:uppercase;padding:7px 10px;border-radius:var(--r);cursor:pointer}
+.pick .acts .add.into{background:var(--accent);border-color:var(--accent);color:#0d1418}
+.limitchip.mixinto{border-color:var(--accent);color:var(--ink);background:var(--accent-wash)}
+.unit.mixg{border-left:3px solid var(--accent);background:linear-gradient(90deg,var(--accent-wash),transparent 60%)}
+.unit.mixg.filling{outline:1px dashed var(--accent);outline-offset:-3px}
+.unit.mixg .uhead .cls{color:var(--ink)}
+.unit.mixg span.ufold{display:inline-block;width:22px}
+.mixmem{margin:6px 0 0 32px;display:grid;grid-template-columns:auto 1fr auto;gap:3px 12px;font:400 12px/1.4 var(--sans);color:var(--ink-2)}
+.mixmem b{font:600 12px/1.4 var(--mono);color:var(--ink)} .mixmem span:last-child{font:400 12px/1.4 var(--mono);color:var(--ink-3)}
+.mixmem i{font-style:normal;color:var(--ink-3)}
+.mixmem.empty{display:block;font:400 11px/1.4 var(--mono);color:var(--ink-3)}
+.mixfill{margin:8px 0 2px 32px}
+.mixmeter{position:relative;height:7px;border:1px solid var(--line);border-radius:4px;background:var(--panel)}
+.mixmeter i{position:absolute;left:0;top:0;bottom:0;background:var(--accent);border-radius:3px}
+.mixmeter.short i{background:var(--warn,#d0a53f)}
+.mixmeter em{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--ink-3)}
+.mixlab{display:flex;justify-content:space-between;margin-top:4px;font:400 11px/1.3 var(--mono);color:var(--ink-3)}
 .stats{
   display:flex;flex-wrap:wrap;gap:0 14px;margin-top:6px;
   font:400 11px/1.6 var(--mono);color:var(--ink-3)

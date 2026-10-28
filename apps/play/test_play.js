@@ -443,6 +443,26 @@ function unitIn(listRe, labelRe, hulls){
   check("all lost: full points whatever the flag (p. 123)", PLAY.conceded(swords, st) === 105);
 }
 {
+  /* A mixed escort squadron of several cards (the builder's letter, user
+     28.10.2026) concedes as one squadron, p. 123: "Each destroyed escort
+     earns its value in victory points provided the entire escort squadron
+     is destroyed". Two Swords and one more Sword card stand in for the mix. */
+  const two = Object.assign({}, swords, { hulls: 2, points: 70 }), one = Object.assign({}, swords, { hulls: 1, points: 35 });
+  const a = PLAY.freshUnit(two), b = PLAY.freshUnit(one);
+  const sq = () => PLAY.squadronConceded([{ R: two, st: a }, { R: one, st: b }]);
+  PLAY.killMember(a, 0); PLAY.killMember(a, 1);
+  check("mixed squadron: one card destroyed, the other alive, concedes nothing (p. 123)",
+        PLAY.destroyed(two, a) && sq() === 0, sq());
+  PLAY.killMember(b, 0);
+  check("mixed squadron: every card destroyed concedes all its cards' points (p. 123)", sq() === 105, sq());
+  const c = PLAY.freshUnit(two), d = PLAY.freshUnit(one);
+  c.disengaged = true; d.disengaged = true;
+  const sq2 = () => PLAY.squadronConceded([{ R: two, st: c }, { R: one, st: d }]);
+  check("mixed squadron disengaged, none lost: 10 % of the whole, 11", sq2() === 11, sq2());
+  PLAY.killMember(c, 0);
+  check("mixed squadron disengaged after 1 of 3 lost: 25 % of the whole, 27 (p. 57, T7)", sq2() === 27, sq2());
+}
+{
   /* p. 67: "If a critical hit is rolled which cannot be applied ... apply
      the next highest critical hit instead. For example a ship with no
      dorsal weapons gets a Dorsal Armament Damaged critical hit. In this

@@ -200,7 +200,7 @@ export function rowSelOf(u){
    fleet (DOMAIN.rowStep, user 18.10.2026): the row behind a route button
    (data-hs) is this fleet's own, otherwise the source list's, bought
    under its name. */
-export function rowStepFor(b, dir){
+export function rowStepFor(b, dir, skip){
   const own = b.dataset.hs != null, L2 = own ? L() : SRC();
   const lst = own || L2 === L() ? null : L2.nm;
   const si = +(own ? b.dataset.hs : b.dataset.s), ei = +(own ? b.dataset.he : b.dataset.e);
@@ -208,6 +208,9 @@ export function rowStepFor(b, dir){
   if(!en) return null;
   const sh = en.r ? SHIPS[String(en.r)] : null;
   let units = rowUnits(lst, si, ei);
+  /* a card in a mixed squadron is that squadron's, not this row's last card
+     (mixed.js mixMember): + and - here keep to the plain cards */
+  if(skip) units = units.filter(u => !skip(u));
   /* Clanz (J226): + grows the card of the Warlord new skwadrons go to, not
      another Warlord's; - takes his */
   if(L2 === L() && !lst && clanzSkwadronSec(si)){

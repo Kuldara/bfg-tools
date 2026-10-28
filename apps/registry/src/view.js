@@ -7,8 +7,9 @@ import { renderPrintSetup } from "./print.js";
 import { STASH_PTS, ensureUids, save, stashUnits } from "./save.js";
 import { renderSaves } from "./saved-fleets.js";
 import { appState } from "./state.js";
+import { mixActive, mixGroups, mixGroupHTML, mixHulls, mixMember, mixRowHTML, mixRule, mixSec, mixStart, mixStop, mixUnits } from "./mixed.js";
 import { aboardHTML, fleetResolved } from "./validation.js";
-import { SKW_MAX, activeWarlordIdx, clanzAfterMove, clanzHiddenUps, clanzIn, clanzMoveBlock, clanzPin, clanzSkwadronSec, factRowsHTML, fleetControlsHTML, freeSqTag, fxTagsHTML, isCommandeered, isOrkHulkUnit, optFxHTML, upKind, orkPlain, orkSecGloss, sendSkwadron, setClan, setWarlordRerolls, upFx, warlordColor, warlordIdx, warlordNeeds, warlordSkwadrons } from "./warlords.js";
+import { SKW_MAX, activeWarlordIdx, clanzAfterMove, clanzDimUps, clanzHiddenUps, clanzIn, clanzMoveBlock, clanzPin, clanzSkwadronSec, factRowsHTML, fleetControlsHTML, freeSqTag, fxTagsHTML, isCommandeered, isOrkHulkUnit, optFxHTML, upKind, orkPlain, orkSecGloss, sendSkwadron, setClan, setWarlordRerolls, upFx, warlordColor, warlordIdx, warlordNeeds, warlordSkwadrons } from "./warlords.js";
 import { DATA, LISTS, SHIPS } from "../../../packages/ui/catalog.js";
 import { arcGlyph, arcParts, esc, optCostLabel, shortRange, title, upCostText } from "../../../packages/ui/format.js";
 import DOMAIN from "../../../packages/rules/domain.js";
@@ -365,6 +366,8 @@ export function renderCatalogue(){
     /* The builder's own notes are not the book's sentences and must not
        read as rules: a separate, quieter group with its own heading. */
     const note = grp("note", "Builder's notes", sec.notes || []);
+    /* Mixed squadron (prototype): while one is filling, this section's + is marked */
+    const mixFill = !foreign && mixActive(si);
     const rows = sec.ents.map((en, ei) => {
       const sh = en.r ? SHIPS[String(en.r)] : null;
       const up = isUpgradeEnt(en);
@@ -496,7 +499,7 @@ export function renderCatalogue(){
           nIn ? `<button class="sub" data-s="${si}" data-e="${ei}"${
             hostEn ? ` data-hs="${hostAt.si}" data-he="${hostAt.ei}"` : ""} title="${
             many ? "One less on this row's last " + cardName + "; at " + minOn + " the card goes" : "Remove one from your fleet"}">&minus;</button>` : ""
-        }<button class="add${rowNo ? " no" : ""}" data-s="${si}" data-e="${ei}"${
+        }<button class="add${rowNo ? " no" : ""}${mixFill ? " into" : ""}" data-s="${si}" data-e="${ei}"${
           hostEn ? ` data-hs="${hostAt.si}" data-he="${hostAt.ei}"` : ""}${nIn ? ` data-n="${nIn}"` : ""} title="${
           rowNo ? esc(rv.why) : hostEn ? esc("Add from " + viaTitle)
           : (foreign ? "Add as " + esc(appState.SRC_ROLE) : "Add")}${
@@ -514,14 +517,18 @@ export function renderCatalogue(){
     const fk = foldKey(SL, sec), open = FOLDS[fk] != null ? !!FOLDS[fk] : !!pick;
     /* Clanz (J226): which Warlord a + here adds to */
     const wlTo = WL_TO && SL === L() && clanzSkwadronSec(L().secs.indexOf(sec)) ? WL_TO : "";
+    /* Mixed squadron (prototype): the section's top row, and the chip while one is filling */
+    const mixTop = !foreign && mixSec(si) ? mixRowHTML(si) : "";
+    const mixOn = !foreign ? mixActive(si) : null;
     return `<details class="sec${pick ? "" : " ref"}" data-fold="${esc(fk)}"${open ? " open" : ""}>
       <summary>${esc(title(sec.t))}${orkSecGloss(SL, sec) ? `<span class="gloss">${esc(orkSecGloss(SL, sec))}</span>` : ""}${hdr ? `<span class="limitchip">max ${hdr.max}</span>` : ""}${
         wlTo ? `<span class="limitchip wlto" style="--wl:${WL_TO_COLOR}" title="The catalogue's + adds a skwadron to this Warlord; pick another one in Buying for">for ${esc(wlTo)}</span>` : ""}${
+        mixOn ? `<span class="limitchip mixinto" title="The + of this section adds one ship to the mixed squadron">into squadron ${esc(mixOn.tag)}</span>` : ""}${
         frr ? `<span class="limitchip" title="${esc(frr.source + " (Fleets p. " + frr.page + ")")}">${esc("fleet: " + frr.text)}</span>` : ""}
       ${pick ? `<span class="n">${
           sec.ents.filter(e => !isUpgradeEnt(e)).length || ""}</span>`
         : `<span class="refchip">rules only</span>`}</summary>
-      <div class="secbody">${man}${auto}${rowInfo}${note}${rows}</div></details>`;
+      <div class="secbody">${man}${auto}${rowInfo}${note}${mixTop}${rows}</div></details>`;
   }).join("");
   /* The source list is read at click time, not baked into the button: the
      catalogue is rebuilt on every render, and one place deciding it is one
@@ -531,10 +538,17 @@ export function renderCatalogue(){
        for that render to put on the button standing in the same place. */
     const sel = `.add[data-s="${b.dataset.s}"][data-e="${b.dataset.e}"]`;
     appState.JUST = { did: sel, keep: [{ sel: "#catalogue " + sel, mid: midY(b) }] };
+    /* Mixed squadron (prototype): while one is filling, + in its section
+       puts one ship of this row into it; + anywhere else ends the filling */
+    if(appState.MIX){
+      const M = b.dataset.hs == null && !foreign ? mixActive(+b.dataset.s) : null;
+      if(!M){ mixStop(); }
+      else { mixAddOne(M, +b.dataset.s, +b.dataset.e); appState.JUST = null; return; }
+    }
     /* On a row sold by the card the press is one more ship on the row's
        last card while it has room (user 18.10.2026); a full card, or no
        card yet, opens a new one at its minimum through addUnitFrom. */
-    const grow = rowStepFor(b, 1);
+    const grow = rowStepFor(b, 1, mixMember);
     if(grow && grow.act === "grow"){
       grow.unit.n = (grow.unit.n || 1) + 1;
       appState.JUST.unit = grow.unit;
@@ -549,8 +563,16 @@ export function renderCatalogue(){
   /* Minus takes out the unit of this row that was added last - the same
      units the count on the + counts. When that was the only one the minus
      itself goes, and the + beside it is what must not move. */
+  wrap.querySelectorAll("[data-mixstart]").forEach(b => b.onclick = () => { mixStart(+b.dataset.mixstart); render(); });
+  wrap.querySelectorAll("[data-mixdone]").forEach(b => b.onclick = () => { mixStop(); render(); });
   wrap.querySelectorAll(".sub").forEach(b => b.onclick = () => {
-    const step = rowStepFor(b, -1);
+    if(appState.MIX && b.dataset.hs == null && !foreign && mixActive(+b.dataset.s)){
+      const M = appState.MIX, u = mixUnits(M.tag).find(x => x.s === +b.dataset.s && x.e === +b.dataset.e);
+      if(!u) return;
+      if((u.n || 1) > 1) u.n--; else appState.S.units.splice(appState.S.units.indexOf(u), 1);
+      render(); return;
+    }
+    const step = rowStepFor(b, -1, mixMember);
     if(!step) return;
     const at = `[data-s="${b.dataset.s}"][data-e="${b.dataset.e}"]`, plus = b.parentNode.querySelector(".add");
     /* One less on the row's last card while it stays above its minimum
@@ -684,8 +706,10 @@ export function unitHTML(R, ui, st){
     const fx = upFx(up, R.entry && R.entry.label, st.ab && st.ab.hulk);
     /* the kind the book names (Gubbin, More Gubbins, clan, bio-enhancement ...) */
     const kind = upKind(up);
-    return `<div class="opt${up.required ? " req" : ""}">
-      <span class="tri">${b("take","Take")}${b("opt","Option")}${b("off","Hide","off")}</span>
+    /* greyed: a Gubbin his re-rolls no longer cover (clanzDimUps) */
+    const dim = ((st.ab && st.ab.dim) || []).indexOf(up.key) >= 0;
+    return `<div class="opt${up.required ? " req" : ""}${dim ? " dis" : ""}"${dim ? ` title="All his re-rolls are spent on Gubbins: another needs another re-roll (Fleets p. 372)"` : ""}>
+      <span class="tri">${dim ? b("take","Take").replace("<button", "<button disabled") : b("take","Take")}${b("opt","Option")}${b("off","Hide","off")}</span>
       <span${fx ? ` title="${esc([up.description, up.note].filter(Boolean).join(" "))}"` : ""}>${kind ? `<span class="ukind">${esc(kind)}</span>` : ""}${esc(title(up.label))}${up.included ? " \u2014 included, no cost"
         : up.required ? " \u2014 automatic, required by the fleet list" : ""}
         ${!fx && up.note ? `<span class="src">${esc(up.note)}</span>` : ""}</span>
@@ -964,23 +988,55 @@ export function renderFleet(){
   const wsC = L().clanz ? warlordIdx(RF) : [];
   const wlOf = i => wsC.indexOf(i) >= 0 ? i : (RF.command && RF.command[i] >= 0 ? RF.command[i] : -1);
   (RF.aboard || []).forEach(a => { abOf[a.unit] = a; });
-  const hideOf = clanzHiddenUps(RF);
+  const hideOf = clanzHiddenUps(RF), dimOf = clanzDimUps(RF);
   /* J232: Send to beside the grip; a Warlord aboard an Ork hulk shows his
      upgrades as they work there (Fleets p. 390) */
   const sendOf = extra.send || [];
   const onHulk = ui => { const a = abOf[ui]; return !!(a && a.ship != null && isOrkHulkUnit(RF.units[a.ship])); };
-  box.innerHTML = appState.S.units.map((u, ui) => unitRowHTML(u, ui,
-    { a: abOf[ui] || null, RF: RF, extra: extra[ui] || "", hide: hideOf[ui] || [], send: sendOf[ui] || "", hulk: onHulk(ui),
+  const rowOf = (u, ui) => unitRowHTML(u, ui,
+    { a: abOf[ui] || null, RF: RF, extra: extra[ui] || "", hide: hideOf[ui] || [], dim: dimOf[ui] || [], send: sendOf[ui] || "", hulk: onHulk(ui),
       /* J234: "" without Compact, else this unit "shut" or "open" */
-      fold: appState.FLEET_FOLD ? (UOPEN.has(u) ? "open" : "shut") : "" })).join("");
+      fold: appState.FLEET_FOLD ? (UOPEN.has(u) ? "open" : "shut") : "" });
+  /* Mixed squadron (prototype): two or more cards with one letter are one
+     group row, drawn where the first card is; its cards show under it when
+     the row is open. The squadron being filled is a row even while empty. */
+  const groups = mixGroups(), memberOf = {};
+  groups.forEach(g => g.idx.forEach(j => { memberOf[j] = g; }));
+  appState.MIXOPEN = appState.MIXOPEN || new Set();
+  box.innerHTML = appState.S.units.map((u, ui) => {
+    const g = memberOf[ui];
+    if(!g) return rowOf(u, ui);
+    if(ui !== g.first) return "";
+    const open = appState.MIXOPEN.has(g.tag);
+    return mixGroupHTML(g, open) + (open ? g.idx.map(j => rowOf(appState.S.units[j], j)).join("") : "");
+  }).join("") + groups.filter(g => !g.idx.length).map(g => mixGroupHTML(g, false)).join("");
   box.querySelectorAll("[data-unfold]").forEach(b => b.onclick = () => {
     const u = appState.S.units[+b.dataset.unfold];
     if(!u) return;
     if(UOPEN.has(u)) UOPEN.delete(u); else UOPEN.add(u);
     render();
   });
+  box.querySelectorAll("[data-mixfold]").forEach(b => b.onclick = () => {
+    const t = b.dataset.mixfold;
+    if(appState.MIXOPEN.has(t)) appState.MIXOPEN.delete(t); else appState.MIXOPEN.add(t);
+    render();
+  });
+  box.querySelectorAll("[data-mixdone]").forEach(b => b.onclick = () => { mixStop(); render(); });
+  box.querySelectorAll("[data-mixmore]").forEach(b => b.onclick = () => {
+    const g = groups.filter(x => x.tag === b.dataset.mixmore)[0];
+    if(!g) return;
+    appState.MIX = { tag: g.tag, si: g.si, list: L().nm };
+    render();
+  });
+  box.querySelectorAll("[data-mixrm]").forEach(b => b.onclick = () => {
+    const g = groups.filter(x => x.tag === b.dataset.mixrm)[0];
+    if(!g) return;
+    g.idx.slice().sort((a, c) => c - a).forEach(j => appState.S.units.splice(j, 1));
+    if(appState.MIX && appState.MIX.tag === g.tag) mixStop();
+    render();
+  });
   if(wsC.length) box.querySelectorAll(".unit").forEach(row => {
-    const i = +row.dataset.ui, w = wlOf(i);
+    const i = row.dataset.ui != null ? +row.dataset.ui : +row.dataset.mixui, w = i >= 0 ? wlOf(i) : -1;
     if(w < 0) return;
     row.classList.add("wlc");
     if(w === i) row.classList.add("wlhead");
@@ -1280,6 +1336,24 @@ export function renderChecks(){
    first (test_golden.js buildFleet). The app must not do that: render()
    sweeps applyRequired over the whole fleet, so a moment with the wrong
    list selected rewrites every ship's required upgrades (backlog J103). */
+/* Mixed squadron (prototype): one ship of row (si, ei) into the squadron
+   being filled - the row's card with the letter grows by one, or a card of
+   one is added with the letter. A full squadron ends the filling. */
+function mixAddOne(M, si, ei){
+  const same = mixUnits(M.tag).find(x => x.s === si && x.e === ei);
+  if(same) same.n = (same.n || 1) + 1;
+  else {
+    const before = appState.S.units.slice();
+    addUnitFrom(appState.S.li, si, ei, null);
+    const u = appState.S.units.find(x => before.indexOf(x) < 0);
+    if(!u) return;
+    u.n = 1; u.sq = M.tag;
+  }
+  const r = mixRule(si);
+  if(r && mixHulls(M.tag) >= r.max) mixStop();
+  appState.JUST = { unit: same || appState.S.units[appState.S.units.length - 1] };
+  render();
+}
 export function addUnitFrom(li2, si, ei, role){
   const L2 = LISTS[li2] || L();
   const sec = L2.secs[si], en = sec && sec.ents[ei];

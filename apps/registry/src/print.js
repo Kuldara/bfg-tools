@@ -272,7 +272,7 @@ export async function auditOneCard(ref){
 }
 
 /* One roster row from the resolved unit (P1-8d). */
-export function rosterRowOf(R){
+export function rosterRowOf(R, sq){
   const opts = R.options.filter(o => o.state === "take").map(o => o.text);
   /* Fleet-list upgrades are paid for in the unit's points, so leaving them
      out made the line unexplainable: a Master of the Fleet with two
@@ -283,7 +283,7 @@ export function rosterRowOf(R){
   /* a commander's re-rolls, included ones named as such (user 5.10.2026) */
   if(R.kind === "commander" && R.rerolls && R.rerolls.text) opts.unshift(R.rerolls.text);
   return `<tr><td>${esc(R.name)}</td>
-      <td>${esc(title(R.className))}${R.hulls > 1 ? " \u00d7 " + R.hulls : ""}
+      <td>${esc(title(R.className))}${R.hulls > 1 ? " \u00d7 " + R.hulls : ""}${sq ? ` <span style="font-size:7.5pt;color:#555">squadron ${esc(sq)}</span>` : ""}
         ${opts.length ? `<br><span style="font-size:7.5pt;color:#555">${esc(opts.join(" \u00b7 "))}</span>` : ""}</td>
       <td>${R.stats ? R.stats.type : R.defence ? "Defence" : "option"}</td><td class="n">${R.stats ? (R.stats.hits||"\u2013") : "\u2013"}</td>
       <td class="n">${R.points}</td></tr>`;
@@ -304,7 +304,7 @@ export function printRoster(){
   const frr = DOMAIN.fleetRerolls(L(), Rs);
   const frrRow = !frr ? "" : `<tr><td></td><td>Fleet re-rolls: ${esc(frr.text)} (Fleets p. ${frr.page})${rosterBoxes(frr.boxes)}${
     frr.optional ? `<br><span style="font-size:7.5pt;color:#555">dashed = only if bought</span>` : ""}</td><td>fleet</td><td class="n">\u2013</td><td class="n"></td></tr>`;
-  const rows = Rs.map(R => rosterRowOf(R)).join("") + frrRow;
+  const rows = Rs.map((R, i) => rosterRowOf(R, appState.S.units[i] && appState.S.units[i].sq)).join("") + frrRow;
   const RF = fleetResolved(), cs = RF.checks, fs = RF.facts || [];
   /* The roster may run onto as many A4 pages as it needs. The page's own
      print margin protects the continuation pages too; the table header
@@ -337,6 +337,12 @@ export function listText(){
   const lines = [L().nm + " \u2014 " + total() + "/" + (appState.S.limit|0) + " pts", ""];
   const Rs = appState.S.units.map(u => resolveUnit(u));
   Rs.forEach(R => { lines.push(listLineOf(R)); });
+  /* a squadron letter on the line (a mixed escort squadron is its cards
+     with one letter, 28.10.2026); Da Ork Clanz below writes the skwadrons
+     as headings instead */
+  if(!L().clanz) appState.S.units.forEach((u, i) => {
+    if(!u.sq || !lines[i + 2]) return;
+    const ln = lines[i + 2].split("\n"); ln[0] += " \u00b7 squadron " + u.sq; lines[i + 2] = ln.join("\n"); });
   /* a fleet without a commander: its own re-roll (Necrons p. 404, Demiurg p. 486) */
   const frr = DOMAIN.fleetRerolls(L(), Rs);
   if(frr) lines.push("\u2022 Fleet re-rolls: " + frr.text + " (Fleets p. " + frr.page + ")");

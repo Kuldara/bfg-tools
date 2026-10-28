@@ -309,6 +309,12 @@ export function commanderCardHTML(R, pos, aboardTx, leadsTx){
 export function unitCards(u){
   const R = resolveUnit(u);
   if(!R) return [];
+  /* a mixed escort squadron (28.10.2026): the card says its letter and the
+     other cards of the squadron, so the table knows the three cards are one */
+  if(R.kind === "ship" && R.squadron && u.sq && !u.lst){
+    const mates = appState.S.units.filter(x => x !== u && !x.lst && x.sq === u.sq).map(x => resolveUnit(x)).filter(x => x && x.squadron);
+    R.sqTag = u.sq; R.sqMates = mates.map(x => x.hulls + " " + title(x.className)).join(" + ");
+  }
   if(R.card === "fort" && R.kind === "ship")
     return [{ id: "plan", html: pos => fortPlanCardHTML(R, pos) },
             { id: "rules", html: pos => fortRulesCardHTML(R, pos) }];
@@ -493,7 +499,8 @@ export function shipCardHTML(R, pos){
        base card holds four): the box is then told to take the row. */
     bottom = `<div class="k-box"${slots < 6 ? ' style="flex:1"' : ""}><h4>${grouped ? "SQUADRON HIT POINTS / MEMBERS" : "HIT POINTS / MEMBERS"}<em>1 box / ${each} &middot; ${
       grouped ? "squadron " + sq.min + "\u2013" + sq.max : "up to " + sq.max + " per card"}${
-      slots > 6 ? " &middot; " + n + " ships" : ""}</em></h4>
+      slots > 6 ? " &middot; " + n + " ships" : ""}${
+      R.sqTag ? " &middot; SQUADRON " + esc(R.sqTag) + (R.sqMates ? " with " + esc(R.sqMates) : "") : ""}</em></h4>
       <div class="k-bd"><div class="fit-content"><div class="k-mem${
         slots > 8 ? " tight" : ""}">${cells}</div></div></div></div>`;
   }else if(R.damage.critical.groups){

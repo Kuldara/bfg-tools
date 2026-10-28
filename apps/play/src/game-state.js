@@ -189,8 +189,16 @@ export function sqnShip(R){ return R.kind === "ship" && !PLAY.isEscort(R) && !PL
 export function builderGroups(units){
   const tagOf = units.map(x => x.u && x.u.sq && sqnShip(x.R) ? String(x.u.sq) : null);
   const tags = tagOf.filter((t, j) => t && tagOf.indexOf(t) === j && tagOf.filter(s => s === t).length >= 2).sort().slice(0, 3);
-  return tagOf.map(t => t && tags.indexOf(t) >= 0 ? "ABC"[tags.indexOf(t)] : null);
+  /* A mixed escort squadron (28.10.2026): escort cards with one letter are
+     one squadron here too - one Leadership, one order, one Brace - under
+     the key "e:" + the builder's letter, which the SQN button never gives.
+     Each card keeps its own members to kill. */
+  const escOf = units.map(x => x.u && x.u.sq && x.R.kind === "ship" && PLAY.isEscort(x.R) ? String(x.u.sq) : null);
+  return tagOf.map((t, j) => t && tags.indexOf(t) >= 0 ? "ABC"[tags.indexOf(t)]
+    : escOf[j] && escOf.filter(s => s === escOf[j]).length >= 2 ? "e:" + escOf[j] : null);
 }
+export const grpLabel = g => String(g || "").replace(/^e:/, "");
+export const isEscGrp = g => /^e:/.test(String(g || ""));
 /* A unit whose Leadership is not rolled has it from the start: planetary
    defences Ld 7 (Rulebook p. 100, Fleets p. 499), the Fortress-Monastery
    Ld 10 (Fleets p. 111). A value the player tapped for such a unit in an
@@ -240,9 +248,12 @@ export function applyCommanderLd(){
   else if(own != null){ st.ld = Math.min(ld.max || 10, own + ld.value); st.ldFrom = "commander"; }
 }
 export function setLd(i, v){
-  const st = appState.G.st[i];
-  st.ldRoll = v; st.ld = v; st.ldFrom = null;
-  if(i === appState.G.flag) applyCommanderLd();
+  /* a mixed escort squadron rolls one Leadership (p. 45: "per escort
+     squadron"): the value goes on every card of the squadron */
+  const g = appState.G.grp[i];
+  const ms = isEscGrp(g) ? appState.G.grp.map((x, j) => x === g ? j : -1).filter(j => j >= 0) : [i];
+  ms.forEach(j => { const st = appState.G.st[j]; st.ldRoll = v; st.ld = v; st.ldFrom = null; });
+  if(ms.indexOf(appState.G.flag) >= 0) applyCommanderLd();
 }
 
 export function save(){

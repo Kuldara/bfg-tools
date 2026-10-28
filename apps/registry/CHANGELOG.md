@@ -23,12 +23,14 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   the one-file engine, as do the golden cases, Play and the simulator.
 
 ### Fixed
-- Da Ork Clanz: a Warlord's own ship is not offered another Gubbin once he has
+- Da Ork Clanz: a Warlord's own ship cannot take another Gubbin once he has
   one for every re-roll ("one upgrade from the Gubbins list for every re-roll he
-  has", Fleets p. 372; user 27.10.2026). The Warlord block says "all used:
-  another needs another re-roll"; a taken Gubbin stays, so a fleet with too many
-  can still drop one. More Gubbins (Klaws, Shokk-Attack Lance, Assault Karrier)
-  and Deathskullz's free looted rows are not counted and stay offered.
+  has", Fleets p. 372; user 27.10.2026). The other Gubbins stay in the list,
+  greyed with Take off and the reason in the tooltip (user 28.10.2026: hiding
+  them was confusing). The Warlord block says "all used: another needs another
+  re-roll"; a taken Gubbin stays, so a fleet with too many can still drop one.
+  More Gubbins (Klaws, Shokk-Attack Lance, Assault Karrier) and Deathskullz's
+  free looted rows are not counted and stay offered.
 - **Escort squadrons in the five lists whose rules count them** (user 27.10.2026,
   after the Clanz audit): Rogue Traders (p. 174), Exploration (p. 177), Pirates
   and Wolf Packs (p. 179), Tau Commerce Protection (p. 457) and Demiurg War Host
@@ -119,6 +121,23 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   (`clanz-bad-moonz-paid-per-rok`: three Bad Moonz Roks cost +90, not +30).
 
 ### Added
+- **Mixed squadron** (prototype, user 28.10.2026), an addition beside the
+  per-class cards, which work as before. In the five lists whose rules count
+  escort squadrons and in Da Ork Clanz's tiddla section, the section's top row
+  *Mixed squadron +* starts one with the next free letter; while it fills, the
+  section's + puts one ship of that row into it (a card of that class with the
+  letter) and - takes one out. Filling ends with *Done*, when the squadron is
+  full, or with a + in another section. In Your fleet two or more cards with one
+  letter are one row, "Escort squadron A: 4 escorts, mixed", with its members
+  and points; the arrow shows the cards, *Add more* fills it again, *Remove*
+  takes the whole squadron. Saves, the rules and Play read only the letters, as
+  before. Elsewhere: a squadron card prints "SQUADRON A with ..." over its
+  boxes, *Copy list* and the roster say "squadron A". In **Play** escort cards
+  with one letter are one squadron: one Leadership rolled for all its cards, one
+  head with each card's ships alive ("Escort squadron A x3 of 4") and the
+  surviving Leadership, and victory points for the whole squadron (Rulebook
+  p. 123: an escort's points only when the entire squadron is destroyed; a
+  disengaged squadron 10 % or 25 % of its total).
 - Your fleet in *Compact* (user 27.10.2026): an arrow beside each unit's name
   (right: closed, down: open) opens or closes it, as the name still does; *Open
   all* / *Close all* beside the Compact button does every unit at once. A

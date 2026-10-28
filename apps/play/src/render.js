@@ -3,7 +3,7 @@ import { wepClass } from "./setup.js";
 import { OPT, PLAY_VERSION, TRACK, builderRaw, lsGet } from "./storage.js";
 import { $, MID, TIMES, fnv } from "./helpers.js";
 import { fleetFactsNow, fleetPoints, fleetsIn, parseDoc, resolveFleet } from "./fleet-document.js";
-import { KEY_WAKE, builderTool, carriersOf, cmdsAboard, coCmd, loadPlay, sqnShip, toolBtn, wl2Box, wlExtra, wlTag } from "./game-state.js";
+import { KEY_WAKE, builderTool, carriersOf, cmdsAboard, coCmd, grpLabel, isEscGrp, loadPlay, sqnShip, toolBtn, wl2Box, wlExtra, wlTag } from "./game-state.js";
 import { cataLabel, critLabel, groupUnits } from "./actions.js";
 import { baseName, classTag, crippledNow, critChips, ldTile, memberWord, ordChip, ordnancePills, renderFleetPop, statsLine, unitName, weaponsLine, weaponsTable } from "./derived.js";
 import { builderFleets, endPending, jumpStrip, linkedFleets, renderEndPhase } from "./share.js";
@@ -36,7 +36,19 @@ export const cmdPts = i => appState.G ? cmdsAboard(i).reduce((a, j) => a + (appS
    defences one installation at a time (p. 123) and orbital mines bought
    one by one (Fleets p. 512) - PLAY.conceded knows which row pays what;
    a commander's own row and a minefield pay nothing. */
-export const vpTotal = () => appState.U.reduce((a, x, i) => a + PLAY.conceded(x.R, appState.G.st[i], cmdPts(i)), 0);
+/* What a unit concedes; a mixed escort squadron of several cards concedes
+   once, as a whole (p. 123), on its first card - its other cards give 0 */
+export function vpOf(i){
+  const g = appState.G.grp[i];
+  if(isEscGrp(g)){
+    const ms = groupUnits(g);
+    return ms[0] !== i ? 0 : PLAY.squadronConceded(ms.map(j => ({ R: appState.U[j].R, st: appState.G.st[j], plus: cmdPts(j) })));
+  }
+  return PLAY.conceded(appState.U[i].R, appState.G.st[i], cmdPts(i));
+}
+/* the squadron's figure, for any of its cards */
+export const vpOfGroup = i => isEscGrp(appState.G.grp[i]) ? vpOf(groupUnits(appState.G.grp[i])[0]) : null;
+export const vpTotal = () => appState.U.reduce((a, x, i) => a + vpOf(i), 0);
 /* The selector that finds a control again after a render. */
 appState.TAP = null;
 export function tapSel(el){
@@ -293,7 +305,7 @@ export function renderSetup(){
        away from the Ld tiles; a ship still without its Ld is marked */
     const need = st.ld == null;
     const sqBtn = sqn ? `<button class="sqb${appState.G.grp[i] ? " on" : ""}" data-act="grp" data-i="${i}"${appState.G.grp[i] ? ` style="--sqc:${sqColor(appState.G.grp[i])}"` : ""} title="Squadron: tap for A, B, C or none (p. 95, 99)">${appState.G.grp[i] ? "SQN " + appState.G.grp[i] : "+ SQN"}</button>` : "";
-    return `<div class="setrow${need ? " need" : ""}" data-u="${i}"><div class="who"><input class="nm" type="text" data-nm="${i}" value="${esc(unitName(i))}" placeholder="${esc(baseName(i))}" maxlength="40" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" aria-label="Name of this ship in the game"><small>${classTag(R)}${esq ? " " + TIMES + R.hulls + (fx ? "" : " " + MID + " one Ld for the squadron") : ""}${why}${need ? ` ${MID} <span class="needs">pick its Ld</span>` : ""}</small>${sqBtn}</div>
+    return `<div class="setrow${need ? " need" : ""}" data-u="${i}"><div class="who"><input class="nm" type="text" data-nm="${i}" value="${esc(unitName(i))}" placeholder="${esc(baseName(i))}" maxlength="40" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" aria-label="Name of this ship in the game"><small>${classTag(R)}${esq ? " " + TIMES + R.hulls + (fx ? "" : isEscGrp(appState.G.grp[i]) ? " " + MID + " one Ld for squadron " + grpLabel(appState.G.grp[i]) + " (" + groupUnits(appState.G.grp[i]).length + " cards)" : " " + MID + " one Ld for the squadron") : ""}${why}${need ? ` ${MID} <span class="needs">pick its Ld</span>` : ""}</small>${sqBtn}</div>
       <div class="ctl">${fixed ? `<span class="pill on"><b>Ld ${st.ld}</b></span>` : `<div class="seg ld">${tiles}</div>`}</div></div>`;
   }).join("");
   /* a grey Start says why, and each name takes you to its row */
@@ -319,7 +331,8 @@ export function renderRoster(){
   appState.U.forEach((x, i) => {
     if(done[i]) return;
     const g = appState.G.grp[i];
-    if(g && x.R.kind === "ship" && !PLAY.isEscort(x.R)){
+    /* a capital squadron, or a mixed escort squadron (builderGroups "e:") */
+    if(g && x.R.kind === "ship"){
       const ms = groupUnits(g);
       out.push(renderGroupHead(g, ms));
       ms.forEach(j => { done[j] = 1; out.push(renderRow(j, true)); });
@@ -376,7 +389,7 @@ export function renderRoster(){
 /* A squadron's colour: the capital squadrons A, B, C take the first three,
    each escort squadron (a card of its own) the next in the fleet's order. */
 export const SQ_COLS = ["var(--sq1)", "var(--sq2)", "var(--sq3)", "var(--sq4)", "var(--sq5)", "var(--sq6)"];
-export function sqColor(letter){ return SQ_COLS[Math.max(0, "ABC".indexOf(letter))]; }
+export function sqColor(letter){ return isEscGrp(letter) ? SQ_COLS[(3 + "ABCDEFGHIJKLMNOPQRSTUVWXYZ".indexOf(grpLabel(letter))) % SQ_COLS.length] : SQ_COLS[Math.max(0, "ABC".indexOf(letter))]; }
 export function escColor(i){
   const k = appState.U.slice(0, i).filter(x => x.R.kind === "ship" && PLAY.isEscort(x.R)).length;
   return SQ_COLS[(3 + k) % SQ_COLS.length];
@@ -390,17 +403,21 @@ export function renderGroupHead(letter, ms){
   /* who is still on the table: a member out of action is struck through
      with the reason, a crippled one marked (its values are halved already) */
   const status = PLAY.squadronStatus(units);
+  const escG = isEscGrp(letter), lab = grpLabel(letter);
+  /* a mixed escort squadron: each card's ships alive, and the total */
+  const alive = escG ? ms.map(j => PLAY.alive(appState.G.st[j])) : [];
+  const total = escG ? ms.reduce((a, j) => a + (appState.U[j].R.hulls | 0), 0) : 0;
   const members = ms.map((j, k) => {
     const o = status.out.find(x => x.idx === k);
     if(o) return `<s>${esc(names[k])}</s> <i>${o.why}</i>`;
-    return esc(names[k]) + (status.crippled.indexOf(k) >= 0 ? ` <i class="cr">crippled</i>` : "");
+    return esc(names[k]) + (escG ? " " + TIMES + alive[k] : "") + (status.crippled.indexOf(k) >= 0 ? ` <i class="cr">crippled</i>` : "");
   }).join(", ");
-  return `<section class="row grp-hd" data-g="${letter}" style="--kd:${kd};--km:${km};--sq:${sqColor(letter)}">
-    <div class="r1"><span class="tag grp">SQN ${letter}</span>
-      <div class="name"><b>Squadron ${letter}</b><small>${members}${from.idx != null ? " " + MID + " Ld of " + esc(names[from.idx]) + " (p. 95)" : ""}</small></div>
+  return `<section class="row grp-hd${escG ? " esc" : ""}" data-g="${letter}" style="--kd:${kd};--km:${km};--sq:${sqColor(letter)}">
+    <div class="r1"><span class="tag grp">SQN ${lab}</span>
+      <div class="name"><b>${escG ? "Escort squadron " + lab + " " + TIMES + alive.reduce((a, n) => a + n, 0) + " of " + total : "Squadron " + lab}</b><small>${members}${from.idx != null ? " " + MID + " Ld of " + esc(names[from.idx]) + " (p. 95)" : ""}</small></div>
       ${ldTile(ms[0])}
       <button class="played p${st0.played}" data-act="played" data-i="${ms[0]}">${["TO PLAY", "MOVED", "SHOT"][st0.played]}</button></div>
-    ${appState.V.compact ? "" : squadronTable(units, names)}
+    ${appState.V.compact || escG ? "" : squadronTable(units, names)}
     ${OPT.orders && ordChip(st0) ? `<div class="r2">${ordChip(st0)}</div>` : ""}
     ${OPT.orders ? `<div class="r4">
       <button class="brace ${PLAY.braced(st0) ? "on" : ""}" data-act="brace" data-i="${ms[0]}" ${PLAY.canOrder(st0, appState.G.fleet, "BFI") ? "" : "disabled"}>Brace<small>all ${ms.length}</small></button>
@@ -645,7 +662,7 @@ export function renderRow(i, inGroup){
     ? (v.destroyed ? "" : (inGroup ? "" : ldTile(i, "", true)) + (esq ? "" : `<button class="crit cmini" data-act="pop" data-i="${i}" data-arg="crit" ${v.quadGone ? "disabled" : ""}>Crit<small>${critLine}</small></button>`) + (inGroup ? "" : playedBtn(i, v)))
     : (inGroup || v.destroyed ? "" : ldTile(i) + playedBtn(i, v));
   return `<section class="${cls}" data-u="${i}" style="--kd:${kd};--km:${km}${sqc ? ";--sq:" + sqc : ""}">
-    <div class="r1"><span class="tag">${classTag(R)}${esq ? TIMES + v.alive : ""}</span>${inGroup ? `<span class="tag sq" title="Squadron ${appState.G.grp[i]}">SQN ${appState.G.grp[i]}</span>` : ""}${wlTag(i)}
+    <div class="r1"><span class="tag">${classTag(R)}${esq ? TIMES + v.alive : ""}</span>${inGroup ? `<span class="tag sq" title="Squadron ${grpLabel(appState.G.grp[i])}">SQN ${grpLabel(appState.G.grp[i])}</span>` : ""}${wlTag(i)}
       <button class="name" data-act="sheet" data-i="${i}"><b>${esc(unitName(i))}</b><small>${esc(sub)}</small></button>
       ${r1tail}</div>
     ${cmdsAboard(i).map(cmdLine).join("")}${shipRRLine(i)}
@@ -819,7 +836,7 @@ export function renderSheet(i){
       ${OPT.orders ? `<div class="r4"><button class="brace ${v.braced ? "on" : ""}" data-act="brace" data-i="${i}" ${PLAY.canOrder(st, fl, "BFI", R) ? "" : "disabled"}>Brace</button>
         <button class="order ${st.order && st.order !== "BFI" ? "on" : ""}" data-act="pop" data-i="${i}" data-arg="order">${st.order && st.order !== "BFI" ? esc(PLAY.ORDER_BY[st.order].name) : "Order"}</button></div>
       ${appState.V.pop && appState.V.pop.i === i && appState.V.pop.kind === "order" ? renderPop(i) : ""}` : ""}
-      <p class="foot">${esc(R.damage.note)} ${MID} VP conceded ${PLAY.conceded(R, st, cmdPts(i))} (${PLAY.concededPage(R)})</p></div>`
+      <p class="foot">${esc(R.damage.note)} ${MID} VP conceded ${isEscGrp(appState.G.grp[i]) ? "by squadron " + grpLabel(appState.G.grp[i]) + " " + vpOfGroup(i) + " (all its cards, p. 123)" : PLAY.conceded(R, st, cmdPts(i)) + " (" + PLAY.concededPage(R) + ")"}</p></div>`
     : `<div class="sec"><h3>Damage<em>${qn ? qn + " " + MID + " " : ""}${v.hits} of ${v.max} ${MID} crippled from box ${v.crippledAt}</em></h3>
       ${v.destroyed ? "" : hitsTrack(i, v, true)}
       <p class="crline">${esc(R.damage.note)}</p>
@@ -873,7 +890,7 @@ export function renderSheet(i){
 export function renderMenu(){
   /* every row that can concede points: ships, and orbital mines bought one
      by one (Fleets p. 512) */
-  const rows = appState.U.map((x, i) => x.R.kind === "ship" || PLAY.tickUnit(x.R) ? `<tr><td>${esc(unitName(i))}${cmdPts(i) ? " + " + esc(cmdsAboard(i).map(unitName).join(", ")) : ""}${appState.G.st[i].disengaged ? " (disengaged)" : ""}</td><td>${PLAY.conceded(x.R, appState.G.st[i], cmdPts(i))}</td></tr>` : "").join("");
+  const rows = appState.U.map((x, i) => x.R.kind === "ship" || PLAY.tickUnit(x.R) ? `<tr><td>${esc(unitName(i))}${cmdPts(i) ? " + " + esc(cmdsAboard(i).map(unitName).join(", ")) : ""}${appState.G.st[i].disengaged ? " (disengaged)" : ""}${isEscGrp(appState.G.grp[i]) ? " (squadron " + grpLabel(appState.G.grp[i]) + ")" : ""}</td><td>${vpOf(i)}</td></tr>` : "").join("");
   const vp = vpTotal(), mo = appState.V.menuOpen || {};
   const nec = appState.U.some(u => u.R && u.R.source && /NECRON/i.test(String(u.R.source.faction || ""))) ? "; Necrons Fleets p. 402" : "";
   const all = TRACK.every(t => OPT[t[0]]), some = TRACK.some(t => OPT[t[0]]);

@@ -506,16 +506,16 @@ export function warlordNeeds(W, RF){
    The Warlord's re-rolls are his block's 1-2-3, and the Gubbins his re-rolls
    pay for go on his own ship only (Fleets p. 372): another ship is not
    offered them unless one is already taken there, so the red check can be
-   put right where it is. Nor is his own ship offered another once he has
-   one for every re-roll (user 27.10.2026: "one upgrade from the Gubbins list
-   for every re-roll he has", p. 372) - a taken one stays, so a fleet that
+   put right where it is. On his own ship the other Gubbins stay in the
+   list but greyed once he has one for every re-roll (user 27.10.2026: "one
+   upgrade from the Gubbins list for every re-roll he has", p. 372; 28.10.:
+   greyed, not hidden - clanzDimUps) - a taken one stays, so a fleet that
    has too many can still drop one. More Gubbins and Deathskullz's free
    looted rows are not Gubbins of his (gub_re) and stay. */
 export function clanzHiddenUps(RF){
   const C = L().clanz, out = [];
   if(!C) return out;
   const wsI = warlordIdx(RF), ships = (RF.warlords || []).map(W => W.ship);
-  const full = (RF.warlords || []).filter(W => W.ship != null && (W.gub || 0) >= (W.rr || 1)).map(W => W.ship);
   appState.S.units.forEach((u, i) => {
     const R = RF.units[i];
     if(!R || u.lst) return;
@@ -525,9 +525,24 @@ export function clanzHiddenUps(RF){
       if(!sc) return;
       if(wsI.indexOf(i) >= 0 && /re-roll/i.test(String(up.label))) keys.push(up.key);
       else if(new RegExp(C.gub_sec, "i").test(String(sc.t).trim()) && new RegExp(C.gub_re, "i").test(String(up.label)) &&
-              (ships.indexOf(i) < 0 || full.indexOf(i) >= 0) && up.state !== "take") keys.push(up.key);
+              ships.indexOf(i) < 0 && up.state !== "take") keys.push(up.key);
     });
     out[i] = keys;
+  });
+  return out;
+}
+/* the Gubbins rows a Warlord's own ship cannot take any more: greyed, with
+   the reason, once his re-rolls are all spent on Gubbins (p. 372) */
+export function clanzDimUps(RF){
+  const C = L().clanz, out = [];
+  if(!C) return out;
+  const full = (RF.warlords || []).filter(W => W.ship != null && (W.gub || 0) >= (W.rr || 1)).map(W => W.ship);
+  appState.S.units.forEach((u, i) => {
+    const R = RF.units[i];
+    if(!R || u.lst || full.indexOf(i) < 0) return;
+    out[i] = R.upgrades.filter(up => { const sc = L().secs[+String(up.key).split(":")[0]];
+      return sc && new RegExp(C.gub_sec, "i").test(String(sc.t).trim()) && new RegExp(C.gub_re, "i").test(String(up.label)) && up.state !== "take"; })
+      .map(up => up.key);
   });
   return out;
 }
