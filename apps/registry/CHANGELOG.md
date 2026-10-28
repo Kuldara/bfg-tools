@@ -5,6 +5,19 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 
 ## Unreleased
 
+## 1.3 — 2026-10-28
+
+Everything since 1.2 that the October update did not already announce: mixed
+escort squadrons in every list with one printed card per squadron, Da Ork Clanz
+rebuilt around the Warlord (Buying for, the Warlord block, tiddlas as the
+player's squadrons, an outside audit's fixes), the FAQ 2026 as a rules source,
+Fleet rules with what the builder checks, fleet facts, commanders aboard ships,
+game-effect tags on upgrade rows, the Compact fleet view, print on A4 or Letter
+at any card size, swiping on a phone, Paste text and the fleet link dialog
+(J191-J242 and the entries below). The release was published from the owner's
+machine; no `registry-v1.3` tag was pushed, because the mirror's github-pages
+environment deploys only from main and gh-pages.
+
 ### Removed (for developers)
 - The release images and their scripts (`marketing/`) and the archived 1.0 and
   1.1 pages under `docs/history/registry/versiot/` left the repository on
