@@ -9,7 +9,7 @@ import { renderSaves } from "./saved-fleets.js";
 import { appState } from "./state.js";
 import { mixActive, mixGroups, mixGroupHTML, mixHulls, mixMember, mixRowHTML, mixRule, mixSec, mixStart, mixStop, mixUnits } from "./mixed.js";
 import { aboardHTML, fleetResolved } from "./validation.js";
-import { SKW_MAX, activeWarlordIdx, clanzAfterMove, clanzDimUps, clanzHiddenUps, clanzIn, clanzMoveBlock, clanzPin, clanzSkwadronSec, factRowsHTML, fleetControlsHTML, freeSqTag, fxTagsHTML, isCommandeered, isOrkHulkUnit, optFxHTML, upKind, orkPlain, orkSecGloss, sendSkwadron, setClan, setWarlordRerolls, upFx, warlordColor, warlordIdx, warlordNeeds, warlordSkwadrons } from "./warlords.js";
+import { SKW_MAX, activeWarlordIdx, clanzAfterMove, clanzDimUps, clanzHiddenUps, clanzIn, clanzMoveBlock, clanzPin, clanzSkwadronSec, factRowsHTML, fleetControlsHTML, freeSqTag, fxTagsHTML, isCommandeered, isOrkHulkUnit, optFxHTML, orkTiddlaHint, skwKind, upKind, orkPlain, orkSecGloss, sendSkwadron, setClan, setWarlordRerolls, upFx, warlordColor, warlordIdx, warlordNeeds, warlordSkwadrons } from "./warlords.js";
 import { DATA, LISTS, SHIPS } from "../../../packages/ui/catalog.js";
 import { arcGlyph, arcParts, esc, optCostLabel, shortRange, title, upCostText } from "../../../packages/ui/format.js";
 import DOMAIN from "../../../packages/rules/domain.js";
@@ -993,8 +993,10 @@ export function renderFleet(){
      upgrades as they work there (Fleets p. 390) */
   const sendOf = extra.send || [];
   const onHulk = ui => { const a = abOf[ui]; return !!(a && a.ship != null && isOrkHulkUnit(RF.units[a.ship])); };
+  /* a Clanz tiddla card: Mob Rule and Young Gunz, as information (p. 370) */
+  const tidHint = u => L().clanz && skwKind(u) === "tiddla" ? `<div class="uctl">${orkTiddlaHint(u.n || 1)}</div>` : "";
   const rowOf = (u, ui) => unitRowHTML(u, ui,
-    { a: abOf[ui] || null, RF: RF, extra: extra[ui] || "", hide: hideOf[ui] || [], dim: dimOf[ui] || [], send: sendOf[ui] || "", hulk: onHulk(ui),
+    { a: abOf[ui] || null, RF: RF, extra: (extra[ui] || "") + tidHint(u), hide: hideOf[ui] || [], dim: dimOf[ui] || [], send: sendOf[ui] || "", hulk: onHulk(ui),
       /* J234: "" without Compact, else this unit "shut" or "open" */
       fold: appState.FLEET_FOLD ? (UOPEN.has(u) ? "open" : "shut") : "" });
   /* Mixed squadron (prototype): two or more cards with one letter are one

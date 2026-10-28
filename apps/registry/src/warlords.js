@@ -75,6 +75,12 @@ export function skwKind(u){
 }
 /* a Blood Axe tiddla's commandeered escorts are members of the tiddla of
    their tag (Fleets p. 369), in its count and its line */
+/* Mob Rule and Young Gunz (Fleets p. 370, user 28.10.2026: information,
+   not mechanics): what a tiddla of n escorts gets at the table */
+export function orkTiddlaHint(n){
+  return `<span class="wlhint">${n > 5 ? "<b>Mob rule: +1 Ld</b> while more than five ships" : "Mob rule: +1 Ld with six or more ships"}
+    &middot; Young Gunz: on Ld 5&ndash;6 one free escort before the game, ten at most (Fleets p. 370)</span>`;
+}
 export function isCommandeered(u){ const BA = L().bloodaxe; return !!(BA && u && !u.lst && clanzIn(u.s, BA.sec)); }
 const comKind = u => isCommandeered(u) && u.sq ? "tiddla" : "";
 export function warlordSkwadrons(RF, wi){

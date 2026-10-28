@@ -12,7 +12,7 @@
 import { resolveUnit } from "./cards.js";
 import { L } from "./model.js";
 import { appState } from "./state.js";
-import { clanzIn, freeSqTag } from "./warlords.js";
+import { clanzIn, freeSqTag, orkTiddlaHint } from "./warlords.js";
 import { esc, title } from "../../../packages/ui/format.js";
 
 /* The squadron rule that sizes this section's cards, where the section is
@@ -101,5 +101,6 @@ export function mixGroupHTML(g, open){
     </div>
     ${mem ? `<div class="mixmem">${mem}</div>` : `<div class="mixmem empty">nothing yet &mdash; press + on the escorts in the catalogue</div>`}
     ${g.filling ? `<div class="mixfill">${meterHTML(g)}</div>` : ""}
+    ${g.tiddla ? `<div class="mixfill">${orkTiddlaHint(g.hulls)}</div>` : ""}
   </div>`;
 }

@@ -305,7 +305,7 @@ export function renderSetup(){
        away from the Ld tiles; a ship still without its Ld is marked */
     const need = st.ld == null;
     const sqBtn = sqn ? `<button class="sqb${appState.G.grp[i] ? " on" : ""}" data-act="grp" data-i="${i}"${appState.G.grp[i] ? ` style="--sqc:${sqColor(appState.G.grp[i])}"` : ""} title="Squadron: tap for A, B, C or none (p. 95, 99)">${appState.G.grp[i] ? "SQN " + appState.G.grp[i] : "+ SQN"}</button>` : "";
-    return `<div class="setrow${need ? " need" : ""}" data-u="${i}"><div class="who"><input class="nm" type="text" data-nm="${i}" value="${esc(unitName(i))}" placeholder="${esc(baseName(i))}" maxlength="40" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" aria-label="Name of this ship in the game"><small>${classTag(R)}${esq ? " " + TIMES + R.hulls + (fx ? "" : isEscGrp(appState.G.grp[i]) ? " " + MID + " one Ld for squadron " + grpLabel(appState.G.grp[i]) + " (" + groupUnits(appState.G.grp[i]).length + " cards)" : " " + MID + " one Ld for the squadron") : ""}${why}${need ? ` ${MID} <span class="needs">pick its Ld</span>` : ""}</small>${sqBtn}</div>
+    return `<div class="setrow${need ? " need" : ""}" data-u="${i}"><div class="who"><input class="nm" type="text" data-nm="${i}" value="${esc(unitName(i))}" placeholder="${esc(baseName(i))}" maxlength="40" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" aria-label="Name of this ship in the game"><small>${classTag(R)}${esq ? " " + TIMES + R.hulls + (fx ? "" : isEscGrp(appState.G.grp[i]) ? " " + MID + " one Ld for squadron " + grpLabel(appState.G.grp[i]) + " (" + groupUnits(appState.G.grp[i]).length + " cards)" : " " + MID + " one Ld for the squadron") : ""}${why}${youngGunzNote(i)}${need ? ` ${MID} <span class="needs">pick its Ld</span>` : ""}</small>${sqBtn}</div>
       <div class="ctl">${fixed ? `<span class="pill on"><b>Ld ${st.ld}</b></span>` : `<div class="seg ld">${tiles}</div>`}</div></div>`;
   }).join("");
   /* a grey Start says why, and each name takes you to its row */
@@ -385,6 +385,23 @@ export function renderRoster(){
 
 
 
+/* Da Ork Clanz, Fleets p. 370 (user 28.10.2026: information only, the
+   player adds it - RULINGS.md T40): "Ork escort skwadrons gain a +1 bonus
+   to their Leadership while they contain more than five models". */
+export function mobChip(n){
+  return appState.L0 && appState.L0.clanz && n > 5
+    ? `<span class="chip" title="Ork escort skwadrons gain +1 Leadership while they contain more than five models (Fleets p. 370). Add it to the Ld you play with.">mob rule: +1 Ld (${n} ships)</span>` : "";
+}
+/* Young Gunz, Fleets p. 370: "Any Ork escort skwadron with a Leadership of 5
+   or 6 gets a bonus escort ship added for free" - said at set-up, where the
+   Ld is picked; the free ship is the player's to add */
+export function youngGunzNote(i){
+  if(!appState.L0 || !appState.L0.clanz) return "";
+  const R = appState.U[i].R, st = appState.G.st[i], g = appState.G.grp[i];
+  if(!PLAY.isEscort(R) || (st.ld !== 5 && st.ld !== 6)) return "";
+  if(isEscGrp(g) && groupUnits(g)[0] !== i) return "";
+  return ` ${MID} <span class="yg" title="Any Ork escort skwadron with a Leadership of 5 or 6 gets a bonus escort ship added for free: any Ork escort class of the list costing no more than the cheapest paid for in the skwadron, ten at most. Young Gunz comes before Mob Rule (Fleets p. 370).">Young Gunz: one free escort (Fleets p. 370)</span>`;
+}
 /* A squadron's own colour ties its header and its members together. */
 /* A squadron's colour: the capital squadrons A, B, C take the first three,
    each escort squadron (a card of its own) the next in the fleet's order. */
@@ -412,11 +429,13 @@ export function renderGroupHead(letter, ms){
     if(o) return `<s>${esc(names[k])}</s> <i>${o.why}</i>`;
     return esc(names[k]) + (escG ? " " + TIMES + alive[k] : "") + (status.crippled.indexOf(k) >= 0 ? ` <i class="cr">crippled</i>` : "");
   }).join(", ");
+  const mob = escG ? mobChip(alive.reduce((a, n) => a + n, 0)) : "";
   return `<section class="row grp-hd${escG ? " esc" : ""}" data-g="${letter}" style="--kd:${kd};--km:${km};--sq:${sqColor(letter)}">
     <div class="r1"><span class="tag grp">SQN ${lab}</span>
       <div class="name"><b>${escG ? "Escort squadron " + lab + " " + TIMES + alive.reduce((a, n) => a + n, 0) + " of " + total : "Squadron " + lab}</b><small>${members}${from.idx != null ? " " + MID + " Ld of " + esc(names[from.idx]) + " (p. 95)" : ""}</small></div>
       ${ldTile(ms[0])}
       <button class="played p${st0.played}" data-act="played" data-i="${ms[0]}">${["TO PLAY", "MOVED", "SHOT"][st0.played]}</button></div>
+    ${mob ? `<div class="r3">${mob}</div>` : ""}
     ${appState.V.compact || escG ? "" : squadronTable(units, names)}
     ${OPT.orders && ordChip(st0) ? `<div class="r2">${ordChip(st0)}</div>` : ""}
     ${OPT.orders ? `<div class="r4">
@@ -624,6 +643,7 @@ export function renderRow(i, inGroup){
   /* a star fort's chips are the selected quadrant's, and say which */
   const qn = v.fort ? PLAY.QUADS[v.quad] + " " : "";
   const chips = (OPT.orders && !inGroup ? ordChip(st) : "") + (v.crippled ? `<span class="chip crip">${qn}CRIPPLED</span>` : "") +
+    (esq && !inGroup ? mobChip(PLAY.alive(st)) : "") +
     (v.quadGone && !v.destroyed ? `<span class="chip crip">${qn}AT 0 ${MID} ASTEROID FIELD</span>` : "") +
     (v.destroyed ? hulkChip(st) : "") +
     critChips(R, st, i) + (st.disengaged ? `<span class="chip">disengaged</span>` : "") +

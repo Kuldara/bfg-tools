@@ -138,6 +138,13 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   surviving Leadership, and victory points for the whole squadron (Rulebook
   p. 123: an escort's points only when the entire squadron is destroyed; a
   disengaged squadron 10 % or 25 % of its total).
+- Da Ork Clanz, Mob Rule and Young Gunz as information (Fleets p. 370, user
+  28.10.2026; the Leadership stays the player's, RULINGS T40): a tiddla card and
+  a mixed tiddla say "Mob rule: +1 Ld while more than five ships" and that on Ld
+  5-6 Young Gunz gives one free escort before the game. In Play an escort
+  squadron with more than five ships left shows "mob rule: +1 Ld (6 ships)",
+  gone when it drops to five, and set-up says "Young Gunz: one free escort"
+  beside an escort squadron whose Ld is 5 or 6.
 - Your fleet in *Compact* (user 27.10.2026): an arrow beside each unit's name
   (right: closed, down: open) opens or closes it, as the name still does; *Open
   all* / *Close all* beside the Compact button does every unit at once. A
