@@ -254,16 +254,21 @@ export function rowPurchase(list, si, en, sh){
 }
 
 /* What one press of the catalogue row's + or - does to the row's cards in
-   the fleet (owner 18 Oct 2026: "on a squadron card a +/- right there to
-   change the squadron's size"). On a row sold by the card the press is
-   one SHIP, not one card: + grows the row's last card until it is full and
-   then opens a new one at the card's minimum; - shrinks the last card down
-   to its minimum and then takes the card away. A single-ship row is one
-   unit a press. units: the row's cards in fleet order. The answer says
-   what to do; the caller does it. */
+   the fleet. A squadron card (escorts, one-hit defences) is one card a
+   press (owner 28 Oct 2026: + added one ship to the row's bottom card,
+   "it should always add a new squadron card; now it is confusing"): + opens
+   a new card at the squadron's minimum, - takes the row's last card away,
+   and the card's own - n + in the fleet sets its size. This replaces 18 Oct
+   2026's one ship a press; the four squadrons of two that four presses made
+   before that (13 Oct) are now one card made bigger on the card. A row sold
+   on one card - a count (orbital mines) or a ground unit's group - is still
+   one a press: + grows the last card until it is full and then opens
+   another, - shrinks it to its minimum and then takes it away. A
+   single-ship row is one unit a press. units: the row's cards in fleet
+   order. The answer says what to do; the caller does it. */
 export function rowStep(buy, units, dir){
   var last = units.length ? units[units.length - 1] : null;
-  if(!buy || buy.kind === "single")
+  if(!buy || buy.kind === "single" || buy.kind === "squadron")
     return dir > 0 ? { act: "open" } : (last ? { act: "remove", unit: last } : null);
   var min = Math.max(1, buy.min || 1), max = buy.max == null ? Infinity : buy.max;
   if(dir > 0) return last && (last.n || 1) < max ? { act: "grow", unit: last } : { act: "open" };

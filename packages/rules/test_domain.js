@@ -3625,13 +3625,14 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
   check("minefield: a count on one card, at most 2 (p.499, p.513)", same(rp(/^minefield$/i), { kind: "count", max: 2 }));
 })();
 
-/* ---- 22b. one press on a catalogue row is one ship (owner 18.10.2026)
-   "the fleet builder could have a feature: on a squadron card a +/- right there
-   to change the squadron's size": on a row sold by the card, + is one ship onto
-   the row's last card until the card is full (Fleets p. 13: 2-6), and then a
-   new card at its minimum; - is one ship off the last card, and at the minimum
-   the card goes. A single-ship row is one unit a press. rowStep only says what
-   to do - it does not do it. */
+/* ---- 22b. one press on a catalogue row (owner 18.10. and 28.10.2026)
+   A squadron card is one card a press (28.10.2026: "it should always add a new
+   squadron card"): + opens a new card at its minimum, - takes the row's last
+   card away; the card's own - n + in the fleet sets its size. A row sold on
+   one card (a count, a ground unit's group) is one a press: + onto the last
+   card until it is full, then a new card; - one off the last card, and at its
+   minimum the card goes (18.10.2026). A single-ship row is one unit a press.
+   rowStep only says what to do - it does not do it. */
 (function(){
   check("rowStep is exported", typeof DOMAIN.rowStep === "function");
   if(typeof DOMAIN.rowStep !== "function") return;
@@ -3640,10 +3641,12 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
   const u = n => ({ n: n });
   const st = (b, us, d) => { const r = DOMAIN.rowStep(b, us, d); return r ? r.act + (r.unit ? ":" + us.indexOf(r.unit) : "") : "null"; };
   check("squadron, empty: + opens a card", st(sq, [], 1) === "open", st(sq, [], 1));
-  check("squadron 2: + grows the last card", st(sq, [u(2)], 1) === "grow:0", st(sq, [u(2)], 1));
+  check("squadron 2: + opens a new card, does not grow the last", st(sq, [u(2)], 1) === "open", st(sq, [u(2)], 1));
   check("squadron of 6 (full): + opens a new card", st(sq, [u(6)], 1) === "open", st(sq, [u(6)], 1));
-  check("squadron 6+3: + grows the last, not the first", st(sq, [u(6), u(3)], 1) === "grow:1", st(sq, [u(6), u(3)], 1));
-  check("squadron 3: - shrinks", st(sq, [u(3)], -1) === "shrink:0", st(sq, [u(3)], -1));
+  check("squadron 6+3: + opens a new card", st(sq, [u(6), u(3)], 1) === "open", st(sq, [u(6), u(3)], 1));
+  check("squadron 3: - takes the card away, does not shrink it", st(sq, [u(3)], -1) === "remove:0", st(sq, [u(3)], -1));
+  check("a ground unit of 2 (limit 4): + grows the same card", st(grp, [u(2)], 1) === "grow:0", st(grp, [u(2)], 1));
+  check("a ground unit of 3: - shrinks it", st(grp, [u(3)], -1) === "shrink:0", st(grp, [u(3)], -1));
   check("squadron of 2 (minimum): - takes the card away", st(sq, [u(2)], -1) === "remove:0", st(sq, [u(2)], -1));
   check("squadron 4+2: - takes the last card away, does not shrink the first", st(sq, [u(4), u(2)], -1) === "remove:1", st(sq, [u(4), u(2)], -1));
   check("squadron, empty: - does nothing", st(sq, [], -1) === "null", st(sq, [], -1));

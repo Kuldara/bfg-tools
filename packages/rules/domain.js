@@ -4371,7 +4371,7 @@ var __rules = (() => {
   }
   function rowStep(buy, units, dir) {
     var last = units.length ? units[units.length - 1] : null;
-    if (!buy || buy.kind === "single")
+    if (!buy || buy.kind === "single" || buy.kind === "squadron")
       return dir > 0 ? { act: "open" } : last ? { act: "remove", unit: last } : null;
     var min = Math.max(1, buy.min || 1), max = buy.max == null ? Infinity : buy.max;
     if (dir > 0) return last && (last.n || 1) < max ? { act: "grow", unit: last } : { act: "open" };

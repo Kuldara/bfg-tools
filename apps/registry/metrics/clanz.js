@@ -83,16 +83,18 @@ const OLD = {
 };
 /* The new Warlord block (J226): re-rolls and clan in the block heading, the catalogue's +
    adds to the active Warlord, a kroozer is paired by itself when a separate
-   skwadron would not fit, Gubbins only on the Warlord's ship. */
+   skwadron would not fit, Gubbins only on the Warlord's ship. A tiddla's
+   further ships go on with its card's own + (grow; 28.10.2026 the catalogue's
+   + opens a new squadron card). */
 const NEW = {
   planned: [
     ["add", /^Ork Warlord$/, "W1"], ["rr", "W1", 2], ["clan", "W1", "Goffs"],
     ["add", /^Hammer class battlekroozer/i, "HAM"], ["add", /^Terror ship/i, "TER"], ["add", /^Kill kroozer/i, "KIL1"],
-    ["add", /^Ravager/i, "RAV"], ["more", /^Ravager/i],
+    ["add", /^Ravager/i, "RAV"], ["grow", /^Ravager/i],
     ["add", /^Brute/i, "BRU"],
     ["up", "HAM", /^Extra Turrets$/],
     ["wlnew", /^Ork Warlord$/, "W2"], ["add", /^Kill kroozer/i, "KIL2"],
-    ["add", /^Savage/i, "SAV"], ["more", /^Savage/i], ["more", /^Savage/i],
+    ["add", /^Savage/i, "SAV"], ["grow", /^Savage/i], ["grow", /^Savage/i],
     ["wlnew", /^Ork Warlord$/, "W3"], ["add", /^Rok$/, "ROK"], ["add", /^Onslaught/i, "ONS"]
   ],
   browse: [
@@ -100,9 +102,9 @@ const NEW = {
     ["rr", "W1", 2], ["clan", "W1", "Goffs"],
     ["active", "W1"],
     ["add", /^Hammer class battlekroozer/i, "HAM"], ["add", /^Terror ship/i, "TER"], ["add", /^Kill kroozer/i, "KIL1"],
-    ["add", /^Ravager/i, "RAV"], ["more", /^Ravager/i], ["add", /^Brute/i, "BRU"],
+    ["add", /^Ravager/i, "RAV"], ["grow", /^Ravager/i], ["add", /^Brute/i, "BRU"],
     ["active", "W2"],
-    ["add", /^Kill kroozer/i, "KIL2"], ["add", /^Savage/i, "SAV"], ["more", /^Savage/i], ["more", /^Savage/i],
+    ["add", /^Kill kroozer/i, "KIL2"], ["add", /^Savage/i, "SAV"], ["grow", /^Savage/i], ["grow", /^Savage/i],
     ["active", "W3"],
     ["add", /^Onslaught/i, "ONS"], ["add", /^Rok$/, "ROK"],
     ["up", "HAM", /^Extra Turrets$/]
@@ -201,6 +203,16 @@ function inPage(){
     add(re, as){ const before = S.units.slice(); tap(addBtn(re)); const nu = S.units.filter(u => before.indexOf(u) < 0);
       if(as){ if(nu.length !== 1) throw new Error("the add did not make exactly one unit " + re); NAMES[as] = nu[0]; } },
     more(re, as){ OPS.add(re, as); },
+    /* one more ship on a skwadron's card: since 28.10.2026 the catalogue's
+       + opens a new squadron card, so the ship goes on with the card's own +
+       in Your fleet - the last card of that row the active Warlord has */
+    grow(re){
+      const [si, ei] = entry(re), RF = fleetResolved(), wa = activeWarlordIdx(RF);
+      const mine = S.units.map((u, i) => i).filter(i => { const u = S.units[i];
+        return !u.lst && u.s === si && u.e === ei && (wa < 0 || (RF.command && RF.command[i] === wa)); });
+      if(!mine.length) throw new Error("no card to grow " + re);
+      tap(Q('#fleet .stepper button[data-u="' + mine[mine.length - 1] + '"][data-d="1"]'));
+    },
     up(nm, re){
       let b = upButton(nm, re);
       const det = b && b.closest("details");

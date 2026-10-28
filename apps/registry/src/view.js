@@ -463,13 +463,16 @@ export function renderCatalogue(){
       const rowUs = up || noChar ? []
         : hostEn ? rowUnits(null, hostAt.si, hostAt.ei) : rowUnits(foreign ? SL.nm : null, si, ei);
       /* What one + buys. An escort row sells a squadron: a CARD for two to
-         six ships, and the price beside it is each ship's. One press used
-         to be one card, so four presses for four frigates made four
-         squadrons of two (user 13.10.2026). Since 18.10.2026 a press is one
-         SHIP: + fills the row's last card and then opens another, - empties
-         the last card and then takes it (DOMAIN.rowStep). The row says it
-         before the press: a tag by the name, "each" under the price, the
-         buttons' titles - and the count on the + is ships, not cards. */
+         six ships, and the price beside it is each ship's. Since 28.10.2026
+         a press is one squadron card again (user: + grew the row's bottom
+         card, "it should always add a new squadron card; now it is
+         confusing"): + opens a new card at the squadron's minimum, - takes
+         the row's last card, and the card's own - n + in Your fleet sets its
+         size - which is what four presses for four frigates (four squadrons
+         of two, 13.10.2026) lacked. A row sold on one card (orbital mines, a
+         ground unit) is still one a press (18.10.2026; DOMAIN.rowStep). The
+         row says it before the press: a tag by the name, "each" under the
+         price, the buttons' titles; the count on the + is ships. */
       const buy = up || noChar ? null : DOMAIN.rowPurchase(rowList, hostEn ? hostAt.si : si, hostEn || en, sh);
       const many = !!buy && buy.kind !== "single";
       const nCards = rowUs.length;
@@ -479,9 +482,12 @@ export function renderCatalogue(){
       const cardWord = !many ? "" : buy.kind === "squadron" ? "squadron card" : "one card";
       const cardName = !many ? "" : buy.kind === "squadron" ? "squadron card" : "card";
       const minOn = !many ? 1 : Math.max(1, buy.min || 1);
-      const buyTip = !many ? "" : "Sold by the card, " + perCard + " on a card. Each + is one more on this row's last " +
-        cardName + (buy.max == null ? "" : ", and a full card is followed by a new one") +
-        "; each \u2212 is one less, and at " + minOn + " the card goes";
+      const buyTip = !many ? "" : buy.kind === "squadron"
+        ? "A squadron card, " + perCard + " ships. Each + is a new squadron card of " + minOn +
+          "; set its size with the card's own \u2212 and + in Your fleet. Each \u2212 here takes this row's last card away"
+        : "Sold by the card, " + perCard + " on a card. Each + is one more on this row's last " +
+          cardName + (buy.max == null ? "" : ", and a full card is followed by a new one") +
+          "; each \u2212 is one less, and at " + minOn + " the card goes";
       /* the ship's info popup shows the unit + would add (info.js) */
       const infoKey = up || !rowHasInfo(hostEn || en) ? null : hostEn ? "c:" + appState.S.li + "." + hostAt.si + "." + hostAt.ei
         : "c:" + (appState.SRC_LI == null ? appState.S.li : appState.SRC_LI) + "." + si + "." + ei;
@@ -550,9 +556,10 @@ export function renderCatalogue(){
       if(!M){ mixStop(); }
       else { mixAddOne(M, +b.dataset.s, +b.dataset.e); appState.JUST = null; return; }
     }
-    /* On a row sold by the card the press is one more ship on the row's
-       last card while it has room (user 18.10.2026); a full card, or no
-       card yet, opens a new one at its minimum through addUnitFrom. */
+    /* A squadron card's row opens a new card a press (user 28.10.2026);
+       a row sold on one card puts one more on its last card while it has
+       room (18.10.2026), and a full card, or no card yet, opens a new one at
+       its minimum through addUnitFrom. */
     const grow = rowStepFor(b, 1, mixMember);
     if(grow && grow.act === "grow"){
       grow.unit.n = (grow.unit.n || 1) + 1;
@@ -580,8 +587,9 @@ export function renderCatalogue(){
     const step = rowStepFor(b, -1, mixMember);
     if(!step) return;
     const at = `[data-s="${b.dataset.s}"][data-e="${b.dataset.e}"]`, plus = b.parentNode.querySelector(".add");
-    /* One less on the row's last card while it stays above its minimum
-       (user 18.10.2026); at the minimum the card itself goes, as before. */
+    /* A row sold on one card: one less on its last card while it stays
+       above its minimum (user 18.10.2026); at the minimum, and on a
+       squadron card's row always (28.10.2026), the card itself goes. */
     if(step.act === "shrink"){
       step.unit.n = (step.unit.n || 1) - 1;
       appState.JUST = { did: ".sub" + at, unit: step.unit,

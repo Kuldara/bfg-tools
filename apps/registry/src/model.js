@@ -197,7 +197,7 @@ export function rowSelOf(u){
   return foreign ? `.add[data-hs="${u.s}"][data-he="${u.e}"]` : `.add[data-s="${u.s}"][data-e="${u.e}"]`;
 }
 /* What one press of a catalogue row's + or - does to the row's cards in the
-   fleet (DOMAIN.rowStep, user 18.10.2026): the row behind a route button
+   fleet (DOMAIN.rowStep, user 18.10. and 28.10.2026): the row behind a route button
    (data-hs) is this fleet's own, otherwise the source list's, bought
    under its name. */
 export function rowStepFor(b, dir, skip){
@@ -211,8 +211,8 @@ export function rowStepFor(b, dir, skip){
   /* a card in a mixed squadron is that squadron's, not this row's last card
      (mixed.js mixMember): + and - here keep to the plain cards */
   if(skip) units = units.filter(u => !skip(u));
-  /* Clanz (J226): + grows the card of the Warlord new skwadrons go to, not
-     another Warlord's; - takes his */
+  /* Clanz (J226): - takes the card of the Warlord new skwadrons go to, not
+     another Warlord's (a new card from + goes to him in addUnitFrom) */
   if(L2 === L() && !lst && clanzSkwadronSec(si)){
     const RF = fleetResolved(), wa = activeWarlordIdx(RF);
     const his = wa >= 0 ? units.filter(u => RF.command && RF.command[appState.S.units.indexOf(u)] === wa) : units;
