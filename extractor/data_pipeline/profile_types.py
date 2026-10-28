@@ -223,7 +223,7 @@ for Lx in lists_out:
                 r["lone"] = 1
                 _lone += 1
 assert _lone == 21, "21 squadron rules referring to p.13 expected, found %d" % _lone
-# Armageddon p.43: "* Space Marine vessels may not be squadroned with
+# Armageddon, Fleets p.41: "* Space Marine vessels may not be squadroned with
 # non-Space Marine vessels." (split_fl). Tau p.455: "Defenders are fielded in
 # squadrons of 2-6 ships. They may be combined in squadrons with Messengers if
 # you wish. They may not be combined with Orcas." (with_pick).

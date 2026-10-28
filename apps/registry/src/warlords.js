@@ -1,4 +1,5 @@
 import { resolveUnit } from "./cards.js";
+import { mixSec } from "./mixed.js";
 import { L, listOf, setUpState, upState, upgradesFor } from "./model.js";
 import { save } from "./save.js";
 import { appState } from "./state.js";
@@ -590,9 +591,11 @@ export function fleetControlsHTML(RF){
   /* A list whose rules count escort squadrons (L.esq: Rogue Traders,
      Exploration, Pirates and Wolf Packs, Tau Commerce Protection, Demiurg War
      Host): its escort cards take a letter too, since there the letter, not a
-     short card by itself, makes a mixed squadron (27.10.2026) */
-  const escs = L().esq ? appState.S.units.map((u, i) => { const R = RF.units[i];
-    return !u.lst && R && R.kind === "ship" && R.squadron && !R.defence ? i : -1; }).filter(i => i >= 0) : [];
+     short card by itself, makes a mixed squadron (27.10.2026). Since
+     28.10.2026 the escort cards of every list's mixable sections (mixSec) do
+     too: there a letter on two cards is a mixed squadron the rules check. */
+  const escs = appState.S.units.map((u, i) => { const R = RF.units[i];
+    return !u.lst && R && R.kind === "ship" && R.squadron && !R.defence && (L().esq || mixSec(u.s)) ? i : -1; }).filter(i => i >= 0);
   const caps = L().clanz ? com.concat(tid) : caps0.length >= 2 || escs.length ? caps0.concat(com, tid, escs) : com.concat(tid);
   if(caps.length >= 2){
     /* escorts and capital ships never share a squadron: each card is offered

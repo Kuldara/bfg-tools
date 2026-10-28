@@ -47,8 +47,9 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   behind one cruiser were green). Demiurg: "Tau, Nicassar and Rogue Trader
   escorts may not be mixed in the same squadrons" is checked on the letters.
   Escort cards in these lists have the Squadron menu, with escort letters only.
-  Other lists are unchanged: nothing there counts escort squadrons, so a short
-  card still joins a mixed squadron by itself (p. 13).
+  In other lists nothing counts escort squadrons, so a short card without a
+  letter still joins a mixed squadron by itself (p. 13); cards with a letter are
+  that squadron (see Added, Mixed squadron).
 - **Da Ork Clanz, from an outside audit of the live site (ChatGPT, 27.10.2026).**
   Each finding was checked against Fleets pp. 369-373 and 381 before it was
   changed; golden cases lock each one and were red before the fix.
@@ -122,19 +123,31 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 
 ### Added
 - **Mixed squadron** (prototype, user 28.10.2026), an addition beside the
-  per-class cards, which work as before. In the five lists whose rules count
-  escort squadrons and in Da Ork Clanz's tiddla section, the section's top row
-  *Mixed squadron +* starts one with the next free letter; while it fills, the
+  per-class cards, which work as before. In every escort section with two or
+  more escort classes (escorts only, user 28.10.2026) and in Da Ork Clanz's
+  tiddla section, the section's top row *Mixed squadron +* starts one with the
+  next free letter; while it fills, the
   section's + puts one ship of that row into it (a card of that class with the
   letter) and - takes one out. Filling ends with *Done*, when the squadron is
   full, or with a + in another section. In Your fleet two or more cards with one
   letter are one row, "Escort squadron A: 4 escorts, mixed", with its members
   and points; the arrow shows the cards, *Add more* fills it again, *Remove*
   takes the whole squadron. Saves, the rules and Play read only the letters, as
-  before. Elsewhere: a squadron card prints "SQUADRON A with ..." over its
-  boxes, *Copy list* and the roster say "squadron A". In **Play** escort cards
-  with one letter are one squadron: one Leadership rolled for all its cards, one
-  head with each card's ships alive ("Escort squadron A x3 of 4") and the
+  before. Outside the five lists the rules check a lettered squadron as one:
+  "Escort squadron B: 6 ships: 3 Cobra class destroyer + 2 Sword class frigate
+  + 1 Firestorm class frigate", red over the list's maximum, and in Armageddon
+  red with Space Marine and other vessels together (Fleets p. 41). A lettered
+  card does not join other cards by itself; cards without a letter join as
+  before, so no saved fleet changes. *Copy list* and the roster say
+  "squadron A". **Printed cards** (prototype E1): a mixed escort squadron is
+  one card, not one per class. Each class has its own stats row, base row and
+  options, weapons and hit-point boxes, each led by the class's two-letter mark
+  (Cobra CO, Sword SW) in the card's fleet colours, with its own outline (solid,
+  dashed, double, dotted) so the classes stay apart in black and white. A rule
+  every class has is printed once without a mark. PTS is the squadron's total
+  when every class's price is fixed, otherwise blank for the player to fill
+  in. In **Play** escort cards with one letter are one squadron: one Leadership
+  rolled for all its cards, one head with each card's ships alive ("Escort squadron A x3 of 4") and the
   surviving Leadership, and victory points for the whole squadron (Rulebook
   p. 123: an escort's points only when the entire squadron is destroyed; a
   disengaged squadron 10 % or 25 % of its total).

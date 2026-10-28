@@ -6754,6 +6754,121 @@
       "why": "p.13: \"Battlecruisers, heavy cruisers and cruisers may be mixed together in the same squadron.\""
     },
     {
+      "id": "escort-squadron-lettered-mixed-classes",
+      "page": 13,
+      "fleet": {
+        "list": "Imperial Navy — Gothic Sector",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Lunar class cruiser$"
+          },
+          {
+            "entry": "^Gothic class cruiser$"
+          },
+          {
+            "entry": "^Cobra class destroyer$",
+            "n": 3,
+            "sq": "B"
+          },
+          {
+            "entry": "^Sword class frigate$",
+            "n": 2,
+            "sq": "B"
+          },
+          {
+            "entry": "^Firestorm class frigate$",
+            "n": 1,
+            "sq": "B"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Escort squadron B$",
+            "ok": true,
+            "v": "6 ships: 3 Cobra class destroyer + 2 Sword class frigate + 1 Firestorm class frigate"
+          }
+        ],
+        "others_ok": true
+      },
+      "why": "p.13: \"The escorts in a squadron do not have to all be of the same class.\" Rulebook p.95: \"The ships in a squadron can be of different classes as long as they are all of the same type\". The letter B makes the three cards one squadron of six (28.10.2026)."
+    },
+    {
+      "id": "escort-squadron-lettered-mixed-over-six",
+      "page": 13,
+      "fleet": {
+        "list": "Imperial Navy — Gothic Sector",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Lunar class cruiser$"
+          },
+          {
+            "entry": "^Gothic class cruiser$"
+          },
+          {
+            "entry": "^Cobra class destroyer$",
+            "n": 4,
+            "sq": "B"
+          },
+          {
+            "entry": "^Sword class frigate$",
+            "n": 3,
+            "sq": "B"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Escort squadron B$",
+            "ok": false,
+            "v": "7 ships: 4 Cobra class destroyer + 3 Sword class frigate"
+          }
+        ],
+        "failing": 1
+      },
+      "why": "p.35: escorts 'in squadrons of 2-6 unless specified'. Four Cobras and three Swords given one letter are one squadron of seven, over the maximum, although each card alone is within it."
+    },
+    {
+      "id": "escort-squadron-lettered-space-marine-with-navy",
+      "page": 41,
+      "fleet": {
+        "list": "Imperial Navy — Armageddon Sector",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Lunar class cruiser$"
+          },
+          {
+            "entry": "^Gothic class cruiser$"
+          },
+          {
+            "entry": "^Nova Class Frigate",
+            "n": 2,
+            "sq": "A"
+          },
+          {
+            "entry": "^Firestorm Class Frigate$",
+            "n": 2,
+            "sq": "A"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Escort squadron A$",
+            "ok": false
+          }
+        ],
+        "failing": 1
+      },
+      "why": "Fleets p.41: \"* Space Marine vessels may not be squadroned with non-Space Marine vessels.\" Two Novas and two Firestorms given one letter are of a legal size, but the Novas are Space Marine vessels."
+    },
+    {
       "id": "squadron-of-one-ship",
       "page": 13,
       "fleet": {

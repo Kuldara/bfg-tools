@@ -312,7 +312,7 @@ function ruleSquadron(F, r, sec, si, lab){
   /* Fleets p. 13: "The escorts in a squadron do not have to all be of
      the same class." A unit short of the minimum joins other escorts the
      rule covers - a squadron with room left, or other short units.
-     split_fl: Armageddon p. 43 "Space Marine vessels may not be
+     split_fl: Armageddon, Fleets p. 41 "Space Marine vessels may not be
      squadroned with non-Space Marine vessels". with_pick: ships it may
      also join, Tau p. 455 "They may be combined in squadrons with
      Messengers if you wish". lone: "A single escort may be taken in a
@@ -358,11 +358,41 @@ function ruleSquadron(F, r, sec, si, lab){
     });
     return;
   }
+  /* Every other list (28.10.2026): escort cards the player gave one letter
+     are one mixed squadron (Rulebook p. 95, Fleets p. 13), checked as a
+     squadron - its size across the cards, and split_fl's Space Marine
+     vessels apart (Armageddon, Fleets p. 41). A lettered card is the
+     player's squadron, so it does not join others by itself; the cards
+     without a letter keep the implicit joining below, as before, so no saved
+     fleet changes. Said once per letter (a Messenger beside Defenders). */
+  var letterOf = function(m){
+    return m.escort && !m.defence && m.unitRow && m.own && m.intent && m.intent.sq ? "sq:" + m.intent.sq : null; };
+  var lettered = inRule.filter(letterOf);
+  if(lettered.length){
+    var saidL = F.esqSaid || (F.esqSaid = {});
+    var srcL = "Squadrons of " + r.min + "–" + r.max + ". " + r.src;
+    lettered.forEach(function(m){
+      var k = letterOf(m);
+      if(saidL[k]) return;
+      saidL[k] = 1;
+      var g = members.filter(function(x){ return letterOf(x) === k; });
+      var gn = g.reduce(function(a, x){ return a + x.hulls; }, 0);
+      var fls = r.split_fl ? g.map(function(x){ return String((x.sel.sh && x.sel.sh.fl) || ""); })
+        .filter(function(f, j, a){ return a.indexOf(f) === j; }) : [];
+      var split = fls.length > 1 && fls.some(function(f){ return /SPACE MARINE/i.test(f); });
+      out.push({ ok: gn >= r.min && gn <= r.max && !split, t: "Escort squadron " + k.slice(3),
+        v: gn + " ships: " + g.map(function(x){ return x.hulls + " " + x.en.l; }).join(" + ") +
+           (split ? " - Space Marine vessels with others" : ""),
+        s: srcL + (split ? " Space Marine vessels may not be squadroned with non-Space Marine vessels. (Fleets p. 41)" : "") });
+    });
+    inRule = inRule.filter(function(m){ return !letterOf(m); });
+    if(!inRule.length) return;
+  }
   var poolKey = function(m){ return r.split_fl ? String((m.sel.sh && m.sel.sh.fl) || "") : ""; };
   var pools = {};
   inRule.forEach(function(m){ var k = poolKey(m); (pools[k] = pools[k] || []).push(m); });
   var partners = r.with_pick ? members.filter(function(m){
-    return inRule.indexOf(m) < 0 && r.with_pick.some(function(p){ return pickHas(m, p); });
+    return inRule.indexOf(m) < 0 && !letterOf(m) && r.with_pick.some(function(p){ return pickHas(m, p); });
   }) : [];
   var fits = function(x){
     if(x === 0) return true;

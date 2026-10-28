@@ -6173,6 +6173,45 @@ var __rules = (() => {
       });
       return;
     }
+    var letterOf = function(m) {
+      return m.escort && !m.defence && m.unitRow && m.own && m.intent && m.intent.sq ? "sq:" + m.intent.sq : null;
+    };
+    var lettered = inRule.filter(letterOf);
+    if (lettered.length) {
+      var saidL = F.esqSaid || (F.esqSaid = {});
+      var srcL = "Squadrons of " + r.min + "\u2013" + r.max + ". " + r.src;
+      lettered.forEach(function(m) {
+        var k = letterOf(m);
+        if (saidL[k]) return;
+        saidL[k] = 1;
+        var g = members.filter(function(x) {
+          return letterOf(x) === k;
+        });
+        var gn = g.reduce(function(a, x) {
+          return a + x.hulls;
+        }, 0);
+        var fls = r.split_fl ? g.map(function(x) {
+          return String(x.sel.sh && x.sel.sh.fl || "");
+        }).filter(function(f, j, a) {
+          return a.indexOf(f) === j;
+        }) : [];
+        var split = fls.length > 1 && fls.some(function(f) {
+          return /SPACE MARINE/i.test(f);
+        });
+        out.push({
+          ok: gn >= r.min && gn <= r.max && !split,
+          t: "Escort squadron " + k.slice(3),
+          v: gn + " ships: " + g.map(function(x) {
+            return x.hulls + " " + x.en.l;
+          }).join(" + ") + (split ? " - Space Marine vessels with others" : ""),
+          s: srcL + (split ? " Space Marine vessels may not be squadroned with non-Space Marine vessels. (Fleets p. 41)" : "")
+        });
+      });
+      inRule = inRule.filter(function(m) {
+        return !letterOf(m);
+      });
+      if (!inRule.length) return;
+    }
     var poolKey = function(m) {
       return r.split_fl ? String(m.sel.sh && m.sel.sh.fl || "") : "";
     };
@@ -6182,7 +6221,7 @@ var __rules = (() => {
       (pools[k] = pools[k] || []).push(m);
     });
     var partners = r.with_pick ? members.filter(function(m) {
-      return inRule.indexOf(m) < 0 && r.with_pick.some(function(p) {
+      return inRule.indexOf(m) < 0 && !letterOf(m) && r.with_pick.some(function(p) {
         return pickHas(m, p);
       });
     }) : [];

@@ -1,0 +1,24 @@
+/* The card of a mixed escort squadron (src/mixed-card.js, 28.10.2026).
+   The class mark is two letters in the card's own fleet colours (--kd dark,
+   --km mid). Each class also gets its own outline - solid, dashed, double,
+   dotted - so the marks stay apart on a black and white print. */
+.cmk{display:inline-block;min-width:4.6mm;padding:0 .6mm;margin-right:1mm;border-radius:.7mm;
+  font:700 5.4pt/1.3 var(--sans);letter-spacing:.03em;text-align:center;vertical-align:.25mm;
+  box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.cmk.m1{background:var(--kd);color:#fff;border:.35mm solid var(--kd)}
+.cmk.m2{background:var(--km);color:#fff;border:.35mm dashed var(--kd)}
+.cmk.m3{background:#fff;color:var(--kd);border:.7mm double var(--kd)}
+.cmk.m4{background:color-mix(in srgb, var(--km) 22%, #fff);color:var(--kd);border:.35mm dotted var(--kd)}
+/* inside an option's title the option list's own span rules would make it a block */
+.k .k-opt .tx span.cmk{display:inline-block;width:auto;margin:0 1mm 0 0;font-size:5.4pt;color:#fff}
+.k .k-opt .tx span.cmk.m3,.k .k-opt .tx span.cmk.m4{color:var(--kd)}
+.k-mem em .cmk{font-size:5pt;margin-right:.8mm}
+
+/* the stats row as one row per class, Leadership beside it */
+.k-st.mix{align-items:stretch}
+.k-st.mix>.mstw{flex:4 1 auto;padding:.5mm 1.4mm .7mm}
+.k-st.mix>.mixld{flex:0 0 30mm}
+.k-mst{width:100%;border-collapse:collapse}
+.k-mst th{font:700 5.4pt/1 var(--sans);letter-spacing:.09em;color:var(--km);text-align:left;padding:.5mm .8mm .6mm}
+.k-mst td{font:700 7.6pt/1.15 var(--sans);padding:.35mm .8mm;border-top:.4pt solid #E2DDD5;white-space:nowrap}
+.k-mst td.cl{font-weight:600;font-size:7pt}

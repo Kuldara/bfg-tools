@@ -6,6 +6,8 @@ import { appState } from "./state.js";
 import { fleetResolved, shipCall } from "./validation.js";
 import { ldLabel } from "./view.js";
 import { leadsText, warlordIdx } from "./warlords.js";
+import { mixedEscortCardHTML } from "./mixed-card.js";
+import { mixRule } from "./mixed.js";
 import { DATA } from "../../../packages/ui/catalog.js";
 import { arcGlyph, esc, factionCols, fixedCardPoints, optCostLabel, shortArmour, shortRange, shortShield, starHTML, title, upCostText } from "../../../packages/ui/format.js";
 import DOMAIN from "../../../packages/rules/domain.js";
@@ -306,10 +308,20 @@ export function commanderCardHTML(R, pos, aboardTx, leadsTx){
    plain fleet option) has no card. This is the one place that decides it:
    the sheet, the audits and every checker read it, so a unit cannot pass
    the sheet's filter and then render nothing. */
-export function unitCards(u){
+export function unitCards(u, single){
   const R = resolveUnit(u);
   if(!R) return [];
-  /* a mixed escort squadron (28.10.2026): the card says its letter and the
+  /* A mixed escort squadron (two or more escort cards with one letter,
+     28.10.2026) prints as ONE card on the sheet, the squadron's
+     (mixed-card.js): its first card gives it, the others give none. single:
+     the unit's own card all the same (cardHTML, a card shown on screen). */
+  const grp = single ? null : mixedGroupOf(u, R);
+  if(grp){
+    if(grp[0] !== u) return [];
+    const Rs = grp.map(x => x === u ? R : resolveUnit(x)), mr = mixRule(u.s);
+    return [{ id: "mixed", html: pos => mixedEscortCardHTML(Rs, u.sq, pos, !!(mr && mr.tiddla)) }];
+  }
+  /* a lettered escort card by itself: the card says its letter and the
      other cards of the squadron, so the table knows the three cards are one */
   if(R.kind === "ship" && R.squadron && u.sq && !u.lst){
     const mates = appState.S.units.filter(x => x !== u && !x.lst && x.sq === u.sq).map(x => resolveUnit(x)).filter(x => x && x.squadron);
@@ -323,11 +335,21 @@ export function unitCards(u){
             : R.kind === "commander" ? pos => commanderCardHTML(R, pos, aboardCardText(u), leadsCardText(u)) : null;
   return one ? [{ id: "card", html: one }] : [];
 }
+/* The escort cards of u's mixed squadron in fleet order, or null: u is an
+   escort card of this fleet's own list with a letter that at least one other
+   such card has. */
+const isEscortCard = R => !!(R && R.kind === "ship" && R.squadron && !R.defence);
+export function mixedGroupOf(u, R){
+  if(!u || !u.sq || u.lst || !isEscortCard(R || resolveUnit(u))) return null;
+  const g = appState.S.units.filter(x => x === u || (!x.lst && x.sq === u.sq && isEscortCard(resolveUnit(x))));
+  return g.length >= 2 ? g : null;
+}
 /* One card of a unit: the only card of most, and of a star fort the RULES
    card - the one that carries what every ship card carries (stats, loadout,
-   armament, rules). The plan comes from unitCards(). */
+   armament, rules). The plan comes from unitCards(). A member of a mixed
+   squadron gives its own class card here; the sheet prints the squadron's. */
 export function cardHTML(u, pos){
-  const cs = unitCards(u);
+  const cs = unitCards(u, true);
   return cs.length ? cs[cs.length - 1].html(pos) : "";
 }
 

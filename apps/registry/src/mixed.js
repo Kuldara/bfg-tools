@@ -1,29 +1,38 @@
-/* Mixed escort squadrons (user 27.-28.10.2026, prototype): an addition beside
-   the per-class cards, which stay as they are. In a list whose rules count
-   escort squadrons (L.esq) and in Da Ork Clanz's tiddla section, the
-   section's top row "Mixed squadron" starts one: it takes the next free
+/* Mixed escort squadrons (user 27.-28.10.2026): "The ships in a squadron can
+   be of different classes as long as they are all of the same type"
+   (Rulebook p. 95; escorts, Fleets p. 13). In every escort section with a
+   squadron rule and two or more escort classes (28.10.2026: every list, not
+   only those that count escort squadrons, L.esq, and Da Ork Clanz's tiddla
+   section), the section's top row "Mixed squadron" starts one: it takes the next free
    letter, and while it is filling the section's + puts ONE ship of the
    pressed row into it (a card of that class with the letter, grown by one),
    instead of a new card of that class. Filling ends with Done, when the
    squadron is full, or when + is pressed in another section. In the fleet a
    squadron of two or more cards with one letter is drawn as one group row
    with its members; the cards are still there (open the row), and the
-   saved fleet, the rules and Play see only the letters, as before. */
+   saved fleet, the rules and Play see only the letters, as before. The
+   printed sheet gives the squadron one card (mixed-card.js). */
 import { resolveUnit } from "./cards.js";
 import { L } from "./model.js";
+import { SHIPS } from "../../../packages/ui/catalog.js";
 import { appState } from "./state.js";
 import { clanzIn, freeSqTag, orkTiddlaHint } from "./warlords.js";
 import { esc, title } from "../../../packages/ui/format.js";
 
 /* The squadron rule that sizes this section's cards, where the section is
-   one whose squadrons the player makes (esq, or the Clanz tiddla). */
+   one whose squadrons the player may mix: an escort section with a squadron
+   rule (min two or more) and at least two escort classes to mix. A section
+   without a squadron rule (a list's Rogue Trader or renegade escorts, whose
+   own rules decide) gets no row. */
+const isEscortRow = en => !!(en && en.r && SHIPS[String(en.r)] && /escort/i.test(String(SHIPS[String(en.r)].ty || "")));
 export function mixRule(si){
   const Lx = L(), sec = Lx.secs[si];
   if(!sec || sec.ct === "defence") return null;
   const tiddla = !!(Lx.clanz && clanzIn(si, Lx.clanz.tiddla));
-  if(!Lx.esq && !tiddla) return null;
   const r = Lx.secs.reduce((f, s2) => f || (s2.rules || []).find(x => x.kind === "squadron" && (x.sec || []).indexOf(si) >= 0), null);
-  return r && r.min >= 2 ? { min: r.min, max: r.max, tiddla } : null;
+  if(!r || r.min < 2) return null;
+  if(!tiddla && sec.ents.filter(isEscortRow).length < 2) return null;
+  return { min: r.min, max: r.max, tiddla };
 }
 export const mixSec = si => !!mixRule(si);
 export function mixActive(si){
