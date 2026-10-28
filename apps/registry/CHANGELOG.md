@@ -138,9 +138,15 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   + 1 Firestorm class frigate", red over the list's maximum, and in Armageddon
   red with Space Marine and other vessels together (Fleets p. 41). A lettered
   card does not join other cards by itself; cards without a letter join as
-  before, so no saved fleet changes. *Copy list* and the roster say
-  "squadron A". **Printed cards** (prototype E1): a mixed escort squadron is
-  one card, not one per class. Each class has its own stats row, base row and
+  before, so no saved fleet changes. **A squadron the player made is always
+  red when its size is wrong** (user 28.10.2026), in every list and in a Clanz
+  tiddla, and the row says why: "Escort squadron A: 2 ships: 1 Escort Carrier
+  + 1 Q-Ship - too few, at least 3" (Pirates and Wolf Packs, squadrons of 3-6,
+  p. 179). The error is in Legality and on the squadron's own row in Your
+  fleet, whose edge turns red, and on a card alone with its letter. A single
+  escort with a letter is red too: p. 13's lone escort is a card without one.
+  *Copy list* and the roster say "squadron A". **Printed cards** (prototype
+  E1): a mixed escort squadron is one card, not one per class. Each class has its own stats row, base row and
   options, weapons and hit-point boxes, each led by the class's two-letter mark
   (Cobra CO, Sword SW) in the card's fleet colours, with its own outline (solid,
   dashed, double, dotted) so the classes stay apart in black and white. A rule

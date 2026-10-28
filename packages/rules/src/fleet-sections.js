@@ -280,6 +280,13 @@ function ruleMandatoryAt(F, r, sec, si, lab){
 function ruleSquadron(F, r, sec, si, lab){
   var members = F.members, out = F.out, pickHas = F.pickHas;
   var insec = r.sec || [si];
+  /* A squadron the player made with a letter says what is wrong with its
+     size (user 28.10.2026: a custom squadron always reports it when it is
+     short of the minimum): "2 ships: ... - too few, at least 3". */
+  var sizeV = function(n, word){
+    return n + " " + word + (n === 1 ? "" : "s") + ": "; };
+  var sizeWhy = function(n){
+    return n < r.min ? " - too few, at least " + r.min : n > r.max ? " - too many, at most " + r.max : ""; };
   /* Da Ork Clanz tiddla skwadrons are the player's own (clanzTiddlas): the
      rows of one tag in any mix (Fleets p. 372) with a Blood Axe tiddla's
      commandeered escorts (p. 369), a row without a tag by itself. A short row
@@ -297,7 +304,7 @@ function ruleSquadron(F, r, sec, si, lab){
         return;
       }
       var names = t.ork.concat(t.com).map(function(i){ return members[i].hulls + " " + members[i].en.l; });
-      out.push({ ok: ok, t: "Tiddla skwadron " + t.tag, v: t.n + " escorts: " + names.join(" + "),
+      out.push({ ok: ok, t: "Tiddla skwadron " + t.tag, v: sizeV(t.n, "escort") + names.join(" + ") + sizeWhy(t.n),
         s: "Squadrons of " + r.min + "–" + r.max + ". " + r.src });
     });
     return;
@@ -353,7 +360,7 @@ function ruleSquadron(F, r, sec, si, lab){
       var sep = ((F.L.esq.sep) || []).filter(function(re){
         return g.some(function(x){ return x.own && F.L.secs[x.si] && new RegExp(re, "i").test(String(F.L.secs[x.si].t).trim()); }); });
       out.push({ ok: gn >= r.min && gn <= r.max && sep.length <= 1, t: "Escort squadron " + k.slice(3),
-        v: gn + " ships: " + g.map(function(x){ return x.hulls + " " + x.en.l; }).join(" + ") + (sep.length > 1 ? " - may not be mixed" : ""),
+        v: sizeV(gn, "ship") + g.map(function(x){ return x.hulls + " " + x.en.l; }).join(" + ") + sizeWhy(gn) + (sep.length > 1 ? " - may not be mixed" : ""),
         s: srcOf + (sep.length > 1 ? " " + citeText(F.L.esq.sep_cite) : "") });
     });
     return;
@@ -381,7 +388,7 @@ function ruleSquadron(F, r, sec, si, lab){
         .filter(function(f, j, a){ return a.indexOf(f) === j; }) : [];
       var split = fls.length > 1 && fls.some(function(f){ return /SPACE MARINE/i.test(f); });
       out.push({ ok: gn >= r.min && gn <= r.max && !split, t: "Escort squadron " + k.slice(3),
-        v: gn + " ships: " + g.map(function(x){ return x.hulls + " " + x.en.l; }).join(" + ") +
+        v: sizeV(gn, "ship") + g.map(function(x){ return x.hulls + " " + x.en.l; }).join(" + ") + sizeWhy(gn) +
            (split ? " - Space Marine vessels with others" : ""),
         s: srcL + (split ? " Space Marine vessels may not be squadroned with non-Space Marine vessels. (Fleets p. 41)" : "") });
     });

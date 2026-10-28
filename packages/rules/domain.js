@@ -6100,6 +6100,12 @@ var __rules = (() => {
   function ruleSquadron(F, r, sec, si, lab) {
     var members = F.members, out = F.out, pickHas = F.pickHas;
     var insec = r.sec || [si];
+    var sizeV = function(n, word) {
+      return n + " " + word + (n === 1 ? "" : "s") + ": ";
+    };
+    var sizeWhy = function(n) {
+      return n < r.min ? " - too few, at least " + r.min : n > r.max ? " - too many, at most " + r.max : "";
+    };
     var CZ = F.L.clanz;
     if (CZ && !r.pick && insec.some(function(i) {
       return F.L.secs[i] && new RegExp(CZ.tiddla, "i").test(String(F.L.secs[i].t).trim());
@@ -6117,7 +6123,7 @@ var __rules = (() => {
         out.push({
           ok,
           t: "Tiddla skwadron " + t.tag,
-          v: t.n + " escorts: " + names.join(" + "),
+          v: sizeV(t.n, "escort") + names.join(" + ") + sizeWhy(t.n),
           s: "Squadrons of " + r.min + "\u2013" + r.max + ". " + r.src
         });
       });
@@ -6165,9 +6171,9 @@ var __rules = (() => {
         out.push({
           ok: gn >= r.min && gn <= r.max && sep.length <= 1,
           t: "Escort squadron " + k.slice(3),
-          v: gn + " ships: " + g.map(function(x) {
+          v: sizeV(gn, "ship") + g.map(function(x) {
             return x.hulls + " " + x.en.l;
-          }).join(" + ") + (sep.length > 1 ? " - may not be mixed" : ""),
+          }).join(" + ") + sizeWhy(gn) + (sep.length > 1 ? " - may not be mixed" : ""),
           s: srcOf + (sep.length > 1 ? " " + citeText(F.L.esq.sep_cite) : "")
         });
       });
@@ -6201,9 +6207,9 @@ var __rules = (() => {
         out.push({
           ok: gn >= r.min && gn <= r.max && !split,
           t: "Escort squadron " + k.slice(3),
-          v: gn + " ships: " + g.map(function(x) {
+          v: sizeV(gn, "ship") + g.map(function(x) {
             return x.hulls + " " + x.en.l;
-          }).join(" + ") + (split ? " - Space Marine vessels with others" : ""),
+          }).join(" + ") + sizeWhy(gn) + (split ? " - Space Marine vessels with others" : ""),
           s: srcL + (split ? " Space Marine vessels may not be squadroned with non-Space Marine vessels. (Fleets p. 41)" : "")
         });
       });

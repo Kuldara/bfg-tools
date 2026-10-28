@@ -7,7 +7,7 @@ import { renderPrintSetup } from "./print.js";
 import { STASH_PTS, ensureUids, save, stashUnits } from "./save.js";
 import { renderSaves } from "./saved-fleets.js";
 import { appState } from "./state.js";
-import { mixActive, mixGroups, mixGroupHTML, mixHulls, mixMember, mixRowHTML, mixRule, mixSec, mixStart, mixStop, mixUnits } from "./mixed.js";
+import { mixActive, mixGroups, mixGroupHTML, mixHulls, mixMember, mixRowHTML, mixRule, mixSec, mixStart, mixStop, mixUnits, sqErrorsHTML } from "./mixed.js";
 import { aboardHTML, fleetResolved } from "./validation.js";
 import { SKW_MAX, activeWarlordIdx, clanzAfterMove, clanzDimUps, clanzHiddenUps, clanzIn, clanzMoveBlock, clanzPin, clanzSkwadronSec, factRowsHTML, fleetControlsHTML, freeSqTag, fxTagsHTML, isCommandeered, isOrkHulkUnit, optFxHTML, orkTiddlaHint, skwKind, upKind, orkPlain, orkSecGloss, sendSkwadron, setClan, setWarlordRerolls, upFx, warlordColor, warlordIdx, warlordNeeds, warlordSkwadrons } from "./warlords.js";
 import { DATA, LISTS, SHIPS } from "../../../packages/ui/catalog.js";
@@ -995,8 +995,8 @@ export function renderFleet(){
   const onHulk = ui => { const a = abOf[ui]; return !!(a && a.ship != null && isOrkHulkUnit(RF.units[a.ship])); };
   /* a Clanz tiddla card: Mob Rule and Young Gunz, as information (p. 370) */
   const tidHint = u => L().clanz && skwKind(u) === "tiddla" ? `<div class="uctl">${orkTiddlaHint(u.n || 1)}</div>` : "";
-  const rowOf = (u, ui) => unitRowHTML(u, ui,
-    { a: abOf[ui] || null, RF: RF, extra: (extra[ui] || "") + tidHint(u), hide: hideOf[ui] || [], dim: dimOf[ui] || [], send: sendOf[ui] || "", hulk: onHulk(ui),
+  const rowOf = (u, ui, more) => unitRowHTML(u, ui,
+    { a: abOf[ui] || null, RF: RF, extra: (extra[ui] || "") + tidHint(u) + (more || ""), hide: hideOf[ui] || [], dim: dimOf[ui] || [], send: sendOf[ui] || "", hulk: onHulk(ui),
       /* J234: "" without Compact, else this unit "shut" or "open" */
       fold: appState.FLEET_FOLD ? (UOPEN.has(u) ? "open" : "shut") : "" });
   /* Mixed squadron (prototype): two or more cards with one letter are one
@@ -1007,7 +1007,8 @@ export function renderFleet(){
   appState.MIXOPEN = appState.MIXOPEN || new Set();
   box.innerHTML = appState.S.units.map((u, ui) => {
     const g = memberOf[ui];
-    if(!g) return rowOf(u, ui);
+    /* a card alone with its letter is a squadron too: its red rows on it */
+    if(!g) return rowOf(u, ui, u.sq && !u.lst && mixSec(u.s) ? sqErrorsHTML(u.sq) : "");
     if(ui !== g.first) return "";
     const open = appState.MIXOPEN.has(g.tag);
     return mixGroupHTML(g, open) + (open ? g.idx.map(j => rowOf(appState.S.units[j], j)).join("") : "");
@@ -1265,7 +1266,8 @@ export function renderChecks(){
     r.k = r.cs.length > 1 ? "squadrons|" + r.g : c.t + "|" + c.s;
     r.side = r.cs.some(x => !x.ok) ? "bad" : r.cs.every(x => x.warn) ? "warn" : "ok";
   });
-  const sqSize = v => String(v).replace(/^(\d+) (ships?|defences?)\b\s*/, "\u00d7$1 ");
+  /* "7 ships" -> "x7"; a lettered squadron's "6 ships: 3 Cobra + ..." -> "x6 \u00b7 3 Cobra + ..." */
+  const sqSize = v => String(v).replace(/^(\d+) (ships?|escorts?|defences?)\b(:\s*)?\s*/, (m, n, w, c) => "\u00d7" + n + (c ? " \u00b7 " : " "));
   /* J232: a Da Ork Clanz row in plain English beside the Ork words */
   const pl = L().clanz ? orkPlain : (x => x);
   const rowHTML = (r, ix) => {

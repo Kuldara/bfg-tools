@@ -16,6 +16,7 @@ import { resolveUnit } from "./cards.js";
 import { L } from "./model.js";
 import { SHIPS } from "../../../packages/ui/catalog.js";
 import { appState } from "./state.js";
+import { checks } from "./validation.js";
 import { clanzIn, freeSqTag, orkTiddlaHint } from "./warlords.js";
 import { esc, title } from "../../../packages/ui/format.js";
 
@@ -35,6 +36,17 @@ export function mixRule(si){
   return { min: r.min, max: r.max, tiddla };
 }
 export const mixSec = si => !!mixRule(si);
+/* The rules' red rows for the squadron with this letter (user 28.10.2026:
+   a custom squadron always says so when it is not legal, short of the
+   minimum above all), on the squadron's own row as well as in Legality.
+   Read from the checks, so the row says what the rules say: the size, Space
+   Marine vessels with others, Demiurg's escorts that may not be mixed. */
+export function sqErrorsHTML(tag){
+  const re = new RegExp("\\b(squadron|skwadron|tiddla) " + String(tag).replace(/[^\w]/g, "\\$&") + "$", "i");
+  const bad = checks().filter(c => !c.ok && re.test(String(c.t || "")));
+  return bad.length ? `<div class="issues">${bad.map(c =>
+    `<p class="error">⚠ ${esc(c.t)}: ${esc(c.v)}</p>`).join("")}</div>` : "";
+}
 export function mixActive(si){
   const M = appState.MIX;
   return M && M.list === L().nm && (si == null || M.si === si) ? M : null;
@@ -98,7 +110,8 @@ export function mixGroupHTML(g, open){
   const mem = g.idx.map(j => { const u = appState.S.units[j], R = resolveUnit(u);
     return `<b>${R.hulls}&times;</b><span>${esc(title(R.className))}${u.name ? " <i>" + esc(u.name) + "</i>" : ""}</span><span>${R.points} pts</span>`; }).join("");
   const pts = g.idx.reduce((a, j) => a + (resolveUnit(appState.S.units[j]).points || 0), 0);
-  return `<div class="unit mixg${g.filling ? " filling" : ""}" data-mixui="${g.first}" data-mixtag="${esc(g.tag)}">
+  const errs = g.idx.length ? sqErrorsHTML(g.tag) : "";
+  return `<div class="unit mixg${g.filling ? " filling" : ""}${errs ? " bad" : ""}" data-mixui="${g.first}" data-mixtag="${esc(g.tag)}">
     <div class="uhead">
       ${g.idx.length ? `<button type="button" class="ufold" data-mixfold="${esc(g.tag)}" aria-expanded="${!!open}" title="${open ? "Hide the cards" : "Show the cards"}">${open ? "▾" : "▸"}</button>` : `<span class="ufold"></span>`}
       <span class="cls">${kindWord(g)} ${esc(g.tag)}</span>
@@ -109,6 +122,7 @@ export function mixGroupHTML(g, open){
       <button type="button" class="del" data-mixrm="${esc(g.tag)}" title="Remove the whole squadron">Remove</button>
     </div>
     ${mem ? `<div class="mixmem">${mem}</div>` : `<div class="mixmem empty">nothing yet &mdash; press + on the escorts in the catalogue</div>`}
+    ${errs}
     ${g.filling ? `<div class="mixfill">${meterHTML(g)}</div>` : ""}
     ${g.tiddla ? `<div class="mixfill">${orkTiddlaHint(g.hulls)}</div>` : ""}
   </div>`;

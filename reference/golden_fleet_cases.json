@@ -6825,7 +6825,7 @@
           {
             "label": "^Escort squadron B$",
             "ok": false,
-            "v": "7 ships: 4 Cobra class destroyer + 3 Sword class frigate"
+            "v": "7 ships: 4 Cobra class destroyer + 3 Sword class frigate - too many, at most 6"
           }
         ],
         "failing": 1
@@ -6867,6 +6867,101 @@
         "failing": 1
       },
       "why": "Fleets p.41: \"* Space Marine vessels may not be squadroned with non-Space Marine vessels.\" Two Novas and two Firestorms given one letter are of a legal size, but the Novas are Space Marine vessels."
+    },
+    {
+      "id": "escort-squadron-lettered-single-card-short",
+      "page": 13,
+      "fleet": {
+        "list": "Imperial Navy — Gothic Sector",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Lunar class cruiser$"
+          },
+          {
+            "entry": "^Gothic class cruiser$"
+          },
+          {
+            "entry": "^Cobra class destroyer$",
+            "n": 1,
+            "sq": "B"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Escort squadron B$",
+            "ok": false,
+            "v": "1 ship: 1 Cobra class destroyer - too few, at least 2"
+          }
+        ],
+        "failing": 1
+      },
+      "why": "p.13: escorts 'in squadrons of 2-6'. A card the player gave a letter is the player's squadron and is checked as one (user 28.10.2026: a custom squadron always reports a size short of the minimum). The single escort exception of p.13 is for a card without a letter: without the B this Cobra is the only escort and green."
+    },
+    {
+      "id": "escort-squadron-lettered-pirates-short",
+      "page": 179,
+      "fleet": {
+        "list": "Rogue Traders — Pirates and Wolf Packs",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Escort Carrier",
+            "n": 1,
+            "sq": "A"
+          },
+          {
+            "entry": "^Q-Ship",
+            "n": 1,
+            "sq": "A"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Escort squadron A$",
+            "ok": false,
+            "v": "2 ships: 1 Escort Carrier + 1 Q-Ship - too few, at least 3"
+          }
+        ]
+      },
+      "why": "p.179: \"At least one squadron of 3–6 escort vessels must be included for each cruiser in the fleet, organized in any mix desired.\" Two cards with one letter are one squadron of two, short of three."
+    },
+    {
+      "id": "clanz-lettered-tiddla-short",
+      "page": 372,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Ravager attack ship",
+            "n": 1,
+            "sq": "A"
+          },
+          {
+            "entry": "^Onslaught attack ship",
+            "n": 1,
+            "sq": "A"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Tiddla skwadron A$",
+            "ok": false,
+            "v": "2 escorts: 1 Ravager attack ship + 1 Onslaught attack ship - too few, at least 3"
+          }
+        ]
+      },
+      "why": "p.372: \"Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired\". A Ravager and an Onslaught with one letter are one tiddla of two."
     },
     {
       "id": "squadron-of-one-ship",
@@ -8691,7 +8786,7 @@
           {
             "label": "^Tiddla skwadron A",
             "ok": false,
-            "v": "13 escorts: 10 Brute ramship + 3 Cobra class destroyer"
+            "v": "13 escorts: 10 Brute ramship + 3 Cobra class destroyer - too many, at most 10"
           }
         ]
       },

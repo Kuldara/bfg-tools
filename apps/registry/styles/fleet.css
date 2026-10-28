@@ -147,6 +147,9 @@ details.rules.auto[open]>summary::after{content:" \2013"}
 .mixmem i{font-style:normal;color:var(--ink-3)}
 .mixmem.empty{display:block;font:400 11px/1.4 var(--mono);color:var(--ink-3)}
 .mixfill{margin:8px 0 2px 32px}
+/* a squadron the rules find wrong (short, too many, mixed where it may not be) */
+.unit.mixg.bad{border-left-color:var(--bad)}
+.unit.mixg .issues{margin:6px 0 0 32px}
 .mixmeter{position:relative;height:7px;border:1px solid var(--line);border-radius:4px;background:var(--panel)}
 .mixmeter i{position:absolute;left:0;top:0;bottom:0;background:var(--accent);border-radius:3px}
 .mixmeter.short i{background:var(--warn,#d0a53f)}
