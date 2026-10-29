@@ -16,10 +16,10 @@
       "type": "string"
     },
     "ships": {
-      "description": "Ship profiles by id. The id is the Fleets Book page of the profile, with a letter when one page has several (\"472c\").",
+      "description": "Ship profiles by id. The id is the profile's page in Fleets WiP v0.36, frozen when the apps moved to v0.40 (extractor/ship_ids.json), with a letter when one page has several (\"472c\"); profiles new in v0.40 have an id that is not a page (\"am128\"). The ship's own pg is its page in the current book.",
       "type": "object",
       "patternProperties": {
-        "^[0-9]+[a-z]?$": { "$ref": "#/$defs/ship" }
+        "^([0-9]+[a-z]?|am[0-9]+)$": { "$ref": "#/$defs/ship" }
       },
       "additionalProperties": false
     },

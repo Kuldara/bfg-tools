@@ -60,13 +60,12 @@
       "why": "Parsed only when the ratio pattern was taught to know 'for each' alongside the word pair 'for every' (7.9.2026)."
     },
     {
-      "key": "between 6 and 12 escort class ships for each hive ship",
-      "text": "You may include between 6 and 12 escort class ships for each hive ship.",
+      "key": "between 0 and 12 additional escort class ships",
+      "text": "You may include between 0 and 12 additional escort class ships (of any kind) for each hive ship.",
       "page": 431,
       "status": "enforced",
-      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. Two rules: min_ratio 6 and ratio 12 per hive ship. The earlier gap: a ratio with both a minimum and a maximum. The engine's ratio enforced only the maximum, and the number word 'between' does not do as a number. In practice this is the list's most important limi",
-      "kind": "min_ratio",
-      "min": 6,
+      "why": "Updated for Fleets v0.40 on 29.10.2026: with the six escort drones per hive ship, at most 18 escorts per hive ship (p.430: 'purchase 6-18 escort ships'); ratio 18 per hive ship, when a hive ship is chosen. v0.36 said 'between 6 and 12 escort class ships'.",
+      "kind": "ratio",
       "classified_on": "2026-09-09"
     },
     {

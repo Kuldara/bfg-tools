@@ -46,13 +46,6 @@
       "why": "The placement is done at the table."
     },
     {
-      "key": "there should be only one Inquisitorial cruiser in the fleet",
-      "text": "As the rules state, there should be only one Inquisitorial cruiser in the fleet.",
-      "page": 148,
-      "status": "manual",
-      "why": "The count limit is enforced: the book's row is '(0-1) Inquisitorial Cruiser', which gives the row limit mx=1."
-    },
-    {
       "key": "Any Imperial or Space Marine fleet may include a single Inquisitorial Cruiser",
       "text": "Any Imperial or Space Marine fleet may include a single Inquisitorial Cruiser in the fleet, which takes the place of a battlecruiser or strike cruiser in the fleet.",
       "page": 148,
@@ -199,7 +192,7 @@
       "page": null
     },
     {
-      "name": "Ordo Malleus Inquisitor Lord",
+      "name": "Ordo Malleus Inquisitor Lord (Ld 10)",
       "pts": 25,
       "page": null
     }
@@ -219,6 +212,7 @@
   "notes": [
     "Pages 142-147 are narrative (Ordo Malleus, Ordos Minoris, the history of the Grey Knights). They were hidden in the LORE_SECTIONS table: all ten sentences were story.",
     "From page 154 the book has its own 'GREY KNIGHTS FLEET LIST'. Until 7.9.2026 it was merged into this list, so the list had two FLEET COMMANDER, two CAPITAL SHIPS and two ATTACK RATING sections at different prices. The lists were separated; see 09_grey_knights.json.",
-    "This list has the worst enforcement ratio in the whole book, and the reason is structural: almost every limit refers to ships of another list ('Any Imperial or Space Marine fleet may include...'). The app does not model links between lists, so these cannot be enforced without a whole new concept."
+    "This list has the worst enforcement ratio in the whole book, and the reason is structural: almost every limit refers to ships of another list ('Any Imperial or Space Marine fleet may include...'). The app does not model links between lists, so these cannot be enforced without a whole new concept.",
+    "Updated for Fleets v0.40 on 29.10.2026: the Ordo Malleus row is printed 'Ordo Malleus Inquisitor Lord (Ld 10)'; the sentence 'there should be only one Inquisitorial cruiser' is gone (the row's 0-1 stays)."
   ]
 }

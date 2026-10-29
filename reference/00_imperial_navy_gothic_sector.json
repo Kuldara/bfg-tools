@@ -197,15 +197,10 @@
       "page": 84
     }
   ],
-  "extra_entries": [
-    {
-      "name": "Imperial Power Ram",
-      "pts": 5,
-      "why": "The book gives this in the shared Imperial Navy rules on page 32, not on the list page: 'The Imperial Power Ram may be taken by any Imperial capital ship with a 6+ prow for +5 points unless it has a Nova Cannon.' upgrades.py adds it to the list."
-    }
-  ],
+  "extra_entries": [],
   "notes": [
     "The shared Imperial Navy rules are on pages 32-33, not on the list page. Page 32: attack rating 2; Fury 30 cm, Starhawk 20 cm, Shark 30 cm; Power Ram. Page 33: campaign rules and the Space Marine call-for-help table 2D6.",
-    "Pages 28-30 and 34 are empty or illustrations."
+    "Pages 28-30 and 34 are empty or illustrations.",
+    "Updated for Fleets v0.40 on 29.10.2026: v0.40 removed the fleet-wide power ram and prints it as an option of each ship that may take it ('if it is part of an Imperial Navy, Adeptus Mechanicus, Inquisition, or Rogue Trader fleet list')."
   ]
 }

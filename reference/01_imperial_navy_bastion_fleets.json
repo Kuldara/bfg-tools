@@ -267,16 +267,11 @@
       "page": null
     }
   ],
-  "extra_entries": [
-    {
-      "name": "Imperial Power Ram",
-      "pts": 5,
-      "why": "from the shared Imperial Navy rules on page 32"
-    }
-  ],
+  "extra_entries": [],
   "notes": [
     "Page 36 is the start of the list and narrative about the Bastion fleets. Page 37 is the whole composition list. Page 38 is Battlefleet Cadia and Veteran Captains. Page 39 is the reserve fleets of Segmentum Obscurus.",
     "The reserve rule on page 39 allows five Chaos ships: Repulsive p.271, Executor p.273, Hades p.276, Murder p.281, Carnage p.279. They are not rows of the list, because they come through the Reserves rule.",
-    "Battlefleet Cadia's leadership rule (two dice, the lower) is in-game and does not show on the cards."
+    "Battlefleet Cadia's leadership rule (two dice, the lower) is in-game and does not show on the cards.",
+    "Updated for Fleets v0.40 on 29.10.2026: v0.40 removed the fleet-wide power ram and prints it as an option of each ship that may take it ('if it is part of an Imperial Navy, Adeptus Mechanicus, Inquisition, or Rogue Trader fleet list')."
   ]
 }

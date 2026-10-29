@@ -2892,7 +2892,20 @@
    {
     "title": "ATTACK RATING",
     "rules": [
-     "An Imperial Navy or Adeptus Mechanicus fleet led by an Inquisitor Lord has an attack rating of 2. A Space Marine fleet led by an Inquisitor Lord has an attack rating of 3 unless a Blackship is accompanying the fleet, in which case its attack rating is 2. WEAPONS, ORDNANCE AND UPGRADES Grey Knights are Space Marines in all respects and use all their special rules described on pg. 94 onwards, including the Bombardment Cannon. If an Imperial Navy or Adeptus Mechanicus ship embarking an Inquisitor is equipped with launch bays, it must replace its attack craft with Thunderhawks, with its launch bay strength divided in half (rounding down). Grey Knights may never take Thunderhawk Annihilators. Ships with torpedo tubes are armed with ordinary and boarding torpedoes, and for no cost or modification can also act as Exterminatus vessels."
+     "An Imperial Navy or Adeptus Mechanicus fleet led by an Inquisitor Lord has an attack rating of 2. A Space Marine fleet led by an Inquisitor Lord has an attack rating of 3 unless a Blackship is accompanying the fleet, in which case its attack rating is 2."
+    ],
+    "entries": [],
+    "pg": [
+     [
+      0,
+      149
+     ]
+    ]
+   },
+   {
+    "title": "WEAPONS, ORDNANCE AND UPGRADES",
+    "rules": [
+     "Grey Knights are Space Marines in all respects and use all their special rules described on pg. 94 onwards, including the Bombardment Cannon. If an Imperial Navy or Adeptus Mechanicus ship embarking an Inquisitor is equipped with launch bays, it must replace its attack craft with Thunderhawks, with its launch bay strength divided in half (rounding down). Grey Knights may never take Thunderhawk Annihilators. Ships with torpedo tubes are armed with ordinary and boarding torpedoes, and for no cost or modification can also act as Exterminatus vessels."
     ],
     "entries": [],
     "pg": [

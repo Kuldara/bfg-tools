@@ -208,22 +208,12 @@
       "page": 85
     },
     {
-      "name": "Siluria Class Light Cruiser",
-      "pts": 100,
-      "page": 78
-    },
-    {
       "name": "Havoc Class Frigate",
       "pts": 35,
       "page": 81
     }
   ],
   "extra_entries": [
-    {
-      "name": "Imperial Power Ram (6+ prow, not with a Nova Cannon)",
-      "pts": 5,
-      "why": "p.188 POWER RAM"
-    },
     {
       "name": "One extra re-roll",
       "pts": 25,
@@ -254,6 +244,8 @@
     "The book marks the Fra'al Battleship '(0-2)', from which the app sets the row limit mx=2. The book adds: 'These count as cruisers for fleet building.'",
     "The Idolator Raider's page reference is wrong in the book (p. 157); the right profile is on page 283. The app corrects this by name and says so in the row's note.",
     "'Cargo Transport (pg. 85)' points at the Imperial Navy's TRANSPORT profile. The app used to point it wrongly at page 202; fixed 7.9.2026.",
-    "This list is open by structure: it has no actual cruiser rows at all, because the book defines them by a price limit from other lists. That explains why three rules are enforced but there are four gaps."
+    "This list is open by structure: it has no actual cruiser rows at all, because the book defines them by a price limit from other lists. That explains why three rules are enforced but there are four gaps.",
+    "Updated for Fleets v0.40 on 29.10.2026: v0.40 removed the fleet-wide power ram and prints it as an option of each ship that may take it ('if it is part of an Imperial Navy, Adeptus Mechanicus, Inquisition, or Rogue Trader fleet list').",
+    "Updated for Fleets v0.40 on 29.10.2026: the Siluria is no longer offered (p.189)."
   ]
 }

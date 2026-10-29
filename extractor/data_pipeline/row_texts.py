@@ -64,6 +64,20 @@ for _k, _sh in ships.items():
         _seen.add(_o["id"])
         _n_ids += 1
 print("option IDs given: %d" % _n_ids)
+# The ids of a previous book version whose option text changed (option_aliases.json):
+# o["was"] lets a saved fleet find the option (legacy.js optionIndex). Each
+# alias must find its option, and an old id must not be a live one.
+_ALIAS = json.load(io.open(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                                        "option_aliases.json"), encoding="utf-8"))["was"]
+_live = {_o["id"] for _sh in ships.values() for _o in _sh.get("ol") or []}
+_al_hit = 0
+for _sh in ships.values():
+    for _o in _sh.get("ol") or []:
+        if _o["id"] in _ALIAS:
+            assert not set(_ALIAS[_o["id"]]) & _live, _ALIAS[_o["id"]]
+            _o["was"] = list(_ALIAS[_o["id"]])
+            _al_hit += 1
+assert _al_hit == len(_ALIAS), "option_aliases.json: %d of %d new ids found" % (_al_hit, len(_ALIAS))
 
 for _fx in KEEP_TEXT:
     assert _fx.get("_used"), "KEEP_TEXT did not hit: %r" % _fx

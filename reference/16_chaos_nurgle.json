@@ -17,16 +17,6 @@
       "max": 1
     },
     {
-      "key": "must be taken in fleets of 750 points or more",
-      "text": "A Chaos Warmaster (and their required capital ship) must be taken in fleets of 750 points or more.",
-      "page": 248,
-      "status": "enforced",
-      "kind": "mandatory_at",
-      "points": 750,
-      "over": false,
-      "why": "The book's wording is 'in fleets of 750 points or more', not 'worth ... or more'. MAND_GE was widened on 7.9.2026, and at the same time the guard was changed: it now compares the sentence's words with the SECTION's heading and does not look for a word referring to leading. Without the change this rule was missing from five lists."
-    },
-    {
       "key": "You can only include a Chaos Warmaster in your fleet if it includes any capital ships",
       "text": "You can only include a Chaos Warmaster in your fleet if it includes any capital ships.",
       "page": 248,
@@ -377,6 +367,7 @@
     "The frame is the same as in the Chaos Incursion: the same Space Hulk limit, the same three ratios and the same 0-12 cruisers.",
     "The daemonship price list is a table of its own in the book; the app offers the rows 'Battleship / Grand cruiser / Heavy cruiser / Cruiser' in its own DAEMONSHIPS section.",
     "The DAEMON SHIPS price list is printed in the book as ship classes only, because the section heading tells what is bought: 'Battleship +50 / Grand cruiser +30 / Heavy cruiser +25 / Cruiser +20'. In the app the row showed until 7.9.2026 under the name 'Grand Cruiser +50', which tells nothing - and because the section has no ships, the rows were offered to EVERY ship. A grand cruiser was thus offered three different prices at once. Now the row is 'Daemonship: <class>' and attached to the section whose heading is the same class in the plural.",
-    "13.10.2026 (J162): Abaddon added by the user's decision on the basis of p.241's general rule; the price 195 is printed only in the Black Crusade list (p.244)."
+    "13.10.2026 (J162): Abaddon added by the user's decision on the basis of p.241's general rule; the price 195 is printed only in the Black Crusade list (p.244).",
+    "Updated for Fleets v0.40 on 29.10.2026: the Warmaster is '0-1' and the sentence 'A Chaos Warmaster ... must be taken in fleets of 750 points or more' is gone."
   ]
 }

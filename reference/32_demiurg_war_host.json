@@ -236,7 +236,7 @@
       "sec": "Rogue Trader Escorts"
     },
     {
-      "name": "Cargo Vessel",
+      "name": "Armed Cargo Vessel",
       "pts": 20,
       "page": 202,
       "sec": "Rogue Trader Escorts"
@@ -252,6 +252,7 @@
     "This is the book's last list and structurally exceptional: the hull ship section has ships of three factions (Demiurg, Tau, Rogue Trader) and the escorts are split into three subsections by origin.",
     "The list has no commander at all, like the necrons. The fleet as a whole buys the re-rolls, and they do not apply to the allied ships.",
     "The book's subheading 'Kroot Vessels (0-3)' is the only one in the whole book with the count limit after the name in brackets. Without recognising it the Warsphere would have been counted towards the cruiser cap, which the book explicitly forbids.",
-    "The list's most important restriction - 'Demiurg Commerce Vessels must outnumber all non-Demiurg cruisers combined' - is a comparison of two sets and cannot be enforced. Without it the list could be built almost entirely of other factions' ships."
+    "The list's most important restriction - 'Demiurg Commerce Vessels must outnumber all non-Demiurg cruisers combined' - is a comparison of two sets and cannot be enforced. Without it the list could be built almost entirely of other factions' ships.",
+    "Updated for Fleets v0.40 on 29.10.2026: the Rogue Trader row Cargo Vessel is printed Armed Cargo Vessel."
   ]
 }

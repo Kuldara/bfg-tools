@@ -307,7 +307,7 @@
       "sec": "Rogue Traders"
     },
     {
-      "name": "Cargo Vessel",
+      "name": "Armed Cargo Vessel",
       "pts": 20,
       "page": 202,
       "sec": "Rogue Traders"
@@ -317,6 +317,7 @@
     "On the book's page 456 the row is 'Custodian class starship (pg. 440)... 330 pts', and there is no profile on page 440 - it is on page 468. The app corrects the reference by name.",
     "Kor'O'Mesme is marked with a star and explained on page 457. The row is on the list as it is, star included.",
     "This is the book's only list with two different limits tied to a point total that are counted from the TAU SHIPS' points and not from the fleet's points limit (the Custodian and the Rogue Trader cruiser). Neither can be enforced correctly, so neither is enforced.",
-    "The heading 'ALLIES, SUBJECTS & MERCENARIES' was ordinary text until 7.9.2026, and the mercenary paragraph ended up in a section whose heading became the list's name printed on the page's side 'COMMERCE PROTECTION FLEET LIS'."
+    "The heading 'ALLIES, SUBJECTS & MERCENARIES' was ordinary text until 7.9.2026, and the mercenary paragraph ended up in a section whose heading became the list's name printed on the page's side 'COMMERCE PROTECTION FLEET LIS'.",
+    "Updated for Fleets v0.40 on 29.10.2026: the Rogue Trader row Cargo Vessel is printed Armed Cargo Vessel."
   ]
 }

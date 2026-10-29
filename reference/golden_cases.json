@@ -149,24 +149,15 @@
     },
     {
       "id": "admech-required-turret",
-      "page": 120,
+      "page": 131,
       "list": "Adeptus Mechanicus — Explorator",
-      "ship": "67",
+      "ship": "am131",
       "select": [],
       "expect": {
         "points": 255,
-        "turrets": "4",
-        "upgrades": [
-          {
-            "match": "Turret Refit",
-            "state": "take",
-            "required": true,
-            "cost": 0,
-            "owner": "own"
-          }
-        ]
+        "turrets": "4"
       },
-      "why": "Fleets p.120: '+1 turret all Mechanicus capital ships are equipped with'. Dictator p.67 base 3 turrets. The upgrade is required and free; addUnit() runs it with applyRequired(). A unit built by hand would not have got it."
+      "why": "v0.40: the Mechanicus Dictator (p.131) has 4 turrets in its profile: 'These extra rules ... are already included in the profiles on the following pages, i.e. increased turrets and the dorsal lance' (p.125). Before v0.40 a required free row added the turret."
     },
     {
       "id": "ork-hulk-not-crippled",
@@ -628,14 +619,14 @@
       "expect": {
         "points": 260,
         "weapon": {
-          "match": "Starboard Bio-plasma spines",
+          "match": "Starboard Bio-plasma discharge",
           "range": "15 cm",
           "fp": "6",
           "arc": "Right",
           "count": 3
         }
       },
-      "why": "p.432: bio-plasma set +20 pts, three sets 200 + 60 = 260. Three starboard bio-plasma spines at 2 = 6. (The book's option text says 'discharge', the weapon table 'spines' - the book's own inconsistency, the row's name is from the table.) Implemented P1-6 (count + sum)."
+      "why": "p.432: bio-plasma set +20 pts, three sets 200 + 60 = 260. Three starboard bio-plasma discharges at 2 = 6 (v0.40 names the weapon as the options do; v0.36's table said 'spines')."
     },
     {
       "id": "tyranid-cruiser-two-side-pyro",
@@ -1492,7 +1483,7 @@
           "option": "45 cm range weapons batteries"
         },
         {
-          "upgrade": "Imperial Power Ram"
+          "option": "power ram"
         }
       ],
       "expect": {
@@ -1516,33 +1507,26 @@
           {
             "match": "45 cm range",
             "state": "take"
-          }
-        ],
-        "upgrades": [
+          },
           {
-            "match": "Power Ram",
-            "state": "take",
-            "cost": 5,
-            "owner": "other"
+            "match": "power ram",
+            "state": "take"
           }
         ],
         "card_contains": [
           "Righteous Fury",
-          "Refit: reinforced prow",
-          "Imperial Power Ram"
+          "Refit: reinforced prow"
         ],
         "list_contains": [
           "Righteous Fury",
           "205 pts",
-          "Imperial Power Ram (+5)",
           "Refit: reinforced prow (+5)"
         ],
         "roster_contains": [
-          "Imperial Power Ram",
           "Refit: reinforced prow"
         ]
       },
-      "why": "The rich fixture (P1-8d): a name, a note, a manual +5, a ship option and a list upgrade at the same time, all surfaces field by field. p.35 Tyrant 185; p.69 '45 cm range weapons batteries at a cost of +10 pts'; p.32 Power Ram '+5 points unless it has a Nova Cannon' (6+ prow); 185+10+5+5 = 205. Base profile p.69: Hits 8, Speed 20 cm, Turns 45°, Shields 2, Armour 6+ front / 5+, Turrets 2; the 30 cm batteries go, 4 rows of 45 cm batteries + torpedoes = 5 in force."
+      "why": "The rich fixture (P1-8d): a name, a note, a manual +5, two ship options at the same time, all surfaces field by field. p.35 Tyrant 185; p.69 '45 cm range weapons batteries at a cost of +10 pts'; p.69 v0.40 'If the prow torpedoes are not replaced, the ship may take a power ram for +5 points'; 185+10+5+5 = 205. Base profile p.69: Hits 8, Speed 20 cm, Turns 45°, Shields 2, Armour 6+ front / 5+, Turrets 2; the 30 cm batteries go, 4 rows of 45 cm batteries + torpedoes = 5 in force."
     },
     {
       "id": "cmd-fleet-admiral-reroll-boxes",
@@ -2004,35 +1988,25 @@
     },
     {
       "id": "mechanicus-lunar-power-ram",
-      "page": 118,
+      "page": 134,
       "list": "Adeptus Mechanicus — Explorator",
-      "ship": "71",
+      "ship": "am134",
       "select": [
         {
-          "upgrade": "Power Ram"
+          "option": "power ram"
         }
       ],
       "expect": {
         "points": 220,
-        "max_points": 250,
         "turrets": "3",
-        "upgrades": [
+        "options": [
           {
-            "match": "Power Ram",
-            "state": "take",
-            "cost": 5
+            "match": "power ram",
+            "state": "take"
           }
-        ],
-        "card_contains": [
-          "Power Ram:",
-          "automatic hit"
-        ],
-        "card_lacks": [
-          "Nova Cannon:",
-          "nova cannon at an additional cost"
         ]
       },
-      "why": "p.118-119 Mechanicus Lunar 215 + Power Ram 5 = 220; POWER RAM: a capital ship with a 6+ prow, not with a Nova Cannon, one automatic hit on a successful ram before the hit rolls. When the Ram is taken, the Nova Cannon swap is not a compatible choice and its rule does not belong on the card; the largest legal price is 220, not 240. Spot check 2 (9.9.2026), case 2. 30.9.2026: the fleet list's upgrade rows open as Option, so the cap includes them (the most expensive legal combination). Ram taken: + Special torpedoes 20 + Plasma-boosted batteries 10 = 250; Nova (the own option or the list's row) not with the Ram (p. 118)."
+      "why": "v0.40: Mechanicus Lunar p.134 215 + power ram 5 = 220. 'If the prow torpedoes are not replaced, the ship may take a power ram for +5 points': with the ram the nova cannon swap is off (one or the other)."
     },
     {
       "id": "planet-killer-armageddon-gun",
@@ -3227,14 +3201,19 @@
     },
     {
       "id": "rt-power-ram-cruiser-offered",
-      "page": 186,
+      "page": 190,
       "list": "Rogue Traders",
       "ship": "180",
       "select": [],
       "expect": {
-        "upgrade_offered": "Imperial Power Ram"
+        "options": [
+          {
+            "match": "power ram",
+            "state": "opt"
+          }
+        ]
       },
-      "why": "p.186 POWER RAM + p.190 Rogue Trader Cruiser 6+ front: the row should be offered (the positive counterpart)."
+      "why": "v0.40: Rogue Trader Cruiser p.190: 'The ship may take a power ram for +5 points, if it is part of an Imperial Navy, Adeptus Mechanicus, Inquisition, or Rogue Trader fleet list.'"
     },
     {
       "id": "faq26-armageddon-sm-strike-cruiser-no-power-ram",
@@ -3281,26 +3260,33 @@
       "why": "FAQ 2026 *Power ram*: 'Note of authors: only Imperial Navy, Rogue Trader and Adeptus Mechanicus ships meeting the prow requirements may take the power ram as an upgrade. Thus it is not available for Strike Cruisers in the Battlefleet Armageddon fleet list.' Fleets p. 32 says 'any Imperial capital ship with a 6+ prow'; the FAQ wins in a conflict (the user's decision 20.10.2026). The Pirates list's row (p. 188) says 'any Rogue Trader capital ship'; the Space Marine Strike Cruiser is excluded as in Armageddon (the FAQ's spirit, recorded in FAQ2026_tarkistus.md)."
     },
     {
-      "id": "faq26-armageddon-gothic-power-ram-offered",
-      "page": 32,
+      "id": "ram-armageddon-gothic-offered",
+      "page": 70,
       "list": "Imperial Navy — Armageddon Sector",
       "ship": "70",
       "select": [],
       "expect": {
-        "upgrade_offered": "Imperial Power Ram"
+        "options": [
+          {
+            "match": "power ram",
+            "state": "opt"
+          }
+        ]
       },
-      "why": "The positive counterpart: the Gothic class cruiser (p. 70, 6+ front, no Nova Cannon) is an IN ship, so on the Armageddon list the row is still offered (Fleets p. 32, FAQ 2026 *Power ram*)."
+      "why": "v0.40: Gothic p.70: 'The ship may take a power ram for +5 points, if it is part of an Imperial Navy ... fleet list' - the Armageddon list is one."
     },
     {
-      "id": "faq26-gothic-inquisitorial-cruiser-power-ram-offered",
-      "page": 148,
+      "id": "ram-inquisitorial-cruiser-none",
+      "page": 160,
       "list": "Imperial Navy — Gothic Sector",
       "ship": "150",
       "select": [],
       "expect": {
-        "upgrade_offered": "Imperial Power Ram"
+        "card_lacks": [
+          "power ram"
+        ]
       },
-      "why": "Interpretation (FAQ2026_tarkistus.md, item 1): p. 138 'An Inquisitorial cruiser is any cruiser seconded to the Inquisition ... it can be any Imperial' cruiser, so the hull is an IN ship and the FAQ's limit does not remove the row. Locked so the interpretation does not change unnoticed."
+      "why": "v0.40: the power ram is an option of the profiles that may take it; the Inquisitorial Cruiser (p.160) has none, so it is not offered (v0.36: FAQ 2026 *Power ram* and the list row)."
     },
     {
       "id": "faq26-dictator-orbital-mines-ignore-shields",
@@ -4003,25 +3989,30 @@
     },
     {
       "id": "mechanicus-tyrant-nova-cannon-covered",
-      "page": 121,
+      "page": 132,
       "list": "Adeptus Mechanicus — Explorator",
-      "ship": "69",
+      "ship": "am132",
       "select": [],
       "expect": {
         "upgrade_not_offered": "Nova Cannon instead of prow torpedoes"
       },
-      "why": "p.69 OPTIONS 'Can replace its prow torpedoes with a nova cannon at a cost of +20 pts' is the same purchase as the p.121 list's 'Nova Cannon instead of prow torpedoes 20' - both were offered. Spot check 7 row 85."
+      "why": "v0.40: the Mechanicus Tyrant (p.132) has its own nova cannon option; the list no longer has the row 'Nova Cannon instead of prow torpedoes' (p.121's sentence is in the profiles)."
     },
     {
       "id": "mechanicus-gothic-nova-cannon-offered",
-      "page": 121,
+      "page": 133,
       "list": "Adeptus Mechanicus — Explorator",
-      "ship": "70",
+      "ship": "am133",
       "select": [],
       "expect": {
-        "upgrade_offered": "Nova Cannon instead of prow torpedoes"
+        "options": [
+          {
+            "match": "nova cannon",
+            "state": "opt"
+          }
+        ]
       },
-      "why": "p.121: a cruiser with a 6+ prow and without an own option gets the list's row (the positive counterpart)."
+      "why": "v0.40: the Mechanicus Gothic (p.133): 'Can replace its prow torpedoes with a nova cannon at a cost of +20 pts' is the profile's own option."
     },
     {
       "id": "clanz-onslaught-gubbins-not-for-escorts",
@@ -4485,12 +4476,12 @@
     },
     {
       "id": "admech-endeavour-dorsal-lance",
-      "page": 121,
+      "page": 135,
       "list": "Adeptus Mechanicus — Explorator",
-      "ship": "72",
+      "ship": "am135",
       "select": [
         {
-          "upgrade": "^Dorsal lance instead of prow torpedoes"
+          "option": "dorsal lance battery"
         }
       ],
       "expect": {
@@ -4505,16 +4496,16 @@
           "match": "prow torpedo"
         }
       },
-      "why": "p.121: 'Endeavour and Endurance light cruisers may replace their prow torpedoes with a single 30 cm range dorsal lance battery firing left/front/right for no cost.'"
+      "why": "v0.40: Mechanicus Endeavour p.135: 'May replace its prow torpedoes with a single 30 cm range dorsal lance battery firing left/ front/ right for no cost.'"
     },
     {
       "id": "admech-gothic-nova-cannon-effect",
-      "page": 121,
+      "page": 133,
       "list": "Adeptus Mechanicus — Explorator",
-      "ship": "70",
+      "ship": "am133",
       "select": [
         {
-          "upgrade": "^Nova Cannon instead of prow torpedoes$"
+          "option": "nova cannon"
         }
       ],
       "expect": {
@@ -4528,16 +4519,16 @@
           "match": "prow torpedo"
         }
       },
-      "why": "p.121: 6+ keulan cruiser 'can replace their prow torpedoes with a Nova Cannon for +20 points' - Gothic 215 + 20."
+      "why": "v0.40: Mechanicus Gothic p.133 215 + nova cannon 20 = 235."
     },
     {
       "id": "admech-retribution-nova-cannon-effect",
-      "page": 121,
+      "page": 129,
       "list": "Adeptus Mechanicus — Explorator",
-      "ship": "54",
+      "ship": "am129",
       "select": [
         {
-          "upgrade": "\\(Retribution\\)"
+          "option": "nova cannon"
         }
       ],
       "expect": {
@@ -4550,16 +4541,16 @@
           "match": "prow torpedo"
         }
       },
-      "why": "p.121: 'Mechanicus Retribution battleship can make this trade for +10 points' - 380 + 10."
+      "why": "v0.40: Mechanicus Retribution p.129 380 + nova cannon 10 = 390."
     },
     {
       "id": "admech-lunar-plasma-boosted",
-      "page": 121,
+      "page": 134,
       "list": "Adeptus Mechanicus — Explorator",
-      "ship": "71",
+      "ship": "am134",
       "select": [
         {
-          "upgrade": "^Plasma-boosted batteries"
+          "option": "plasma-boosters"
         }
       ],
       "expect": {
@@ -4573,7 +4564,7 @@
           "range": "30 cm"
         }
       },
-      "why": "p.121: 'cruisers that would normally be equipped with 30 cm Weapon Batteries can incorporate plasma-boosted batteries that increase their range to 45 cm for +10 points.'"
+      "why": "v0.40: Mechanicus Lunar p.134: 'Can incorporate plasma-boosters into its weapons batteries that increase the range from 30 cm to 45 cm at a cost of +10 pts.' 215 + 10."
     },
     {
       "id": "inquisitorial-cruiser-no-embark-halving",
@@ -5283,37 +5274,31 @@
     },
     {
       "id": "admech-oberon-no-shark-assault-boats",
-      "page": 125,
+      "page": 130,
       "list": "Adeptus Mechanicus — Explorator",
-      "ship": "56",
+      "ship": "am130",
       "select": [],
       "expect": {
         "points": 370,
-        "max_points": 410,
-        "options": [
-          {
-            "match": "Shark assault boats",
-            "state": "off"
-          }
+        "card_lacks": [
+          "Shark"
         ]
       },
-      "why": "p.125 ORDNANCE: 'Attack carriers may use any combination of Fury interceptors and Starhawk bombers. They may not use assault boats, even if their Imperial Navy counterparts may have access to this type of ordnance (such as Emperor battleships).' 30.9.2026: laivastolistan paivitysrivit avautuvat Optionina, joten katto sisaltaa ne (kallein laillinen yhdistelma). + Torpedo bombers 4 bays x 10 = 40 (p. 22, 125): 410."
+      "why": "v0.40: the Mechanicus Oberon (p.130) has no Shark option ('They may not use assault boats', p.125)."
     },
     {
       "id": "admech-emperor-no-shark-assault-boats",
-      "page": 125,
+      "page": 128,
       "list": "Adeptus Mechanicus — Explorator",
-      "ship": "53",
+      "ship": "am128",
       "select": [],
       "expect": {
-        "options": [
-          {
-            "match": "Shark assault",
-            "state": "off"
-          }
+        "points": 400,
+        "card_lacks": [
+          "Shark"
         ]
       },
-      "why": "p.125: 'They may not use assault boats, even if their Imperial Navy counterparts may have access to this type of ordnance (such as Emperor battleships).'"
+      "why": "v0.40: the Mechanicus Emperor (p.128) has no Shark option ('They may not use assault boats', p.125)."
     },
     {
       "id": "gothic-emperor-shark-assault-boats-offered",
@@ -5375,14 +5360,14 @@
       "entry": "^Ordo Malleus Inquisitor Lord",
       "select": [
         {
-          "upgrade": "^Two extra re-rolls"
+          "upgrade": "^One extra re-roll"
         }
       ],
       "expect": {
-        "points": 150,
-        "rerolls_total": 3
+        "points": 125,
+        "rerolls_total": 2
       },
-      "why": "p.154: 'Ordo Malleus Inquisitor Lord (Ld 10) +100 pts ... An Inquisitor Lord gets one re-roll, and may purchase up to two more re-rolls for +25 points each' - 100 + 50, 1 + 2 re-rolls."
+      "why": "v0.40: p.154: 'Ordo Malleus Inquisitor Lord (Ld 10)...100 pts ... An Inquisitor Lord gets one re-roll ... A second re-roll can be purchased for +25 points.' 100 + 25, 1 + 1 re-rolls."
     },
     {
       "id": "pirates-cobra-no-detection-gear",
@@ -6357,7 +6342,7 @@
       "id": "explorator-lunar-mechanicus-boarding",
       "page": 118,
       "list": "Adeptus Mechanicus — Explorator",
-      "ship": "71",
+      "ship": "am134",
       "select": [],
       "expect": {
         "card_contains": [
@@ -7762,17 +7747,17 @@
       "why": "Fleets p.232: 'Chaos has a +1 boarding modifier. The Chaos Space Marine upgrade replaces this, providing them with a total +2 boarding modifier (before all other modifiers are applied normally).' The list's own Murder can buy the crew (p.248), so the sentence stays on its card - a regression guard for the renegade fix."
     },
     {
-      "id": "pirates-siluria-ld-minus-one",
+      "id": "pirates-havoc-ld-minus-one",
       "page": 188,
       "list": "Rogue Traders — Pirates and Wolf Packs",
-      "ship": "78",
+      "ship": "81",
       "select": [],
       "expect": {
         "card_contains": [
           "-1 Leadership"
         ]
       },
-      "why": "Fleets p.188: 'All pirate vessels suffer a -1 leadership modifier, meaning their unmodified starting leadership will be from 5 to 8.' A list-wide Ld modifier belongs on the card like the orks' -1 (p.360) and the eldar's +1 (p.304); the Siluria is the list's human ship (p.189 NOTES FROM NATE MONTES). Spot check 2026-10-18/1, seed 2026101802."
+      "why": "v0.40: Fleets p.188: 'All pirate vessels suffer a -1 leadership modifier'. The Havoc is the list's human ship of the Nate Montes notes (p.189); v0.40 dropped the Pirates' Siluria."
     },
     {
       "id": "pirates-xenos-vessel-no-ld-line",
@@ -7887,7 +7872,7 @@
       "id": "mech-own-lunar-no-p121-line",
       "page": 121,
       "list": "Adeptus Mechanicus — Explorator",
-      "ship": "71",
+      "ship": "am134",
       "select": [],
       "expect": {
         "card_lacks": [
@@ -7906,22 +7891,21 @@
           "option": "prow armour to 6\\+"
         },
         {
-          "upgrade": "Imperial Power Ram"
+          "option": "power ram"
         }
       ],
       "expect": {
         "points": 115,
         "armour": "6+ front / 5+",
         "turns": "45°",
-        "upgrades": [
+        "options": [
           {
-            "match": "Power Ram",
-            "state": "take",
-            "cost": 5
+            "match": "power ram",
+            "state": "take"
           }
         ]
       },
-      "why": "Fleets p. 32: 'The Imperial Power Ram may be taken by any Imperial capital ship with a 6+ prow for +5 points unless it has a Nova Cannon.' Endeavour p. 72: 'May increase the prow armour to 6+ for no additional cost. However, if this option is taken, the turning radius of these vessels is reduced to 45 degrees.' The ram asks for the prow the ship has, so the free 6+ prow option makes the Endeavour eligible: 110 + 0 + 5 = 115. The owner's Bastion 1500 roster of 19.10.2026 (J223)."
+      "why": "v0.40: Endeavour p. 72: 'If the prow armour is increased, the ship may also take a power ram for +5 points' - the ram needs the free 6+ prow option first. 115 pts (J223)."
     },
     {
       "id": "ram-endeavour-5plus-prow-not-offered",
@@ -7946,21 +7930,20 @@
           "option": "prow armour to 6\\+"
         },
         {
-          "upgrade": "Imperial Power Ram"
+          "option": "power ram"
         }
       ],
       "expect": {
         "points": 125,
         "armour": "6+ front / 5+",
-        "upgrades": [
+        "options": [
           {
-            "match": "Power Ram",
-            "state": "take",
-            "cost": 5
+            "match": "power ram",
+            "state": "take"
           }
         ]
       },
-      "why": "Fleets p. 32: 'The Imperial Power Ram may be taken by any Imperial capital ship with a 6+ prow for +5 points unless it has a Nova Cannon.' Defiant p. 76: 'May increase the prow armour to 6+ for no additional cost.' 120 + 5 = 125 (J223)."
+      "why": "v0.40: Defiant p. 76: 'If the prow armour is increased, the ship may also take a power ram for +5 points' - the ram needs the free 6+ prow option first. 125 pts (J223)."
     },
     {
       "id": "waaagh-warlord-power-fields-space-hulk-row",
@@ -8022,6 +8005,22 @@
         ]
       },
       "why": "Fleets p. 395: “In their Movement phase Roks travel 10 cm forward in a straight line, no more, no less.” and “any rules which are not specifically noted as being modified below, apply in full to Roks.” Fleets p. 372: “Soopa Boostas +25 pts. The ship gains +5 cm speed, and it rolls 4D6 cm when on All Ahead Full special orders.” Ruling T57 (user 26.10.2026, read as written for now): a +5 cm speed upgrade does not change the 10 cm of a Rok. The Rok can still take the row and pays for it. The 4D6 replaces the own extra 2D6 of the Rok on All Ahead Full. Rok 80 + Soopa Boostas 25 = 105."
+    },
+    {
+      "id": "ram-not-in-chaos",
+      "page": 190,
+      "list": "Chaos — Incursion",
+      "ship": "180",
+      "select": [],
+      "expect": {
+        "options": [
+          {
+            "match": "power ram",
+            "state": "off"
+          }
+        ]
+      },
+      "why": "v0.40: the power ram is only for a ship 'part of an Imperial Navy, Adeptus Mechanicus, Inquisition, or Rogue Trader fleet list' (p.190); a Rogue Trader cruiser with a Chaos fleet does not get it (the row's optno)."
     }
   ]
 }

@@ -1285,9 +1285,13 @@ def annotate(lists_out, raws, pages=None):
         ONE_WEAPON_SEC = re.compile(r"^one\b.*\bweapons?$", re.I)
         ONE_WEAPON_TXT = re.compile(r"must be armed with one weapon chosen",
                                     re.I)
+        # v0.40 p.431 prints each "must be armed with one weapon chosen from the
+        # following list:" as a lead-in of its own, which the text cleaning drops,
+        # so the Hive Fleet's ESCORTS section is named.
         for si, sec in enumerate(Lx["secs"]):
             if not (ONE_WEAPON_SEC.match(sec["t"])
-                    or any(ONE_WEAPON_TXT.search(t) for t in sec.get("text", []))):
+                    or any(ONE_WEAPON_TXT.search(t) for t in sec.get("text", []))
+                    or (Lx["nm"] == "Tyranids \u2014 Hive Fleet" and sec["t"] == "ESCORTS")):
                 continue
             for e in sec["ents"]:
                 if e.get("k") != "up" or e.get("grp"):

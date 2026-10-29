@@ -84,7 +84,9 @@ CAPS = re.compile(r"^[A-Z’'&\- ]{3,40}$")
 # because the book's two-line headings would then break at the wrong
 # place ("XENOS FREEBOOTERS, CORSAIRS AND", "PRINCE YRIEL, BEARER
 # OF THE"). These are read from the book and checked one by one.
-EXTRA_HEADS = {"ALLIES, SUBJECTS & MERCENARIES"}
+# v0.40 p.149: the Inquisition's ordnance paragraph has the heading
+# "WEAPONS, ORDNANCE AND UPGRADES" (v0.36: ORDNANCE AND UPGRADES).
+EXTRA_HEADS = {"ALLIES, SUBJECTS & MERCENARIES", "WEAPONS, ORDNANCE AND UPGRADES"}
 _EXTRA_HEAD_HITS = []
 # A slash belongs to the heading: "Up to Three Port/Starboard Weapons"
 # (the tyranids' hive ship, p.430) and "Reserve/allies" (the Inquisition,
@@ -287,8 +289,9 @@ io.open(_os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "lists_raw.j
 tot = sum(len(s["entries"]) for L in out for s in L["sections"])
 print("lists %d, sections %d, rows %d" %
       (len(out), sum(len(L["sections"]) for L in out), tot))
-assert len(_EXTRA_HEAD_HITS) == 2, (
-    "a named heading did not hit twice: %s" % _EXTRA_HEAD_HITS)
+# the Tau heading on both Tau lists, the Inquisition's once
+assert len(_EXTRA_HEAD_HITS) == 3, (
+    "the named headings did not hit three times: %s" % _EXTRA_HEAD_HITS)
 print("named headings: %d" % len(_EXTRA_HEAD_HITS))
 assert len(_TAILCOUNT_HITS) == 1, (
     "a count limit in brackets did not hit once: %s" % _TAILCOUNT_HITS)

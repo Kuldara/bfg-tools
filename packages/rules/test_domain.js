@@ -551,7 +551,8 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
   /* 77 = 75 + Prince Yriel on both Corsair lists (p.317, J161 9.10.2026) */
   /* 81 = 77 + Abaddon on four god lists (p.241, J162 13.10.2026) */
   check("commanders: 81 rows, each with ld and rr in the data", cmds === 81 && bad === 0, cmds + " / bad " + bad);
-  check("commanders: without an Ld value only those acknowledged in the reference (8)", noLd.length === 8, noLd.join(" | "));
+  /* 5 since v0.40: Prince Yriel's page prints Leadership 10 (p.313) */
+  check("commanders: without an Ld value only those acknowledged in the reference (5)", noLd.length === 5, noLd.join(" | "));
   const ref = JSON.parse(fs.readFileSync(path.join(HERE, "..", "..", "reference", "commanders.json"), "utf8")).commanders;
   check("commanders: the reference rows are found in the data with their pages", ref.every(r => r.verified === true && Number.isInteger(r.page) &&
         catalog.lists.some(L => L.nm === r.list && L.secs.some(s => s.ents.some(e => e.k === "cmd" && e.l === r.label)))));
@@ -635,27 +636,25 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
     const x = unitFor(L.nm, page, { [same[0]]: "take", [same[1]]: "take" });
     check("validate: the same weapon slot twice -> option.swap_conflict", DOMAIN.validateIntent(x.intent, x.ctx, catalog).some(i => i.code === "option.swap_conflict"));
   }
-  /* ineligible upgrade: Tyrant with nova cannon and the Power Ram */
-  { const L = listByName("Imperial Navy — Gothic Sector"); const sh = catalog.ships["69"]; const nova = sh.ol.findIndex(o => /nova cannon/i.test(o.t));
-    const at = placeOn(L, "69"); let ram = null;
-    L.secs.forEach((s, si) => s.ents.forEach((e, ei) => { if(e.k === "up" && /Power Ram/i.test(e.l)) ram = { si, ei, en: e }; }));
-    const ramId = DOMAIN.upgradeId(L.nm, L.secs[ram.si].t, ram.en.l);
-    const x = unitFor("Imperial Navy — Gothic Sector", "69", {}, { [ram.si + ":" + ram.ei]: "take" });
-    check("Tyrant + Power Ram: valid", DOMAIN.validateIntent(x.intent, x.ctx, catalog).length === 0);
-    const tr = DOMAIN.transition(x.intent, { type: "option", id: sh.ol[nova].id, state: "take" }, x.ctx, catalog);
-    /* 30.9.2026: a drop returns the row to its default (the key goes) - while
-       the nova is taken the ram is not offered, so it is gone; when the nova
-       is undone the ram comes back as an Option and does not stay a Hide */
-    const trR = DOMAIN.resolveUnit(tr.intent, x.ctx, catalog).upgrades.filter(u => /Power Ram/i.test(u.label));
-    check("transition: Nova drops the Power Ram with a notice", !(ramId in tr.intent.upgrades) && trR.every(u => u.state === "off") && tr.notices.some(n => n.code === "upgrade.ineligible"), JSON.stringify([tr.notices, trR.map(u => u.state)]));
-    const back = DOMAIN.transition(tr.intent, { type: "option", id: sh.ol[nova].id, state: "opt" }, x.ctx, catalog);
-    const backR = DOMAIN.resolveUnit(back.intent, x.ctx, catalog).upgrades.filter(u => /Power Ram/i.test(u.label));
-    check("... nova open again: Power Ram returns to Option", backR.length === 1 && backR[0].state === "opt", JSON.stringify(backR.map(u => u.state)));
-    const bad = JSON.parse(JSON.stringify(x.intent)); bad.options[sh.ol[nova].id] = { state: "take", qty: 1 };
-    const is = DOMAIN.validateIntent(bad, x.ctx, catalog);
-    check("validate: Nova + Power Ram directly -> upgrade.ineligible (warning, not charged)", is.some(i => i.code === "upgrade.ineligible" && i.severity === "warning"));
-    const Rb = DOMAIN.resolveUnit(bad, x.ctx, catalog);
-    check("resolveUnit(invalid): the ram is not charged", Rb.points === 185 + 20, String(Rb.points));
+  /* Tyrant: the nova cannon or the power ram (Fleets v0.40 p.69: "If the prow
+     torpedoes are not replaced, the ship may take a power ram") - one
+     exclusive group of the ship's own options */
+  { const sh = catalog.ships["69"]; const nova = sh.ol.findIndex(o => /nova cannon/i.test(o.t));
+    const ram = sh.ol.findIndex(o => /take a power ram/i.test(o.t));
+    check("Tyrant: the nova cannon and the power ram share a group of one", nova >= 0 && ram >= 0 &&
+          sh.ol[nova].grp && sh.ol[nova].grp === sh.ol[ram].grp && sh.ol[ram].gmax === 1);
+    const x = unitFor("Imperial Navy — Gothic Sector", "69", { [ram]: "take" });
+    check("Tyrant + power ram: valid, 185 + 5", DOMAIN.validateIntent(x.intent, x.ctx, catalog).length === 0 &&
+          DOMAIN.resolveUnit(x.intent, x.ctx, catalog).points === 190);
+    const bad = unitFor("Imperial Navy — Gothic Sector", "69", { [ram]: "take", [nova]: "take" });
+    check("validate: nova cannon + power ram -> an error", DOMAIN.validateIntent(bad.intent, bad.ctx, catalog).some(i => i.severity === "error"),
+          JSON.stringify(DOMAIN.validateIntent(bad.intent, bad.ctx, catalog)));
+  }
+  /* the power ram is not for a Chaos fleet ("if it is part of an Imperial
+     Navy, Adeptus Mechanicus, Inquisition, or Rogue Trader fleet list") */
+  { const L = listByName("Chaos — Incursion"); let en = null;
+    L.secs.forEach(s => s.ents.forEach(e => { if(!en && String(e.r) === "180" && e.k !== "up") en = e; }));
+    check("Chaos: a Rogue Trader cruiser's power ram is banned on the row", !!en && /power ram/.test(en.optno || ""), en && en.optno);
   }
   /* hull change clears with a notice; unknown hull is an error */
   { const L = listByName("Space Marines — Codex Astartes"); let at = null;
@@ -807,9 +806,11 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
   { const L = list("Tyranids — Hive Fleet");
     expect("no hive ship + Cruiser", fleet(L, 2000, [unit(L, "^Cruiser$")]), "Without a hive ship", false);
     expect("no hive ship + Kraken", fleet(L, 2000, [unit(L, "^Kraken", 6)]), "Without a hive ship", true);
-    expect("hive ship + 5 escorts (min 6)", fleet(L, 2000, [unit(L, "^Hive ship"), unit(L, "^Escort drone", 5)]), "Escorts per hive ship \\(min\\)", false);
+    expect("hive ship + 5 escort drones (min 6)", fleet(L, 2000, [unit(L, "^Hive ship"), unit(L, "^Escort drone", 5)]), "Escort drones per hive ship", false);
     expect("hive ship + 6 escort drones", fleet(L, 2000, [unit(L, "^Hive ship"), unit(L, "^Escort drone", 6)]), "Escort drones per hive ship", true);
-    expect("hive ship + 13 escorts (max 12)", fleet(L, 2000, [unit(L, "^Hive ship"), unit(L, "^Escort drone", 6), unit(L, "^Kraken", 7)]), "Escorts per hive ship \\(max\\)", false);
+    /* v0.40 p.430-431: six escort drones + up to 12 more = at most 18 per hive ship */
+    expect("hive ship + 6 drones + 12 Kraken (max 18)", fleet(L, 2000, [unit(L, "^Hive ship"), unit(L, "^Escort drone", 6), unit(L, "^Kraken", 12)]), "Escorts per hive ship \\(six", true);
+    expect("hive ship + 6 drones + 13 Kraken (max 18)", fleet(L, 2000, [unit(L, "^Hive ship"), unit(L, "^Escort drone", 6), unit(L, "^Kraken", 13)]), "Escorts per hive ship \\(six", false);
     expect("1 hive ship + Imperative (min_one)", fleet(L, 2000, [unit(L, "^Hive ship", 1, ["Hive Mind Imperative"]), unit(L, "^Escort drone", 6)]), "Hive Mind Imperatives", true);
     expect("2 hive ships + 2 Imperatives", fleet(L, 3000, [unit(L, "^Hive ship", 1, ["Hive Mind Imperative"]), unit(L, "^Hive ship", 1, ["Hive Mind Imperative"]), unit(L, "^Escort drone", 12)]), "Hive Mind Imperatives", false);
     /* p.426: at most three different refits on a hive ship (unit_upgrade_max) */
@@ -818,12 +819,12 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
     /* p.431: ordnance markers at most 10 % of the points limit (points_share of=limit) */
     const ordn = fleet(L, 1000, [unit(L, "^Hive ship"), unit(L, "^Escort drone", 6), unit(L, "^Cruiser$")]);
     check("Tyranid ordnance share check exists", !!chk(ordn, "Ordnance markers")); }
-  /* Grey Knights p. 155: a Battlebarge only if the rest of the fleet is >= 1000 AND the Ordo Malleus leads (allowed_at remainder+cond) */
+  /* Grey Knights p. 154: a Battle barge only if the rest of the fleet is >= 1000 AND an Ordo Malleus Inquisitor Lord leads (allowed_at remainder+cond) */
   { const L = list("Grey Knights");
     const sc7 = Array.from({ length: 7 }, () => unit(L, "Grey Knights Strike Cruiser"));
-    expect("GK barge, Inquisitor Lord only", fleet(L, 3000, [unit(L, "^Grey Knights Battlebarge"), unit(L, "^Inquisitor Lord")].concat(sc7)), "Battlebarge", false);
-    expect("GK barge, Ordo Malleus + 1155 pts", fleet(L, 3000, [unit(L, "^Grey Knights Battlebarge"), unit(L, "^Ordo Malleus")].concat(sc7)), "Battlebarge", true);
-    expect("GK barge, Ordo Malleus, remainder < 1000", fleet(L, 3000, [unit(L, "^Grey Knights Battlebarge"), unit(L, "^Ordo Malleus"), unit(L, "Grey Knights Strike Cruiser")]), "Battlebarge", false); }
+    expect("GK barge, Inquisitor Lord only", fleet(L, 3000, [unit(L, "^Grey Knights Battle barge"), unit(L, "^Inquisitor Lord")].concat(sc7)), "Battle barge", false);
+    expect("GK barge, Ordo Malleus + 1155 pts", fleet(L, 3000, [unit(L, "^Grey Knights Battle barge"), unit(L, "^Ordo Malleus")].concat(sc7)), "Battle barge", true);
+    expect("GK barge, Ordo Malleus, remainder < 1000", fleet(L, 3000, [unit(L, "^Grey Knights Battle barge"), unit(L, "^Ordo Malleus"), unit(L, "Grey Knights Strike Cruiser")]), "Battle barge", false); }
   /* Rogue Traders Exploration p.186-187 */
   { const L = list("Rogue Traders — Exploration");
     expect("RT half: 1 RT + 2 Lunar", fleet(L, 3000, [unit(L, "^Rogue Trader cruiser"), unit(L, "^Lunar"), unit(L, "^Lunar"), unit(L, "^Veteran Rogue"), unit(L, "^Cargo Transport", 2)]), "at least half", false);
@@ -1792,7 +1793,8 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
           (wantL ? "lance" : "weapon battery") + " -> " + want);
     });
   });
-  check("13h: weapon badges checked against the book's sentence", checked >= 25,
+  /* 24 since v0.40: the Hive ship's "Bio-plasma spines" are "discharge" (p.432) */
+  check("13h: weapon badges checked against the book's sentence", checked >= 24,
         String(checked));
   check("no weapon badge disagrees with the book's sentence",
         wrong.length === 0, wrong.slice(0, 6).join("  |  "));
@@ -1963,14 +1965,15 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
   });
   check("13i: all four gods were run", ran === 24, String(ran));
 
-  /* Only the Mechanicus's two 0-point refits remain required upgrades. If
-     someone gives the Mark back its `req`, this says so at once. */
+  /* No required upgrades remain: v0.40 put the Mechanicus's two 0-point
+     refits into its profiles (p.125). If someone gives the Mark back its
+     `req`, this says so at once. */
   const reqs = [];
   catalog.lists.forEach(function(L){
     L.secs.forEach(function(sec){
       sec.ents.forEach(function(en){
         if(en.k === "up" && en.req && !en.incl) reqs.push(L.nm + " / " + en.l); }); }); });
-  check("there are exactly two required upgrades", reqs.length === 2,
+  check("there are no required upgrades", reqs.length === 0,
         reqs.join(" | "));
 })();
 
@@ -2116,7 +2119,7 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
   check("... failed second double: defects, victory points to neither side (p. 39)",
         /if that second double also failed the check, the ship defects to the Chaos player and scores victory points for neither side/.test(carnage), String(carnage));
   check("... the mention of the Inquisitor: not in force while the Ordo Malleus Inquisitor's ship is in play (p. 152)",
-        /If an Ordo Malleus Inquisitor leads the fleet, this does not apply while the Inquisitor's ship remains in play\. \(Fleets pp\. 39, 142\)/.test(carnage), String(carnage));
+        /If an Ordo Malleus Inquisitor leads the fleet, this does not apply while the Inquisitor's ship remains in play\. \(Fleets pp\. 39, 152\)/.test(carnage), String(carnage));
   const glunar = card(go, /^Cruisers$/i, /^Lunar/);
   check("control: Gothic's own Lunar gets no section rules",
         !!glunar && !/Renegade|Strange happenings/.test(glunar), String(glunar));
@@ -2346,7 +2349,7 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
   };
   const cruisers = (L, n) => Array.from({ length: n }, () => row(L, /^Cruisers$/i, /class cruiser$/i));
   const lord = L => row(L, /^THE INQUISITION$/, /^Inquisitor Lord/);
-  const om = L => row(L, /^ORDO MALLEUS INQUISITORS$/, /^Ordo Malleus Inquisitor Lord$/);
+  const om = L => row(L, /^ORDO MALLEUS INQUISITORS$/, /^Ordo Malleus Inquisitor Lord \(Ld 10\)$/);
   const carnage = L => row(L, /^ORDO MALLEUS RESERVES$/, /^Carnage/);
   const fleet = (L, units) => DOMAIN.resolveFleet({ list: L.nm, limit: 100000, units: units }, catalog);
   const bad = F => F.checks.filter(c => !c.ok).map(c => c.t + " = " + c.v);
@@ -2408,7 +2411,7 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
   check("the Ordo Malleus Carnage's card: Strange happenings starts only after the Inquisitor's ship",
         /Ordo Malleus reserve: Chaos ordnance, no ship class variants\. Strange happenings applies only once the Inquisitor's ship is out of play: a double on a command check makes the ship unreliable for the rest of the game/.test(cc) &&
         /minimum move straight ahead/.test(cc) && /nearest table edge/.test(cc) &&
-        /defects to the Chaos player and scores victory points for neither side\. \(Fleets pp\. 39, 142\)/.test(cc) &&
+        /defects to the Chaos player and scores victory points for neither side\. \(Fleets pp\. 39, 152\)/.test(cc) &&
         !/If an Ordo Malleus Inquisitor leads the fleet/.test(cc) &&
         !/Battlefleet Obscura Reserve Fleet|Reserve fleet vessel/.test(cc), cc);
   const gl = cardOf(row(GO, /^Cruisers$/i, /^Lunar/), GO);
@@ -2436,8 +2439,9 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
   check("Explorator Carnage: no list upgrades and no required keys",
         Rc.upgrades.length === 0 && DOMAIN.requiredUpgradeKeys(selC).length === 0,
         Rc.upgrades.map(u => u.label).join("; "));
-  check("control: Explorator's own cruiser is a Mechanicus ship and gets the required rows",
-        Ro.mechanicus === true && Ro.gifts === true && DOMAIN.requiredUpgradeKeys(selO).length >= 1 &&
+  /* v0.40: its +1 turret and dorsal lance are in the profile (p.125), no required rows */
+  check("control: Explorator's own cruiser is a Mechanicus ship",
+        Ro.mechanicus === true && Ro.gifts === true && DOMAIN.requiredUpgradeKeys(selO).length === 0 &&
         /Mechanicus crews/.test(Ro.rules.map(r => r.t).join(" ")), JSON.stringify({ m: Ro.mechanicus, k: DOMAIN.requiredUpgradeKeys(selO) }));
   const BK = by("Imperial Navy — Bakka Sector");
   const jov = BK.secs.filter(x => x.ct === "reserve")[0];
@@ -2580,15 +2584,16 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
   check("hive ship: five groups condense into one marker",
         t("HIVE SHIP") === "5 weapon choices", t("HIVE SHIP"));
 
-  /* A list can force a weapon and a value before the player chooses anything:
-     the Mechanicus's dorsal lance and +1 turret (p. 120) are on every cruiser of
-     that list, so the row counts them in. */
+  /* A list can force a weapon and a value before the player chooses anything.
+     The Mechanicus's dorsal lance and +1 turret did that until v0.40; now they
+     are in the Mechanicus profiles (p.125, Gothic p.133), so nothing is forced. */
   const EX = by("Adeptus Mechanicus \u2014 Explorator"), GO = by("Imperial Navy \u2014 Gothic Sector");
-  const chg = DOMAIN.requiredHullChanges(EX, sh("GOTHIC CLASS CRUISER"));
-  check("Explorator forces a dorsal lance and +1 turret on a Gothic",
-        chg.rows.length === 1 && /dorsal lance/i.test(chg.rows[0][0]) && chg.mod && chg.mod.tu === 1 &&
-        t("GOTHIC CLASS CRUISER", { list: EX }) === "LAN 4\u00d72, 1 \u00b7 TORP 6",
-        JSON.stringify(chg) + " | " + t("GOTHIC CLASS CRUISER", { list: EX }));
+  const amGothic = catalog.ships.am133;
+  const chg = DOMAIN.requiredHullChanges(EX, amGothic);
+  check("Explorator's Gothic is the Mechanicus profile: its dorsal lance and turret 3 are printed",
+        chg.rows.length === 0 && chg.mod === null && amGothic.tu === "3" &&
+        amGothic.aw.some(a => /^Dorsal lance battery$/.test(a[0])),
+        JSON.stringify(chg));
   const goChg = DOMAIN.requiredHullChanges(GO, sh("GOTHIC CLASS CRUISER"));
   check("control: Gothic Sector forces nothing",
         goChg.rows.length === 0 && goChg.mod === null && t("GOTHIC CLASS CRUISER", { list: GO }) === t("GOTHIC CLASS CRUISER"),
@@ -2702,7 +2707,7 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
         val(fleet(GO, lunar(12).concat([lord(GO), black(GO)])), /^Battleships/));
 
   /* On the Space Marine list both take a strike cruiser slot (0-10). */
-  const sc = n => Array.from({ length: n }, () => row(CA, /^Cruisers$/i, /^Strike cruisers/i));
+  const sc = n => Array.from({ length: n }, () => row(CA, /^Cruisers$/i, /^Strike cruiser/i));
   check("Codex: 10 strike cruisers + Inquisitorial Cruiser = 11 / 10",
         /^X 11 \/ 10/.test(val(fleet(CA, sc(10).concat([lord(CA), inq(CA)])), /^Cruisers/)),
         val(fleet(CA, sc(10).concat([lord(CA), inq(CA)])), /^Cruisers/));
@@ -2895,11 +2900,16 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
   const t2 = DOMAIN.transition(t1.intent, { type: "upgrade", id: oneRr.id, state: "opt" }, { list: GO }, catalog);
   const back = DOMAIN.resolveUnit(t2.intent, { list: GO }, catalog).upgrades.filter(x => /re-roll/i.test(x.label)).map(x => x.state);
   check("... One taken (Two drops) and then off: all three Options again", JSON.stringify(back) === '["opt","opt","opt"]', JSON.stringify(back));
-  /* A taken Power Ram excludes the nova: the card gets no "OR Prow nova cannon" */
-  const ram = l0.upgrades.filter(x => /Power Ram/i.test(x.label))[0];
-  const rk = {}; rk[ram.id] = "take";
-  const tyr = mk(GO, /^Cruisers$/i, /^Tyrant/, rk);
-  check("Tyrant + Power Ram: the nova is not offered in the weapon table (Fleets p. 32)", !tyr.weapons.some(w => /nova/i.test(w.a[0])), JSON.stringify(tyr.weapons.map(w => w.a[0])));
+  /* A taken power ram excludes the nova: the card gets no "OR Prow nova cannon"
+     (v0.40 p.69: "If the prow torpedoes are not replaced, the ship may take a
+     power ram" - the ship's own options, one group) */
+  const tsh = catalog.ships["69"], ramI = tsh.ol.findIndex(o => /take a power ram/i.test(o.t));
+  const at69 = at(GO, /^Cruisers$/i, /^Tyrant/);
+  const tyr = DOMAIN.resolveUnit({ schemaVersion: DOMAIN.SCHEMA_VERSION, role: "core",
+      entry: { list: GO.nm, section: at69.sec.t, label: at69.en.l }, ref: "69", hull: null, hulls: 1,
+      name: "", note: "", adjust: 0, custom: null, members: [],
+      options: { [tsh.ol[ramI].id]: { state: "take", qty: 1 } }, upgrades: {} }, { list: GO }, catalog);
+  check("Tyrant + power ram: the nova is not offered in the weapon table (Fleets p. 69)", !tyr.weapons.some(w => /nova/i.test(w.a[0])), JSON.stringify(tyr.weapons.map(w => w.a[0])));
   const tyr0 = mk(GO, /^Cruisers$/i, /^Tyrant/);
   check("... without the ram the nova is an alternative", tyr0.weapons.some(w => /nova/i.test(w.a[0]) && w.state === "offered"));
   check("... a two-side swap is marked on both sides (one option)", tyr0.weapons.filter(w => w.alt && w.both).length === 2,
@@ -2973,7 +2983,7 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
   check("each of the 81 commander rows: the included number is said in words", n === 81 && !bad.length, bad.slice(0, 5).join(" | "));
   /* the fleet's own re-roll without a commander (Necron p. 406, Demiurg p. 486) */
   const fr = DOMAIN.fleetRerolls || (() => null);
-  [[NE, 404], [DE, 486]].forEach(p => {
+  [[NE, 406], [DE, 486]].forEach(p => {
     const f = fr(p[0]);
     check(p[0].nm + ": the fleet gets one re-roll (p. " + p[1] + ")", !!f && f.included === 1 && f.page === p[1] && /1 re-roll included/.test(f.text), JSON.stringify(f));
   });
@@ -3313,39 +3323,42 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
         rows(KH, kBase) + "  ->  " + rows(KH, kBase.concat([unit(KH, /^Blackstone fortress$/)])));
 })();
 
-/* ---- 16. Prince Yriel on the Corsair lists (Fleets p. 317, J161) -----------
+/* ---- 16. Prince Yriel on Iyanden and the Corsair lists (Fleets p. 313, J161) --
    "Yriel may be taken instead of the Hero Fleet Commander as listed in the
-   Corsair and Craftworld Eldar fleet lists." The box is printed on Iyanden's
-   second page, so the row was only on that list. */
+   Corsair and Craftworld Eldar fleet lists." v0.40 gives him his own page;
+   the section "Prince Yriel" is built from it on all three lists. */
 (function(){
   const by = nm => catalog.lists.find(L => L.nm === nm);
-  const IY = by("Eldar \u2014 Iyanden Craftworld");
-  const iy = IY.secs.find(s => s.t === "RESERVES AND ALLIES");
-  ["Eldar Corsairs \u2014 Gothic Sector", "Eldar Corsairs \u2014 Later Gothic War"].forEach(nm => {
-    const L = by(nm), si = L.secs.findIndex(s => s.t === "RESERVES AND ALLIES"), sec = L.secs[si];
-    const rows = sec.ents.map(e => [e.l, e.p, e.k, e.rr || 0]);
-    check("Yriel " + nm + ": the row 150 pts, 1 re-roll in the price, +25 / +50, -25 aboard the Flame (p. 317)",
+  const IY = by("Eldar — Iyanden Craftworld");
+  const iy = IY.secs.find(s => s.t === "Prince Yriel");
+  ["Eldar Corsairs — Gothic Sector", "Eldar Corsairs — Later Gothic War", "Eldar — Iyanden Craftworld"].forEach(nm => {
+    const L = by(nm), si = L.secs.findIndex(s => s.t === "Prince Yriel"), sec = L.secs[si];
+    const rows = sec ? sec.ents.map(e => [e.l, e.p, e.k, e.rr || 0]) : [];
+    check("Yriel " + nm + ": the row 150 pts, 1 re-roll in the price, +25 / +50, -25 aboard the Flame (p. 313)",
           same(rows, [["Prince Yriel", 150, "cmd", 1], ["One extra re-roll", 25, "up", 1], ["Two extra re-rolls", 50, "up", 2],
                       ["Embarked aboard the Flame of Asuryan", -25, "up", 0]]), JSON.stringify(rows));
+    if(!sec) return;
     check("Yriel " + nm + ": his own upgrade rows point to his row",
           sec.ents.slice(1).every(e => same(e.at, [[si, 0]])), JSON.stringify(sec.ents.slice(1).map(e => e.at)));
     const it = { list: L.nm, entry: { list: L.nm, section: sec.t, label: "Prince Yriel" }, ref: null, hulls: 1, options: {}, upgrades: {} };
     const R = DOMAIN.resolveUnit(it, { list: L, host: L }, catalog);
     const iyR = DOMAIN.resolveUnit({ list: IY.nm, entry: { list: IY.nm, section: iy.t, label: "Prince Yriel" }, ref: null, hulls: 1, options: {}, upgrades: {} },
                                    { list: IY, host: IY }, catalog);
-    check("Yriel " + nm + ": commander, 150 pts, 1 re-roll included, two open boxes",
+    check("Yriel " + nm + ": commander, 150 pts, Ld 10, 1 re-roll included, two open boxes",
           !!R && R.kind === "commander" && R.points === 150 && R.rerolls.included === 1 &&
           R.rerolls.boxes.join(",") === "included,optional,optional", JSON.stringify(R && [R.kind, R.points, R.rerolls.boxes]));
-    check("Yriel " + nm + ": the card's rules the same as on Iyanden's row (9 sentences, p. 317)",
-          same(R.rules.map(r => r.t), iyR.rules.map(r => r.t)) && R.rules.length >= 9 &&
-          R.rules.some(r => /Vampire raiders/.test(r.t)) && R.rules.some(r => /exempt from the reserve rules \(e\.g\. you do not have to field three capital ships in a Corsair Eldar fleet list\)\./.test(r.t)) &&
-          !R.rules.some(r => /An Eldar Hero must lead the fleet in order to use Craftworld/.test(r.t)),
+    check("Yriel " + nm + ": the card's rules the same as on Iyanden's row (p. 313)",
+          same(R.rules.map(r => r.t), iyR.rules.map(r => r.t)) && R.rules.length >= 8 &&
+          R.rules.some(r => /Vampire raiders/.test(r.t)) && R.rules.some(r => /exempt from the reserve rules/.test(r.t)) &&
+          !R.rules.some(r => /An Eldar Hero must lead the fleet in order to use/.test(r.t)),
           R.rules.length + " / " + iyR.rules.length);
-    check("Yriel " + nm + ": the Flame of Asuryan's reserve exemption is in the list's facts with its page",
-          !!L.res_exempt && L.res_exempt.pg === 319 && new RegExp(L.res_exempt.re, "i").test("Flame of Asuryan") &&
-          !new RegExp(L.res_exempt.re, "i").test("Dragonship"), JSON.stringify(L.res_exempt));
+    if(/Corsairs/.test(nm))
+      check("Yriel " + nm + ": the Flame of Asuryan's reserve exemption is in the list's facts with its page",
+            !!L.res_exempt && L.res_exempt.pg === 313 && new RegExp(L.res_exempt.re, "i").test("Flame of Asuryan") &&
+            !new RegExp(L.res_exempt.re, "i").test("Dragonship"), JSON.stringify(L.res_exempt));
   });
 })();
+
 
 /* ---- 17. the Space Hulk card (Fleets p. 290, p. 393; owner 9.10.2026)
    The critical table as three groups with sub-items, the minus boxes' facts on
@@ -3673,10 +3686,10 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
   };
   const pir = rowsOf(/Pirates and Wolf Packs$/, /^Pirate Captains$/i, /extra re-roll/i);
   check("the Pirate Captain's two re-roll rows on page 188",
-        pir.length === 2 && pir.every(en => en.src_page === 178), JSON.stringify(pir.map(en => [en.l, en.src_page])));
+        pir.length === 2 && pir.every(en => en.src_page === 188), JSON.stringify(pir.map(en => [en.l, en.src_page])));
   const yr = rowsOf(/^Eldar Corsairs/, /./, /extra re-roll/i);
-  check("Prince Yriel's re-roll rows on page 317 on both Corsair lists",
-        yr.length === 4 && yr.every(en => en.src_page === 319), JSON.stringify(yr.map(en => [en.l, en.src_page])));
+  check("Prince Yriel's re-roll rows on page 313 on both Corsair lists",
+        yr.length === 4 && yr.every(en => en.src_page === 313), JSON.stringify(yr.map(en => [en.l, en.src_page])));
   const miss = [];
   catalog.lists.forEach(L => L.secs.forEach(sec => sec.ents.forEach(en => {
     if((en.k === "up" || en.k === "cmd") && !(en.src_page > 0)) miss.push(L.nm + " / " + sec.t + " / " + en.l);
@@ -3763,13 +3776,13 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
         !/only on a 6/.test(steps(GO, /^Orbital mine$/)) && !/only on a 6/.test(steps(GO, /^Minefield$/)));
   /* (b) */
   check("J175b: the Shroud exception on both mine cards (p.409)",
-        [steps(GO, /^Orbital mine$/), steps(GO, /^Minefield$/)].every(t => /Shroud never activates orbital mines/.test(t) && /p\. 407/.test(t)));
+        [steps(GO, /^Orbital mine$/), steps(GO, /^Minefield$/)].every(t => /Shroud never activates orbital mines/.test(t) && /p\. 409/.test(t)));
 
   /* (c) */
   const DR = (() => { let hit = null;
     TH.secs.forEach(sec => sec.ents.forEach(en => { if(!hit && String(en.r) === "437") hit = [sec, en]; })); return hit; })();
   const S437 = catalog.ships["437"];
-  const fsOpt = S437 && S437.ol.find(o => /become fireships/.test(o.t));
+  const fsOpt = S437 && S437.ol.find(o => /become fire ships/.test(o.t));
   const drones = (n, fire) => {
     const u = { list: TH.nm, entry: { section: DR[0].t, label: DR[1].l }, ref: "437", hulls: n, options: {}, upgrades: {} };
     if(fire) u.options[fsOpt.id] = { state: "take" };
@@ -3798,7 +3811,7 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
     return u;
   };
   const wwSec = EC.secs.find(x => x.t === "WEBWAY PORTAL");
-  check("J175d: the Corsair list has a Webway Portal section, page 335", !!wwSec && wwSec.ents.length === 1 && wwSec.ents[0].src_page === 337);
+  check("J175d: the Corsair list has a Webway Portal section, page 335", !!wwSec && wwSec.ents.length === 1 && wwSec.ents[0].src_page === 335);
   if(wwSec){
     const full = R(EC, ecShip(/^Eclipse/)), half = R(EC, ecShip(/^Eclipse/, true));
     check("J175d: an Eclipse through the portal at half price (rounded up)",
@@ -3860,8 +3873,10 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
   const gothic = () => unit(EX, /^Gothic class cruiser$/);
   const stOf = Rx => offered(Rx).filter(x => /^Special torpedoes/.test(x.label)).map(x => x.label);
   check("J120b: an Explorator Gothic without a Nova: special torpedoes offered", stOf(R(EX, gothic())).length === 1, JSON.stringify(stOf(R(EX, gothic()))));
-  const gNova = take(gothic(), EX, /^Nova Cannon instead of prow torpedoes$/);
-  check("J120b: ... with the list's Nova taken the torpedoes are gone, and special torpedoes are not offered (p. 19)",
+  /* v0.40: the nova cannon is the Mechanicus Gothic's own option (p.133) */
+  const gNova = gothic(), gSh = catalog.ships[String(gNova.ref)];
+  gNova.options[gSh.ol.find(o => /nova cannon/i.test(o.t)).id] = { state: "take", qty: 1 };
+  check("J120b: ... with the Nova taken the torpedoes are gone, and special torpedoes are not offered (p. 19)",
         !R(EX, gNova).weapons.some(w => /torpedo/i.test(w.a[0]) && w.state === "active") && stOf(R(EX, gNova)).length === 0,
         JSON.stringify(stOf(R(EX, gNova))));
 

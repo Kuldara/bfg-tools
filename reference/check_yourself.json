@@ -8327,6 +8327,755 @@
    "p": 174,
    "text": "The Rogue Trader cruiser profile represents a Kar Durniash pattern Imperial Navy cruiser, a basic profile on which a Rogue Trader may customize as desired using the Xenotech rules.",
    "fix": "J213: S0353 koottuna"
+  },
+  {
+   "id": "S1174",
+   "g": "campaign",
+   "f": "appeals",
+   "p": 313,
+   "text": "For other appeals (Remastered Rulebook pg 156), they can use the Space Marines table below."
+  },
+  {
+   "id": "S1175",
+   "g": "campaign",
+   "f": "campaign",
+   "p": 348,
+   "text": "IMPERIAL PROMOTIONS Renown Title Ld Notes 1-5 Commander 1 re-roll 6-10 Battle Group Commander 2 re-rolls 11-20 Sub-sector Commander 2 re-rolls 21-30 Admiral 3 re-rolls 31-50 Fleet Admiral 3 re-rolls 51+ Solar Admiral 4 re-rolls SPACE MARINES (OTHER APPEALS) A request is made to nearby Space Marine Chapters to send aid to your fleet."
+  },
+  {
+   "id": "S1176",
+   "g": "campaign",
+   "f": "appeals",
+   "p": 33,
+   "text": "In your next game your opponent must reduce his points value by D6 × 30."
+  },
+  {
+   "id": "S1177",
+   "g": "campaign",
+   "f": "appeals",
+   "p": 33,
+   "text": "In the next game you play where your opponent has planetary defences, their value will be reduced by D6 × 30 points."
+  },
+  {
+   "id": "S1178",
+   "g": "checked",
+   "f": "row_cond",
+   "p": 145,
+   "text": "Every Grey Knights vessel in the fleet may embark an Honour Guard for +10 points."
+  },
+  {
+   "id": "S1179",
+   "g": "play",
+   "f": "card_rule",
+   "p": 145,
+   "text": "This ship and every Grey Knights vessel in the fleet mounts hexagrammic wards throughout its hull and ignores any Chaos marks or Daemonship effects affecting leadership or boarding actions."
+  },
+  {
+   "id": "S1180",
+   "g": "play",
+   "f": "commander_effect",
+   "p": 142,
+   "text": "Rules for Chaos Space Marines still apply normally, and any other special rules and effects such as the Forces of Chaos listed on pg.168 of the Rulebook remain unaffected."
+  },
+  {
+   "id": "S1181",
+   "g": "info",
+   "f": "list_variant",
+   "p": 39,
+   "text": "If you wish, you may use a Battlefleet Obscura Reserve Fleet, picked using the fleet list on pg 36."
+  },
+  {
+   "id": "S1182",
+   "g": "campaign",
+   "f": "appeals",
+   "p": 96,
+   "text": "Space Marines may roll appeals against the Space Marines table on pg 33 if desired."
+  },
+  {
+   "id": "S1183",
+   "g": "checked",
+   "f": "lend_upgrade_ban",
+   "p": 101,
+   "text": "Imperial Navy vessels (including Adeptus Mechanicus and Rogue Traders) are equipped with their own standard ordnance (even if they have Space Marine Captains) and cannot be given any form of Space Marine upgrade."
+  },
+  {
+   "id": "S1184",
+   "g": "campaign",
+   "f": "campaign",
+   "p": 101,
+   "text": "However, in the course of a campaign, a Dominion Fleet cannot take reinforcements from the Space Marines table listed on pg 33."
+  },
+  {
+   "id": "S1185",
+   "g": "checked",
+   "f": "vbb",
+   "p": 102,
+   "text": "The launch bays are configured to carry Thunderhawks following the rules detailed beforehand on pg 95, and they cannot be used to launch any other form of attack craft."
+  },
+  {
+   "id": "S1186",
+   "g": "play",
+   "f": "gifts",
+   "p": 119,
+   "text": "Advanced Engines: The ship gains +5 cm speed, as well as +1D6 when on All Ahead Full special orders."
+  },
+  {
+   "id": "S1187",
+   "g": "play",
+   "f": "gifts",
+   "p": 124,
+   "text": "A Mechanicus Archmagos can elect up to any one desired item from the Mechanicus Gift table for their own ship as part of their point cost, in addition to (and before) the refit the ship rolls for normally."
+  },
+  {
+   "id": "S1188",
+   "g": "checked",
+   "f": "list_gate",
+   "p": 144,
+   "text": "Grey Knights may never take Thunderhawk Annihilators."
+  },
+  {
+   "id": "S1189",
+   "g": "campaign",
+   "f": "subplot",
+   "p": 139,
+   "text": "In addition to any sub-plots rolled normally, the fleet led by an Inquisitor must take a Secret Ploys sub-plot rolled randomly from pg 127 of the Remastered Rulebook."
+  },
+  {
+   "id": "S1190",
+   "g": "drop",
+   "f": "example",
+   "p": 140,
+   "text": "For example, an Ordo Hereticus Inquisitor may lead a f leet to perform Exterminatus on a planet subsumed by a witch- cult, an Ordo Xenos Inquisitor and her kill-team may be sent to clear a derelict Space Hulk of a Tyranid infestation, etc."
+  },
+  {
+   "id": "S1191",
+   "g": "checked",
+   "f": "inquisitor_allies",
+   "p": 141,
+   "text": "An Imperial Navy or Adeptus Mechanicus fleet led by an Inquisitor that does not include Space Marine vessels has the following addition to its reserves and/or allies rules."
+  },
+  {
+   "id": "S1192",
+   "g": "drop",
+   "f": "lore",
+   "p": 142,
+   "text": "An Ordo Malleus Inquisitor Lord will only be called when intense demonic activity threatens to overrun an entire Sector."
+  },
+  {
+   "id": "S1193",
+   "g": "checked",
+   "f": "row_cond",
+   "p": 145,
+   "text": "The vessel embarking the Inquisitor Lord or one Grey Knights vessel may board a Grey Knights terminator boarding party."
+  },
+  {
+   "id": "S1194",
+   "g": "info",
+   "f": "attack_rating",
+   "p": 145,
+   "text": "A Grey Knights fleet has an attack rating of 3 unless a Blackship is accompanying the fleet, in which case its attack rating is 2."
+  },
+  {
+   "id": "S1195",
+   "g": "campaign",
+   "f": "subplot",
+   "p": 175,
+   "text": "Any game that includes a Rogue Trader cruiser must include a sub- plot from pg 124 onwards in the Remastered Rulebook."
+  },
+  {
+   "id": "S1196",
+   "g": "row",
+   "f": "option_price",
+   "p": 175,
+   "text": "To represent this each Rogue Trader cruiser and escort squadron may roll one random crew skill on pg 159 in the Remastered Rulebook for +10% point value."
+  },
+  {
+   "id": "S1197",
+   "g": "campaign",
+   "f": "subplot",
+   "p": 176,
+   "text": "Any game using the Rogue Trader fleet list must include a sub-plot from pg 124 onwards of the Remastered Rulebook."
+  },
+  {
+   "id": "S1198",
+   "g": "checked",
+   "f": "row_cond",
+   "p": 176,
+   "text": "The Xenotech Systems refits listed on pg 185 can only be used by Rogue Trader cruisers and escorts, not by other reserves or allied vessels in the fleet."
+  },
+  {
+   "id": "S1199",
+   "g": "campaign",
+   "f": "campaign",
+   "p": 176,
+   "text": "Over the course of a campaign, Rogue Trader cruisers cannot earn additional refits from the Xenotech list and must use the refit tables listed on pg 158 onwards of the Remastered Rulebook."
+  },
+  {
+   "id": "S1200",
+   "g": "checked",
+   "f": "text_mismatch",
+   "p": 231,
+   "text": "ABADDON AS FLEET COMMANDER: 195 PTS Abaddon can be chosen to act as fleet commander in any game in which the Chaos fleet is worth 1,000 points or more."
+  },
+  {
+   "id": "S1201",
+   "g": "checked",
+   "f": "aboard",
+   "p": 423,
+   "text": "If the Planet Killer is present, Abaddon must be aboard it."
+  },
+  {
+   "id": "S1202",
+   "g": "row",
+   "f": "commander_stats",
+   "p": 231,
+   "text": "Abaddon has the following characteristics: Leadership: 10 Abaddon is an exceptional commander in all respects."
+  },
+  {
+   "id": "S1203",
+   "g": "checked",
+   "f": "row_limit",
+   "p": 236,
+   "text": "Up to two capital ships (including the flagship) can have daemonic entities and warp beasts swirl about its hull, including daemonships."
+  },
+  {
+   "id": "S1204",
+   "g": "checked",
+   "f": "conditional_cap",
+   "p": 245,
+   "text": "Berzerker Fleets led by a Space Hulk may have more than two battleships, but other restrictions remain unchanged."
+  },
+  {
+   "id": "S1205",
+   "g": "play",
+   "f": "mark_effect",
+   "p": 248,
+   "text": "While within 15 cm of a vessel with Siren’s Summon, enemy ships cannot take special orders or make leadership checks of any type, including Brace For Impact."
+  },
+  {
+   "id": "S1206",
+   "g": "open",
+   "f": "row_cond",
+   "p": 455,
+   "text": "• Ghostships may not be armed with launch bays."
+  },
+  {
+   "id": "S1207",
+   "g": "campaign",
+   "f": "campaign",
+   "p": 49,
+   "text": "If the sun is in the rear arc, it counts as on its side."
+  },
+  {
+   "id": "S1208",
+   "g": "campaign",
+   "f": "campaign",
+   "p": 348,
+   "text": "ELDAR PROMOTIONS (ALL TYPES OF ELDAR) Renown Title Ld Bonus Notes 1-5 Captain +0 1 re-roll 6-10 Lord +1 1 re-rolls 11-20 Shadow Lord +1 2 re-rolls 21-30 Prince +2 2 re-rolls 31-50 Shadow Prince +2 3 re-rolls 51+ King +2 4 re-rolls The refit tables are for use by any capital ships in a Corsair Eldar or Craftworld Eldar fleet."
+  },
+  {
+   "id": "S1209",
+   "g": "campaign",
+   "f": "campaign",
+   "p": 350,
+   "text": "At the beginning of each subsequent Eldar turn roll a D6."
+  },
+  {
+   "id": "S1210",
+   "g": "checked",
+   "f": "aboard_row",
+   "p": 319,
+   "text": "He must be embarked aboard the Flame of Asuryan if it is present, in which case Yriel's cost is reduced to 125 points."
+  },
+  {
+   "id": "S1211",
+   "g": "row",
+   "f": "commander_stats",
+   "p": 319,
+   "text": "Pirate Warband Yriel is accompanied by the fiercest members of his own pirate warband, which count as an Aspect Warrior host (pg 307)."
+  },
+  {
+   "id": "S1212",
+   "g": "info",
+   "f": "attack_rating",
+   "p": 319,
+   "text": "Attack rating: 4 A fleet led by Yriel has an attack rating of 4, even if it includes Craftworld vessels."
+  },
+  {
+   "id": "S1213",
+   "g": "checked",
+   "f": "reserves",
+   "p": 319,
+   "text": "Furthermore, if the Flame of Asuryan with Yriel is added to the parent fleet it is exempt from the reserve rules. (e.g. you do not need to field three capital ships in a Corsair Eldar fleet list)."
+  },
+  {
+   "id": "S1214",
+   "g": "row",
+   "f": "commander_stats",
+   "p": 319,
+   "text": "Yriel is accompanied by the fiercest members of his own pirate warband, which count as an Aspect Warrior host (pg. 307)."
+  },
+  {
+   "id": "S1215",
+   "g": "info",
+   "f": "attack_rating",
+   "p": 319,
+   "text": "A fleet led by Yriel has an attack rating of 4, even if it includes Craftworld vessels."
+  },
+  {
+   "id": "S1216",
+   "g": "campaign",
+   "f": "campaign",
+   "p": 348,
+   "text": "DARK ELDAR IN CAMPAIGNS In a campaign, a Dark Eldar fleet commander earns promotions (re-rolls) in the same manner as the Eldar as listed on pg 310."
+  },
+  {
+   "id": "S1217",
+   "g": "play",
+   "f": "ordnance_rule",
+   "p": 120,
+   "text": "Tyranid spore clouds will NOT intercept Tyranid ordnance."
+  },
+  {
+   "id": "S1218",
+   "g": "drop",
+   "f": "row_desc_dup",
+   "p": 427,
+   "text": "Each launch bay can launch one mega-spore mine In the Ordnance phase Mega- spore mines follow all movement and ordnance rules mines do on pg 512 , but when rolling against armour to inflict hits, it inflicts that number of fire criticals instead."
+  },
+  {
+   "id": "S1219",
+   "g": "checked",
+   "f": "other_section",
+   "p": 430,
+   "text": "Each hive ship allows the Tyranid player to purchase 6–18 escort ships and 0–2 capital ships."
+  },
+  {
+   "id": "S1220",
+   "g": "drop",
+   "f": "lore",
+   "p": 451,
+   "text": "Note on Tau Weapon Configurations Tau rail gun and lance batteries are extremely sophisticated with advanced targeting systems that allow several individual weapons to engage each designated target regardless of their relative positions on the Tau ship."
+  },
+  {
+   "id": "S1221",
+   "g": "checked",
+   "f": "aboard",
+   "p": 453,
+   "text": "KOR’O VASH’YA Y’ELDI MESME: 110 PTS Kor’O’Mesme is embarked aboard the Kor’or’vesh vessel Bor’kan Or’es El’Leath Se’arle O’Mesme."
+  },
+  {
+   "id": "S1222",
+   "g": "checked",
+   "f": "ratio_base",
+   "p": 179,
+   "text": "Allied vessels don’t count toward this total."
+  },
+  {
+   "id": "S1223",
+   "g": "checked",
+   "f": "example",
+   "p": 456,
+   "text": "Fleets of at least 1,500 points may include two Custodians, and so on."
+  },
+  {
+   "id": "S1224",
+   "g": "checked",
+   "f": "row_cond",
+   "p": 145,
+   "text": "This ship or one Grey Knights vessel may board a Grey Knights terminator boarding party for +50 points."
+  },
+  {
+   "id": "S1225",
+   "g": "info",
+   "f": "opponent_bonus",
+   "p": 231,
+   "text": "The enemy Chaos fleet may add one Mark of Chaos or upgrade a cruiser to a Daemonship at no cost, and may also do so again as many times as there are Grey Knights strike cruisers in the fleet."
+  },
+  {
+   "id": "S1226",
+   "g": "row",
+   "f": "option_effect",
+   "p": 316,
+   "text": "Two turrets on the ship are exchanged for fleet defence turrets capable of protecting itself or any one other vessel within 15 cm each ordnance phase."
+  },
+  {
+   "id": "S1227",
+   "g": "row",
+   "f": "option_effect",
+   "p": 360,
+   "text": "If another vessel is chosen, they add +2 to the turret strength of that ship (this does not alter bomber attack rolls when used to defend another vessel)."
+  },
+  {
+   "id": "S1228",
+   "g": "play",
+   "f": "ordnance_rule",
+   "p": 345,
+   "text": "On a score of 4+, do not remove the Thunderhawk marker However, they stop moving as soon as they intercept an enemy."
+  },
+  {
+   "id": "S1229",
+   "g": "row",
+   "f": "option_effect",
+   "p": 427,
+   "text": "Fleet Defence Turrets: Two turrets on the ship are exchanged for fleet defence turrets capable of protecting itself or any one other vessel within 15 cm each ordnance phase."
+  },
+  {
+   "id": "S1230",
+   "g": "campaign",
+   "f": "subplot",
+   "p": 121,
+   "text": "In addition to any subplots that may be taken normally as desired, a fleet including any Adeptus Mechanicus capital ships must roll a single D6 against the following subplot table: D6 ROLL QUEST FOR KNOWLEDGE Extended Duty: The Quest for Knowledge can be long and arduous, sometimes seeing the fleet deep in unexplored space far away from logistical support for exceedingly long periods."
+  },
+  {
+   "id": "S1231",
+   "g": "checked",
+   "f": "row_offered",
+   "p": 120,
+   "text": "All Adeptus Mechanicus light cruisers can upgrade their prow armour to 6+ at no cost."
+  },
+  {
+   "id": "S1232",
+   "g": "checked",
+   "f": "reserves",
+   "p": 49,
+   "text": "Escorts taken in this manner must be taken from the same fleet list reserve capital ships are being drawn from.﻿ CAMPAIGNS The Mechanicus refit that ships earn at the start of a campaign are the ones they keep until they are destroyed."
+  },
+  {
+   "id": "S1233",
+   "g": "checked",
+   "f": "inquisitor_allies",
+   "p": 145,
+   "text": "For no change in their cost, a fleet led by an Ordo Malleus Inquisitor may take as reserves any Chaos ship listed in the Bastion Fleet List on pg 39."
+  },
+  {
+   "id": "S1234",
+   "g": "play",
+   "f": "strange_happenings",
+   "p": 174,
+   "text": "These vessels are free of the “Strange Happenings” special rule as long as the Inquisitor’s ship remains in play, but the fleet may not take any Grey Knights vessels, and the Inquisitor’s ship loses its Grey Knights contingent along with their leadership, boarding value and other bonuses."
+  },
+  {
+   "id": "S1235",
+   "g": "checked",
+   "f": "row_limit",
+   "p": 95,
+   "text": "This is a special vessel and does not count toward or against other ship limits in the fleet."
+  },
+  {
+   "id": "S1236",
+   "g": "checked",
+   "f": "row_cond",
+   "p": 145,
+   "text": "Every Grey Knights vessel in the fleet may embark an Honour Guard."
+  },
+  {
+   "id": "S1237",
+   "g": "play",
+   "f": "card_rule",
+   "p": 145,
+   "text": "The vessel embarking the Inquisitor Lord and every Grey Knights vessel in the fleet mounts hexagrammic wards throughout its hull and ignores any Chaos marks or Daemonship effects affecting leadership or boarding actions."
+  },
+  {
+   "id": "S1238",
+   "g": "play",
+   "f": "faction_rule",
+   "p": 231,
+   "text": "In order to function, a Ghostship must always be commanded by a Spiritseer – a powerful Eldar psyker who has chosen to dedicate his powers to communing with the dead."
+  },
+  {
+   "id": "S1239",
+   "g": "drop",
+   "f": "intro",
+   "p": 146,
+   "text": "USING GHOSTSHIPS Ghostships do not represent a particular class of vessel, but rather they are those vessels which are substantially controlled by spirit stones, having only a small or even non- existent living crew."
+  },
+  {
+   "id": "S1240",
+   "g": "row",
+   "f": "option_price",
+   "p": 318,
+   "text": "Any vessel in an Iyanden fleet may be converted to a Ghostship."
+  },
+  {
+   "id": "S1241",
+   "g": "play",
+   "f": "faction_rule",
+   "p": 231,
+   "text": "Ghostships use the following special rules: Leadership: Ghostships have normal Eldar leadership."
+  },
+  {
+   "id": "S1242",
+   "g": "play",
+   "f": "faction_rule",
+   "p": 174,
+   "text": "Special Orders: Ghostships are able to go onto special orders and use re-rolls in just the same manner as other vessels, however there is always a danger that the spectral and deathly manner in which these vessels interact with the real universe will distract them and turn their attention away from the battle at hand."
+  },
+  {
+   "id": "S1243",
+   "g": "play",
+   "f": "faction_rule",
+   "p": 371,
+   "text": "If a Ghostship fails a Command check for a special order, it not only fails to go onto the special order, but may also do nothing except move this turn."
+  },
+  {
+   "id": "S1244",
+   "g": "play",
+   "f": "faction_rule",
+   "p": 456,
+   "text": "You may not make any further Command checks for other Ghostships during the same turn."
+  },
+  {
+   "id": "S1245",
+   "g": "play",
+   "f": "faction_rule",
+   "p": 121,
+   "text": "You may, however, continue to give special orders to other ‘crewed’ vessels in the fleet (until, of course, you fail a Command check with one of them as well)."
+  },
+  {
+   "id": "S1246",
+   "g": "play",
+   "f": "faction_rule",
+   "p": 349,
+   "text": "If the failed Command check is as a result of attempting to go onto Brace for Impact orders, the Ghostship may still attempt to Brace for Impact but may do nothing except move during its next turn instead."
+  },
+  {
+   "id": "S1247",
+   "g": "play",
+   "f": "faction_rule",
+   "p": 118,
+   "text": "Ghostships, unlike other Eldar vessels, only suffer a critical hit on a roll of a 6 (not a 4, 5 or 6 as is usually the case with Eldar vessels)."
+  },
+  {
+   "id": "S1248",
+   "g": "open",
+   "f": "row_cond",
+   "p": 310,
+   "text": "For this reason: • Ghostships may not contain Aspect Warrior fighting crews."
+  },
+  {
+   "id": "S1249",
+   "g": "play",
+   "f": "faction_rule",
+   "p": 229,
+   "text": "• Ghostships may not initiate boarding actions or hit-and run attacks of any form."
+  },
+  {
+   "id": "S1250",
+   "g": "play",
+   "f": "faction_rule",
+   "p": 229,
+   "text": "• Enemies boarding a Ghostship gain a +1 modifier in the boarding action, in addition to other modifiers."
+  },
+  {
+   "id": "S1251",
+   "g": "play",
+   "f": "faction_rule",
+   "p": 349,
+   "text": "• Enemies making a hit-and-run attack against Ghostships add +1 to their dice roll."
+  },
+  {
+   "id": "S1252",
+   "g": "play",
+   "f": "faction_rule",
+   "p": 349,
+   "text": "Ghostships roll only half the normal number of dice when undertaking damage control in the End phase (before halving it again for Blast markers, if appropriate)."
+  },
+  {
+   "id": "S1253",
+   "g": "campaign",
+   "f": "campaign",
+   "p": 122,
+   "text": "ELDAR IN CAMPAIGNS In a campaign, an Eldar fleet commander earns promotions (re-rolls) in the following manner: ENGINE REFIT The ship’s engines are fitted with additional systems or improvements have been made to the power generators and energy relays in some fashion."
+  },
+  {
+   "id": "S1254",
+   "g": "campaign",
+   "f": "campaign",
+   "p": 227,
+   "text": "D6 roll Engine Refit Celestial Dragon Engine: The standard manoeuvring thrusters have been augmented, allowing breathtaking turns."
+  },
+  {
+   "id": "S1255",
+   "g": "campaign",
+   "f": "campaign",
+   "p": 484,
+   "text": "The vessel may choose to turn up to 90º at the end of its movement instead of turning normally at the beginning of its movement."
+  },
+  {
+   "id": "S1256",
+   "g": "campaign",
+   "f": "campaign",
+   "p": 483,
+   "text": "Phoenix Sails: Hyper-efficient materials of exceeding purity are used to replace the mainsails, squeezing extra energy from the solar wind, adding +5 cm to all speed bands."
+  },
+  {
+   "id": "S1257",
+   "g": "campaign",
+   "f": "campaign",
+   "p": 228,
+   "text": "Instead of turning to any facing at the start of its movement, it may choose to make a single 45º turn at any point along its movement."
+  },
+  {
+   "id": "S1258",
+   "g": "campaign",
+   "f": "campaign",
+   "p": 370,
+   "text": "When the ship is facing the sun, it counts as having the sunward edge in its rear."
+  },
+  {
+   "id": "S1259",
+   "g": "campaign",
+   "f": "campaign",
+   "p": 234,
+   "text": "The ship only suffers critical damage on a 5+ instead of a 4+."
+  },
+  {
+   "id": "S1260",
+   "g": "drop",
+   "f": "row_desc_dup",
+   "p": 319,
+   "text": "PRINCE YRIEL: 150 PTS Yriel may be taken instead of the Hero Fleet Commander as listed in the Corsair and Craftworld Eldar fleet lists, and is treated as an Eldar Hero with the additions listed here."
+  },
+  {
+   "id": "S1261",
+   "g": "checked",
+   "f": "aboard",
+   "p": 33,
+   "text": "Prince Yriel must be embarked on a Dragonship equipped with launch bays, or the Flame of Asuryan, even if he is leading a Corsair fleet."
+  },
+  {
+   "id": "S1262",
+   "g": "checked",
+   "f": "reserve_special",
+   "p": 400,
+   "text": "(eg you do not need to field three capital ships in a Corsair Eldar fleet list)."
+  },
+  {
+   "id": "S1263",
+   "g": "drop",
+   "f": "row_desc_dup",
+   "p": 319,
+   "text": "Leadership: 10 Re-rolls: 1 A second and third re-roll can be purchased at +25 points each."
+  },
+  {
+   "id": "S1264",
+   "g": "checked",
+   "f": "commander_count",
+   "p": 319,
+   "text": "Yriel may be taken instead of the Hero Fleet Commander as listed in the Corsair and Craftworld Eldar fleet lists, and is treated as an Eldar Hero with the additions listed here."
+  },
+  {
+   "id": "S1265",
+   "g": "row",
+   "f": "reroll_price",
+   "p": 138,
+   "text": "A second and third re-roll can be purchased at +25 points each."
+  },
+  {
+   "id": "S1266",
+   "g": "open",
+   "f": "ordnance_choice",
+   "p": 359,
+   "text": "Dragonships equipped with launch bays may take Vampire raiders at an additional cost of +10 points."
+  },
+  {
+   "id": "S1267",
+   "g": "campaign",
+   "f": "campaign",
+   "p": 450,
+   "text": "CAMPAIGN MAP SYSTEM TYPE Ork infested Systems on a campaign map can be Ork infested to such a degree that they can never truly be recaptured."
+  },
+  {
+   "id": "S1268",
+   "g": "campaign",
+   "f": "campaign",
+   "p": 318,
+   "text": "To represent this, the sub-sector map may include a new system type, Ork Infested worlds (I)."
+  },
+  {
+   "id": "S1269",
+   "g": "campaign",
+   "f": "campaign",
+   "p": 231,
+   "text": "An infested world is useless to anyone other than an Ork player, and hence counts as uninhabited to these players."
+  },
+  {
+   "id": "S1270",
+   "g": "campaign",
+   "f": "campaign",
+   "p": 32,
+   "text": "If an Ork player controls an infested system he may count it as a civilised world."
+  },
+  {
+   "id": "S1271",
+   "g": "play",
+   "f": "faction_rule",
+   "p": 38,
+   "text": "SPORES Tyranid ships do not have turrets or shields in the normal sense, and instead rely on emitting a constantly replenished physical barrier of spore clouds."
+  },
+  {
+   "id": "S1272",
+   "g": "play",
+   "f": "faction_rule",
+   "p": 122,
+   "text": "Spore clouds are not cumulative and never exceed the spore cyst strength of a given vessel, they are also unaffected by the ship’s special orders."
+  },
+  {
+   "id": "S1273",
+   "g": "play",
+   "f": "faction_rule",
+   "p": 142,
+   "text": "Spores as Shields A spore cloud will absorb any hit generated by weapons fire except from those that specifically ignore shields, such as Warp cannon or Particle Whip rolls of 6."
+  },
+  {
+   "id": "S1274",
+   "g": "play",
+   "f": "faction_rule",
+   "p": 310,
+   "text": "Spore clouds are affected by Blast markers just like shields on an ordinary ship, place a marker in base contact for each cloud that absorbs a hit."
+  },
+  {
+   "id": "S1275",
+   "g": "play",
+   "f": "faction_rule",
+   "p": 400,
+   "text": "They lose -5 cm speed and ships with a Shield strength of 0 (ie Eldar or ships suffering the Shields Collapse critical) also suffers a point of damage on a D6 roll of 6."
+  },
+  {
+   "id": "S1276",
+   "g": "play",
+   "f": "faction_rule",
+   "p": 427,
+   "text": "However, this test only needs to be done once per Movement phase, regardless of how many Tyranid ships make base contact with the same enemy vessel."
+  },
+  {
+   "id": "S1277",
+   "g": "play",
+   "f": "faction_rule",
+   "p": 229,
+   "text": "The ship only counts as having blast markers in base contact if it ends its movement in base contact with a Tyranid vessel."
+  },
+  {
+   "id": "S1278",
+   "g": "play",
+   "f": "faction_rule",
+   "p": 369,
+   "text": "Each Blast marker in contact with the ship will reduce one spore cloud to hitting on a 6+ instead of 4+."
+  },
+  {
+   "id": "S1279",
+   "g": "play",
+   "f": "ordnance_rule",
+   "p": 361,
+   "text": "Bio-ships can mass their spore cysts in close formation against ordnance as described for other ships, but they do not gain any shielding benefits by doing so."
+  },
+  {
+   "id": "S1280",
+   "g": "checked",
+   "f": "aboard",
+   "p": 431,
+   "text": "Kor’O’Mesmecan be taken instead of a normal commander and has to be placed on a Custodian Class Battleship."
   }
  ]
 }

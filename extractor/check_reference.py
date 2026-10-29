@@ -317,7 +317,10 @@ def check_list(ref, data, out):
                            % (name, ref_e["name"], e.get("grp"),
                               ref_e["grp"]))
         if ref_e.get("page") is not None:
-            got = str(e.get("r") or "")
+            # The reference gives the profile's page in the current book; the
+            # row points at the frozen ship id (ship_ids.json), whose pg is that page.
+            _sh = data["ships"].get(str(e.get("r"))) if e.get("r") is not None else None
+            got = str(_sh["pg"]) if _sh else str(e.get("r") or "")
             if not got.startswith(str(ref_e["page"])):
                 out.append("%s: %r profile page is %r, the reference expects %r"
                            % (name, ref_e["name"], e.get("r"), ref_e["page"]))

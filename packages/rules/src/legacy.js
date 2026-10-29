@@ -26,6 +26,9 @@ export function optionIndex(sh, id, text){
   var ol = (sh && sh.ol) || [];
   var i, hit = -1, hits = 0;
   for(i = 0; i < ol.length; i++) if(id != null && ol[i].id === id) return i;
+  /* an id of an earlier book version whose option text changed (was, from
+     extractor/option_aliases.json) */
+  for(i = 0; i < ol.length; i++) if(id != null && ol[i].was && ol[i].was.indexOf(id) >= 0) return i;
   if(text){
     for(i = 0; i < ol.length; i++) if(textKey(ol[i].t) === text){ hit = i; hits++; }
   }

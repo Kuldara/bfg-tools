@@ -29,6 +29,10 @@ export function weaponRows(sel, skip, noList){
     /* An open option a taken list row rules out (Power Ram: "not with a
        Nova Cannon") is no choice any more, so no OR row either. */
     if(st !== "take" && swapRuledOutByUp(sel, o)) return;
+    /* ... and so does a taken option of the same choose-one group (Fleets
+       v0.40: the nova cannon or the power ram, p.69) */
+    if(st !== "take" && o.grp && o.gmax === 1 && (sh.ol || []).some(function(p, j){
+      return j !== i && p.grp === o.grp && optState(sel, j) === "take"; })) return;
     /* one option that swaps several rows at once (the Tyrant's 45 cm
        batteries, both sides): each alternative says so */
     var both = (o.sw.f || []).length > 1 ? 1 : 0;

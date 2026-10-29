@@ -1327,6 +1327,9 @@ var __rules = (() => {
       var st = optState(sel, i);
       if (st === "off") return;
       if (st !== "take" && swapRuledOutByUp(sel, o)) return;
+      if (st !== "take" && o.grp && o.gmax === 1 && (sh.ol || []).some(function(p, j) {
+        return j !== i && p.grp === o.grp && optState(sel, j) === "take";
+      })) return;
       var both = (o.sw.f || []).length > 1 ? 1 : 0;
       o.sw.f.forEach(function(fi, k) {
         (alts[fi] = alts[fi] || []).push([(o.sw.t[k] || o.sw.t[0]).slice(), st, 0, both]);
@@ -5053,6 +5056,7 @@ var __rules = (() => {
     var ol = sh && sh.ol || [];
     var i, hit = -1, hits = 0;
     for (i = 0; i < ol.length; i++) if (id != null && ol[i].id === id) return i;
+    for (i = 0; i < ol.length; i++) if (id != null && ol[i].was && ol[i].was.indexOf(id) >= 0) return i;
     if (text) {
       for (i = 0; i < ol.length; i++) if (textKey(ol[i].t) === text) {
         hit = i;

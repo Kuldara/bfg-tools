@@ -119,9 +119,9 @@ for _nm in _INQ_HOSTS:
     _ents = [
         dict(l="Inquisitor Lord (Ld 9)", r=None, p=75, src_page=148, a=1, mx=1,
              nt=None, k="cmd", ld=dict(kind="fixed", value=9), rr=1),
-        _p18_unit("Inquisitorial Cruiser", 150, 270, 138, mx=1),
-        _p18_unit("Inquisition Blackship", 148, 300, 138, mx=1),
-        _p18_unit("Grey Knights Strike Cruiser", 151, 165, 138),
+        _p18_unit("Inquisitorial Cruiser", 150, 270, 148, mx=1),
+        _p18_unit("Inquisition Blackship", 148, 300, 148, mx=1),
+        _p18_unit("Grey Knights Strike Cruiser", 151, 165, 148),
         # p.148: "A second re-roll can be purchased for +25 points." The same row
         # as on the Inquisition list; the target is the Lord's row (index 0). At the end,
         # so that old saves' rows keep their indexes.
@@ -320,7 +320,7 @@ for _nm in _OM_HOSTS:
         t=_OM_RES_T, text=[],
         notes=["Page 152 names no hulls: it points to the Chaos ships of the Bastion "
                "Fleet List, which are the five of page 39, at the same prices."],
-        ents=[dict(_p18_unit(e["l"], e["r"], e["p"], 142), **({"optno": e["optno"]} if e.get("optno") else {}))
+        ents=[dict(_p18_unit(e["l"], e["r"], e["p"], 152), **({"optno": e["optno"]} if e.get("optno") else {}))
               for e in _bast_rows],
         rules=[
             dict(kind="requires", ok=True, what="an Ordo Malleus Inquisitor",
@@ -433,10 +433,10 @@ _RTX["secs"][_rtx].setdefault("notes", []).append(
     "no prices; the builder offers the Demiurg fleet list's vessels at their "
     "prices there (page 487).")
 _RTX["secs"][_rtx]["ents"] = [
-    _p18_unit("Stronghold Commerce Vessel", 488, 350, 175),
-    _p18_unit("Bastion Commerce Vessel", 489, 255, 175),
-    _p18_unit("Citadel Commerce Vessel", 490, 185, 175),
-    _p18_unit("Kroot Warsphere", 494, 145, 175),
+    _p18_unit("Stronghold Commerce Vessel", 488, 350, 185),
+    _p18_unit("Bastion Commerce Vessel", 489, 255, 185),
+    _p18_unit("Citadel Commerce Vessel", 490, 185, 185),
+    _p18_unit("Kroot Warsphere", 494, 145, 185),
 ]
 _RTX["secs"][_rtx]["rules"] = list(_RTX["secs"][_rtx].get("rules") or []) + [dict(
     kind="per_points", each=1, per=750, full=True, ok=True, sec=[_rtx],
@@ -520,8 +520,8 @@ for _nm in ("Chaos \u2014 Incursion", "Chaos \u2014 Black Crusade", "Chaos \u201
     assert not any(e.get("r") == 69 for x in _L["secs"] for e in x["ents"]), \
         "%s: the renegades already exist" % _nm
     _i = len(_L["secs"])
-    _ents = ([_p18_unit(_l, _r, _p, 222, noopt=True) for _l, _r, _p in _REN_CRUISERS]
-             + [_p18_unit(_l, _r, _p, 222, noopt=True) for _l, _r, _p in _REN_ESCORTS])
+    _ents = ([_p18_unit(_l, _r, _p, 232, noopt=True) for _l, _r, _p in _REN_CRUISERS]
+             + [_p18_unit(_l, _r, _p, 232, noopt=True) for _l, _r, _p in _REN_ESCORTS])
     _L["secs"].append(dict(t="RENEGADE IMPERIAL VESSELS", text=[_REN_SRC, _REN_SRC2],
         ents=_ents, rules=[
             dict(kind="per_points", each=1, per=1500, full=True, ok=True, sec=[_i],

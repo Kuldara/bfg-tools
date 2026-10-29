@@ -522,9 +522,14 @@ _pc = _p18_sec(_PL, "CAPITAL SHIPS")
 _pe = _p18_sec(_PL, "ESCORTS")
 _pn = _p18_sec(_PL, "NOTES FROM NATE MONTES")
 assert not any(e.get("r") in (71, 180) for e in _PL["secs"][_pc]["ents"]), "the pirate cruisers are already on the list"
+# v0.40 prints the choice as a row "Pirate Cruiser.....varies"; the cruisers
+# below are that row, so the priceless heading row goes.
+_pcr = [e for e in _PL["secs"][_pc]["ents"] if e["l"] == "Pirate Cruiser" and e.get("p") is None]
+assert len(_pcr) == 1, _pcr
+_PL["secs"][_pc]["ents"].remove(_pcr[0])
 for _lab, _ref, _pts in _PIR_CRUISERS:
-    _PL["secs"][_pc]["ents"].append(_p18_unit(_lab, _ref, _pts, 178, noopt=True))
-_PL["secs"][_pc]["ents"].append(_p18_unit("Space Marine Strike Cruiser", 105, 145, 178, mx=1, noopt=True))
+    _PL["secs"][_pc]["ents"].append(_p18_unit(_lab, _ref, _pts, 188, noopt=True))
+_PL["secs"][_pc]["ents"].append(_p18_unit("Space Marine Strike Cruiser", 105, 145, 188, mx=1, noopt=True))
 _PL["secs"][_pc]["rules"] += [
     dict(kind="per_points", each=1, per=500, what="cruisers", label="Pirate cruisers (one per 500 pts)",
          pick=[dict(sec=_pc), dict(sec=_pn, re="^siluria")], ok=True, sec=[_pc],
@@ -568,7 +573,7 @@ for _nm in ("Rogue Traders", "Rogue Traders \u2014 Exploration", "Rogue Traders 
     _L = _p18_list(_nm)
     assert not any(e.get("r") == 196 for x in _L["secs"] for e in x["ents"]), "%s: Stryxis already exists" % _nm
     _L["secs"].append(dict(t="STRYXIS CARAVAN VESSELS", rules=[], text=[_STRYX_SRC],
-                           ents=[_p18_unit("Stryxis Caravan Vessel", 196, 80, 196, mx=4)]))
+                           ents=[_p18_unit("Stryxis Caravan Vessel", 196, 80, 206, mx=4)]))
 
 # J29 p.286: "Only one Activated Blackstone Fortress may be fielded for every
 # FULL 750 points of other ships in a Chaos fleet. No more than three may be
@@ -584,7 +589,7 @@ for _nm in ("Chaos \u2014 Incursion", "Chaos \u2014 Black Crusade", "Chaos \u201
     _others = [i for i, x in enumerate(_L["secs"]) if any(e.get("k") == "unit" and e.get("r") for e in x["ents"])]
     _i = len(_L["secs"])
     _L["secs"].append(dict(t="ACTIVATED BLACKSTONE FORTRESS", text=[_BSF_SRC],
-                           ents=[_p18_unit("Activated Blackstone Fortress", 284, 750, 284, mx=3)],
+                           ents=[_p18_unit("Activated Blackstone Fortress", 284, 750, 286, mx=3)],
                            rules=[dict(kind="per_points", each=1, per=750, full=True, what="fortresses",
                                        label="Activated Blackstone Fortress (one per FULL 750 pts of other ships)",
                                        pick=[dict(sec=_i)], of_pick=[dict(sec=j) for j in _others],

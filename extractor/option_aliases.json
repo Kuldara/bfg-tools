@@ -1,0 +1,20 @@
+{
+ "_doc": "Option ids of Fleets v0.36 whose text changed in v0.40, so that saved fleets keep their options (optionIndex in packages/rules/src/legacy.js reads 'was'). new id -> [old ids]; made 29.10.2026 by matching the texts of the same ship (similarity >= 0.6).",
+ "was": {
+  "192:c9e2074f": [
+   "192:5c036507"
+  ],
+  "437:e6bb5bf4": [
+   "437:8bc47b0b"
+  ],
+  "480:f897526b": [
+   "480:82c53c8a"
+  ],
+  "481:b0f954fe": [
+   "481:5079ab36"
+  ],
+  "84:f0d2bc3b": [
+   "84:531dd000"
+  ]
+ }
+}

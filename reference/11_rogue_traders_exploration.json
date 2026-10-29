@@ -168,7 +168,7 @@
       "page": 200
     },
     {
-      "name": "Cargo Vessel",
+      "name": "Armed Cargo Vessel",
       "pts": 20,
       "page": 202
     },
@@ -225,11 +225,6 @@
   ],
   "extra_entries": [
     {
-      "name": "Imperial Power Ram (6+ prow, not with a Nova Cannon)",
-      "pts": 5,
-      "why": "p.186 POWER RAM"
-    },
-    {
       "name": "Xenotech System, rolled randomly (cruiser)",
       "pts": 15,
       "why": "p.186 The Best Money Can Buy: 'The Xenotech Systems refits listed on [p.185] can only be used by Rogue Trader cruisers and escorts' and 'may start by taking one refit from the Xenotech list for the appropriate point cost'; the price p.185 (+15 per cruiser). Spot check 6 row 88."
@@ -263,6 +258,8 @@
   "notes": [
     "The book's page 186 has a misprint: 'Havoc Class Frigatevvvv....35 pts' - the page reference has run into the end of the name. The app named the row after it and was left without a card. Fixed 7.9.2026 in the FIXES table to the name 'Havoc Class Frigate' and page 81, which the book gives for the same ship on pages 184 and 189.",
     "'Cargo Transport (pg. 85)' is CORRECT in the book: page 85 is the Imperial Navy's TRANSPORT profile ('PTS: SPECIAL'). The app pointed the row wrongly at page 202 (Armed Cargo Vessel) and claimed the book was wrong, because the word 'transport' is on the stop list and the profile's name was cut down to nothing. Fixed 7.9.2026.",
-    "This list has the most recorded gaps in the whole book: five. They are all of the same family - the limit targets a ship class, a share or a condition, not a section."
+    "This list has the most recorded gaps in the whole book: five. They are all of the same family - the limit targets a ship class, a share or a condition, not a section.",
+    "Updated for Fleets v0.40 on 29.10.2026: v0.40 removed the fleet-wide power ram and prints it as an option of each ship that may take it ('if it is part of an Imperial Navy, Adeptus Mechanicus, Inquisition, or Rogue Trader fleet list').",
+    "Updated for Fleets v0.40 on 29.10.2026: the row Cargo Vessel is printed Armed Cargo Vessel."
   ]
 }

@@ -618,7 +618,7 @@ for _nm in _RT_PER750 + _RT_SINGLE:
                   pick=[dict(sec=_i)], src=_RT174_A))
     _L["secs"].append(dict(t="ROGUE TRADERS",
                            text=[_RT174_A, _RT174_B, _RT174_C],
-                           ents=[_p18_unit("Rogue Trader Cruiser", 180, 185, 174)],
+                           ents=[_p18_unit("Rogue Trader Cruiser", 180, 185, 184)],
                            rules=[_rule]))
     # "always count against cruiser restrictions in any fleet list that has
     # such restrictions": the list's own cruiser limit counts this in.

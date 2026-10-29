@@ -275,16 +275,11 @@
       "page": 84
     }
   ],
-  "extra_entries": [
-    {
-      "name": "Imperial Power Ram",
-      "pts": 5,
-      "why": "from the shared Imperial Navy rules p.32"
-    }
-  ],
+  "extra_entries": [],
   "notes": [
     "The re-roll rows are in two sections, because the book has two different price lists: Admiral 25/75/150 and Master of the Fleet 25/50/75. The app keeps them apart, which matches the book.",
     "The Rapid Strike Vessel rows refer to two pages in the book (e.g. 'pg 106 (pg 79)'): the rules are on page 106 and the profile on the original ship's page. The app uses the profile page.",
-    "Pages 42-47 belong to this list's page range but are narrative (Dominus Astra, Calgar, Rath's portrait). They are hidden in the LORE_SECTIONS table."
+    "Pages 42-47 belong to this list's page range but are narrative (Dominus Astra, Calgar, Rath's portrait). They are hidden in the LORE_SECTIONS table.",
+    "Updated for Fleets v0.40 on 29.10.2026: v0.40 removed the fleet-wide power ram and prints it as an option of each ship that may take it ('if it is part of an Imperial Navy, Adeptus Mechanicus, Inquisition, or Rogue Trader fleet list')."
   ]
 }

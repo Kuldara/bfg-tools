@@ -55,6 +55,11 @@ export function resolveSaved(units, L0, lost){
       const k = Object.keys(SHIPS).find(p => SHIPS[p].nm === u.hn);
       if(k) u.ref = isNaN(+k) ? k : +k;
     }
+    /* A row without a hull choice has one ship. Fleets v0.40 gave the
+       Mechanicus list profiles of its own (p.126-137), so a fleet saved
+       before 29.10.2026 names the Imperial Navy page: the row decides. */
+    const en0 = Lx.secs[si].ents[ei];
+    if(en0 && en0.r != null && !en0.hc && String(u.ref) !== String(en0.r) && SHIPS[String(en0.r)]) u.ref = en0.r;
     kept.push(u);
   });
 
@@ -124,6 +129,19 @@ export function resolveSaved(units, L0, lost){
       if(fit.length !== 1) return;      /* ambiguous: report it instead */
       ups[fit[0].si + ":" + fit[0].ei] = u.upn[k];
       usedKey[k] = 1; filled[fit[0].si + ":" + fit[0].ei] = 1;
+    });
+    /* Fleets v0.40 (saves before 29.10.2026): the list row "Imperial Power
+       Ram" became each ship's own option, and the Mechanicus list's required
+       +1 turret and dorsal lance are in its profiles. */
+    const sh = DOMAIN.shipFor(u.ref, Lx.secs[u.s] ? Lx.secs[u.s].ents[u.e] : null, DATA);
+    Object.keys(u.upn).forEach(k => {
+      const nm = k.split("\u0001").pop();
+      if(usedKey[k] || u.upn[k] === "off") return;
+      if(/^Imperial Power Ram/.test(nm) && sh && sh.ol){
+        const ri = sh.ol.findIndex(o => /may (?:also )?take a power ram/i.test(o.t));
+        if(ri >= 0){ u.os = u.os || {}; if(u.os[ri] == null) u.os[ri] = u.upn[k]; usedKey[k] = 1; return; }
+      }
+      if(/^Mechanicus (turret refit|dorsal lance battery)/.test(nm)){ usedKey[k] = 1; return; }
     });
     Object.keys(u.upn).forEach(k => {
       if(!usedKey[k] && u.upn[k] !== "off")

@@ -191,11 +191,6 @@
   ],
   "extra_entries": [
     {
-      "name": "Imperial Power Ram (6+ prow, not with a Nova Cannon)",
-      "pts": 5,
-      "why": "p.184 POWER RAM"
-    },
-    {
       "name": "Xenotech System, rolled randomly (cruiser)",
       "pts": 15,
       "why": "p.185 '+15 points per cruiser'"
@@ -239,6 +234,7 @@
   "notes": [
     "Pages 178-183 are narrative (Durandal Grohe, Memet Poralius, Behemoth). They were hidden in the LORE_SECTIONS table: all seven sentences were story.",
     "This list is attachable by nature like the Inquisition: most limits concern the fleet the Rogue Trader is attached to, not this list. That is why only two rules are enforced.",
-    "'Auxiliary vessels (pg. 201)' is priced 'varies' - the ship is chosen from another fleet list. The app does not offer the row as an upgrade (10.9.2026, spot check 4): p.201 is a list rule, and the ships are picked from the list of the fleet they escort."
+    "'Auxiliary vessels (pg. 201)' is priced 'varies' - the ship is chosen from another fleet list. The app does not offer the row as an upgrade (10.9.2026, spot check 4): p.201 is a list rule, and the ships are picked from the list of the fleet they escort.",
+    "Updated for Fleets v0.40 on 29.10.2026: v0.40 removed the fleet-wide power ram and prints it as an option of each ship that may take it ('if it is part of an Imperial Navy, Adeptus Mechanicus, Inquisition, or Rogue Trader fleet list')."
   ]
 }

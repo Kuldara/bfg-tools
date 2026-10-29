@@ -125,6 +125,17 @@ OPT_EFFECTS = {
         dict(cov=r"^shark assault boats"),
     (151, "Firepower 5, range 30 cm (front arc only) bombardment cannon battery"):
         dict(c=0),
+    # --- v0.40: the Mechanicus profiles' own options (p.131-137) -------------
+    # "Can incorporate plasma-boosters into its weapons batteries that increase
+    # the range from 30 cm to 45 cm at a cost of +10 pts." (v0.36: the list
+    # row Plasma-boosted batteries, p.121)
+    **{(_k, "plasma-boosters into its weapons batteries"): dict(swp=dict(f="weapons batter", onlyrg="30", rg="45 cm"))
+       for _k in ("am131", "am132", "am134", "am135", "am136")},
+    # "May replace its prow torpedoes with a single 30 cm range dorsal lance
+    # battery firing left/ front/ right for no cost." The sentence has no
+    # strength; one lance battery, as the v0.36 list row (p.121).
+    **{(_k, "dorsal lance battery firing left"): dict(c=0, sw=dict(f=[3], t=[["Dorsal lance battery", "30 cm", "1", "Left/front/right"]]))
+       for _k in ("am135", "am136")},
     # --- P1-2: additive stat effects (reference/options.json) ---------------
     # p.61: "May purchase a third turret for an additional +10 points."
     (61, "third turret"):

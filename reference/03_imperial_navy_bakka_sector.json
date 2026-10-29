@@ -329,17 +329,13 @@
       "name": "+1 turret (Battlefleet Bakka refit)",
       "pts": 5,
       "why": "p.50, for any capital ship of Bakka"
-    },
-    {
-      "name": "Imperial Power Ram",
-      "pts": 5,
-      "why": "from the shared Imperial Navy rules p.32"
     }
   ],
   "notes": [
     "The Emperor class battleship is marked '(0-1)' in the book, and the app sets the row limit mx=1 from it. The same goes for the Jovian class battlecruiser in the RESERVES section.",
     "Bakka's Endeavour and Endurance cost 115 pts, while in the other Imperial lists they cost 110. The difference is in the book, not an error.",
     "The Dominus Astra narrative on page 48 is hidden in the LORE_SECTIONS table; its last sentence ('Bakka fleets may only field a single Emperor battleship') is still a valid rule and is recorded here.",
-    "Page 51 is empty."
+    "Page 51 is empty.",
+    "Updated for Fleets v0.40 on 29.10.2026: v0.40 removed the fleet-wide power ram and prints it as an option of each ship that may take it ('if it is part of an Imperial Navy, Adeptus Mechanicus, Inquisition, or Rogue Trader fleet list')."
   ]
 }

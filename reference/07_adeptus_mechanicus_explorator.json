@@ -1,8 +1,15 @@
 {
   "list": "Adeptus Mechanicus — Explorator",
   "book_page": 124,
-  "read_pages": [118, 119, 120, 122, 124, 125],
-  "read_on": "2026-09-07",
+  "read_pages": [
+    118,
+    119,
+    120,
+    122,
+    124,
+    125
+  ],
+  "read_on": "2026-10-29",
   "rules": [
     {
       "key": "0-1 Mechanicus Archmagos",
@@ -31,8 +38,8 @@
       "why": "The placement is done at the table. 'Ark Mechanicus' means the Omnissiah's Victory (p. 126)."
     },
     {
-      "key": "Mechanicus Archmagos can elect up to any one desired item from the Adeptus Mechanicus refit table",
-      "text": "A Mechanicus Archmagos can elect up to any one desired item from the Adeptus Mechanicus refit table for their own ship as part of their point cost, in addition to (and before) the refit the ship rolls for normally.",
+      "key": "Mechanicus Archmagos can elect up to any one desired item from the Mechanicus Gift table",
+      "text": "A Mechanicus Archmagos can elect up to any one desired item from the Mechanicus Gift table for their own ship as part of their point cost, in addition to (and before) the refit the ship rolls for normally.",
       "page": 124,
       "status": "manual",
       "why": "The refit is chosen from the Mechanicus Gifts table, which the app does not model as a choice."
@@ -45,7 +52,9 @@
       "kind": "ratio",
       "allow": 1,
       "per": 3,
-      "per_types": ["cruisers"]
+      "per_types": [
+        "cruisers"
+      ]
     },
     {
       "key": "Omnissiah’s Victory may not take any Mechanicus Gifts refits",
@@ -99,13 +108,6 @@
       "why": "Refit-valinta pelin alussa."
     },
     {
-      "key": "The Imperial Power Ram may be taken by any Mechanicus capital ship",
-      "text": "The Imperial Power Ram may be taken by any Mechanicus capital ship with a 6+ prow for +5 points unless it has a Nova Cannon.",
-      "page": 118,
-      "status": "manual",
-      "why": "A priced option; the row 'Imperial Power Ram 5 pts' can be chosen. The condition of a 6+ prow and no nova cannon is implemented as the row's eligibility condition."
-    },
-    {
       "key": "The Adeptus Mechanicus does not utilize any battlecruisers in their own fleets",
       "text": "To avoid raising the concern of the Imperial Navy, The Adeptus Mechanicus does not utilize any battlecruisers in their own fleets, though they still produce them for the Imperial Navy as required.",
       "page": 118,
@@ -156,42 +158,135 @@
     }
   ],
   "entries": [
-    {"name": "Archmagos Explorator (Ld 8)", "pts": 50, "page": null},
-    {"name": "Archmagos Veneratus (Ld 9)", "pts": 100, "page": null},
-    {"name": "One re-roll", "pts": 50, "page": null},
-    {"name": "Two re-rolls", "pts": 125, "page": null},
-    {"name": "Omnissiah’s Victory", "pts": 415, "page": 126},
-    {"name": "Emperor class battleship", "pts": 400, "page": 53},
-    {"name": "Retribution class battleship", "pts": 380, "page": 54},
-    {"name": "Oberon class battleship", "pts": 370, "page": 56},
-    {"name": "Dictator class cruiser", "pts": 255, "page": 67},
-    {"name": "Tyrant class cruiser", "pts": 220, "page": 69},
-    {"name": "Gothic class cruiser", "pts": 215, "page": 70},
-    {"name": "Lunar class cruiser", "pts": 215, "page": 71},
-    {"name": "Endeavour class light cruiser", "pts": 125, "page": 72},
-    {"name": "Endurance class light cruiser", "pts": 125, "page": 74},
-    {"name": "Defiant class light cruiser", "pts": 130, "page": 76},
-    {"name": "Nova Class Frigate", "pts": 45, "page": 107},
-    {"name": "Firestorm Class Frigate", "pts": 40, "page": 79},
-    {"name": "Gladius Class Frigate", "pts": 40, "page": 108},
-    {"name": "Sword Class Frigate", "pts": 35, "page": 82},
-    {"name": "Falchion Class Frigate", "pts": 35, "page": 80},
-    {"name": "Hunter Class Destroyer", "pts": 35, "page": 109},
-    {"name": "Cobra Class Destroyer", "pts": 30, "page": 84}
+    {
+      "name": "Archmagos Explorator (Ld 8)",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Archmagos Veneratus (Ld 9)",
+      "pts": 100,
+      "page": null
+    },
+    {
+      "name": "One re-roll",
+      "pts": 50,
+      "page": null
+    },
+    {
+      "name": "Two re-rolls",
+      "pts": 125,
+      "page": null
+    },
+    {
+      "name": "Omnissiah’s Victory",
+      "pts": 415,
+      "page": 126
+    },
+    {
+      "name": "Emperor class battleship",
+      "pts": 400,
+      "page": 128
+    },
+    {
+      "name": "Retribution class battleship",
+      "pts": 380,
+      "page": 129
+    },
+    {
+      "name": "Oberon class battleship",
+      "pts": 370,
+      "page": 130
+    },
+    {
+      "name": "Dictator class cruiser",
+      "pts": 255,
+      "page": 131
+    },
+    {
+      "name": "Tyrant class cruiser",
+      "pts": 220,
+      "page": 132
+    },
+    {
+      "name": "Gothic class cruiser",
+      "pts": 215,
+      "page": 133
+    },
+    {
+      "name": "Lunar class cruiser",
+      "pts": 215,
+      "page": 134
+    },
+    {
+      "name": "Endeavour class light cruiser",
+      "pts": 125,
+      "page": 135
+    },
+    {
+      "name": "Endurance class light cruiser",
+      "pts": 125,
+      "page": 136
+    },
+    {
+      "name": "Defiant class light cruiser",
+      "pts": 130,
+      "page": 137
+    },
+    {
+      "name": "Nova Class Frigate",
+      "pts": 45,
+      "page": 107
+    },
+    {
+      "name": "Firestorm Class Frigate",
+      "pts": 40,
+      "page": 79
+    },
+    {
+      "name": "Gladius Class Frigate",
+      "pts": 40,
+      "page": 108
+    },
+    {
+      "name": "Sword Class Frigate",
+      "pts": 35,
+      "page": 82
+    },
+    {
+      "name": "Falchion Class Frigate",
+      "pts": 35,
+      "page": 80
+    },
+    {
+      "name": "Hunter Class Destroyer",
+      "pts": 35,
+      "page": 109
+    },
+    {
+      "name": "Cobra Class Destroyer",
+      "pts": 30,
+      "page": 84
+    }
   ],
   "extra_entries": [
-    {"name": "Torpedo bombers", "pts": 10, "why": "p.125 ORDNANCE"},
-    {"name": "Mechanicus turret refit (+1 turret)", "pts": 0, "why": "p.119, included in the price"},
-    {"name": "Mechanicus dorsal lance battery", "pts": 0, "why": "p.118, included in the price"},
-    {"name": "Imperial Power Ram", "pts": 5, "why": "p.118"},
-    {"name": "Nova Cannon instead of prow torpedoes", "pts": 20, "why": "p.121 refit-saannoista"},
-    {"name": "Plasma-boosted batteries", "pts": 10, "why": "p.121 refit-saannoista"},
-    {"name": "+1 turret (escort squadron)", "pts": 5, "why": "p.121: escorts do not get +1 turret as included in the price"}
+    {
+      "name": "Torpedo bombers",
+      "pts": 10,
+      "why": "p.125 ORDNANCE"
+    },
+    {
+      "name": "+1 turret (escort squadron)",
+      "pts": 5,
+      "why": "p.121: escorts do not get +1 turret as included in the price"
+    }
   ],
   "notes": [
     "The Cruisers section has NO count limit. The book gives none (compare the Imperial lists' '0-12 Cruisers'), so the app is right to enforce nothing.",
     "AdMech ships cost more than the same hulls in the Imperial Navy (e.g. Dictator 255 vs 220). The difference is in the book: Mechanicus Gifts and +1 turret are included in the price.",
     "Pages 119-123 are largely tables: Mechanicus Gifts (D6), Quest for Knowledge (D6), the Improvement/Alteration tables and Mechanicus Promotions. They are in-game or campaign rolls and not fleet building, so they are left to the player.",
-    "Page 123 is empty."
+    "Page 123 is empty.",
+    "Updated for Fleets v0.40 on 29.10.2026: v0.40 removed the fleet-wide power ram and prints it as an option of each ship that may take it ('if it is part of an Imperial Navy, Adeptus Mechanicus, Inquisition, or Rogue Trader fleet list').",
+    "Updated for Fleets v0.40 on 29.10.2026: the capital ships are the Mechanicus profiles on p.126-137, which include the +1 turret and the dorsal lance and carry the Mechanicus options themselves (p.125); the list-level rows of v0.36 are gone."
   ]
 }
