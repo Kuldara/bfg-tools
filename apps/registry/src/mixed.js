@@ -18,7 +18,7 @@ import { SHIPS } from "../../../packages/ui/catalog.js";
 import { appState } from "./state.js";
 import { checks } from "./validation.js";
 import { infoBtnHTML } from "./info.js";
-import { clanzIn, freeSqTag, orkTiddlaHint } from "./warlords.js";
+import { clanzIn, freeSqTag, isCommandeered, orkTiddlaHint } from "./warlords.js";
 import { esc, title } from "../../../packages/ui/format.js";
 
 /* The squadron rule that sizes this section's cards, where the section is
@@ -54,15 +54,17 @@ export function mixActive(si){
 }
 export function mixStart(si){ appState.MIX = { tag: freeSqTag(), si, list: L().nm }; }
 export function mixStop(){ delete appState.MIX; }
-/* the cards of one letter in the sections the player's squadrons live in */
+/* the cards of one letter in the sections the player's squadrons live in,
+   with a Blood Axe tiddla's commandeered escorts (Fleets p. 369, 29.10.2026) */
+const inMix = u => mixSec(u.s) || isCommandeered(u);
 export function mixUnits(tag){
-  return appState.S.units.filter(u => !u.lst && u.sq === tag && mixSec(u.s));
+  return appState.S.units.filter(u => !u.lst && u.sq === tag && inMix(u));
 }
 export const mixHulls = tag => mixUnits(tag).reduce((a, u) => a + (u.n || 1), 0);
 /* a card that belongs to a mixed squadron: its letter is on another card
    too, or it is the squadron being filled */
 export function mixMember(u){
-  if(u.lst || !u.sq || !mixSec(u.s)) return false;
+  if(u.lst || !u.sq || !inMix(u)) return false;
   const M = mixActive();
   return (M && M.tag === u.sq) || mixUnits(u.sq).length >= 2;
 }
@@ -71,12 +73,16 @@ export function mixMember(u){
 export function mixGroups(){
   const out = [], seen = {}, M = mixActive();
   appState.S.units.forEach((u, i) => {
-    if(u.lst || !u.sq || !mixSec(u.s) || seen[u.sq]) return;
-    const idx = appState.S.units.map((x, j) => !x.lst && x.sq === u.sq && mixSec(x.s) ? j : -1).filter(j => j >= 0);
+    if(u.lst || !u.sq || !inMix(u) || seen[u.sq]) return;
+    const idx = appState.S.units.map((x, j) => !x.lst && x.sq === u.sq && inMix(x) ? j : -1).filter(j => j >= 0);
     if(idx.length < 2 && !(M && M.tag === u.sq)) return;
+    /* the squadron's own cards decide its rule; commandeered ones alone are no squadron */
+    const own = idx.map(j => appState.S.units[j]).filter(x => mixSec(x.s))[0];
+    if(!own) return;
     seen[u.sq] = 1;
-    const r = mixRule(u.s);
-    out.push({ tag: u.sq, si: u.s, idx, first: idx[0], hulls: idx.reduce((a, j) => a + (appState.S.units[j].n || 1), 0),
+    const r = mixRule(own.s);
+    out.push({ tag: u.sq, si: own.s, idx, first: idx[0], hulls: idx.reduce((a, j) => a + (appState.S.units[j].n || 1), 0),
+               com: idx.reduce((a, j) => a + (isCommandeered(appState.S.units[j]) ? appState.S.units[j].n || 1 : 0), 0),
                min: r.min, max: r.max, tiddla: r.tiddla, filling: !!(M && M.tag === u.sq) });
   });
   if(M && !seen[M.tag]){ const r = mixRule(M.si) || { min: 2, max: 6 };
@@ -109,14 +115,14 @@ export function mixRowHTML(si){
 /* the fleet pane's group row; open shows the cards under it */
 export function mixGroupHTML(g, open){
   const mem = g.idx.map(j => { const u = appState.S.units[j], R = resolveUnit(u);
-    return `<b>${R.hulls}&times;</b><span>${esc(title(R.className))}${u.name ? " <i>" + esc(u.name) + "</i>" : ""}</span><span>${R.points} pts</span>`; }).join("");
+    return `<b>${R.hulls}&times;</b><span>${esc(title(R.className))}${isCommandeered(u) ? " <i>commandeered</i>" : ""}${u.name ? " <i>" + esc(u.name) + "</i>" : ""}</span><span>${R.points} pts</span>`; }).join("");
   const pts = g.idx.reduce((a, j) => a + (resolveUnit(appState.S.units[j]).points || 0), 0);
   const errs = g.idx.length ? sqErrorsHTML(g.tag) : "";
   return `<div class="unit mixg${g.filling ? " filling" : ""}${errs ? " bad" : ""}" data-mixui="${g.first}" data-mixtag="${esc(g.tag)}">
     <div class="uhead">
       ${g.idx.length ? `<button type="button" class="ufold" data-mixfold="${esc(g.tag)}" aria-expanded="${!!open}" title="${open ? "Hide the cards" : "Show the cards"}">${open ? "▾" : "▸"}</button>` : `<span class="ufold"></span>`}
       <span class="cls">${kindWord(g)} ${esc(g.tag)}</span>${g.idx.length ? infoBtnHTML("m:" + g.tag, "Everything about this squadron") : ""}
-      <span class="ty">${g.hulls} escort${g.hulls === 1 ? "" : "s"} &middot; mixed${g.filling ? " &middot; filling" : ""}</span>
+      <span class="ty">${g.hulls} escort${g.hulls === 1 ? "" : "s"}${g.com ? " (" + (g.hulls - g.com) + " Ork + " + g.com + " commandeered)" : ""} &middot; mixed${g.filling ? " &middot; filling" : ""}</span>
       <span class="pts">${pts} pts</span>
       ${g.filling ? `<button type="button" class="del mixdone" data-mixdone title="Stop filling; the squadron stays">Done</button>`
                   : `<button type="button" class="del" data-mixmore="${esc(g.tag)}" title="The section's + adds to this squadron again">Add more</button>`}

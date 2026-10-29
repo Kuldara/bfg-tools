@@ -132,6 +132,14 @@ details.rules.auto[open]>summary::after{content:" \2013"}
   font:500 10px/1.3 var(--mono);letter-spacing:.03em;color:var(--ink-3);vertical-align:1px}
 /* Mixed squadron (prototype): the section's top row and the fleet's group row */
 .pick.mixrow{border:1px dashed var(--accent);border-radius:var(--r);margin:6px 0 8px;background:var(--accent-wash)}
+/* Blood Axe commandeered escorts (src/commandeered.js): where the section's + goes, and the tiddla section's line */
+.pick.batop{border:1px solid #5f9b45;border-left-width:3px;border-radius:var(--r);margin:6px 0 8px;padding:6px 8px;background:color-mix(in srgb,#5f9b45 12%,transparent)}
+.pick.batop.no{border-color:var(--line);border-style:dashed;background:transparent}
+.pick.batop .nm{color:var(--ink)}
+.pick.batop .nm small,.pick.bahint .nm small{font-family:var(--sans)}
+.pick.batop .seg{display:flex;gap:0}
+.pick.bahint{border:0;padding:2px 0 6px}
+.pick.bahint .lnk{border:0;background:transparent;padding:0;margin-left:4px;color:var(--accent);font:600 11px/1.4 var(--sans);cursor:pointer;text-decoration:underline}
 .pick.mixrow.on{border-style:solid}
 .pick.mixrow .nm{color:var(--ink)}
 .pick.mixrow .acts .mixdone,.uhead .del.mixdone{border:1px solid var(--accent);background:var(--accent);color:#0d1418;font:600 11px/1 var(--sans);

@@ -183,6 +183,30 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   (`clanz-bad-moonz-paid-per-rok`: three Bad Moonz Roks cost +90, not +30).
 
 ### Added
+- **Da Ork Clanz: Blood Axe commandeered escorts go straight into a tiddla**
+  (user 29.10.2026). Fleets p. 369: "A Blood Axe tiddla skwadron of at least
+  six escorts may include up to three Imperial Navy and/or Chaos escorts from
+  any fleet list at their listed cost." The list prints them in a section of
+  their own, BLOOD AXE COMMANDEERED ESCORTS, far below the tiddlas, and a card
+  from it was a squadron card of two that had to be given the tiddla's letter
+  by hand, and the tiddla a letter too. Now:
+  - the section's top row names the tiddla its + goes into, one of the Warlord
+    being bought for when his clan is Blood Axes: "Into tiddla A of Warlord 1 ·
+    6 Ork + 1 commandeered · room for 2"; with two or more the player picks
+    one there. Without one it says what is missing (no Blood Axe Warlord, no
+    tiddla yet), the rows say "needs a Blood Axe tiddla", and + adds a card as
+    before;
+  - its + puts one ship into that tiddla (a card of one with the tiddla's
+    letter, or one more on that class's card; a tiddla card without a letter
+    gets one) and its − takes one out;
+  - while a mixed tiddla is filling, the section's + puts ships into it too,
+    and picking another tiddla ends the filling;
+  - in Your fleet the tiddla's row lists them, "9 escorts (6 Ork + 3
+    commandeered)";
+  - for a Blood Axe Warlord the tiddla section has a line about them with a
+    link down to the section.
+  The rules, the printed card and Play read the letter as before.
+  `check_bloodaxe.js` drives it in Chrome (`npm test`).
 - **Da Ork Clanz: the Blood Axe Warlord's Imperial Navy refit is a row of its
   own** (user 29.10.2026, prototype A). Fleets p. 369: "The Warlord's ship may
   take one refit from the Imperial Navy refit table (rolled randomly) for +20

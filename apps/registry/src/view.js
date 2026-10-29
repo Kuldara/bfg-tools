@@ -11,6 +11,7 @@ import { mixActive, mixGroups, mixGroupHTML, mixHulls, mixMember, mixRowHTML, mi
 import { aboardHTML, fleetResolved } from "./validation.js";
 import { infoBtnHTML, rowHasInfo } from "./info.js";
 import { refitInfoHTML } from "./refit-tables.js";
+import { baAddOne, baHintHTML, baInTarget, baRowTag, baSec, baState, baSubOne, baTopHTML, isBaSec } from "./commandeered.js";
 import { SKW_MAX, activeWarlordIdx, clanzAfterMove, clanzDimUps, clanzHiddenUps, clanzIn, clanzMoveBlock, clanzPin, clanzSkwadronSec, factRowsHTML, fleetControlsHTML, freeSqTag, fxTagsHTML, isCommandeered, isOrkHulkUnit, optFxHTML, orkTiddlaHint, skwKind, upKind, orkPlain, orkSecGloss, sendSkwadron, setClan, setWarlordRerolls, upFx, warlordColor, warlordIdx, warlordNeeds, warlordSkwadrons } from "./warlords.js";
 import { DATA, LISTS, SHIPS } from "../../../packages/ui/catalog.js";
 import { arcGlyph, arcParts, esc, optCostLabel, shortRange, title, upCostText } from "../../../packages/ui/format.js";
@@ -370,6 +371,8 @@ export function renderCatalogue(){
     const note = grp("note", "Builder's notes", sec.notes || []);
     /* Mixed squadron (prototype): while one is filling, this section's + is marked */
     const mixFill = !foreign && mixActive(si);
+    /* Blood Axe commandeered escorts (commandeered.js): where this section's + goes */
+    const baOn = !foreign && isBaSec(si) ? baState() : null, baT = baOn && baOn.target;
     const rows = sec.ents.map((en, ei) => {
       const sh = en.r ? SHIPS[String(en.r)] : null;
       const up = isUpgradeEnt(en);
@@ -496,7 +499,7 @@ export function renderCatalogue(){
          the row's buttons work on (rowCards): not a mixed squadron's, in
          Clanz the active Warlord's. Not while a mixed squadron is filling,
          when this section's + puts ships into that. */
-      const newest = !buy || buy.kind !== "squadron" || mixFill ? null
+      const newest = !buy || buy.kind !== "squadron" || mixFill || baT ? null
         : rowCards(hostEn ? L() : SL, hostEn || !foreign ? null : SL.nm, hostEn ? hostAt.si : si, hostEn ? hostAt.ei : ei, 1, mixMember).slice(-1)[0];
       const newestAt = newest ? appState.S.units.indexOf(newest) : -1;
       const rowCard = newestAt < 0 ? "" : (() => {
@@ -515,7 +518,7 @@ export function renderCatalogue(){
         up ? `<span class="tag">${en.incl ? "included" : en.req ? "required" : "upgrade"}</span>` : ""}${
         rrO && rrO.included ? `<span class="tag rr" title="${esc("Included in the points cost" + (rrO.scope ? " - " + rrO.scope : ""))}">${esc(rrO.head)}</span>` : ""}${
         noChar ? `<span class="tag">own fleet only</span>` : ""}${
-        many ? `<span class="tag sq" title="${buyTip}">${cardWord} &middot; ${perCard}</span>` : ""}${
+        many ? (baOn ? baRowTag() : `<span class="tag sq" title="${buyTip}">${cardWord} &middot; ${perCard}</span>`) : ""}${
         rowNo ? `<span class="tag no" title="${esc(rv.why)}">${esc(rvTag)}</span>` : ""}${
         hostEn ? `<span class="tag via" title="${esc("Added from " + viaTitle + " on this fleet's own list")}">${
           esc(routeTag(via.title))}</span>` : ""}
@@ -526,15 +529,17 @@ export function renderCatalogue(){
         ${up || noChar ? "" : `<span class="acts">${
           /* The count on the + has its way back beside it: one of this row
              out of the fleet again. Only where there is one to take. */
-          nIn ? `<button class="sub" data-s="${si}" data-e="${ei}"${
+          (baT ? baInTarget(si, ei) : nIn) ? `<button class="sub" data-s="${si}" data-e="${ei}"${
             hostEn ? ` data-hs="${hostAt.si}" data-he="${hostAt.ei}"` : ""} title="${
-            buy.kind === "squadron" ? "Take this row's last squadron card away"
+            baT ? "One ship of this class out of " + (baT.tag ? "tiddla " + esc(baT.tag) : "his tiddla")
+            : buy.kind === "squadron" ? "Take this row's last squadron card away"
             : many ? "One less on this row's last " + cardName + "; at " + minOn + " the card goes" : "Remove one from your fleet"}">&minus;</button>` : ""
         }<button class="add${rowNo ? " no" : ""}${mixFill ? " into" : ""}" data-s="${si}" data-e="${ei}"${
           hostEn ? ` data-hs="${hostAt.si}" data-he="${hostAt.ei}"` : ""}${nIn ? ` data-n="${nIn}"` : ""} title="${
           rowNo ? esc(rv.why) : hostEn ? esc("Add from " + viaTitle)
           : (foreign ? "Add as " + esc(appState.SRC_ROLE) : "Add")}${
-          buy && buy.kind === "squadron" ? " a new squadron card of " + minOn + " (" + perCard + " on a card)"
+          baT ? " one ship into " + (baT.tag ? "tiddla " + esc(baT.tag) : "his tiddla") + " (Blood Axes, Fleets p. 369)"
+          : buy && buy.kind === "squadron" ? " a new squadron card of " + minOn + " (" + perCard + " on a card)"
           : many ? " one more to this row's last " + cardName + " (" + perCard + " on a card)" : ""}${
           nIn ? " &middot; " + nIn + " in your fleet" + (many ? " on " + nCards + " card" + (nCards > 1 ? "s" : "") : "") : ""}">+</button></span>`}
         ${warn}</div>`;
@@ -552,7 +557,9 @@ export function renderCatalogue(){
     /* Mixed squadron (prototype): the section's top row, and the chip while one is filling */
     const mixTop = !foreign && mixSec(si) ? mixRowHTML(si) : "";
     const mixOn = !foreign ? mixActive(si) : null;
-    return `<details class="sec${pick ? "" : " ref"}" data-fold="${esc(fk)}"${open ? " open" : ""}>
+    const baTop = baOn ? baTopHTML() : "";
+    const baHint = !foreign && L().clanz && clanzIn(si, L().clanz.tiddla) ? baHintHTML() : "";
+    return `<details class="sec${pick ? "" : " ref"}" data-fold="${esc(fk)}" data-sec="${si}"${open ? " open" : ""}>
       <summary>${esc(title(sec.t))}${orkSecGloss(SL, sec) ? `<span class="gloss">${esc(orkSecGloss(SL, sec))}</span>` : ""}${hdr ? `<span class="limitchip">max ${hdr.max}</span>` : ""}${
         wlTo ? `<span class="limitchip wlto" style="--wl:${WL_TO_COLOR}" title="The catalogue's + adds a skwadron to this Warlord; pick another one in Buying for">for ${esc(wlTo)}</span>` : ""}${
         mixOn ? `<span class="limitchip mixinto" title="The + of this section adds one ship to the mixed squadron">into squadron ${esc(mixOn.tag)}</span>` : ""}${
@@ -560,7 +567,7 @@ export function renderCatalogue(){
       ${pick ? `<span class="n">${
           sec.ents.filter(e => !isUpgradeEnt(e)).length || ""}</span>`
         : `<span class="refchip">rules only</span>`}</summary>
-      <div class="secbody">${man}${auto}${rowInfo}${note}${mixTop}${rows}</div></details>`;
+      <div class="secbody">${man}${auto}${rowInfo}${note}${mixTop}${baHint}${baTop}${rows}</div></details>`;
   }).join("");
   /* The source list is read at click time, not baked into the button: the
      catalogue is rebuilt on every render, and one place deciding it is one
@@ -572,11 +579,16 @@ export function renderCatalogue(){
     appState.JUST = { did: sel, keep: [{ sel: "#catalogue " + sel, mid: midY(b) }] };
     /* Mixed squadron (prototype): while one is filling, + in its section
        puts one ship of this row into it; + anywhere else ends the filling */
+    const baRow = b.dataset.hs == null && !foreign && isBaSec(+b.dataset.s);
     if(appState.MIX){
-      const M = b.dataset.hs == null && !foreign ? mixActive(+b.dataset.s) : null;
+      let M = b.dataset.hs == null && !foreign ? mixActive(+b.dataset.s) : null;
+      /* a Blood Axe tiddla being filled takes the commandeered escorts too (p. 369) */
+      if(!M && baRow){ const t = baState().target; if(t && t.tag && t.tag === appState.MIX.tag) M = appState.MIX; }
       if(!M){ mixStop(); }
       else { mixAddOne(M, +b.dataset.s, +b.dataset.e); appState.JUST = null; return; }
     }
+    /* a commandeered escort: one ship into the Blood Axe tiddla the section names */
+    if(baRow && baAddOne(+b.dataset.s, +b.dataset.e, addUnitFrom)){ render(); return; }
     /* A squadron card's row opens a new card a press (user 28.10.2026);
        a row sold on one card puts one more on its last card while it has
        room (18.10.2026), and a full card, or no card yet, opens a new one at
@@ -606,12 +618,28 @@ export function renderCatalogue(){
   });
   wrap.querySelectorAll("[data-mixstart]").forEach(b => b.onclick = () => { mixStart(+b.dataset.mixstart); render(); });
   wrap.querySelectorAll("[data-mixdone]").forEach(b => b.onclick = () => { mixStop(); render(); });
+  /* picking another tiddla ends the filling of a mixed one: the pick is where the + goes */
+  wrap.querySelectorAll("[data-bato]").forEach(b => b.onclick = () => {
+    appState.BA_TO = b.dataset.bato;
+    if(appState.MIX && appState.MIX.tag !== b.dataset.bato) mixStop();
+    render();
+  });
+  wrap.querySelectorAll("[data-bajump]").forEach(b => b.onclick = () => {
+    const d = wrap.querySelector(`details.sec[data-sec="${baSec()}"]`);
+    if(!d) return;
+    d.open = true;
+    d.scrollIntoView({ block: "start" });
+  });
   wrap.querySelectorAll(".sub").forEach(b => b.onclick = () => {
     if(appState.MIX && b.dataset.hs == null && !foreign && mixActive(+b.dataset.s)){
       const M = appState.MIX, u = mixUnits(M.tag).find(x => x.s === +b.dataset.s && x.e === +b.dataset.e);
       if(!u) return;
       if((u.n || 1) > 1) u.n--; else appState.S.units.splice(appState.S.units.indexOf(u), 1);
       render(); return;
+    }
+    if(b.dataset.hs == null && !foreign && isBaSec(+b.dataset.s) && baState().target){
+      if(baSubOne(+b.dataset.s, +b.dataset.e)) render();
+      return;
     }
     const step = rowStepFor(b, -1, mixMember);
     if(!step) return;
@@ -1411,7 +1439,7 @@ function mixAddOne(M, si, ei){
     if(!u) return;
     u.n = 1; u.sq = M.tag;
   }
-  const r = mixRule(si);
+  const r = mixRule(M.si);
   if(r && mixHulls(M.tag) >= r.max) mixStop();
   appState.JUST = { unit: same || appState.S.units[appState.S.units.length - 1] };
   render();
