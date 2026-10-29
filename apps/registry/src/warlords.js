@@ -43,6 +43,7 @@ export const ORK_SEC_GLOSS = [
   [/^space hulks$/i, "one Warlord's whole command", "clanz"],
   [/^gubbins$/i, "upgrades \u00b7 Warlord's own ship, one per re-roll"],
   [/^clan upgrades$/i, "his clan on every skwadron"],
+  [/^blood axe commandeered escorts$/i, "Imperial Navy and Chaos escorts for a Blood Axe tiddla, up to 3"],
   [/^mob rule$/i, "+1 Ld with 6+ escorts"],
   [/^young gunz$/i, "a free escort at Ld 5\u20136"]
 ];
@@ -550,14 +551,26 @@ export function clanzHiddenUps(RF){
   /* the Blood Axe refit (p. 369): on the ship a Blood Axe Warlord is aboard */
   const axeShips = C.refit_re ? (RF.warlords || []).filter(W => W.ship != null &&
     (W.clans || []).some(c => new RegExp(C.axe_clan, "i").test(c))).map(W => W.ship) : [];
+  /* A Warlord's clan is his skwadrons' clan (p. 369: "A Warlord and his
+     skwadrons may only be from one clan"), so on his ships the other clans'
+     rows only take space (user 29.10.2026: "take them away from the ships
+     under that clan's boss"). His clan as his block shows it: the one picked
+     for him, else the one his skwadrons bought. A row taken all the same
+     stays, so the red check can be put right where it is. */
+  const clanOf = {};
+  (RF.warlords || []).forEach(W => { const w = appState.S.units[W.unit];
+    const c = (w && w.clan) || ((W.clans || []).length === 1 ? W.clans[0] : "");
+    if(c) clanOf[W.unit] = String(c).toLowerCase(); });
   appState.S.units.forEach((u, i) => {
     const R = RF.units[i];
     if(!R || u.lst) return;
-    const keys = [];
+    const keys = [], his = RF.command ? clanOf[RF.command[i]] : "";
     R.upgrades.forEach(up => {
       const sc = L().secs[+String(up.key).split(":")[0]];
       if(!sc) return;
-      if(wsI.indexOf(i) >= 0 && /re-roll/i.test(String(up.label))) keys.push(up.key);
+      const cm = /^Clan: (.+?) \(/i.exec(String(up.label));
+      if(cm && his && cm[1].toLowerCase() !== his && up.state !== "take") keys.push(up.key);
+      else if(wsI.indexOf(i) >= 0 && /re-roll/i.test(String(up.label))) keys.push(up.key);
       else if(new RegExp(C.gub_sec, "i").test(String(sc.t).trim()) && new RegExp(C.gub_re, "i").test(String(up.label)) &&
               ships.indexOf(i) < 0 && up.state !== "take") keys.push(up.key);
       else if(C.refit_re && new RegExp(C.refit_re, "i").test(String(up.label)) && axeShips.indexOf(i) < 0 && up.state !== "take") keys.push(up.key);
@@ -665,7 +678,12 @@ export function fleetControlsHTML(RF){
               " a skwadron may leave the benefit unpaid (Fleets p. 369): set its Clan row off under Other fleet-list upgrades.",
           hulk && c === "Evil Sunz" && clan !== c)).join("")}</span></div>
       <div class="wlrow"><span class="abl"></span><ul class="wlclans">${(clan && CI[clan] ? [clan] : CLANS.filter(c => CI[c]))
-        .map(c => clanLineHTML(c, CI[c], hulk)).join("")}</ul></div>
+        .map(c => clanLineHTML(c, CI[c], hulk)).join("")}</ul></div>${
+      /* the Blood Axes' two abilities, where to find them (user 29.10.2026:
+         "when the ability is on, a help: use the mixed squadron feature") */
+      /blood axes/i.test(clan) && L().bloodaxe ? `<div class="wlrow"><span class="abl"></span><span class="wlhint">Blood Axes:
+        Imperial Navy or Chaos escorts (up to ${L().bloodaxe.max} in a tiddla of ${L().bloodaxe.min}+) &ndash; start a <b>Mixed squadron</b> in the Tiddla section, then + them under Blood Axe commandeered escorts right below it;
+        his ship's Imperial Navy refit is a row in its fleet-list upgrades.</span></div>` : ""}
       <div class="wlrow"><span class="abl">Skwadrons</span>${skwadronsHTML(RF, wi)}</div>
       <div class="wlrow"><span class="abl">${need.ok ? "Done" : "Needs"}</span><span class="wlneed ${need.ok ? "ok" : "bad"}">${esc(need.text)}</span></div>
       ${ship ? `<div class="wlrow"><span class="abl">Gubbins</span><span class="wlhint">upgrades on his own ship only: ${W.gub || 0} / ${rr}${

@@ -103,7 +103,7 @@ export function mixRowHTML(si){
   if(M){
     const g = mixGroups().filter(x => x.tag === M.tag)[0] || { hulls: 0, min: r.min, max: r.max };
     return `<div class="pick mixrow on"><div class="nm">Mixed squadron ${esc(M.tag)}<span class="tag sq">filling</span>
-      <small>+ on the rows below puts one ship into it &middot; ${g.hulls} ship${g.hulls === 1 ? "" : "s"}, ${
+      <small>+ on the rows below puts one ship into it${r.tiddla && L().bloodaxe ? ", and so does + on the Blood Axe commandeered escorts below" : ""} &middot; ${g.hulls} ship${g.hulls === 1 ? "" : "s"}, ${
         g.hulls < g.min ? (g.min - g.hulls) + " more to reach " + g.min : g.hulls < g.max ? "room for " + (g.max - g.hulls) + " more" : "full"}</small></div>
       <div class="p"></div><span class="acts"><button type="button" class="mixdone" data-mixdone title="Stop filling; the squadron stays">Done</button></span></div>`;
   }

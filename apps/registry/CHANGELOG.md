@@ -190,7 +190,18 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   their own, BLOOD AXE COMMANDEERED ESCORTS, far below the tiddlas, and a card
   from it was a squadron card of two that had to be given the tiddla's letter
   by hand, and the tiddla a letter too. Now:
-  - the section's top row names the tiddla its + goes into, one of the Warlord
+  - the section is drawn right after the Tiddla skwadron section, with a gloss
+    "Imperial Navy and Chaos escorts for a Blood Axe tiddla, up to 3" (user:
+    "I did not figure out how to add the IN and Chaos ships");
+  - the way in is **Mixed squadron** (user: "it should be in the add mixed
+    squadron feature"): while a mixed tiddla is filling, the section's + puts
+    its ships into it whatever the Warlord's clan, and the squadron is red in
+    the legality panel and on its row when it is not kept ("no Blood Axe
+    clan", fewer than six, more than three commandeered);
+  - the Tiddla section says so for every Warlord, with a link down; a Warlord
+    whose clan is Blood Axes has a help line in his block (where the escorts
+    are, and that his ship's Imperial Navy refit is a row of its own);
+  - outside filling, the section's top row names the tiddla its + goes into, one of the Warlord
     being bought for when his clan is Blood Axes: "Into tiddla A of Warlord 1 ·
     6 Ork + 1 commandeered · room for 2"; with two or more the player picks
     one there. Without one it says what is missing (no Blood Axe Warlord, no
@@ -199,13 +210,16 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   - its + puts one ship into that tiddla (a card of one with the tiddla's
     letter, or one more on that class's card; a tiddla card without a letter
     gets one) and its − takes one out;
-  - while a mixed tiddla is filling, the section's + puts ships into it too,
-    and picking another tiddla ends the filling;
+  - picking another tiddla there ends the filling of a mixed one;
   - in Your fleet the tiddla's row lists them, "9 escorts (6 Ork + 3
-    commandeered)";
-  - for a Blood Axe Warlord the tiddla section has a line about them with a
-    link down to the section.
+    commandeered)".
   The rules, the printed card and Play read the letter as before.
+- **Da Ork Clanz: a Warlord's ships show only his clan's row** (user
+  29.10.2026: "take the others away from the ships under that clan's boss, they
+  only take space"). "A Warlord and his skwadrons may only be from one clan"
+  (Fleets p. 369): once his clan is picked (or his skwadrons bought one), the
+  other clans' rows are gone from his ships' fleet-list upgrades. A row taken
+  all the same stays, so the red check can be put right where it is.
   `check_bloodaxe.js` drives it in Chrome (`npm test`).
 - **Da Ork Clanz: the Blood Axe Warlord's Imperial Navy refit is a row of its
   own** (user 29.10.2026, prototype A). Fleets p. 369: "The Warlord's ship may

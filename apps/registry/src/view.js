@@ -334,7 +334,7 @@ export function renderCatalogue(){
      renegade section prints both an Endeavour and a Bakka Endeavour, at
      different prices). */
   const srcRoute = foreign ? routeOf(SL) : null;
-  wrap.innerHTML = sourceBarHTML() + fleetRulesHTML(SL, foreign) + SL.secs.map((sec, si) => {
+  wrap.innerHTML = sourceBarHTML() + fleetRulesHTML(SL, foreign) + clanzOrder(SL.secs.map((sec, si) => {
     if(!sec.ents.length && !sec.rules.length && !sec.text.length) return "";
     /* A section with nothing to buy is rules only, and every one of its
        sentences now has a place in the Fleet rules block above (J212). */
@@ -568,7 +568,7 @@ export function renderCatalogue(){
           sec.ents.filter(e => !isUpgradeEnt(e)).length || ""}</span>`
         : `<span class="refchip">rules only</span>`}</summary>
       <div class="secbody">${man}${auto}${rowInfo}${note}${mixTop}${baHint}${baTop}${rows}</div></details>`;
-  }).join("");
+  }), SL, foreign).join("");
   /* The source list is read at click time, not baked into the button: the
      catalogue is rebuilt on every render, and one place deciding it is one
      place to get it wrong. */
@@ -583,7 +583,7 @@ export function renderCatalogue(){
     if(appState.MIX){
       let M = b.dataset.hs == null && !foreign ? mixActive(+b.dataset.s) : null;
       /* a Blood Axe tiddla being filled takes the commandeered escorts too (p. 369) */
-      if(!M && baRow){ const t = baState().target; if(t && t.tag && t.tag === appState.MIX.tag) M = appState.MIX; }
+      if(!M && baRow){ const t = baState().target; if(t && t.filling) M = appState.MIX; }
       if(!M){ mixStop(); }
       else { mixAddOne(M, +b.dataset.s, +b.dataset.e); appState.JUST = null; return; }
     }
@@ -1315,6 +1315,18 @@ export function renderFleet(){
   box.querySelectorAll("details.upinfo").forEach(d => d.addEventListener("toggle", () => {
     if(d.open) upInfo().add(d.dataset.upinfo); else upInfo().delete(d.dataset.upinfo);
   }));
+}
+/* Da Ork Clanz: the Blood Axe commandeered escorts are drawn right after the
+   tiddla section they join (user 29.10.2026: "I did not figure out how to add
+   the IN and Chaos ships" - the book's list prints them last, below Rogue
+   Traders). parts: the sections' markup, by section index. */
+function clanzOrder(parts, SL, foreign){
+  if(foreign || !SL.clanz || SL !== L()) return parts;
+  const b = baSec(), t = SL.secs.findIndex((s, i) => clanzIn(i, SL.clanz.tiddla));
+  if(b < 0 || t < 0 || b === t + 1) return parts;
+  const out = parts.slice(), moved = out.splice(b, 1)[0];
+  out.splice(b > t ? t + 1 : t, 0, moved);
+  return out;
 }
 /* the refit boxes left open, this session (made on first use: the fleet pane
    can be drawn before this module has run to its end) */

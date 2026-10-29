@@ -17,7 +17,10 @@
        are green; - takes one out; the tiddla section has the line;
      - a mixed tiddla being filled takes a commandeered escort into it;
      - two tiddlas: the pick in the top row is where the + goes, and the link
-       opens the section. */
+       opens the section;
+     - the other clans' rows are gone from a clan Warlord's ships (user
+       29.10.2026: "take them away, they only take space"), and all there
+       while he has none. */
 "use strict";
 const fs = require("fs"), path = require("path");
 const { launch } = require("../../tools/lib/chrome.js");
@@ -86,6 +89,18 @@ const run = async (cd, js) => JSON.parse(await cd.evaluate("(async () => { " + H
       return JSON.stringify({ filling: !!G.appState.MIX, fleet: fleet() });`);
     check("a mixed tiddla being filled takes the commandeered escort", [m.filling, m.fleet], [true, "ravager 6, brute 3A, sword 1A"]);
 
+    /* user 29.10.2026: in the Mixed squadron feature whatever the clan; the squadron is red when it is not kept */
+    const gm = await run(cd, clan("Goffs") + `sec(TID).querySelector('[data-mixstart]').click(); await w();
+      for (let k = 0; k < 6; k++) { press(TID, /^Brute/); await w(); }
+      press(BA, /^Sword/); await w();
+      sec(TID).querySelector('[data-mixdone]').click(); await w();
+      const g = [...document.querySelectorAll('#fleet .unit.mixg')].map(x => ({ bad: x.classList.contains('bad'), err: (x.querySelector('.issues') || {}).textContent || '' }));
+      return JSON.stringify({ fleet: fleet(), bad: g.length === 1 && g[0].bad, says: /no Blood Axe clan/.test(g.length ? g[0].err : '') });`);
+    check("a Goff Warlord's mixed tiddla takes it too, and its row is red: no Blood Axe clan", [gm.fleet, gm.bad, gm.says], ["ravager 6, brute 6A, sword 1A", true, true]);
+    const help = await run(cd, clan("Blood Axes") + `const p = document.querySelector('#fleet .wlpanel');
+      return JSON.stringify(/Blood Axes:[\\s\\S]*Mixed squadron/.test(p ? p.textContent : ''));`);
+    check("the Warlord block says where the Blood Axes' escorts are", help, true);
+
     const t = await run(cd, clan("Blood Axes") + `const a2 = at(/^Brute/i); G.addUnit(a2[0], a2[1]);
       const nb = S().units[S().units.length - 1]; nb.n = 6; nb.sq = 'B';
       S().units.find(u => /ravager/i.test(G.resolveUnit(u).className)).sq = 'A'; G.render(); await w();
@@ -97,6 +112,12 @@ const run = async (cd, js) => JSON.parse(await cd.evaluate("(async () => { " + H
     check("two tiddlas: the top row offers both", t.segs, ["A*", "B"]);
     check("the pick is where the + goes", t.fleet, "ravager 6A, brute 6B, sword 1B");
     check("the link opens the section", t.opened, true);
+    const clansOn = `const rav = [...document.querySelectorAll('#fleet .unit')].find(x => /ravager/i.test((x.querySelector('.cls') || {}).textContent || ''));
+      return [...rav.querySelectorAll('.opt')].map(o => (o.textContent.match(/Clan: ([A-Za-z ]+?) [(]/i) || [])[1]).filter(Boolean);`;
+    const none = JSON.parse(await cd.evaluate("(async () => { " + HELP + START + "return JSON.stringify((() => { " + clansOn + " })()); })()"));
+    const goff = JSON.parse(await cd.evaluate("(async () => { " + HELP + START + clan("Goffs") + "return JSON.stringify((() => { " + clansOn + " })()); })()"));
+    check("no clan picked: every clan's row on his tiddla", none.length > 2, true);
+    check("a Goff Warlord: only the Goffs row on his tiddla", goff, ["Goffs"]);
     check("no errors on the page", t.errs, []);
   } catch (e) {
     console.log("  FAIL  " + (e && e.stack || e)); fail++;
