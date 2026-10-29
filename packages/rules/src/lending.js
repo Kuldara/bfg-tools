@@ -39,7 +39,7 @@ export function listOfIntent(intent, ctx, catalog){
 export function lendGrantFor(L, D){
   /* A list can name the same source twice, once plainly and once behind a
      condition: Dominion grants Imperial Navy vessels outright (p. 101) and
-     again through the Inquisitor Lord licence (p. 139). The plain one wins,
+     again through the Inquisitor Lord licence (p. 149). The plain one wins,
      or the picker would put an unconditional source behind a condition just
      because of the order the rows happen to sit in. */
   var hit = null;
@@ -72,7 +72,7 @@ export function allyPairOk(L, D){
    Getting that order wrong is not academic. A Space Marine list lent to an
    Imperial Navy fleet is legal as an ALLY with nobody in charge (the matrix
    allows imperials and space marines), and legal as a RESERVE too, but only
-   with an Inquisitor Lord leading (p. 139). Reading the grant first made the
+   with an Inquisitor Lord leading (p. 149). Reading the grant first made the
    picker announce "needs an Inquisitor Lord" and mark all nine rows red on a
    pairing resolveFleet passes green - 194 rows across 21 pairs. All 27
    granted pairs have an ally route as well, so a grant is never the only way
@@ -82,7 +82,7 @@ export function lendVerdict(L, D, role){
   if(D === L || D.nm === L.nm)
     return { kind: "own", role: null, cond: null, why: "" };
   /* A list that swaps ships with nobody beats every grant and every door: the
-     sentence is the list's own and more specific (p. 99, p. 145). */
+     sentence is the list's own and more specific (p. 99, p. 155). */
   if(L.res_ban) return { kind: "no", role: null, cond: null, why: L.res_ban };
   if(D.res_ban) return { kind: "no", role: null, cond: null, why: D.res_ban };
   var same = !!(D.race && L.race && D.race === L.race);
@@ -126,7 +126,7 @@ export function lendVerdict(L, D, role){
      - the donor's own reserve or access sections are not the donor's ships
        to lend (p. 15, "you cannot use a reserve of a reserve", and the same
        for named access). Every Ork list carries a ROGUE TRADERS section of
-       that kind (p. 174), so an Ork list lends its kroozers and not that.
+       that kind (p. 184), so an Ork list lends its kroozers and not that.
      - lend_ban: Armageddon lends everything except its starred Space Marine
        vessels (p. 41).
      - a grant can exclude rows: Dominion takes Rogue Trader vessels but not
@@ -149,7 +149,7 @@ export function lendRowVerdict(L, D, si, en, catalog, ctx){
   if(v.kind === "no") return { ok: false, why: v.why, cause: "pair" };
   /* A conditional grant refuses EVERY row until the fleet meets it: "An
      Eldar Hero must lead the fleet in order to use Craftworld Eldar vessels
-     as reserves" (p. 316), and the Inquisitor Lord licence on p. 139. The
+     as reserves" (p. 314), and the Inquisitor Lord licence on p. 149. The
      pair verdict says the list lends, which is true; whether it lends right
      now depends on the fleet, so the caller has to say. ctx.condMet is left
      undefined when the question is about the pair and not about a fleet. */
@@ -205,7 +205,7 @@ export function lendOfferable(en){
    its own pages, and the two biggest cases are exactly the pair a player
    asks about:
 
-     Every Chaos list prints RENEGADE IMPERIAL VESSELS (p. 222): "For every
+     Every Chaos list prints RENEGADE IMPERIAL VESSELS (p. 232): "For every
      1,500 points in a Chaos fleet, one cruiser from any Imperial Navy fleet
      list up to 185 points and/or up to six Imperial Navy escorts may be
      taken."
@@ -236,7 +236,7 @@ export function sectionNeeds(L, si){
   return hit;
 }
 /* A donor row refused as a reserve of a reserve (p. 15) may still be this
-   fleet's own row. Fleets p. 142 gives an Ordo Malleus fleet "any Chaos ship
+   fleet's own row. Fleets p. 152 gives an Ordo Malleus fleet "any Chaos ship
    listed in the Bastion Fleet List" in its own section: opening Bastion
    Fleets from a Gothic fleet should point there, not only say no. Same hull
    reference, in a section of this list of kind reserve. */
@@ -256,7 +256,7 @@ export function lendOwnRoute(L, D, catalog){
   if(!L || !D || L === D) return null;
   /* A list that gives ships to nobody gives them to nobody: "A Grey Knights
      fleet will not take ships from or provide ships to any other fleet list"
-     (Fleets p. 146). A host section that prints the same hulls is the host's
+     (Fleets p. 155). A host section that prints the same hulls is the host's
      own offer, and shows in the host's own catalogue - it is not a route
      FROM that list, and the picker must not paint it yellow as one. */
   if(D.res_ban) return null;
@@ -314,8 +314,8 @@ export function lendRouteFor(L, D, catalog){
 
    "limited" is NOT the same as "has rows it will not lend". Almost every list
    has those: 2693 of the 3041 refusals across all 1024 pairs are rows in a
-   donor's own access section - every Ork list's ROGUE TRADERS block (p. 174),
-   every Chaos list's renegade block (p. 222) - and they are refused from every
+   donor's own access section - every Ork list's ROGUE TRADERS block (p. 184),
+   every Chaos list's renegade block (p. 232) - and they are refused from every
    host alike. A category that is on for 406 of 408 lending pairs would tell
    the player nothing.
 

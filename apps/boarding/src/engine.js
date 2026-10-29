@@ -34,7 +34,7 @@
   }
   // A ship is crippled once it has LOST half its damage points (RB p.65).
   // Space hulks are the exception: "Space hulks are not crippled by damage like
-  // ordinary ships" (FL p.288, p.391), so they never grant the +2 and never
+  // ordinary ships" (FL p.290, p.393), so they never grant the +2 and never
   // halve their turrets.
   function isCrippled(ship) {
     if (has(ship, "spacehulk")) return false;
@@ -53,14 +53,14 @@
   function alive(side) {
     // `out` marks a hull that is not part of this attempt any more - a holofield
     // save takes the ship out of the boarding action it saved against
-    // (FL p.303: the attempt against it is ignored).
+    // (FL p.305: the attempt against it is ignored).
     return (side.ships || []).filter(function (s) { return s.dp > 0 && !s.out; });
   }
   function sideHas(side, opt) {
     return alive(side).some(function (s) { return has(s, opt); });
   }
   // Hexagrammic wards: an Ordo Malleus Inquisitor Lord, and Grey Knights capital
-  // ships, ignore Chaos marks affecting boarding actions (FL p.142, p.145).
+  // ships, ignore Chaos marks affecting boarding actions (FL p.152, p.155).
   function hasWards(side) {
     return sideHas(side, "inq_malleus") || sideHas(side, "greyknights");
   }
@@ -69,14 +69,14 @@
   // REF step 1: order of operations is Multiply, Divide, Add, Subtract.
   function shipValue(ship, side, role, enemy) {
     var steps = [];
-    var base = has(ship, "hp2") ? 2 : ship.dp;   // FL p.388, Grunt assault ship
+    var base = has(ship, "hp2") ? 2 : ship.dp;   // FL p.390, Grunt assault ship
     if (has(ship, "hp2")) steps.push({ t: "counts as 2 HP (before other modifiers)", v: 2 });
     var v = base;
 
     var wards = enemy ? hasWards(enemy) : false;
     var mult = 1, why = [];
-    // FL p.288: a Chaos space hulk "may not take any Chaos Marks", and both hulk
-    // entries ban every upgrade that improves Boarding Value (FL p.288, p.390).
+    // FL p.290: a Chaos space hulk "may not take any Chaos Marks", and both hulk
+    // entries ban every upgrade that improves Boarding Value (FL p.290, p.392).
     if (has(ship, "khorne") && !wards && !has(ship, "spacehulk")) {
       mult *= 2; why.push("Mark of Khorne");
     }
@@ -157,7 +157,7 @@
     // --- situational, about the ENEMY ---------------------------------------
     // Tyranids gain the Blast Marker modifier but never grant it, and boarding
     // itself places a Blast Marker on the target, so as boarder they always
-    // have it (FL p.418).
+    // have it (FL p.420).
     if (side.race === "tyranid" && role === "attacker") {
       mods.push({ id: "blast", label: "boarding places a Blast Marker on the target", v: 1 });
     } else if (enemy.blast && enemy.race !== "tyranid") {
@@ -181,18 +181,18 @@
       });
     }
     // Hemlock, Shadowhunter, Ghostship: "a ship that BOARDS one gains a +1
-    // modifier" (FL p.327, p.332, p.307) - the boarder only.
+    // modifier" (FL p.325, p.330, p.309) - the boarder only.
     if (role === "attacker" && eShips.some(function (s) { return has(s, "easyprey"); })) {
       mods.push({ id: "easyprey", label: "boarding a fragile Eldar hull", v: 1 });
     }
     // Talons refit: "Enemy ships attempting to board the vessel ... suffer a -2
-    // modifier" (FL p.309, p.350) - again the boarder only.
+    // modifier" (FL p.311, p.352) - again the boarder only.
     if (role === "attacker" && theirs("talons")) {
       mods.push({ id: "talons", label: "the target carries the Talons refit", v: -2 });
     }
 
     // A vessel with no crew has no boarding parties, so none of the modifiers
-    // that describe the quality of a crew can apply to it (FL p.284).
+    // that describe the quality of a crew can apply to it (FL p.286).
     var ownShips = alive(side);
     var crewless = ownShips.length > 0 && ownShips.every(function (x) { return has(x, "nocrew"); });
     if (crewless) {
@@ -202,7 +202,7 @@
 
     // --- race, counted ONCE per side (RB p.90, REF step 2) -------------------
     // A Blackship is explicitly not crewed by Space Marines even in a fleet
-    // that contains them (FL p.148). Ignore an invalid saved/manual Marines
+    // that contains them (FL p.158). Ignore an invalid saved/manual Marines
     // flag on that hull instead of silently granting another +2.
     var marineCrew = ownShips.some(function (s) { return has(s, "marines") && !has(s, "blackship"); });
     var marines = (side.race === "spacemarines") || marineCrew;
@@ -217,8 +217,8 @@
 
     // --- per-side upgrades, counted once ------------------------------------
     // REF p.1 lists Abaddon, mega-armour and Goff crew; the named ship/fleet
-    // rules add Berzerkers (FL p.264), Clanz Warlord (FL p.372) and Aspect
-    // Warrior Hosts (FL p.305).
+    // rules add Berzerkers (FL p.266), Clanz Warlord (FL p.374) and Aspect
+    // Warrior Hosts (FL p.307).
     if (mine("abaddon")) mods.push({ id: "abaddon", label: "Abaddon the Despoiler", v: 1 });
     if (mine("berzerkers")) mods.push({ id: "berzerkers", label: "Khorne Berzerker retinue", v: 2 });
     if (mine("megaarmour")) mods.push({ id: "megaarmour", label: "mega-armoured boarding parties", v: 1 });
@@ -227,7 +227,7 @@
     if (mine("aspect")) mods.push({ id: "aspect", label: "Aspect Warrior Host", v: 2 });
 
     // An Inquisitor Lord's +2 is not added on top of an identical Space Marine
-    // or Grey Knights bonus (FL p.144).
+    // or Grey Knights bonus (FL p.154).
     var inq = mine("inq_malleus") ? { id: "inq_malleus", label: "Ordo Malleus Inquisitor Lord", v: 2 }
       : mine("inq_hereticus") ? { id: "inq_hereticus", label: "Ordo Hereticus Inquisitor Lord", v: 2 }
         : null;
@@ -240,7 +240,7 @@
     }
 
     // --- defending only ------------------------------------------------------
-    // These hull/commander bonuses are FL p.72, p.148 and p.48 respectively.
+    // These hull/commander bonuses are FL p.72, p.158 and p.48 respectively.
     if (role === "defender") {
       if (mine("corridor")) mods.push({ id: "corridor", label: "Endeavour/Endurance/Defiant hull", v: 1 });
       if (mine("blackship")) mods.push({ id: "blackship", label: "Inquisition Blackship garrison", v: 2 });
@@ -297,7 +297,7 @@
       ],
     },
     eldar: {
-      id: "eldar", label: "Eldar Critical Hits", page: "FL p.305", dice: 2, rows: [
+      id: "eldar", label: "Eldar Critical Hits", page: "FL p.307", dice: 2, rows: [
         row(2, 2, 0, "Infinity circuit damaged", "Leadership -1 until repaired."),
         row(3, 3, 0, "Keel armament damaged", "The keel armament may not fire until repaired."),
         row(4, 4, 0, "Prow armament damaged", "The prow armament may not fire until repaired."),
@@ -312,7 +312,7 @@
       ],
     },
     tyranid: {
-      id: "tyranid", label: "Tyranid Critical Hits", page: "FL p.423", dice: 2, rows: [
+      id: "tyranid", label: "Tyranid Critical Hits", page: "FL p.425", dice: 2, rows: [
         row(2, 2, 0, "Spore cysts injured", "The spore cysts may not be used until repaired."),
         row(3, 3, 0, "Starboard armament wounded", "The starboard armament may not be used until repaired."),
         row(4, 4, 0, "Port armament wounded", "The port armament may not be used until repaired."),
@@ -327,7 +327,7 @@
       ],
     },
     darkeldar: {
-      id: "darkeldar", label: "Dark Eldar Critical Hits", page: "FL p.344", dice: 2, rows: [
+      id: "darkeldar", label: "Dark Eldar Critical Hits", page: "FL p.346", dice: 2, rows: [
         row(2, 2, 0, "Weapons Systems Damaged", "No weapon may fire until repaired."),
         row(3, 3, 0, "Prow Armament Damaged", "The prow armament (not the weapons batteries) may not fire until repaired."),
         row(4, 4, 0, "Manoeuvring Systems Damaged", "The ship must pass a Command check to come to new heading until repaired."),
@@ -342,7 +342,7 @@
       ],
     },
     necron: {
-      id: "necron", label: "Necron Critical Hits", page: "FL p.401", dice: 2, rows: [
+      id: "necron", label: "Necron Critical Hits", page: "FL p.403", dice: 2, rows: [
         row(2, 2, 0, "Power Flow Disrupted", "May not fire lightning arc or particle whip in its port arc until repaired."),
         row(3, 3, 0, "Power Flow Disrupted", "May not fire lightning arc or particle whip in its starboard arc until repaired."),
         row(4, 4, 0, "Power Flow Disrupted", "May not fire lightning arc in any arc until repaired."),
@@ -357,7 +357,7 @@
       ],
     },
     haven: {
-      id: "haven", label: "Eldar Haven Critical Hits", page: "FL p.337", dice: 2, rows: [
+      id: "haven", label: "Eldar Haven Critical Hits", page: "FL p.335", dice: 2, rows: [
         row(2, 2, 0, "Infinity circuit damaged", "Leadership -1 until repaired."),
         row(3, 3, 0, "Weapon Batteries Off-line", "Weapon batteries may not fire in any arc until repaired."),
         row(4, 4, 0, "Pulsar Lances Off-line", "Pulsar Lances may not fire in any arc until repaired."),
@@ -399,7 +399,7 @@
       ],
     },
     chaoshulk: {
-      id: "chaoshulk", label: "Chaos Space Hulk Critical Hits", page: "FL p.288", dice: 1,
+      id: "chaoshulk", label: "Chaos Space Hulk Critical Hits", page: "FL p.290", dice: 1,
       note: "Damage rolled that does not apply for any reason immediately assumes the next higher level damage on the table. Space hulks cannot repair any critical damage during the battle.",
       rows: [
         row(1, 2, 0, "Target high energy systems!", "Roll a D6 to determine the affected system.", {
@@ -420,7 +420,7 @@
       ],
     },
     orkhulk: {
-      id: "orkhulk", label: "Ork Hulk Critical Hits", page: "FL p.391", dice: 1,
+      id: "orkhulk", label: "Ork Hulk Critical Hits", page: "FL p.393", dice: 1,
       note: "Damage rolled that does not apply for any reason immediately assumes the next higher level damage on the table. Space hulks cannot repair any critical damage during the battle.",
       rows: [
         row(1, 2, 0, "Target high energy systems!", "Roll a D6 to determine the affected system.", {
@@ -545,9 +545,9 @@
   ];
   var CATA_TABLES = {
     standard: { id: "standard", label: "Catastrophic Damage", page: "RB p.71", dice: 2, rows: CATA },
-    // Tyranid bio-ships use their own tables entirely (FL p.423, p.425).
+    // Tyranid bio-ships use their own tables entirely (FL p.425, p.424).
     tyranid: {
-      id: "tyranid", label: "Tyranid Catastrophic Damage", page: "FL p.423", dice: 2, rows: [
+      id: "tyranid", label: "Tyranid Catastrophic Damage", page: "FL p.425", dice: 2, rows: [
         { lo: 2, hi: 7, name: "Drifting carcass", bm: "1", text: "The wreck moves 4D6 cm forward each Movement Phase; place a Blast Marker in contact after each move." },
         { lo: 8, hi: 9, name: "Death throes", bm: "1", text: "The wreck moves 4D6 cm forward each Movement Phase; place a Blast Marker and roll on this table again after the move." },
         { lo: 10, hi: 11, name: "Biological eruption", bm: "half its starting hits", text: "Remove the ship. Make a pyro-acid attack against every target within 3D6 cm with Firepower equal to its starting damage." },
@@ -563,9 +563,9 @@
       ],
     },
     // A space hulk keeps the drifting and blazing results; the two explosive
-    // ones are replaced (FL p.288, p.391).
+    // ones are replaced (FL p.290, p.393).
     spacehulk: {
-      id: "spacehulk", label: "Space Hulk Catastrophic Damage", page: "FL p.288", dice: 2, rows: [
+      id: "spacehulk", label: "Space Hulk Catastrophic Damage", page: "FL p.290", dice: 2, rows: [
         { lo: 2, hi: 6, name: "Drifting Hulk", bm: "1", text: "Unchanged: the wreck moves 4D6 cm forward each Movement Phase; place a Blast Marker after each move." },
         { lo: 7, hi: 8, name: "Blazing Hulk", bm: "1", text: "Unchanged: the wreck moves 4D6 cm forward each Movement Phase; place a Blast Marker and roll again after the move." },
         { lo: 9, hi: 11, name: "Torn apart", bm: "none", text: "Internal explosions tear the hulk apart. No damage is scored on nearby ships; it breaks up into an asteroid field D3 x 5 cm wide and long." },
@@ -574,7 +574,7 @@
     },
   };
   // Roks, Kroot Warspheres and Nicassar Caravans never roll: they simply break
-  // up into four Blast Markers (FL p.393, p.495, p.492).
+  // up into four Blast Markers (FL p.395, p.495, p.492).
   function cataTableId(ship, side) {
     if (has(ship, "nocata4")) return "nocata4";
     if (has(ship, "ramilies")) return "ramilies";
@@ -583,7 +583,7 @@
     return "standard";
   }
   // Mercury battlecruisers, and Heavy Transports bought as Fuel Tankers, roll
-  // 3D6 for catastrophic damage and cap a sum over 12 at 12 (FL p.64, p.182).
+  // 3D6 for catastrophic damage and cap a sum over 12 at 12 (FL p.64, p.192).
   function cataDice(ship, side) {
     if (has(ship, "cata3") || has(ship, "fuel_tanker")) return 3;
     var t = CATA_TABLES[cataTableId(ship, side)] || CATA_TABLES.standard;
@@ -641,7 +641,7 @@
       // because that same combat continues next End Phase (RB p.90, FL p.303).
       if (has(s, "holofields") && (!ctx || (ctx.round || 1) === 1)) {
         var xenos = a.some(function (x) { return has(x, "inq_xenos"); });
-        // The same save is "shadowfields" on a Dark Eldar ship (FL p.342).
+        // The same save is "shadowfields" on a Dark Eldar ship (FL p.344).
         var field = def.race === "darkeldar" ? "shadowfields" : "holofields";
         problems.push({
           level: "roll", id: "holofield", field: field, target: xenos ? 3 : 2, ship: s.name, idx: s.idx,
@@ -650,7 +650,7 @@
         });
       }
     });
-    // Tyranid special rule "All Is Lost" (FL p.418). Leadership is not part of
+    // Tyranid special rule "All Is Lost" (FL p.420). Leadership is not part of
     // a hull profile, so the resolver surfaces the complete optional procedure
     // instead of silently omitting it or inventing a Leadership value.
     if (att.race === "tyranid" && d.some(function (s) {
@@ -658,7 +658,7 @@
     })) {
       problems.push({
         level: "rule", id: "allislost",
-        text: "All Is Lost (optional): a capital ship boarded by Tyranids may first pass a Leadership test to self-destruct. If it passes, D6 1-3 is Plasma Drive Overload and 4-6 is Warp Drive Implosion (FL p.418).",
+        text: "All Is Lost (optional): a capital ship boarded by Tyranids may first pass a Leadership test to self-destruct. If it passes, D6 1-3 is Plasma Drive Overload and 4-6 is Warp Drive Implosion (FL p.420).",
       });
     }
     return problems;
@@ -679,7 +679,7 @@
       var ships = alive(side);
       var noCrew = ships.length > 0 && ships.every(function (s) { return has(s, "nocrew"); });
       // How many dice this side throws, and which one of them counts. Tyranids
-      // roll 2D6 and keep the highest (FL p.418); "dicelow" is the mirror image
+      // roll 2D6 and keep the highest (FL p.420); "dicelow" is the mirror image
       // - two dice of which the LOWEST counts - which the books use for
       // hit-and-run attacks against Tyranids (FL p.418, RB p.92) and which a
       // house rule may put on a boarding roll.
@@ -739,7 +739,7 @@
   }
 
   // Mark of Khorne adds +1 to the roll to see if a critical hit is caused (REF step 3).
-  // FL p.142 / p.145: a ship with hexagrammic wards "ignores any Chaos marks
+  // FL p.152 / p.155: a ship with hexagrammic wards "ignores any Chaos marks
   // affecting leadership or boarding actions", which is the Mark of Khorne's
   // +1 on the roll to cause a critical as much as its doubled boarding value.
   // The Berzerker Tide is a Forces of Chaos entry, not a Mark, and the ward
@@ -749,7 +749,7 @@
     return (enemy && hasWards(enemy)) ? 0 : 1;
   }
   // A Berzerker fleet may make D3 additional critical rolls but may not use
-  // special orders in the following turn (FL p.244, REF step 3).
+  // special orders in the following turn (FL p.250, REF step 3).
   function extraCritRolls(side) {
     return sideHas(side, "berzerkerfleet") && sideHas(side, "khorne");
   }

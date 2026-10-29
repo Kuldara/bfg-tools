@@ -23,7 +23,7 @@ export function resolveFleet(fleetIntent, catalog){
   var ctx = { list: L, host: L };
   var lim = fleetIntent.limit | 0;
   /* a Da Ork Clanz tiddla skwadron's clan and Gubbins are the skwadron's,
-     on every row and paid once (Fleets pp. 369-370, ruling T60) */
+     on every row and paid once (Fleets pp. 371-372, ruling T60) */
   var units = shareSkwadronUpgrades(fleetIntent.units || [], ctx, catalog);
   var members = units.map(function(it){
     var sel = selectionOf(it, ctx, catalog);
@@ -61,7 +61,7 @@ export function resolveFleet(fleetIntent, catalog){
      would otherwise demand an Admiral and a second Warlord. User decision
      8.10.2026 (BACKLOG J170). */
   /* Not the Ramilies or the Haven: those are "bought from the fleet's
-     points, rather than defences" (pp. 500, 337), so they are part of what
+     points, rather than defences" (pp. 500, 335), so they are part of what
      the fleet is worth, like the Fortress-Monastery - the same reason they
      are left out of the one-third sum below (review 9.10.2026: they used to
      fall into neither). */

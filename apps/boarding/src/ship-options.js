@@ -21,7 +21,7 @@ export function shipOpts(k,i){
           '</b><span>'+esc(a.d)+' — part of this hull’s profile.</span></span></div>');
       });
       var hulk = auto.indexOf("spacehulk")>=0 || (u.opts||[]).indexOf("spacehulk")>=0;
-      var BV_UP = ["khorne","abaddon","warlord"];   /* FL p.288, p.390 */
+      var BV_UP = ["khorne","abaddon","warlord"];   /* FL p.290, p.392 */
       OPTS.filter(function(o){
         if(o.r.indexOf(race)<0 || auto.indexOf(o.id)>=0) return false;
         if(o.only && (!p || o.only.indexOf(p.full)<0)) return false;

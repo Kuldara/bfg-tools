@@ -132,12 +132,12 @@
   {
     id: "fan-p-stolen-goods", grp: "fan-pdd", name: "Stolen Goods", series: "Project Distant Darkness · Scenario Three", trust: "fan",
     why: "Tau escorts must board the right freighter out of six before a Rogue Trader slips away with the stolen cargo.", src: REVP(21), book: "O", suggest: ["Tau", "Rogue Traders"],
-    others: "Any small escort force against any trader with six armed freighters. The Rogue Trader ships come from Warp Rift 17; the Fleets book has the Rogue Trader cruiser, recommissioned escorts and armed cargo vessels (FL p. 180, 189, 192).",
+    others: "Any small escort force against any trader with six armed freighters. The Rogue Trader ships come from Warp Rift 17; the Fleets book has the Rogue Trader cruiser, recommissioned escorts and armed cargo vessels (FL p. 190, 199, 202).",
     sides: { a: { n: "Rogue Trader", f: "Rogue Traders" }, b: { n: "Tau patrol", f: "Tau: Kor’vre Sheva’s" } },
     pitch: "A Rogue Trader has stolen goods from the Orbital City that fronts for the project. Kor’vre Sheva’s and his Fire Warriors must search the freighters one by one before they escape.",
     glance: [["Points", "Fixed forces"], ["Table", "Not given — the map is square"], ["Battlezone", "Inner biosphere; phenomena as agreed"], ["First turn", "Rogue Trader, no special orders"], ["Game ends", "The goods are found, or every freighter has left"]],
     bring: ["A Tau orbital city (FL p. 478)", "6 armed freighters, numbered 1–6 in secret", "A Rogue Trader galleon or cruiser and four escorts", "3 Castellans and 2 Wardens"],
-    forces: { a: ["Trade galleon, Archis Noca pattern, with an extra turret (Warp Rift 17; a Rogue Trader cruiser, FL p. 180): Captain Lunerton, Ld 8, 1 re-roll.", "2 recommissioned escorts, a pinnace and a brigantine (recommissioned escorts, FL p. 189).", "6 armed cargo vessels (FL p. 192)."], b: ["3 Castellan class escorts commanded by Kor’vre Sheva’s.", "2 Warden class escorts.", "A Tau orbital city."] },
+    forces: { a: ["Trade galleon, Archis Noca pattern, with an extra turret (Warp Rift 17; a Rogue Trader cruiser, FL p. 180): Captain Lunerton, Ld 8, 1 re-roll.", "2 recommissioned escorts, a pinnace and a brigantine (recommissioned escorts, FL p. 199).", "6 armed cargo vessels (FL p. 202)."], b: ["3 Castellan class escorts commanded by Kor’vre Sheva’s.", "2 Warden class escorts.", "A Tau orbital city."] },
     draw: (v, W, H) => { const cx = Math.max(30, W - 60); return [{ z: "edge", e: "t", s: "a", l: "Rogue Trader escapes here" }, { z: "mark", x: cx, y: H - 20, s: "b", l: "" }, { z: "text", x: cx - textLen("orbital city", W) / 2 - 6, y: H - 20, l: "orbital city", s: "b" },
       { z: "mark", x: cx, y: H - 40, s: "a", l: "" }, { z: "text", x: cx - textLen("Rogue Trader", W) / 2 - 6, y: H - 40, l: "Rogue Trader", s: "a" }, { z: "arrow", x1: cx, y1: H - 3, x2: cx, y2: H - 13, s: "b" }, { z: "text", x: cx + 6 + textLen("Sheva’s enters", W) / 2, y: H - 8, l: "Sheva’s enters", s: "b" },
       { z: "dim", x1: cx, y1: H / 2, x2: W, y2: H / 2, l: "60 cm" }]; },
@@ -152,7 +152,7 @@
     ],
     stools: [{ k: "secret", id: "goods", s: "a", l: "The stolen goods are on transport…", sub: "Rogue Trader: roll in secret. Show it when the Tau find it.", opts: ["1", "2", "3", "4", "5", "6"], rnd: true }],
     notes: ["The supplement places the phenomena “as shown on the map”, but its map shows only the ships; the default is our suggestion.", "The orbital city has its own profile in the supplement (130 pts, 12 hits, railguns 45 cm 12, missiles 6, 2 launch bays); the Fleets book’s Kor Caste Orbital City (FL p. 478) replaces it.", "Pinnace and brigantine are Warp Rift 17 designs; recommissioned escorts stand in."],
-    refs: [["Kor Caste orbital city", "FL p. 478"], ["Castellan class escort", "FL p. 474"], ["Warden class gunship", "FL p. 475"], ["Rogue Trader cruiser", "FL p. 180"], ["Armed cargo vessel", "FL p. 192"], ["Boarding actions", "RB p. 89–90"]],
+    refs: [["Kor Caste orbital city", "FL p. 478"], ["Castellan class escort", "FL p. 474"], ["Warden class gunship", "FL p. 475"], ["Rogue Trader cruiser", "FL p. 190"], ["Armed cargo vessel", "FL p. 192"], ["Boarding actions", "RB p. 89–90"]],
     play: [
       { w: "Searching", s: "b", t: "Board a transport successfully to search it. When you board the right one, the Tau win." },
       { w: "Escape", s: "a", t: "Get the transport with the goods off the top edge." }
@@ -187,7 +187,7 @@
     ],
     stools: [],
     notes: ["The orbital defences are the Fleets book’s: orbital weapons platforms, an orbital defence laser platform and a minefield (FL p. 509–513). For the torpedo and weapons batteries on the planet, missile silos and defence laser silos (FL p. 517) are the nearest book defences.", "The supplement says the reliquary is destroyed “from low orbit” but not how. The default treats it as a low orbit target (RB p. 116).", "Its map shows the deployment zones only; whether the Tau set up in their zone or enter from it is open."],
-    refs: [["Fighting in low orbit", "RB p. 116"], ["Planetary defences", "FL p. 496–499"], ["Barrage bombs", "FL p. 20"], ["Custodian class battleship", "FL p. 468"], ["Hades class heavy cruiser", "FL p. 274"]],
+    refs: [["Fighting in low orbit", "RB p. 116"], ["Planetary defences", "FL p. 496–499"], ["Barrage bombs", "FL p. 20"], ["Custodian class battleship", "FL p. 468"], ["Hades class heavy cruiser", "FL p. 276"]],
     play: [
       { w: "The reliquary", s: "a", t: "Destroy it from the low orbit table: 4 hits, armour 6+, no weapons ({a:how})." },
       { w: "Nua’ta’s Marauder", s: "a", t: "From low orbit its missiles bombard the planet as barrage bombs that ignore shields — but then it fires nothing else (tools)." },
@@ -298,7 +298,7 @@
     ],
     stools: [{ k: "val", id: "surp", s: "b", l: "Pirates −2 Ld for the first … turns (D3)", opts: [1, 2, 3], roll: () => dn(3) }],
     notes: [TIGER, "The escort carriers are the Fleets book’s (FL p. 521)."],
-    refs: [["Protector class cruiser", "FL p. 470"], ["Murder class cruiser", "FL p. 279"], ["Escort carrier", "FL p. 521"], ["Victory points", "RB p. 122"]],
+    refs: [["Protector class cruiser", "FL p. 470"], ["Murder class cruiser", "FL p. 281"], ["Escort carrier", "FL p. 521"], ["Victory points", "RB p. 122"]],
     play: [{ w: "Turns 1 to D3", s: "b", t: "Caught by surprise: −2 Leadership (tool)." }],
     fx: (T, st) => { const d = get(st, "surp", 0); return d && T <= d ? [["b", "−2 Leadership"]] : !d && T === 1 ? [["b", "Roll the D3 for the −2 Leadership turns"]] : []; },
     tools: [{ k: "html", html: CHARS_REV }],
@@ -331,7 +331,7 @@
     ],
     stools: [],
     notes: ["The supplement points to The Bait (RB p. 130) for everything not given; its map puts the bait 60 cm from the Corsairs’ edge rather than in the centre.", "Neither side may disengage on purpose. The victory conditions leave open what happens if the Tau lose a ship but not all; see Agree.", TIGER],
-    refs: [["The Bait", "RB p. 130"], ["Explorer", "FL p. 458"], ["Warden class gunship", "FL p. 475"], ["Solaris class light cruiser", "FL p. 324"], ["Nightshade class destroyer", "FL p. 328"]],
+    refs: [["The Bait", "RB p. 130"], ["Explorer", "FL p. 458"], ["Warden class gunship", "FL p. 475"], ["Solaris class light cruiser", "FL p. 322"], ["Nightshade class destroyer", "FL p. 326"]],
     play: [
       { w: "Rescue fleet", s: "a", t: "It may enter on any turn, turn 1 included; from turn 2 also up to 30 cm along a long edge for each turn after the first (tools)." },
       { w: "No disengaging", t: "No ship may disengage voluntarily." },
@@ -353,7 +353,7 @@
     pitch: "Nua’ta has gone missing to fight Dark Eldar raiders over a young colony. When they are gone, he means to bomb the occupied city himself — and L’ikei has been sent to bring him back.",
     glance: [["Points", "Fixed: two Tau light cruisers, two Corsair escorts"], ["Table", "180 × 120 cm"], ["Battlezone", "Inner biosphere; a medium planet and a moon"], ["First turn", "Nua’ta"], ["Game ends", "Not given — see Agree"]],
     bring: ["A medium planet and a moon", "A low orbit table (RB p. 116)", "Two Tau light cruisers, two Dark Eldar escorts", "A marker for L’ikei’s stealth dive"],
-    forces: { a: ["Kor’vre Nua’ta in his Marauder class Emissary (tools).", "Kor’vre L’ikei in her Mantis class Emissary (tools), arriving from turn 2."], b: ["2 Corsair class escorts: one with weapons batteries, one with torpedoes (FL p. 353)."] },
+    forces: { a: ["Kor’vre Nua’ta in his Marauder class Emissary (tools).", "Kor’vre L’ikei in her Mantis class Emissary (tools), arriving from turn 2."], b: ["2 Corsair class escorts: one with weapons batteries, one with torpedoes (FL p. 355)."] },
     draw: (v, W, H) => [{ z: "planet", cx: 18, cy: 18, r: 10, free: 1 }, { z: "planet", cx: Math.min(W - 20, 94), cy: H / 2, r: 3 }, { z: "circ", cx: 60, cy: 40, r: 8, s: "b", l: "", nr: 1 }, { z: "text", x: 60, y: 54, l: "Dark Eldar", s: "b" },
       { z: "mark", x: Math.min(W - 14, 100), y: H / 2, s: "a", l: "Nua’ta" }, { z: "dim", x1: 0, y1: H / 2 + 12, x2: Math.min(W - 14, 100), y2: H / 2 + 12, l: "100 cm" }],
     fit: () => [120, 90], srcTable: [180, 120],
@@ -366,7 +366,7 @@
     ],
     stools: [],
     notes: ["The supplement does not say how long the game lasts, or who decides Nua’ta’s moves once he turns on the colony; the defaults are our suggestion.", "Its own epilogue tells how it went: L’ikei shielded the city with her ship, and Nua’ta, seeing her hit, diverted his missiles at the last moment."],
-    refs: [["Fighting in low orbit", "RB p. 116"], ["Barrage bombs", "FL p. 20"], ["Corsair class escort", "FL p. 353"], ["Emissary class envoy ship", "FL p. 472"]],
+    refs: [["Fighting in low orbit", "RB p. 116"], ["Barrage bombs", "FL p. 20"], ["Corsair class escort", "FL p. 355"], ["Emissary class envoy ship", "FL p. 472"]],
     play: [
       { w: "Start of turn 2", s: "a", t: "L’ikei may enter using the Mantis’s stealth system (tools)." },
       { w: "Once the Dark Eldar are gone", s: "a", t: "Nua’ta must enter low orbit at the first chance and bomb the city with the Marauder’s missiles: the target counts as a ground defence with 4 hits and armour 5+, no turrets or shields." },
@@ -431,7 +431,7 @@
     pitch: "Tas’ka’s three escorts are fixing silent surveillance posts in a planet’s asteroid ring when five energy signatures come round the dark side of the planet at extreme speed.",
     glance: [["Points", "Fixed forces"], ["Table", "120 × 120 cm"], ["Battlezone", "A medium planet with an asteroid ring, nothing else"], ["First turn", "Tas’ka"], ["Game ends", "A Castellan escapes, or all three are destroyed"]],
     bring: ["3 Castellan class escorts", "3 Jackal and 2 Dirge class raiders", "A medium planet and an asteroid ring"],
-    forces: { a: ["3 Castellan class escorts (FL p. 474) in one squadron, led by Kor’el Tas’ka: Ld 9, 1 re-roll (tools)."], b: ["3 Jackal class raiders (FL p. 408).", "2 Dirge class raiders (FL p. 409).", "Leadership as for any Necron fleet (FL p. 404)."] },
+    forces: { a: ["3 Castellan class escorts (FL p. 474) in one squadron, led by Kor’el Tas’ka: Ld 9, 1 re-roll (tools)."], b: ["3 Jackal class raiders (FL p. 410).", "2 Dirge class raiders (FL p. 411).", "Leadership as for any Necron fleet (FL p. 406)."] },
     draw: (v, W, H) => { const cx = W / 2, cy = H / 2, px = cx - 30.4, py = cy - 30.4;
       return [{ z: "planet", cx: px, cy: py, r: 10, free: 1 }, { z: "ring", cx: px, cy: py, r: 37.5, sw: 5, ast: 1, free: 1 },
         { z: "mark", x: cx, y: cy, s: "a", l: "" }, { z: "arrow", x1: cx, y1: cy - 5, x2: cx, y2: cy - 17, s: "a" }, { z: "text", x: cx, y: cy + mapFont(W) * 1.6, l: "Tas’ka: 3 Castellans", s: "a" },
@@ -446,7 +446,7 @@
     ],
     stools: [],
     notes: ["“Outer biosphere” is not a rulebook battlezone, but nothing beyond the planet and its ring goes on the table, so it makes no difference here.", "The supplement does not say whether the ring’s 25 cm runs from the planet’s edge or its centre. From the edge, the ring passes just short of the table’s centre, which puts the Castellans’ start “just outside” it, as the text says."],
-    refs: [["Castellan class escort", "FL p. 474"], ["Jackal class raider", "FL p. 408"], ["Dirge class raider", "FL p. 409"], ["Necron Leadership", "FL p. 404"], ["Ringed planets", "RB p. 113"], ["Asteroid fields", "RB p. 110"]],
+    refs: [["Castellan class escort", "FL p. 474"], ["Jackal class raider", "FL p. 410"], ["Dirge class raider", "FL p. 411"], ["Necron Leadership", "FL p. 404"], ["Ringed planets", "RB p. 113"], ["Asteroid fields", "RB p. 110"]],
     play: [
       { w: "Escape", s: "a", t: "Get one Castellan off the table by any edge and you win." },
       { w: "Tas’ka", s: "a", t: "Ld 9 and one re-roll; her strike-craft talent does not matter here, as Castellans carry none." }
@@ -507,7 +507,7 @@
     pitch: "Five transports and two Defenders are nearly at their waystation when Necron raiders fall on them. Ry’zon, out on a patrol of his own, hears the distress call and turns at once.",
     glance: [["Points", "Fixed forces"], ["Table", "120 × 120 cm"], ["Battlezone", "Outer reaches: a large asteroid field, more as you like"], ["First turn", "Convoy"], ["Game ends", "Two transports escape, or too few are left"]],
     bring: ["5 Tau transports and 2 Defender class escorts", "A Protector class cruiser for Ry’zon", "3 Dirge and 2 Jackal class raiders", "A 20 × 20 cm asteroid field"],
-    forces: { a: ["5 Tau transports (FL p. 463) and 2 Defender class escorts (FL p. 464).", "Ry’zon’s Phase II Protector class cruiser (FL p. 470), commanded by Kor’O Ry’zon (tools), arriving in turn 2."], b: ["3 Dirge class raiders (FL p. 409).", "2 Jackal class raiders (FL p. 408).", "Leadership as for any Necron fleet (FL p. 404)."] },
+    forces: { a: ["5 Tau transports (FL p. 463) and 2 Defender class escorts (FL p. 464).", "Ry’zon’s Phase II Protector class cruiser (FL p. 470), commanded by Kor’O Ry’zon (tools), arriving in turn 2."], b: ["3 Dirge class raiders (FL p. 411).", "2 Jackal class raiders (FL p. 410).", "Leadership as for any Necron fleet (FL p. 406)."] },
     draw: (v, W, H) => [{ z: "hatch", x: W / 4 - 10, y: H / 4 - 10, w: 20, h: 20, l: "", free: 1 }, R(W / 2 - 15, H / 2 - 10, 30, 20, "a", "", { free: 1 }), { z: "cm", x: W / 2, y: H / 2, s: "a", l: "convoy" }, ...EDGES4("b", "Necrons: one edge, close together")],
     fit: () => [80, 80], srcTable: [120, 120],
     mapNote: "A 20 × 20 cm asteroid field in one quarter. The convoy in the middle; the Necrons together on any one edge. Ry’zon arrives in turn 2 from any edge the Tau player chooses.",
@@ -519,7 +519,7 @@
     ],
     stools: [],
     notes: ["The supplement’s Tau transports are given for scenarios in the Fleets book (FL p. 463).", AOC_EMPIRE],
-    refs: [["Transports in a Tau fleet", "FL p. 463"], ["Defender class starship", "FL p. 464"], ["Protector class cruiser", "FL p. 470"], ["Dirge class raider", "FL p. 409"], ["Jackal class raider", "FL p. 408"], ["Asteroid fields", "RB p. 110"]],
+    refs: [["Transports in a Tau fleet", "FL p. 463"], ["Defender class starship", "FL p. 464"], ["Protector class cruiser", "FL p. 470"], ["Dirge class raider", "FL p. 411"], ["Jackal class raider", "FL p. 408"], ["Asteroid fields", "RB p. 110"]],
     play: [
       { w: "Turn 2", s: "a", t: "Ry’zon moves on from any table edge you choose." },
       { w: "Escape", s: "a", t: "Get transports off the table by any edge: two are enough." }
@@ -657,7 +657,7 @@
     pitch: "A message from W’tail has just told Ry’zon that Ly’tan murdered his Aun. While Ry’zon sits frozen in his chair, Necron ships come in out of the sun at extreme speed.",
     glance: [["Points", "Fixed forces"], ["Table", "180 × 120 cm"], ["Battlezone", "Inner biosphere, phenomena as you like"], ["First turn", "Necrons"], ["Game ends", "A fleet is destroyed"]],
     bring: ["5 Tau Protector class cruisers", "2 Scythe, 2 Shroud, 3 Jackal and 3 Dirge class Necron ships"],
-    forces: { a: ["Five Phase II Protector class cruisers (FL p. 470), one each for the five (tools)."], b: ["2 Scythe class harvest ships (FL p. 406).", "2 Shroud class light cruisers (FL p. 407).", "3 Jackal and 3 Dirge class raiders (FL p. 408–409).", "Leadership as for any Necron fleet (FL p. 404)."] },
+    forces: { a: ["Five Phase II Protector class cruisers (FL p. 470), one each for the five (tools)."], b: ["2 Scythe class harvest ships (FL p. 408).", "2 Shroud class light cruisers (FL p. 409).", "3 Jackal and 3 Dirge class raiders (FL p. 410–411).", "Leadership as for any Necron fleet (FL p. 406)."] },
     draw: (v, W, H) => { const cy = H / 2, dx = Math.sqrt(Math.max(0, 6400 - cy * cy)), x0 = Math.min(W - 4, 60 + dx);
       return [{ z: "sun", e: "t" }, { z: "ring", cx: 60, cy, r: 80, s: "b" }, { z: "mark", x: 60, y: cy, s: "a", l: "the five" }, { z: "arrow", x1: 66, y1: cy, x2: 80, y2: cy, s: "a" },
         { z: "dim", x1: 0, y1: cy + 10, x2: 60, y2: cy + 10, l: "60 cm" }, { z: "dim", x1: 60, y1: cy + 10 + mapFont(W) * 2.2, x2: 140, y2: cy + 10 + mapFont(W) * 2.2, l: "80 cm" },
@@ -671,7 +671,7 @@
     ],
     stools: [{ k: "val", id: "shock", l: "Ry’zon in shock: D3+1 turns", opts: [2, 3, 4], roll: () => Math.ceil(d6() / 2) + 1, unit: " turns" }],
     notes: ["The supplement does not draw the wing formation: any arrowhead of the five will do.", "In the story Ry’zon comes round in time and saves them all with a manoeuvre L’ikei calls ridiculous."],
-    refs: [["Scythe class harvest ship", "FL p. 406"], ["Shroud class light cruiser", "FL p. 407"], ["Jackal class raider", "FL p. 408"], ["Dirge class raider", "FL p. 409"], ["Necron Leadership", "FL p. 404"], ["Protector class cruiser", "FL p. 470"], ["Brace for Impact", "RB p. 47"]],
+    refs: [["Scythe class harvest ship", "FL p. 408"], ["Shroud class light cruiser", "FL p. 409"], ["Jackal class raider", "FL p. 410"], ["Dirge class raider", "FL p. 411"], ["Necron Leadership", "FL p. 406"], ["Protector class cruiser", "FL p. 470"], ["Brace for Impact", "RB p. 47"]],
     play: [
       { w: "Ry’zon in shock", s: "a", t: "For the first D3+1 turns Ry’zon’s ship is at −2 Leadership and may take no special orders except Brace for Impact." },
       { w: "No disengaging", t: "Neither fleet may disengage." },
@@ -897,12 +897,12 @@
   {
     id: "fan-p-nightmares", grp: "fan-pdd", name: "Nightmares", series: "Distant Sun · Chapter Three", trust: "fan",
     why: "Three Tau cruisers come to the rescue of an Eldar grand cruiser chased by a hive fleet.", src: SUNP(21), book: "O", suggest: ["Tau", "Craftworld Eldar", "Tyranids"],
-    others: OTHERS_T + " The Eldar ship is the Flame of Asuryan (FL p. 329) — Akaeris’ Spirit of Arina from Starblade.",
+    others: OTHERS_T + " The Eldar ship is the Flame of Asuryan (FL p. 327) — Akaeris’ Spirit of Arina from Starblade.",
     sides: { a: { n: "Tau and Eldar", f: "Tau, with an Eldar grand cruiser" }, b: { n: "Tyranids", f: "Tyranids" } },
     pitch: "An Eldar vessel streaks past the planet with Kraken on its tail and a hive fleet ahead. Three Tau cruisers decide to help.",
     glance: [["Points", "Fixed forces"], ["Table", "180 × 120 cm"], ["Battlezone", "Mercurial zone; a medium planet and an asteroid line"], ["First turn", "Tau"], ["Game ends", "A fleet is destroyed or has disengaged"]],
     bring: ["A medium planet", "An asteroid field 20 × 10 cm", "A Tyranid hive fleet", "An Eldar grand cruiser", "D3+2 blast markers"],
-    forces: { a: ["Three Protector class cruisers, commanded by Kor’O Ry’zon, Kor’el Tas’ka and Kor’el Sheva’s (tools).", "Void Dragon class grand cruiser: Ld 10, 3 re-rolls — the Flame of Asuryan (FL p. 329)."], b: ["Hive ship, Ld 8: prow feeder tentacles and massive claws, thorax pyro-acid battery, two launch bays each side, bio-plasma discharge; adrenaline sacs.", "Cruiser: prow torpedoes, thorax feeder tentacles, pyro-acid batteries each side, bio-plasma discharge.", "Cruiser: prow massive claws, thorax torpedoes, two pyro-acid batteries each side; solar vanes.", "6 escort drones (3 feeder tentacles, 3 bio-plasma), 8 vanguard drone ships (4 pyro-acid, 4 feeder tentacles), 6 Kraken (2 massive claws, 4 torpedoes).", "4 fighters and 4 assault boats."] },
+    forces: { a: ["Three Protector class cruisers, commanded by Kor’O Ry’zon, Kor’el Tas’ka and Kor’el Sheva’s (tools).", "Void Dragon class grand cruiser: Ld 10, 3 re-rolls — the Flame of Asuryan (FL p. 327)."], b: ["Hive ship, Ld 8: prow feeder tentacles and massive claws, thorax pyro-acid battery, two launch bays each side, bio-plasma discharge; adrenaline sacs.", "Cruiser: prow torpedoes, thorax feeder tentacles, pyro-acid batteries each side, bio-plasma discharge.", "Cruiser: prow massive claws, thorax torpedoes, two pyro-acid batteries each side; solar vanes.", "6 escort drones (3 feeder tentacles, 3 bio-plasma), 8 vanguard drone ships (4 pyro-acid, 4 feeder tentacles), 6 Kraken (2 massive claws, 4 torpedoes).", "4 fighters and 4 assault boats."] },
     draw: (v, W, H) => { const px = 40, py = H - 40; return [{ z: "sun", e: "t" }, { z: "planet", cx: px, cy: py, r: 10, free: 1 }, { z: "dim", x1: 0, y1: py, x2: px - 10, y2: py, l: "30" }, { z: "dim", x1: px, y1: py + 10, x2: px, y2: H, l: "30" },
       { z: "hatch", x: px + 30, y: py - 5, w: 20, h: 10, l: "", free: 1 }, { z: "mark", x: px + 20, y: py, s: "a", l: "", free: 1 }, { z: "text", x: px + 30, y: py + 13, l: "Eldar ship", s: "a" },
       { z: "mark", x: Math.max(4, px - 10), y: py - 18, s: "b", l: "", free: 1 }, { z: "text", x: Math.max(4, px - 10), y: py - 28, l: "Kraken", s: "b" }, R(60, 30, Math.max(10, W - 140), H - 60, "b", "Tyranid fleet", { dash: 1 }),
@@ -917,8 +917,8 @@
       { s: "a", t: "You take the first turn." }
     ],
     stools: [{ k: "val", id: "bm", l: "Blast markers behind the Eldar ship (D3+2)", opts: [3, 4, 5], roll: () => dn(3) + 2 }],
-    notes: ["The supplement asks for the Eldar MMS rules for the grand cruiser; the Fleets book’s Flame of Asuryan (FL p. 329) is the book equivalent.", "The Tyranid evolutions are in the Fleets book (FL p. 426–427)."],
-    refs: [["Flame of Asuryan", "FL p. 329"], ["Hive ship", "FL p. 432"], ["Tyranid cruiser", "FL p. 434"], ["Evolution of the hive mind", "FL p. 426"], ["Battlezone generators", "RB p. 107–108"]],
+    notes: ["The supplement asks for the Eldar MMS rules for the grand cruiser; the Fleets book’s Flame of Asuryan (FL p. 327) is the book equivalent.", "The Tyranid evolutions are in the Fleets book (FL p. 426–427)."],
+    refs: [["Flame of Asuryan", "FL p. 327"], ["Hive ship", "FL p. 432"], ["Tyranid cruiser", "FL p. 434"], ["Evolution of the hive mind", "FL p. 426"], ["Battlezone generators", "RB p. 107–108"]],
     play: [{ w: "No losses", s: "a", t: "If any Tau ship or the Eldar ship is destroyed, you lose." }, DISENGAGE_DRAW],
     tools: [{ k: "html", html: CHARS_SUN }],
     rtools: [endTool([["A Tau ship or the Eldar ship was destroyed", "b", "The Tau lose"], ["Every Tyranid destroyed", "a", "Tau victory"], ["The Tau and Eldar disengaged", "draw", "As agreed"]])],
@@ -949,7 +949,7 @@
     ],
     stools: [{ k: "shiproll", id: "q", l: "Asteroid fields per quarter (D3+2)", cl: "Quarters", n0: 4, roll: () => dn(3) + 2, il: i => "Quarter " + (i + 1), out: d => d + " asteroid fields" }],
     notes: ["The supplement does not say what happens if Nua’ta disengages; the default follows Into the Claw, where the Tau disengaging is a draw."],
-    refs: [["Kill Kroozer", "FL p. 382"], ["Onslaught attack ship", "FL p. 384"], ["Asteroid fields", "RB p. 110"], ["Fighting in low orbit", "RB p. 116"]],
+    refs: [["Kill Kroozer", "FL p. 384"], ["Onslaught attack ship", "FL p. 384"], ["Asteroid fields", "RB p. 110"], ["Fighting in low orbit", "RB p. 116"]],
     play: [{ w: "The docked kroozer", s: "b", t: "It must pass a Leadership test to leave the station." }, { w: "Turns 1–3", s: "b", t: "−1 Leadership." }, { w: "No losses", s: "a", t: "If your ship is destroyed, you lose." }, DISENGAGE_DRAW],
     fx: T => T === 1 ? [["a", "Enter from any edge"], ["b", "−1 Leadership"]] : T <= 3 ? [["b", "−1 Leadership"]] : [],
     tools: [{ k: "html", html: CHARS_SUN }],
@@ -1027,12 +1027,12 @@
   {
     id: "fan-p-ever-dream", grp: "fan-pdd", name: "Ever Dream", series: "Distant Sun · Chapter Seven", trust: "fan",
     why: "Three wrecked Tau cruisers surrounded by an endless hive fleet: hold on until the Eldar can teleport the crews out.", src: SUNP(51), book: "O", suggest: ["Tau", "Craftworld Eldar", "Tyranids"],
-    others: OTHERS_T + " The Eldar ship is the Flame of Asuryan (FL p. 329), Akaeris’ Spirit of Arina.",
+    others: OTHERS_T + " The Eldar ship is the Flame of Asuryan (FL p. 327), Akaeris’ Spirit of Arina.",
     sides: { a: { n: "Tau and Eldar", f: "Tau, with an Eldar grand cruiser" }, b: { n: "Tyranids", f: "Tyranids" } },
     pitch: "Three battered Tau cruisers sit surrounded by the hive fleet, and every creature that dies is replaced. Their only way out is the Eldar ship coming in from the edge of the table.",
     glance: [["Points", "Fixed forces, damaged"], ["Table", "180 × 120 cm"], ["Battlezone", "As Abandon All Hope"], ["First turn", "Tau"], ["Game ends", "The rescue succeeds, or Ry’zon, L’ikei or the Eldar ship dies"]],
     bring: ["The hive fleet that survived Abandon All Hope", "An Eldar grand cruiser", "Blast markers"],
-    forces: { a: ["Kor’O Ry’zon’s Protector: 5 hits left, port ion cannon damaged, no attack craft.", "Kor’el L’ikei’s Protector: 5 hits left, 2 blast markers in contact.", "Kor’el Sheva’s Protector: 1 hit left, shields collapsed, port weapons offline, starts braced for impact, no attack craft.", "Void Dragon class grand cruiser (the Flame of Asuryan, FL p. 329): Ld 10, 3 re-rolls, entering in turn 1."], b: ["The hive fleet of Abandon All Hope, battered: the second hive ship down to 9 hits, one cruiser to 5, the other to 3 and crippled; 4 + 5 escort drones, 2 + 4 vanguard drone ships, a fighter, 5 assault boats, 5 boarding torpedoes."] },
+    forces: { a: ["Kor’O Ry’zon’s Protector: 5 hits left, port ion cannon damaged, no attack craft.", "Kor’el L’ikei’s Protector: 5 hits left, 2 blast markers in contact.", "Kor’el Sheva’s Protector: 1 hit left, shields collapsed, port weapons offline, starts braced for impact, no attack craft.", "Void Dragon class grand cruiser (the Flame of Asuryan, FL p. 327): Ld 10, 3 re-rolls, entering in turn 1."], b: ["The hive fleet of Abandon All Hope, battered: the second hive ship down to 9 hits, one cruiser to 5, the other to 3 and crippled; 4 + 5 escort drones, 2 + 4 vanguard drone ships, a fighter, 5 assault boats, 5 boarding torpedoes."] },
     draw: (v, W, H) => [R(W / 2 - 15, H / 2 - 10, 30, 20, "a", "Tau"), { z: "ring", cx: W / 2, cy: H / 2, r: 30, s: "b", nr: 1 }, { z: "ring", cx: W / 2, cy: H / 2, r: 58, s: "b", nr: 1 }, { z: "text", x: W / 2, y: H / 2 + 38, l: "Tyranids: 15–45 cm from the Tau", s: "b" },
       { z: "edge", e: "l", s: "a", l: "Eldar enter at the centre of a short edge" }, { z: "edge", e: "r", s: "a", l: "" }],
     fit: () => [140, 120], srcTable: [180, 120],
@@ -1044,11 +1044,11 @@
       { s: "a", t: "The Eldar ship enters from the centre of either short edge at the start of turn 1. You take the first turn." }
     ],
     stools: [],
-    notes: ["The supplement asks for the Eldar MMS rules; the Fleets book’s Flame of Asuryan (FL p. 329) is the book equivalent.", "How the rescue teleport works is only partly given: whose shields count and who is rescued. The default is our reading."],
+    notes: ["The supplement asks for the Eldar MMS rules; the Fleets book’s Flame of Asuryan (FL p. 327) is the book equivalent.", "How the rescue teleport works is only partly given: whose shields count and who is rescued. The default is our reading."],
     refs: [["All is Lost", "FL p. 418"], ["Teleport attacks", "RB p. 92"], ["Flame of Asuryan", "FL p. 329"], ["Hive ship", "FL p. 432"]],
     play: [
       { w: "Every turn after the first", s: "b", t: "At the start of your turn, every ship destroyed so far comes back: a new one of the same profile at the centre of a random table edge. Escorts wait until three can form a squadron." },
-      { w: "Sheva’s", s: "a", t: "Sheva’s may blow up his own ship using the Tyranid rules’ All is Lost option (FL p. 418)." },
+      { w: "Sheva’s", s: "a", t: "Sheva’s may blow up his own ship using the Tyranid rules’ All is Lost option (FL p. 420)." },
       { w: "Rescue teleport", s: "a", t: "The Eldar ship may try a special teleport within 10 cm of Tau ships ({a:rescue}): 2+ if their shields are down, 4+ if they are up. It cannot make a normal teleport attack in the same turn." }
     ],
     fx: T => T === 1 ? [["a", "The Eldar ship enters from the centre of a short edge"]] : [["b", "Start of your turn: replace every destroyed ship at a random edge"]],

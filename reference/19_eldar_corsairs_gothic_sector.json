@@ -1,6 +1,6 @@
 {
   "list": "Eldar Corsairs — Gothic Sector",
-  "book_page": 316,
+  "book_page": 314,
   "read_pages": [
     316
   ],
@@ -9,7 +9,7 @@
     {
       "key": "0-1 Pirate Prince",
       "text": "0-1 Pirate Prince",
-      "page": 316,
+      "page": 314,
       "status": "enforced",
       "kind": "section_count",
       "min": 0,
@@ -18,7 +18,7 @@
     {
       "key": "worth over 750 points a Pirate Prince must be included",
       "text": "If the fleet is worth over 750 points a Pirate Prince must be included to lead it.",
-      "page": 316,
+      "page": 314,
       "status": "enforced",
       "kind": "mandatory_at",
       "points": 750,
@@ -27,14 +27,14 @@
     {
       "key": "adds +2 to its Leadership, to a maximum of 10",
       "text": "You may include 1 Pirate Prince in your fleet, who must be assigned to a ship and adds +2 to its Leadership, to a maximum of 10.",
-      "page": 316,
+      "page": 314,
       "status": "manual",
       "why": "The placement and the leadership maximum are decided in the game."
     },
     {
       "key": "Your fleet may be led by an Eldar Hero, in place of its normal fleet commander",
       "text": "Your fleet may be led by an Eldar Hero, in place of its normal fleet commander.",
-      "page": 316,
+      "page": 314,
       "status": "enforced",
       "kind": "cap",
       "max": 1,
@@ -44,7 +44,7 @@
     {
       "key": "Only a fleet led by an Eldar Hero may take reserves",
       "text": "Your fleet may be led by an Eldar Hero, in place of its normal fleet commander. Only a fleet led by an Eldar Hero may take reserves from the Craftworld Eldar fleet list.",
-      "page": 316,
+      "page": 314,
       "status": "enforced",
       "why": "1.1 (14.9.2026): the same rule as the RESERVES AND ALLIES section's sentence, in another place of the book. Enforced by the list's res_ok permission, whose condition is an Eldar Hero. A conditional reserve right; the app does not model reserves.",
       "enforced_by": "fleet_golden",
@@ -56,7 +56,7 @@
     {
       "key": "0-12 Cruisers",
       "text": "0-12 Cruisers",
-      "page": 316,
+      "page": 314,
       "status": "enforced",
       "kind": "section_count",
       "min": 0,
@@ -65,7 +65,7 @@
     {
       "key": "escorts in your fleet in squadrons of 2",
       "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
-      "page": 316,
+      "page": 314,
       "status": "enforced",
       "kind": "squadron",
       "min": 2,
@@ -74,42 +74,42 @@
     {
       "key": "any mix of Darkstar fighters and Eagle bombers",
       "text": "Any ship with launch bays may choose to have them launch any mix of Darkstar fighters and Eagle bombers. Ships with torpedo tubes are armed with Eldar torpedoes.",
-      "page": 316,
+      "page": 314,
       "status": "manual",
       "why": "Ordnance-valinta pelin aikana."
     },
     {
       "key": "Dragonship or Wraithship may be taken for every three cruisers",
       "text": "Following this, one Craftworld Eldar Flame of Asuryan, Dragonship or Wraithship may be taken for every three cruisers in the fleet.",
-      "page": 316,
+      "page": 314,
       "status": "manual",
       "why": "A reserve rule: the ships come from the Craftworld list."
     },
     {
       "key": "no more than one for every three escort vessels in the fleet",
       "text": "Craftworld Eldar Shadowhunters may be taken in the same ratio of no more than one for every three escort vessels in the fleet.",
-      "page": 316,
+      "page": 314,
       "status": "manual",
       "why": "Reserve-saanto."
     },
     {
       "key": "Corsair Eldar escorts and Shadowhunters may not be in the same squadron",
       "text": "Corsair Eldar escorts and Shadowhunters may not be in the same squadron.",
-      "page": 316,
+      "page": 314,
       "status": "manual",
       "why": "The skwadron's composition is decided at the table."
     },
     {
       "key": "If the Flame of Asuryan is taken, the Eldar Hero must be embarked aboard it",
       "text": "If the Flame of Asuryan is taken, the Eldar Hero must be embarked aboard it.",
-      "page": 316,
+      "page": 314,
       "status": "manual",
       "why": "Sijoittelu."
     },
     {
       "key": "An Eldar Hero must lead the fleet in order to use Craftworld Eldar vessels as reserves",
       "text": "An Eldar Hero must lead the fleet in order to use Craftworld Eldar vessels as reserves. Following this, one Craftworld Eldar Flame of Asuryan, Dragonship or Wraithship may be taken for every three cruisers in the fleet. Craftworld Eldar Shadowhunters may be taken in the same ratio of no more than one for every three escort vessels in the fleet.",
-      "page": 316,
+      "page": 314,
       "status": "enforced",
       "enforced_by": "fleet_golden",
       "goldens": [
@@ -121,17 +121,17 @@
     {
       "key": "Yriel may be taken instead of the Hero Fleet Commander",
       "text": "Yriel may be taken instead of the Hero Fleet Commander as listed in the Corsair and Craftworld Eldar fleet lists.",
-      "page": 319,
+      "page": 317,
       "status": "enforced",
       "kind": "cap",
       "max": 1,
-      "why": "J161, player report 9.10.2026: the box is printed on Iyanden's page 319, but the sentence names the Corsair lists. The Yriel row (150 pts, 1 re-roll in the price) is in the list's RESERVES AND ALLIES section, and he is one of three commanders (Pirate Prince, Eldar Hero or Yriel); the required commander (over 750) is met by him.",
+      "why": "J161, player report 9.10.2026: the box is printed on Iyanden's page 317, but the sentence names the Corsair lists. The Yriel row (150 pts, 1 re-roll in the price) is in the list's RESERVES AND ALLIES section, and he is one of three commanders (Pirate Prince, Eldar Hero or Yriel); the required commander (over 750) is met by him.",
       "classified_on": "2026-10-09"
     },
     {
       "key": "if the Flame of Asuryan with Yriel is added to the parent fleet it is exempt from the reserve rules",
       "text": "Furthermore, if the Flame of Asuryan with Yriel is added to the parent fleet it is exempt from the reserve rules *eg you do not have to field three capital ships in a Corsair Eldar fleet list(.",
-      "page": 319,
+      "page": 317,
       "status": "enforced",
       "enforced_by": "fleet_golden",
       "goldens": [
@@ -143,7 +143,7 @@
     {
       "key": "He must be embarked aboard the Flame of Asuryan if it is present",
       "text": "He must be embarked aboard the Flame of Asuryan if it is present, in which case his cost is 125 points.",
-      "page": 319,
+      "page": 317,
       "status": "enforced",
       "enforced_by": "fleet_golden",
       "goldens": [
@@ -193,36 +193,36 @@
     {
       "name": "Eclipse class cruiser",
       "pts": 250,
-      "page": 321
+      "page": 319
     },
     {
       "name": "Shadow class cruiser",
       "pts": 210,
-      "page": 322
+      "page": 320
     },
     {
       "name": "Hellebore class frigate",
       "pts": 65,
-      "page": 325
+      "page": 323
     },
     {
       "name": "Aconite class frigate",
       "pts": 55,
-      "page": 326
+      "page": 324
     },
     {
       "name": "Hemlock class destroyer",
       "pts": 40,
-      "page": 327
+      "page": 325
     },
     {
       "name": "Nightshade class destroyer",
       "pts": 40,
-      "page": 328
+      "page": 326
     }
   ],
   "notes": [
-    "The book has TWO Eldar Corsairs lists: page 316's heading is 'GOTHIC SECTOR' and page 317's 'LATER GOTHIC WAR'. Until 7.9.2026 they were merged into one, so the list had two identical Pirate Prince and Eldar Hero sections. The same defect as with the Grey Knights.",
+    "The book has TWO Eldar Corsairs lists: page 314's heading is 'GOTHIC SECTOR' and page 315's 'LATER GOTHIC WAR'. Until 7.9.2026 they were merged into one, so the list had two identical Pirate Prince and Eldar Hero sections. The same defect as with the Grey Knights.",
     "The commander sections are word for word the same on both lists. Note that 'One re-roll' costs 25 for the Pirate Prince and 50 for the Eldar Hero - the same name, a different price, a different section.",
     "This list has NO battleships and no light cruisers - only the Eclipse and the Shadow. That is in the book, not a gap."
   ],
@@ -230,7 +230,7 @@
     {
       "name": "Prince Yriel",
       "pts": 150,
-      "page": 319
+      "page": 317
     }
   ]
 }

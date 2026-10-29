@@ -258,7 +258,7 @@ export function commanderCardHTML(R, pos, aboardTx, leadsTx){
   const sub = [name ? title(R.entry.label) : "", "Commander", listName]
     .filter(Boolean).join(" | ");
   const rows = optRowsHTML(R);
-  const cmdRules = R.rules.map(r => r.t).concat(leadsTx ? ["Leads: " + leadsTx + ". His re-rolls count only for these skwadrons (Fleets p. 372)."] : []);
+  const cmdRules = R.rules.map(r => r.t).concat(leadsTx ? ["Leads: " + leadsTx + ". His re-rolls count only for these skwadrons (Fleets p. 374)."] : []);
   const optionCount = R.upgrades.filter(x => x.state === "take" || (x.state === "opt" && x.required)).length +
     Math.ceil(R.upgrades.filter(x => x.state === "opt" && !x.required).length / 5) +
     ((R.note || "").trim() ? 1 : 0);
@@ -361,13 +361,13 @@ export function cardHTML(u, pos){
    it only fits beside a short one: a long value used to run under the box,
    which is what looked like the box covering the numbers (user 20.9., Eldar
    speed). Every long value is also one nobody writes a single number for -
-   Eldar speed is read off the wind each turn (Fleets pp. 302-305), turns
+   Eldar speed is read off the wind each turn (Fleets pp. 304-307), turns
    "Special", a save instead of shields, quadrant armour - so those cells keep
    the value and drop the box. */
 export function stCell(label, value){
   const v = String(value == null ? "" : value);
   /* Three parts, not one number: Eldar speed is sunward / crosswind / downwind
-     and is read off the sun each turn (Fleets pp. 302-305), quadrant armour is
+     and is read off the sun each turn (Fleets pp. 304-307), quadrant armour is
      per facing, and a save is not a shield count. Those keep the value and drop
      the box - the widest of them, "10/20/25 cm", needs 18.53 mm where the box
      leaves 15.1 mm. Two-part values like "6+/5+" fit beside the box. */
@@ -388,7 +388,7 @@ export function ldCellHTML(R, extra){
     ld.note ? `<small class="ldn">${esc(ld.note)}</small>` : ""}${extra || ""}</div></div>`;
 }
 /* A ship's own re-rolls as small boxes beside its Leadership (J168 c): the
-   Scion of Prospero's two (Fleets p. 258), a Mark of Tzeentch's one. A
+   Scion of Prospero's two (Fleets p. 260), a Mark of Tzeentch's one. A
    seventh cell did not fit the stat row; the box kinds are the commander
    card's (included, bought, dashed = only if bought). */
 export function shipRerollBoxes(R){
@@ -530,7 +530,7 @@ export function shipCardHTML(R, pos){
         slots > 8 ? " tight" : ""}">${cells}</div></div></div></div>`;
   }else if(R.damage.critical.groups){
     /* Space hulk: the D6 table as its three results with their sub-results
-       (Fleets pp. 288, 391). A loss that lands on a weapon is ticked on that
+       (Fleets pp. 290, 393). A loss that lands on a weapon is ticked on that
        weapon's row; shields, turrets and thrusters are ticked here. */
     const cm = R.damage.critical;
     const where = { lance: "lance row", bay: "launch bay row", torp: "torpedo row", wb: "battery row" };
@@ -567,7 +567,7 @@ export function shipCardHTML(R, pos){
   const hulkCard = !!R.damage.critical.groups;
   const basePrice = P.basePrice, entryNote = P.entryNote;
   /* A stationary defence whose rules outgrow the box beside the weapon
-     table: an Eldar Haven (Fleets pp. 334-337) or a Tau Orbital (p. 480)
+     table: an Eldar Haven (Fleets pp. 332-335) or a Tau Orbital (p. 480)
      carries over 2000 characters of rules and three or four weapon rows, and
      with the two side by side the rules came out at 3.9 pt while half the
      ARMAMENT box stood empty (layout_check.js, 8.10.2026). On such a card

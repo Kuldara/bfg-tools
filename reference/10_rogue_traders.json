@@ -1,6 +1,6 @@
 {
   "list": "Rogue Traders",
-  "book_page": 174,
+  "book_page": 184,
   "read_pages": [
     174,
     175
@@ -10,7 +10,7 @@
     {
       "key": "0-2 Veteran Rogue Traders",
       "text": "0-2 Veteran Rogue Traders",
-      "page": 174,
+      "page": 184,
       "status": "enforced",
       "kind": "section_count",
       "min": 0,
@@ -19,16 +19,16 @@
     {
       "key": "a Veteran Rogue Trader must be assigned to a Rogue Trader cruiser",
       "text": "If a fleet has more than one Rogue Trader cruiser or also includes more than one squadron of transports, a Veteran Rogue Trader must be assigned to a Rogue Trader cruiser.",
-      "page": 174,
+      "page": 184,
       "status": "manual",
       "why": "The placement is done at the table; the condition also depends on the number of transport skwadrons."
     },
     {
       "key": "Any fleet except Necrons or Tyranids may include a single Rogue Trader capital ship",
       "text": "Any fleet except Necrons or Tyranids may include a single Rogue Trader capital ship.",
-      "page": 174,
+      "page": 184,
       "status": "enforced",
-      "why": "1.1 (14.9.2026): the ROGUE TRADERS section was added to 21 lists. The Tau, Demiurg and Imperial lists get a per_points rule (one per 750 p or part), the others cap 1. Left out are the Necrons and the tyranids (the book's 'except'), the Rogue Trader lists themselves, Bakka / Tau Commerce Protection / Demiurg (their own more specific rule) and the Crusade and the Grey Knights (their own ban, p.99 and p.145). The row is the Rogue Trader Cruiser; the Exploration list's variants are a case of their own. The last sentence ('always count against cruiser restrictions') holds through section_count's pick. Concerns the fleet the Rogue Trader is attached to, not this list.",
+      "why": "1.1 (14.9.2026): the ROGUE TRADERS section was added to 21 lists. The Tau, Demiurg and Imperial lists get a per_points rule (one per 750 p or part), the others cap 1. Left out are the Necrons and the tyranids (the book's 'except'), the Rogue Trader lists themselves, Bakka / Tau Commerce Protection / Demiurg (their own more specific rule) and the Crusade and the Grey Knights (their own ban, p.99 and p.155). The row is the Rogue Trader Cruiser; the Exploration list's variants are a case of their own. The last sentence ('always count against cruiser restrictions') holds through section_count's pick. Concerns the fleet the Rogue Trader is attached to, not this list.",
       "enforced_by": "fleet_golden",
       "goldens": [
         "ork-fleet-may-include-one-rogue-trader-cruiser",
@@ -40,12 +40,12 @@
     {
       "key": "one Rogue Trader cruiser for every 750 points or part thereof",
       "text": "Tau, Demiurg and Imperial fleets may include one Rogue Trader cruiser for every 750 points or part thereof in their fleet.",
-      "page": 174,
+      "page": 184,
       "status": "enforced",
       "kind": "per_points",
       "each": 1,
       "per": 750,
-      "why": "1.1 (14.9.2026): the ROGUE TRADERS section was added to 21 lists. The Tau, Demiurg and Imperial lists get a per_points rule (one per 750 p or part), the others cap 1. Left out are the Necrons and the tyranids (the book's 'except'), the Rogue Trader lists themselves, Bakka / Tau Commerce Protection / Demiurg (their own more specific rule) and the Crusade and the Grey Knights (their own ban, p.99 and p.145). The row is the Rogue Trader Cruiser; the Exploration list's variants are a case of their own. The last sentence ('always count against cruiser restrictions') holds through section_count's pick. Concerns the host fleet (Tau, Demiurg, Imperial). Links between lists are not in v1's model; on the Tau Commerce list the matching rule is enforced with its own rows.",
+      "why": "1.1 (14.9.2026): the ROGUE TRADERS section was added to 21 lists. The Tau, Demiurg and Imperial lists get a per_points rule (one per 750 p or part), the others cap 1. Left out are the Necrons and the tyranids (the book's 'except'), the Rogue Trader lists themselves, Bakka / Tau Commerce Protection / Demiurg (their own more specific rule) and the Crusade and the Grey Knights (their own ban, p.99 and p.155). The row is the Rogue Trader Cruiser; the Exploration list's variants are a case of their own. The last sentence ('always count against cruiser restrictions') holds through section_count's pick. Concerns the host fleet (Tau, Demiurg, Imperial). Links between lists are not in v1's model; on the Tau Commerce list the matching rule is enforced with its own rows.",
       "classified_on": "2026-09-09",
       "enforced_by": "fleet_golden",
       "goldens": [
@@ -58,21 +58,21 @@
     {
       "key": "Rogue Trader cruisers always count against cruiser restrictions",
       "text": "Rogue Trader cruisers always count against cruiser restrictions in any fleet list that has such restrictions.",
-      "page": 174,
+      "page": 184,
       "status": "manual",
       "why": "Koskee isantalaivaston rajoja."
     },
     {
       "key": "Heavy transports may not be in squadrons with other transport types",
       "text": "Heavy transports may not be in squadrons with other transport types.",
-      "page": 174,
+      "page": 184,
       "status": "manual",
       "why": "The skwadron's composition is decided at the table."
     },
     {
       "key": "A single squadron of 2-6 Rogue Trader escorts and auxiliary vessels",
       "text": "A single squadron of 2-6 Rogue Trader escorts and auxiliary vessels may accompany each Rogue Trader capital ship in a fleet, in any mix desired.",
-      "page": 174,
+      "page": 184,
       "status": "enforced",
       "kind": "squadron",
       "min": 2,
@@ -82,51 +82,51 @@
     {
       "key": "Xenos vessels cannot be used in fleets that include Space Marine ships",
       "text": "Xenos vessels cannot be used in fleets that include Space Marine ships.",
-      "page": 174,
+      "page": 184,
       "status": "manual",
       "why": "A conditional ban, depends on the host fleet's contents."
     },
     {
       "key": "For every 750 points in the fleet, Rogue Traders may be accompanied by a single Demiurg or Kroot vessel",
       "text": "For every 750 points in the fleet, Rogue Traders may be accompanied by a single Demiurg or Kroot vessel unless the fleet is using auxiliary ships that cannot be allies with the Demiurg or Kroot (such as Space Marines).",
-      "page": 175,
+      "page": 185,
       "status": "enforced",
-      "why": "1.1 (14.9.2026): the section got rows and a rule. 750 is read as full, because the sentence does not say 'or part thereof' - unlike the RT cruiser rule on p.174, which does. The ships come from other lists; this list does not have their rows. On the Exploration list the Kroot Warsphere is enforced.",
+      "why": "1.1 (14.9.2026): the section got rows and a rule. 750 is read as full, because the sentence does not say 'or part thereof' - unlike the RT cruiser rule on p.184, which does. The ships come from other lists; this list does not have their rows. On the Exploration list the Kroot Warsphere is enforced.",
       "classified_on": "2026-09-09",
       "kind": "per_points"
     },
     {
       "key": "Any game that includes a Rogue Trader cruiser must include a sub-plot",
       "text": "Any game that includes a Rogue Trader cruiser must include a sub-plot from ... p.82-84 in the Rulebook.",
-      "page": 175,
+      "page": 185,
       "status": "manual",
       "why": "Skenaariosaanto."
     },
     {
       "key": "may roll randomly against the Xenotech System table below for +15 points per cruiser",
       "text": "Each Rogue Trader vessel may roll randomly against the Xenotech System table below for +15 points per cruiser or +5 points per escort. For an additional +5 points per ship, the player can select the desired technology instead of rolling randomly for it.",
-      "page": 175,
+      "page": 185,
       "status": "manual",
-      "why": "Priced options; the rows 'Xenotech System, rolled randomly (cruiser) 15 pts', 'Xenotech System, rolled randomly (escort, per ship) 5 pts' and 'Choose the Xenotech System instead of rolling 5 pts / ship' can be chosen. Spot check 6: before, one row offered escorts the cruiser's price of 15; the Heavy Transport (p.182, its own +10 refit) and the Xenos Vessel hulls (p.184-188, xenotech included) do not get the list's rows."
+      "why": "Priced options; the rows 'Xenotech System, rolled randomly (cruiser) 15 pts', 'Xenotech System, rolled randomly (escort, per ship) 5 pts' and 'Choose the Xenotech System instead of rolling 5 pts / ship' can be chosen. Spot check 6: before, one row offered escorts the cruiser's price of 15; the Heavy Transport (p.192, its own +10 refit) and the Xenos Vessel hulls (p.194-198, xenotech included) do not get the list's rows."
     },
     {
       "key": "Auxiliary vessels in a Rogue Trader escort squadron can only use these refits",
       "text": "Auxiliary vessels in a Rogue Trader escort squadron can only use these refits if they are in a squadron that includes at least three Rogue Trader escorts.",
-      "page": 175,
+      "page": 185,
       "status": "manual",
       "why": "Ehto riippuu skwadronin kokoonpanosta."
     },
     {
       "key": "each Rogue Trader cruiser and escort squadron may roll one random crew skill",
       "text": "To represent this each Rogue Trader cruiser and escort squadron may roll one random crew skill on ... in the Remastered Rulebook for +10% point value.",
-      "page": 175,
+      "page": 185,
       "status": "manual",
       "why": "A percentage price: the rows 'Crew skill, rolled randomly (cruiser / escort squadron, +10% of its points)' can be chosen, and the app computes 10 % of the unit's points before the crew skill, rounded up (J44, 11.9.2026; base and rounding T27). The table is Rulebook p.159."
     },
     {
       "key": "If both players agree before the game, these ships can be included in a Rogue Trader fleet",
       "text": "Siluria Class Light Cruisers and Havoc Class Frigates are older, outdated ships ... If both players agree before the game, these ships can be included in a Rogue Trader fleet, as a cruiser and an escort respectively.",
-      "page": 174,
+      "page": 184,
       "status": "out_of_scope",
       "why": "An agreement between the players; the rows can be chosen in their own section.",
       "classified_on": "2026-09-09"
@@ -141,7 +141,7 @@
     {
       "name": "Rogue Trader Cruiser",
       "pts": 185,
-      "page": 180
+      "page": 190
     },
     {
       "name": "Dauntless Class Light Cruiser",
@@ -151,32 +151,32 @@
     {
       "name": "Endeavour Class Light Cruiser",
       "pts": 110,
-      "page": 181
+      "page": 191
     },
     {
       "name": "Heavy Transport",
       "pts": 40,
-      "page": 182
+      "page": 192
     },
     {
       "name": "Xenos Vessel",
       "pts": 50,
-      "page": 184
+      "page": 194
     },
     {
       "name": "Recommissioned Escort",
       "pts": 30,
-      "page": 189
+      "page": 199
     },
     {
       "name": "Iconoclast Destroyer",
       "pts": 30,
-      "page": 190
+      "page": 200
     },
     {
       "name": "Armed Cargo Vessel",
       "pts": 20,
-      "page": 192
+      "page": 202
     },
     {
       "name": "Siluria Class Light Cruiser",
@@ -193,52 +193,52 @@
     {
       "name": "Imperial Power Ram (6+ prow, not with a Nova Cannon)",
       "pts": 5,
-      "why": "p.174 POWER RAM"
+      "why": "p.184 POWER RAM"
     },
     {
       "name": "Xenotech System, rolled randomly (cruiser)",
       "pts": 15,
-      "why": "p.175 '+15 points per cruiser'"
+      "why": "p.185 '+15 points per cruiser'"
     },
     {
       "name": "Xenotech System, rolled randomly (escort, per ship)",
       "pts": 5,
-      "why": "p.175 '+5 points per escort'"
+      "why": "p.185 '+5 points per escort'"
     },
     {
       "name": "Choose the Xenotech System instead of rolling",
       "pts": 5,
-      "why": "p.175"
+      "why": "p.185"
     },
     {
       "name": "Crew skill, rolled randomly (cruiser, +10% of its points)",
       "pts": null,
-      "why": "p.175 '+10% point value' (J44): a percentage price, the app computes it"
+      "why": "p.185 '+10% point value' (J44): a percentage price, the app computes it"
     },
     {
       "name": "Crew skill, rolled randomly (escort squadron, +10% of its points)",
       "pts": null,
-      "why": "p.175 '+10% point value' (J44): a percentage price, the app computes it"
+      "why": "p.185 '+10% point value' (J44): a percentage price, the app computes it"
     },
     {
       "name": "Xenos Vessel - Pthuxutl war cruiser",
       "pts": 50,
-      "why": "The named Xenos Vessel variants on the book's pages 186-188, all 50 pts. The book says 'all of them cost 50 points'; the app offers them separately so the card shows the right xenotech system."
+      "why": "The named Xenos Vessel variants on the book's pages 196-198, all 50 pts. The book says 'all of them cost 50 points'; the app offers them separately so the card shows the right xenotech system."
     },
     {
       "name": "Xenos Vessel - Fra'al raider",
       "pts": 50,
-      "why": "the same, p.187"
+      "why": "the same, p.197"
     },
     {
       "name": "Xenos Vessel - Nekulli whip",
       "pts": 50,
-      "why": "the same, p.188"
+      "why": "the same, p.198"
     }
   ],
   "notes": [
-    "Pages 168-173 are narrative (Durandal Grohe, Memet Poralius, Behemoth). They were hidden in the LORE_SECTIONS table: all seven sentences were story.",
+    "Pages 178-183 are narrative (Durandal Grohe, Memet Poralius, Behemoth). They were hidden in the LORE_SECTIONS table: all seven sentences were story.",
     "This list is attachable by nature like the Inquisition: most limits concern the fleet the Rogue Trader is attached to, not this list. That is why only two rules are enforced.",
-    "'Auxiliary vessels (pg. 191)' is priced 'varies' - the ship is chosen from another fleet list. The app does not offer the row as an upgrade (10.9.2026, spot check 4): p.191 is a list rule, and the ships are picked from the list of the fleet they escort."
+    "'Auxiliary vessels (pg. 201)' is priced 'varies' - the ship is chosen from another fleet list. The app does not offer the row as an upgrade (10.9.2026, spot check 4): p.201 is a list rule, and the ships are picked from the list of the fleet they escort."
   ]
 }

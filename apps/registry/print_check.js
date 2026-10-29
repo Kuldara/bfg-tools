@@ -128,14 +128,14 @@ LISTS.forEach((L, li) => {
     const txtAll = fort ? strip(cs.join("\n")) : txt;
     const ref = "s." + sh.pg + " " + sh.nm;
     /* J144: a Chaos hull in the list's own reserve section (Bastion p.39, Ordo
-       Malleus p.142) is not the list's own ship - the same exception as the
+       Malleus p.152) is not the list's own ship - the same exception as the
        domain's foreignReserveRow: no Mechanicus blocks and no native rules. */
     const foreignReserve = (L.secs[u.s] || {}).ct === "reserve" && /^CHAOS/i.test(String(sh.fl || "")) &&
       !/^Chaos/.test(L.nm);
 
     // 1 sections. The critical table heading comes from the resolver's model, not
     // a constant: the faction tables happened to contain "CRITICAL DAMAGE
-    // (2D6)" as a substring, the ork hulk's D6 table does not (Fleets p.391).
+    // (2D6)" as a substring, the ork hulk's D6 table does not (Fleets p.393).
     const Rk = api.resolveUnit(u) || {};
     const held = esc && !!(Rk.squadron && Rk.squadron.cardOnly);
     (fort ? SECTIONS_FORT_RULES : esc ? (held ? SECTIONS_HELD : SECTIONS_ESC) : SECTIONS_CAP).forEach(s => {
@@ -184,13 +184,13 @@ LISTS.forEach((L, li) => {
 
     // 10 contradictions within the card (spot check 19, M13). The crippled row must not
     // slow a ship whose own rule says crippled does not slow it (Fleets
-    // p.197/393/492/495); an escort has no critical hit trigger
+    // p.207/395/492/495); an escort has no critical hit trigger
     // (Rulebook p.66); an active Nova Cannon shows on the crippled row
-    // (Rulebook p.65); a Chaos list card has +1 boarding (Fleets p.222, not
-    // for the Activated Blackstone Fortress, p.284 "It has no crew").
+    // (Rulebook p.65); a Chaos list card has +1 boarding (Fleets p.232, not
+    // for the Activated Blackstone Fortress, p.286 "It has no crew").
     const R0 = api.resolveUnit(u) || {};
     /* J168 c: the ship's own re-rolls as boxes on the card, as for a commander
-       (the Scion of Prospero's two, p.258); a fort's boxes are on the plan card */
+       (the Scion of Prospero's two, p.260); a fort's boxes are on the plan card */
     if (!fort) {
       const rrs = (R0.rerolls && R0.rerolls.boxes) || [];
       ["included", "bought", "optional"].forEach(k => {
@@ -213,11 +213,11 @@ LISTS.forEach((L, li) => {
       fail(L.nm, ref, "the active Nova Cannon is missing from the crippled row");
     /* A planetary defence (the profile's df) is bought from the Fleets p.499 price
        list, not from the Chaos list's rows: a station, platform or monitor is not
-       a Chaos ship, so p.222's "+1 in boarding actions" does not belong on its card
+       a Chaos ship, so p.232's "+1 in boarding actions" does not belong on its card
        and the domain rightly leaves it out. The exception covers only df profiles;
        every own ship of a Chaos list still needs the row. */
     /* On a renegade hull the row is "+1 in boarding actions as a Chaos vessel"
-       (p.222 forbids a Chaos Space Marine crew, so the chaos_core row's
+       (p.232 forbids a Chaos Space Marine crew, so the chaos_core row's
        crew sentence does not belong on its card; spot check 2026-10-18/1). */
     if (/^Chaos\b/.test(L.nm) && !/BLACKSTONE/i.test(sh.nm) && !sh.df && !/\+1 in boarding actions/.test(txt))
       fail(L.nm, ref, "the Chaos +1 boarding is missing");
@@ -225,7 +225,7 @@ LISTS.forEach((L, li) => {
       fail(L.nm, ref, "a defence card has the Chaos list's +1 boarding (p.499: not a list ship)");
 
     /* J145: a stat box's write-in box fits only beside a short value.
-       A long value (the Eldar three-part speed p.302-305, "Special", a save
+       A long value (the Eldar three-part speed p.304-307, "Special", a save
        in place of shields, quadrant armour) slid under the box, so it
        prints without a box - and no single number is written into them. */
     const stats = [...h.matchAll(/<div( class="nobox")?><span>([^<]*)<\/span><div class="v"><b>([^<]*)<\/b>/g)];
@@ -251,7 +251,7 @@ LISTS.forEach((L, li) => {
       // The ship's own option may add a row (assault torpedoes, P1-3). It is
       // on the card as an empty box in the "opt" state and ticked in the "take" state;
       // only "off" removes it - the same rule as in armModel().
-      // add may be one row or a list of rows (Murder p.279: port and
+      // add may be one row or a list of rows (Murder p.281: port and
       // starboard lance), the same contract as in armModel().
       + (sh.ol || []).reduce((a, o, i) =>
           a + (o.add && api.optState(u, i) !== "off"
@@ -414,7 +414,7 @@ LISTS.forEach((L, li) => {
       });
     });
     // A list row may forbid the ship's own options entirely (RT Exploration
-    // p.180, en.noopt): then the card has no options and no stars for them.
+    // p.190, en.noopt): then the card has no options and no stars for them.
     const enRow = L.secs[u.s] && L.secs[u.s].ents[u.e];
     const noopt = !!(enRow && enRow.noopt);
     // A list row may forbid a single option (en.optno: the Mechanicus does not use
@@ -538,14 +538,14 @@ LISTS.forEach((L, li) => {
       // point. So the limit is ceil(hp/2). This test used to expect
       // floor(hp/2)+1, which is right only for odd hull values.
       const crBox = Math.ceil((sh.hp || 0) / 2);
-      // Fleets p.391: space hulks are not crippled, so there is no band.
+      // Fleets p.393: space hulks are not crippled, so there is no band.
       // Fleets p.501: a star fort's stats row is per quadrant.
       if (sh.qd && !h.includes("PER QUADRANT"))
         fail(L.nm, ref, "a quadrant ship has no quadrant mark on the card");
-      // Fleets p.391 (Ork) and p.288 (Chaos): each hulk has its own
+      // Fleets p.393 (Ork) and p.290 (Chaos): each hulk has its own
       // D6 table, repair ban and rules pages that the profile page does not
       // contain. The first version guarded only the ork, because the Chaos hulk's
-      // p.288 was left unread - the printed card revealed it.
+      // p.290 was left unread - the printed card revealed it.
       if (/\bHULK\b/i.test(String(sh.nm || ""))) {
         const chaos = /\bCHAOS\b/i.test(String(sh.nm || ""));
         const want = chaos ? "CHAOS SPACE HULK CRITICAL" : "ORK HULK CRITICAL";
@@ -556,11 +556,11 @@ LISTS.forEach((L, li) => {
         if (!/cannot repair/i.test(h))
           fail(L.nm, ref, "the hulk is missing its repair ban");
         if (!/exactly 10 cm/.test(h))
-          fail(L.nm, ref, "the hulk is missing its movement rule (Fleets pp. 287/390)");
+          fail(L.nm, ref, "the hulk is missing its movement rule (Fleets pp. 289/392)");
         if (chaos && !/twice as many attack craft/.test(h))
-          fail(L.nm, ref, "the Chaos hulk is missing 2x attack craft (p.287)");
+          fail(L.nm, ref, "the Chaos hulk is missing 2x attack craft (p.289)");
         if (!chaos && !/always Leadership 6/.test(h))
-          fail(L.nm, ref, "the ork hulk is missing Ld 6 (p.390)");
+          fail(L.nm, ref, "the ork hulk is missing Ld 6 (p.392)");
       }
       const hulk = /\bhulk\b/i.test(String(sh.nm || ""));
       if (hulk) {
@@ -640,9 +640,9 @@ LISTS.forEach((L, li) => {
       if (!/(through shields|every Hit): 6|4\+/.test(txt))
         fail(L.nm, ref, "the critical trigger hint is missing from the heading row");
 
-      /* The Haven Space Station (Fleets p.334) is an Eldar hull, but not an Eldar
-         ship in these two respects: p.336 "armour 5+ and take critical
-         damage on a 5+" (Eldar ships 4+, p.305) and p.337 its own
+      /* The Haven Space Station (Fleets p.332) is an Eldar hull, but not an Eldar
+         ship in these two respects: p.334 "armour 5+ and take critical
+         damage on a 5+" (Eldar ships 4+, p.307) and p.335 its own
          CRITICAL HITS TABLE (Infinity Circuit, Pulsar Lances, Polarization
          Field ...). The checker demanded the Eldar ships' 4+ from it; the expectation is now
          the Haven's own threshold and its own table. The Holofields row is in both
@@ -651,7 +651,7 @@ LISTS.forEach((L, li) => {
       if (haven && (!txt.includes(cm.title) || !/HAVEN/.test(cm.title) || !txt.includes("HOLOFIELDS") ||
                     !txt.includes("INFINITY CIRCUIT") || !txt.includes("critical damage on 5+") ||
                     !/every Hit: 5\+/.test(txt) || txt.includes("critical damage on 4+")))
-        fail(L.nm, ref, "the Haven is missing its own critical table or the 5+ threshold (p.336-337)");
+        fail(L.nm, ref, "the Haven is missing its own critical table or the 5+ threshold (p.334-335)");
       if (/^ELDAR\b/i.test(String(sh.fl || "")) && !haven &&
           (!txt.includes(cm.title) || !txt.includes("HOLOFIELDS") || !txt.includes("critical damage on 4+")))
         fail(L.nm, ref, "an Eldar ship is missing the Eldar critical table");

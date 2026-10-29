@@ -210,7 +210,7 @@
       "page": 16,
       "status": "enforced",
       "task": "WAITS FOR ANOTHER SESSION: the same upgrade key space as in the previous one. This is its limit - a reserve gets both lists' upgrades only from the same race.",
-      "why": "Enforced 14.9.2026. The host list's upgrades open only when the source list's and the host list's race is the same; an ally of a different race never gets them, and a list with no race is not 'the same race' as anything. Race is a game-technical group and not a biological species (the user's decision T37): p.15's list separates the Imperial Navy and the Space Marines although both are human, and the same list says 'Tau (including Tau allies)'. So the Grey Knights are space marines by race (p.144: 'Grey Knights count as Space Marines in all respects') and the Demiurg tau (p.482 names it one of the Tau fleets' three races). The Inquisition and the three Rogue Traders lists are left without a race, so they do not inherit the host's upgrades. NOT IMPLEMENTED: the sentence's end 'or the rules for that fleet specifically allow it' - the data has no field for it and no list has been identified as such. Leaving it out can only WITHHOLD a permission, not give too much, so it is the cautious direction; if such a list is found, it is a row of its own.",
+      "why": "Enforced 14.9.2026. The host list's upgrades open only when the source list's and the host list's race is the same; an ally of a different race never gets them, and a list with no race is not 'the same race' as anything. Race is a game-technical group and not a biological species (the user's decision T37): p.15's list separates the Imperial Navy and the Space Marines although both are human, and the same list says 'Tau (including Tau allies)'. So the Grey Knights are space marines by race (p.154: 'Grey Knights count as Space Marines in all respects') and the Demiurg tau (p.482 names it one of the Tau fleets' three races). The Inquisition and the three Rogue Traders lists are left without a race, so they do not inherit the host's upgrades. NOT IMPLEMENTED: the sentence's end 'or the rules for that fleet specifically allow it' - the data has no field for it and no list has been identified as such. Leaving it out can only WITHHOLD a permission, not give too much, so it is the cautious direction; if such a list is found, it is a row of its own.",
       "enforced_by": "fleet_golden",
       "goldens": [
         "different-race-reserve-gets-no-host-upgrades"
@@ -247,7 +247,7 @@
       "status": "enforced",
       "enforced_by": "list_rules",
       "src_has": "must contain at least three escorts for every capital ship taken",
-      "why": "Both examples the book names are already enforced: the Dark Eldar's 3:1 (p.351, min_ratio) and Iyanden's Flame of Asuryan condition (p.319, requires). The sentence itself is a principle - the list's own restriction beats the general rule - and it is recorded here so that phase 3's mechanism does not bypass them."
+      "why": "Both examples the book names are already enforced: the Dark Eldar's 3:1 (p.353, min_ratio) and Iyanden's Flame of Asuryan condition (p.317, requires). The sentence itself is a principle - the list's own restriction beats the general rule - and it is recorded here so that phase 3's mechanism does not bypass them."
     },
     {
       "key": "Allied vessels taken in this way cannot be placed in squadrons with vessels in the core fleet",
@@ -281,7 +281,7 @@
   ],
   "notes": [
     "p.17's ALLIES MATRIX is a heading without content (checked from the page image 14.9.2026). This is a gap in the book, not in the extraction.",
-    "The race list (p.14-15) does not name the Rogue Traders or the Demiurg. Both have their own list rules (p.174, p.487), and p.15 says that named access is not a reserve - that is why they get no race in the LIST_RACE table.",
+    "The race list (p.14-15) does not name the Rogue Traders or the Demiurg. Both have their own list rules (p.184, p.487), and p.15 says that named access is not a reserve - that is why they get no race in the LIST_RACE table.",
     "The Segmentum Solar list is not in this book, so p.15's example stays an example. The mechanism must still be recorded: the permission belongs to the list, not to the race."
   ]
 }

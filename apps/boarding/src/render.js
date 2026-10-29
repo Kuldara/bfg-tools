@@ -28,8 +28,8 @@ export function fleetIcon(i, cls){
 }
 export function hullIcon(t, color, cls){ return svgIcon(ICONS.hulls[t], color, cls); }
 export var HULL_SHORT = {"Battleship":"Battle", "Grand Cruiser":"Grand"};
-/* FL p.222: renegade Imperial vessels take no Chaos Lord, no Chaos Space Marine
-   crew and no Chaos ordnance, and FL p.225 hangs every Mark on one of those. */
+/* FL p.232: renegade Imperial vessels take no Chaos Lord, no Chaos Space Marine
+   crew and no Chaos ordnance, and FL p.235 hangs every Mark on one of those. */
 export var RENEGADE_NEVER = ["khorne","nurgle","csm","abaddon","berzerkers","berzerkerfleet","ark","terminators"];
 /* the "open the math" mark on the boarding value and roll modifier buttons */
 var INFO_ICON = '<svg class="info" viewBox="0 0 24 24" aria-hidden="true" focusable="false">'+
@@ -104,7 +104,7 @@ function renderSide(k){
   h.push(upRow(k));
 
   h.push('<div class="tgRow">');
-  /* Tyranids never grant the Blast Marker modifier (FL p.418), so on their card
+  /* Tyranids never grant the Blast Marker modifier (FL p.420), so on their card
      the switch is shown as having no effect rather than lighting up for nothing. */
   var blastInert = (s.f>=0 && FLEETS[s.f].race==="tyranid");
   h.push('<button class="tg'+(s.blast&&!blastInert?" on":"")+(blastInert?" inert":"")+

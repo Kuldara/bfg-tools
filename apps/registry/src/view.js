@@ -188,7 +188,7 @@ export function sourceBarHTML(){
      for a limit aimed at THIS fleet: a ban on some of the donor's rows
      (Armageddon's starred vessels, pg. 41), a grant that excludes rows
      (Dominion takes Rogue Traders but not the Xenos ones, pg. 101), or a
-     condition the fleet has not met yet (pg. 139, pg. 316). That is 35 pairs
+     condition the fleet has not met yet (pg. 149, pg. 314). That is 35 pairs
      out of 1024. The rest of the refusals are shown on the rows themselves,
      once the list is open. */
   const vs = LISTS.map(l => {
@@ -245,7 +245,7 @@ export function sourceBarHTML(){
     : DOMAIN.lendVerdict(L(), src, other).kind !== "no";
   /* A refused list is not always a dead end. The book's other route is the
      host list naming the vessels on its own pages - every Chaos list prints
-     RENEGADE IMPERIAL VESSELS (pg. 222), Bastion Fleets prints Chaos hulls
+     RENEGADE IMPERIAL VESSELS (pg. 232), Bastion Fleets prints Chaos hulls
      under its reserve fleet (pg. 39), and an Imperial or Space Marine list
      offers the Grey Knights Strike Cruiser under The Inquisition. Saying only
      "Not allowed" would be read as "those ships are out of reach", which is a
@@ -255,7 +255,7 @@ export function sourceBarHTML(){
     ? "Not as " + esc(appState.SRC_ROLE) + " - this list lends to you as " + esc(other) +
       ". Switch above, or add one anyway and the legality panel will name the rule."
     /* Two kinds, and they must not be described alike: renegades "do not
-       count as reserves" (pg. 222), while Bastion's Chaos hulls are taken
+       count as reserves" (pg. 232), while Bastion's Chaos hulls are taken
        with "your reserve choices" (pg. 39). */
     : route && route.ct === "reserve"
     ? "Not borrowed from that list - but this fleet's own list takes " + route.n +
@@ -311,10 +311,10 @@ export function renderWarlordBar(RF){
       const w = appState.S.units[wi], on = wi === wa;
       return `<button type="button" class="segb wlpick${on ? " on" : ""}" data-wlpick="${wi}" aria-pressed="${on}"
         style="--wl:${warlordColor(w, k)}"><i class="wldot"></i>Warlord ${k + 1}${w.clan ? " \u00b7 " + esc(w.clan) : ""}</button>`; }).join("")}${
-      wlRow ? `<button type="button" class="segb" data-wladd="${wlRow[0]}:${wlRow[1]}" title="One Warlord for every 500 points, or part, of the fleet (Fleets p. 372)">+ Warlord</button>` : ""}</span>${
+      wlRow ? `<button type="button" class="segb" data-wladd="${wlRow[0]}:${wlRow[1]}" title="One Warlord for every 500 points, or part, of the fleet (Fleets p. 374)">+ Warlord</button>` : ""}</span>${
       cnt ? `<span class="wlhint${cnt.ok ? "" : " bad"}">Warlords ${esc(String(cnt.v).replace(/\s*exactly$/, ""))}</span>` : ""}</div>${
     wa >= 0 ? `<div class="wlrow"><span class="abl">${need.ok ? "Done" : "Needs"}</span><span class="wlneed ${need.ok ? "ok" : "bad"}">${esc(need.text)}</span></div>`
-            : `<div class="wlrow"><span class="wlneed bad">Start with a Warlord: every skwadron belongs to one (Fleets p. 372).</span></div>`}`;
+            : `<div class="wlrow"><span class="wlneed bad">Start with a Warlord: every skwadron belongs to one (Fleets p. 374).</span></div>`}`;
   bar.querySelectorAll("[data-wlpick]").forEach(b => b.onclick = () => {
     const w = appState.S.units[+b.dataset.wlpick]; if(!w) return; appState.ACTIVE_WL = w.uid; render(); });
   bar.querySelectorAll("[data-wladd]").forEach(b => b.onclick = () => {
@@ -418,7 +418,7 @@ export function renderCatalogue(){
           : rowLendOf(SL, si, en);
       /* Added from this fleet's own section instead: a route list's row, or a
          row the donor may not lend as a reserve of a reserve (pg. 15) that
-         this list prints in a reserve section of its own (pg. 142). */
+         this list prints in a reserve section of its own (pg. 152). */
       const resRow = rv0 && !rv0.ok && rv0.cause === "reserve" ? DOMAIN.hostReserveRow(L(), en) : null;
       const hostAt = routeAt || resRow;
       const hostEn = hostAt ? L().secs[hostAt.si].ents[hostAt.ei] : null;
@@ -453,7 +453,7 @@ export function renderCatalogue(){
           : "fleet option";
       /* The price is the host section's own: an Explorator Tyrant is 220 as a
          Mechanicus ship (pg. 125) but a renegade cruiser is "up to 185
-         points" (pg. 222), and the renegade row carries that price. */
+         points" (pg. 232), and the renegade row carries that price. */
       const priced = hostEn || en;
       const cost = priced.p == null ? "?" : (priced.a || up ? "+" : "") + priced.p;
       const rowNo = !!rv && !rv.ok;
@@ -538,7 +538,7 @@ export function renderCatalogue(){
           hostEn ? ` data-hs="${hostAt.si}" data-he="${hostAt.ei}"` : ""}${nIn ? ` data-n="${nIn}"` : ""} title="${
           rowNo ? esc(rv.why) : hostEn ? esc("Add from " + viaTitle)
           : (foreign ? "Add as " + esc(appState.SRC_ROLE) : "Add")}${
-          baT ? " one ship into " + (baT.tag ? "tiddla " + esc(baT.tag) : "his tiddla") + " (Blood Axes, Fleets p. 369)"
+          baT ? " one ship into " + (baT.tag ? "tiddla " + esc(baT.tag) : "his tiddla") + " (Blood Axes, Fleets p. 371)"
           : buy && buy.kind === "squadron" ? " a new squadron card of " + minOn + " (" + perCard + " on a card)"
           : many ? " one more to this row's last " + cardName + " (" + perCard + " on a card)" : ""}${
           nIn ? " &middot; " + nIn + " in your fleet" + (many ? " on " + nCards + " card" + (nCards > 1 ? "s" : "") : "") : ""}">+</button></span>`}
@@ -549,7 +549,7 @@ export function renderCatalogue(){
        it while shopping for hulls. */
     const pick = sec.ents.length;
     /* A fleet without a commander: its own re-roll is said on the section
-       that sells the extra ones (Necrons p. 404, Demiurg p. 486). */
+       that sells the extra ones (Necrons p. 406, Demiurg p. 486). */
     const frr = SL.frr && SL.frr.sec === sec.t ? DOMAIN.fleetRerolls(SL, []) : null;
     const fk = foldKey(SL, sec), open = FOLDS[fk] != null ? !!FOLDS[fk] : !!pick;
     /* Clanz (J226): which Warlord a + here adds to */
@@ -582,7 +582,7 @@ export function renderCatalogue(){
     const baRow = b.dataset.hs == null && !foreign && isBaSec(+b.dataset.s);
     if(appState.MIX){
       let M = b.dataset.hs == null && !foreign ? mixActive(+b.dataset.s) : null;
-      /* a Blood Axe tiddla being filled takes the commandeered escorts too (p. 369) */
+      /* a Blood Axe tiddla being filled takes the commandeered escorts too (p. 371) */
       if(!M && baRow){ const t = baState().target; if(t && t.filling) M = appState.MIX; }
       if(!M){ mixStop(); }
       else { mixAddOne(M, +b.dataset.s, +b.dataset.e); appState.JUST = null; return; }
@@ -734,7 +734,7 @@ export function unitHTML(R, ui, st){
       <span><b>Armour</b> ${esc(R.stats.armour)}</span><span><b>${
         esc(title(R.stats.turretLabel))}</b> ${esc(R.stats.turrets)}</span>
       <span><b>pg.</b> ${R.source.page}</span></div>` : "";
-  /* noopt: the list forbids this hull's variants (RT Exploration p.180) -
+  /* noopt: the list forbids this hull's variants (RT Exploration p.190) -
      nothing to offer, so the block is not drawn at all. */
   /* forbidden: the list forbids that one option (Mechanicus Sharks, p. 125). */
   const opts = R.options.some(o => !o.forbidden) && !(R.entry && R.entry.noopt)
@@ -780,7 +780,7 @@ export function unitHTML(R, ui, st){
     const kind = upKind(up);
     /* greyed: a Gubbin his re-rolls no longer cover (clanzDimUps) */
     const dim = ((st.ab && st.ab.dim) || []).indexOf(up.key) >= 0;
-    return `<div class="opt${up.required ? " req" : ""}${dim ? " dis" : ""}"${dim ? ` title="All his re-rolls are spent on Gubbins: another needs another re-roll (Fleets p. 372)"` : ""}>
+    return `<div class="opt${up.required ? " req" : ""}${dim ? " dis" : ""}"${dim ? ` title="All his re-rolls are spent on Gubbins: another needs another re-roll (Fleets p. 374)"` : ""}>
       <span class="tri">${dim ? b("take","Take").replace("<button", "<button disabled") : b("take","Take")}${b("opt","Option")}${b("off","Hide","off")}</span>
       <span${fx ? ` title="${esc([up.description, up.note].filter(Boolean).join(" "))}"` : ""}>${kind ? `<span class="ukind">${esc(kind)}</span>` : ""}${esc(title(up.label))}${up.included ? " \u2014 included, no cost"
         : up.required ? " \u2014 automatic, required by the fleet list" : ""}
@@ -901,7 +901,7 @@ export function unitSummaryHTML(R, st){
   return bits.length ? `<div class="usum">${bits.join(" &middot; ")}</div>` : "";
 }
 /* A ship's own re-rolls, for the few that have any (the Scion of Prospero's
-   two, Fleets p. 258; a Mark of Tzeentch; a fortress-monastery's). */
+   two, Fleets p. 260; a Mark of Tzeentch; a fortress-monastery's). */
 export function shipRerollChip(R){
   const rr = R.rerolls;
   if(!rr || !(rr.included || rr.total)) return "";
@@ -1064,10 +1064,10 @@ export function renderFleet(){
   (RF.aboard || []).forEach(a => { abOf[a.unit] = a; });
   const hideOf = clanzHiddenUps(RF), dimOf = clanzDimUps(RF);
   /* J232: Send to beside the grip; a Warlord aboard an Ork hulk shows his
-     upgrades as they work there (Fleets p. 390) */
+     upgrades as they work there (Fleets p. 392) */
   const sendOf = extra.send || [];
   const onHulk = ui => { const a = abOf[ui]; return !!(a && a.ship != null && isOrkHulkUnit(RF.units[a.ship])); };
-  /* a Clanz tiddla card: Mob Rule and Young Gunz, as information (p. 370) */
+  /* a Clanz tiddla card: Mob Rule and Young Gunz, as information (p. 372) */
   const tidHint = u => L().clanz && skwKind(u) === "tiddla" ? `<div class="uctl">${orkTiddlaHint(u.n || 1)}</div>` : "";
   const rowOf = (u, ui, more) => unitRowHTML(u, ui,
     { a: abOf[ui] || null, RF: RF, extra: (extra[ui] || "") + tidHint(u) + (more || ""), hide: hideOf[ui] || [], dim: dimOf[ui] || [], send: sendOf[ui] || "", hulk: onHulk(ui),
@@ -1170,7 +1170,7 @@ export function renderFleet(){
     const wi = +b.dataset.wlclan, R0 = fleetResolved(), w = appState.S.units[wi];
     const W = (R0.warlords || []).filter(x => x.unit === wi)[0]; if(!W || !w) return;
     if(b.dataset.c) w.clan = b.dataset.c; else delete w.clan;
-    /* a commandeered escort's tiddla pays the clan once (Fleets p. 369) */
+    /* a commandeered escort's tiddla pays the clan once (Fleets p. 371) */
     W.units.forEach(i => { if(!isCommandeered(appState.S.units[i])) setClan(appState.S.units[i], b.dataset.c); });
     render(); });
   /* Aboard (J215): the player's pick is the ship's uid; Automatic drops it. */
@@ -1331,7 +1331,7 @@ function clanzOrder(parts, SL, foreign){
 /* the refit boxes left open, this session (made on first use: the fleet pane
    can be drawn before this module has run to its end) */
 const upInfo = () => appState.UPINFO || (appState.UPINFO = new Set());
-/* Da Ork Clanz: the Blood Axe Warlord's ship's Imperial Navy refit row (p. 369) */
+/* Da Ork Clanz: the Blood Axe Warlord's ship's Imperial Navy refit row (p. 371) */
 function isRefitUp(up){
   const C = L().clanz;
   return !!(C && C.refit_re && new RegExp(C.refit_re, "i").test(String(up.label || "")));
@@ -1480,7 +1480,7 @@ export function addUnitFrom(li2, si, ei, role){
       /* only the clan chosen for him: a clan bought on one skwadron is that
          skwadron's own choice */
       if(appState.S.units[wa].clan) setClan(u, appState.S.units[wa].clan);
-      /* J232: a Rok joins his Rok skwadron the same way (1-4, Fleets p. 372) */
+      /* J232: a Rok joins his Rok skwadron the same way (1-4, Fleets p. 374) */
       const kk = clanzIn(si, CZ.big) ? "kroozer" : clanzIn(si, CZ.rok) ? "rok" : "";
       if(W && !W.hulk && kk){
         const others = (W.total || 0) - Math.min(W.tiddla || 0, W.rr);

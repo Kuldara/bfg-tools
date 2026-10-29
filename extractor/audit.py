@@ -152,7 +152,7 @@ for pg, sh in sorted(ships.items(), key=profile_sort):
         n = norm(re.sub(r"^(OPTIONS|SPECIAL|NOTES?|UPGRADES|REFITS)\s*:?\s*", "", line))
         n = n.lstrip("• \t")
         if sh["pg"] in (184, 192):
-            n = n.replace("[???]", "p. 175")  # the book's known Xenotech reference error
+            n = n.replace("[???]", "p. 185")  # the book's known Xenotech reference error
         if len(n) > 12 and n[:45] not in captured:
             add("D2 block cut", ref, "not extracted: %r" % line[:95])
             break
@@ -189,8 +189,8 @@ for L in D["lists"]:
                             (e["p"] == 0 and re.search(r"\bFree\b", pt, re.I)))
                 # A broken list row: when the list page and the profile page
                 # disagree on the price, the profile page is the authority. Page
-                # 372's row "(pg. 377)). 2310 pts" is the book's own mess, and
-                # the correct 210 reads on profile page 381. The finding stays
+                # 372's row "(pg. 379)). 2310 pts" is the book's own mess, and
+                # the correct 210 reads on profile page 383. The finding stays
                 # in force if the price is on neither page.
                 if not ok_price and e.get("r"):
                     ok_price = bool(re.search(r"\b%d\s*pts\b" % e["p"],

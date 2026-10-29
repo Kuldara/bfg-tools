@@ -11,7 +11,7 @@ import swaps, copy
 from .inputs import copy, re
 from .inquisition_allies import _INQ_HOSTS, _L, _cmd, _cmds, _e, _hit, _i, _inq_at, _inq_limits, _md, _nm, _r, _x
 from .profile_types import _AR, _a, _c, _sec, _sh, e, r, x
-from .row_classes import _p18_list, _p18_sec, _p18_unit, _ty, add_text, j, k
+from .row_classes import _p18_list, _p18_sec, _p18_unit, _ty, add_text, k
 from .row_texts import _pg
 from .section_guard import lists_out
 from .ships import _g, _src, ships
@@ -26,8 +26,8 @@ from .ships import _g, _src, ships
 # race at all: it reaches another fleet only through its own list rule,
 # and p.15 says it may then not also be taken as a reserve
 # ("These may only be taken exactly as described on their fleet list rules
-# and may not also be taken as reserves"). Rogue Traders (p.174), Demiurg
-# and Kroot (p.15), the Inquisition (p.138) and Grey Knights (p.138, p.145)
+# and may not also be taken as reserves"). Rogue Traders (p.184), Demiurg
+# and Kroot (p.15), the Inquisition (p.148) and Grey Knights (p.148, p.155)
 # all belong to this group.
 #
 # Eldar and Craftworld Eldar are DIFFERENT races in the book's list, so
@@ -48,24 +48,24 @@ LIST_RACE = [
     ("Space Marines %s Crusade", "space marines", "p.14 race list"),
     ("Space Marines %s Dominion", "space marines", "p.14 race list"),
     ("The Emperor's Inquisition", None,
-     "not in the race list. p.138: 'The Inquisition has no fleet list on its "
+     "not in the race list. p.148: 'The Inquisition has no fleet list on its "
      "own. Instead, there are various ways to add an Inquisitor or "
      "Inquisitorial ships to the Imperial factions.' Named access, not a "
      "reserve (p.15)"),
     ("Grey Knights", "space marines",
-     "p.144 says word for word: 'Grey Knights count as Space Marines in all "
+     "p.154 says word for word: 'Grey Knights count as Space Marines in all "
      "respects and as such follow all rules for Space Marines as written on "
      "pages 92-94.' A race is a game-mechanical group, and the book names it itself. "
      "The conditional access to the Imperial fleets does not get round this, because "
-     "p.146 bans both directions separately: 'A Grey Knights fleet will "
+     "p.155 bans both directions separately: 'A Grey Knights fleet will "
      "not take ships from or provide ships to any other fleet list as "
      "reserves or allies' - the ban (res_ban) is decided before the race. "
      "The user's decision T37, 14.9.2026"),
     ("Rogue Traders", None,
-     "not in the race list. p.174: 'Any fleet except Necrons or Tyranids may "
+     "not in the race list. p.184: 'Any fleet except Necrons or Tyranids may "
      "include a single Rogue Trader capital ship' - a named rule of its own"),
-    ("Rogue Traders %s Exploration", None, "as Rogue Traders (p.174)"),
-    ("Rogue Traders %s Pirates and Wolf Packs", None, "as Rogue Traders (p.174)"),
+    ("Rogue Traders %s Exploration", None, "as Rogue Traders (p.184)"),
+    ("Rogue Traders %s Pirates and Wolf Packs", None, "as Rogue Traders (p.184)"),
     ("Chaos %s Incursion", "chaos", "p.14 'Chaos (including Chaos Space Marines)'"),
     ("Chaos %s Black Crusade", "chaos", "p.14 race list"),
     ("Chaos %s Tzeentch", "chaos", "p.14 race list"),
@@ -106,14 +106,14 @@ SHIP_RT_BY_TY = {"Battleship": "battleship", "Cruiser": "cruiser",
                  "Grand Cruiser": "cruiser", "Escort": "escort"}
 SHIP_RT_EXCEPTIONS = [
     ("286", "battleship",
-     "p.288: 'It counts as a battleship for purposes of taking another so in "
+     "p.290: 'It counts as a battleship for purposes of taking another so in "
      "order to take a second battleship, the fleet must already have six "
      "cruisers and/or heavy cruisers.' The book gives the hulk a battleship's "
      "status explicitly; the sentence limits it to counting battleships, "
      "which is exactly the counting of the reserve rule"),
     ("389", "none",
      "Ork hulk: the book gives it none of the three types. Its own rule decides "
-     "(p.367 'maximum of one space hulk per 1,500 points', p.372 "
+     "(p.369 'maximum of one space hulk per 1,500 points', p.374 "
      "'An Ork fleet with at least three Warlords may include one Space Hulk')"),
     ("392", "none", "a Rok is a defence structure, not a battleship/cruiser/escort"),
     ("494", "none",
@@ -127,7 +127,7 @@ SHIP_RT_EXCEPTIONS = [
     ("506", "none", "the Blackstone Fortress is a station"),
     ("500", "none", "the Ramilies class star fort is a station"),
     ("334", "none", "the Haven space station is a station"),
-    ("334b", "none", "the Haven as a Dark Eldar base (p.347) is the same station"),
+    ("334b", "none", "the Haven as a Dark Eldar base (p.349) is the same station"),
     ("507", "none", "the Space station is a station"),
     ("508", "none", "the Orbital dock is a station"),
     ("509", "none", "the Orbital defence laser platform is a station"),
@@ -224,18 +224,18 @@ RESERVE_GRANTS = [
                  dict(list="Rogue Traders \u2014 Exploration", not_re="xenos"),
                  dict(list="Rogue Traders \u2014 Pirates and Wolf Packs", not_re="xenos")]),
 ]
-# --- 1.1 phase 4: Eldar Corsairs <-> Iyanden (Fleets p.316 and p.319) -------
-# p.316: "An Eldar Hero must lead the fleet in order to use Craftworld Eldar
+# --- 1.1 phase 4: Eldar Corsairs <-> Iyanden (Fleets p.314 and p.317) -------
+# p.314: "An Eldar Hero must lead the fleet in order to use Craftworld Eldar
 # vessels as reserves. Following this, one Craftworld Eldar Flame of Asuryan,
 # Dragonship or Wraithship may be taken for every three cruisers in the fleet."
-# p.319: "An Eldar Hero must lead the fleet in order to use Corsair Eldar
+# p.317: "An Eldar Hero must lead the fleet in order to use Corsair Eldar
 # vessels as reserves. Following this, one Corsair Eldar cruiser or light
 # cruiser may be taken for every three Dragonships and / or Wraithships in the
 # fleet."
 #
 # Eldar and Craftworld Eldar are DIFFERENT races in p.14's race list, so
 # the general race gate would block this. The permission is per list AND conditional:
-# the fleet must be led by an Eldar Hero (or on Iyanden Prince Yriel, p.319:
+# the fleet must be led by an Eldar Hero (or on Iyanden Prince Yriel, p.317:
 # "Yriel may be taken instead of the Hero Fleet Commander"). The ratios are
 # the book's general 1:3 by type, so they come from the engine.
 _ELDAR_HERO = "^(eldar hero|prince yriel)"
@@ -308,11 +308,11 @@ assert _inq_hits == {
     "Space Marines \u2014 Dominion": ["cru10"],
     "Adeptus Mechanicus \u2014 Explorator": ["bs"],
 }, _inq_hits
-print("Inquisition ships into the host's limits: %d picks (p.138, p.14)"
+print("Inquisition ships into the host's limits: %d picks (p.148, p.14)"
       % sum(len(v) for v in _inq_hits.values()))
 
 
-# --- 1.1 phase 4: lists that exchange no ships at all (p.99, p.145) ----------
+# --- 1.1 phase 4: lists that exchange no ships at all (p.99, p.155) ----------
 # "A Space Marine Crusade fleet will not take ships from or provide ships to
 # any other fleet list as reserves or allies, including Imperial Navy, Rogue
 # Trader or Adeptus Mechanicus fleet lists." Grey Knights have the same sentence.
@@ -320,7 +320,7 @@ print("Inquisition ships into the host's limits: %d picks (p.138, p.14)"
 # Without this ban the general race rule would let Crusade and Codex Astartes
 # exchange ships: both are space marines by race. The ban works
 # both ways ("take ships from or provide ships to") and also beats
-# p.139's inquisitor permission, because it is the list's own and more precise.
+# p.149's inquisitor permission, because it is the list's own and more precise.
 RESERVE_BANS = [
     dict(list="Space Marines \u2014 Crusade",
          src="A Space Marine Crusade fleet will not take ships from or provide "
@@ -354,7 +354,7 @@ for _b in LEND_BANS:
     _L["lend_ban"] = dict(re=_b["re"], src=_b["src"])
 print("partial lending bans: %d lists" % len(LEND_BANS))
 
-# A rule's source sentence must not run on into a price row. Grey Knights' p.146
+# A rule's source sentence must not run on into a price row. Grey Knights' p.155
 # escort sentence ends "(see pg 13)" without a full stop, and the extraction glued
 # the next row "Rapid strike vessel (Firestorm) (pg 106) (pg
 # 79)..45 pts" to it - the player read it in the legality panel as the rule's sentence.
@@ -377,8 +377,8 @@ for _L in lists_out:
             _GLUED += 1
 print("source sentences glued to a price row cut: %d" % _GLUED)
 
-# Chaos Space Marine crews (p.234/236/240/244/248). Two things
-# spot check 20 found: (1) p.222 forbids the crew on a renegade ship -
+# Chaos Space Marine crews (p.244/246/248/250/252). Two things
+# spot check 20 found: (1) p.232 forbids the crew on a renegade ship -
 # "Chaos Space Marines ... may not be taken for Imperial Navy vessels used in
 # this manner" - so an Imperial Navy hull does not get the row (flno); (2) a ship
 # has one crew, and the legion-named rows of two lists are the same purchase
@@ -394,7 +394,7 @@ for _L in lists_out:
                 _CREW += 1
 print("Chaos Space Marine crew rows made conditional: %d" % _CREW)
 
-# Veil of Lust (p.248): the row's own sentence is two sentences, and the second is
+# Veil of Lust (p.252): the row's own sentence is two sentences, and the second is
 # mechanics. The section sentence carried only the first, so the card sold the ability
 # without its effect (spot check 20, seed 2026091441).
 _VEIL = 0
@@ -409,7 +409,7 @@ for _L in lists_out:
 assert _VEIL == 1, _VEIL
 print("the Veil of Lust description completed")
 
-# --- 1.1 phase 4: a fleet led by an inquisitor (Fleets p.139) ----------------
+# --- 1.1 phase 4: a fleet led by an inquisitor (Fleets p.149) ----------------
 # "Any one of the Imperial Navy, Adeptus Mechanicus and Space Marine fleets
 # led by an Inquisitor may always take ships from the other two as reserves in
 # the normal manner."
@@ -437,7 +437,7 @@ print("the inquisitor's reserve permission: %d lists" % len(_INQ_HOSTS))
 # "Adeptus Mechanicus vessels can be used as reserves in any Imperial Navy or
 # Space Marine fleet list." The permission is unconditional, but the Mechanicus is by race
 # imperial navy and the Space Marines a race of their own, so the general race gate blocks
-# it. The only permission recorded on the Space Marine lists was p.139's
+# it. The only permission recorded on the Space Marine lists was p.149's
 # inquisitor-conditional one, so the app required an inquisitor against the book
 # (the Codex review 15.9.2026). The Imperial Navy lists are already the same race,
 # so they do not need this; res_ban (Crusade) is the list's own and more precise.
@@ -568,14 +568,14 @@ for _a, _b, _want in _EXPECT:
 print("allies matrix: %d lists, %d classes" % (_AR, len(ALLY_MATRIX)))
 
 
-# --- 1.1 phase 4: a Rogue Trader cruiser in other fleets (p.174) ------------
+# --- 1.1 phase 4: a Rogue Trader cruiser in other fleets (p.184) ------------
 # "Any fleet except Necrons or Tyranids may include a single Rogue Trader
 # capital ship. Tau, Demiurg and Imperial fleets may include one Rogue Trader
 # cruiser for every 750 points or part thereof in their fleet. ... Rogue
 # Trader cruisers always count against cruiser restrictions in any fleet list
 # that has such restrictions."
 #
-# The row is the Rogue Trader Cruiser (p.180, 185 pts). The Exploration list's variants
+# The row is the Rogue Trader Cruiser (p.190, 195 pts). The Exploration list's variants
 # (Dauntless, Endeavour) are left out: they are the Rogue Trader list's own
 # rows, and the book's second sentence concerns specifically a second cruiser
 # from the Exploration list - a case of its own.
@@ -585,7 +585,7 @@ print("allies matrix: %d lists, %d classes" % (_AR, len(ALLY_MATRIX)))
 #   The Rogue Trader lists themselves - they already have the row.
 #   Bakka (p.50), Tau Commerce Protection (p.457) and Demiurg (p.487) -
 #     they have their own, more precise rule on the same matter.
-#   Space Marines Crusade and Grey Knights - their own ban (p.99, p.145)
+#   Space Marines Crusade and Grey Knights - their own ban (p.99, p.155)
 #     says they take ships from NOWHERE else.
 _RT174_A = ("Any fleet except Necrons or Tyranids may include a single Rogue "
             "Trader capital ship.")
@@ -630,68 +630,51 @@ for _nm in _RT_PER750 + _RT_SINGLE:
                 _r["src"] = _r["src"] + " " + _RT174_C
     _rt174 += 1
 assert _rt174 == 21, _rt174
-print("Rogue Trader cruiser added to %d lists (p.174)" % _rt174)
+print("Rogue Trader cruiser added to %d lists (p.184)" % _rt174)
 
 
-# --- J162: Abaddon on the four god lists (Fleets p.231) ---------------------
-# The user's decision 13.10.2026. p.231 ABADDON AS FLEET COMMANDER: "Abaddon can
-# be chosen to act as fleet commander in any game in which the Chaos fleet is
-# worth 1,000 points or more." The sentence does not limit the list, and the Tzeentch,
-# Nurgle, Khorne and Slaanesh lists' own Planet Killer row allows for him
-# (p.237, 241, 245, 249: "If Abaddon is present, he must be aboard the Planet
-# Killer"), as do the god barges' profiles (p.258: "unless the fleet is
-# being led by Abaddon the Despoiler"). Their Fleet Commander sections do not
-# list him, so the row was only in Black Crusade. The Incursion list
-# (p.232) does not mention him anywhere and is not part of the decision.
+# --- J162: Abaddon on Black Crusade and the four god lists (Fleets p.241) ----
+# The user's decision 13.10.2026, kept for v0.40. p.241 ABADDON AS FLEET
+# COMMANDER: 195 PTS: "Abaddon can be chosen to act as fleet commander in any
+# game in which the Chaos fleet is worth 1,000 points or more." v0.36 printed
+# his row in the Black Crusade list (p.234) only; v0.40 removed it and gives
+# him his own block, so the section is built here for the same five lists
+# that had him: Black Crusade and the Tzeentch, Nurgle, Khorne and Slaanesh
+# lists (the god barges' profiles still allow for him, p.260-266: "unless the
+# fleet is being led by Abaddon the Despoiler"). The Incursion list (p.242)
+# does not mention him and is not part of the decision.
 #
-# The row is COPIED from the Black Crusade section (one source: the price 195 is printed
-# only on p.234, Ld 10, one re-roll per turn). The section is added at the end of the list
-# before the defence section, so no section index moves.
-#
-# The other half of the same decision: p.234 says of Black Crusade "worth more than
-# 1,000 points", p.231 "1,000 points or more". Abaddon's own general rule
-# (p.231) decides: exactly 1 000 points is enough in Black Crusade too.
+# He acts as fleet commander, so he is in place of the Warmaster, not beside
+# him (cap 1). v0.40 makes the Warmaster of these lists "0-1" and dropped the
+# v0.36 sentence "A Chaos Warmaster ... must be taken in fleets of 750 points
+# or more", so there is no required commander for him to fill. The section
+# is added at the end of the list before the defence section, so no section
+# index moves.
 _AB_SRC = ("Abaddon can be chosen to act as fleet commander in any game in which the "
            "Chaos fleet is worth 1,000 points or more.")
 _AB_RR = "Abaddon’s fleet is allowed to re-roll a single Command check or Leadership test each turn."
 _AB_LORD = "You may not place a Chaos Lord on the same ship as Abaddon."
-_ab_bc = _p18_list("Chaos — Black Crusade")
-_ab_sec = _ab_bc["secs"][_p18_sec(_ab_bc, "Abaddon")]
-assert [(e["l"], e["p"], e["k"], e.get("rr")) for e in _ab_sec["ents"]] == [("Abaddon (Ld 10)", 195, "cmd", 1)], _ab_sec["ents"]
-_ab_at = [r for r in _ab_sec["rules"] if r["kind"] == "allowed_at"]
-assert len(_ab_at) == 1 and _ab_at[0].get("over") is True and _ab_at[0]["points"] == 1000, _ab_at
-del _ab_at[0]["over"]
-_ab_at[0]["src"] = _AB_SRC
-add_text(_ab_sec, [_AB_SRC])
-if _ab_sec.get("own") is not None:                # the sentence belongs to the section, not to the row
-    _ab_sec["own"] = list(_ab_sec["own"]) + [None] * (len(_ab_sec["text"]) - len(_ab_sec["own"]))
-    assert len(_ab_sec["own"]) == len(_ab_sec["text"])
+_AB_PK = "If the Planet Killer is present, Abaddon must be aboard it."
 _ab_n = 0
-for _nm in ("Chaos — Tzeentch", "Chaos — Nurgle", "Chaos — Khorne", "Chaos — Slaanesh"):
+for _nm in ("Chaos — Black Crusade", "Chaos — Tzeentch", "Chaos — Nurgle", "Chaos — Khorne", "Chaos — Slaanesh"):
     _L = _p18_list(_nm)
     assert not any("abaddon" in str(e["l"]).lower() for x in _L["secs"] for e in x["ents"]), "%s: Abaddon already exists" % _nm
-    # The list's own commander section = the one the Warmaster requirement concerns.
-    _md = [r for x in _L["secs"] for r in (x.get("rules") or []) if r.get("kind") == "mandatory_at"]
-    assert len(_md) == 1 and "Chaos Warmaster" in _md[0]["src"], "%s: mandatory_at %s" % (_nm, _md)
-    _cmds = sorted({q["sec"] for q in (_md[0].get("pick") or [])} | set(_md[0].get("sec") or []))
-    assert len(_cmds) == 1 and _L["secs"][_cmds[0]]["t"].startswith("Chaos Warmaster"), "%s: komentajaosiot %s" % (_nm, _cmds)
+    assert not any(r.get("kind") == "mandatory_at" for x in _L["secs"] for r in (x.get("rules") or [])), \
+        "%s: a required commander is back; Abaddon must fill it" % _nm
+    _cmds = [j for j, x in enumerate(_L["secs"]) if x["t"].startswith("Chaos Warmaster")]
+    assert len(_cmds) == 1, "%s: commander sections %s" % (_nm, _cmds)
     _cmd = _cmds[0]
     _i = len(_L["secs"])
-    _e = copy.deepcopy(_ab_sec["ents"][0])
-    _e["src_page"] = 231
     _L["secs"].append(dict(
-        t="Abaddon", text=[_AB_SRC, _AB_LORD, _AB_RR], own=[None, None, "Abaddon (Ld 10)"],
-        notes=["Page 231 lets Abaddon lead any Chaos fleet of 1,000 points or more. This list does not "
-               "print a row for him; his price is the one printed in the Black Crusade list (p. 234)."],
-        ents=[_e],
+        t="Abaddon", text=[_AB_SRC, _AB_LORD, _AB_PK, _AB_RR], own=[None, None, None, "Abaddon (Ld 10)"],
+        notes=["Page 241 lets Abaddon lead any Chaos fleet of 1,000 points or more. The fleet list does not "
+               "print a row for him; his price is the one on his own page (p. 241)."],
+        ents=[dict(l="Abaddon (Ld 10)", r=None, p=195, src_page=241, a=0, mx=None, nt=None, k="cmd",
+                   ld=dict(kind="fixed", value=10), rr=1, rrq=dict(unit="per turn", pg=241))],
         rules=[dict(kind="allowed_at", points=1000, ok=True, sec=[_i], label="Abaddon",
                     pick=[dict(sec=_i)], src=_AB_SRC),
-               # "act as fleet commander": in place of the Warmaster, not beside him
-               # (p.234 says the same of Black Crusade: "as the Warmaster").
                dict(kind="cap", max=1, ok=True, sec=[_i], label="Warmaster or Abaddon",
                     pick=[dict(sec=_cmd), dict(sec=_i)], src=_AB_SRC)]))
-    # ...and the required Warmaster is filled by him.
-    _md[0]["pick"] = list(_md[0].get("pick") or [dict(sec=j) for j in (_md[0].get("sec") or [])]) + [dict(sec=_i)]
     _ab_n += 1
-assert _ab_n == 4, _ab_n
-print("Abaddon added to %d god lists (p.231); the Black Crusade limit 1 000 points or more" % _ab_n)
+assert _ab_n == 5, _ab_n
+print("Abaddon added to %d Chaos lists (p.241)" % _ab_n)

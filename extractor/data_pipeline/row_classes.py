@@ -26,15 +26,15 @@ for w in up_warn:
 # Curated conditions for list rows the book limits but that have no
 # source sentence in upgrades.py's EXTRA table. Exactly one hit per row.
 UP_CONDS = [
-    # p.307: "Ghostships may not be armed with launch bays", "may not contain
-    # Aspect Warrior fighting crews"; p.318 "Any capital ship ... may be
+    # p.309: "Ghostships may not be armed with launch bays", "may not contain
+    # Aspect Warrior fighting crews"; p.316 "Any capital ship ... may be
     # upgraded to a Ghostship". Bays offered = bays in the armament.
     ("Eldar — Iyanden Craftworld", "Ghostship",
      dict(cap=1, no=r"launch bay", noup=r"aspect warrior host")),
-    # p.318 "Any capital ship in the fleet may be equipped with Aspect
-    # Warriors"; p.307 not for a Ghostship.
+    # p.316 "Any capital ship in the fleet may be equipped with Aspect
+    # Warriors"; p.309 not for a Ghostship.
     ("Eldar — Iyanden Craftworld", "Aspect Warrior Host",
-     # p.329: the Flame of Asuryan's crew "count as an Aspect Warrior
+     # p.327: the Flame of Asuryan's crew "count as an Aspect Warrior
      # fighting crew" already in the price (spot check 12 row 34).
      dict(cap=1, noup=r"^ghostship", nmno=r"^flame of asuryan")),
 ]
@@ -44,7 +44,7 @@ for _ln, _lab, _cond in UP_CONDS:
     assert len(_hits) == 1, "UP_CONDS: %s / %s hit %d times" % (_ln, _lab, len(_hits))
     _hits[0]["cond"] = dict(_hits[0].get("cond") or {}, **_cond)
 
-# "Auxiliary vessels (pg. 191) ... varies" is a list rule (half of the escorts
+# "Auxiliary vessels (pg. 201) ... varies" is a list rule (half of the escorts
 # from the list of the fleet they escort), not a 0 pts upgrade bought for an escort.
 # The row is the last of its section, so the at references of other rows do not move.
 # Spot check 4 (10.9.2026), rows 13/27.
@@ -59,10 +59,10 @@ for L in lists_out:
                 break
 assert _aux == 2, "2 Auxiliary vessels rows expected, %d removed" % _aux
 
-# p.227: "Any Daemon ship may have a single Mark of Chaos with the same
-# effects and cost in points as described on pg. 232." The Black Crusade list's
-# DAEMON SHIPS section does not repeat the sentence, so the rows are added by hand at the p.232
-# prices; condition: a Daemon ship taken. Nurgle's Mark +1 Damage Point (p.232).
+# p.237: "Any Daemon ship may have a single Mark of Chaos with the same
+# effects and cost in points as described on pg. 242." The Black Crusade list's
+# DAEMON SHIPS section does not repeat the sentence, so the rows are added by hand at the p.242
+# prices; condition: a Daemon ship taken. Nurgle's Mark +1 Damage Point (p.242).
 # Spot check 5, row 43.
 _BC_MARKS = [("The Mark of Slaanesh", 25, {}), ("The Mark of Khorne", 20, {}),
              ("The Mark of Tzeentch", 30, {}), ("The Mark of Nurgle", 35, dict(mod=dict(hp=1)))]
@@ -73,14 +73,14 @@ assert len(_bcsec) == 1, "Black Crusade: the DAEMON SHIPS section is not found e
 for _lab, _p, _extra in _BC_MARKS:
     assert not any(e["l"] == _lab for e in _bcsec[0]["ents"]), "Black Crusade DAEMON SHIPS: %s already exists" % _lab
     _bcsec[0]["ents"].append(dict(dict(l=_lab, r=None, p=_p, a=1, u=1, mx=None, k="up", grp="mark",
-                                       src_page=227, cond=dict(cap=1, up=r"^daemonship:"),
-                                       nt="Fleets pg. 227: any Daemon ship may have a single Mark of Chaos "
-                                          "at the cost on pg. 232."), **_extra))
+                                       src_page=237, cond=dict(cap=1, up=r"^daemonship:"),
+                                       nt="Fleets pg. 237: any Daemon ship may have a single Mark of Chaos "
+                                          "at the cost on pg. 242."), **_extra))
 
-# p.234: "Remember, a ship with a Chaos Space Marine crew may have a Mark of
+# p.244: "Remember, a ship with a Chaos Space Marine crew may have a Mark of
 # Chaos, even if a Warmaster or Lord does not captain it, but is subject to the
-# restriction on pg. 225." The list's crew has no named legion, so
-# the p.225 Black Legion row ("May have any one Mark"); prices from the p.234 Marks.
+# restriction on pg. 235." The list's crew has no named legion, so
+# the p.235 Black Legion row ("May have any one Mark"); prices from the p.244 Marks.
 # Spot check 11, rows 15 and 88.
 _BC_CREW_MARKS = [("The Mark of Slaanesh", 25, {}), ("The Mark of Khorne", 20, {}),
                   ("The Mark of Tzeentch", 25, {}), ("The Mark of Nurgle", 35, dict(mod=dict(hp=1)))]
@@ -89,17 +89,17 @@ assert len(_bccrew) == 1, "Black Crusade: the CHAOS SPACE MARINE CREWS section i
 for _lab, _p, _extra in _BC_CREW_MARKS:
     assert not any(e["l"] == _lab for e in _bccrew[0]["ents"]), "Black Crusade CSM CREWS: %s already exists" % _lab
     _bccrew[0]["ents"].append(dict(dict(l=_lab, r=None, p=_p, a=1, u=1, mx=None, k="up", grp="crewmark",
-                                        src_page=234, cond=dict(cap=1, up=r"^chaos space marine crew$"),
-                                        nt="Fleets pg. 234: a ship with a Chaos Space Marine crew may have "
-                                           "one Mark of Chaos, subject to its Legion (pg. 225)."), **_extra))
+                                        src_page=244, cond=dict(cap=1, up=r"^chaos space marine crew$"),
+                                        nt="Fleets pg. 244: a ship with a Chaos Space Marine crew may have "
+                                           "one Mark of Chaos, subject to its Legion (pg. 235)."), **_extra))
 
 # Narrative and scenario sentences off the commander card's section text, which
 # RULEY lets through ("must", "only"). The sentence is removed from the text and
 # the owner table at the same place. Exactly one hit per sentence.
 DROP_LIST_TEXT = [
-    # p.140: the Istvaanists and the Xeno Hybrists are narrative.
+    # p.150: the Istvaanists and the Xeno Hybrists are narrative.
     ("The Emperor's Inquisition", "ORDO XENOS INQUISITORS", "While Inquisitors of this Ordo know they must be fully cognizant"),
-    # p.141: when an inquisitor is called is narrative; the following
+    # p.151: when an inquisitor is called is narrative; the following
     # "The enemy Xenos fleet adds D6x50 points" is a rule and stays.
     ("The Emperor's Inquisition", "ORDO XENOS INQUISITORS", "An Ordo Xenos Inquisitor will only be called when"),
 ]
@@ -119,10 +119,8 @@ for _ln, _st, _frag in DROP_LIST_TEXT:
 # A list row's note states the rule, not the book's defects. Two
 # transformations, both must hit at least once.
 NOTE_DROP = [
-    r"^Source misprint:",
     r"^Source page reference is wrong:",
     r"^The book's pg\. \d+ has no stat profile for this entry;",
-    r"^The book's price on pg\. \d+ is unreadable",
     r"^The book points at pg\. \d+, which is a rules page",
     r"^The book cross-references the Imperial Navy printing on pg\.",
 ]
@@ -310,7 +308,7 @@ assert upgrades._HULL_PRICE_HITS[0] >= 1, \
     "the ship class price list never hit"
 print("ship class price list rows attached: %d" % upgrades._HULL_PRICE_HITS[0])
 # Nurgle (4 classes), Khorne (3) and Slaanesh (4): "must take the Mark of X,
-# which is already included in the cost" (p.241, 245, 249). Tzeentch and
+# which is already included in the cost" (p.249, 251, 253). Tzeentch and
 # Black Crusade do not include the Mark.
 print("list upgrade effects: %d, escort versions: %d" % (len(upgrades._ROW_EFFECT_LOG), upgrades._ESC_SPLIT_HITS[0]))
 assert upgrades._ESC_SPLIT_HITS[0] == 3, "3 escort versions expected"
@@ -360,7 +358,7 @@ for _pg, _sh in ships.items():
 _miss = [k for k in OPT_EFFECTS if _OPT_EFFECT_HITS.get(k) != 1]
 assert not _miss, "an option effect did not hit exactly once: %s" % _miss
 print("option effects attached: %d" % len(OPT_EFFECTS))
-assert _TURNS_FIXED[0] == 1, "TURNS without a degree sign: %d (expected 1, p.181)" % _TURNS_FIXED[0]
+assert _TURNS_FIXED[0] == 1, "TURNS without a degree sign: %d (expected 1, p.191)" % _TURNS_FIXED[0]
 
 # --- P1-4: Venerable battle barge = choice of base hull (Fleets p.102) -----
 # "chosen from any available Imperial or Chaos battleship, grand cruiser,
@@ -399,7 +397,7 @@ assert _hc_hits == 3, "3 Venerable battle barge rows expected, found %d" % _hc_h
 assert 20 <= len(HULL_CHOICES) <= 32, "%d hull alternatives - check the selection" % len(HULL_CHOICES)
 print("venerable hull alternatives: %d" % len(HULL_CHOICES))
 
-# --- item 7, batch 7: Lite Kroozer p.383 - one option, two alternatives -----
+# --- item 7, batch 7: Lite Kroozer p.385 - one option, two alternatives -----
 # "For no change in cost, they may exchange their prow heavy gunz for a
 # torpedo launcha (Speed 30 cm, Strength D6) or additional D6 gunz (for
 # D6+2 in total)." Two mutually exclusive swaps in one sentence;
@@ -434,7 +432,7 @@ if "383" in ships:
             pass                                   # the launcha stays at index 0
     print("Lite Kroozer: the prow swap split into two options")
 
-# --- item 7, batch 7: RT Exploration p.180 - "no special variants" ---------
+# --- item 7, batch 7: RT Exploration p.190 - "no special variants" ---------
 # "Chaos vessels used as loyalist ships must be painted as such, and no
 # special variants in the notes of these ships' profiles can be used. For
 # example, the Tyrant can't take boosted batteries or a Nova Cannon, etc."
@@ -503,7 +501,7 @@ def _p18_unit(label, ref, pts, page, mx=None, noopt=False, nt=None):
     return e
 
 
-# J30 p.178: "A human pirate fleet may have up to one cruiser for every 500
+# J30 p.188: "A human pirate fleet may have up to one cruiser for every 500
 # points of ships in the fleet or portion thereof. A Pirate Cruiser may consist
 # of a Rogue Trader cruiser or any cruiser from the Imperial or Chaos fleet
 # lists worth 185 points or less. It may also include a single Space Marine
@@ -533,7 +531,7 @@ _PL["secs"][_pc]["rules"] += [
          src="A human pirate fleet may have up to one cruiser for every 500 points of ships in the fleet or "
              "portion thereof."),
 ]
-# p.179: "At least one squadron of 3-6 escort vessels must be included for
+# p.189: "At least one squadron of 3-6 escort vessels must be included for
 # each cruiser in the fleet" and "The number of escort vessels that utilize
 # ordnance or lance weaponry may not outnumber those that rely solely on weapon
 # batteries. Xenos vessels of all types don't count toward this total."
@@ -559,10 +557,10 @@ _PL["secs"][_pe]["rules"] += [
 print("  pirates: cruisers %d, ordnance/lance escorts %d, battery escorts %d"
       % (len(_PIR_CRUISERS) + 1, len(_ord), len(_bat)))
 
-# J31 p.197: "Additionally, up to four ships in a Rogue Trader or pirate fleet
+# J31 p.207: "Additionally, up to four ships in a Rogue Trader or pirate fleet
 # may be Stryxis Caravan Vessels, rolling for leadership normally. They do not
 # count as cruisers against their respective fleet lists, but they may not use
-# any fleet re-rolls." p.196: 80 pts. A section of its own: not counted with the cruisers.
+# any fleet re-rolls." p.206: 80 pts. A section of its own: not counted with the cruisers.
 _STRYX_SRC = ("Additionally, up to four ships in a Rogue Trader or pirate fleet may be Stryxis Caravan Vessels, "
               "rolling for leadership normally. They do not count as cruisers against their respective fleet lists, "
               "but they may not use any fleet re-rolls.")
@@ -572,10 +570,10 @@ for _nm in ("Rogue Traders", "Rogue Traders \u2014 Exploration", "Rogue Traders 
     _L["secs"].append(dict(t="STRYXIS CARAVAN VESSELS", rules=[], text=[_STRYX_SRC],
                            ents=[_p18_unit("Stryxis Caravan Vessel", 196, 80, 196, mx=4)]))
 
-# J29 p.284: "Only one Activated Blackstone Fortress may be fielded for every
+# J29 p.286: "Only one Activated Blackstone Fortress may be fielded for every
 # FULL 750 points of other ships in a Chaos fleet. No more than three may be
 # taken." The Chaos lists' menus do not name it, but the profile allows it in
-# a Chaos fleet and p.288 assumes it can be chosen. The Space Hulk exclusion
+# a Chaos fleet and p.290 assumes it can be chosen. The Space Hulk exclusion
 # (J26) gets the section.
 _BSF_SRC = ("Only one Activated Blackstone Fortress may be fielded for every FULL 750 points of other ships in a "
             "Chaos fleet. No more than three may be taken.")
@@ -597,9 +595,9 @@ for _nm in ("Chaos \u2014 Incursion", "Chaos \u2014 Black Crusade", "Chaos \u201
                 r["cond_pick"] = list(r["cond_pick"]) + [dict(sec=_i)]
                 _bsf += 1
 assert _bsf == 6, "6 Space Hulk exclusions expected, found %d" % _bsf
-# p.284: "It has no crew and so does not add a D6 to its boarding score during
+# p.286: "It has no crew and so does not add a D6 to its boarding score during
 # a boarding action." A Chaos Space Marine crew ("Any capital ship can be
-# designated as having a Chaos Space Marine crew", p.234) does not apply to it.
+# designated as having a Chaos Space Marine crew", p.244) does not apply to it.
 _csm = 0
 for _L in lists_out:
     for _x in _L["secs"]:
@@ -617,7 +615,7 @@ assert _csm == 5, "5 Chaos Space Marine crew rows expected, found %d" % _csm
 _bs = ships["284"]
 for _need in ("Only one Activated Blackstone Fortress may be fielded", "Super-Mega-Death Shot",
               "It has no crew", "warp cannons roll 1 dice per point of Strength"):
-    assert _need in _bs["sr"], "p.284: the expected passage is missing: %r" % _need
+    assert _need in _bs["sr"], "p.286: the expected passage is missing: %r" % _need
 _bs["sr"] = (
     "\u2022 A Blackstone Fortress cannot go onto special orders but is assumed to automatically pass all other "
     "Leadership tests it is required to make. "
@@ -633,7 +631,7 @@ _bs["sr"] = (
     "ordnance and escorts touching the area between them are destroyed; a capital ship touching it takes 8 lance "
     "shots per charging Fortress (no shields, no Brace), and each Fortress then takes D6 hits, cannot move or "
     "shoot next turn and must recharge.")
-# J33 p.390: "Hulks cannot take any upgrade that improves Boarding Value,
+# J33 p.392: "Hulks cannot take any upgrade that improves Boarding Value,
 # Turning or Speed." Of the Da Ork Clanz clans, Evil Sunz ("+5 cm speed") does not suit
 # a hulk. Goffs ("+1 bonus to the dice roll during boarding actions") does:
 # a die modifier is not boarding value, and the same page allows the matching Warlord
@@ -695,7 +693,7 @@ for _L in lists_out:
                     _e["rr"] = _RR_N[_m.group(1).lower()] if _m else 1
                     _rr_rows += 1
                 elif _re3.match(r"\s*the mark of tzeentch\b", _e["l"], _re3.I):
-                    # p.236 "The vessel ... gains +1 re-roll", p.232 "The Chaos
+                    # p.246 "The vessel ... gains +1 re-roll", p.242 "The Chaos
                     # Lord gains a re-roll": Mark of Tzeentch on re-roll.
                     _e["rr"] = 1
                     _rr_rows += 1
@@ -712,7 +710,7 @@ for _L in lists_out:
             else:
                 # the row's own text; if the section has only this one commander,
                 # the section's lead sentence belongs to it unambiguously (Ordo
-                # Xenos p.141: "The ship adds +1 to its leadership (max. 10)")
+                # Xenos p.151: "The ship adds +1 to its leadership (max. 10)")
                 _alone = sum(1 for x in (_sec.get("ents") or []) if x.get("k") == "cmd") == 1
                 _m2 = _LD_OWN.search(_owntext) or (_alone and _LD_OWN.search(_sectext))
                 if _m2:
@@ -733,22 +731,23 @@ for _L in lists_out:
             _e["rr"] = _inc
             # The book's own scope for an included re-roll (user 5.10.2026):
             # whose rolls (scope) or how often (unit, Abaddon "per
-            # turn" p.231). Only rows acknowledged in the reference with their pages.
+            # turn" p.241). Only rows acknowledged in the reference with their pages.
             _q = dict((k, _r["rerolls_" + k]) for k in ("scope", "unit")
                       if _r is not None and _r.get("rerolls_" + k))
             if _q:
                 # The scope may also concern only a bought re-roll: Chaos Lord
-                # "which he can use for his own ship or squadron only" (p.234).
+                # "which he can use for his own ship or squadron only" (p.244).
                 _q["pg"] = _r["page"]
                 _e["rrq"] = _q
                 _rrq.append("%s / %s" % (_L["nm"], _e["l"]))
             _cmd_ld[_ld["kind"] if _ld else "none"] += 1
 assert not _cmd_missing, "a commander has no leadership (record it in reference/commanders.json): %s" % _cmd_missing
 print("commanders %d: Ld %s; re-roll rows %d" % (_cmd_n, _cmd_ld, _rr_rows))
-# Veteran Captain p.38, Veteran Rogue Trader p.174 and p.176, Abaddon p.234,
-# Farseers p.318, Clanz Warlord p.372; review 5.10.2026: Pirate Captain
-# p.178 and the Chaos Lords p.234, 236, 240, 244, 248 (the scope of a bought re-roll).
-assert len(_rrq) == 12, "12 re-roll scopes expected, found %d: %s" % (len(_rrq), _rrq)
+# Veteran Captain p.38, Veteran Rogue Trader p.184 and p.186, Farseers p.316,
+# Clanz Warlord p.374; review 5.10.2026: Pirate Captain p.188 and the Chaos
+# Lords p.244, 246, 248, 250, 252 (the scope of a bought re-roll). Abaddon's
+# "per turn" (p.241) is set where his section is built (races.py, J162).
+assert len(_rrq) == 11, "11 re-roll scopes expected, found %d: %s" % (len(_rrq), _rrq)
 
 # p.453 Kor'O'Mesme: "Re-rolls: 2". The section's general sentence "The commander has one
 # re-roll included in his points cost." (p.456) does not hold for him, but
@@ -768,20 +767,20 @@ for _L in lists_out:
                 _mesme += 1
 assert _mesme == 1, "1 Kor'O'Mesme row expected, found %d" % _mesme
 
-# p.258 Scion of Prospero: "This ship bears the Mark of Tzeentch as part of
-# its point cost" (Mark: "gains +1 re-roll", p.236) and "The ship is gifted
+# p.260 Scion of Prospero: "This ship bears the Mark of Tzeentch as part of
+# its point cost" (Mark: "gains +1 re-roll", p.246) and "The ship is gifted
 # with an additional re-roll added to that from the Mark of Tzeentch" -
 # the ship has two re-rolls of its own and they are included in the 450 points.
 # In the profile they are only sentences; rr turns them into boxes (domain.js
 # shipRerolls). Review 5.10.2026.
 _scion = ships["258"]
-assert "SCION OF PROSPERO" in _scion["nm"].upper() and "additional re-" in json.dumps(_scion), "p.258 is not the Scion of Prospero or the Vagaries of Fate sentence is missing"
+assert "SCION OF PROSPERO" in _scion["nm"].upper() and "additional re-" in json.dumps(_scion), "p.260 is not the Scion of Prospero or the Vagaries of Fate sentence is missing"
 assert "rr" not in _scion
 _scion["rr"] = 2
 
 # The fleet's own re-roll without a commander (user 5.10.2026: a re-roll included in
 # the price is always stated visibly). "The fleet gets one re-roll and
-# can purchase extra re-rolls at the cost shown" - Necrons p.404, Demiurg
+# can purchase extra re-rolls at the cost shown" - Necrons p.406, Demiurg
 # p.486. The list gets frr = count, page and the book's sentence; domain.js fleetRerolls
 # reads it, and no surface parses text at run time.
 _FRR = _re3.compile(r"^The fleet gets (one|two|three) re-\s*rolls?\b", _re3.I)
@@ -804,9 +803,9 @@ for _L in lists_out:
             if _only:
                 _L["frr"]["scope"] = "%s vessels only" % _only[0].group(1)
             _frr.append("%s p.%s%s" % (_L["nm"], _L["pg"], " (%s)" % _L["frr"]["scope"] if _only else ""))
-assert len(_frr) == 2 and any("Necrons" in x and "404" in x and "only" not in x for x in _frr) \
+assert len(_frr) == 2 and any("Necrons" in x and "406" in x and "only" not in x for x in _frr) \
     and any("Demiurg" in x and "486" in x and "Demiurg vessels only" in x for x in _frr), \
-    "the fleet's own re-roll: Necrons p.404 and Demiurg p.486 expected, found %s" % _frr
+    "the fleet's own re-roll: Necrons p.406 and Demiurg p.486 expected, found %s" % _frr
 print("the fleet's own re-roll: %s" % "; ".join(_frr))
 
 # p.430 Tyranid Hive Fleet: "The Tyranid player may opt to include the direct
@@ -833,14 +832,14 @@ for _L in lists_out:
         _ty += 1
 assert _ty == 1, "1 Tyranid Hive Fleet Hive Mind section expected, found %d" % _ty
 
-# p.184 Xenos Vessel: "each Xenos vessel also has one selected xenotech
+# p.194 Xenos Vessel: "each Xenos vessel also has one selected xenotech
 # system as described in the Rogue Trader special rules. This system does
 # not cost extra points and may be selected by the owning player for free"
-# - the p.175 table as six free choices, one per ship. The named
-# variants (p.185-188) have their own in the profile already. Spot check 5, row 10.
+# - the p.185 table as six free choices, one per ship. The named
+# variants (p.195-198) have their own in the profile already. Spot check 5, row 10.
 if "184" in ships:
     _xv = ships["184"]
-    assert not _xv.get("ol"), "Xenos Vessel p.184: an empty option list expected"
+    assert not _xv.get("ol"), "Xenos Vessel p.194: an empty option list expected"
     _XT = [
         ("Long Range Sensors: The vessel adds +1 to its base leadership (max. of Ld 10).", {}),
         ("Targeting Matrix: The vessel counts all targets as closing when using the gunnery "
@@ -854,7 +853,7 @@ if "184" in ships:
     _xv["ol"] = [dict(t="Xenotech system (free, choose one) — " + _t, c=0, var=0,
                       grp="xenotech", gmax=1, **_eff) for _t, _eff in _XT]
 
-# p.376 Dethdeala: "The rules for the bombardment cannon can be found on
+# p.378 Dethdeala: "The rules for the bombardment cannon can be found on
 # pg. 94." is a reference, not a rule - it blocked the card's own Bombardment Cannon
 # rule (domain.js selfText). Spot check 4, row 54.
 _ptr = "The rules for the bombardment cannon can be found on pg. 94."
@@ -866,13 +865,13 @@ for _sh in ships.values():
         _ptr_hits += 1
 assert _ptr_hits == 1, "bombardment reference sentence: 1 hit expected, %d" % _ptr_hits
 
-# p.181 Endeavour: "Instead of the Endeavour, Rogue Traders may use a
+# p.191 Endeavour: "Instead of the Endeavour, Rogue Traders may use a
 # lance-armed Dauntless light cruiser for +15 points ... This is already
 # reflected in the point cost in the fleet list." A list note, not the ship's
-# equipment: the Dauntless is its own row (p.174, 125 pts). The option is removed, so that
+# equipment: the Dauntless is its own row (p.184, 125 pts). The option is removed, so that
 # the card does not offer a +15 pts tick without an effect. Spot check 4, row 81.
 DROP_OPTS = [("181", "Instead of the Endeavour, Rogue Traders may use a lance-armed Dauntless"),
-             # p.180: the same kind - a note of the Exploration list (Lunar/Tyrant/
+             # p.190: the same kind - a note of the Exploration list (Lunar/Tyrant/
              # Carnage/Murder as their own rows), not equipment of the Rogue Trader Cruiser.
              # The sentence mentions the Nova Cannon and brought its rule to the card.
              # Spot check 5 (10.9.2026), row 51.

@@ -220,7 +220,7 @@ console.log("  page reference corrected:", fixed, " flagged as suspicious:", fla
 eq(fixed >= 30, true, "wrong page references corrected by name (" + fixed + " rows)");
 eq(flagged, 0, "the book's known page reference errors are corrected explicitly");
 
-/* These rows are on page 145 of the book, i.e. in the Grey Knights list. They
+/* These rows are on page 155 of the book, i.e. in the Grey Knights list. They
    used to sit under the Inquisition because Grey Knights had been merged
    into it; the lists were separated on 7.9.2026 by the book's own heading. */
 const gk = listIndex("Grey Knights");
@@ -233,7 +233,7 @@ const aspect = findEntry(iyanden, "Aspect Warrior Host").en;
 eq(!aspect.r && aspect.u === 1, true,
    "Aspect Warrior Host is handled as an upgrade row, not a ship profile");
 eq((SHIPS["184"].sr + SHIPS["192"].op).includes("[???]"), false,
-   "Rogue Trader Xenotech cross-references corrected to page 175");
+   "Rogue Trader Xenotech cross-references corrected to page 185");
 eq(SHIPS["352"].aw.length, 5,
    "the Torture profile has the base weapon and all four optional weapons");
 eq(SHIPS["481"].aw.some(a => /ion cannon/i.test(a[0])), true,
@@ -257,8 +257,8 @@ eq(api.optState(hu, 0) === "opt" && api.optState(hu, 1) === "take", true,
 eq(api.unitPts(hu), he.en.p + 15,
    "the price of the Hive Ship's chosen Feeder/claws option is counted correctly");
 
-/* A known error in the Chaos lists: 'Chaos battle barge (pg. 266)' pointed
-   to the Despoiler and 'Styx (pg. 268)' to the Retaliator. */
+/* A known error in the Chaos lists: 'Chaos battle barge (pg. 268)' pointed
+   to the Despoiler and 'Styx (pg. 270)' to the Retaliator. */
 const chaos = listIndex("Chaos - Incursion".replace(" - ", " — "));
 const bb = findEntry(chaos, "Chaos battle barge");
 eq(SHIPS[String(bb.en.r)].nm, "CHAOS BATTLE BARGE", "Chaos battle barge points to the right ship");
@@ -335,7 +335,7 @@ LISTS.forEach(L => L.secs.forEach(sec => sec.ents.forEach(e => {
 })));
 eq(danglingRefs, 0, "no list row points to a missing profile");
 
-/* Fleet-level spot check 10.9.2026 (report 17). Black Crusade p.234:
+/* Fleet-level spot check 10.9.2026 (report 17). Black Crusade p.244:
    "You may include Abaddon the Despoiler as the Warmaster in any Chaos
    Fleet worth more than 1,000 points." Abaddon is a Warmaster: he fills
    the required Warmaster, but not at 1 000 points nor beside a Warmaster. */
@@ -354,7 +354,7 @@ build(bcr, 1500, [["Abaddon (Ld 10)", 1], ["Chaos Warmaster (Ld +2)", 1],
                   ["Murder class cruiser", 1], ["Carnage class cruiser", 1]]);
 eq(failed().some(c => /Abaddon/i.test(c.t + " " + c.s)), true, "Abaddon and a Warmaster together fails");
 /* "A fleet 1,000 points or more may include the X as one of its
-   battleships, subject to normal restrictions." (p.237, 241, 245, 249) */
+   battleships, subject to normal restrictions." (p.247, 249, 251, 253) */
 [["Nurgle", "Terminus Est"], ["Slaanesh", "Wage of Sin"], ["Tzeentch", "Scion of Prospero"],
  ["Khorne", "Slaverer"]].forEach(([nm, ship]) => {
   const li = listIndex("Chaos — " + nm);
@@ -387,7 +387,7 @@ console.log("\n=== Tau Defender squadrons and Rogue Trader escorts = ===========
   build(li, 1500, [["Messenger class starship", 1]]);
   eq(sq(/messenger/i), false, nm + ": a Messenger alone is fine");
 });
-/* p.174: "A single squadron of 2-6 Rogue Trader escorts and auxiliary vessels
+/* p.184: "A single squadron of 2-6 Rogue Trader escorts and auxiliary vessels
    may accompany each Rogue Trader capital ship in a fleet, in any mix desired.
    Separately, it may also be accompanied by any number of cargo ships of any
    type (...), organized in squadrons of 2-6 ships, but these squadrons can
@@ -407,7 +407,7 @@ api.S.units[1].sq = "A"; api.S.units[2].sq = "A";
 eq(rtSize(), true, "RT: one ship + a squadron of seven escorts fails");
 build(rtl, 1000, [["Rogue Trader Cruiser", 1], ["Iconoclast", 6], ["Armed Cargo Vessel", 4]]);
 eq(rtCap(), false, "RT: cargo ships do not belong to the escort squadron");
-/* p.174: "If a fleet has more than one Rogue Trader cruiser or also includes
+/* p.184: "If a fleet has more than one Rogue Trader cruiser or also includes
    more than one squadron of transports, a Veteran Rogue Trader must be
    assigned to a Rogue Trader cruiser." (spot check 18, J23). The failure must
    come from the check of this sentence, not from another row. */
@@ -422,8 +422,8 @@ build(rtl, 1000, [["Rogue Trader Cruiser", 1], ["Heavy Transport", 2]]);
 eq(vetReq(), false, "RT: one cruiser and one transport squadron need no Veteran");
 
 console.log("\n=== Eldar Hero and Prince Yriel as commanders ========================");
-/* p.316/317/318: "Your fleet may be led by an Eldar Hero, in place of its
-   normal fleet commander." p.319: "Yriel may be taken instead of the Hero
+/* p.314/315/316: "Your fleet may be led by an Eldar Hero, in place of its
+   normal fleet commander." p.317: "Yriel may be taken instead of the Hero
    Fleet Commander as listed in the Corsair and Craftworld Eldar fleet lists." */
 /* The failure must come from the commander limit, not another error: before
    the fix "two Heroes" only failed on the wrong "Pirate Prince missing". */
@@ -442,7 +442,7 @@ build(iyl, 1000, [["Eldar Hero (Ld 10)", 1], ["Wraithship", 3]]);
 eq(summary(), "-", "Iyanden: an Eldar Hero leads instead of the Autarch");
 /* J215: Yriel needs a ship - "he must be placed on a Craftworld Eldar
    Dragonship with launch bays, but you may instead pick the Flame of
-   Asuryan" (p.319). With Wraithships alone he has no legal place, so the
+   Asuryan" (p.317). With Wraithships alone he has no legal place, so the
    test fleet has the Flame. */
 build(iyl, 1500, [["Prince Yriel", 1], ["Flame of Asuryan", 1], ["Wraithship", 3]]);
 eq(summary(), "-", "Iyanden: Prince Yriel leads");
@@ -464,10 +464,10 @@ function buildU(li, limit, picks) {
     api.S.units.push(u);
   });
 }
-/* J24 p.241: "Up to a third of the capital ships (not the Terminus Est or
-   flagship) in a Plaguefleet may be upgraded to Daemonships"; p.245 "Up to a
+/* J24 p.249: "Up to a third of the capital ships (not the Terminus Est or
+   flagship) in a Plaguefleet may be upgraded to Daemonships"; p.251 "Up to a
    quarter of the capital ships (not battleships or the flagship) in a
-   Berzerker Fleet"; p.249 "Up to half of the capital ships (not the Wage of
+   Berzerker Fleet"; p.253 "Up to half of the capital ships (not the Wage of
    Sin or the flagship) in a Pleasurefleet". */
 const daemonCap = () => failed().some(c => /^Daemonships \(/.test(c.t));
 const CR = ["Murder class cruiser", "Carnage class cruiser", "Slaughter class cruiser", "Inferno class cruiser"];
@@ -480,7 +480,7 @@ const CR = ["Murder class cruiser", "Carnage class cruiser", "Slaughter class cr
   buildU(li, 1500, fleet(allow));
   eq(daemonCap(), false, nm + ": " + allow + " Daemonships with " + caps + " large ships is fine");
 });
-/* J25 p.235: "The Planet Killer also counts as a battleship when working out
+/* J25 p.245: "The Planet Killer also counts as a battleship when working out
    how many heavy cruisers and cruisers the fleet requires." */
 const bcl = listIndex("Black Crusade");
 const bsFail = () => failed().some(c => c.t === "Battleships");
@@ -491,7 +491,7 @@ build(bcl, 2500, [["Warmaster", 1], ["Planet Killer", 1], ["Despoiler class batt
 eq(bsFail(), true, "Black Crusade: Planet Killer + Despoiler with three cruisers fails");
 build(bcl, 3000, [["Warmaster", 1], ["Planet Killer", 1], ["Despoiler class battleship", 1]].concat(ships(C6)));
 eq(bsFail(), false, "Black Crusade: Planet Killer + Despoiler with six cruisers is fine");
-/* J26 p.288: "It may not be taken in a fleet that has the Planet Killer, an
+/* J26 p.290: "It may not be taken in a fleet that has the Planet Killer, an
    Activated Blackstone Fortress or ships that must be used as flagships such
    as the Terminus Est." "A Chaos fleet including a Space Hulk may have no
    more than two other battleships. (...) It counts as a battleship for
@@ -541,7 +541,7 @@ build(bkl, 1500, [["Admiral (Ld 9)", 1], ["Jovian class battlecruiser", 1]].conc
 eq(resCap(), false, "Bakka: a Jovian with three Bakka cruisers is fine");
 build(bkl, 2000, [["Admiral (Ld 9)", 1], ["Jovian class battlecruiser", 1], ["Dominion class battlecruiser", 1]].concat(ships(BKC)));
 eq(failed().some(c => c.t === "Battlecruisers"), true, "Bakka: the Jovian counts towards the battlecruiser ratio");
-/* J28 p.151: "Up to half of the Grey Knights strike cruisers in a fleet may
+/* J28 p.161: "Up to half of the Grey Knights strike cruisers in a fleet may
    replace their launch bays with one of the refits listed below, in any mix
    desired." The third field = the ship's own options (os). */
 function buildO(li, limit, picks) {
@@ -561,9 +561,9 @@ const gkHalf = () => failed().some(c => /launch bays replaced/.test(c.t));
   buildO(li, 1500, [[cmd, 1], ["Grey Knights Strike Cruiser", 1, [0]], ["Grey Knights Strike Cruiser", 1]]);
   eq(gkHalf(), false, nm + ": one bay swap out of two is fine");
 });
-/* J30 p.178: "A human pirate fleet may have up to one cruiser for every 500
+/* J30 p.188: "A human pirate fleet may have up to one cruiser for every 500
    points of ships in the fleet or portion thereof. (...) It may also include
-   a single Space Marine strike cruiser!" p.179: "At least one squadron of 3-6
+   a single Space Marine strike cruiser!" p.189: "At least one squadron of 3-6
    escort vessels must be included for each cruiser in the fleet" and "The
    number of escort vessels that utilize ordnance or lance weaponry may not
    outnumber those that rely solely on weapon batteries." A missing row is
@@ -589,7 +589,7 @@ pir(1000, [CAPT, ["Lunar class cruiser", 1], ["Cobra Destroyer", 3], ["Sword Fri
 pir(1500, [CAPT, ["Space Marine Strike Cruiser", 1], ["Space Marine Strike Cruiser", 1],
            ["Sword Frigate", 3], ["Iconoclast Destroyer", 3]],
     /strike cruiser.*2 \/ 1/i, true, "Pirates: two Space Marine strike cruisers fail");
-/* J32 p.373: "However, no more than one of each of the named Ork battleships
+/* J32 p.375: "However, no more than one of each of the named Ork battleships
    may be in the fleet, no more than one 'Uge ship may be taken in the fleet
    for every two kroozers, and a Space Hulk may only be taken by a fleet of no
    less than 1500 points." */
@@ -608,16 +608,16 @@ build(cll, 2000, [["Ork Warlord", 1], ["Ork Warlord", 1], ["Ork Warlord", 1], ["
                   ["Kill kroozer", 1], ["Kill kroozer", 1], ["Kill kroozer", 1], ["Kill kroozer", 1], ["Kill kroozer", 1]]);
 eq(api.total() >= 1500, true, "Clanz: the hulk fleet is at least 1500 pts (" + api.total() + ")");
 eq(clHulk(), false, "Clanz: a Space Hulk in a 1 500 point fleet is fine");
-/* T31 p.371 MORE GUBBINS: "The following gubbins can be taken by any number of
+/* T31 p.373 MORE GUBBINS: "The following gubbins can be taken by any number of
    capital ships in the fleet." So they do not use the Warlord's re-roll budget
-   (p.370), unlike the rows of the GUBBINS list. */
+   (p.372), unlike the rows of the GUBBINS list. */
 const gubBudget = () => failed().some(c => /^Gubbins \(one per Warlord/.test(c.t));
 buildU(cll, 1500, [["Ork Warlord", 1], ["Kill kroozer", 1, [], 0, ["Klaws", "Maniac Gunners"]]]);
 eq(gubBudget(), false, "Clanz: MORE GUBBINS does not use the Warlord's budget");
 buildU(cll, 1500, [["Ork Warlord", 1], ["Kill kroozer", 1, [], 0, ["Maniac Gunners", "Extra Turrets"]]]);
 eq(gubBudget(), true, "Clanz: two GUBBINS rows with one re-roll fails");
 /* T26 (decision 14.9.2026): allowances tied to points are counted from the fleet's
-   own points, not from the game's points limit. p.372: "one Warlord for every 500
+   own points, not from the game's points limit. p.374: "one Warlord for every 500
    points, or part, that the fleet is worth - no more, no less." */
 build(cll, 1500, [["Ork Warlord", 1], ["Terror ship", 1], ["Kill kroozer", 1]]);
 eq(api.total() < 500, true, "T26: the Clanz fleet is under 500 pts (" + api.total() + ")");
@@ -653,8 +653,8 @@ eq(hookB(), true, "Tau: an Orca on the Custodian's Warden hooks fails");
 build(cp26, 2000, [["Custodian class starship", 1], ["Warden class gunship", 3]]);
 eq(hookA(), false, "Tau: three Wardens on the Custodian's hooks is fine");
 eq(hookB(), false, "Tau: Wardens do not use Dhow capacity");
-/* J38 p.372: "Ork fleets always include one Warlord for every 500 points, or
-   part, that the fleet is worth - no more, no less." p.370: "While there must
+/* J38 p.374: "Ork fleets always include one Warlord for every 500 points, or
+   part, that the fleet is worth - no more, no less." p.372: "While there must
    be at least one Warlord for every 500 points in the fleet or portion
    thereof, not all Warlords are created equal!" */
 const clWl = () => failed().some(c => c.t === "WARLORD");
@@ -669,7 +669,7 @@ build(cll, 1500, [["Ork Warlord", 1], ["Ork Warlord", 1], ["Ork Warlord", 1]].co
 eq(clWl(), false, "Clanz: three Warlords in a fleet over 1000 pts is fine");
 build(cll, 1500, [["Ork Warlord", 1], ["Ork Warlord", 1], ["Ork Warlord", 1], ["Ork Warlord", 1], ["Kill kroozer", 1]].concat(TID));
 eq(clWl(), true, "Clanz: four Warlords in a 1 500 point fleet fails (no more)");
-/* J41 p.404: "A Necron fleet may purchase re-rolls, but they are purchased by
+/* J41 p.406: "A Necron fleet may purchase re-rolls, but they are purchased by
    the fleet as a whole, rather than being considered Fleet Commander
    re-rolls." "The fleet gets one re-roll and can purchase extra re-rolls at
    the cost shown." The price list is One extra re-roll or Two extra re-rolls:
@@ -726,7 +726,7 @@ build(vgl, 1500, [["Kraken", 3], ["Vanguard drone", 3]]);
 eq(sqFail(), false, "Vanguard: three Krakens and three drone ships in one squadron is fine");
 build(vgl, 1500, [["Kraken", 3]]);
 eq(sqFail(), true, "Vanguard: a squadron of three Krakens alone fails");
-/* J47 p.367: "An Ork fleet can include a maximum of one space hulk per 1,500
+/* J47 p.369: "An Ork fleet can include a maximum of one space hulk per 1,500
    points. So if the fleet is worth up to 1,500 points, it may include one
    Space hulk. If it is worth 1,500-3,000 points, two space hulks may be
    included, etc. Each Ork hulk must be assigned an Ork Warlord to command it." */
@@ -737,13 +737,13 @@ eq(hulkWl(), true, "Waaagh!: two hulks with one Warlord fails");
 build(wal, 3000, [["Ork Warlord", 1], ["Ork Warlord", 1], ["Ork hulk", 1], ["Ork hulk", 1]]);
 eq(hulkWl(), false, "Waaagh!: two hulks with two Warlords is fine");
 /* Spot check 19 round 2 (M10r2, M8r2). Every sentence in full at its test. */
-/* J52 p.245: "You may include up to one Space Hulk in the fleet, which must be
+/* J52 p.251: "You may include up to one Space Hulk in the fleet, which must be
    the flagship if chosen. Bezerker Fleets led by a Space Hulk may have more
    than two battleships, but other restrictions remain unchanged." */
 const khl = listIndex("Chaos — Khorne");
 build(khl, 5000, [["Warmaster", 1], ["Chaos Space Hulk", 1], ["Despoiler class battleship", 1],
                   ["Despoiler class battleship", 1], ["Despoiler class battleship", 1]]);
-eq(hulkBs(), false, "Khorne: a Space Hulk and three other battleships is fine (p.245)");
+eq(hulkBs(), false, "Khorne: a Space Hulk and three other battleships is fine (p.251)");
 /* J55 p.456: "Your fleet may include any number of Merchant, Emissary or
    Protector class starships. It may also include up to one Hero class
    starship for every other type of capital ship in the fleet." The per-ship
@@ -781,7 +781,7 @@ build(whl, 2500, BCV.concat([["Defender class starship", 7]]));
 eq(failed().some(c => /Squadrons of 2.6/.test(c.s || "") && /DEFENDER/i.test(c.t)), true, "War Host: a squadron of seven Defenders fails");
 build(whl, 2500, BCV.concat([["Defender class starship", 6]]));
 eq(failed().some(c => /Squadrons of 2.6/.test(c.s || "") && /DEFENDER/i.test(c.t)), false, "War Host: a squadron of six Defenders is fine");
-/* J61 p.177: "The fleet must include at least one squadron of escort-sized
+/* J61 p.187: "The fleet must include at least one squadron of escort-sized
    cargo ships of any type (whether or not the scenario requires transports),
    in a squadron of 2 to 6 ships. Any number of cargo ships beyond this number
    may be taken and organized in squadrons that only contain cargo ships." */
@@ -791,7 +791,7 @@ build(exl, 1500, [["Rogue Trader cruiser", 1], ["Cargo Transport", 1]]);
 eq(cargoSq(), true, "Exploration: a one-ship cargo squadron fails");
 build(exl, 1500, [["Rogue Trader cruiser", 1], ["Cargo Transport", 2]]);
 eq(cargoSq(), false, "Exploration: a two-ship cargo squadron is fine");
-/* J62 p.372: "Tiddla skwadron 3-10 Escorts, chosen from the following list in
+/* J62 p.374: "Tiddla skwadron 3-10 Escorts, chosen from the following list in
    any mix desired". The mix is the player's: the same squadron letter makes
    two cards one tiddla, and a card without one is a tiddla by itself
    (ChatGPT audit RAW-01, 27.10.2026; J62 pooled short cards by itself, so
@@ -805,7 +805,7 @@ api.S.units[2].sq = "A"; api.S.units[3].sq = "A";
 eq(tidSq(), false, "Clanz: two Ravagers and a Grunt in one skwadron (one letter) is fine");
 build(cll, 1000, [["Ork Warlord", 1], ["Ork Warlord", 1], ["Ravager attack ship", 11]]);
 eq(tidSq(), true, "Clanz: an eleven-ship tiddla skwadron fails");
-/* J63 p.318: "If the fleet is worth over 750 points, an Autarch must be
+/* J63 p.316: "If the fleet is worth over 750 points, an Autarch must be
    included to lead it. Eldar Autarch (Ld 9) ... Iyanden Bearer of the Flame
    (Ld 10)" and "If your fleet is led by an Autarch, you may include a single
    Dragonship as his flagship which does not count against this limitation." */
@@ -832,7 +832,7 @@ build(hfl, 500, [["Kraken", 2]]);
 eq(hiveMax(), false, "Hive Fleet: two Krakens without a hive ship is fine");
 build(hfl, 1500, [["Hive ship", 1], ["Kraken", 13]]);
 eq(hiveMax(), true, "Hive Fleet: thirteen escorts with one hive ship fails");
-/* J66 p.144: "If the fleet is above 750 points an Inquisitor Lord must lead
+/* J66 p.154: "If the fleet is above 750 points an Inquisitor Lord must lead
    the fleet. If an Inquisitorial Cruiser is present the Inquisitor Lord must
    be placed aboard it." One Inquisitor Lord leads the fleet (T19). */
 const gkl = listIndex("Grey Knights");
@@ -842,7 +842,7 @@ eq(gkCmd(), true, "Grey Knights: two Inquisitor Lords fail");
 build(gkl, 1500, [["Ordo Malleus Inquisitor Lord", 1]]);
 eq(gkCmd(), false, "Grey Knights: one Inquisitor Lord is fine");
 /* Spot check 19 round 3 (M10r3). */
-/* J70 p.177: "At least one Demiurg vessel of any class may be taken for every
+/* J70 p.187: "At least one Demiurg vessel of any class may be taken for every
    three Rogue Trader cruisers in the fleet." Lenient limit (T20): one at once,
    then one per three. */
 const demFail = () => failed().some(c => /^Demiurg vessels/.test(c.t));
@@ -850,9 +850,9 @@ build(exl, 2000, [["Rogue Trader cruiser", 1], ["Bastion Commerce Vessel", 1], [
 eq(demFail(), true, "Exploration: two Demiurg ships with one RT cruiser fails");
 build(exl, 2000, [["Rogue Trader cruiser", 1], ["Bastion Commerce Vessel", 1]]);
 eq(demFail(), false, "Exploration: one Demiurg ship with one RT cruiser is fine");
-/* J71 p.370: "A vessel or escort skwadron led by a Warlord may be given up to
+/* J71 p.372: "A vessel or escort skwadron led by a Warlord may be given up to
    one of the following upgrades per Command re-roll the Warlord has. Each
-   upgrade can only be applied once." p.372: the Warlord has one re-roll and
+   upgrade can only be applied once." p.374: the Warlord has one re-roll and
    may buy more. Attachment is not modelled (J8); the fleet-level sum is enforced. */
 const gubFail = () => failed().some(c => /^Gubbins \(one per Warlord re-roll\)/.test(c.t));
 buildU(cll, 1000, [["Ork Warlord", 1], ["Ork Warlord", 1], ["Kill kroozer", 1, [], 0, ["Soopa Boostas"]],
@@ -867,7 +867,7 @@ eq(gubFail(), false, "Clanz: three Gubbins with three re-rolls is fine");
 const dml = listIndex("Space Marines — Dominion");
 build(dml, 1500, [["Master of the Fleet", 1], ["Strike cruiser", 1], ["Space Marine Captain", 1]]);
 eq(failed().some(c => /^Space Marine Captains/.test(c.t)), true, "Dominion: a Space Marine Captain without an Imperial Navy hull fails");
-/* J77 p.145: "The vessel embarking the Inquisitor Lord or one Grey Knights
+/* J77 p.155: "The vessel embarking the Inquisitor Lord or one Grey Knights
    vessel may take Grey Knight Terminators." One ship in the fleet. */
 buildU(gkl, 1500, [["Ordo Malleus Inquisitor Lord", 1],
                    ["Grey Knights Strike Cruiser", 1, [], 0, ["Grey Knights Terminators"]],
@@ -885,7 +885,7 @@ build(arl, 1500, [["Admiral (Ld 9)", 1], ["Space Marine Strike Cruiser", 1]]);
 eq(failed().some(c => /^Admiral needs/.test(c.t)), true, "Armageddon: an admiral without an Imperial Navy capital ship fails");
 build(arl, 1500, [["Admiral (Ld 9)", 1], ["Lunar class cruiser", 1]]);
 eq(failed().some(c => /^Admiral needs/.test(c.t)), false, "Armageddon: an admiral and a Lunar is fine");
-/* J81 p.244 (Khorne), p.240 (Nurgle): "You can only include a Chaos Warmaster
+/* J81 p.250 (Khorne), p.248 (Nurgle): "You can only include a Chaos Warmaster
    in your fleet if it includes any capital ships." */
 build(khl, 400, [["Chaos Warmaster", 1], ["Idolator", 2]]);
 eq(failed().some(c => /^Chaos Warmaster needs a capital ship/.test(c.t)), true, "Khorne: a Warmaster without a capital ship fails");
@@ -893,7 +893,7 @@ build(khl, 1000, [["Chaos Warmaster", 1], ["Slaughter", 1]]);
 eq(failed().some(c => /^Chaos Warmaster needs a capital ship/.test(c.t)), false, "Khorne: a Warmaster and a cruiser is fine");
 build(nul, 400, [["Chaos Warmaster", 1], ["Idolator", 2]]);
 eq(failed().some(c => /^Chaos Warmaster needs a capital ship/.test(c.t)), true, "Nurgle: a Warmaster without a capital ship fails");
-/* J82 p.140: "The listed cost is added to that of the Inquisitor Lord, and its
+/* J82 p.150: "The listed cost is added to that of the Inquisitor Lord, and its
    benefits apply to the ship they are embarked upon." The Ordo is an addition to
    the leading Lord: it needs the Lord, and there is one Ordo. */
 const inq82 = listIndex("The Emperor's Inquisition");
@@ -903,7 +903,7 @@ build(inq82, 1000, [["Inquisitor Lord (Ld 9)", 1], ["Inquisitorial Cruiser", 1],
 eq(failed().some(c => /^Ordo affiliation/.test(c.t)), true, "Inquisition: two Ordos fail");
 build(inq82, 1000, [["Inquisitor Lord (Ld 9)", 1], ["Inquisitorial Cruiser", 1], ["Ordo Hereticus", 1]]);
 eq(failed().some(c => /^Ordo/.test(c.t)), false, "Inquisition: a Lord and one Ordo is fine");
-/* J83 p.138: "A Space Marine fleet led by an Ordo Malleus Inquisitor including
+/* J83 p.148: "A Space Marine fleet led by an Ordo Malleus Inquisitor including
    at least 1000 points of Inquisition vessels and Grey Knights strike cruisers
    may include a single Grey Knights battle barge." */
 build(inq82, 500, [["Grey Knights Battle barge", 1]]);
@@ -913,7 +913,7 @@ build(inq82, 2000, [["Inquisitor Lord (Ld 9)", 1], ["Ordo Malleus", 1], ["Inquis
                     ["Grey Knights Strike Cruiser", 1], ["Grey Knights Strike Cruiser", 1], ["Grey Knights Strike Cruiser", 1],
                     ["Grey Knights Battle barge", 1]]);
 eq(failed().some(c => /^Grey Knights Battle barge/.test(c.t)), false, "Inquisition: Ordo Malleus, 1065 pts of ships and a GK Battle barge is fine");
-/* J84 p.174: "Any fleet except Necrons or Tyranids may include a single Rogue
+/* J84 p.184: "Any fleet except Necrons or Tyranids may include a single Rogue
    Trader capital ship. Tau, Demiurg and Imperial fleets may include one Rogue
    Trader cruiser for every 750 points or part thereof in their fleet." */
 build(rt, 1000, [["Veteran Rogue Trader", 1], ["Rogue Trader Cruiser", 1], ["Rogue Trader Cruiser", 1], ["Rogue Trader Cruiser", 1]]);
@@ -923,15 +923,15 @@ build(rt, 1000, [["Veteran Rogue Trader", 1], ["Rogue Trader Cruiser", 1], ["Rog
                  ["Xenos Vessel", 6], ["Xenos Vessel", 2]]);
 eq(api.total() > 750, true, "T26: the RT fleet is over 750 pts (" + api.total() + ")");
 eq(failed().some(c => /^Rogue Trader cruisers \(one per 750/.test(c.t)), false, "Rogue Traders: two cruisers in a fleet over 750 pts is fine");
-/* J88 p.236: "Any ship led by a Lord of Tzeentch (and not the Warmaster!) may
+/* J88 p.246: "Any ship led by a Lord of Tzeentch (and not the Warmaster!) may
    be granted a Strand of Fortune." Attachment is not modelled (J8). */
 const tzl88 = listIndex("Chaos — Tzeentch");
 buildU(tzl88, 1000, [["Chaos Warmaster", 1], ["Slaughter", 1, [], 0, ["Strand of Fortune"]]]);
 eq(failed().some(c => /^Strand of Fortune/.test(c.t)), true, "Tzeentch: a Strand of Fortune without a Chaos Lord fails");
 buildU(tzl88, 1000, [["Chaos Warmaster", 1], ["Chaos Lord", 1], ["Slaughter", 1, [], 0, ["Strand of Fortune"]]]);
 eq(failed().some(c => /^Strand of Fortune/.test(c.t)), false, "Tzeentch: a Strand of Fortune and a Chaos Lord is fine");
-/* J89 p.318: "In order to take the Flame of Asuryan, an Eldar Hero must lead the
-   fleet and be embarked aboard it." p.319 Yriel (Bearer of the Flame): "you may
+/* J89 p.316: "In order to take the Flame of Asuryan, an Eldar Hero must lead the
+   fleet and be embarked aboard it." p.317 Yriel (Bearer of the Flame): "you may
    instead pick the Flame of Asuryan as his command ship to be embarked on." */
 build(iyd, 1500, [["Eldar Autarch", 1], ["Flame of Asuryan", 1]]);
 eq(failed().some(c => /^Flame of Asuryan needs/.test(c.t)), true, "Iyanden: the Flame of Asuryan led by an Autarch fails");
@@ -948,7 +948,7 @@ build(gs24, 1000, [["Sword", 3]]);
 eq(failed().some(c => /^Admiral \(over 750/.test(c.t)), false, "T24: a 105 pt fleet in a 1000 pt game needs no admiral");
 build(gs24, 1000, [["Lunar", 1], ["Lunar", 1], ["Lunar", 1], ["Lunar", 1], ["Sword", 3]]);
 eq(failed().some(c => /^Admiral \(over 750/.test(c.t)), true, "T24: an 825 pt fleet without an admiral fails");
-/* The same wording in permissive limits: p.234 "A fleet of 1,000 points or more
+/* The same wording in permissive limits: p.244 "A fleet of 1,000 points or more
    may include the Planet Killer." */
 build(bcl, 1500, [["Chaos Warmaster", 1], ["Planet Killer", 1]]);
 eq(failed().some(c => c.t === "Planet Killer"), true, "T24: a Planet Killer in a 605 pt fleet fails");

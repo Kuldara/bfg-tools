@@ -172,7 +172,7 @@
     {
       "name": "Rogue Trader Cruiser",
       "pts": 185,
-      "page": 180,
+      "page": 190,
       "sec": "Cruisers"
     },
     {
@@ -184,7 +184,7 @@
     {
       "name": "Endeavour Class Light Cruiser",
       "pts": 110,
-      "page": 181,
+      "page": 191,
       "sec": "Cruisers"
     },
     {
@@ -226,19 +226,19 @@
     {
       "name": "Recommissioned Escort",
       "pts": 30,
-      "page": 189,
+      "page": 199,
       "sec": "Rogue Trader Escorts"
     },
     {
       "name": "Iconoclast Destroyer",
       "pts": 30,
-      "page": 190,
+      "page": 200,
       "sec": "Rogue Trader Escorts"
     },
     {
       "name": "Cargo Vessel",
       "pts": 20,
-      "page": 192,
+      "page": 202,
       "sec": "Rogue Trader Escorts"
     },
     {

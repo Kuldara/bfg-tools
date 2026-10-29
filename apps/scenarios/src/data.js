@@ -36,7 +36,7 @@ export const PA_PROV = st => !num(st, "avp") && !num(st, "dvp") && get(st, "ap",
 export const GROUPS = [
   ["core",      "Core scenarios", "Rulebook pp. 128–143 · any fleets"],
   ["campaign",  "Rulebook campaigns", "Third Armageddon War, 13th Black Crusade · suggested fleets, any can play"],
-  ["fleets",    "Fleets book scenarios", "Rogue Trader scenarios and Craftworld Assault, FL p. 198–315 · any fleets can play"],
+  ["fleets",    "Fleets book scenarios", "Rogue Trader scenarios and Craftworld Assault, FL p. 208–339 · any fleets can play"],
   ["cl-ws",     "Classic · White Dwarf and Warp Storm", "Games Workshop, 1999–2000 · written for the original rules"],
   ["cl-mag",    "Classic · Planet Killer and BFG Magazine", "Fanatic Press, 2000–2004 · written for the original rules"],
   ["cl-inv",    "Classic · Invasion and the 2002 Annual", "Games Workshop, 2002 · written for the original rules"],
@@ -92,7 +92,7 @@ export const THREAT_PLAY = {
     { w: "Daemon mines", s: "b", t: "An activated daemon mine counter becomes D3+2 daemon mines: orbital mines that move an extra D6 cm every time they move and have a 4+ save against fighters. Each is worth 10 VP when destroyed for any reason." }
   ],
   mine: [{ w: "Orbital mines", s: "b", t: "An activated orbital mine counter becomes D3+2 orbital mines." }],
-  wolf: [{ w: "Xenos vessels", s: "b", t: "Escort squadrons may include xenos vessels (FL p. 184), as in the Pirates and Wolf Packs list." }]
+  wolf: [{ w: "Xenos vessels", s: "b", t: "Escort squadrons may include xenos vessels (FL p. 194), as in the Pirates and Wolf Packs list." }]
 };
 
 /* Fleet Engagement formation table (RB p. 142): row = Player 1, column = Player 2 */
@@ -285,7 +285,7 @@ export const SC = [
   bring: v => ["Transports (at least 2)", "Contact markers, one per attacking unit", "Torpedo and attack craft markers"].concat(v === "stalk" ? ["Daemon mine markers", "Tyranid escort drones or cruiser, a daemonship"] : v === "mine" ? ["Orbital mine markers"] : []),
   forces: v => ({
     a: ["At least 2 transports. They may form a single squadron.", v === "std" ? "For every 2 transports: up to 100 pts of escorting ships, at most one squadron per pair of transports." : "For every 2 transports: up to 150 pts of escorting ships (100 + 50 for facing a Fleets book threat table), at most one squadron per pair of transports."],
-    b: ["Rolled at random: D3 rolls on " + (v === "std" ? "the rulebook table" : "the " + THREATS[v].n + " table (FL p. 198–199)") + ", plus one more for each pair of transports (tool below).", "Escort squadrons and capital ships come from your fleet list."]
+    b: ["Rolled at random: D3 rolls on " + (v === "std" ? "the rulebook table" : "the " + THREATS[v].n + " table (FL p. 208–209)") + ", plus one more for each pair of transports (tool below).", "Escort squadrons and capital ships come from your fleet list."]
   }),
   mapNote: "The convoy enters from a short edge (rolled), not within 45 cm of either long edge, and must leave by the opposite short edge.",
   steps: [
@@ -297,10 +297,10 @@ export const SC = [
   ],
   stools: [{ k: "roll", id: "atk", l: "Attacking forces", sub: "D6 per roll · D3 rolls + 1 per pair of transports", rows: v => (THREATS[v] || THREATS.std).rows }],
   notes: v => ["The book does not say which D6 results mean which short edge — agree it, e.g. 1–3 one end, 4–6 the other."].concat(v === "std" ? [] : [
-    "The Fleets book prints four threat tables as alternatives to the rulebook’s attacker table; its cross-reference to the Convoy scenario reads “[???]” in v0.36. With one of them the convoy may add up to +50 pts of escorting ships per two transports (FL p. 198).",
+    "The Fleets book prints four threat tables as alternatives to the rulebook’s attacker table; its cross-reference to the Convoy scenario reads “[???]” in v0.36. With one of them the convoy may add up to +50 pts of escorting ships per two transports (FL p. 208).",
     "Victory in Convoy is decided by transports alone; the victory points the tables give warp beasts and daemon mines matter only if you also count victory points, for example in a campaign."]),
-  refs: v => [["Contact markers, Victory", "RB p. 134–135"], ["Battlezone generators", "RB p. 107–108"]].concat(v === "std" ? [] : [["Threat tables", "FL p. 198–199"]],
-    v === "stalk" ? [["Orbital mines (daemon mines build on them)", "FL p. 23, 512"], ["Daemonships", "FL p. 226–227"], ["Tyranid escort drones and cruisers", "FL p. 432–"]] : v === "mine" ? [["Orbital mines", "FL p. 23, 512"]] : v === "wolf" ? [["Xenos vessels", "FL p. 184"]] : []),
+  refs: v => [["Contact markers, Victory", "RB p. 134–135"], ["Battlezone generators", "RB p. 107–108"]].concat(v === "std" ? [] : [["Threat tables", "FL p. 208–209"]],
+    v === "stalk" ? [["Orbital mines (daemon mines build on them)", "FL p. 23, 512"], ["Daemonships", "FL p. 236–237"], ["Tyranid escort drones and cruisers", "FL p. 432–"]] : v === "mine" ? [["Orbital mines", "FL p. 23, 512"]] : v === "wolf" ? [["Xenos vessels", "FL p. 194"]] : []),
   play: [
     { w: "Convoy movement", s: "a", t: "A convoy ship moving within 30 cm of a marker activates it: flip it face up at once, then finish the move. After the convoy’s movement phase the attacker deploys every activated marker." },
     { w: "Start of attacker movement", s: "b", t: "You may activate one marker yourself — two if any convoy ship is on special orders." },
@@ -420,7 +420,7 @@ export const SC = [
   ],
   stools: [{ k: "roll", id: "psize", l: "Planet size", sub: "D6", rows: () => [[1, 1, "Small"], [2, 5, "Medium"], [6, 6, "Large"]] }],
   notes: ["The book does not say how to roll the random edge for arriving patrols — agree it (for example the edge numbers of Escalating Engagement)."],
-  refs: [["Low orbit table", "RB p. 116"], ["Activated Blackstone Fortress", "FL p. 284"], ["Planetary defences", "FL p. 496–"]],
+  refs: [["Low orbit table", "RB p. 116"], ["Activated Blackstone Fortress", "FL p. 286"], ["Planetary defences", "FL p. 496–"]],
   play: [
     { w: "Attacker", s: "a", t: "Exterminators must reach low orbit and get within 45 cm of the planet edge of the low orbit table." },
     { w: "Start of each turn", s: "a", t: "Roll a D6 for each Exterminator within 45 cm of the planet edge: on 4+ it fires the Armageddon weapon and the planet dies." },
@@ -475,7 +475,7 @@ export const SC = [
   glance: [["Points", "100 pts per 2 transports, each side"], ["Table", "Not given — use your table"], ["Battlezone", "Primary Biosphere, no planets"], ["First turn", "Raiders"], ["Game ends", "A fleet is gone, or the convoy has left"]],
   bring: ["Transport models (at least 2)", "Primary Biosphere phenomena (no planets)"],
   forces: {
-    a: ["At least 2 transports. Heavy Transports may be used freely (FL p. 182).", "For every 2 transports: 100 pts of warships.", "At most one cruiser. Everything else must be light cruisers or escorts."],
+    a: ["At least 2 transports. Heavy Transports may be used freely (FL p. 192).", "For every 2 transports: 100 pts of warships.", "At most one cruiser. Everything else must be light cruisers or escorts."],
     b: ["For every 2 transports in the convoy: 100 pts of ships.", "Escorts only."]
   },
   variants: [["std", "Standard"], ["run", "Running battle"]],
@@ -600,7 +600,7 @@ export const SC = [
   glance: [["Points", "1500 each + 2 free Blackstones"], ["Table", "Not given — use your table"], ["Battlezone", "Primary or Inner Biosphere"], ["First turn", "Roll-off, winner chooses"], ["Game ends", "Planet dies, a Blackstone is crippled, or a fleet is gone"]],
   bring: ["Medium planet", "2 Activated Blackstone Fortresses", "Planetary defences (at least 1 orbital defence platform)", "Other phenomena as rolled"],
   forces: {
-    a: ["1500 pts.", "Plus 2 Activated Blackstone Fortresses for free (FL p. 284) — 3000 pts in all."],
+    a: ["1500 pts.", "Plus 2 Activated Blackstone Fortresses for free (FL p. 286) — 3000 pts in all."],
     b: ["1500 pts.", "Plus 3D6×10 pts of high-orbit defences; at least one orbital defence platform (laser, torpedo or weapons; FL p. 496–).", "Up to 1000 pts defend the planet; the rest is on patrol off the table."]
   },
   steps: [
@@ -611,11 +611,11 @@ export const SC = [
     { t: "Roll off. The higher roll chooses to go first or second." }
   ],
   notes: ["The source says the patrol is “up to ½ of the fleet (750 pts)”, which does not add up with 1000 pts at the planet. This page follows the deployment rule: whatever is not at the planet is on patrol.", "The author advises against using it mid-campaign (it is hard on the defender). As a campaign finale he suggests +5 renown for the winner and −2 for the loser, with no other renown."],
-  refs: [["Activated Blackstone Fortress, Super-Mega-Death Shot", "FL p. 284"], ["Exterminatus (the scenario this one replaces)", "RB p. 140"], ["Planetary defences", "FL p. 496–"], ["Battlezone generators", "RB p. 107"]],
+  refs: [["Activated Blackstone Fortress, Super-Mega-Death Shot", "FL p. 286"], ["Exterminatus (the scenario this one replaces)", "RB p. 140"], ["Planetary defences", "FL p. 496–"], ["Battlezone generators", "RB p. 107"]],
   play: [
-    { w: "Charging the shot", s: "a", t: "Super-Mega-Death Shot (FL p. 284): a Blackstone must not move or fire for two turns, then stays still and fires in the shooting phase of the third. Blackstones no further apart than a Nova Cannon template’s diameter can combine." },
+    { w: "Charging the shot", s: "a", t: "Super-Mega-Death Shot (FL p. 286): a Blackstone must not move or fire for two turns, then stays still and fires in the shooting phase of the third. Blackstones no further apart than a Nova Cannon template’s diameter can combine." },
     { w: "Firing at the planet", s: "a", t: "In this scenario the shot is aimed at the planet from up to 75 cm. Use the range tool below — closer is better, base contact destroys the planet outright." },
-    { w: "Disrupting the charge", s: "b", t: "A capital ship touching the area between charging Blackstones disrupts the charge: it takes 8 lance shots per charging Blackstone (no shields, no brace), each Blackstone takes D6 hits and must start charging again. Escorts and ordnance there are destroyed (FL p. 284)." },
+    { w: "Disrupting the charge", s: "b", t: "A capital ship touching the area between charging Blackstones disrupts the charge: it takes 8 lance shots per charging Blackstone (no shields, no brace), each Blackstone takes D6 hits and must start charging again. Escorts and ordnance there are destroyed (FL p. 286)." },
     { w: "Start of your turn", s: "b", t: "You may roll for patrol ships not yet on the table: one D6 per escort squadron and per capital ship or squadron. Use the arrival rolls below (Tools)." },
     { w: "Any time", t: "A crippled Blackstone cannot fire the shot — and the game ends at once in the defender’s favour." }
   ],
@@ -667,7 +667,7 @@ export const SC = [
 /* ===================================================== WR: ELIARENATH'S GIFT */
 {
   id: "eliarenaths-gift", grp: "committee", name: "Eliarenath’s Gift", series: "Gothic War aftermath", trust: "committee",
-  why: "By Roy “horizon” Amkreutz, Warp Rift’s editor. Eliarenath’s Gift is a named ship of the Gothic War (FL p. 321).",
+  why: "By Roy “horizon” Amkreutz, Warp Rift’s editor. Eliarenath’s Gift is a named ship of the Gothic War (FL p. 319).",
   src: "Warp Rift 11, pp. 30–32", book: "O", suggest: ["Imperial Navy", "Orks", "Eldar Corsairs"],
   others: "Suggestion: any patrol and any ambushers work. The Gift’s restriction (no second move until the trap springs) is written for an Eldar cruiser; another lone fast cruiser can stand in if it simply may not attack or be attacked until the trap is sprung.",
   sides: { a: { n: "Patrol", f: "Imperial Navy" }, b: { n: "Ambush", f: "Orks" }, c: { n: "The Gift", f: "Eldar Corsairs" } },
@@ -677,7 +677,7 @@ export const SC = [
   forces: {
     a: ["Up to 1000 pts; at least half of it escorts.", "Plus Captain Durhan’s Lunar class cruiser Daecis III (Ld 8, 1 re-roll)."],
     b: ["Up to 1250 pts; at least half of it escorts.", "Split into four groups, one for each contact marker."],
-    c: ["Corsair Eldar Eclipse class cruiser (FL p. 321), Ld 10, 1 re-roll for this ship only.", "Played by the ambush player or a third player."]
+    c: ["Corsair Eldar Eclipse class cruiser (FL p. 319), Ld 10, 1 re-roll for this ship only.", "Played by the ambush player or a third player."]
   },
   mapNote: "Left = sunward edge. The table is split lengthways into three equal strips; the Gift stays 60 cm from the sunward edge.",
   steps: [
@@ -690,7 +690,7 @@ export const SC = [
     { s: "c", t: "The Gift takes the first turn; then the ambush may move its markers." }
   ],
   notes: ["The source gives no turn order after turn 1 when a third player commands the Gift, and does not say exactly where an activated group is placed — the marker’s position is the natural reading. Agree before play."],
-  refs: [["Eclipse class cruiser", "FL p. 321"], ["Lunar class cruiser", "FL p. 71"], ["Victory points", "RB p. 122"]],
+  refs: [["Eclipse class cruiser", "FL p. 319"], ["Lunar class cruiser", "FL p. 71"], ["Victory points", "RB p. 122"]],
   play: [
     { w: "Every turn", s: "b", t: "Move each contact marker up to 15 cm. The 50 cm spacing no longer applies." },
     { w: "Movement phase", s: "a", t: "A patrol ship coming within 30 cm of a marker activates it. At the end of the patrol’s movement, the group of that marker is deployed." },
@@ -722,8 +722,8 @@ export const SC = [
   glance: [["Points", "Fixed forces"], ["Table", "180 × 120 cm"], ["Battlezone", "Any, rolled as per the rulebook"], ["First turn", "Hunter"], ["Game ends", "Lart captured or escaped, or the hunter’s cruiser destroyed"]],
   bring: ["A secret note for Lart’s ship (or the tool in Play)", "1 ordnance marker as the escape pod"],
   forces: {
-    a: ["Jeremiah Crowe, Inquisitor Lord of the Ordo Hereticus: Ld 10, one extra re-roll; Ordo Hereticus boarding and hit-and-run rules apply (FL p. 131).", "Damnation’s Fear: Inquisitorial Cruiser with the dorsal lance upgrade (FL p. 150)."],
-    b: ["Premar Lart, Ld 9.", "Sunstar: Rogue Trader cruiser with Advanced Shielding (FL p. 175).", "2 Armed Freighters (FL p. 523).", "4 Cargo Transports."]
+    a: ["Jeremiah Crowe, Inquisitor Lord of the Ordo Hereticus: Ld 10, one extra re-roll; Ordo Hereticus boarding and hit-and-run rules apply (FL p. 141).", "Damnation’s Fear: Inquisitorial Cruiser with the dorsal lance upgrade (FL p. 160)."],
+    b: ["Premar Lart, Ld 9.", "Sunstar: Rogue Trader cruiser with Advanced Shielding (FL p. 185).", "2 Armed Freighters (FL p. 523).", "4 Cargo Transports."]
   },
   mapNote: "Deployment depth from the short edges is not given — agree it before play.",
   steps: [
@@ -733,7 +733,7 @@ export const SC = [
     { s: "a", t: "The hunter takes the first turn." }
   ],
   notes: ["The source says “both fleets are deployed on one of the short table edges”. Opposite edges are the reading used here, since Crowe intercepts head-on and Lart escapes off the opposing edge.", "The escape pod rule covers Lart’s ship exploding after a hit-and-run attack. The source says nothing about his ship being destroyed some other way — agree before play."],
-  refs: [["Ordo Hereticus", "FL p. 131"], ["Inquisitorial Cruiser", "FL p. 150"], ["Advanced Shielding", "FL p. 175"], ["Armed Freighter", "FL p. 523"], ["Boarding actions", "RB p. 89"]],
+  refs: [["Ordo Hereticus", "FL p. 141"], ["Inquisitorial Cruiser", "FL p. 160"], ["Advanced Shielding", "FL p. 185"], ["Armed Freighter", "FL p. 523"], ["Boarding actions", "RB p. 89"]],
   play: [
     { w: "Hit and run", s: "a", t: "A successful hit-and-run attack on a ship reveals whether Lart is aboard. It cannot capture him." },
     { w: "Boarding", s: "a", t: "Capturing Lart takes a successful boarding action against the ship he is on." },

@@ -146,14 +146,14 @@ def replacement(text, old_row, catalogue):
                 strength = cand[0][1]
     # Torpedoes move their speed (Rulebook p.76), and every
     # Imperial and Chaos torpedo row in the book is 30 cm (Retribution p.54,
-    # Lunar p.71, Desolator p.267). The option sentence ("Strength 8 torpedoes",
+    # Lunar p.71, Desolator p.269). The option sentence ("Strength 8 torpedoes",
     # "strength-9 torpedo launchers") does not repeat the speed - the card must not
-    # say "see text" (Dauntless p.77, Despoiler p.266, Victory p.55,
+    # say "see text" (Dauntless p.77, Despoiler p.268, Victory p.55,
     # Mercury p.64).
     if not rng and any(w.startswith("torpedo") for w in parts(nm)[1]):
         rng = "30 cm"
     # Torpedo tubes fire from the prow when the sentence says nothing else (p.105
-    # Strike cruiser "strength-6, speed: 30 cm torpedo tubes" replaces
+    # Strike cruiser "Strength 6, speed: 30 cm torpedo tubes" replaces
     # the launch bays, whose arc is "-"; spot check 6 row 68).
     if (not arc and any(w.startswith("torpedo") for w in parts(nm)[1])
             and not re.search(r"\d|left|right|front", str(old_row[3] or ""), re.I)):

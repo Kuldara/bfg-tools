@@ -20,7 +20,7 @@
   "_example_no_effect": {
     "ship": "INQUISITORIAL CRUISER",
     "text": "If the torpedo refit is taken, the ship does not have to be modified",
-    "page": 150,
+    "page": 160,
     "effect": null,
     "why": "The sentence concerns building the miniature, not the game profile. Not modelled.",
     "verified": true
@@ -54,37 +54,29 @@
     {
       "ship": "REPULSIVE CLASS GRAND CRUISER",
       "text": "May have a third shield for +15 pts",
-      "page": 269,
+      "page": 271,
       "effect": { "mod": { "sh": 1 } },
-      "why": "The book p.269: 'May have a third shield for +15 pts, when modelled on a large 60 mm base.' Base 2, addition +1. The modelling condition is not a game rule. Implemented in OPT_EFFECTS (P1-2).",
+      "why": "The book p.271: 'May have a third shield for +15 pts, when modelled on a large 60 mm base.' Base 2, addition +1. The modelling condition is not a game rule. Implemented in OPT_EFFECTS (P1-2).",
       "verified": true
     },
     {
       "ship": "HAMMER CLASS BATTLEKROOZER",
       "text": "May be equipped with boarding torpedoes for +5 pts",
-      "page": 374,
+      "page": 376,
       "effect": null,
-      "why": "Rulebook p.78: 'Boarding torpedoes are launched like ordinary torpedoes' - the option gives the ship's own torpedo tubes a second ammunition, not a new weapon row (the user 12.10.2026, J190: a boarding torpedo purchase goes only on the option row, not into the weapons). The speed and strength are in the option's text. The earlier record: The book p.374: '(speed 20 cm; strength D6+2)'. The option carries its own profile; the row is on the card only when chosen. The arc is the prow tubes' (Front). The prow launchas are always on the ship (p.374 \"In each turn, these launchas can either fire torpedoes or be used as a bombardment cannon\"), so the option does not depend on the prow choice. Implemented in OPT_EFFECTS add (P1-3).",
+      "why": "Rulebook p.78: 'Boarding torpedoes are launched like ordinary torpedoes' - the option gives the ship's own torpedo tubes a second ammunition, not a new weapon row (the user 12.10.2026, J190: a boarding torpedo purchase goes only on the option row, not into the weapons). The speed and strength are in the option's text. The earlier record: The book p.376: '(speed 20 cm; strength D6+2)'. The option carries its own profile; the row is on the card only when chosen. The arc is the prow tubes' (Front). The prow launchas are always on the ship (p.376 \"In each turn, these launchas can either fire torpedoes or be used as a bombardment cannon\"), so the option does not depend on the prow choice. Implemented in OPT_EFFECTS add (P1-3).",
       "verified": true
     },
     {
       "ship": "GORBAG’S REVENGE BATTLESHIP",
       "text": "May be equipped with boarding torpedoes for +5 pts",
-      "page": 377,
+      "page": 379,
       "effect": null,
-      "why": "Rulebook p.78: 'Boarding torpedoes are launched like ordinary torpedoes' - the option gives the ship's own torpedo tubes a second ammunition, not a new weapon row (the user 12.10.2026, J190: a boarding torpedo purchase goes only on the option row, not into the weapons). The speed and strength are in the option's text. The earlier record: The book p.377: '(speed 20 cm; strength D6+2)'. The ship has prow torpedoes (Front). Implemented in OPT_EFFECTS add (P1-3).",
+      "why": "Rulebook p.78: 'Boarding torpedoes are launched like ordinary torpedoes' - the option gives the ship's own torpedo tubes a second ammunition, not a new weapon row (the user 12.10.2026, J190: a boarding torpedo purchase goes only on the option row, not into the weapons). The speed and strength are in the option's text. The earlier record: The book p.379: '(speed 20 cm; strength D6+2)'. The ship has prow torpedoes (Front). Implemented in OPT_EFFECTS add (P1-3).",
       "verified": true
     },
     {
       "ship": "TERROR SHIP",
-      "text": "If fitted with a torpedo launcha, it may carry boarding torpedoes",
-      "page": 380,
-      "effect": null,
-      "why": "Rulebook p.78: 'Boarding torpedoes are launched like ordinary torpedoes' - the option gives the ship's own torpedo tubes a second ammunition, not a new weapon row (the user 12.10.2026, J190: a boarding torpedo purchase goes only on the option row, not into the weapons). The speed and strength are in the option's text. The earlier record: The book p.380: '(Speed 20 cm, Strength D6+2) at a cost of +5'. Requires the torpedo launcha (dep in the data). Implemented in OPT_EFFECTS add (P1-3).",
-      "verified": true
-    },
-    {
-      "ship": "KILL KROOZER",
       "text": "If fitted with a torpedo launcha, it may carry boarding torpedoes",
       "page": 382,
       "effect": null,
@@ -92,11 +84,19 @@
       "verified": true
     },
     {
+      "ship": "KILL KROOZER",
+      "text": "If fitted with a torpedo launcha, it may carry boarding torpedoes",
+      "page": 384,
+      "effect": null,
+      "why": "Rulebook p.78: 'Boarding torpedoes are launched like ordinary torpedoes' - the option gives the ship's own torpedo tubes a second ammunition, not a new weapon row (the user 12.10.2026, J190: a boarding torpedo purchase goes only on the option row, not into the weapons). The speed and strength are in the option's text. The earlier record: The book p.384: '(Speed 20 cm, Strength D6+2) at a cost of +5'. Requires the torpedo launcha (dep in the data). Implemented in OPT_EFFECTS add (P1-3).",
+      "verified": true
+    },
+    {
       "ship": "ORK HULK",
       "text": "May be equipped with boarding torpedoes for +15 pts",
-      "page": 389,
+      "page": 391,
       "effect": null,
-      "why": "Rulebook p.78: 'Boarding torpedoes are launched like ordinary torpedoes' - the option gives the ship's own torpedo tubes a second ammunition, not a new weapon row (the user 12.10.2026, J190: a boarding torpedo purchase goes only on the option row, not into the weapons). The speed and strength are in the option's text. The earlier record: The book p.389: '+15 pts (speed 20 cm; strength D6+2)'. NOTE: the hulk's own tubes are 2D6, but the boarding torpedoes are D6+2 - the option carries its own profile. There are tubes at the prow, left and right, so the arc is Left/front/right. Implemented in OPT_EFFECTS add (P1-3).",
+      "why": "Rulebook p.78: 'Boarding torpedoes are launched like ordinary torpedoes' - the option gives the ship's own torpedo tubes a second ammunition, not a new weapon row (the user 12.10.2026, J190: a boarding torpedo purchase goes only on the option row, not into the weapons). The speed and strength are in the option's text. The earlier record: The book p.391: '+15 pts (speed 20 cm; strength D6+2)'. NOTE: the hulk's own tubes are 2D6, but the boarding torpedoes are D6+2 - the option carries its own profile. There are tubes at the prow, left and right, so the arc is Left/front/right. Implemented in OPT_EFFECTS add (P1-3).",
       "verified": true
     },
     {
@@ -111,19 +111,19 @@
     {
       "ship": "INQUISITORIAL CRUISER",
       "text": "An Inquisitorial cruiser may replace its launch bays for strength-6, Speed: 30 cm torpedo tubes",
-      "page": 150,
+      "page": 160,
       "effect": { "swp": { "f": "launch bay", "rg": "30 cm", "st": "6" } },
       "modelled_by": "sw",
-      "why": "The book p.150: the same torpedo refit as for the Strike Cruiser, 'for no change in cost'. In the data as an sw alternative; 'Speed: 30 cm' is the torpedo's speed.",
+      "why": "The book p.160: the same torpedo refit as for the Strike Cruiser, 'for no change in cost'. In the data as an sw alternative; 'Speed: 30 cm' is the torpedo's speed.",
       "verified": true
     },
     {
       "ship": "GREY KNIGHTS STRIKE CRUISER",
       "text": "May replace launch bays for strength-6, Speed: 30 cm torpedo tubes",
-      "page": 151,
+      "page": 161,
       "effect": { "swp": { "f": "launch bay", "rg": "30 cm", "st": "6" } },
       "modelled_by": "sw",
-      "why": "The book p.151: the same torpedo refit, 'for no change in cost'. In the data as an sw alternative; 'Speed: 30 cm' is the torpedo's speed.",
+      "why": "The book p.161: the same torpedo refit, 'for no change in cost'. In the data as an sw alternative; 'Speed: 30 cm' is the torpedo's speed.",
       "verified": true
     },
     {
@@ -154,9 +154,9 @@
     {
       "ship": "REPULSIVE CLASS GRAND CRUISER",
       "text": "Can be equipped with ancient targeting systems",
-      "page": 269,
+      "page": 271,
       "effect": { "swp": { "f": "dorsal lance", "rg": "45 cm" } },
-      "why": "The book p.269: 'increases the range of its dorsal lances to 45 cm at an additional cost of +10 pts'. Base dorsal lance battery 30 cm / 3. Implemented in OPT_EFFECTS swp (item 7, batch 2).",
+      "why": "The book p.271: 'increases the range of its dorsal lances to 45 cm at an additional cost of +10 pts'. Base dorsal lance battery 30 cm / 3. Implemented in OPT_EFFECTS swp (item 7, batch 2).",
       "verified": true
     },
     {
@@ -164,7 +164,7 @@
       "text": "May increase the prow armour to 6+ for no additional cost.",
       "page": 72,
       "effect": { "set": { "ar": "6+ front / 5+", "tn": "45°" } },
-      "why": "The book p.72 (the same text p.73 and p.181): 'May increase the prow armour to 6+ for no additional cost. However, if this option is taken, the turning radius of these vessels is reduced to 45 degrees.' Base 5+ / 90°. Two effects from the same option: armour AND turning. Implemented in OPT_EFFECTS set (item 7, batch 3).",
+      "why": "The book p.72 (the same text p.73 and p.191): 'May increase the prow armour to 6+ for no additional cost. However, if this option is taken, the turning radius of these vessels is reduced to 45 degrees.' Base 5+ / 90°. Two effects from the same option: armour AND turning. Implemented in OPT_EFFECTS set (item 7, batch 3).",
       "verified": true
     },
     {
@@ -210,41 +210,41 @@
     {
       "ship": "HAMMER CLASS BATTLEKROOZER",
       "text": "May be equipped with torpedo bommas for +40 pts.",
-      "page": 374,
+      "page": 376,
       "effect": { "swp": { "f": "launch bay", "rgadd": "Torpedo-Bommas: 20 cm" } },
-      "why": "The book p.374 option; p.359: 'Torpedo-bommas only move 20 cm' and 'an additional ordnance choice available to the carrier and do not replace fighta-bommas'. The launch bay row's range cell gets a new type. Implemented in OPT_EFFECTS swp rgadd (item 7, batch 4).",
+      "why": "The book p.376 option; p.361: 'Torpedo-bommas only move 20 cm' and 'an additional ordnance choice available to the carrier and do not replace fighta-bommas'. The launch bay row's range cell gets a new type. Implemented in OPT_EFFECTS swp rgadd (item 7, batch 4).",
       "verified": true
     },
     {
       "ship": "DETHDEALA BATTLESHIP",
       "text": "May be equipped with torpedo bommas for +40 pts.",
-      "page": 376,
+      "page": 378,
       "effect": { "swp": { "f": "launch bay", "rgadd": "Torpedo-Bommas: 20 cm" } },
-      "why": "The book p.376 option; the ordnance rule p.359 (20 cm, an extra type). Implemented in OPT_EFFECTS swp rgadd (item 7, batch 4).",
+      "why": "The book p.378 option; the ordnance rule p.361 (20 cm, an extra type). Implemented in OPT_EFFECTS swp rgadd (item 7, batch 4).",
       "verified": true
     },
     {
       "ship": "GORBAG’S REVENGE BATTLESHIP",
       "text": "May be equipped with torpedo bommas for +80 pts.",
-      "page": 377,
+      "page": 379,
       "effect": { "swp": { "f": "launch bay", "rgadd": "Torpedo-Bommas: 20 cm" } },
-      "why": "The book p.377 option +80 (three launch bay rows: dorsal, port, starboard - all get the type); the ordnance rule p.359. Implemented in OPT_EFFECTS swp rgadd (item 7, batch 4).",
+      "why": "The book p.379 option +80 (three launch bay rows: dorsal, port, starboard - all get the type); the ordnance rule p.361. Implemented in OPT_EFFECTS swp rgadd (item 7, batch 4).",
       "verified": true
     },
     {
       "ship": "SLAMBLASTA BATTLESHIP",
       "text": "May be equipped with torpedo bommas for +40 pts.",
-      "page": 378,
+      "page": 380,
       "effect": { "swp": { "f": "launch bay", "rgadd": "Torpedo-Bommas: 20 cm" } },
-      "why": "The book p.378 option; the ordnance rule p.359. Implemented in OPT_EFFECTS swp rgadd (item 7, batch 4).",
+      "why": "The book p.380 option; the ordnance rule p.361. Implemented in OPT_EFFECTS swp rgadd (item 7, batch 4).",
       "verified": true
     },
     {
       "ship": "KROOLBOY BATTLESHIP",
       "text": "May be equipped with torpedo bommas for +40 pts.",
-      "page": 379,
+      "page": 381,
       "effect": { "swp": { "f": "launch bay", "rgadd": "Torpedo-Bommas: 20 cm" } },
-      "why": "The book p.379 option; the ordnance rule p.359. Implemented in OPT_EFFECTS swp rgadd (item 7, batch 4).",
+      "why": "The book p.381 option; the ordnance rule p.361. Implemented in OPT_EFFECTS swp rgadd (item 7, batch 4).",
       "verified": true
     },
     {
@@ -266,19 +266,19 @@
     {
       "ship": "TERROR SHIP",
       "text": "May replace its prow heavy gun battery with a torpedo launcha",
-      "page": 380,
+      "page": 382,
       "effect": { "swp": { "f": "prow heavy gun", "rg": "30 cm", "st": "D6+2" } },
       "modelled_by": "sw",
-      "why": "The book p.380: '(Speed 30 cm, Strength D6+2) at no extra points'. In the data as an sw alternative (swaps.py); 'Speed 30 cm' is the torpedo's speed, not the ship's - the audit's stat hit is wrong.",
+      "why": "The book p.382: '(Speed 30 cm, Strength D6+2) at no extra points'. In the data as an sw alternative (swaps.py); 'Speed 30 cm' is the torpedo's speed, not the ship's - the audit's stat hit is wrong.",
       "verified": true
     },
     {
       "ship": "KILL KROOZER",
       "text": "May replace its prow heavy gun battery with a torpedo launcha",
-      "page": 382,
+      "page": 384,
       "effect": { "swp": { "f": "prow heavy gun", "rg": "30 cm", "st": "D6+2" } },
       "modelled_by": "sw",
-      "why": "The book p.382: the same swap as on the Terror ship. In the data as an sw alternative; 'Speed 30 cm' is the torpedo's speed.",
+      "why": "The book p.384: the same swap as on the Terror ship. In the data as an sw alternative; 'Speed 30 cm' is the torpedo's speed.",
       "verified": true
     },
     {
@@ -302,9 +302,9 @@
     {
       "ship": "LITE KROOZER",
       "text": "If fitted with a torpedo launcha, it may carry boarding torpedoes",
-      "page": 383,
+      "page": 385,
       "effect": null,
-      "why": "Rulebook p.78: 'Boarding torpedoes are launched like ordinary torpedoes' - the option gives the ship's own torpedo tubes a second ammunition, not a new weapon row (the user 12.10.2026, J190: a boarding torpedo purchase goes only on the option row, not into the weapons). The speed and strength are in the option's text. The earlier record: The book p.383: '(Speed 20 cm, Strength D6) at a cost of +5 pts' - the Lite Kroozer's boarding torpedoes are D6, not D6+2 as on the bigger ones. Requires the launcha (dep=0 in the data). Implemented in OPT_EFFECTS add (item 7, batch 6).",
+      "why": "Rulebook p.78: 'Boarding torpedoes are launched like ordinary torpedoes' - the option gives the ship's own torpedo tubes a second ammunition, not a new weapon row (the user 12.10.2026, J190: a boarding torpedo purchase goes only on the option row, not into the weapons). The speed and strength are in the option's text. The earlier record: The book p.385: '(Speed 20 cm, Strength D6) at a cost of +5 pts' - the Lite Kroozer's boarding torpedoes are D6, not D6+2 as on the bigger ones. Requires the launcha (dep=0 in the data). Implemented in OPT_EFFECTS add (item 7, batch 6).",
       "verified": true
     },
     {
@@ -318,9 +318,9 @@
     {
       "ship": "MURDER CLASS CRUISER",
       "text": "Can replace its Firepower 10 weapons batteries with Firepower 4 weapons batteries and Strength 2 lance batteries",
-      "page": 279,
+      "page": 281,
       "effect": { "swp": { "f": "weapons battery", "st": "4" }, "add": [["Port lance battery", "45 cm", "2", "Left"], ["Starboard lance battery", "45 cm", "2", "Right"]] },
-      "why": "The book p.279: '(all 45 cm range, with port and starboard arcs each) for no extra points'. Batteries 45 cm/10 -> 45 cm/4 (swp) and two lance rows more (an add list). Implemented in OPT_EFFECTS (item 7, batch 7).",
+      "why": "The book p.281: '(all 45 cm range, with port and starboard arcs each) for no extra points'. Batteries 45 cm/10 -> 45 cm/4 (swp) and two lance rows more (an add list). Implemented in OPT_EFFECTS (item 7, batch 7).",
       "verified": true
     },
     {
@@ -334,43 +334,43 @@
     {
       "ship": "LITE KROOZER",
       "text": "Prow — torpedo launcha instead of heavy gunz",
-      "page": 383,
+      "page": 385,
       "effect": { "sw": { "f": [3], "t": [["Prow torpedo launcha", "30 cm", "D6", "Front"]] } },
-      "why": "The book p.383: 'For no change in cost, they may exchange their prow heavy gunz for a torpedo launcha (Speed 30 cm, Strength D6) or additional D6 gunz (for D6+2 in total).' One sentence, two exclusive swaps - split into two options (group lite_prow, gmax 1) in build_data.py. This is the first: the launcha replaces the prow heavy gunz (row 3).",
+      "why": "The book p.385: 'For no change in cost, they may exchange their prow heavy gunz for a torpedo launcha (Speed 30 cm, Strength D6) or additional D6 gunz (for D6+2 in total).' One sentence, two exclusive swaps - split into two options (group lite_prow, gmax 1) in build_data.py. This is the first: the launcha replaces the prow heavy gunz (row 3).",
       "verified": true
     },
     {
       "ship": "LITE KROOZER",
       "text": "Prow — additional D6 gunz",
-      "page": 383,
+      "page": 385,
       "effect": { "swp": { "f": "prow heavy gunz", "st": "D6+2" } },
-      "why": "The book p.383, the same sentence's second alternative: the prow heavy gunz 4 -> D6+2 'in total'. Exclusive with the launcha (lite_prow).",
+      "why": "The book p.385, the same sentence's second alternative: the prow heavy gunz 4 -> D6+2 'in total'. Exclusive with the launcha (lite_prow).",
       "verified": true
     },
     {
       "ship": "XENOS VESSEL",
       "text": "Xenotech system (free, choose one) — Long Range Sensors",
-      "page": 175,
+      "page": 185,
       "effect": null,
-      "why": "The book p.175/184: '+1 to its base leadership (max. of Ld 10)'. Leadership is not a stat on the ship card (rolled at the start of the game); the option's text prints on the card. The audit's 'range' hit is from the words 'Long Range'.",
+      "why": "The book p.185/194: '+1 to its base leadership (max. of Ld 10)'. Leadership is not a stat on the ship card (rolled at the start of the game); the option's text prints on the card. The audit's 'range' hit is from the words 'Long Range'.",
       "verified": true
     },
     {
       "ship": "XENOS VESSEL",
       "text": "Xenotech system (free, choose one) — Advanced Shielding",
-      "page": 175,
+      "page": 185,
       "effect": { "mod": { "sh": 1 } },
       "modelled_by": "mod",
-      "why": "The book p.175: 'increases the strength of its shields by +1'. Implemented in build_data.py's p.184 block (mod sh +1); the audit's 'strength' hit means the shield, not a weapon.",
+      "why": "The book p.185: 'increases the strength of its shields by +1'. Implemented in build_data.py's p.194 block (mod sh +1); the audit's 'strength' hit means the shield, not a weapon.",
       "verified": true
     },
     {
       "ship": "XENOS VESSEL",
       "text": "Xenotech system (free, choose one) — Ship Defense Grid",
-      "page": 175,
+      "page": 185,
       "effect": { "mod": { "tu": 1 } },
       "modelled_by": "mod",
-      "why": "The book p.175: 'increases the strength of its turrets by +1'. Implemented (mod tu +1); the audit's 'strength' hit means the turrets.",
+      "why": "The book p.185: 'increases the strength of its turrets by +1'. Implemented (mod tu +1); the audit's 'strength' hit means the turrets.",
       "verified": true
     }
   ]

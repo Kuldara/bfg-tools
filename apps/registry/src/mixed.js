@@ -55,7 +55,7 @@ export function mixActive(si){
 export function mixStart(si){ appState.MIX = { tag: freeSqTag(), si, list: L().nm }; }
 export function mixStop(){ delete appState.MIX; }
 /* the cards of one letter in the sections the player's squadrons live in,
-   with a Blood Axe tiddla's commandeered escorts (Fleets p. 369, 29.10.2026) */
+   with a Blood Axe tiddla's commandeered escorts (Fleets p. 371, 28.10.2026) */
 const inMix = u => mixSec(u.s) || isCommandeered(u);
 export function mixUnits(tag){
   return appState.S.units.filter(u => !u.lst && u.sq === tag && inMix(u));

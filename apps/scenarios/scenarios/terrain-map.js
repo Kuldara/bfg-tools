@@ -92,19 +92,19 @@ TM("bc-navigate-the-storm", { z: "none", by: "src", zoneText: "the scenario’s 
   warn: "The source has the players take turns placing their eight rifts each; here all sixteen are rolled, 10 cm apart." });
 TM("bc-macharias-end", { z: "any", by: "book", fixedSize: "large", note: "The source places only Macharia and says nothing about other phenomena (RB p. 198)." });
 
-/* ---------------------------------------------------------------- Fleets (FL p. 200–211, 312–315) */
-TM("fl-merchantmens-folly", { z: "any", by: "src", why: "The source: any agreed way, near a planet or out in deep space (FL p. 200)." });
+/* ---------------------------------------------------------------- Fleets (FL p. 210–221, 336–339) */
+TM("fl-merchantmens-folly", { z: "any", by: "src", why: "The source: any agreed way, near a planet or out in deep space (FL p. 210)." });
 TM("fl-hunter-and-prey", { z: "none", by: "src", zoneText: "the scenario places two small planets and asteroid fields", areas: false, fixedSize: "small",
-  why: "The source names no battlezone: two small planets and D3 asteroid fields in each quarter, none within 15 cm of a planet (FL p. 202).",
+  why: "The source names no battlezone: two small planets and D3 asteroid fields in each quarter, none within 15 cm of a planet (FL p. 212).",
   pieces: (v, W, H) => PER(QUARTERS(W, H), "asteroid", "d3"), keep: AROUND(15, 7.5),
   note: "The map keeps the sunward edge on the left; if your roll says right, mirror the table. Other phenomena only if you agree." });
-TM("fl-rt-gauntlet", { z: 6, by: "src", ignore: ["planet"], ignoreText: "the scenario ignores any planet (FL p. 204)" });
-TM("fl-explorers-prize", { z: "any", by: "book", ignore: ["planet"], ignoreText: "never a planet (FL p. 206)",
+TM("fl-rt-gauntlet", { z: 6, by: "src", ignore: ["planet"], ignoreText: "the scenario ignores any planet (FL p. 214)" });
+TM("fl-explorers-prize", { z: "any", by: "book", ignore: ["planet"], ignoreText: "never a planet (FL p. 216)",
   warn: "The source adds phenomena beyond the asteroid belt only if you both agree — and never a planet." });
-TM("fl-space-hulk", { z: "any", by: "src", why: "The source: any agreed way (FL p. 208)." });
-TM("fl-void-malevolent", { z: "any", by: "src", why: "The source: any agreed way — a sun, low orbit or asteroids may hide the foe (FL p. 210)." });
+TM("fl-space-hulk", { z: "any", by: "src", why: "The source: any agreed way (FL p. 218)." });
+TM("fl-void-malevolent", { z: "any", by: "src", why: "The source: any agreed way — a sun, low orbit or asteroids may hide the foe (FL p. 220)." });
 TM("fl-craftworld-assault", { z: ZTOOL("bz", [[1, 2, 4], [3, 4, 5], [5, 6, 6]], "the scenario’s D3: primary biosphere, outer reaches or deep space"), by: "src",
-  ignore: ["planet"], ignoreText: "the scenario ignores any planet (FL p. 312)", zoneText: "from the Battlezone roll in Set-up tools" });
+  ignore: ["planet"], ignoreText: "the scenario ignores any planet (FL p. 336)", zoneText: "from the Battlezone roll in Set-up tools" });
 
 /* ---------------------------------------------------------------- Classic GW */
 TM("cl-callavell", { z: "any", by: "book", warn: ONLY });

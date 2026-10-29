@@ -14,7 +14,7 @@ export function checkWarmasterMark(F){
      Warmaster must take the Mark of Nurgle" - and the god's own battle barge
      says it is already bought: "This ship bears the Mark of Nurgle as part of
      its point cost; it does not have to be paid for separately by the ship's
-     commander" (pp. 258, 260, 262, 264). Which one applies depends on whether
+     commander" (pp. 260, 262, 264, 266). Which one applies depends on whether
      the Warmaster is aboard that barge, and the book answers that too, in the
      barge's own rule - so nothing here is inferred:
 
@@ -100,7 +100,7 @@ export function checkUnitIssues(F){
 /* A commander whose price depends on his ship. */
 export function checkCommanderPrice(F){
   var L = F.L, members = F.members, out = F.out;
-  /* ---- A commander whose price depends on his ship (Fleets p. 319) -----
+  /* ---- A commander whose price depends on his ship (Fleets p. 317) -----
      "He must be embarked aboard the Flame of Asuryan if it is present, in
      which case his cost is 125 points." The -25 is a row the player ticks;
      the fleet can see whether the tick and the ship agree. Unticked beside
@@ -133,7 +133,7 @@ export function checkDefences(F){
   var defs = members.filter(function(m){ return m.defence; });
   if(defs.length){
     /* The Ramilies is "bought from the fleet's points, rather than defences"
-       (p. 500) and a Haven's "value counts against the fleet list" (p. 337):
+       (p. 500) and a Haven's "value counts against the fleet list" (p. 335):
        neither is paid from the one-third allowance. */
     var budget = defs.reduce(function(a, m){
       return a + (defenceOwnPoints(m.sel.sh) ? 0 : m.points); }, 0);
@@ -209,7 +209,7 @@ export function checkOptionShares(F){
 /* Ships summoned through the Webway Portal. */
 export function checkWebway(F){
   var L = F.L, members = F.members, out = F.out;
-  /* ---- Ships summoned through the Webway Portal (Fleets p. 337, J175) --
+  /* ---- Ships summoned through the Webway Portal (Fleets p. 335, J175) --
      "Any number of ships may be purchased against the fleet's total at 50%
      cost, but they count as reserves and start off the table" - a rule of
      the Eldar Haven, so a half-price ship needs a Haven in the fleet. */

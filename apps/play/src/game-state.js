@@ -52,8 +52,8 @@ export function newGame(res){
     return { kind: x.R.kind, s: si < 0 ? 1e6 : si, e: ei < 0 ? 1e6 : ei };
   }));
   /* The commander's re-rolls, included and bought; without a commander the
-     fleet's own (Necrons p. 404, Demiurg p. 486). Abaddon's come back every
-     turn (Fleets p. 231). */
+     fleet's own (Necrons p. 406, Demiurg p. 486). Abaddon's come back every
+     turn (Fleets p. 241). */
   const crr = cmd >= 0 ? res.units[cmd].R.rerolls : null;
   const frr0 = cmd < 0 ? DOMAIN.fleetRerolls(res.L0, res.units.map(x => x.R)) : null;
   const pool0 = crr || frr0;
@@ -63,8 +63,8 @@ export function newGame(res){
   res.units.forEach((x, j) => {
     if(x.R.kind === "commander" && j !== cmd && x.R.rerolls)
       PLAY.setRerolls(st[j], x.R.rerolls.total, x.R.rerolls.unit === "per turn", rrKinds(x.R.rerolls));
-    /* a ship's own re-rolls (Scion of Prospero p. 258, a Mark of Tzeentch
-       p. 234, a fortress-monastery p. 111) stay on its own card */
+    /* a ship's own re-rolls (Scion of Prospero p. 260, a Mark of Tzeentch
+       p. 244, a fortress-monastery p. 111) stay on its own card */
     if(x.R.kind === "ship" && x.R.rerolls)
       PLAY.setRerolls(st[j], x.R.rerolls.total, false, rrKinds(x.R.rerolls));
   });
@@ -93,8 +93,8 @@ export function newGame(res){
 /* J233 (RULINGS.md T43): every commander aboard a ship of his own - "Assign
    the Fleet Commander(s) to their ship(s)" (Rulebook p. 123). An Ork
    fleet's every Warlord "must be assigned to a ship or squadron" (Fleets
-   pp. 365, 366), a Da Ork Clanz Warlord to "the most expensive ship under
-   his own command ... even if it is an escort" (p. 372). The fleet
+   pp. 367, 368), a Da Ork Clanz Warlord to "the most expensive ship under
+   his own command ... even if it is an escort" (p. 374). The fleet
    commander's ship is G.flag as before, every other commander's G.on[j]. */
 export let FR = null;
 export function fleetRes(){
@@ -146,7 +146,7 @@ export const coCmd = j => appState.G.cmd != null && j !== appState.G.cmd && !!ap
   String(appState.U[j].R.entry && appState.U[j].R.entry.label) === String(appState.U[appState.G.cmd].R.entry && appState.U[appState.G.cmd].R.entry.label);
 /* Da Ork Clanz: whose ships these are (the builder's command, J216) - a
    Warlord's re-rolls "only count for the skwadrons under his command"
-   (Fleets p. 372). */
+   (Fleets p. 374). */
 export function warlordOf(i){
   const ws = (fleetRes().warlords || []).filter(W => W && W.units);
   return ws.length < 2 ? null : ws.filter(W => W.units.indexOf(i) >= 0)[0] || null;
@@ -158,25 +158,25 @@ export const WL_PAL = ["#d9711c", "#1b9aa0", "#8e5bd0", "#d0457f", "#6f8f2e", "#
 export function wlColor(W){ const u = appState.U[W.unit] && appState.U[W.unit].u; return (u && u.clan && CLAN_COL[u.clan]) || WL_PAL[(W.n - 1) % WL_PAL.length]; }
 export function wlTag(i){
   const W = warlordOf(i);
-  return W ? `<span class="tag wl" style="--wl:${wlColor(W)}" title="${esc("Under " + unitName(W.unit) + ": his re-rolls only (Fleets p. 372)")}">W${W.n}</span>` : "";
+  return W ? `<span class="tag wl" style="--wl:${wlColor(W)}" title="${esc("Under " + unitName(W.unit) + ": his re-rolls only (Fleets p. 374)")}">W${W.n}</span>` : "";
 }
 /* What an Ork Warlord does besides his re-rolls: in Da Ork Clanz he "adds
-   +2 to one boarding dice roll per game" (Fleets p. 372) - one box; in the
+   +2 to one boarding dice roll per game" (Fleets p. 374) - one box; in the
    Waaagh! and the Cyclops Cluster "a vessel carrying a Warlord doubles its
-   boarding value" (pp. 366, 365), not a space hulk's (p. 390). */
+   boarding value" (pp. 368, 367), not a space hulk's (p. 392). */
 /* the Clanz Warlord's +2: one box in the row of his re-roll boxes, used or
    not like them (a once-per-game thing at the same place on the card) */
 export function wl2Box(j){
   if(!(j >= 0 && isWarlord(j) && appState.L0.clanz)) return "";
   const used = !!appState.G.st[j].wl2;
-  return `<button class="rrx b2${used ? " used" : ""}" data-act="wl2" data-i="${j}" aria-pressed="${used}" aria-label="${used ? "Plus 2 to a boarding roll: used" : "Plus 2 to one boarding roll this game: free"}" title="Fleets p. 372: a Warlord adds +2 to one boarding dice roll per game"><b>+2</b><small>boarding</small></button>`;
+  return `<button class="rrx b2${used ? " used" : ""}" data-act="wl2" data-i="${j}" aria-pressed="${used}" aria-label="${used ? "Plus 2 to a boarding roll: used" : "Plus 2 to one boarding roll this game: free"}" title="Fleets p. 374: a Warlord adds +2 to one boarding dice roll per game"><b>+2</b><small>boarding</small></button>`;
 }
 export function wlExtra(j){
   if(!isWarlord(j)) return "";
   if(appState.L0.clanz) return "";
   const sh = j === appState.G.cmd ? appState.G.flag : (appState.G.on || {})[j];
   const hulk = sh != null && appState.U[sh] && /hulk/i.test(String(appState.U[sh].R.className || ""));
-  return `<small>${hulk ? MID + " on a space hulk: boarding value not doubled (Fleets p. 390)" : MID + " his ship doubles its boarding value (Fleets p. " + (/cyclops/i.test(appState.L0.nm) ? 365 : 366) + ")"}</small>`;
+  return `<small>${hulk ? MID + " on a space hulk: boarding value not doubled (Fleets p. 392)" : MID + " his ship doubles its boarding value (Fleets p. " + (/cyclops/i.test(appState.L0.nm) ? 365 : 366) + ")"}</small>`;
 }
 /* The ships the SQN button is offered to: capital ships; a star fort
    "cannot squadron with other orbital defences" (Rulebook p. 100). */

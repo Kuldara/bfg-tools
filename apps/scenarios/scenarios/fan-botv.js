@@ -14,7 +14,7 @@
   const V2 = "Scenario by Roy “horizon” Amkreutz, from Book of the Void II: Xenos Tide, a fan supplement he led and largely wrote; text editing by Captain Ardias, ArcaneShipyard and Hexagrammaton, with story and rules input from Robert C. M. Passovoy, Fr05ty, Alpharisus, NateHA-FlybyWire, IFoldyGo and Captain Ardias; Tyranid drawings by Wintermans.";
   const P1 = n => "Book of the Void I p. " + n;
   const P2 = n => "Book of the Void II p. " + n;
-  const OTHERS_V1 = "Written for the Book of the Void fleets: the Adepta Sororitas, the Diasporex nomads and Da Grot Rev’looshun (Book of the Void I p. 14–50). Any fleets can play with ships of similar size; the Grots follow the Ork rules (FL p. 359–).";
+  const OTHERS_V1 = "Written for the Book of the Void fleets: the Adepta Sororitas, the Diasporex nomads and Da Grot Rev’looshun (Book of the Void I p. 14–50). Any fleets can play with ships of similar size; the Grots follow the Ork rules (FL p. 361–).";
   const OTHERS_V2 = "Written for the Book of the Void II lists (Battlegroups “Seiche” and “Storm Surge”, Hivefleet Devourer). Book alternative: an Imperial Navy fleet with merchants (FL p. 454) against a Tyranid hive fleet (FL p. 430) or vanguard fleet (FL p. 429).";
   const CAMP2 = "Devourer Unleashed is a linked series: Avaheim leads to Vallar’s Gambit (Imperial win) or Vallar’s Eulogy (Tyranid win), then The Sirvos Disaster and The Last Wave. Each can also be played on its own.";
   const vpTools = (a, b) => [{ k: "num", id: "va", s: "a", l: a + ": victory points", after: v => v + " VP" }, { k: "num", id: "vb", s: "b", l: b + ": victory points", after: v => v + " VP" }];
@@ -102,7 +102,7 @@
       { s: "a", t: "The Grots, as the attackers, take the first turn." }
     ],
     notes: ["The text only says the collectors go in the deployment zone “as shown”; the map puts them in a 10 cm strip at the edge and the Grots in a 20 cm zone opposite.", "The collector explosion counts “turns spent charging”, which these scenarios never define. We count the turns played (tool in Play); agree otherwise if you like."],
-    refs: [["Terror ship", "FL p. 380"], ["Savage gunship", "FL p. 385"], ["Onslaught attack ship", "FL p. 384"], ["Victory points", "RB p. 122"]],
+    refs: [["Terror ship", "FL p. 382"], ["Savage gunship", "FL p. 387"], ["Onslaught attack ship", "FL p. 384"], ["Victory points", "RB p. 122"]],
     play: [
       { w: "All game", s: "b", t: "You may not disengage: the solar fields matter too much." },
       { w: "Collectors", t: "Each one destroyed is worth 50 VP to the Grots; each one standing at the end is worth 25 VP to the Diasporex." },
@@ -158,7 +158,7 @@
     ],
     stools: [],
     notes: ["The bracketed numbers in the supplement’s fleet lists assign each ship to a division (contact marker).", "“25 points to the player who has ships left on the battlefield” for each uncaptured hulk: if both players still have ships there, the source does not say — agree it (Agree before you start)."],
-    refs: [["Escalating Engagement (the same set-up)", "RB p. 138–139"], ["Victory class battleship", "FL p. 55"], ["Armageddon class battlecruiser", "FL p. 65"], ["Overlord class battlecruiser", "FL p. 66"], ["Lunar class cruiser", "FL p. 71"], ["Dauntless class light cruiser", "FL p. 77"], ["Oberon class battleship", "FL p. 56"], ["Hammer class battlekroozer", "FL p. 374"]],
+    refs: [["Escalating Engagement (the same set-up)", "RB p. 138–139"], ["Victory class battleship", "FL p. 55"], ["Armageddon class battlecruiser", "FL p. 65"], ["Overlord class battlecruiser", "FL p. 66"], ["Lunar class cruiser", "FL p. 71"], ["Dauntless class light cruiser", "FL p. 77"], ["Oberon class battleship", "FL p. 56"], ["Hammer class battlekroozer", "FL p. 376"]],
     play: [
       { w: "End phase of your turn", t: "Draw another of your markers at random and place it on a random table edge (tool below): not within 60 cm of enemy ships, and if you have ships within 30 cm of that edge, within 30 cm of one of them." },
       { w: "Start of your turn", t: "Roll a D6 for each of your markers on an edge. The slowest ship in the division decides: up to 20 cm needs 5+, 21–29 cm 4+, 30 cm or more 3+; +2 if friendly ships are within 30 cm of the marker." },
@@ -330,7 +330,7 @@
       { t: "Roll a D6 each and add your fleet’s attack rating (RB p. 120): the higher total goes first." }
     ],
     notes: ["“Board the relic with at least a (combined) boarding value of 10” — the source does not say whether a boarding action is rolled. The default (Agree before you start) is ours: no roll, just the boarding value and two full turns in contact."],
-    refs: [["Attack ratings", "RB p. 120"], ["Boarding actions", "RB p. 89–90"], ["Ramilies class star fort", "FL p. 500"], ["Activated Blackstone Fortress", "FL p. 284"]],
+    refs: [["Attack ratings", "RB p. 120"], ["Boarding actions", "RB p. 89–90"], ["Ramilies class star fort", "FL p. 500"], ["Activated Blackstone Fortress", "FL p. 286"]],
     play: [
       { w: "Capturing the relic", t: "Board it with a combined boarding value of at least 10 and stay in base contact for two full turns. The relic has 20 hits and a boarding value of 20." },
       { w: "Taking it home", t: "Once captured, the captor may move the relic 10 cm a turn toward their own table edge." },
@@ -368,7 +368,7 @@
       { s: "b", t: "Place the four drone squadrons in the marked areas, at least 30 cm from each other." },
       { s: "a", t: "Peregrine Squadron takes the first turn." }
     ],
-    notes: ["“The battle takes place in low orbit” with the whole table as the surface: we read that the low orbit firing rules apply (RB p. 116) but there is no planet edge, so nothing is pulled down.", "The source refers to the old Armada rulebook (p. 82) for instinctive behaviour; it is in the Fleets book now (FL p. 416).", "The book does not say what happens if all three Cobras are destroyed; the Tyranids have won by then (the Imperials win only by escaping)."],
+    notes: ["“The battle takes place in low orbit” with the whole table as the surface: we read that the low orbit firing rules apply (RB p. 116) but there is no planet edge, so nothing is pulled down.", "The source refers to the old Armada rulebook (p. 82) for instinctive behaviour; it is in the Fleets book now (FL p. 418).", "The book does not say what happens if all three Cobras are destroyed; the Tyranids have won by then (the Imperials win only by escaping)."],
     refs: [["Low orbit", "RB p. 116"], ["Instinctive Behaviour", "FL p. 416"], ["Cobra class destroyer", "FL p. 84"], ["Escort drone", "FL p. 437"]],
     play: [
       { w: "Mountains", t: "The mountain regions are impassable to both sides: the Cobras fly too low, and the drones will not cross them." },
@@ -376,7 +376,7 @@
       { w: "Low orbit", t: "Firepower shifts one column right; lances need a 4+ to fire; no torpedoes; ships need not move before turning (RB p. 116)." },
       { w: "Escape", s: "a", t: "Get at least one Cobra off the opposite short edge to win." }
     ],
-    tools: [{ k: "roll", id: "instinct", s: "b", d2: 1, l: "Override Instinctive Behaviour", sub: "2D6 against Ld 6 — one roll for all squadrons", rows: () => [[2, 6, "Passed: move the drones as you like"], [7, 12, "Failed: Instinctive Behaviour (FL p. 416)"]] }],
+    tools: [{ k: "roll", id: "instinct", s: "b", d2: 1, l: "Override Instinctive Behaviour", sub: "2D6 against Ld 6 — one roll for all squadrons", rows: () => [[2, 6, "Passed: move the drones as you like"], [7, 12, "Failed: Instinctive Behaviour (FL p. 418)"]] }],
     rtools: [endTool([["A Cobra escaped off the opposite short edge", "a", "Imperial win"], ["No Cobra escaped", "b", "Tyranid win"]])],
     end: ["Peregrine Squadron escapes with at least one ship off the opposite short edge, or the drones are destroyed."],
     win: ["The Imperials win if Peregrine Squadron escapes; otherwise the Tyranids win.", "Campaign: an Imperial win leads to Vallar’s Gambit (2A), a Tyranid win to Vallar’s Eulogy (2B)."],

@@ -13,13 +13,13 @@ export var FORWARD_REF = /\b(shown below|noted below|listed below|the following|
    the section carries. Printed on the commander card after the list's own
    sentences. */
 export const COMMANDER_RULES = [
-  /* Fleets p. 141: the Ordo Xenos ship rolls on (or picks from, +5 pts) the
+  /* Fleets p. 151: the Ordo Xenos ship rolls on (or picks from, +5 pts) the
      xenotech table; the table itself is not in the section text. */
   {id:"ordo_xenos_table", entry:/^ordo xenos inquisitor lord/i,
-   text:"Xenotech refit (D6, or choose for +5 pts): 1 Long Range Sensors: +1 to base Leadership (max 10). 2 Targeting Matrix: all targets count as closing within 30 cm, no right-shift modifiers beyond 30 cm. 3 Advanced Shielding: +1 shield. 4 Ship Defence Grid: +1 turret. 5 Advanced Drive Technology: +5 cm Speed and +1D6 on All Ahead Full. 6 Gravitic Thrusters: double the maximum turn. (Fleets p. 141)"},
-  /* Fleets p. 231: the special rules that apply to Abaddon. */
+   text:"Xenotech refit (D6, or choose for +5 pts): 1 Long Range Sensors: +1 to base Leadership (max 10). 2 Targeting Matrix: all targets count as closing within 30 cm, no right-shift modifiers beyond 30 cm. 3 Advanced Shielding: +1 shield. 4 Ship Defence Grid: +1 turret. 5 Advanced Drive Technology: +5 cm Speed and +1D6 on All Ahead Full. 6 Gravitic Thrusters: double the maximum turn. (Fleets p. 151)"},
+  /* Fleets p. 241: the special rules that apply to Abaddon. */
   {id:"abaddon", entry:/^abaddon\b/i,
-   text:"Abaddon the Despoiler: his ship doubles its value in boarding actions and adds +1 to the Boarding modifier. Hit & Run raids against his ship suffer -1; his own teleport attacks add +1 (boarding torpedoes and assault boats do not). \"You have failed me for the last time\": if his re-roll is used for another ship's or squadron's Command check or Leadership test and it fails again, in the next Chaos Shooting phase his ship directs at least half its firepower and lance strength at them, resolved as if it were an enemy. (Fleets p. 231)"},
+   text:"Abaddon the Despoiler: his ship doubles its value in boarding actions and adds +1 to the Boarding modifier. Hit & Run raids against his ship suffer -1; his own teleport attacks add +1 (boarding torpedoes and assault boats do not). \"You have failed me for the last time\": if his re-roll is used for another ship's or squadron's Command check or Leadership test and it fails again, in the next Chaos Shooting phase his ship directs at least half its firepower and lance strength at them, resolved as if it were an enemy. (Fleets p. 241)"},
   {id:"mesme", entry:/kor.o.mesme/i,
    text:"Kor'O Vash'ya Y'eldi Mesme: embarked aboard the Custodian class battleship Bor'kan Or'es El'Leath Se'arle O'Mesme; Leadership 9 and two re-rolls included. Aun'Shear of the Ethereal caste always accompanies him, so extra re-rolls may be bought. Excellent Pilots: the attack craft squadrons of his flagship have the Excellent Pilots crew skill. Improved Logic Engines (+10 pts): his vessel ignores Leadership effects from contact with Blast Markers. (Fleets p. 453)"}
 ];

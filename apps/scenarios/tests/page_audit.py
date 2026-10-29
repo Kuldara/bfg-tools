@@ -20,8 +20,8 @@ ROOT = os.path.dirname(HERE)
 TXT = os.path.join(os.environ.get("BFG_BOOKS") or os.path.join(ROOT, "..", "..", "books"), "text")
 
 BY_HAND = {  # (heading, reference) -> why it is right; checked against the text dumps 20.10.
-    ("Abaddon’s rules", "FL p. 230–231"): "ABADDON THE DESPOILER p. 230",
-    ("Advanced Shielding", "FL p. 175"): "row 3 of the refit table",
+    ("Abaddon’s rules", "FL p. 240–241"): "ABADDON THE DESPOILER p. 230",
+    ("Advanced Shielding", "FL p. 185"): "row 3 of the refit table",
     ("All Ahead Full", "RB p. 46"): "the special orders described on p. 46",
     ("Battlezone generators", "RB p. 107"): "the generator tables p. 107–108",
     ("Battlezone generators", "RB p. 107–108"): "the generator tables p. 107–108",
@@ -38,9 +38,9 @@ BY_HAND = {  # (heading, reference) -> why it is right; checked against the text
     ("Reload Ordnance", "RB p. 46"): "the special orders described on p. 46",
     ("Reload Ordnance and running out", "RB p. 46–47"): "the special orders p. 46–47",
     ("Rulebook scenarios", "RB p. 128–143"): "scenarios 1–10",
-    ("Threat tables", "FL p. 198–199"): "the Rogue Trader threat tables",
-    ("Tyranid instinctive behaviour", "FL p. 416"): "Special rules: Instinctive Behaviour",
-    ("Instinctive Behaviour", "FL p. 416"): "Special rules: Instinctive Behaviour (checked 26.10.)",
+    ("Threat tables", "FL p. 208–209"): "the Rogue Trader threat tables",
+    ("Tyranid instinctive behaviour", "FL p. 418"): "Special rules: Instinctive Behaviour",
+    ("Instinctive Behaviour", "FL p. 418"): "Special rules: Instinctive Behaviour (checked 26.10.)",
     ("Flare region", "RB p. 107"): "1. Flare Region Generator p. 107 (checked 26.10.)",
     ("Miserable defeat", "RB p. 124"): "the results table row Miserable Defeat! p. 124 (checked 26.10.)",
     ("Blazing and drifting hulks", "RB p. 71"): "hulks in the Catastrophic Damage section p. 71",

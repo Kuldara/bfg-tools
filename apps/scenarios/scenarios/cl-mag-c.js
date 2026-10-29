@@ -16,7 +16,7 @@
     return A === B ? ["draw", "Level", A + " – " + B + " VP."] : [A > B ? "a" : "b", wins(A > B ? an : bn), an + " " + A + " – " + bn + " " + B + " VP."];
   };
   const AHRIMAN = [
-    { w: "Ahriman", s: "b", t: "Ld 10 on the fleet’s most powerful ship. His fleet may re-roll one command check or Leadership test each turn, and he uses Abaddon’s “You have failed me for the last time” (FL p. 231)." },
+    { w: "Ahriman", s: "b", t: "Ld 10 on the fleet’s most powerful ship. His fleet may re-roll one command check or Leadership test each turn, and he uses Abaddon’s “You have failed me for the last time” (FL p. 241)." },
     { w: "Blessing of Tzeentch · Ward of Chaos", s: "b", t: "Enemy ships firing at his ship shift one column right on the gunnery table. Enemy ships within 15 cm of his ship count as having a blast marker on their base." },
     { w: "Daemonic Horde, once per game", s: "b", t: "Pick any one enemy ship — any range, no line of sight needed. Roll a D6, then that many dice to hit against its lowest armour. Shields count; check criticals as normal; no Lock On re-rolls." }
   ];
@@ -58,7 +58,7 @@
       { t: "Agree the five entry points, as on the map. Nothing else starts on the table." },
       { s: "b", t: "Chaos takes the first turn." }
     ],
-    notes: [OLD + "The Vengeance grand cruiser is now FL p. 58. The Desecrator battleship (experimental rules by Nate Montes, BFG Magazine 9 p. 2–3, PDF p. 4–5) is not in the Fleets book; its profile is on the Play tab. Without the model, a Desolator (FL p. 267) is the nearest stand-in.",
+    notes: [OLD + "The Vengeance grand cruiser is now FL p. 58. The Desecrator battleship (experimental rules by Nate Montes, BFG Magazine 9 p. 2–3, PDF p. 4–5) is not in the Fleets book; its profile is on the Play tab. Without the model, a Desolator (FL p. 269) is the nearest stand-in.",
       "If you play with your own fleets, keep the five groups and their arrival turns, and agree the points."],
     refs: [["Vengeance class grand cruiser", "FL p. 58"], ["Orbital dock", "FL p. 507–515"], ["Victory points", "RB p. 122"]],
     play: [
@@ -105,8 +105,8 @@
     ],
     notes: ["Written for the original 1999 rules. The Invincible class is an experimental magazine design not in the Fleets book (the Fleets book only lists an Invincible among the famous ships of the Gothic War).",
       "The article does not say who takes the first turn. Suggestion: roll off.",
-      "The Chaos ships’ Marks are the player’s choice (FL p. 225, 232)."],
-    refs: [["Deep space generator", "RB p. 107–108"], ["Victory class battleship", "FL p. 55"], ["Desolator, Repulsive", "FL p. 267, 269"], ["Marks of Chaos", "FL p. 225, 232"]],
+      "The Chaos ships’ Marks are the player’s choice (FL p. 235, 242)."],
+    refs: [["Deep space generator", "RB p. 107–108"], ["Victory class battleship", "FL p. 55"], ["Desolator, Repulsive", "FL p. 269, 271"], ["Marks of Chaos", "FL p. 235, 242"]],
     play: [
       { w: "The Huud (Invincible class, 290 pts)", s: "a", t: "Battleship/8, speed 25 cm, turns 45°, 2 shields, armour 5+ (6+ front), 4 turrets. Port and starboard batteries 60 cm, firepower 12; dorsal lance 60 cm, strength 4, left/front/right; prow torpedoes 30 cm, strength 6. It may Come to New Heading. Every hit it takes rolls two dice for criticals (a double 6 is two criticals)." },
       { w: "The warp gate", s: "b", t: "Any ship entering the gate disappears into the warp. The Soul of Hate may not disengage any other way; every other ship may." },
@@ -198,7 +198,7 @@
     notes: [OLD + "Blockade Run: RB p. 133. Sub-plots: RB p. 124–127.",
       "The forces section prices the Venturer and Lysander together at 255 pts, while its profile reads 245 pts plus 75 pts for Lysander. The scenario asks you to pay 255.",
       "The heroic victory needs “both” of the runners’ sub-plots; they have three (Desperate Mission, Extended Duty, Signalling Problems). Read as all of them."],
-    refs: [["Blockade Run", "RB p. 133"], ["Sub-plots", "RB p. 124–127"], ["Hammer battlekroozer, terror ship", "FL p. 374, 380"]],
+    refs: [["Blockade Run", "RB p. 133"], ["Sub-plots", "RB p. 124–127"], ["Hammer battlekroozer, terror ship", "FL p. 376, 382"]],
     play: [
       { w: "The Venturer", s: "a", t: "Hawking class exploration cruiser: Cruiser/6, speed 25 cm, turns 90°, 2 shields, armour 5+, 2 turrets. Port and starboard batteries 30 cm, firepower 4; port and starboard launch bays, one Fury squadron each; prow torpedoes 30 cm, strength 6. +1D6 cm on All Ahead Full; +1 Leadership (sensors); no speed loss from blast markers or gas/dust clouds." },
       { w: "Captain Lysander", s: "a", t: "Ld 8 (9 with the sensors) and two re-rolls. The Venturer is out of contact: it cannot use the Admiral’s re-rolls, and no other ship can use Lysander’s." },
@@ -326,10 +326,10 @@
       { s: "a", t: "Pick a short edge and deploy within 30 cm of it, every ship facing the other short edge, each ship or squadron at least 20 cm from the others. Give the rearguard Blood Bond (Sub-plots tab)." },
       { s: "b", t: "No deployment: the attackers roll for ships at the start of each turn. They take the first turn." }
     ],
-    notes: [OLD + "Built on Defence of Pelucidar (RB p. 180–181). Inquisition and Deathwatch ships are played at the magazine’s costs: 270 pts for the Black Ship (its rules are in BFG Magazine 9) and 175 pts for a Deathwatch strike cruiser — a Space Marine strike cruiser (FL p. 105) with two free refits. For comparison, the Fleets book’s Inquisition Blackship is a battleship-sized profile at 300 pts (FL p. 148); the Deathwatch appear in its Inquisition section (FL p. 133).",
+    notes: [OLD + "Built on Defence of Pelucidar (RB p. 180–181). Inquisition and Deathwatch ships are played at the magazine’s costs: 270 pts for the Black Ship (its rules are in BFG Magazine 9) and 175 pts for a Deathwatch strike cruiser — a Space Marine strike cruiser (FL p. 105) with two free refits. For comparison, the Fleets book’s Inquisition Blackship is a battleship-sized profile at 300 pts (FL p. 158); the Deathwatch appear in its Inquisition section (FL p. 143).",
       "If you lack a model for a rolled result, take the next lowest result instead (no cruiser left: three escort squadrons). Agree beforehand whether destroyed ships go back into the pool.",
       "Necron Tombship with Sepulchre and Warmaster Umbros can each appear only once."],
-    refs: [["Defence of Pelucidar (the base scenario)", "RB p. 180–181"], ["Blood Bond", "RB p. 125"], ["Necron ships", "FL p. 405–"], ["Inquisition", "FL p. 128–"]],
+    refs: [["Defence of Pelucidar (the base scenario)", "RB p. 180–181"], ["Blood Bond", "RB p. 125"], ["Necron ships", "FL p. 405–"], ["Inquisition", "FL p. 138–"]],
     play: [
       { w: "Start of each attacker turn", s: "b", t: "Roll a D6 + the turn number on the table (tool below). The ships move on at once from your edge — they cannot be held back — and may take special orders that turn. Roll Leadership as they arrive; two capital ships arriving together may form a squadron." },
       { w: "Escort squadrons", s: "b", t: "D6 escorts of any type. A Chaos attack craft wing is four markers of any allowed type, outside the ordnance limits." },
@@ -356,7 +356,7 @@
   {
     id: "cl-cerberus-4", grp: "cl-mag", name: "Apotheosis", series: "Cerberus War · Scenario 4", trust: "classic",
     why: "The finale: two attacking fleets race to land the most troops on the craftworld Alurmen, through its last defence stations.", src: "BFG Magazine 14 p. 27–31", book: "O", suggest: ["Chaos", "Imperial Navy"],
-    others: "One side is Ahriman’s Chaos fleet; the other can be anyone — historically every race fought over Alurmen. Allied fleets on each side make it bigger still. Ahriman is an unofficial character: without him, any Chaos warmaster can lead with Abaddon’s re-roll rules (FL p. 230–231), as Ahriman’s Arrival suggests.",
+    others: "One side is Ahriman’s Chaos fleet; the other can be anyone — historically every race fought over Alurmen. Allied fleets on each side make it bigger still. Ahriman is an unofficial character: without him, any Chaos warmaster can lead with Abaddon’s re-roll rules (FL p. 240–241), as Ahriman’s Arrival suggests.",
     sides: { a: { n: "Ahriman’s rivals", f: "Imperial Navy" }, b: { n: "Ahriman", f: "Chaos (Thousand Sons)" } },
     pitch: "Ahriman has found Alurmen and the webway nexus that could make him a god. Another armada has arrived at the same moment. Whoever lands enough troops first takes the craftworld.",
     glance: [["Points", "Equal, 3000 or more"], ["Table", "Large, laid out precisely"], ["Battlezone", "Mercurial zone + low orbit table"], ["First turn", "Roll-off"], ["Game ends", "One side leads by 8 assault points"]],

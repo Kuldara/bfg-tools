@@ -291,7 +291,7 @@
     {
       "name": "Rogue Trader Cruiser",
       "pts": 185,
-      "page": 180,
+      "page": 190,
       "sec": "Rogue Traders"
     },
     {
@@ -303,13 +303,13 @@
     {
       "name": "Endeavour Class Light Cruiser",
       "pts": 110,
-      "page": 181,
+      "page": 191,
       "sec": "Rogue Traders"
     },
     {
       "name": "Cargo Vessel",
       "pts": 20,
-      "page": 192,
+      "page": 202,
       "sec": "Rogue Traders"
     }
   ],

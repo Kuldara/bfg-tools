@@ -142,7 +142,7 @@
       "text": "A Space Marine Crusade fleet will not take ships from or provide ships to any other fleet list as reserves or allies, including Imperial Navy, Rogue Trader or Adeptus Mechanicus fleet lists.",
       "page": 99,
       "status": "enforced",
-      "why": "1.1 (14.9.2026): the list's field res_ban. The ban works both ways and also beats p.139's inquisitor permission, because it is the list's own and more specific. Without it the general race rule would let the Crusade and the Codex Astartes swap ships - both are space marines by race. A reserve rule; the app does not model reserves at all, so the ban holds by itself.",
+      "why": "1.1 (14.9.2026): the list's field res_ban. The ban works both ways and also beats p.149's inquisitor permission, because it is the list's own and more specific. Without it the general race rule would let the Crusade and the Codex Astartes swap ships - both are space marines by race. A reserve rule; the app does not model reserves at all, so the ban holds by itself.",
       "enforced_by": "fleet_golden",
       "goldens": [
         "crusade-takes-no-reserves-at-all",

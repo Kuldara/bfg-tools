@@ -250,10 +250,10 @@ export function showValue(k){
     items:function(){ return h; }, onPick:function(){}});
 }
 var PAGE = {ratio1:"RB p.90",ratio2:"RB p.90",ratio3:"RB p.90",ratio4:"RB p.90",blast:"RB p.90",orders:"RB p.90",orders2:"FL p.63",
-  crippled:"RB p.90",chaos:"RB p.90",ork:"RB p.90",marines:"RB p.90",csm:"REF p.1",abaddon:"REF p.1",berzerkers:"FL p.264",
-  megaarmour:"REF p.1",goff:"REF p.1",clanzwarlord:"FL p.372",corridor:"FL p.72",blackship:"FL p.148",easyprey:"FL p.327",
+  crippled:"RB p.90",chaos:"RB p.90",ork:"RB p.90",marines:"RB p.90",csm:"REF p.1",abaddon:"REF p.1",berzerkers:"FL p.266",
+  megaarmour:"REF p.1",goff:"REF p.1",clanzwarlord:"FL p.374",corridor:"FL p.72",blackship:"FL p.158",easyprey:"FL p.325",
   inq_malleus:"REF p.1",inq_hereticus:"REF p.1",inq_xenos:"REF p.1",vs_xenos:"REF p.1",de1:"REF p.1",de2:"REF p.1",
-  aspect:"FL p.305",rath:"FL p.48",talons:"FL p.309/350"};
+  aspect:"FL p.307",rath:"FL p.48",talons:"FL p.311/352"};
 export function showMods(k){
   var p = prep ? prep[k] : null;
   var h = [];

@@ -76,13 +76,13 @@
   {
     id: "cl-evacuation", grp: "cl-mag", name: "Evacuation", series: "BFG Magazine 4 · convoy", trust: "classic",
     why: "A panicked evacuation fleet — liners, tankers, Q-ships, clippers — must get out past a renegade fleet already closing in.", src: "BFG Magazine 4 p. 8–9", book: "O", suggest: ["Imperial Navy"],
-    others: "Any defending fleet with a motley convoy, against any attackers rolled from their own list. The Fleets book’s Merchantmen’s Folly (FL p. 200) builds on the same idea of an undisciplined convoy.",
+    others: "Any defending fleet with a motley convoy, against any attackers rolled from their own list. The Fleets book’s Merchantmen’s Folly (FL p. 210) builds on the same idea of an undisciplined convoy.",
     sides: { a: { n: "Evacuation fleet", f: "Imperial Navy" }, b: { n: "Attackers" } },
     pitch: "Guidus Prime will fall. Nearly twenty ships flee at once — some masters itching for one last fight, others already panicking — and the enemy is already in-system.",
     glance: [["Points", "Convoy: 200 pts of transports + 300 pts · attackers random"], ["Table", "Not given — use your table"], ["Battlezone", "Inner biosphere, no planets"], ["First turn", "Evacuation fleet"], ["Game ends", "The last transport leaves or dies"]],
     bring: ["10 or more transports of mixed types", "Paper to note which freighters are Q-ships"],
     forces: {
-      a: ["Up to 200 pts of transports, at least 10 ships. No more than three of any one type, except plain transports (10 pts each here).", "Transport types: heavy transports, armed freighters, armed cargo vessels and fast clippers, Q-ships, escort carriers (FL p. 182, 192, 521–523).", "Up to 300 pts of warships.", "Every transport and civilian ship rolls Leadership on its own at −1 Ld and takes special orders on its own, even in a squadron."],
+      a: ["Up to 200 pts of transports, at least 10 ships. No more than three of any one type, except plain transports (10 pts each here).", "Transport types: heavy transports, armed freighters, armed cargo vessels and fast clippers, Q-ships, escort carriers (FL p. 192, 202, 521–523).", "Up to 300 pts of warships.", "Every transport and civilian ship rolls Leadership on its own at −1 Ld and takes special orders on its own, even in a squadron."],
       b: ["Rolled at random: D3+3 rolls on the table below."]
     },
     draw: (v, W, H) => [
@@ -187,7 +187,7 @@
   {
     id: "cl-ahriman", grp: "cl-mag", name: "Ahriman’s Arrival", series: "Cerberus War · BFG Magazine 6", trust: "classic",
     why: "Escalating Engagement against the Arch-Sorcerer Ahriman, whose whole fleet arrives at once on turn 2. The Imperials only have to hurt him.", src: "BFG Magazine 6 p. 19–21", book: "O", suggest: ["Imperial Navy", "Chaos"],
-    others: "Any fleet can face Ahriman. He is an unofficial special character, so take him only with your opponent’s agreement; without him, give the Chaos flagship Abaddon’s re-roll rules (FL p. 230–231).",
+    others: "Any fleet can face Ahriman. He is an unofficial special character, so take him only with your opponent’s agreement; without him, give the Chaos flagship Abaddon’s re-roll rules (FL p. 240–241).",
     sides: { a: { n: "Imperial Navy", f: "Imperial Navy" }, b: { n: "Ahriman’s fleet", f: "Chaos (Tzeentch)" } },
     pitch: "Ahriman rides a warp current into the Willow system. The scattered Imperial fleet cannot win — but every hour it delays him buys warnings for the rest of the sector.",
     glance: [["Points", "2000 each"], ["Table", "Not given — use your table"], ["Battlezone", "As normal"], ["First turn", "As Escalating Engagement"], ["Game ends", "A fleet disengages or is destroyed"]],
@@ -218,7 +218,7 @@
     play: [
       { w: "End of Chaos turn 1", s: "b", t: "Place your fleet’s single contact marker on any table edge. The whole rest of the fleet arrives there at the start of turn 2 — no roll needed." },
       { w: "Imperial reinforcements", s: "a", t: "As in Escalating Engagement: draw a marker each end phase, place it on a random edge, roll to arrive." },
-      { w: "Ahriman", s: "b", t: "Ld 10. His fleet may re-roll one command check or Leadership test each turn, and he uses Abaddon’s “You have failed me for the last time” (FL p. 231)." },
+      { w: "Ahriman", s: "b", t: "Ld 10. His fleet may re-roll one command check or Leadership test each turn, and he uses Abaddon’s “You have failed me for the last time” (FL p. 241)." },
       { w: "Blessing of Tzeentch", s: "b", t: "Enemy ships firing at Ahriman’s ship shift one column right on the gunnery table." },
       { w: "Ward of Chaos", s: "b", t: "Every enemy ship within 15 cm of Ahriman’s ship counts as having one blast marker on its base." },
       { w: "Daemonic Horde, once per game", s: "b", t: "Pick one enemy ship: roll a D6, then roll that many dice to hit against its armour. Shields count; check criticals as normal. (The Cerberus War reprint in BFG Magazine 14 adds: any range, no line of sight, against the lowest armour, no Lock On re-rolls.)" },

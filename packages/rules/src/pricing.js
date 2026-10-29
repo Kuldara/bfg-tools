@@ -2,7 +2,7 @@ import { optionsOf } from "./unit.js";
 import { bayStrength, isUpgradeEnt, optCount, optState, secOf, sharedBy, upSecs, upState, upgradeKey, upgradesFor } from "./upgrades.js";
 
 export function upCost(sel, en){
-  /* pct: "+10% point value" (Rogue Trader crew skill, Fleets p. 175) - a share
+  /* pct: "+10% point value" (Rogue Trader crew skill, Fleets p. 185) - a share
      of the unit's points before this row, rounded up as the Rulebook rounds
      (pp. 88, 99). The list has no fixed price, so the row shows "see text". */
   if(en.pct) return Math.ceil(pctBase(sel) * en.pct / 100);
@@ -95,7 +95,7 @@ export function flatMaxPointsOf(sel){
      the launcha) rides on its prerequisite: it counts only while the
      prerequisite can still be taken, and inside the prerequisite's group it
      is added to that member - the Torture takes launch bays (40) or two
-     Impalers (20 + 20), never both (Fleets p. 352). */
+     Impalers (20 + 20), never both (Fleets p. 354). */
   var optCost = function(o){ return o.c * (o.qty ? (o.qty.max || 1) : 1) * (sel.escort ? sel.hulls : 1); };
   var depAdd = {};
   if(sh) sh.ol.forEach(function(o, i){
@@ -167,8 +167,8 @@ export function maxPointsSearch(sel){
   /* A free option is a choice of its own here only when a priced one hangs
      on it: the Kill Kroozer's torpedo launcha costs nothing, and its
      boarding torpedoes (+5) can be bought only once it is fitted (Fleets
-     p. 382); the Dragonship's Vampire raiders (+10) need the launch bays
-     (p. 330). behind[i] is the most that option i can unlock, through any
+     p. 384); the Dragonship's Vampire raiders (+10) need the launch bays
+     (p. 328). behind[i] is the most that option i can unlock, through any
      chain of prerequisites - the search must tick the free one to reach it,
      and its bound must know what waits there. */
   var behind = {};

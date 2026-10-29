@@ -299,7 +299,7 @@ export function rosterBoxes(boxes){
 export function printRoster(){
   const Rs = appState.S.units.map(u => resolveUnit(u));
   /* a fleet without a commander: its own re-rolls are a line of the roster,
-     as they are of the Copy list (Necrons p. 404, Demiurg p. 486, Tyranid
+     as they are of the Copy list (Necrons p. 406, Demiurg p. 486, Tyranid
      Hive Mind Influence p. 430) */
   const frr = DOMAIN.fleetRerolls(L(), Rs);
   const frrRow = !frr ? "" : `<tr><td></td><td>Fleet re-rolls: ${esc(frr.text)} (Fleets p. ${frr.page})${rosterBoxes(frr.boxes)}${
@@ -343,7 +343,7 @@ export function listText(){
   if(!L().clanz) appState.S.units.forEach((u, i) => {
     if(!u.sq || !lines[i + 2]) return;
     const ln = lines[i + 2].split("\n"); ln[0] += " \u00b7 squadron " + u.sq; lines[i + 2] = ln.join("\n"); });
-  /* a fleet without a commander: its own re-roll (Necrons p. 404, Demiurg p. 486) */
+  /* a fleet without a commander: its own re-roll (Necrons p. 406, Demiurg p. 486) */
   const frr = DOMAIN.fleetRerolls(L(), Rs);
   if(frr) lines.push("\u2022 Fleet re-rolls: " + frr.text + " (Fleets p. " + frr.page + ")");
   const RF = fleetResolved();

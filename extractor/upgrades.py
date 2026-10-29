@@ -66,7 +66,7 @@ def group_of(label):
 
 # Per-section exclusive groups. GROUPS infers the group from the row's
 # NAME, but the orks' Warlord upgrades are mutually exclusive
-# only in the WARLORD section: the book says on pages 365 and 366 "may include up
+# only in the WARLORD section: the book says on pages 367 and 368 "may include up
 # to one of the upgrades shown below at the additional cost indicated".
 # Rows of exactly the same name are also in the Clanz list's GUBBINS section,
 # where the limit is another (one upgrade per Warlord re-roll), so
@@ -90,11 +90,11 @@ _NAMED_EXCL_HITS = [0]
 # The book's own rows whose sentence limits the target, but the row parses
 # without a condition. (list, section, row name, condition.) Spot check 6 found each:
 # the Forces of Chaos rows were offered to escorts and to ships without a Mark
-# (p.236: "capital ships ... that have the Mark of Tzeentch", p.240 "Any
-# capital ships with the Mark of Nurgle", p.244 "Any ships with the Mark
-# of Khorne", p.248 "Any ships with the Mark of Slaanesh"; Strand of
-# Fortune p.236 "Any ship led by a Lord of Tzeentch"), the Grey Knights rows
-# to escorts (p.145 "Any Grey Knights capital ship", "one Grey Knights
+# (p.246: "capital ships ... that have the Mark of Tzeentch", p.248 "Any
+# capital ships with the Mark of Nurgle", p.250 "Any ships with the Mark
+# of Khorne", p.252 "Any ships with the Mark of Slaanesh"; Strand of
+# Fortune p.246 "Any ship led by a Lord of Tzeentch"), the Grey Knights rows
+# to escorts (p.155 "Any Grey Knights capital ship", "one Grey Knights
 # vessel may take Grey Knight Terminators" - the teleport attack is a capital
 # ship's ability). The Nurgle, Khorne and Slaanesh Daemonship includes the Mark.
 ROW_CONDS = [
@@ -103,7 +103,7 @@ ROW_CONDS = [
     # Orca (Codex 10.9.). The purchase is recorded on a Demiurg ship.
     (re.compile(r"^Demiurg"), re.compile(r"^Re-rolls$"),
      re.compile(r"re-roll", re.I), dict(nm="commerce vessel")),
-    # p.370-371 Gubbins: "(Not for escorts.)" Extra Power Fields, Maniac
+    # p.372-373 Gubbins: "(Not for escorts.)" Extra Power Fields, Maniac
     # Turrets, Mad Meks, Mega-Armoured Boarding Parties, Prow Ram, Tellyporta,
     # Klaws (except the Grunt with its own option), Shokk-Attack Lance; "More
     # Gubbins ... can only be added to capital ships" (Assault Karrier).
@@ -112,17 +112,17 @@ ROW_CONDS = [
      re.compile(r"^(?:Extra Power Fields|Maniac Turrets|Mad Meks|Mega-Armoured Boarding Parties"
                 r"|Prow Ram|Tellyporta|Klaws|Shokk-Attack Lance|Assault Karrier)$", re.I),
      dict(cap=1)),
-    (re.compile(r"^Grey Knights$"), re.compile(r"^ORDNANCE AND UPGRADES$"),
+    (re.compile(r"^Grey Knights$"), re.compile(r"^ORDNANCE$"),
      re.compile(r"^Grey Knights Terminators$", re.I), dict(cap=1)),
-    # p.145 "Any Grey Knights capital ship in the fleet may embark an Honour
-    # Guard": the Blackship (p.148 "not crewed by Space Marines") and the Inquisitorial
+    # p.155 "Any Grey Knights capital ship in the fleet may embark an Honour
+    # Guard": the Blackship (p.158 "not crewed by Space Marines") and the Inquisitorial
     # Cruiser are not Grey Knights ships (spot check 9 row 6).
-    (re.compile(r"^Grey Knights$"), re.compile(r"^ORDNANCE AND UPGRADES$"),
+    (re.compile(r"^Grey Knights$"), re.compile(r"^ORDNANCE$"),
      re.compile(r"^Grey Knights Honour Guard$", re.I), dict(cap=1, nmno=r"blackship|inquisitorial")),
     (re.compile(r"Tzeentch"), re.compile(r"^FORCES OF CHAOS$"),
      re.compile(r"^Warp Beasts$", re.I), dict(cap=1, up=r"^the mark of tzeentch")),
-    # p.236 "Any ship led by a Lord of Tzeentch (and not the Warmaster!)" and
-    # p.237 "A Daemonship may not be commanded by a Warmaster or a Chaos Lord"
+    # p.246 "Any ship led by a Lord of Tzeentch (and not the Warmaster!)" and
+    # p.247 "A Daemonship may not be commanded by a Warmaster or a Chaos Lord"
     # (spot check 11 rows 60, 61, 69).
     (re.compile(r"Tzeentch"), re.compile(r"^FORCES OF CHAOS$"),
      re.compile(r"^Strand of Fortune$", re.I), dict(cap=1, noup=r"^daemonship:")),
@@ -138,23 +138,23 @@ ROW_CONDS = [
 ]
 _ROW_COND_HITS = [0]
 _ROW_COND_LOG = []
-# Da Ork Clanz p.372: "Space Hulks so led can take upgrades from the list of
+# Da Ork Clanz p.374: "Space Hulks so led can take upgrades from the list of
 # Gubbins for double the listed cost. Upgrades that increase its boarding
 # value or speed may not be taken." Soopa Boostas (+5 cm) is left out; the others
-# get a hulk copy of their own at double price (p.390: "Extra Powerfields costs +50 pts
+# get a hulk copy of their own at double price (p.392: "Extra Powerfields costs +50 pts
 # instead of +25"). Mega-Armoured Boarding Parties is a die modifier, not
-# boarding value - p.390: "Mega-armoured Boarding Parties is unchanged"
+# boarding value - p.392: "Mega-armoured Boarding Parties is unchanged"
 # (spot check 19 round 3, T15: the earlier ban was a reading error).
 _HULK_GUBBIN_NO = re.compile(r"^(?:Soopa Boostas)$", re.I)
-# p.371 MORE GUBBINS is a list of its own with its own permission: "The following gubbins
-# can be taken by any number of capital ships in the fleet." p.372's doubling
-# concerns "upgrades from the list of Gubbins", i.e. p.370-371's GUBBINS list,
+# p.373 MORE GUBBINS is a list of its own with its own permission: "The following gubbins
+# can be taken by any number of capital ships in the fleet." p.374's doubling
+# concerns "upgrades from the list of Gubbins", i.e. p.372-373's GUBBINS list,
 # so a hulk pays the list price for these (interpretation decision T31, 14.9.2026).
 _HULK_GUBBIN_FLAT = re.compile(r"^(?:Klaws|Shokk-Attack Lance|Assault Karrier)$", re.I)
 _HULK_GUBBIN_HITS = [0]
-# The Waaagh! list's hulk Warlord (p.390, J224): its own +50 row, see phase 4.
+# The Waaagh! list's hulk Warlord (p.392, J224): its own +50 row, see phase 4.
 _HULK_PF_HITS = [0]
-# Sections where the Marks do not exclude each other: p.232 "they may be given
+# Sections where the Marks do not exclude each other: p.242 "they may be given
 # up to four Marks of Chaos as shown below (no Mark may be taken more than
 # once)". GROUPS gives the group "mark" by name; here it is undone.
 _MULTI_MARK = re.compile(r"up to four Marks of Chaos", re.I)
@@ -172,7 +172,7 @@ _CLAN = re.compile(r"^CLAN UPGRADES$")
 _TYR = re.compile(r"^Tyranids")
 _BIO = re.compile(r"^BIO-ENHANCEMENTS$")
 ROW_EFFECTS = [
-    # --- Da Ork Clanz: Gubbins (p.370-371) ---
+    # --- Da Ork Clanz: Gubbins (p.372-373) ---
     (_CLANZ, _GUB, re.compile(r"^Soopa Boostas$", re.I),
      dict(mod=dict(sp=5), desc="The ship gains +5 cm speed, and it rolls 4D6 cm when on All Ahead Full special orders.")),
     (_CLANZ, _GUB, re.compile(r"^Extra Power Fields$", re.I),
@@ -181,7 +181,7 @@ ROW_EFFECTS = [
      dict(mod=dict(tu=2), cond=dict(cap=1, noup=r"^maniac turrets"),
           desc="The ship gains +2 Turrets. This cannot be combined with Maniac Turrets.")),
     (_CLANZ, _GUB, re.compile(r"^Maniac Turrets$", re.I),
-     # p.370 "The ship's turret value is replaced by D3 turrets", in plainer words (user 27.10.2026)
+     # p.372 "The ship's turret value is replaced by D3 turrets", in plainer words (user 27.10.2026)
      dict(set=dict(tu="D3"), cond=dict(noup=r"^extra turrets"),
           desc="Turrets: roll a D3 (1-3) instead of the ship's printed turret value. Not with Extra Turrets.")),
     (_CLANZ, _GUB, re.compile(r"^Looted Lances$", re.I),
@@ -189,7 +189,7 @@ ROW_EFFECTS = [
           cond=dict(cap=1, has="heavy gunz"),
           desc="Any heavy gunz batteries on the ship are replaced with a Strength-2 lance battery. Range is 30 cm for capital ships.")),
     (_CLANZ, _GUB, re.compile(r"^Looted Torpedoes$", re.I),
-     # An effect only with torpedoes: the Slamblasta (p.378) has no torpedoes,
+     # An effect only with torpedoes: the Slamblasta (p.380) has no torpedoes,
      # so the row cost 20 pts without an effect (spot check 8 row 37).
      dict(cond=dict(has="torpedo"),
           desc="The ship may re-roll the dice for the Strength of torpedo salvoes when it fires.")),
@@ -207,7 +207,7 @@ ROW_EFFECTS = [
      dict(swp=dict(f=r"prow heavy gunz", nmf=r"heavy gunz(?: battery)?", nm="shokk-attack lance", rg="30 cm", st="Special"),
           cond=dict(has="prow heavy gunz"),
           desc="Replaces the prow heavy gunz. Not while crippled or braced; only against a ship with shields down. Hits on 4+ at 30 cm (holofields and bracing save): D3+1 snotling hordes board it, each adding an extra D6 to its next Leadership check or special order until cleared; a miss places a Blast Marker on the Ork ship. Against escorts: D6, 1-3 destroys the nearest unshielded escort, 4+ places a Blast Marker.")),
-    # p.371 "It takes boarding torpedoes for free, but it may only use assault
+    # p.373 "It takes boarding torpedoes for free, but it may only use assault
     # boats": no torpedo-bommas or orbital mines beside it (each excludes the
     # other, the later choice wins), and the boarding torpedoes rows give way
     # to it (their noup below; frees words the notice). ChatGPT audit RAW-06,
@@ -216,7 +216,7 @@ ROW_EFFECTS = [
      dict(cond=dict(has=["launch bay", "torpedo"], noup=r"^torpedo[\s-]*bom|^orbital mines$"),
           frees=r"^boarding torpedoes",
           desc="Takes boarding torpedoes for free but may only use assault boats. It may launch +1 assault boat marker each time it launches attack craft (even if crippled or braced, but not both).")),
-    # --- Da Ork Clanz: clans (p.369) ---
+    # --- Da Ork Clanz: clans (p.371) ---
     (_CLANZ, _CLAN, re.compile(r"^Clan: Goffs", re.I),
      dict(desc="All Goff ships (including tiddla skwadrons) gain a +1 bonus to the dice roll during boarding actions and a +1 Leadership bonus when attempting to ram.")),
     (_CLANZ, _CLAN, re.compile(r"^Clan: Evil Sunz", re.I),
@@ -228,7 +228,7 @@ ROW_EFFECTS = [
     (_CLANZ, _CLAN, re.compile(r"^Clan: Blood Axes", re.I),
      dict(desc="The Warlord's ship may take one refit from the Imperial Navy refit table (rolled randomly) for +20 points. A Blood Axe tiddla skwadron of at least six escorts may include up to three Imperial Navy and/or Chaos escorts at their listed cost.")),
     (_CLANZ, _CLAN, re.compile(r"^Imperial Navy refit, rolled randomly", re.I),
-     dict(desc="Blood Axe Warlord's ship only (p. 369). Roll a D6: 1-2 ship, 3-4 engine, 5-6 weapons refit, "
+     dict(desc="Blood Axe Warlord's ship only (p. 371). Roll a D6: 1-2 ship, 3-4 engine, 5-6 weapons refit, "
                "then a D6 on that table (Rulebook pp. 156, 158-159). Rolled: ________")),
     (_CLANZ, _CLAN, re.compile(r"^Clan: Snakebites", re.I),
      dict(cond=dict(ty=r"escort|defence"),
@@ -269,13 +269,13 @@ ROW_EFFECTS = [
     (re.compile(r""), re.compile(r""), re.compile(r"^Shark assault boats", re.I),
      dict(desc="The Emperor's launch bays may also launch Shark assault boats (30 cm). (Fleets pp. 49, 53)")),
     (re.compile(r""), re.compile(r""), re.compile(r"^Xenotech System, rolled randomly", re.I),
-     dict(desc="Roll D6 on the Xenotech Systems table and note the result: 1 Long Range Sensors +1 base Ld (max 10); 2 Targeting Matrix: targets within 30 cm count as closing, no right shift beyond 30 cm; 3 Advanced Shielding +1 shield; 4 Ship Defense Grid +1 turret; 5 Advanced Drive +5 cm speed and +1D6 on All Ahead Full; 6 Gravitic Thrusters double the maximum turn. (Fleets p. 175)")),
+     dict(desc="Roll D6 on the Xenotech Systems table and note the result: 1 Long Range Sensors +1 base Ld (max 10); 2 Targeting Matrix: targets within 30 cm count as closing, no right shift beyond 30 cm; 3 Advanced Shielding +1 shield; 4 Ship Defense Grid +1 turret; 5 Advanced Drive +5 cm speed and +1D6 on All Ahead Full; 6 Gravitic Thrusters double the maximum turn. (Fleets p. 185)")),
     (re.compile(r""), re.compile(r""), re.compile(r"^Choose the Xenotech System", re.I),
-     dict(desc="Pay +5 per ship to select the Xenotech System instead of rolling for it. (Fleets p. 175)")),
+     dict(desc="Pay +5 per ship to select the Xenotech System instead of rolling for it. (Fleets p. 185)")),
     (re.compile(r""), re.compile(r""), re.compile(r"^Leech torpedoes$", re.I),
-     dict(desc="Leech torpedoes at no extra cost, loaded with a specific Reload Ordnance roll (or start loaded by noting it on the ship sheet). A hit causes one automatic critical instead of damage: Speed -10 cm and no All Ahead Full until repaired. (Fleets p. 347)")),
+     dict(desc="Leech torpedoes at no extra cost, loaded with a specific Reload Ordnance roll (or start loaded by noting it on the ship sheet). A hit causes one automatic critical instead of damage: Speed -10 cm and no All Ahead Full until repaired. (Fleets p. 349)")),
     (re.compile(r"^Orks"), re.compile(r""), re.compile(r"^Torpedo-bommas$", re.I),
-     dict(desc="Torpedo-bommas: 20 cm bombers with no fighter ability. From the turn after launch each marker may become a Strength-2 torpedo salvo; an additional attack craft type. Cost per launch bay strength. (Fleets p. 359)")),
+     dict(desc="Torpedo-bommas: 20 cm bombers with no fighter ability. From the turn after launch each marker may become a Strength-2 torpedo salvo; an additional attack craft type. Cost per launch bay strength. (Fleets p. 361)")),
     (re.compile(r"^Orks"), re.compile(r""), re.compile(r"^Boarding torpedoes( \(Space Hulk\))?$", re.I),
      dict(desc="Its torpedoes may be boarding torpedoes: a Hit & Run attack instead of torpedo damage when they hit. (Fleets p. 360, Rulebook p. 78)")),
     (re.compile(r""), re.compile(r""), re.compile(r"^Improved Logic Engines$", re.I),
@@ -283,18 +283,18 @@ ROW_EFFECTS = [
     (re.compile(r"Crusade"), re.compile(r"^Fortress-Monastery$"), re.compile(r"re-roll", re.I),
      dict(desc="The fortress-monastery's own re-rolls, usable for its own command checks only. If the Master of the Fleet is assigned to it, they are added to his and may be used by the entire fleet. (Fleets p. 98)")),
     (re.compile(r"^Necrons"), re.compile(r"^Re-rolls$"), re.compile(r"re-roll", re.I),
-     dict(desc="Necron fleet re-rolls, bought for the fleet as a whole and not as Fleet Commander re-rolls: the fleet gets one re-roll plus these. Buy them once for the fleet. (Fleets p. 404)")),
+     dict(desc="Necron fleet re-rolls, bought for the fleet as a whole and not as Fleet Commander re-rolls: the fleet gets one re-roll plus these. Buy them once for the fleet. (Fleets p. 406)")),
     (re.compile(r"^Tyranids"), re.compile(r"^FLEET COMMANDER$"), re.compile(r"^Hive Mind Influence re-roll$", re.I),
      dict(desc="Works like a normal fleet commander re-roll. At most one per hive ship in the fleet. (Fleets p. 430)")),
     (re.compile(r"^Tyranids"), re.compile(r"^FLEET COMMANDER$"), re.compile(r"^Hive Mind Imperative$", re.I),
      dict(desc="A Command check or Leadership test is passed automatically; decide before the dice are rolled. At most one per two hive ships, or one with at least one hive ship. (Fleets p. 430)")),
     (re.compile(r"^Tyranids"), re.compile(r"^HIVE SHIPS$"), re.compile(r"^Increase to Ld 9$", re.I),
      dict(desc="The hive ship has Leadership 9 instead of 8. (Fleets p. 430)")),
-    # --- Chaos: Thunderhawks of a Space Marine crew (J213, p.235) ---
+    # --- Chaos: Thunderhawks of a Space Marine crew (J213, p.245) ---
     (re.compile(r"^Chaos"), re.compile(r"^(?:ORDNANCE|Marine crew may be)$"),
      re.compile(r"^Thunderhawk Gunships \(Chaos Space Marine crew\)$", re.I),
      dict(desc="The ship's launch bays carry Thunderhawk Gunships, and then only Thunderhawks: it may not launch "
-               "any other attack craft. Only a ship with a Chaos Space Marine crew. (Fleets p. 235)")),
+               "any other attack craft. Only a ship with a Chaos Space Marine crew. (Fleets p. 245)")),
     # --- Bakka: Fleet Defence Turrets of the Adeptus Mechanicus ships (J217, p.50) ---
     (re.compile(r"Bakka"), re.compile(r"^Adeptus Mechanicus$"),
      re.compile(r"^Fleet Defence Turrets \(instead of a Mechanicus Gift\)$", re.I),
@@ -303,7 +303,7 @@ ROW_EFFECTS = [
                "when defending another vessel). (Fleets p. 50)")),
 ]
 _ROW_EFFECT_LOG = []
-# An escort version of a capital row (p.370: "Escorts get +1 Turret";
+# An escort version of a capital row (p.372: "Escorts get +1 Turret";
 # Looted Lances "Range is 15 cm for escorts"). The hulk copies are made before
 # this, so no hulk copy is born from the escort version.
 ESC_SPLITS = [
@@ -314,7 +314,7 @@ ESC_SPLITS = [
      dict(swp=dict(f=r"heavy gunz", nmf=r"heavy gunz(?: battery)?", nm="lance battery", rg="15 cm", st="2"),
           cond=dict(esc=1, nmno="hulk", has="heavy gunz"),
           desc="Any heavy gunz batteries on the escorts are replaced with a Strength-2 lance battery. Range is 15 cm for escorts. The cost is for the whole tiddla skwadron.")),
-    # p.371 Klaws: "(Not for escorts except the Grunt at +5 points per escort.)"
+    # p.373 Klaws: "(Not for escorts except the Grunt at +5 points per escort.)"
     # The list's only Gubbin priced per escort, so per="hull"
     # and not a fixed price for the whole skwadron (interpretation decision T31, 14.9.2026).
     (_CLANZ, _GUB, "Klaws", "Klaws (Grunt: +5 per escort)",
@@ -344,12 +344,12 @@ def sec_group(list_name, sec_title):
 # Every price is read from the source sentence when the book writes it
 # there. A hand-written number is only where the sentence does not contain it.
 
-# Hulls that already have xenotech as their own option: the Heavy Transport (p.182,
-# +10 one refit) and the Xenos Vessel variants (p.184-188).
+# Hulls that already have xenotech as their own option: the Heavy Transport (p.192,
+# +10 one refit) and the Xenos Vessel variants (p.194-198).
 _XENO_OWN = r"heavy transport|xenos vessel|fra.al raider|nekulli whip|pthuxutl"
-# The Stryxis Caravan Vessel is an ally (p.196 "cannot ally with any fleet
-# that contains Eldar vessels"). p.175 sells the table to "each Rogue Trader vessel",
-# and p.176 limits it: "can only be used by Rogue Trader cruisers and
+# The Stryxis Caravan Vessel is an ally (p.206 "cannot ally with any fleet
+# that contains Eldar vessels"). p.185 sells the table to "each Rogue Trader vessel",
+# and p.186 limits it: "can only be used by Rogue Trader cruisers and
 # escorts, not by other reserves or allied vessels in the fleet" (spot check 19, J36).
 _XENO_NOT = _XENO_OWN + "|stryxis caravan"
 
@@ -362,7 +362,7 @@ EXTRA = [
     # removed. The reason is in the book: the god's own battle barge carries the Mark in its
     # price already - "This ship bears the Mark of Nurgle as part of its point
     # cost; it does not have to be paid for separately by the ship's
-    # commander" (p.262, and the same p.258/260/264) - and a locked row charged for
+    # commander" (p.264, and the same p.260/262/266) - and a locked row charged for
     # it a second time. The requirement itself does not go away: it is now a fleet-level
     # rule (mark_paid), which sees which situation is at hand.
     dict(lst=r"Chaos", sec=r"^Chaos Warmaster",
@@ -376,17 +376,17 @@ EXTRA = [
 
     # ---- Chaos: a Space Marine crew --------------------------------------
     # "Any capital ship can be designated" - not for escorts; a Daemonship
-    # cannot have a CSM crew (p.227, 237, 241, 245, 249).
+    # cannot have a CSM crew (p.237, 247, 249, 251, 253).
     dict(lst=r"Chaos", sec=r"CHAOS SPACE MARINE CREWS",
          sent=r"capital ship can be designated as having (?:a|an)\s*(.*?)\s*Chaos Space Marine crew at \+?(\d+)\s*points",
          rows=[dict(l="$1 Chaos Space Marine crew", p="$2", a=1,
-                    # p.260: the Wage of Sin "always counts as being crewed by
+                    # p.262: the Wage of Sin "always counts as being crewed by
                     # Emperor's Children Chaos Space Marines (included it its
                     # cost)" - not sold again (spot check 8 row 39).
-                    # p.288: "Hulks cannot take any upgrade that improves
+                    # p.290: "Hulks cannot take any upgrade that improves
                     # Boarding Value" (the crew +2 boarding) and "It may not
                     # take any Chaos Marks" (spot check 12 row 73).
-                    # The Chaos Space Hulk gets the crew (T21): p.287 "including the
+                    # The Chaos Space Hulk gets the crew (T21): p.289 "including the
                     # Warmaster's base leadership, having Chaos Space Marines
                     # embarked"; the crew's +2 is a die modifier, not boarding value.
                     cond=dict(cap=1, noup=r"^daemonship:", nmno=r"^wage of sin|^slaverer"))]),
@@ -394,14 +394,14 @@ EXTRA = [
          sent=r"For \+?(\d+)\s*points, battleships and grand cruisers[^.]*?may include Chosen Terminators",
          # The sentence limits itself: "battleships and grand cruisers ... may include".
          # Without the condition the row was also offered to the Chaos Space Hulk (Defence),
-         # which p.288 also forbids upgrades that improve boarding value.
+         # which p.290 also forbids upgrades that improve boarding value.
          # "... with Chaos Space Marine Warmasters, Lords or crews may include
-         # Chosen Terminators" (p.235-249): the crew is a condition. The binding of the Warmaster and
+         # Chosen Terminators" (p.245-253): the crew is a condition. The binding of the Warmaster and
          # the Lord to a ship is not modelled in the row's conditions (spot check 7
          # rows 13, 29, 31, 46, 50, 90).
          rows=[dict(l="Chosen Terminators (battleship / grand cruiser)", p="$1", a=1,
                     cond=dict(ty="battleship|grand cruiser", up=r"chaos space marine crew")),
-               # p.260: the Wage of Sin's crew is included in the price, so it is a
+               # p.262: the Wage of Sin's crew is included in the price, so it is a
                # "battleship ... with Chaos Space Marine ... crews" even without the row.
                # The start of the name differs: annotate removes duplicates of the same
                # name and price (brackets off the name), so "Chosen
@@ -410,7 +410,7 @@ EXTRA = [
                     cond=dict(nm=r"^wage of sin"))]),
 
     # ---- Chaos: Thunderhawks of a Space Marine crew (J213, S0512) ---------
-    # p.235: "A ship with a Chaos Space Marine crew may be equipped with
+    # p.245: "A ship with a Chaos Space Marine crew may be equipped with
     # Thunderhawk Gunships but if so it may only carry Thunderhawks and may
     # not launch any other attack craft." There is no price, so the row is 0 pts.
     # On the god lists the extractor cut the sentence into a section heading ("Marine crew
@@ -425,29 +425,29 @@ EXTRA = [
     # ---- Chaos: a Mark for the god list's ships ---------------------------
     # On the god lists a Mark goes only to the Warmaster (required, its own row), the Lord
     # (its own row), a CSM-crewed ship ("A ship with a ... Chaos Space
-    # Marine crew may have a Mark of X", p.236/240/244/248) and a Daemonship
+    # Marine crew may have a Mark of X", p.246/248/250/252) and a Daemonship
     # (Nurgle/Khorne/Slaanesh: included in the price; Tzeentch: "paid for
-    # separately", p.237). The price is read from the Warmaster's Mark row (@).
-    # Nurgle's Mark gives +1 Damage Point (p.240).
+    # separately", p.247). The price is read from the Warmaster's Mark row (@).
+    # Nurgle's Mark gives +1 Damage Point (p.248).
     dict(lst=r"Tzeentch", sec=r"CHAOS SPACE MARINE CREWS",
          sent=r"A ship with (?:a|an) [^.]*?Chaos Space Marine crew may have a (Mark of Tzeentch)",
          rows=[dict(l="The $1", p="@The $1", a=1,
-                    # p.258 Scion of Prospero: the Mark "as part of its point cost" (spot check 9).
+                    # p.260 Scion of Prospero: the Mark "as part of its point cost" (spot check 9).
                     cond=dict(cap=1, up=r"chaos space marine crew", nmno=r"^scion of prospero"))]),
     dict(lst=r"Nurgle", sec=r"CHAOS SPACE MARINE CREWS",
          sent=r"A ship with (?:a|an) [^.]*?Chaos Space Marine crew may have a (Mark of Nurgle)",
          rows=[dict(l="The $1", p="@The $1", a=1, mod=dict(hp=1),
-                    # p.262 Terminus Est: the Mark "as part of its point cost" (spot check 9).
+                    # p.264 Terminus Est: the Mark "as part of its point cost" (spot check 9).
                     cond=dict(cap=1, up=r"chaos space marine crew", nmno=r"^terminus est"))]),
     dict(lst=r"Khorne", sec=r"CHAOS SPACE MARINE CREWS",
          sent=r"A ship with (?:a|an) [^.]*?Chaos Space Marine crew may have a (Mark of Khorne)",
          rows=[dict(l="The $1", p="@The $1", a=1,
-                    # p.264 Slaverer: the Mark "as part of its point cost" (spot check 9).
+                    # p.266 Slaverer: the Mark "as part of its point cost" (spot check 9).
                     cond=dict(cap=1, up=r"chaos space marine crew", nmno=r"^slaverer"))]),
     dict(lst=r"Slaanesh", sec=r"CHAOS SPACE MARINE CREWS",
          sent=r"A ship with (?:a|an) [^.]*?Chaos Space Marine crew may have a (Mark of Slaanesh)",
          rows=[dict(l="The $1", p="@The $1", a=1,
-                    # p.260 Wage of Sin: the Mark "as part of its point cost" (spot check 9).
+                    # p.262 Wage of Sin: the Mark "as part of its point cost" (spot check 9).
                     cond=dict(cap=1, up=r"chaos space marine crew", nmno=r"^wage of sin"))]),
     dict(lst=r"Tzeentch", sec=r"^DAEMONSHIPS$",
          sent=r"Daemonships in a Sorcerous Fleet may only take the (Mark of Tzeentch), paid for separately",
@@ -455,14 +455,14 @@ EXTRA = [
                     cond=dict(cap=1, up=r"^daemonship:"))]),
 
     # ---- Orks: Dakka Dakka -----------------------------------------------
-    # p.367: +2 turrets for a capital ship, +1 turret per ship for an escort -
+    # p.369: +2 turrets for a capital ship, +1 turret per ship for an escort -
     # the row belongs only to its own ship class and changes the turrets.
     # Capital ship = battleship or cruiser (Rulebook p.42: "battleships and
     # cruisers are often grouped together under the general heading of capital
-    # ships"). A Rok (p.392 "Defence/8") and an Ork hulk (p.389 "Defence/40") are
+    # ships"). A Rok (p.394 "Defence/8") and an Ork hulk (p.391 "Defence/40") are
     # neither, nor escorts: no Dakka Dakka (user 12.10.2026,
     # J189). The condition cap=1 means in the domain only "not an escort", so the type
-    # is named separately. The same for the boarding torpedoes rows below (p.359:
+    # is named separately. The same for the boarding torpedoes rows below (p.361:
     # "Any capital ship in the Ork fleet list armed with torpedoes"; a Rok has
     # torpedoes, but it is not a capital ship - the hulk has its own +15 row).
     dict(lst=r"Ork", sec=r"DAKKA DAKKA",
@@ -497,7 +497,7 @@ EXTRA = [
          sent=r"capital ships that use torpedoes may use boarding torpedoes for \+?(\d+)\s*points",
          # The sentence limits itself: "capital ships that use torpedoes". Without the condition
          # the row was offered to the Onslaught escort (spot check 6 row 71).
-         # noup: Da Ork Clanz p.371, an Assault Karrier "takes boarding torpedoes for free" (RAW-06).
+         # noup: Da Ork Clanz p.373, an Assault Karrier "takes boarding torpedoes for free" (RAW-06).
          rows=[dict(l="Boarding torpedoes", p="$1", a=1,
                     cond=dict(cap=1, ty=r"battleship|cruiser", has="torpedo", nmno="hulk", noup=r"^assault karrier"))]),
     dict(lst=r"Bakka", sec=r"^ORDNANCE$",
@@ -547,26 +547,26 @@ EXTRA = [
          # The sentence limits itself: a capital ship, a 6+ prow, no Nova Cannon. Without
          # the condition the row was offered to escorts and 5+ prows (spot check 6, 12
          # rows). Demiurg and Kroot allies are not a "Rogue Trader
-         # capital ship" (p.176) nor an "Imperial capital ship" (p.32).
+         # capital ship" (p.186) nor an "Imperial capital ship" (p.32).
          rows=[dict(l="Imperial Power Ram (6+ prow, not with a Nova Cannon)",
                     p="$1", a=1,
                     # FAQ 2026 *Power ram* (the user's decision 20.10.2026: the FAQ is
                     # the third authority): "only Imperial Navy, Rogue Trader and
                     # Adeptus Mechanicus ships ... not available for Strike
                     # Cruisers". The Pirates list's Space Marine Strike Cruiser
-                    # (p.178) is excluded as in Armageddon.
+                    # (p.188) is excluded as in Armageddon.
                     cond=dict(cap=1, prow="6", no="nova cannon",
                               nmno="commerce vessel|warsphere|strike cruiser|battle barge"))]),
     dict(lst=r"Rogue Traders", sec=r"THE BEST MONEY CAN BUY",
          sent=r"roll randomly against the Xenotech System table below for \+?(\d+)\s*points per cruiser or \+?(\d+)\s*points per escort",
          # Two prices, two rows: before, an escort was offered the cruiser's
-         # 15 (spot check 6 row 74). The Heavy Transport (p.182, its own +10 option)
-         # and the Xenos Vessel hulls (p.184-188, xenotech included) do not get
+         # 15 (spot check 6 row 74). The Heavy Transport (p.192, its own +10 option)
+         # and the Xenos Vessel hulls (p.194-198, xenotech included) do not get
          # the list's rows on top.
          rows=[dict(l="Xenotech System, rolled randomly (cruiser)", p="$1", a=1,
                     cond=dict(cap=1, nmno=_XENO_NOT)),
                dict(l="Xenotech System, rolled randomly (escort, per ship)", p="$2", a=1,
-                    # p.192 Fast Clipper: "Instead of taking a refit normally" -
+                    # p.202 Fast Clipper: "Instead of taking a refit normally" -
                     # a taken Fast Clipper replaces the Xenotech refit (J16).
                     per="hull", cond=dict(esc=1, nmno=_XENO_OWN, offopt=r"^Fast Clipper"))]),
     dict(lst=r"Rogue Traders", sec=r"THE BEST MONEY CAN BUY",
@@ -576,134 +576,64 @@ EXTRA = [
                     # roll, not a replacing purchase (spot check 19 round 2, J60).
                     per="hull", cond=dict(nmno=_XENO_NOT, offopt=r"^Fast Clipper",
                                           up=r"^Xenotech System, rolled randomly"))]),
-    # F15 (spot check 6 row 88): the Exploration list p.176 "The Xenotech Systems
-    # refits listed on [p.175] can only be used by Rogue Trader cruisers and
+    # F15 (spot check 6 row 88): the Exploration list p.186 "The Xenotech Systems
+    # refits listed on [p.185] can only be used by Rogue Trader cruisers and
     # escorts, not by other reserves or allied vessels" and "may start by
     # taking one refit from the Xenotech list for the appropriate point
-    # cost" - the prices are on p.175 (15 / 5 per escort / +5 choice).
+    # cost" - the prices are on p.185 (15 / 5 per escort / +5 choice).
     dict(lst=r"Exploration", sec=r"The Best Money Can Buy",
          sent=r"Xenotech Systems refits listed on .*? can only be used by Rogue Trader cruisers and escorts",
          rows=[dict(l="Xenotech System, rolled randomly (cruiser)", p="15", a=1,
                     cond=dict(cap=1, nmno=_XENO_NOT + "|commerce vessel|warsphere"),
-                    x="Rogue Trader cruisers only; price from the Rogue Traders list (Fleets p. 175)."),
+                    x="Rogue Trader cruisers only; price from the Rogue Traders list (Fleets p. 185)."),
                dict(l="Xenotech System, rolled randomly (escort, per ship)", p="5", a=1,
                     per="hull", cond=dict(esc=1, nmno=_XENO_OWN, offopt=r"^Fast Clipper"),
-                    x="Rogue Trader escorts only; price from the Rogue Traders list (Fleets p. 175)."),
+                    x="Rogue Trader escorts only; price from the Rogue Traders list (Fleets p. 185)."),
                dict(l="Choose the Xenotech System instead of rolling", p="5", a=1,
                     per="hull", cond=dict(nmno=_XENO_NOT + "|commerce vessel|warsphere",
                                           offopt=r"^Fast Clipper",
                                           up=r"^Xenotech System, rolled randomly"),
-                    x="Price from the Rogue Traders list (Fleets p. 175).")]),
+                    x="Price from the Rogue Traders list (Fleets p. 185).")]),
 
     # ---- Inkvisiittorit ----------------------------------------------------
-    dict(lst=r"Inquisition", sec=r"^Inquisitor Lord$",
+    # v0.40: the Grey Knights list (p.154) has the same 0-1 Inquisitor Lord
+    # section as the Inquisition (p.148), with the Ordo Malleus Lord (Ld 10,
+    # 100 pts) as a row of its own; v0.36's FLEET COMMANDER rows ("may
+    # purchase up to two more re-rolls", "Ordo Malleus ... +100 pts") are gone.
+    dict(lst=r"Inquisition|Grey Knights", sec=r"^Inquisitor Lord$",
          sent=r"A second re-roll can be purchased for \+?(\d+)\s*points",
          rows=[dict(l="One extra re-roll", p="$1", a=1)]),
-    # These two are from page 144 of the Grey Knights list. Before 7.9.2026
-    # Grey Knights had been merged into the Inquisition, so the lst pattern was
-    # "Inquisition"; after the lists were separated the target is Grey Knights.
-    dict(lst=r"Inquisition|Grey Knights", sec=r"^FLEET COMMANDER$",
-         sent=r"may purchase up to two more re-rolls for \+?(\d+)\s*points each",
-         rows=[dict(l="One extra re-roll", p="$1", a=1),
-               dict(l="Two extra re-rolls", p="$1*2", a=1)]),
-    dict(lst=r"Inquisition|Grey Knights", sec=r"^FLEET COMMANDER$",
-         sent=r"Ordo Malleus Inquisitor Lord \(Ld 10\)\s*\.+\s*\+?(\d+)\s*pts",
-         rows=[dict(l="Ordo Malleus Inquisitor Lord (Ld 10)", p="$1", a=1, k="cmd")]),
 
     # ---- Pirate and eldar commanders ---------------------------------------
     dict(lst=r"Pirates and Wolf Packs", sec=r"^Pirate Captains$",
          sent=r"may purchase up to two more re-rolls for \+?(\d+)\s*points each",
          rows=[dict(l="One extra re-roll", p="$1", a=1),
                dict(l="Two extra re-rolls", p="$1*2", a=1)]),
-    dict(lst=r"Iyanden", sec=r"^RESERVES AND ALLIES$",
-         sent=r"a second or third re-roll can be purchased at \+?(\d+)\s*points each",
-         rows=[dict(l="One extra re-roll", p="$1", a=1),
-               dict(l="Two extra re-rolls", p="$1*2", a=1)]),
-    dict(lst=r"Iyanden", sec=r"^RESERVES AND ALLIES$",
-         sent=r"He must be embarked aboard the Flame of Asuryan if it is present, in which case his cost is (\d+)\s*points",
-         rows=[dict(l="Embarked aboard the Flame of Asuryan", p="-25", a=1,
-                    x="His cost becomes $1 points instead of 150.")]),
+    # Prince Yriel's re-rolls and the Flame of Asuryan discount: his own page
+    # (p.313) since v0.40, built in profile_types.py (J161).
 
-    # ---- AdMech: required free profile changes -----------------------------
-    dict(lst=r"Mechanicus", src=r"Mechanicus", sec=r"^FLEET RULES",
-         sent=r"All Mechanicus capital ships add \+1 to a given vessel.s original turret value",
-         rows=[dict(l="Mechanicus turret refit (+1 turret)", p="0", req=1,
-                    cond=dict(cap=1), mod=dict(tu=1),
-                    x="Included in the point cost.")]),
-    dict(lst=r"Mechanicus", src=r"Mechanicus", sec=r"^FLEET RULES",
-         sent=r"Every Mechanicus cruiser \(not light cruiser\) is equipped with a single 60\s*cm range dorsal lance battery firing left/front/right",
-         rows=[dict(l="Mechanicus dorsal lance battery", p="0", req=1,
-                    cond=dict(ty="cruiser", nmno="light"),
-                    add=["Dorsal lance battery", "60 cm", "1",
-                         "Left/front/right"],
-                    x="Included in the point cost.")]),
-
-    # ---- Power Ram: the book writes this in the FLEET RULES block, not -----
-    #      in a section of its own, so it used to go entirely unpicked.
-    dict(lst=r"Imperial Navy", src=r"Gothic Sector", sec=r"^FLEET RULES",
-         sent=r"Power Ram may be taken by any Imperial capital ship with a 6\+ prow for \+?(\d+)\s*points",
-         # FAQ 2026 *Power ram*: "only Imperial Navy, Rogue Trader and Adeptus
-         # Mechanicus ships meeting the prow requirements may take the power
-         # ram ... not available for Strike Cruisers in the Battlefleet
-         # Armageddon fleet list." Space Marine hulls (Armageddon's Strike
-         # Cruiser and Battle barge, the attachment section's Grey Knights Strike Cruiser)
-         # are excluded by name. The Inquisitorial Cruiser and the Blackship are
-         # Imperial cruisers (p.138), so they get the row
-         # (FAQ2026_tarkistus.md item 1).
-         rows=[dict(l="Imperial Power Ram", p="$1", a=1,
-                    cond=dict(cap=1, prow="6", no="nova cannon", nmno="strike cruiser|battle barge"),
-                    x="Any Imperial Navy, Rogue Trader or Mechanicus capital ship with a 6+ prow, "
-                      "unless it has a Nova Cannon. Not Space Marine strike cruisers or battle barges (FAQ 2026).")]),
-    dict(lst=r"Mechanicus", src=r"Mechanicus", sec=r"^FLEET RULES",
-         sent=r"Power Ram may be taken by any Mechanicus capital ship with a 6\+ prow for \+?(\d+)\s*points",
-         # FAQ 2026 *Power ram*: as the Imperial Navy row above.
-         rows=[dict(l="Imperial Power Ram", p="$1", a=1,
-                    cond=dict(cap=1, prow="6", no="nova cannon", nmno="strike cruiser|battle barge"),
-                    x="Any Imperial Navy, Rogue Trader or Mechanicus capital ship with a 6+ prow, "
-                      "unless it has a Nova Cannon. Not Space Marine strike cruisers or battle barges (FAQ 2026).")]),
-
-    # ---- AdMech: Weapons of the Adeptus Mechanicus (Fleets p. 121) --------
-    dict(lst=r"Mechanicus", src=r"Mechanicus", sec=r"^FLEET RULES",
-         sent=r"cruisers \(not light cruisers\) with armour 6\+ prows can replace their prow torpedoes with a Nova Cannon for \+?(\d+)\s*points",
-         # 30.9.2026: a hull with its own nova option (Lunar, Tyrant) buys it
-         # there - the same purchase (noopt); the Power Ram is "any capital
-         # ship with a 6+ prow, unless it has a Nova Cannon" (Fleets p. 118),
-         # so a taken ram closes this row (noup) as the nova closes the ram
-         rows=[dict(l="Nova Cannon instead of prow torpedoes", p="$1", a=1,
-                    cond=dict(ty="cruiser", nmno="light", prow="6",
-                              has="prow torpedo", noopt="nova cannon",
-                              noup="Power Ram"),
-                    swp=dict(f="prow torpedo",
-                             t=["Prow nova cannon", "30 - 150 cm", "1", "Front"]),
-                    x="Any cruiser with a 6+ prow, even classes that do not "
-                      "normally offer it (such as the Gothic).")]),
-    dict(lst=r"Mechanicus", src=r"Mechanicus", sec=r"^FLEET RULES",
-         sent=r"Mechanicus Retribution battleship can make this trade for \+?(\d+)\s*points",
-         rows=[dict(l="Nova Cannon instead of prow torpedoes (Retribution)",
-                    p="$1", a=1,
-                    cond=dict(nm="retribution", has="prow torpedo",
-                              noup="Power Ram"),
-                    swp=dict(f="prow torpedo",
-                             t=["Prow nova cannon", "30 - 150 cm", "1", "Front"]))]),
-    dict(lst=r"Mechanicus", src=r"Mechanicus", sec=r"^FLEET RULES",
-         sent=r"cruisers that would normally be equipped with 30\s*cm Weapon Batteries can incorporate plasma-boosted batteries that increase their range to 45\s*cm for \+?(\d+)\s*points",
-         rows=[dict(l="Plasma-boosted batteries", p="$1", a=1,
-                    cond=dict(ty="cruiser", has="weapons batter@30",
-                              noopt="30 cm range weapons batteries with 45"),
-                    swp=dict(f="weapons batter", onlyrg="30", rg="45 cm"),
-                    x="Weapon battery range 30 cm becomes 45 cm.")]),
+    # ---- AdMech (v0.40) ------------------------------------------------------
+    # v0.40 p.125: the list's capital ships are the Adeptus Mechanicus
+    # profiles on p.126-137, and "These extra rules, where applicable, are
+    # already included in the profiles on the following pages, i.e. increased
+    # turrets and the dorsal lance." The profiles also carry the Mechanicus
+    # options themselves (plasma-boosters, nova cannon, the light cruisers'
+    # dorsal lance and prow armour, the power ram), so the list-level rows of
+    # v0.36 (+1 turret, dorsal lance, nova cannon, Retribution nova, plasma
+    # batteries, light cruiser dorsal lance) are gone: they would count twice.
+    # The escorts are still the Imperial Navy profiles (p.121: "Mechanicus
+    # escorts do not have the +1 turret as part of their point cost").
+    #
+    # Power ram: v0.40 removed the fleet-wide rule ("Power Ram may be taken by
+    # any Imperial capital ship with a 6+ prow", FAQ 2026 *Power ram*) and
+    # prints it as an option of each ship that may take it. The new book wins
+    # over the FAQ (CLAUDE.md), so the ram is a profile option now.
     dict(lst=r"Mechanicus", src=r"Mechanicus", sec=r"^FLEET RULES",
          sent=r"They however may each purchase \+1 turret for \+?(\d+)\s*points",
          rows=[dict(l="+1 turret (escort squadron)", p="$1", a=1, per="hull",
                     cond=dict(esc=1), mod=dict(tu=1),
                     x="If taken, every escort in the squadron takes it.")]),
-    dict(lst=r"Mechanicus", src=r"Mechanicus", sec=r"^FLEET RULES",
-         sent=r"Endeavour and\s+Endurance light cruisers may replace their prow torpedoes with a single 30\s*cm range dorsal lance battery firing left/front/right for no cost",
-         rows=[dict(l="Dorsal lance instead of prow torpedoes", p="0",
-                    cond=dict(nm="endeavour|endurance", has="prow torpedo"),
-                    swp=dict(f="prow torpedo",
-                             t=["Dorsal lance battery", "30 cm", "1",
-                                "Left/front/right"]))]),
+
 
     # ---- Inquisition ------------------------------------------------------
     dict(lst=r"Inquisition", sec=r"ORDO XENOS",
@@ -713,10 +643,10 @@ EXTRA = [
     dict(lst=r"Inquisition", sec=r"ORDNANCE AND UPGRADES",
          sent=r"ship embarking an Inquisitor is equipped with launch bays, it must replace its attack craft with Thunderhawks, with its launch bay strength divided in half",
          rows=[dict(l="Embarks the Inquisitor: Thunderhawks, launch bays halved",
-                    p="0", # p.139: "If an Imperial Navy or Adeptus Mechanicus ship embarking an
+                    p="0", # p.149: "If an Imperial Navy or Adeptus Mechanicus ship embarking an
                     # Inquisitor is equipped with launch bays..." - not for Grey Knights
                     # ships; no speed is given, so the Thunderhawk is 20 cm (p.95).
-                    # The Inquisitorial cruiser (p.150) is neither an Imperial Navy nor a
+                    # The Inquisitorial cruiser (p.160) is neither an Imperial Navy nor a
                     # Mechanicus ship; its Thunderhawk bays are in the profile
                     # at full strength (spot check 8 row 48).
                     cond=dict(has="launch bay", nmno="grey knights|inquisitorial"),
@@ -747,10 +677,10 @@ EXTRA = [
     dict(lst=r"Ork", src=r"Cyclops", sec=r"^FLEET RULES",
          sent=r"Torpedo-bommas may be taken by any ship equipped with launch bays for \+?(\d+)\s*points per launch bay strength",
          rows=[dict(l="Torpedo-bommas", p="$1", a=1, per="bay",
-                    # Da Ork Clanz p.371: an Assault Karrier "may only use assault boats"
+                    # Da Ork Clanz p.373: an Assault Karrier "may only use assault boats"
                     cond=dict(has="launch bay", noup=r"^assault karrier"),
                     x="Per launch bay strength.")]),
-    # Da Ork Clanz p.371: an Assault Karrier "takes boarding torpedoes for
+    # Da Ork Clanz p.373: an Assault Karrier "takes boarding torpedoes for
     # free", so the paid rows give way to it (RAW-06; the Waaagh! list has no Karrier)
     dict(lst=r"Ork", src=r"Cyclops", sec=r"^FLEET RULES",
          sent=r"capital ship in the Ork fleet list armed with torpedoes can use boarding torpedoes for \+?(\d+)\s*points",
@@ -794,14 +724,14 @@ TABLES = [
 # parsed the rows properly, so they are copied from there as they are
 # and not parsed from prose again - otherwise the same price would be in two
 # places and could diverge.
-GUBBIN_NT = "Gubbin, Fleets pg. 367-371."
-# p.372 word for word. The earlier text also said "each Gubbin only once",
+GUBBIN_NT = "Gubbin, Fleets pg. 369-373."
+# p.374 word for word. The earlier text also said "each Gubbin only once",
 # which the book does not say - that is the rows' own mx limit, not a sentence of the book.
 GUBBIN_TEXT = ("A Warlord may choose for his own ship or escort skwadron one upgrade "
                "from the Gubbins list for every re-roll he has at its listed cost.")
 GUBBIN_SECS = ("GUBBINS", "MORE GUBBINS")
 # Sections of the same Clanz block that have no prices at all. They too belong
-# only to the Clanz list (Fleets p.368: "only with its dedicated Clanz fleet
+# only to the Clanz list (Fleets p.370: "only with its dedicated Clanz fleet
 # list"), so they move there as text sections.
 ORK_CLANZ_TEXT_SECS = ("MOB RULE", "YOUNG GUNZ")
 
@@ -1074,20 +1004,20 @@ def annotate(lists_out, raws, pages=None):
         for name, pts, col in CLANS:
             if not re.search(re.escape(name), blob, re.I):
                 continue
-            # The clan's price is on the Waaagh! list's pages (p.367-371).
+            # The clan's price is on the Waaagh! list's pages (p.369-373).
             _cm = re.search(re.escape(name), clan_blob, re.I)
             rows.append(dict(
                 l="Clan: %s (%s)" % (name, col), r=None, p=pts, a=1, u=1,
                 mx=None, prose=1,
                 src_page=_page_at(clan_pm, _cm.start()) if _cm else None,
-                # Ruling T58 (user 26.10.2026): every Rok pays too - p. 369
+                # Ruling T58 (user 26.10.2026): every Rok pays too - p. 371
                 # counts Rok skwadrons among the capital ship skwadrons
                 # (Snakebites), and only a tiddla skwadron pays once.
-                nt="Clan upgrade, Fleets pg. 367–371. Every capital ship in "
+                nt="Clan upgrade, Fleets pg. 369–373. Every capital ship in "
                    "the skwadron pays separately, and so does every Rok; for "
                    "tiddla skwadrons the cost is for the whole skwadron. The "
                    "skwadron must show clan colours."))
-        # The Blood Axe Warlord's ship's Imperial Navy refit (p.369: "The
+        # The Blood Axe Warlord's ship's Imperial Navy refit (p.371: "The
         # Warlord's ship may take one refit from the Imperial Navy refit table
         # (rolled randomly) for +20 points."): a row of its own (user
         # 29.10.2026), so that it can be bought and printed - it was only the
@@ -1097,7 +1027,7 @@ def annotate(lists_out, raws, pages=None):
         # table it is rolled on is ruling T61.
         _rm = re.search(r"The Warlord.s ship may take one refit from the Imperial Navy refit table "
                         r"\(rolled randomly\) for \+?(\d+)\s*points", clan_blob, re.I)
-        assert _rm, "Blood Axes: the Imperial Navy refit sentence (p.369) was not found"
+        assert _rm, "Blood Axes: the Imperial Navy refit sentence (p.371) was not found"
         rows.append(dict(
             l="Imperial Navy refit, rolled randomly (Blood Axe Warlord's ship)", r=None,
             p=int(_rm.group(1)), a=1, u=1, mx=None, prose=1, cond=dict(cap=1),
@@ -1209,11 +1139,11 @@ def annotate(lists_out, raws, pages=None):
                     h["cond"] = dict({k2: v2 for k2, v2 in c.items()
                                       if k2 not in ("cap", "esc", "nmno")}, nm="hulk")
                     h.pop("grp", None)
-                    h["nt"] = ((("Fleets p. 371: More Gubbins can be taken by any number of capital "
+                    h["nt"] = ((("Fleets p. 373: More Gubbins can be taken by any number of capital "
                                  "ships in the fleet, so a Space Hulk pays the listed cost; the double "
-                                 "cost on p. 372 covers the list of Gubbins. ")
+                                 "cost on p. 374 covers the list of Gubbins. ")
                                 if flat else
-                                ("Fleets p. 372: a Space Hulk takes Gubbins for double the "
+                                ("Fleets p. 374: a Space Hulk takes Gubbins for double the "
                                  "listed cost; no upgrade that improves boarding value or speed. "))
                                + str(e.get("nt") or "")).strip()
                     copies.append(h)
@@ -1230,7 +1160,7 @@ def annotate(lists_out, raws, pages=None):
                     h.update(fx)
                     sec["ents"].append(h)
                     _ESC_SPLIT_HITS[0] += 1
-                # Deathskullz (p.369): "Deathskullz capital ships and/or tiddla
+                # Deathskullz (p.371): "Deathskullz capital ships and/or tiddla
                 # skwadrons have 'looted' upgrades (torpedoes and/or lances) for
                 # no additional cost." From every Looted row (also the escort
                 # and hulk versions) a free copy for the Deathskullz; the paid
@@ -1245,7 +1175,7 @@ def annotate(lists_out, raws, pages=None):
                     h["p"] = 0
                     h["cond"] = dict(c0, up=r"^clan: deathskullz")
                     h["desc"] = (str(e.get("desc") or "") +
-                                 " Deathskullz take it for no additional cost (Fleets p. 369).").strip()
+                                 " Deathskullz take it for no additional cost (Fleets p. 371).").strip()
                     h.pop("grp", None)
                     e["cond"] = dict(c0, noup=r"^clan: deathskullz")
                     free.append(h)
@@ -1253,7 +1183,7 @@ def annotate(lists_out, raws, pages=None):
                 sec["ents"].extend(free)
 
         # Waaagh! (J224): a hulk Warlord pays +50 for Extra Power Fields
-        # (p.390: "Extra Powerfields costs +50 pts instead of +25."). The Warlord's
+        # (p.392: "Extra Powerfields costs +50 pts instead of +25."). The Warlord's
         # upgrades are in the WARLORD section on the commander, and the ship does not affect
         # the row's price, so the hulk price is a row of its own in the same
         # exclusive group. The row goes to the end of the list, so that the other
@@ -1268,9 +1198,9 @@ def annotate(lists_out, raws, pages=None):
                 h = dict(src[0])
                 h["l"] = "Extra Power Fields (Space Hulk)"
                 h["p"] = 50
-                h["src_page"] = 390
+                h["src_page"] = 392
                 h["desc"] = ("A Warlord aboard a space hulk: Extra Powerfields costs +50 pts instead of +25 "
-                             "(Fleets p. 390).")
+                             "(Fleets p. 392).")
                 sec["ents"].append(h)
                 _HULK_PF_HITS[0] += 1
 
@@ -1375,7 +1305,7 @@ def annotate(lists_out, raws, pages=None):
             if sec["t"].strip().upper() not in HULL_PRICE_SECS:
                 continue
             for e in sec["ents"]:
-                # A Mark row in the same section (Tzeentch p.237) is not a price list.
+                # A Mark row in the same section (Tzeentch p.247) is not a price list.
                 if e.get("k") != "up" or e.get("at") or e.get("grp") == "mark":
                     continue
                 want = str(e["l"]).strip().lower() + "s"
@@ -1395,11 +1325,11 @@ def annotate(lists_out, raws, pages=None):
                 # has already run - set the same result by hand.
                 e["grp"] = group_of(e["l"]) or e.get("grp")
                 # "A Daemonship may not have a Chaos Space Marine crew"
-                # (p.227, 237, 241, 245, 249).
+                # (p.237, 247, 249, 251, 253).
                 e["cond"] = dict(noup=r"chaos space marine crew")
-                # "(not the Terminus Est or flagship)" p.241, "(not the Wage
-                # of Sin or the flagship)" p.249, "Except for the flagship or
-                # the Scion of Prospero" p.237: the named ship cannot be a
+                # "(not the Terminus Est or flagship)" p.249, "(not the Wage
+                # of Sin or the flagship)" p.253, "Except for the flagship or
+                # the Scion of Prospero" p.247: the named ship cannot be a
                 # Daemonship. The flagship is a fleet-level matter.
                 blob0 = " ".join(sec.get("text") or [])
                 mn = (re.search(r"\(not the ([^()]+?) or (?:the )?flagship\)", blob0, re.I)
@@ -1409,9 +1339,9 @@ def annotate(lists_out, raws, pages=None):
                     _NAMED_EXCL_HITS[0] += 1
                 # Nurgle/Khorne/Slaanesh: "All Daemonships ... must take the
                 # Mark of X, which is already included in the cost to upgrade
-                # them to Daemonships" (p.241, 245, 249). The Mark's rule
+                # them to Daemonships" (p.249, 251, 253). The Mark's rule
                 # prints from the Daemonship row (domain.js), and Nurgle's Mark
-                # gives +1 Damage Point (p.240).
+                # gives +1 Damage Point (p.248).
                 blob = " ".join(sec.get("text") or [])
                 mi = re.search(r"must\s+take\s+the\s+Mark\s+of\s+(\w+),\s+which\s+is\s+already\s+included",
                                blob, re.I)

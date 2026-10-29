@@ -65,7 +65,7 @@ export function fleetCounters(L, catalog, members){
   var rx = function(p){ return p.re ? new RegExp(p.re, "i") : null; };
   /* A pick can also name what no section of this list holds (J144): race -
      a ship borrowed from a list of that race; hull - a profile name, own or
-     borrowed. Fleets p. 142: a fleet taking Chaos ships through an Ordo
+     borrowed. Fleets p. 152: a fleet taking Chaos ships through an Ordo
      Malleus Inquisitor must not "include Space Marine vessels" and "may not
      take any Grey Knights vessels" - an Imperial fleet can have those from
      its own Inquisition section, as reserves or as allies alike. */
@@ -141,7 +141,7 @@ export function fleetCounters(L, catalog, members){
   };
 
   /* J221: an ally's special character, where the fleet list allows one
-     (Exploration, Fleets p. 177) - counted below, not refused here */
+     (Exploration, Fleets p. 187) - counted below, not refused here */
   var allySpecial = function(m){
     return !!(L.ally_cmd && m.role === "ally" && m.en && m.en.k === "cmd" &&
               new RegExp(L.ally_cmd.re, "i").test(String(m.en.l))); };
@@ -199,7 +199,7 @@ function ruleSectionCount(F, r, sec, si, lab){
   var out = F.out, secShips = F.secShips, count = F.count;
   /* pick: the heading's count reaches rows outside its own section -
      Chaos renegade Imperial hulls "count as Chaos vessels in all
-     respects" (Fleets p. 222), so they fill the list's own cruiser and
+     respects" (Fleets p. 232), so they fill the list's own cruiser and
      escort headings even though the book prints them apart. */
   var c = r.pick ? count(r.pick, null) : secShips(si);
   out.push({ ok: c <= r.max && (c === 0 || c >= r.min), t: lab, v: c + " / " + r.max, s: r.src });
@@ -232,7 +232,7 @@ function ruleRatio(F, r, sec, si, lab){
   /* at_least: a floor, not an addition. The Chaos Space Hulk needs no
      cruisers, but "it counts as a battleship for purposes of taking
      another so in order to take a second battleship, the fleet must
-     already have six cruisers" (Fleets p. 288). */
+     already have six cruisers" (Fleets p. 290). */
   if(r.at_least && count(r.at_least.cond_pick, null) >= (r.at_least.cond_min == null ? 1 : r.at_least.cond_min))
     allowed = Math.max(allowed, r.at_least.count == null ? 1 : r.at_least.count);
   out.push({ ok: have <= allowed, t: lab, v: have + " / " + allowed, s: r.src });
@@ -247,7 +247,7 @@ function rulePerPoints(F, r, sec, si, lab){
   var cp = r.pick ? count(r.pick, null) : (r.sec || [si]).reduce(function(a, i){ return a + secUnits(i); }, 0);
   /* The denominator is the fleet's own points: every one of these sentences
      says so - "for every 500 points, or part, that the fleet is worth"
-     (Clanz p. 372), "for every full 1,000 points it contains" (Corsairs),
+     (Clanz p. 374), "for every full 1,000 points it contains" (Corsairs),
      "or part thereof in your fleet" (Space Marines). basis: "limit" is for
      a sentence that names the game instead. When the book names a set of
      ships (Tau "per FULL 750 points of Tau vessels"), of_pick wins.
@@ -261,7 +261,7 @@ function rulePerPoints(F, r, sec, si, lab){
                   : Math.max(1, Math.ceil(basePts / r.per)) * r.each;
   if(!condMet(r)) ap = 0;
   /* exact: "one Warlord for every 500 points, or part, that the fleet
-     is worth - no more, no less" (Clanz p. 372). */
+     is worth - no more, no less" (Clanz p. 374). */
   out.push({ ok: r.exact ? cp === ap : cp <= ap, t: lab,
     v: cp + " / " + ap + (r.exact ? " exactly" : ""), s: r.src });
   if(r.interp && r.interp.strict_max != null && cp <= ap && cp > r.interp.strict_max)
@@ -292,8 +292,8 @@ function ruleSquadron(F, r, sec, si, lab){
   var sizeWhy = function(n){
     return n < r.min ? " - too few, at least " + r.min : n > r.max ? " - too many, at most " + r.max : ""; };
   /* Da Ork Clanz tiddla skwadrons are the player's own (clanzTiddlas): the
-     rows of one tag in any mix (Fleets p. 372) with a Blood Axe tiddla's
-     commandeered escorts (p. 369), a row without a tag by itself. A short row
+     rows of one tag in any mix (Fleets p. 374) with a Blood Axe tiddla's
+     commandeered escorts (p. 371), a row without a tag by itself. A short row
      does not join a squadron the player did not make, because the Warlord's
      count reads the same skwadrons (ChatGPT audit RAW-01: two Brutes and two
      Onslaughts were green as one mixed tiddla here and two tiddlas there). */
@@ -343,7 +343,7 @@ function ruleSquadron(F, r, sec, si, lab){
      while the count saw it as a squadron of its own: two cruisers with two
      Swords and two Cobras were green in Pirates and Wolf Packs, which asks
      for "at least one squadron of 3-6 escort vessels ... for each cruiser"
-     (Fleets p. 179). A squadron of several rules (a Messenger beside
+     (Fleets p. 189). A squadron of several rules (a Messenger beside
      Defenders) is said once; sep names sections that may not share one
      (Demiurg p. 487). */
   if(F.L.esq && inRule.length && !inRule.some(function(m){ return m.defence; })){
@@ -460,7 +460,7 @@ function ruleConditionalCap(F, r, sec, si, lab){
 function ruleRequires(F, r, sec, si, lab){
   var out = F.out, count = F.count;
   /* if_min: the rule starts from that many - "more than one Rogue Trader
-     cruiser" (Fleets p. 174); if_units counts squadrons, not hulls. */
+     cruiser" (Fleets p. 184); if_units counts squadrons, not hulls. */
   var ifc = count(r.if_pick, null, !!r.if_units), thenc = count(r.then_pick, null), min = r.min == null ? 1 : r.min;
   var ifMin = r.if_min == null ? 1 : r.if_min;
   /* unless_pick: the requirement lapses while that row is present - the
@@ -474,7 +474,7 @@ function ruleRequires(F, r, sec, si, lab){
 function ruleMinRatio(F, r, sec, si, lab){
   var out = F.out, count = F.count;
   /* units: squadrons rather than hulls - "At least one squadron of 3-6
-     escort vessels must be included for each cruiser" (Fleets p. 179). */
+     escort vessels must be included for each cruiser" (Fleets p. 189). */
   var b2 = count(r.per_pick, null), h2 = count(r.allow_pick, null, !!r.units), needN = b2 * r.min;
   out.push({ ok: b2 === 0 || h2 >= needN, t: lab, v: h2 + " / " + needN + " min", s: r.src });
 }
@@ -524,7 +524,7 @@ function ruleOptionRatio(F, r, sec, si, lab){
   /* Units of a pick that took an own option matching opt_re, at most
      allow per `per` hulls of the pick: "Up to half of the Grey Knights
      strike cruisers in a fleet may replace their launch bays" (Fleets
-     p. 151). */
+     p. 161). */
   var orx = new RegExp(r.opt_re, "i");
   var inPick = members.filter(function(m){
     return (r.pick || []).some(function(p){ return pickHas(m, p); }); });
@@ -546,7 +546,7 @@ function ruleNotice(F, r, sec, si, lab){
 }
 
 /* one_donor: the borrowed ships of these roles come from one list only -
-   "they can only be from one fleet" (Fleets p. 177, J213). */
+   "they can only be from one fleet" (Fleets p. 187, J213). */
 function ruleOneDonor(F, r, sec, si, lab){
   var L = F.L, members = F.members, out = F.out;
   var donors = {};
@@ -557,7 +557,7 @@ function ruleOneDonor(F, r, sec, si, lab){
 }
 
 /* agreement: rows the book allows only by the opponent's consent - the
-   outdated Siluria and Havoc (Fleets p. 174), Tyranid bio-enhancements in
+   outdated Siluria and Havoc (Fleets p. 184), Tyranid bio-enhancements in
    a one-off game (p. 426). Said in yellow while one is in the fleet. */
 function ruleAgreement(F, r, sec, si, lab){
   var members = F.members, out = F.out, count = F.count, tookUp = F.tookUp, upRows = F.upRows;
@@ -603,13 +603,13 @@ function ruleHookCapacity(F, r, sec, si, lab){
 /* up_budget: rows of an upgrade section limited by a budget of units and
    taken upgrades - Clanz "A vessel or escort skwadron led by a Warlord
    may be given up to one of the following upgrades per Command re-roll
-   the Warlord has" (p. 370): each Warlord has one re-roll and may buy
+   the Warlord has" (p. 372): each Warlord has one re-roll and may buy
    more. The ship-to-Warlord binding is not modelled, the sum is. */
 function ruleUpBudget(F, r, sec, si, lab){
   var members = F.members, out = F.out, count = F.count, tookUp = F.tookUp, paidUp = F.paidUp, upRows = F.upRows;
   var usedB = 0, budget = 0;
   /* up_re: only these rows use the budget - a Strand of Fortune per Lord
-     of Tzeentch (Fleets p. 236), not every Force of Chaos. */
+     of Tzeentch (Fleets p. 246), not every Force of Chaos. */
   var budRows = upRows(r.up_sec, r.up_re ? new RegExp(r.up_re, "i") : null);
   members.forEach(function(m){ budRows.forEach(function(x){ if(paidUp(m, x[0], x[1])) usedB++; }); });
   (r.budget || []).forEach(function(b){
@@ -657,7 +657,7 @@ export function checkRowLimits(F){
   }); });
   /* fxg: rows that are alternatives of one fleet purchase. "The fleet gets
      one re-roll and can purchase extra re-rolls at the cost shown" (Necrons
-     p. 404, Demiurg p. 486): One or Two, not one of each on two ships. */
+     p. 406, Demiurg p. 486): One or Two, not one of each on two ships. */
   var fxg = {};
   L.secs.forEach(function(sec, si){ sec.ents.forEach(function(en, ei){
     if(!en.fxg || !isUpgradeEnt(en)) return;

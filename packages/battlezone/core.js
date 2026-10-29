@@ -725,7 +725,7 @@ export function generate(seed, opts) {
 }
 
 /* ═══════════════════════════════════════════════════════════ WHAT IT DOES
-   In-play rules for each phenomenon, pp. 109–116, summarised close to the
+   In-play rules for each phenomenon, pp. 109–115, summarised close to the
    book's wording with the page on every group. A gas cloud is defined by
    reference to the Blast Marker rules, so those are pulled in from pp. 48
    and 68–69 rather than assumed known. */
@@ -825,9 +825,9 @@ export const RULES = {
         'Torpedoes are <b>destroyed</b> on contact with the template edge, including ones launched from a ship sitting on the template.',
         'Hulks that drift into a planet are <b>destroyed</b>.'
       ] },
-      { head: 'Orbit', cite: 'pp. 113, 116', items: [
+      { head: 'Orbit', cite: 'pp. 113, 115', items: [
         '<b>High orbit:</b> a ship in a gravity well may elect to enter it. It does not have to move, but a stationary ship is shot at using the <b>Defences column</b>.',
-        '<b>Low orbit</b> removes the ship to a separate table and is a scenario system of its own (p. 116): firepower there takes a right column shift, lances and nova cannon need a <b>4+</b> to fire, and torpedoes may not be fired at all.'
+        '<b>Low orbit</b> removes the ship to a separate table and is a scenario system of its own (p. 115): firepower there takes a right column shift, lances and nova cannon need a <b>4+</b> to fire, and torpedoes may not be fired at all.'
       ] }
     ]
   },

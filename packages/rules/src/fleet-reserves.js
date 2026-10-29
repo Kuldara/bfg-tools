@@ -27,12 +27,12 @@ export function checkReserveTypes(F){
     + "vessels in the fleet. (Fleets p. 16)";
   var typeOf = function(m){ return (m.sel && m.sel.sh && m.sel.sh.rt) || "none"; };
   /* res_exempt: one named reserve that a named commander frees from the
-     reserve rules. Fleets p. 319, Prince Yriel: "if the Flame of Asuryan with
+     reserve rules. Fleets p. 317, Prince Yriel: "if the Flame of Asuryan with
      Yriel is added to the parent fleet it is exempt from the reserve rules"
      - the book's own example is a Corsair list that does not field three
      capital ships. It is the Flame WITH Yriel, so a Hero-led fleet still
      needs its three cruisers, and so does a Dragonship carrying Yriel. One
-     hull: the Flame is unique (p. 329). */
+     hull: the Flame is unique (p. 327). */
   var RX = L.res_exempt || null, rxShip = null;
   if(RX && members.some(function(x){
        return x.own && x.en && x.en.k === "cmd" && new RegExp(RX.needs_re, "i").test(String(x.en.l)); }))
@@ -40,7 +40,7 @@ export function checkReserveTypes(F){
       return m.role === "reserve" && m.unitRow && m.hulls === 1 && new RegExp(RX.re, "i").test(String(m.en.l)); })[0] || null;
   if(rxShip) out.push({ ok: true, t: "Exempt from the reserve rules: " + rxShip.en.l, v: "with Prince Yriel",
                         s: RX.src + " (Fleets p. " + RX.pg + ")" });
-  /* The Flame is unique (p. 329). A borrowed row's own 0-1 is the donor
+  /* The Flame is unique (p. 327). A borrowed row's own 0-1 is the donor
      list's business and is not counted here, so two Flames used to pass:
      one exempt with Yriel, one as an ordinary reserve. */
   if(RX && RX.unique_src){
@@ -136,9 +136,9 @@ export function checkReserveRaces(F){
     var dl = m.sel && m.sel.list, dr = dl ? dl.race : null;
     /* res_ban: a list that swaps ships with nobody - "A Space Marine Crusade
        fleet will not take ships from or provide ships to any other fleet list
-       as reserves or allies" (Fleets p. 99, and the same on p. 145 for the
+       as reserves or allies" (Fleets p. 99, and the same on p. 155 for the
        Grey Knights). Both directions, and it beats every grant: the sentence
-       is the list's own and more specific than p. 139's Inquisitor licence. */
+       is the list's own and more specific than p. 149's Inquisitor licence. */
     if(dl && dl !== L && L.res_ban){
       sayOnce({ ok: false, t: "Takes no reserves or allies: " + L.nm,
         v: "not from " + dl.nm, s: L.res_ban });
@@ -249,7 +249,7 @@ export function checkReserveRaces(F){
         excluded = g; return; }
       /* needs_re: the grant is conditional on the fleet's own commander -
          "An Eldar Hero must lead the fleet in order to use Craftworld Eldar
-         vessels as reserves" (Fleets p. 316, and the mirror on p. 319). */
+         vessels as reserves" (Fleets p. 314, and the mirror on p. 317). */
       if(g.needs_re){
         var re2 = new RegExp(g.needs_re, "i");
         var led = members.some(function(x){

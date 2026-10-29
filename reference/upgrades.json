@@ -19,14 +19,14 @@
       "match": "re-rolls?$",
       "list": "^Necrons",
       "class": "text",
-      "page": 404,
-      "why": "The Necron fleet's re-rolls, bought once for the fleet (p.404)."
+      "page": 406,
+      "why": "The Necron fleet's re-rolls, bought once for the fleet (p.406)."
     },
     {
       "match": "^Imperial Power Ram",
       "class": "text",
-      "page": 176,
-      "why": "p.32/118/176: one automatic hit when ramming (the power_ram rule)."
+      "page": 186,
+      "why": "p.32/118/186: one automatic hit when ramming (the power_ram rule)."
     },
     {
       "match": "^Torpedo bombers( \\((Eldar or Tau|Tau) vessel\\))?$",
@@ -97,151 +97,151 @@
     {
       "match": "^Embarks the Inquisitor",
       "class": "weapon",
-      "page": 142,
+      "page": 152,
       "why": "The inquisitor's ship: the launch bays are halved and carry Thunderhawks."
     },
     {
       "match": "^Grey Knights (Terminators|Honour Guard)$",
       "class": "text",
-      "page": 145,
-      "why": "p.145: the section's own sentences print."
+      "page": 155,
+      "why": "p.155: the section's own sentences print."
     },
     {
       "match": "^(Xenotech System|Choose the Xenotech)",
       "class": "text",
-      "page": 175,
-      "why": "p.175: the player rolls or chooses the Xenotech system; the card states the table."
+      "page": 185,
+      "why": "p.185: the player rolls or chooses the Xenotech system; the card states the table."
     },
     {
       "match": "^Summoned through the Webway Portal",
       "class": "text",
-      "page": 337,
-      "why": "p.337: a way of buying - the ship is bought at half price and arrives from off the table through the Haven's portal; the card's row states the arrival rule (J175 d)."
+      "page": 335,
+      "why": "p.335: a way of buying - the ship is bought at half price and arrives from off the table through the Haven's portal; the card's row states the arrival rule (J175 d)."
     },
     {
       "match": "^Crew skill, rolled randomly",
       "class": "text",
-      "page": 175,
-      "why": "p.175: the player rolls the crew skill from the Rulebook's table (p.159); the card states the table and how the price is counted (J44)."
+      "page": 185,
+      "why": "p.185: the player rolls the crew skill from the Rulebook's table (p.159); the card states the table and how the price is counted (J44)."
     },
     {
       "match": "^Mark of (Nurgle|Khorne|Slaanesh|Tzeentch)$",
       "class": "text",
-      "page": 258,
-      "why": "A Mark that comes built in, 0 points, a locked info row (J142). The barges p.258-264: 'This ship bears the Mark of X as part of its point cost'; the Daemonships p.240/244/248: the Mark 'already included in the cost'. The row's desc is the book's sentence; no mod key, because the profile already includes the Mark (Terminus Est hp 13) and the Daemonship row carries Nurgle's +1 hp. The label is without 'The' on purpose, so the card's Mark rules and mark_paid do not trigger a second time."
+      "page": 260,
+      "why": "A Mark that comes built in, 0 points, a locked info row (J142). The barges p.260-266: 'This ship bears the Mark of X as part of its point cost'; the Daemonships p.248/250/252: the Mark 'already included in the cost'. The row's desc is the book's sentence; no mod key, because the profile already includes the Mark (Terminus Est hp 13) and the Daemonship row carries Nurgle's +1 hp. The label is without 'The' on purpose, so the card's Mark rules and mark_paid do not trigger a second time."
     },
     {
       "match": "^The Mark of Nurgle$",
       "class": "stat",
-      "page": 240,
-      "why": "p.232/240: +1 Damage Point."
+      "page": 248,
+      "why": "p.242/248: +1 Damage Point."
     },
     {
       "match": "^The Mark of (Slaanesh|Khorne|Tzeentch)$",
       "class": "text",
-      "page": 232,
-      "why": "p.232-248: Markin saanto (mark_*-saannot)."
+      "page": 242,
+      "why": "p.242-252: Markin saanto (mark_*-saannot)."
     },
     {
       "match": "Chaos Space Marine crew$",
       "class": "text",
-      "page": 224,
-      "why": "p.224-225: CSM-miehiston saannot (csm_crew)."
+      "page": 234,
+      "why": "p.234-235: CSM-miehiston saannot (csm_crew)."
     },
     {
       "match": "^(Wage of Sin: )?Chosen Terminators",
       "class": "text",
-      "page": 224,
-      "why": "p.224: a teleport attack with two dice (chosen_terminators)."
+      "page": 234,
+      "why": "p.234: a teleport attack with two dice (chosen_terminators)."
     },
     {
       "match": "^Daemonship:",
       "class": "text",
-      "page": 227,
-      "why": "p.227-249: the Daemonship rules (daemonship). The Nurgle, Khorne and Slaanesh Daemonship includes the Mark (Nurgle: mod hp +1), the Black Crusade's and Tzeentch's do not - a stat effect is not the class's condition."
+      "page": 237,
+      "why": "p.237-253: the Daemonship rules (daemonship). The Nurgle, Khorne and Slaanesh Daemonship includes the Mark (Nurgle: mod hp +1), the Black Crusade's and Tzeentch's do not - a stat effect is not the class's condition."
     },
     {
       "match": "^(Warp Beasts|Strand of Fortune|Hives of Nurgle|Ark of Pestilence|Berzerker Tide|Veil of Lust|Siren.s Summon)$",
       "class": "text",
-      "page": 236,
-      "why": "p.236-248 Forces of Chaos: the section's own sentences print."
+      "page": 246,
+      "why": "p.246-252 Forces of Chaos: the section's own sentences print."
     },
     {
       "match": "^Ghostship$",
       "class": "text",
-      "page": 307,
-      "why": "p.307: Ghostship-saannot (ghostship)."
+      "page": 309,
+      "why": "p.309: Ghostship-saannot (ghostship)."
     },
     {
       "match": "^Aspect Warrior Host$",
       "class": "text",
-      "page": 305,
-      "why": "p.305: Aspect Warrior Host (aspect_host)."
+      "page": 307,
+      "why": "p.307: Aspect Warrior Host (aspect_host)."
     },
     {
       "match": "^Leech torpedoes$",
       "class": "text",
-      "page": 347,
-      "why": "p.347: leech torpedoes, loaded with their own Reload Ordnance roll."
+      "page": 349,
+      "why": "p.349: leech torpedoes, loaded with their own Reload Ordnance roll."
     },
     {
       "match": "^Dakka Dakka",
       "class": "stat",
-      "page": 365,
-      "why": "p.365/367: +2 turrets for a capital ship, +1 for an escort."
+      "page": 367,
+      "why": "p.367/369: +2 turrets for a capital ship, +1 for an escort."
     },
     {
       "match": "^Torpedo-bommas$",
       "class": "text",
-      "page": 360,
-      "why": "p.360: torpedo-bommas; the price per launch bay strength."
+      "page": 362,
+      "why": "p.362: torpedo-bommas; the price per launch bay strength."
     },
     {
       "match": "^Boarding torpedoes( \\(Space Hulk\\))?$",
       "class": "text",
-      "page": 360,
-      "why": "p.360/372: the torpedoes can be boarding torpedoes (Hit & Run)."
+      "page": 362,
+      "why": "p.362/374: the torpedoes can be boarding torpedoes (Hit & Run)."
     },
     {
       "match": "^(Soopa Boostas|Extra Power Fields|Extra Turrets|Maniac Turrets)",
       "class": "stat",
-      "page": 370,
-      "why": "p.370: +5 cm / +1 kilpi / +2 tornia (saattaja +1) / tornit D3."
+      "page": 372,
+      "why": "p.372: +5 cm / +1 kilpi / +2 tornia (saattaja +1) / tornit D3."
     },
     {
       "match": "^(Looted Lances|Shokk-Attack Lance)",
       "class": "weapon",
-      "page": 370,
-      "why": "p.370-371: heavy gunz -> lance battery / prow heavy gunz -> Shokk-attack lance."
+      "page": 372,
+      "why": "p.372-373: heavy gunz -> lance battery / prow heavy gunz -> Shokk-attack lance."
     },
     {
       "match": "^(Looted Torpedoes|Mad Meks|Maniac Gunners|Mega-Armoured Boarding Parties|Prow Ram|Tellyporta|Klaws|Assault Karrier)",
       "class": "text",
-      "page": 370,
-      "why": "p.370-371: the Gubbin's rule in the card's upgrade box."
+      "page": 372,
+      "why": "p.372-373: the Gubbin's rule in the card's upgrade box."
     },
     {
       "match": "^Clan: Evil Sunz",
       "class": "stat",
-      "page": 369,
-      "why": "p.369: +5 cm."
+      "page": 371,
+      "why": "p.371: +5 cm."
     },
     {
       "match": "^Clan: ",
       "class": "text",
-      "page": 369,
-      "why": "p.369: the clan's rule in the card's upgrade box."
+      "page": 371,
+      "why": "p.371: the clan's rule in the card's upgrade box."
     },
     {
       "match": "^Imperial Navy refit, rolled randomly",
       "class": "text",
-      "page": 369,
-      "why": "p.369 Blood Axes: one refit rolled on the Imperial Navy refit table (ruling T61: Rulebook pp. 156, 158-159); the card's upgrade box says how to roll it and leaves the result to write in."
+      "page": 371,
+      "why": "p.371 Blood Axes: one refit rolled on the Imperial Navy refit table (ruling T61: Rulebook pp. 156, 158-159); the card's upgrade box says how to roll it and leaves the result to write in."
     },
     {
       "match": "^Sepulchre$",
       "class": "text",
-      "page": 404,
+      "page": 406,
       "why": "Necron Sepulchre (sepulchre-saanto)."
     },
     {
@@ -297,8 +297,8 @@
       "match": "^Thunderhawk Gunships \\(Chaos Space Marine crew\\)$",
       "list": "^Chaos",
       "class": "text",
-      "page": 235,
-      "why": "J213: a ship with a Space Marine crew may carry Thunderhawks and then only them (p.235); the card states the limit, the stats do not change."
+      "page": 245,
+      "why": "J213: a ship with a Space Marine crew may carry Thunderhawks and then only them (p.245); the card states the limit, the stats do not change."
     },
     {
       "match": "^Fleet Defence Turrets \\(instead of a Mechanicus Gift\\)$",

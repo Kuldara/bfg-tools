@@ -18,7 +18,7 @@ function step(k,i,d){
   u.dp = Math.max(0, Math.min(eShip(u).hp, u.dp + d));
   render();
 }
-/* Turrets are bought (Ork Dakka Dakka FL p.365, AdMech +1 FL p.119, Tyranid
+/* Turrets are bought (Ork Dakka Dakka FL p.367, AdMech +1 FL p.119, Tyranid
    extra spore cysts FL p.426) and shot away, and the defender adds the number
    REMAINING (RB p.89), so the profile value is only where it starts. */
 export function stepTurrets(k,i,d){
@@ -116,7 +116,7 @@ function applyResult(){
   closeResult();
   if(notes.length) flash(notes.join(" · "));
 }
-/* "+2 to one boarding dice roll per game" (FL p.372): once it has been used in
+/* "+2 to one boarding dice roll per game" (FL p.374): once it has been used in
    a resolved action, the app takes it off the ship so it cannot be used twice. */
 function spendOncePerGame(notes){
   ["att","def"].forEach(function(k){

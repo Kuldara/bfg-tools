@@ -232,7 +232,7 @@
       { s: "b", t: "Deploy anywhere within 15 cm of the opposite long edge, facing any way. A space hulk must be at least 90 cm from the star fort, and may not enter low orbit." },
       { t: "Set up the low orbit table. Roll off; the higher roll chooses to go first or second." }
     ],
-    notes: [OLD + "Planetary Assault: RB p. 136–137. Ramilies star fort: FL p. 500–. Chaos Space Hulk: FL p. 286.",
+    notes: [OLD + "Planetary Assault: RB p. 136–137. Ramilies star fort: FL p. 500–. Chaos Space Hulk: FL p. 288.",
       "“An additional 3D6 of planetary defences” is read as 3D6×10 more points of them, in line with the other rolls; agree before play.",
       "Only a space hulk may try to board a Ramilies."],
     refs: [["Planetary Assault", "RB p. 136–137"], ["Ramilies star fort", "FL p. 500–"], ["Chaos Space Hulk", "FL p. 286–287"], ["Low orbit table", "RB p. 116"]],

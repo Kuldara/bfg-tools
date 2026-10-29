@@ -52,7 +52,7 @@ export function renderAct(){
     h.push('<div class="warn rule" data-a="rulehelp"><b>!</b><div>'+
       rules.map(function(p){return esc(p.text);}).join("<br>")+'</div></div>');
   }
-  /* Every defending hull with holofields owes its own save (FL p.303-304: the
+  /* Every defending hull with holofields owes its own save (FL p.305-306: the
      save is rolled once against each attack, by the ship being attacked). */
   var owed = holo.filter(function(p){ return !S.def.ships[p.idx] || !S.def.ships[p.idx].holo; });
   if(owed.length){
@@ -116,8 +116,8 @@ export function diceStrip(p){
 }
 /* Two dice means two rows: the app compares them, so the player never has to
    work out which one counts. */
-/* The defender's save is "shadowfields" on a Dark Eldar ship (FL p.342),
-   "holofields" on an Eldar one (FL p.303): the same save under two names. */
+/* The defender's save is "shadowfields" on a Dark Eldar ship (FL p.344),
+   "holofields" on an Eldar one (FL p.305): the same save under two names. */
 export function fieldWord(){ return S.def.f>=0 && FLEETS[S.def.f].race==="darkeldar" ? "shadowfields" : "holofields"; }
 function holoRow(pr){
   var h = ['<div class="dieRow def"><div class="lab def-lab">'+esc(pr.ship.slice(0,9))+

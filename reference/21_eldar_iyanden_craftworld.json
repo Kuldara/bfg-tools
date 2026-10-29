@@ -1,6 +1,6 @@
 {
   "list": "Eldar — Iyanden Craftworld",
-  "book_page": 318,
+  "book_page": 316,
   "read_pages": [
     318,
     319
@@ -10,7 +10,7 @@
     {
       "key": "0-1 Autarch",
       "text": "0-1 Autarch",
-      "page": 318,
+      "page": 316,
       "status": "enforced",
       "kind": "section_count",
       "min": 0,
@@ -19,7 +19,7 @@
     {
       "key": "worth over 750 points, an Autarch must be included",
       "text": "If the fleet is worth over 750 points, an Autarch must be included to lead it.",
-      "page": 318,
+      "page": 316,
       "status": "enforced",
       "kind": "mandatory_at",
       "points": 750,
@@ -28,7 +28,7 @@
     {
       "key": "You may include up to three Farseers in your fleet",
       "text": "You may include up to three Farseers in your fleet, each of whom must be assigned to a capital ship (including the flagship if desired) and gives the vessel a re-roll.",
-      "page": 318,
+      "page": 316,
       "status": "enforced",
       "why": "The book gives the limit both as the heading '0-3 Farseers' and as a sentence. They were merged into one check on 7.9.2026, and the book's full sentence was left as the source sentence.",
       "kind": "section_count",
@@ -38,7 +38,7 @@
     {
       "key": "up to one Dragonship for every two Wraithships",
       "text": "Your fleet may include up to one Dragonship for every two Wraithships included in the fleet.",
-      "page": 318,
+      "page": 316,
       "status": "enforced",
       "kind": "ratio",
       "allow": 1,
@@ -50,7 +50,7 @@
     {
       "key": "you may include a single Dragonship as his flagship which does not count",
       "text": "If your fleet is led by an Autarch, you may include a single Dragonship as his flagship which does not count against this limitation.",
-      "page": 318,
+      "page": 316,
       "status": "enforced",
       "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. The Dragonship ratio's exempt field: with the Autarch leading, one Dragonship is left out of the count. The earlier gap: a conditional EXCEPTION to a ratio: one Dragonship is left out of the count if the Autarch leads. The engine had no concept of an exception, so the check is here t",
       "enforced_by": "rule_field",
@@ -61,28 +61,28 @@
     {
       "key": "In order to take the Flame of Asuryan, an Eldar Hero must lead the fleet",
       "text": "In order to take the Flame of Asuryan, an Eldar Hero must lead the fleet and be embarked aboard it.",
-      "page": 318,
+      "page": 316,
       "status": "manual",
       "why": "A conditional row limit; the number one is enforced as the row limit mx=1 from the book's marking '(0-1)'."
     },
     {
       "key": "Your fleet may include any number of Wraithships",
       "text": "Your fleet may include any number of Wraithships.",
-      "page": 318,
+      "page": 316,
       "status": "manual",
       "why": "Limits nothing."
     },
     {
       "key": "Any capital ship in the fleet may be upgraded to a Ghostship",
       "text": "Any capital ship in the fleet may be upgraded to a Ghostship. Such a vessel may not also include a Farseer or Aspect Warrior crew.",
-      "page": 318,
+      "page": 316,
       "status": "manual",
       "why": "An exclusive choice per ship; the row 'Ghostship 0 pts' can be chosen."
     },
     {
       "key": "escorts in your fleet in squadrons of 2",
       "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
-      "page": 318,
+      "page": 316,
       "status": "enforced",
       "kind": "squadron",
       "min": 2,
@@ -91,38 +91,38 @@
     {
       "key": "torpedo bombers for +15 points per launch bay",
       "text": "Attack craft carriers may also be equipped with torpedo bombers for +15 points per launch bay.",
-      "page": 319,
+      "page": 317,
       "status": "manual",
       "why": "A priced option; the row 'Torpedo bombers 15 pts' can be chosen."
     },
     {
       "key": "one Corsair Eldar cruiser or light cruiser may be taken for every three Dragonships",
       "text": "Following this, one Corsair Eldar cruiser or light cruiser may be taken for every three Dragonships and / or Wraithships in the fleet.",
-      "page": 319,
+      "page": 317,
       "status": "manual",
       "why": "Reserve-saanto."
     },
     {
       "key": "Up to one Void Stalker may be taken in the fleet as long as the fleet is at least 1000 points",
       "text": "Up to one Void Stalker may be taken in the fleet as long as the fleet is at least 1000 points and at least three Corsair Eldar cruisers and / or light cruisers are already present in the fleet.",
-      "page": 319,
+      "page": 317,
       "status": "manual",
       "why": "Two conditions and a ship from another list; not enforceable."
     },
     {
       "key": "Yriel may be taken instead of the Hero Fleet Commander",
       "text": "Prince Yriel 150 pts. Yriel may be taken instead of the Hero Fleet Commander as listed in the Corsair and Craftworld Eldar fleet lists.",
-      "page": 319,
+      "page": 317,
       "status": "enforced",
       "kind": "cap",
       "max": 1,
-      "why": "Enforced 10.9.2026 (fleet spot check S5, report 17): Yriel replaces the Hero and the Hero the Autarch (p.318 'in place of its normal fleet commander'), so Autarch + Hero + Yriel is at most one, and the required Autarch (over 750) is met by any of the three. Before, a fleet led by the Hero or Yriel got the error 'Autarch missing'.",
+      "why": "Enforced 10.9.2026 (fleet spot check S5, report 17): Yriel replaces the Hero and the Hero the Autarch (p.316 'in place of its normal fleet commander'), so Autarch + Hero + Yriel is at most one, and the required Autarch (over 750) is met by any of the three. Before, a fleet led by the Hero or Yriel got the error 'Autarch missing'.",
       "classified_on": "2026-09-10"
     },
     {
       "key": "An Eldar Hero must lead the fleet in order to use Corsair Eldar vessels as reserves",
       "text": "An Eldar Hero must lead the fleet in order to use Corsair Eldar vessels as reserves. Following this, one Corsair Eldar cruiser or light cruiser may be taken for every three Dragonships and / or Wraithships in the fleet. Corsair Eldar escort vessels may be taken in the same ratio of no more than one for every three Shadowhunters in the fleet.",
-      "page": 319,
+      "page": 317,
       "status": "enforced",
       "enforced_by": "fleet_golden",
       "goldens": [
@@ -134,7 +134,7 @@
     {
       "key": "He must be embarked aboard the Flame of Asuryan if it is present",
       "text": "He must be embarked aboard the Flame of Asuryan if it is present, in which case his cost is 125 points.",
-      "page": 319,
+      "page": 317,
       "status": "enforced",
       "enforced_by": "fleet_golden",
       "goldens": [
@@ -175,18 +175,18 @@
     {
       "name": "Flame of Asuryan",
       "pts": 320,
-      "page": 329,
+      "page": 327,
       "mx": 1
     },
     {
       "name": "Dragonship",
       "pts": 260,
-      "page": 330
+      "page": 328
     },
     {
       "name": "Wraithship",
       "pts": 160,
-      "page": 331
+      "page": 329
     },
     {
       "name": "Ghostship",
@@ -201,7 +201,7 @@
     {
       "name": "Shadowhunter",
       "pts": 40,
-      "page": 332
+      "page": 330
     },
     {
       "name": "Prince Yriel",
@@ -213,12 +213,12 @@
     {
       "name": "Torpedo bombers",
       "pts": 15,
-      "why": "p.319 ORDNANCE"
+      "why": "p.317 ORDNANCE"
     }
   ],
   "notes": [
     "The Ghostship costs 'Free' in the book; the app reads it as zero.",
-    "The Aspect Warrior Host has a page reference in the book (pg. 305), but it is not a ship profile but a fleet upgrade. The FIXES table removes the reference and marks the row as an upgrade.",
-    "Prince Yriel is a box of his own on page 319 in the book and replaces the Hero commander both here and on the Corsair list."
+    "The Aspect Warrior Host has a page reference in the book (pg. 307), but it is not a ship profile but a fleet upgrade. The FIXES table removes the reference and marks the row as an upgrade.",
+    "Prince Yriel is a box of his own on page 317 in the book and replaces the Hero commander both here and on the Corsair list."
   ]
 }

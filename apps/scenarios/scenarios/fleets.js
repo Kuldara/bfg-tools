@@ -1,5 +1,5 @@
 /* Fleets book scenarios — BFG Remastered Fleets v0.36: the six Rogue Trader scenarios
-   (FL p. 198–211) and Craftworld Assault (FL p. 312–315).
+   (FL p. 208–221) and Craftworld Assault (FL p. 336–339).
    Summarised in our own words; every scenario is hand-made (see docs/history/scenarios/LUEMINUT.md, in Finnish).
    The Fleets book still has unresolved cross-references ("[???]", old rulebook and
    Armada pages); the scenarios give their Remastered places and say so in a note. */
@@ -14,23 +14,23 @@
     { w: "Start of the " + foe + (foe.endsWith("s") ? "’" : "’s") + " movement", s: fs, t: "You may activate one marker yourself — two if any enemy ship is on special orders." }
   ];
 
-  /* escaping transport value: heavy = 2 (1 crippled), armed freighter and armed cargo vessel / fast clipper = ½, rounded down at the end (FL p. 182, 192, 523) */
+  /* escaping transport value: heavy = 2 (1 crippled), armed freighter and armed cargo vessel / fast clipper = ½, rounded down at the end (FL p. 192, 202, 523) */
   const tvOut = st => get(st, "rt", 0) + 2 * get(st, "ht", 0) + get(st, "hc", 0) + Math.floor((get(st, "af", 0) + get(st, "fc", 0)) / 2);
 
-  /* attacker table for Merchantmen's Folly: its own (the variant "std") or a threat table (FL p. 198–199) */
+  /* attacker table for Merchantmen's Folly: its own (the variant "std") or a threat table (FL p. 208–209) */
   const MF_TABLE = [[1, 1, "One deadfall torpedo or attack craft cluster"], [2, 2, "Two deadfall torpedo or attack craft clusters"], [3, 3, "Three deadfall torpedo or attack craft clusters"], [4, 4, "A squadron of escorts worth up to 100 pts"], [5, 5, "A squadron of escorts worth up to 150 pts"], [6, 6, "One capital ship worth up to 200 pts"]];
   const mfRows = v => v === "std" || !THREATS[v] ? MF_TABLE : THREATS[v].rows;
-  const mfName = v => v === "std" || !THREATS[v] ? "this scenario’s own table" : "the " + THREATS[v].n + " table (FL p. 198–199)";
+  const mfName = v => v === "std" || !THREATS[v] ? "this scenario’s own table" : "the " + THREATS[v].n + " table (FL p. 208–209)";
   const rowText = (rows, d) => { const r = rows.find(x => d >= x[0] && d <= x[1]); return r ? r[2] : ""; };
-  /* Space Hulk!: the attackers' own table, no threat tables (FL p. 208) */
+  /* Space Hulk!: the attackers' own table, no threat tables (FL p. 218) */
   const SH_TABLE = [[1, 1, "Three deadfall torpedo or attack craft clusters"], [2, 2, "A squadron of escorts worth up to 100 pts"], [3, 3, "A squadron of escorts worth up to 150 pts"], [4, 4, "A squadron of escorts worth up to 200 pts"], [5, 5, "One capital ship worth up to 210 pts"], [6, 6, "One capital ship worth up to 250 pts"]];
 
   addScenarios([
   /* ------------------------------------------------------------ RT 1 MERCHANTMEN'S FOLLY */
   {
     id: "fl-merchantmens-folly", grp: "fleets", name: "Merchantmen’s Folly", series: "Rogue Traders · Scenario One", trust: "fleets",
-    why: "Fleets book scenario: Convoy with a ragtag merchant fleet that will not keep formation.", src: "FL p. 200–201", book: "O", suggest: ["Rogue Traders"],
-    others: "Written for a Rogue Trader escorting merchantmen; the convoy’s armed freighters, Q-ships and fast clippers are in the Fleets book (FL p. 192, 521–523) and any fleet can take them. The attackers use their own fleet list.",
+    why: "Fleets book scenario: Convoy with a ragtag merchant fleet that will not keep formation.", src: "FL p. 210–211", book: "O", suggest: ["Rogue Traders"],
+    others: "Written for a Rogue Trader escorting merchantmen; the convoy’s armed freighters, Q-ships and fast clippers are in the Fleets book (FL p. 202, 521–523) and any fleet can take them. The attackers use their own fleet list.",
     sides: { a: { n: "Convoy", f: "Rogue Traders" }, b: { n: "Attackers" } },
     pitch: "Ten transports’ worth of explorers and hired merchantmen head for a new colony. Pirates lie in wait — but some of these merchantmen bite back, and some panic.",
     variants: [["std", "Own table"], ["trap", "Cruiser Trap"], ["stalk", "Stalkers"], ["mine", "Old Minefield"], ["wolf", "Wolf Packs"]],
@@ -71,15 +71,15 @@
         const val = rt + 2 * ht + Math.floor(af / 2) + Math.floor(fc / 2), cost = 40 * ht + 20 * af + 20 * fc + 60 * qs + 60 * ec, allow = st.v && st.v !== "std" ? 750 : 500;
         const ok = (c, t) => "<li>" + (c ? "✓ " : "✗ ") + t + "</li>";
         return "<h3>Convoy check</h3><ul class='plain'>" + ok(val === 10, "Transport value <b>" + val + "</b> — must be exactly 10") + ok(af >= 2 && qs >= 2 && fc >= 2, "At least 2 armed freighters, 2 Q-ships and 2 fast clippers") + ok(ht <= 2, "At most 2 heavy transports") + "</ul>" +
-          "<p class='calc'>Transport variants cost <b>" + cost + " pts</b> of the <b>" + allow + " pts</b> allowance: <b>" + Math.max(0, allow - cost) + " pts</b> left for warships" + (cost > allow ? " — over the allowance!" : "") + ".</p><p class='small muted' style='margin:0'>Costs: heavy transport 40, armed freighter 20, fast clipper (armed cargo vessel) 20, Q-ship 60, escort carrier 60 pts (FL p. 182, 192, 521–523). Regular transports cost nothing here (see note).</p>";
+          "<p class='calc'>Transport variants cost <b>" + cost + " pts</b> of the <b>" + allow + " pts</b> allowance: <b>" + Math.max(0, allow - cost) + " pts</b> left for warships" + (cost > allow ? " — over the allowance!" : "") + ".</p><p class='small muted' style='margin:0'>Costs: heavy transport 40, armed freighter 20, fast clipper (armed cargo vessel) 20, Q-ship 60, escort carrier 60 pts (FL p. 192, 202, 521–523). Regular transports cost nothing here (see note).</p>";
       } }
     ],
-    notes: v => [XREF + " Convoy set-up, markers and first turn: RB p. 134–135. Threat tables: FL p. 198–199. Transport variants: FL p. 182, 192, 521–523.",
+    notes: v => [XREF + " Convoy set-up, markers and first turn: RB p. 134–135. Threat tables: FL p. 198–199. Transport variants: FL p. 192, 202, 521–523.",
       "The scenario prices only heavy transports and says the transport variants are chosen before “any remaining available points” go on warships. We read that as: variants are paid from the escort allowance, regular transports are free as in Convoy. Agree before play.",
       "The discipline table runs from 2 to 11; a roll of 12 has no entry. Suggestion: treat 12 as “the convoy keeps formation”.",
-      "How much an escaping ship counts comes from the ship profiles: a heavy transport is two transports (one if crippled), an armed freighter or a fast clipper half a transport, rounded down at the end; Q-ships and escort carriers count nothing (FL p. 182, 192, 522–523)."].concat(v === "stalk" ? ["Warp beasts and daemon mines carry victory points, but this scenario is decided by escaping transports; their points matter only for a campaign tally."] : []),
-    refs: v => [["Convoy set-up and contact markers", "RB p. 134–135"], ["Threat tables", "FL p. 198–199"], ["Heavy transport", "FL p. 182"], ["Armed cargo vessel / fast clipper", "FL p. 192"], ["Escort carrier, Q-ship, armed freighter", "FL p. 521–523"], ["Rogue Traders fleet list", "FL p. 174"]].concat(
-      v === "stalk" ? [["Orbital mines (daemon mines build on them)", "FL p. 23, 512"], ["Daemonships", "FL p. 226–227"], ["Tyranid escort drones and cruisers", "FL p. 432–"]] : v === "mine" ? [["Orbital mines", "FL p. 23, 512"]] : v === "wolf" ? [["Xenos vessels", "FL p. 184"]] : []),
+      "How much an escaping ship counts comes from the ship profiles: a heavy transport is two transports (one if crippled), an armed freighter or a fast clipper half a transport, rounded down at the end; Q-ships and escort carriers count nothing (FL p. 192, 202, 522–523)."].concat(v === "stalk" ? ["Warp beasts and daemon mines carry victory points, but this scenario is decided by escaping transports; their points matter only for a campaign tally."] : []),
+    refs: v => [["Convoy set-up and contact markers", "RB p. 134–135"], ["Threat tables", "FL p. 198–199"], ["Heavy transport", "FL p. 192"], ["Armed cargo vessel / fast clipper", "FL p. 202"], ["Escort carrier, Q-ship, armed freighter", "FL p. 521–523"], ["Rogue Traders fleet list", "FL p. 184"]].concat(
+      v === "stalk" ? [["Orbital mines (daemon mines build on them)", "FL p. 23, 512"], ["Daemonships", "FL p. 236–237"], ["Tyranid escort drones and cruisers", "FL p. 432–"]] : v === "mine" ? [["Orbital mines", "FL p. 23, 512"]] : v === "wolf" ? [["Xenos vessels", "FL p. 194"]] : []),
     play: [
       { w: "Start of your turn, from turn 2", s: "a", t: "Roll 2D6 on the discipline table (tool below). Special orders it calls for pass automatically and must be taken that turn." },
       { w: "Turn 2", s: "a", t: "Convoy ships held back enter at the start of the turn." },
@@ -111,7 +111,7 @@
   /* ------------------------------------------------------------ RT 2 THE HUNTER AND THE PREY */
   {
     id: "fl-hunter-and-prey", grp: "fleets", name: "The Hunter and the Prey", series: "Rogue Traders · Scenario Two", trust: "fleets",
-    why: "Fleets book scenario: a pirate haven hidden behind contact markers, with one force docked at a secret base.", src: "FL p. 202–203", book: "O", suggest: ["Rogue Traders"],
+    why: "Fleets book scenario: a pirate haven hidden behind contact markers, with one force docked at a secret base.", src: "FL p. 212–213", book: "O", suggest: ["Rogue Traders"],
     others: "Any hunting fleet and any raiders; both must be mostly escorts and may not take battleships.",
     sides: { a: { n: "Hunters", f: "Rogue Traders" }, b: { n: "Raiders" } },
     pitch: "Hired to clear a pirate-infested system, the hunters sweep towards two small moons. Somewhere among the rocks one raider force waits on guard — and the other sits docked at a hidden base.",
@@ -188,7 +188,7 @@
   /* ------------------------------------------------------------ RT 3 THE GAUNTLET */
   {
     id: "fl-rt-gauntlet", grp: "fleets", name: "The Gauntlet (Rogue Traders)", series: "Rogue Traders · Scenario Three", trust: "fleets",
-    why: "Fleets book scenario: a lone cruiser runs a gauntlet of hidden escort squadrons. Also a good test bench for home-made ship designs.", src: "FL p. 204–205", book: "O", suggest: ["Rogue Traders"],
+    why: "Fleets book scenario: a lone cruiser runs a gauntlet of hidden escort squadrons. Also a good test bench for home-made ship designs.", src: "FL p. 214–215", book: "O", suggest: ["Rogue Traders"],
     others: "Any defender with one cruiser and a few escorts, against any escort-only attacker. The book suggests it for testing home-made ships: send one through against several fleet lists — if it wins easily its points are too low, if it dies in a turn or two they are too high.",
     sides: { a: { n: "Defender", f: "Rogue Traders" }, b: { n: "Attacker" } },
     pitch: "A Rogue Trader cruiser drops out of the warp straight into a hostile fleet. No time to jump back: the only way out is through.",
@@ -238,7 +238,7 @@
   /* ------------------------------------------------------------ RT 4 EXPLORER'S PRIZE */
   {
     id: "fl-explorers-prize", grp: "fleets", name: "Explorer’s Prize", series: "Rogue Traders · Scenario Four", trust: "fleets",
-    why: "Fleets book scenario: find a derelict cruiser in an asteroid field, board it and fly it out.", src: "FL p. 206–207", book: "O", suggest: ["Rogue Traders"],
+    why: "Fleets book scenario: find a derelict cruiser in an asteroid field, board it and fly it out.", src: "FL p. 216–217", book: "O", suggest: ["Rogue Traders"],
     others: "Any two fleets. The derelict can be a cruiser from any fleet except Necrons or Tyranids.",
     sides: { a: { n: "Fleet A", f: "Rogue Traders" }, b: { n: "Fleet B" } },
     pitch: "Somewhere in the asteroid belt drifts an almost intact cruiser — a fortune for whoever finds it, boards it and flies it out. You are not the only one looking.",
@@ -297,7 +297,7 @@
   /* ------------------------------------------------------------ RT 5 SPACE HULK! */
   {
     id: "fl-space-hulk", grp: "fleets", name: "Space Hulk!", series: "Rogue Traders · Scenario Five", trust: "fleets",
-    why: "Fleets book scenario: escort a half-secured space hulk while its boarding teams fight what lives inside.", src: "FL p. 208–209", book: "O", suggest: ["Rogue Traders"],
+    why: "Fleets book scenario: escort a half-secured space hulk while its boarding teams fight what lives inside.", src: "FL p. 218–219", book: "O", suggest: ["Rogue Traders"],
     others: "Written for a Rogue Trader with allies; any fleet can escort the hulk. The attackers are rolled from their own fleet list.",
     sides: { a: { n: "Hulk escort", f: "Rogue Traders + allies" }, b: { n: "Attackers" } },
     pitch: "A Rogue Trader has claimed a space hulk and is towing riches beyond imagining home. The boarding teams are still clearing it — and every few turns they wake something up.",
@@ -328,15 +328,15 @@
     stools: [
       { k: "val", id: "nr", l: "Number of rolls: D3 + 5", opts: [6, 7, 8], roll: () => 5 + dn(3) },
       { k: "shiproll", id: "frc", l: "Roll the attacking forces", cl: "Rolls", n0: st => get(st, "nr", 0) || 7, il: i => "Roll " + (i + 1), out: d => rowText(SH_TABLE, d) },
-      { k: "html", html: "<h3>Attackers’ table (FL p. 208)</h3><table class='ltab'>" + SH_TABLE.map(r => "<tr><td>" + r[0] + "</td><td>" + fmt(r[2]) + "</td></tr>").join("") + "</table>" },
+      { k: "html", html: "<h3>Attackers’ table (FL p. 218)</h3><table class='ltab'>" + SH_TABLE.map(r => "<tr><td>" + r[0] + "</td><td>" + fmt(r[2]) + "</td></tr>").join("") + "</table>" },
       { k: "val", id: "start", l: "Hulk’s starting damage: 2D6", opts: [], roll: () => d6() + d6(), unit: " hits" }
     ],
     notes: [XREF + " Convoy set-up and first turn (old rulebook p. 74–75): RB p. 134–135.",
       "The text sets the attackers up as in Convoy (markers at least 30 cm from every edge), but the book’s map shades 45 cm zones along both long edges as their deployment zones. Agree which to use; one way to honour both is to keep the markers inside the shaded zones but 30 cm from the edges.",
-      "The scenario gives no profile or points value for the hulk beyond 40 hits, Ld 6 and working shields and turrets. The Chaos Space Hulk (650 pts, FL p. 286) and the Ork Hulk (600 pts, FL p. 389) both have 40 hits, 10 cm speed, 3 shields, 4+ armour and 6 turrets; agree which one moves and counts for victory points.",
+      "The scenario gives no profile or points value for the hulk beyond 40 hits, Ld 6 and working shields and turrets. The Chaos Space Hulk (650 pts, FL p. 288) and the Ork Hulk (600 pts, FL p. 391) both have 40 hits, 10 cm speed, 3 shields, 4+ armour and 6 turrets; agree which one moves and counts for victory points.",
       "“Three weapons batteries (all four quadrants)” is read as +3 weapons battery firepower in each of the prow, port, starboard and aft arcs; “two torpedo launchers (all three quadrants)” as +2 torpedo strength in the prow, port and starboard arcs. Only the dorsal lance has a stated maximum (4).",
       "Read literally, a hulk the escort has to destroy after the third Genestealer result still gives the attackers a major victory (“destroyed for any reason”), while the escort gains +1 renown for what it recovered."],
-    refs: [["Convoy set-up and contact markers", "RB p. 134–135"], ["Chaos Space Hulk profile", "FL p. 286–287"], ["Ork Hulk profile", "FL p. 389–390"], ["Victory points", "RB p. 122"]],
+    refs: [["Convoy set-up and contact markers", "RB p. 134–135"], ["Chaos Space Hulk profile", "FL p. 288–289"], ["Ork Hulk profile", "FL p. 389–390"], ["Victory points", "RB p. 122"]],
     play: [
       { w: "Start of your turn, from turn 2", s: "a", t: "Roll 2D6 on the boarding table (tool below). The result takes effect at once." },
       { w: "Turn 2", s: "a", t: "Escorts held back enter at the start of the turn." },
@@ -372,7 +372,7 @@
   /* ------------------------------------------------------------ RT 6 THE VOID MALEVOLENT */
   {
     id: "fl-void-malevolent", grp: "fleets", name: "The Void Malevolent", series: "Rogue Traders · Scenario Six", trust: "fleets", players: 3,
-    why: "Fleets book scenario for three players: two rivals fighting it out when an ancient horror joins in.", src: "FL p. 210–211", book: "O", suggest: ["Foe: Dark Eldar · Necrons · Tyranids"],
+    why: "Fleets book scenario for three players: two rivals fighting it out when an ancient horror joins in.", src: "FL p. 220–221", book: "O", suggest: ["Foe: Dark Eldar · Necrons · Tyranids"],
     others: "Any two rival fleets of equal points. The third fleet, 1.5 times their size, is ideally Dark Eldar, Necrons or Tyranids — but any fleet can play it, as long as it fights both others.",
     sides: { a: { n: "Player 1" }, b: { n: "Player 2" }, c: { n: "Foe Malevolent", f: "Dark Eldar, Necrons or Tyranids" } },
     pitch: "Two rival fleets are busy with each other when something old and hungry, hidden in the glare of a sun or the clutter of an asteroid field, decides they are both prey.",
@@ -444,7 +444,7 @@
   /* ------------------------------------------------------------ CRAFTWORLD ASSAULT */
   {
     id: "fl-craftworld-assault", grp: "fleets", name: "Craftworld Assault", series: "Eldar · scenario", trust: "fleets",
-    why: "Fleets book scenario: Planetary Assault against a craftworld with its own fortresses, forges and webway gates.", src: "FL p. 312–315", book: "O", suggest: ["Craftworld Eldar", "Tyranids"],
+    why: "Fleets book scenario: Planetary Assault against a craftworld with its own fortresses, forges and webway gates.", src: "FL p. 336–339", book: "O", suggest: ["Craftworld Eldar", "Tyranids"],
     others: "Written for Iyanden against Hive Fleet Kraken. Any attacker can replay it (non-Tyranids take two free transports per 500 pts); the defender should be Eldar, since the reserves and Shadowhunters come from the Eldar lists.",
     sides: { a: { n: "Craftworld", f: "Craftworld Eldar" }, b: { n: "Attacker", f: "Tyranids" } },
     pitch: "A hive fleet has found Iyanden. Land enough swarms on the craftworld and it falls; the Eldar have fortresses, a world-sized forge and a webway gate full of reserves.",
@@ -485,7 +485,7 @@
     notes: [XREF + " Planet placement (old rulebook p. 76): RB p. 136. Tyranid scenario notes (Armada): FL p. 428.",
       "Each assault point is stopped on a 4+ by “one of the fortresses”, but the two fortresses are damaged separately. Suggestion: roll once per assault point and use the better number of the two surviving fortresses.",
       "The fortresses’ and the Spear of Light’s End phase rolls are written as separate checks; roll them separately (tools below)."],
-    refs: [["Planetary Assault (placement, low orbit, assault points)", "RB p. 136–137"], ["Low orbit table", "RB p. 116"], ["Nova Cannon", "RB p. 63"], ["Tyranid scenario notes", "FL p. 428"], ["Eldar fleet lists, Shadowhunters", "FL p. 316–319"]],
+    refs: [["Planetary Assault (placement, low orbit, assault points)", "RB p. 136–137"], ["Low orbit table", "RB p. 116"], ["Nova Cannon", "RB p. 63"], ["Tyranid scenario notes", "FL p. 428"], ["Eldar fleet lists, Shadowhunters", "FL p. 314–317"]],
     play: [
       { w: "Landing troops", s: "b", t: "On the low orbit table, each turn a capital ship spends within 30 cm of the craftworld’s edge scores 1 assault point; a transport scores 2. A ship landing troops or bombarding does nothing else that turn. Tyranids follow their scenario notes (FL p. 428)." },
       { w: "Each assault point", s: "a", t: "Roll a D6: on 4+ the fortresses break up the landing and it does not count. A damaged fortress needs 5+, then 6+." },

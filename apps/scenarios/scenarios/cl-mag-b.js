@@ -132,7 +132,7 @@
   {
     id: "cl-antioc-3", grp: "cl-mag", name: "Critical Intercept", series: "Battle for Antioc · Scenario 3", trust: "classic",
     why: "Escorts only against a warlord’s two-cruiser convoy. He is aboard one of them — and can teleport to the other.", src: "BFG Magazine 8 p. 7–8", book: "O", suggest: ["Imperial Navy", "Chaos"],
-    others: "Any escort fleet against any two cruisers with escorts. Chaos Space Marine cruisers suit the defenders well (FL p. 224). Space Marine or Eldar attackers take 75% of the points.",
+    others: "Any escort fleet against any two cruisers with escorts. Chaos Space Marine cruisers suit the defenders well (FL p. 234). Space Marine or Eldar attackers take 75% of the points.",
     sides: { a: { n: "Interceptors", f: "Imperial Navy" }, b: { n: "Attalid’s convoy", f: "Chaos" } },
     pitch: "The warlord who holds the Chaos armada together, Attalid the Diablos, is crossing to the jump point with only two cruisers. Kill him and the alliance may fall apart.",
     glance: [["Points", "Equal: escorts against two cruisers and escorts"], ["Table", "Not given — use your table"], ["Battlezone", "Deep space"], ["First turn", "Interceptors"], ["Game ends", "Every Chaos ship has left or died"]],
@@ -155,7 +155,7 @@
       { s: "a", t: "The interceptors take the first turn." }
     ],
     stools: [{ k: "secret", id: "att", l: "Attalid is aboard", sub: "Convoy: pick his cruiser. It stays hidden until you show it; choose again after a transfer.", opts: ["Cruiser 1", "Cruiser 2"] }],
-    notes: [OLD + "The magazine points to Chaos Space Marine cruisers in Planet Killer 1; today see FL p. 224.", "“Leave the system” in the victory conditions is read as getting Attalid’s cruiser off the opposite short edge, as the special rules require."],
+    notes: [OLD + "The magazine points to Chaos Space Marine cruisers in Planet Killer 1; today see FL p. 234.", "“Leave the system” in the victory conditions is read as getting Attalid’s cruiser off the opposite short edge, as the special rules require."],
     refs: [["Deep space generator", "RB p. 107–108"], ["Teleport attacks (hit-and-run)", "RB p. 91"], ["Chaos Space Marines", "FL p. 224"]],
     play: [
       { w: "All game", s: "b", t: "Get Attalid’s cruiser off the opposite short edge — crippled is fine." },
@@ -234,11 +234,11 @@
   {
     id: "cl-execution-hour", grp: "cl-mag", name: "Execution Hour", series: "Gothic War · BFG Magazine 8", trust: "classic",
     why: "Fixed fleets from Gordon Rennie’s novel: the evacuation of Belatis as Abaddon’s Planet Killer closes in, with three built-in sub-plots.", src: "BFG Magazine 8 p. 21–23", book: "O", suggest: ["Imperial Navy", "Chaos"],
-    others: "A refight with fixed fleets. Other fleets can stand in with the same shape, but the Planet Killer (FL p. 252) is the point of the scenario.",
+    others: "A refight with fixed fleets. Other fleets can stand in with the same shape, but the Planet Killer (FL p. 254) is the point of the scenario.",
     sides: { a: { n: "Evacuation fleet", f: "Imperial Navy" }, b: { n: "Planet Killer fleet", f: "Chaos" } },
     pitch: "Belatis is doomed and its people are fleeing. Fifteen transports must get away before the Planet Killer arrives — and the Macharius will not leave without its captain.",
     glance: [["Points", "Fixed fleets"], ["Table", "Not given — use your table"], ["Battlezone", "Belatis 75 cm from the Chaos edge, nothing else"], ["First turn", "Chaos"], ["Game ends", "No transports left on the table"]],
-    bring: ["15 transports", "The Planet Killer (FL p. 252)", "Orbital dock, 2 space stations, 4 orbital platforms", "6 ground silos (3 laser, 3 missile)"],
+    bring: ["15 transports", "The Planet Killer (FL p. 254)", "Orbital dock, 2 space stations, 4 orbital platforms", "6 ground silos (3 laser, 3 missile)"],
     forces: {
       a: ["Lord Solar Macharius, Dictator (Ld 7); Drachenfels, Gothic (Ld 9); Graf Orlock and Borodino, Lunars (Ld 8).", "Inviolable Retribution, Adeptus Arbites strike cruiser (Ld 9): a Space Marine strike cruiser that carries assault boats instead of Thunderhawks.", "Pegasus and Achilles, Sword frigates (Ld 7); 150 pts of escorts of any class (random Leadership).", "15 transports, 1 orbital dock, 2 space stations, 2 orbital laser platforms, 2 orbital weapons platforms."],
       b: ["Turn 1: Charybdis, Murder (Ld 8); two squadrons of five Infidels (Ld 8).", "From turn 2: three defence laser silos on Belatis. Turn 3: Virulent, Slaughter (Ld 8) with Bulus Sirl, Chaos Lord with the Mark of Nurgle; three defence missile silos (one shot each).", "Turn 5: Scylla, Styx (Ld 9); Kali, Slaughter (Ld 7); the Planet Killer (Ld 10) with Abaddon; Harbinger of Doom, Chaos Space Marine battle barge (Ld 10); Deathlord and Despoiler, Desolator battleships (Ld 10); 300 pts of escorts (random Leadership)."]
@@ -261,7 +261,7 @@
     notes: [OLD + "The Planet Killer and Abaddon: FL p. 230–231, 252. Exterminatus: RB p. 140–141. Low orbit: RB p. 116.",
       "The article does not say which edge the transports leave by. The natural reading is the Imperial table edge, away from the Planet Killer.",
       "The Chaos defence silos are the captured ground defences of Belatis; they may not be attacked until they have fired."],
-    refs: [["Planet Killer", "FL p. 252"], ["Abaddon", "FL p. 230–231"], ["Exterminatus (destroying the planet)", "RB p. 140–141"], ["Low orbit", "RB p. 116"], ["Space Marine strike cruiser", "FL p. 105"]],
+    refs: [["Planet Killer", "FL p. 254"], ["Abaddon", "FL p. 230–231"], ["Exterminatus (destroying the planet)", "RB p. 140–141"], ["Low orbit", "RB p. 116"], ["Space Marine strike cruiser", "FL p. 105"]],
     play: [
       { w: "Turns 1–3", s: "a", t: "Imperial ships are not affected by gravity. The transports cannot leave orbit before turn 3." },
       { w: "The Planet Killer", s: "b", t: "It must destroy Belatis (as in Exterminatus) before it moves past the planet. Then roll a D6: after that many turns, replace Belatis with an asteroid field. The Harbinger of Doom may not exterminate the planet and ignores “You have failed me”." },

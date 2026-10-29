@@ -139,7 +139,7 @@ for Lx in L:
                         text.append(sent)
                     continue
                 # A sentence may be both an enforced rule and card text:
-                # Farseers p.318 is a 0-3 count AND a re-roll usage rule,
+                # Farseers p.316 is a 0-3 count AND a re-roll usage rule,
                 # which without this disappeared from the commander card (spot check 7 row 76).
                 if keep_text(Lx["name"], s["title"], sent):
                     text.append(sent)
@@ -225,7 +225,7 @@ for Lx in L:
                     "by itself.")
                 notes.append(
                     "Skwadron size, not a fleet total: the book prints "
-                    "\u201c%s\u201d as the size of one skwadron (pg. 372)."
+                    "\u201c%s\u201d as the size of one skwadron (pg. 374)."
                     % (s.get("head", "") or s["title"]))
             else:
                 rules.append(dict(kind="section_count", min=s["lo"], max=s["hi"],

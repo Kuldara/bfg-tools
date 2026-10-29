@@ -44,7 +44,7 @@
   {
     id: "wr-eldar-hunt-2", grp: "untested", name: "The Hunt for the Eldar 2: The Haven", series: "Eldar Haven · linked pair 2/2", trust: "untested",
     why: NO_REPORT + " The Fleets book’s Eldar Haven can stand in for the fan-made Haven Spire.", src: "Warp Rift 16, pp. 47, 49", book: "O", suggest: ["Any hunter", "Eldar Corsairs"],
-    others: "The Haven Spire is a fan profile (below). The official Eldar Haven space station (FL p. 334) can stand in if you prefer book rules.",
+    others: "The Haven Spire is a fan profile (below). The official Eldar Haven space station (FL p. 332) can stand in if you prefer book rules.",
     sides: { a: { n: "Searchers", f: "Any fleet" }, b: { n: "Eldar", f: "Eldar Corsairs + Haven Spire" } },
     pitch: "The Haven is found. Cross the asteroid ring and destroy it before it slips away through the webway.",
     glance: [["Points", "Survivors of part 1 + the Haven (500)"], ["Table", "Any"], ["Battlezone", "A 15 cm asteroid ring around the Haven"], ["First turn", "Not given"], ["Victory", "Destroy the Haven or drive it off"]],
@@ -61,7 +61,7 @@
       { s: "a", t: "Set up your surviving ships anywhere outside the ring, facing any way. Your first move takes you into the field — Leadership tests for collision damage." }
     ],
     notes: ["No first turn or turn limit is given — roll off and agree.", "The Haven rules were written for the Eldar MMS 1.6 fan rules; with the Remastered Eldar rules use them as written and agree any clashes."],
-    refs: [["Asteroid fields", "RB p. 104–116"], ["Eldar Haven (official alternative)", "FL p. 334"]],
+    refs: [["Asteroid fields", "RB p. 104–116"], ["Eldar Haven (official alternative)", "FL p. 332"]],
     play: [
       { w: "Haven Spire", s: "b", t: "Defence, 20 hits, speed 5 cm and may move in any direction, shields 5 plus holofield, armour 5+, turrets 5, Leadership 10. Pulsar lances 30 cm strength 5, batteries 45 cm strength 20, launch bays 5 (fighters 30 cm, bombers 20 cm), torpedoes 30 cm strength 5, all round. Its speed never drops from blast markers or damage." },
       { w: "Haven damage", t: "Every 4 damage removes a fifth of everything (tracker below). A critical hit adds 1 damage and does nothing else." }
@@ -98,7 +98,7 @@
       { t: "Roll off: the winner chooses who goes first." }
     ],
     stools: [{ k: "num", id: "pts", l: "Convoy warship points", after: n => n ? "Needs <b>" + Math.ceil(n * 1.5 / 100) + "</b> cargo points — e.g. " + Math.ceil(n * 1.5 / 200) + " standard transports at 2 points each." : "Type your warship points." }],
-    notes: ["Cargo points are the Anargo Sector Project’s: its example counts 30 points as fifteen freighters or three heavy barges. Counting a standard transport as 2 is our reading; a heavy transport counts as two transports in the current rules (FL p. 182).", "The survival levels are read as bands: 0–29% attacker’s major win, 30–59% attacker’s win, 60–89% convoy’s win, 90%+ convoy’s major win."],
+    notes: ["Cargo points are the Anargo Sector Project’s: its example counts 30 points as fifteen freighters or three heavy barges. Counting a standard transport as 2 is our reading; a heavy transport counts as two transports in the current rules (FL p. 192).", "The survival levels are read as bands: 0–29% attacker’s major win, 30–59% attacker’s win, 60–89% convoy’s win, 90%+ convoy’s major win."],
     refs: [["Transports", "FL p. 85"], ["Heavy transport", "FL p. 182"], ["Disengaging", "RB p. 56"]],
     play: [{ w: "Transports", s: "a", t: "Transports may only disengage once crippled. A crippled transport that gets away counts as surviving (with half its cargo). Everything else disengages normally." }],
     tools: [],
@@ -136,7 +136,7 @@
       { t: "Otherwise play as Surprise Attack (RB p. 132), as the first version says, with the Orks as the attacker. The transports run for the jump point in the bottom right corner." }
     ],
     notes: ["The first version (Warp Rift 23, p. 13) introduces itself as a “Surprise attack scenario”, names the Ork entries (the planet’s edge and the top right corner behind the asteroids) and puts the transports’ escape point in the bottom right corner. The second version (Warp Rift 32) says “use the planetary assault scenario”, but nobody lands troops here: a raid on a fleet at its dock is Surprise Attack, so this page follows the first version.", "The first version (Warp Rift 23) calls the flare “possible”; the second says one is under way. The second is used here.", "Neither version says where the stood-down ships are or how the escaping transports score; the defaults are in Agree before you start. The history — transports running for the jump point — suggests agreeing a bonus for transports escaping past the bottom right corner.", "The Widowmaker sensor array on the Scrubbers is the author’s own upgrade with no rules given."],
-    refs: [["Surprise Attack", "RB p. 132"], ["Solar flares", "RB p. 114"], ["Escort carrier", "FL p. 521"], ["Ork ships and refits", "FL p. 361–393"]],
+    refs: [["Surprise Attack", "RB p. 132"], ["Solar flares", "RB p. 114"], ["Escort carrier", "FL p. 521"], ["Ork ships and refits", "FL p. 363–395"]],
     play: [
       { w: "Stand down", s: "a", t: "All your ships start on stand down except the transports. A stood-down ship needs a passed Leadership test to come to battle stations and load weapons; until then it may only Brace and make one 45° turn, and counts as a defence that cannot move." },
       { w: "Leaving the dock", s: "a", t: "Each transport must pass a Leadership 6 test to leave the dock (skeleton crews). They may try from the first turn." },

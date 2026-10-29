@@ -69,7 +69,7 @@ export function sanitizeUnit(u){
   u.opts = (u.opts||[]).filter(function(o){
     if(o === "spacehulk") return false;
     if(auto.indexOf("blackship")>=0 && (o === "marines" || o === "greyknights")) return false;
-    /* a renegade Imperial hull may never carry a Chaos crew or a Mark (FL p.222) */
+    /* a renegade Imperial hull may never carry a Chaos crew or a Mark (FL p.232) */
     if(auto.indexOf("renegade")>=0 && RENEGADE_NEVER.indexOf(o)>=0) return false;
     return true;
   });
@@ -84,11 +84,11 @@ export function cloneUnit(u){
   return c;
 }
 /* engine ship record */
-/* FL p.240: the Mark of Nurgle "gains 1 Damage Point and may not be boarded".
+/* FL p.248: the Mark of Nurgle "gains 1 Damage Point and may not be boarded".
    Only the bought mark adds it - the Terminus Est already has it in its profile
-   (FL p.262), and that one arrives as a profile flag, not a chosen option. */
+   (FL p.264), and that one arrives as a profile flag, not a chosen option. */
 /* RB p.89 counts "remaining turrets", and three fleet lists buy more of them
-   (Ork Dakka Dakka FL p.365, AdMech +1 FL p.119, Tyranid extra spore cysts
+   (Ork Dakka Dakka FL p.367, AdMech +1 FL p.119, Tyranid extra spore cysts
    FL p.426) while criticals take them away. The profile is the starting point,
    not the last word. */
 function shipTurrets(u, p){

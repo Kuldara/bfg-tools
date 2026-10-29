@@ -80,7 +80,7 @@ SECTION_KIND = [
     ("tiddla skwadron", "type", "the Clanz list's skwadron pattern is a ship kind"),
     # --- named ships and named access ------------------------------------
     ("planet killer", "own", "one named ship"),
-    ("chaos space hulk", "own", "one named ship with its own conditions (p.288)"),
+    ("chaos space hulk", "own", "one named ship with its own conditions (p.290)"),
     ("space hulks", "own", "a named ship with its own conditions"),
     ("ork roks", "own", "a named ship"),
     ("roks", "own", "a named ship"),
@@ -94,27 +94,27 @@ SECTION_KIND = [
     ("nicassar vessels", "access", "named access to another race's ships (p.15)"),
     ("nicassar escorts", "access", "named access to another race's ships (p.15)"),
     ("tau escorts", "access", "named access to another race's ships (p.15)"),
-    ("rogue traders", "access", "named access (p.174)"),
-    ("rogue trader escorts", "access", "named access (p.174)"),
+    ("rogue traders", "access", "named access (p.184)"),
+    ("rogue trader escorts", "access", "named access (p.184)"),
     ("transports", "own", "the Rogue Trader list's own transport section"),
     ("reserves", "reserve", "the list's own reserve section: the ships belong to another list"),
     ("ordo malleus reserves", "reserve",
-     "J144 p.142: the Bastion list's Chaos hulls of a fleet led by an Ordo Malleus "
+     "J144 p.152: the Bastion list's Chaos hulls of a fleet led by an Ordo Malleus "
      "inquisitor; the same 1:3 budget as other reserves"),
     ("the reserve fleets of segmentum obscurus", "reserve",
      "Bastion's own reserve section (p.39): five Chaos hulls that use "
      "the same 1:3 budget as ships borrowed from elsewhere"),
     ("notes from nate montes", "own", "a rule box, not a ship kind"),
-    # p.222: "do not count as reserves" and p.15: named access to another race's
+    # p.232: "do not count as reserves" and p.15: named access to another race's
     # ships "may not also be taken as reserves". It was own, so the reserve of a
     # reserve check did not hit (spot check 20, seeds 2026091421/23/42).
     ("renegade imperial vessels", "access",
-     "the Chaos list's own renegade rows (p.222): 'they count as Chaos vessels "
+     "the Chaos list's own renegade rows (p.232): 'they count as Chaos vessels "
      "in all respects', so they are not reserves and cannot be borrowed"),
     ("xenos allies", "access",
-     "the Rogue Traders' named access to Demiurg and Kroot ships (p.175)"),
+     "the Rogue Traders' named access to Demiurg and Kroot ships (p.185)"),
     ("the inquisition", "access",
-     "the list's named access to Inquisition ships (p.138); not a ship kind and "
+     "the list's named access to Inquisition ships (p.148); not a ship kind and "
      "cannot be borrowed into another fleet"),
     # The fifth kind (8.10.2026). Planetary defences are not part of a fleet list
     # but the book's own chapter (p.496-517), whose rows are bought from the p.499
@@ -164,44 +164,15 @@ print("sections classified: %s"
          for k in SECTION_KINDS})
 
 # --- J213: sentence starts picked as a section heading (docs/check-yourself) ---
-# The extractor read a short line of the book as a heading: "Marine crew may be" (p.242,
-# 246, 250), "Space Marine Chapters are fiercely" (p.139) and "The Rogue Trader
-# cruiser profile" (p.174). The catalogue got a section named from the middle of
-# a sentence. The sentence is assembled in the book's words; the first two move to
-# the previous section (an empty section shows nowhere), the third gets the book's own
-# subheading. The sections' indexes do not change, so the references hold.
-def _frag_fix(nm, frag_t, first, into_t=None, new_t=None):
-    _L = _p18_list(nm)
-    _fi = _p18_sec(_L, frag_t)
-    _F = _L["secs"][_fi]
-    assert not _F.get("rules"), "%s / %s: the section has rules" % (nm, frag_t)
-    _tx = list(_F.get("text") or [])
-    assert _tx and first.endswith(_tx[0][-40:]), "%s / %s: the sentence is not the expected one: %r" % (nm, frag_t, _tx[:1])
-    _tx[0] = first
-    if new_t:
-        _F["t"], _F["text"] = new_t, _tx
-        return
-    _T = _L["secs"][_p18_sec(_L, into_t)]
-    _n0 = len(_T.get("text") or [])
-    _own = (_T.get("own") or [None] * _n0) + (_F.get("own") or [None] * len(_tx))
-    _T["text"] = (_T.get("text") or []) + _tx
-    if any(_own):
-        _T["own"] = _own
-    _T["ents"] = (_T.get("ents") or []) + (_F.get("ents") or [])
-    _F["text"], _F["ents"] = [], []
-    _F.pop("own", None)
-_CSM_TH = ("A ship with a Chaos Space Marine crew may be equipped with Thunderhawk Gunships but if so it may only "
-           "carry Thunderhawks and may not launch Swiftdeaths, Doomfires and Dreadclaws.")
-for _nm in ("Chaos — Nurgle", "Chaos — Khorne", "Chaos — Slaanesh"):
-    _frag_fix(_nm, "Marine crew may be", _CSM_TH, into_t="ORDNANCE")
-_frag_fix("The Emperor's Inquisition", "Space Marine Chapters are fiercely",
-          "Space Marine Chapters are fiercely independent and will only grudgingly submit to having their "
-          "leadership usurped by an Inquisitor Lord, regardless of his renown.", into_t="RESERVES AND ALLIES")
-_frag_fix("Rogue Traders", "The Rogue Trader cruiser profile",
-          "The Rogue Trader cruiser profile represents a Kar Durniash pattern Imperial Navy cruiser, a basic "
-          "profile on which a Rogue Trader may customize as desired using the Xenotech rules.",
-          new_t="ROGUE TRADER “CRUISERS”")
-print("J213: sentences picked as a section heading fixed 5")
+# In v0.36 the extractor read short lines of the book as headings ("Marine
+# crew may be" on the god lists, "Space Marine Chapters are fiercely" on the
+# Inquisition, "The Rogue Trader cruiser profile" on Rogue Traders), and the
+# sentences were reassembled here. v0.40's layout reads them as text, so the
+# fix is gone; this guard keeps a heading made of a sentence start out.
+_FRAG_T = ("Marine crew may be", "Furthermore the launch", "This is because the launch",
+           "Space Marine Chapters are fiercely", "The Rogue Trader cruiser profile")
+_frag = ["%s / %s" % (_L["nm"], _s["t"]) for _L in lists_out for _s in _L["secs"] if _s["t"] in _FRAG_T]
+assert not _frag, "J213: a sentence start is a section heading again: %s" % _frag
 
 # --- J213: checks from the Check yourself classification (docs/check-yourself) --
 # Every rule is the book's sentence as it is (src), so that the sentence moves in
@@ -221,7 +192,7 @@ _MS["secs"][_ms_fr].setdefault("rules", []).append(dict(
     then_pick=[dict(sec=_p18_sec(_MS, "Battleships"), re="^custodian")], min=1,
     src=_j213_text(_MS, _ms_fr, "is embarked aboard the Kor")))
 _j213 += 1
-# (b) p.177 (S0380, S0384, S0386): the Exploration list's allies from one
+# (b) p.187 (S0380, S0384, S0386): the Exploration list's allies from one
 # list; no Demiurg or Kroot if Space Marine ships are included.
 _EXR = _p18_sec(_EX, "RESERVES AND ALLIES")
 _EX["secs"][_EXR].setdefault("rules", []).append(dict(
@@ -237,7 +208,7 @@ for _t, _has, _lab in (("The Demiurg", "Demiurg vessels may not be employed if S
         cond_pick=[dict(race="space marines")], cond_min=1, max_unmet=None, max_met=0,
         src=_j213_text(_EX, _si, _has)))
     _j213 += 1
-# (c) Agreement rules (S0352 p.174, S1004 p.426): the row is legal only with
+# (c) Agreement rules (S0352 p.184, S1004 p.426): the row is legal only with
 # the opponent's consent - the check shows it yellow when the row is
 # taken.
 for _nm in ("Rogue Traders", "Rogue Traders — Exploration",
@@ -255,7 +226,7 @@ for _nm in ("Tyranids — Hive Fleet", "Tyranids — Vanguard Fleet"):
         kind="agreement", ok=True, label="Bio-enhancements in a one-off game", up_sec=_si,
         src=_j213_text(_L, _si, "These refits can only be used in one-off games")))
     _j213 += 1
-# (d) Adeptus Mechanicus reserves (p.121-122, S0246 S0249 S0250 S0255 S0256).
+# (d) Adeptus Mechanicus reserves (p.121-123, S0246 S0249 S0250 S0255 S0256).
 # Space Marine reserves without an inquisitor, when the fleet has no
 # ordinary Imperial Navy capital ships nor alien ships; they get their own
 # ratio (strike cruiser / 3 Mechanicus capital ships, battle barge / 3 strike
@@ -273,9 +244,9 @@ _AMX["res_mech"] = dict(
     cap_src=_j213_text(_AMX, _amf, "No more than one reserve vessel can be taken for every three capital ships") + " (Fleets p. 121)",
     sm_src=_j213_text(_AMX, _amf, "They can be taken in the ratio of one strike cruiser") + " (Fleets p. 121)",
     esc_src=_j213_text(_AMX, _amf, "There are no restrictions on how many reserve Imperial Navy") + " "
-            + _j213_text(_AMX, _amf, "Escorts taken in this manner must be taken from the same fleet list") + " (Fleets p. 122)",
+            + _j213_text(_AMX, _amf, "Escorts taken in this manner must be taken from the same fleet list") + " (Fleets p. 123)",
     interp=dict(id="T51", note="Open interpretation: \"Escorts taken in this manner must be taken from the same fleet "
-                "list reserve capital ships are being drawn from\" (Fleets p. 122). The app reads it as: reserve escorts "
+                "list reserve capital ships are being drawn from\" (Fleets p. 123). The app reads it as: reserve escorts "
                 "are free of the 1:3 limit when a reserve capital ship comes from the same list; other reserve escorts "
                 "count against the normal 1:3."))
 _j213 += 1
@@ -302,16 +273,17 @@ def _ar(v, *cites, **when):
 _AR_IN = _cite("The Imperial Navy have a starting attack or initiative rating of 2.", 32)
 _AR_MECH = _cite("The Adeptus Mechanicus have a starting attack or initiative rating of 2.", 118)
 _AR_SM = _cite("Space Marines have a starting attack or initiative rating of 3.", 94)
-_AR_IL_IN = _cite("An Imperial Navy or Adeptus Mechanicus fleet led by an Inquisitor Lord has an attack rating of 2.", 139)
+_AR_IL_IN = _cite("An Imperial Navy or Adeptus Mechanicus fleet led by an Inquisitor Lord has an attack rating of 2.", 149)
 _AR_IL_SM = _cite("A Space Marine fleet led by an Inquisitor Lord has an attack rating of 3 unless a Blackship is "
-                  "accompanying the fleet, in which case its attack rating is 2.", 139)
-_AR_IL_GK = _cite("A Grey Knights fleet led by an Inquisitor Lord has an attack rating of 3 unless a Blackship is "
-                  "accompanying the fleet, in which case its attack rating is 2.", 145)
-_AR_GK = _cite("Grey Knights count as Space Marines in all respects and as such follow all rules for Space Marines "
-               "as written on pages 92-94.", 144)
-_AR_CW = _cite("An Eldar fleet containing any Craftworld Eldar vessels has an attack (or initiative) rating of 3.", 302)
-_AR_CORS = _cite("An Eldar Corsair fleet containing no Craftworld Eldar vessels has an attack (or initiative) rating of 4.", 302)
-_AR_YRIEL = _cite("A fleet led by him has an attack rating of 4, even if it includes Craftworld vessels.", 319)
+                  "accompanying the fleet, in which case its attack rating is 2.", 149)
+# v0.40 p.155: the Grey Knights rating no longer depends on who leads the fleet.
+_AR_IL_GK = _cite("A Grey Knights fleet has an attack rating of 3 unless a Blackship is accompanying the fleet, "
+                  "in which case its attack rating is 2.", 155)
+_AR_GK = _cite("Grey Knights are Space Marines in all respects and use all their special rules described on "
+               "pg. 94 onwards, including the Bombardment Cannon.", 155)
+_AR_CW = _cite("An Eldar fleet containing any Craftworld Eldar vessels has an attack (or initiative) rating of 3.", 304)
+_AR_CORS = _cite("An Eldar Corsair fleet containing no Craftworld Eldar vessels has an attack (or initiative) rating of 4.", 304)
+_AR_YRIEL = _cite("A fleet led by Yriel has an attack rating of 4, even if it includes Craftworld vessels.", 313)
 # Rulebook p.120: the table "ATTACK RATINGS". Used only when the Fleets book's
 # list has no number of its own (Orks, Dark Eldar).
 _AR_RB = lambda nm, v: _cite("The chart that follows shows the attack ratings of all fleets. %s: %d" % (nm, v), 120, rb=True)
@@ -332,32 +304,32 @@ _AR = {
         _ar(3, _cite("A Space Marine Dominion Fleet has an attack rating of 3.", 101)),
         _ar(2, _cite("This is reduced to 2 if the fleet has any Imperial Navy, Mechanicus or Rogue Trader vessels "
                      "at all.", 101), frm=["^imperial navy$", "^rogue traders", "^adeptus mechanicus"])] + _lord_sm(_AR_IL_SM),
-    "Grey Knights": [_ar(3, _AR_GK, _AR_SM)] + _lord_sm(_AR_IL_GK),
+    "Grey Knights": [_ar(3, _AR_IL_GK, _AR_GK, none=[_BSHIP]), _ar(2, _AR_IL_GK, all=[_BSHIP])],
     "Rogue Traders — Exploration": [_ar(3, _cite("When used with this fleet list, Rogue Traders have an attack "
-                                                 "(initiative) rating of 3.", 176))],
-    "Rogue Traders — Pirates and Wolf Packs": [_ar(3, _cite("Pirate fleets have an attack or initiative rating of 3.", 178))],
-    "Chaos": [_ar(2, _cite("Chaos fleets have a starting attack or initiative rating of 2.", 222))],
+                                                 "(initiative) rating of 3.", 186))],
+    "Rogue Traders — Pirates and Wolf Packs": [_ar(3, _cite("Pirate fleets have an attack or initiative rating of 3.", 188))],
+    "Chaos": [_ar(2, _cite("Chaos fleets have a starting attack or initiative rating of 2.", 232))],
     "Eldar Corsairs": [_ar(4, _AR_CORS), _ar(3, _AR_CW, frm=_CWF, none=[_YR]), _ar(4, _AR_YRIEL, all=[_YR])],
     "Eldar — Iyanden Craftworld": [_ar(3, _AR_CW), _ar(4, _AR_YRIEL, all=[_YR])],
     "Dark Eldar": [_ar(4, _AR_RB("Dark Eldar", 4))],
     "Orks": [_ar(3, _AR_RB("Orks", 3))],
-    "Necrons": [_ar(4, _cite("Necrons have a starting attack or initiative rating of 4.", 400))],
-    "Tyranids": [_ar(3, _cite("Tyranids have a starting attack or initiative rating of 3.", 416))],
+    "Necrons": [_ar(4, _cite("Necrons have a starting attack or initiative rating of 4.", 402))],
+    "Tyranids": [_ar(3, _cite("Tyranids have a starting attack or initiative rating of 3.", 418))],
     "Tau": [_ar(2, _cite("Tau have a starting attack or initiative rating of 2.", 450))],
     "Demiurg — War Host": [_ar(2, _cite("The Demiurg fleet has an Attack or Initiative rating of 2.", 486))],
 }
 # Lists without a number: "not given" is shown with where the number could come from
-# (T53). The Inquisition is not an independent fleet (p.132), the Rogue Traders
-# list (p.168-175) has no number of its own.
+# (T53). The Inquisition is not an independent fleet (p.142), the Rogue Traders
+# list (p.178-185) has no number of its own.
 _AR_NONE = {
     "The Emperor's Inquisition": [_AR_IL_IN, _AR_IL_SM],
-    "Rogue Traders": [_cite("When used with this fleet list, Rogue Traders have an attack (initiative) rating of 3.", 176),
+    "Rogue Traders": [_cite("When used with this fleet list, Rogue Traders have an attack (initiative) rating of 3.", 186),
                       _cite("The chart that follows shows the attack ratings of all fleets. Imperial: 2", 120, rb=True)],
 }
 # Sentences that are not in the sections' text (the race's general rules were left out of
 # the extraction): the golden cases' why + check_quotes.py prove them.
 _AR_OFFTEXT = {"Chaos fleets have a starting", "An Eldar fleet containing any", "An Eldar Corsair fleet containing no",
-               "Tyranids have a starting"}
+               "Tyranids have a starting", "Grey Knights are Space Marines in all respects"}
 _all_text = " ".join(_text_key(t) for _L in lists_out for _s in _L["secs"] for t in (_s.get("text") or []))
 _j214 = 0
 for _L in lists_out:
@@ -378,24 +350,26 @@ assert _j214 == len(lists_out) == 32, _j214
 
 # The opponent's free extras. opp = [{pick:[regex], what, many, cite}]:
 # count = the sum of the hulls of the chosen rows (a commander = 1).
-_OPP_MAL = dict(pick=["^ordo malleus inquisitor lord$"], what="Mark of Chaos or Daemonship",
+_OPP_MAL = dict(pick=["^ordo malleus inquisitor lord"], what="Mark of Chaos or Daemonship",
                 many="Marks of Chaos or Daemonships",
                 cite=[_cite("The enemy Chaos fleet may add one Mark of Chaos or upgrade a cruiser to a Daemonship at "
-                            "no cost.", 142)])
+                            "no cost.", 152)])
 _OPP_XEN = dict(pick=["^ordo xenos inquisitor lord$"], fixed="D6×50 pts of escorts",
-                cite=[_cite("The enemy Xenos fleet adds D6×50 points of escort vessels to its fleet for free.", 141)])
-_OPP_GK = dict(pick=["^ordo malleus inquisitor lord", "^grey knights strike cruiser"],
+                cite=[_cite("The enemy Xenos fleet adds D6×50 points of escort vessels to its fleet for free.", 151)])
+# v0.40 p.154: only an Ordo Malleus Lord calls the Chaos extras, one for him and
+# one more per strike cruiser (needs: nothing without him).
+_OPP_GK = dict(pick=["^ordo malleus inquisitor lord", "^grey knights strike cruiser"], needs="^ordo malleus inquisitor lord",
                what="Mark of Chaos or Daemonship", many="Marks of Chaos or Daemonships",
-               cite=[_cite("An enemy Chaos fleet may add one Mark of Chaos; or upgrade a cruiser to a Daemonship; for "
-                           "no aditional cost, for each of the following included in the Grey Knights Fleet: "
-                           "Ordo Malleus Inquisitor Lord, Grey Knights Strike Cruiser", 145)])
+               cite=[_cite("The enemy Chaos fleet may add one Mark of Chaos or upgrade a cruiser to a Daemonship at "
+                           "no cost, and may also do so again as many times as there are Grey Knights strike "
+                           "cruisers in the fleet.", 154)])
 _nopp = 0
 for _L in lists_out:
     _labs = set(e["l"].lower() for _s in _L["secs"] for e in (_s.get("ents") or []))
     _o = []
     if _L["nm"] == "Grey Knights":
         _o.append(_OPP_GK)
-    elif "ordo malleus inquisitor lord" in _labs:
+    elif any(l.startswith("ordo malleus inquisitor lord") for l in _labs):
         _o.append(_OPP_MAL)
     if "ordo xenos inquisitor lord" in _labs:
         _o.append(_OPP_XEN)
@@ -422,7 +396,7 @@ print("J214: attack rating on %d lists, opponent's extras on %d lists, VP values
 #            narrows the choice to them (MoF -> battle barge, Inquisitor ->
 #            Inquisitorial Cruiser -> Blackship)
 #   dearest  {cite, n}: otherwise the dearest ship; n = as many of the dearest as
-#            there are commanders of the same rule (Pirate Captains p. 178)
+#            there are commanders of the same rule (Pirate Captains p. 188)
 #   only     {any:[{re, arm}], capital, mech, cite}: only ships like these
 #   no_up    [{re, cite}]: not a ship with this upgrade (Daemonship)
 #   not_with [{cmd, cite}]: not the same ship as this commander
@@ -432,18 +406,18 @@ print("J214: attack rating on %d lists, opponent's extras on %d lists, VP values
 _pl = lambda s, pg: _cite(s, pg)
 _PL_INQ = dict(cmd="^inquisitor lord", prefer=[
     dict(re="^inquisitorial cruiser", cite=_pl("They must be aboard an Inquisitorial Cruiser if one is included, "
-                                             "otherwise they must be on an Inquisition Blackship if one is included.", 138)),
+                                             "otherwise they must be on an Inquisition Blackship if one is included.", 148)),
     dict(re="^inquisition blackship", cite=_pl("They must be aboard an Inquisitorial Cruiser if one is included, "
-                                             "otherwise they must be on an Inquisition Blackship if one is included.", 138))])
-_PL_ORDO = dict(cmd=r"^ordo \w+ inquisitor lord$", skip=True)
+                                             "otherwise they must be on an Inquisition Blackship if one is included.", 148))])
+_PL_ORDO = dict(cmd=r"^ordo \w+ inquisitor lord( \(ld 10\))?$", skip=True)
 _PL_MOF = lambda re, s, pg: dict(cmd="^master of the fleet", prefer=[dict(re=re, cite=_pl(s, pg))])
-_CH_WM = _cite("Under no circumstance can a Chaos Lord be placed on the same ship as a Warmaster.", 222)
-_CH_AB = _cite("You may not place a Chaos Lord on the same ship as Abaddon.", 231)
+_CH_WM = _cite("Under no circumstance can a Chaos Lord be placed on the same ship as a Warmaster.", 232)
+_CH_AB = _cite("You may not place a Chaos Lord on the same ship as Abaddon.", 241)
 def _chaos(wm_s, wm_pg, lord_s, lord_pg, dae_s, dae_pg):
     dae = [dict(re="^daemonship", cite=_cite(dae_s, dae_pg))]
     return [dict(cmd="^chaos warmaster", dearest=dict(cite=_cite(wm_s, wm_pg)), no_up=dae),
             dict(cmd="^abaddon", prefer=[dict(re="^planet killer",
-                 cite=_cite("If Abaddon is present, he must be aboard the Planet Killer.", 235))]),
+                 cite=_cite("If the Planet Killer is present, Abaddon must be aboard it.", 241))]),
             dict(cmd="^chaos lord", only=dict(capital=True, cite=_cite(lord_s, lord_pg)), no_up=dae,
                  not_with=[dict(cmd="^chaos warmaster", cite=_CH_WM), dict(cmd="^abaddon", cite=_CH_AB)],
                  alone=dict(cite=_cite(lord_s, lord_pg)))]
@@ -453,11 +427,10 @@ _WM_G = "He must be assigned to the most expensive ship and improves its rolled 
 _DAE_G = "A Daemonship may not be commanded by a Warmaster or a Chaos Lord, even if it is the largest ship in the fleet."
 _YRIEL = dict(cmd="^prince yriel",
               prefer=[dict(re="^flame of asuryan", cite=_cite("He must be embarked aboard the Flame of Asuryan if it "
-                                                              "is present, in which case his cost is 125 points.", 319))],
+                                                              "is present, in which case Yriel's cost is reduced to 125 points.", 313))],
               only=dict(any=[dict(re="^flame of asuryan"), dict(re="^dragonship", arm="launch bay")],
-                        cite=_cite("When Yriel is taken he must be placed on a Craftworld Eldar Dragonship with launch "
-                                   "bays, but you may instead pick the Flame of Asuryan as his command ship to be "
-                                   "embarked on.", 319)))
+                        cite=_cite("Prince Yriel must be embarked on a Dragonship equipped with launch bays, or the "
+                                   "Flame of Asuryan, even if he is leading a Corsair fleet.", 313)))
 _PLACE = {
     "Imperial Navy": [_PL_INQ, _PL_ORDO],
     "Space Marines — Codex Astartes": [
@@ -480,46 +453,53 @@ _PLACE = {
         _PL_INQ, _PL_ORDO],
     "The Emperor's Inquisition": [_PL_INQ, _PL_ORDO],
     "Grey Knights": [dict(cmd="inquisitor lord", prefer=[
-        dict(re="^inquisitorial cruiser", cite=_cite("If an Inquisitorial Cruiser is present the Inquisitor Lord "
-                                                     "must be placed aboard it.", 144)),
-        dict(re="^inquisition blackship", cite=_cite("If the Inquisitorial Cruiser is not present but a Blackship "
-                                                     "is then the Inquisitor Lord must be placed aboard the "
-                                                     "Blackship.", 144))],
-        dearest=dict(cite=_cite("Otherwise the Inquisitor must be placed on the most expensive ship.", 144)))],
+        dict(re="^inquisitorial cruiser", cite=_cite("They must be aboard an Inquisitorial Cruiser if one is included, "
+                                                     "otherwise they must be on an Inquisition Blackship if one is "
+                                                     "included.", 154)),
+        dict(re="^inquisition blackship", cite=_cite("They must be aboard an Inquisitorial Cruiser if one is included, "
+                                                     "otherwise they must be on an Inquisition Blackship if one is "
+                                                     "included.", 154))],
+        dearest=dict(cite=_cite("If none of these ships is present, they have to be placed on the most expensive "
+                                "ship in the fleet.", 154)))],
     "Rogue Traders": [
         dict(cmd="^veteran rogue trader", only=dict(any=[dict(re="^rogue trader cruiser")],
-             cite=_cite("A Veteran Rogue Trader may lead each Rogue Trader cruiser in a fleet.", 174)),
-             alone=dict(cite=_cite("A Veteran Rogue Trader may lead each Rogue Trader cruiser in a fleet.", 174)))],
+             cite=_cite("A Veteran Rogue Trader may lead each Rogue Trader cruiser in a fleet.", 184)),
+             alone=dict(cite=_cite("A Veteran Rogue Trader may lead each Rogue Trader cruiser in a fleet.", 184)))],
     "Rogue Traders — Pirates and Wolf Packs": [
         dict(cmd="^pirate captain", dearest=dict(n=True, cite=_cite(
             "He (or she!) must be placed aboard the most expensive vessel in the fleet (or vessels if more than one "
-            "Captain is present).", 178)),
+            "Captain is present).", 188)),
              alone=dict(cite=_cite("He (or she!) must be placed aboard the most expensive vessel in the fleet (or "
-                                   "vessels if more than one Captain is present).", 178)))],
+                                   "vessels if more than one Captain is present).", 188)))],
     "Chaos — Incursion": [
         dict(cmd="^chaos warmaster", dearest=dict(cite=_cite(
             "He must be assigned to the biggest (ie, most expensive) ship and improves its Leadership to the value "
-            "shown below.", 232))),
+            "shown below.", 242))),
         dict(cmd="^chaos lord", not_with=[dict(cmd="^chaos warmaster", cite=_CH_WM)])],
     "Chaos — Black Crusade": _chaos("He must be assigned to the most expensive ship and improves its rolled "
                                     "Leadership by +2, to a maximum of 9.", 234, _LORD_BC, 234,
                                     "A Daemon ship may not be commanded by a Warmaster or a Chaos Lord even if it is "
-                                    "the largest ship in the fleet.", 235),
+                                    "the largest ship in the fleet.", 245),
     "Chaos — Tzeentch": _chaos(_WM_G, 236, _LORD_G, 236, _DAE_G, 237),
     "Chaos — Nurgle": _chaos(_WM_G, 240, _LORD_G, 240, _DAE_G, 241),
     "Chaos — Khorne": _chaos(_WM_G, 244, _LORD_G, 244, _DAE_G, 245),
     "Chaos — Slaanesh": _chaos(_WM_G, 248, _LORD_G, 248, _DAE_G, 249),
     "Eldar Corsairs": [
         dict(cmd="^eldar hero", prefer=[dict(re="^flame of asuryan", cite=_cite(
-            "If the Flame of Asuryan is taken, the Eldar Hero must be embarked aboard it.", 316))]), _YRIEL],
+            "If the Flame of Asuryan is taken, the Eldar Hero must be embarked aboard it.", 314))]), _YRIEL],
     "Eldar — Iyanden Craftworld": [_YRIEL],
     "Tau — Commerce Protection": [
         dict(cmd="^kor.o.mesme", prefer=[dict(re="^custodian", cite=_cite(
-            "Kor’O’Mesme is embarked aboard the Kor’or’vesh vessel Bor’kan Or’es El’Leath Se’arle O’Mesme "
-            "(Custodian Class Battleship).", 453))])],
+            "Kor'O'Mesme is embarked aboard the Kor'or'vesh vessel Bor'kan Or'es El'Leath Se'arle O'Mesme.", 453))])],
 }
-# p.222 and p.231 (the short form) are not in the sections' text; the golden why + check_quotes prove them.
-_PL_OFFTEXT = {"Under no circumstance can a Chaos Lord", "You may not place a Chaos Lord on the same ship as Abaddon."}
+# p.232 and p.241 (the short form) are not in the sections' text; the golden why + check_quotes prove them.
+# The placement sentences the section text does not keep (check_quotes.py holds
+# them against the book): Abaddon's (p.241), the Inquisitor Lord's last
+# clause (p.148, p.154), which the commander parser takes as the row's rule.
+_PL_OFFTEXT = {"Under no circumstance can a Chaos Lord", "You may not place a Chaos Lord on the same ship as Abaddon.",
+               "If none of these ships is present, they have to be placed on the most expensive ship",
+               # v0.40: Mesme's dossier (p.453), no longer beside his list row
+               "Kor'O'Mesme is embarked aboard"}
 _j215 = 0
 for _L in lists_out:
     _keys = ([k for k in _PLACE if _L["nm"] == k] or [k for k in _PLACE if _L["nm"].startswith(k + " —")])
@@ -553,53 +533,53 @@ _CZ_CITE = lambda s, pg: _cite(s, pg)
 _CZL["clanz"] = dict(
     warlord="^ork warlord",
     tiddla="^tiddla skwadron$", big="^big ship skwadron$", uge="uge ship skwadron$", hulk="^space hulks$", rok="^roks$",
-    # gub_re: the Gubbins allowance (p.372) does not include More Gubbins (p.371 "any number of capital ships") nor
-    # Deathskullz's free looted copy (J7, p.369: a clan benefit for every Deathskullz skwadron, J232)
+    # gub_re: the Gubbins allowance (p.374) does not include More Gubbins (p.373 "any number of capital ships") nor
+    # Deathskullz's free looted copy (J7, p.371: a clan benefit for every Deathskullz skwadron, J232)
     clan_sec="^clan upgrades$", gub_sec="^gubbins$",
     gub_re=_CZ_GUB_RE,
     sk=_cite("For every re-roll a Warlord has (including the first one for free), the Warlord must be in command of "
-             "one tiddla skwadron of at least three escorts and one other skwadrons.", 372),
+             "one tiddla skwadron of at least three escorts and one other skwadrons.", 374),
     sk_interp="Open interpretation T52: read as exactly one tiddla and one other skwadron per re-roll, as the "
-              "book's smallest and largest fleets show (Fleets p. 373).",
+              "book's smallest and largest fleets show (Fleets p. 375).",
     uge1=_cite("There is no restriction for what kinds or how many of what type of skwadrons are in the fleet as long "
-               "as no Warlord may have more than one ’Uge Ship, which counts as a skwadron by itself.", 373),
+               "as no Warlord may have more than one ’Uge Ship, which counts as a skwadron by itself.", 375),
     uge2=_cite("A Warlord must have two kroozers in order to take a “Uge ship, meaning the Warlord must have at least "
-               "one extra re-roll to do so.", 373),
+               "one extra re-roll to do so.", 375),
     hulk1=_cite("A Warlord leading a Space Hulk may only lead it and no other ships, but he is not required to take any "
-                "extra re-rolls to do so if it is not desired.", 373),
+                "extra re-rolls to do so if it is not desired.", 375),
     hulk2=_cite("One of your Warlords must be embarked on it, which by itself counts as all the skwadrons that Warlord "
-                "can have (including a tiddla skwadron), regardless of how many re-rolls the Warlord has.", 372),
+                "can have (including a tiddla skwadron), regardless of how many re-rolls the Warlord has.", 374),
     clan=_cite("A Warlord and his skwadrons may only be from one clan, but as many different clans as desired can be "
-               "in a single fleet.", 369),
+               "in a single fleet.", 371),
     clan_sq=_cite("If taken, every capital ship in the skwadron must separately take and pay for the clan upgrade, not "
-                  "just individual ships.", 369),
+                  "just individual ships.", 371),
     # ChatGPT audit RAW-04 (27.10.2026): a Snakebite Warlord's capital ship skwadrons are hulks or Roks, whether
-    # or not they buy the clan (being of a clan does not oblige buying it, p.369, but the clan is the Warlord's)
+    # or not they buy the clan (being of a clan does not oblige buying it, p.371, but the clan is the Warlord's)
     snake_clan="^snakebites",
     snake=_cite("Snakebite capital ship skwadrons can only use space hulks or roks – no other kind of capital "
-                "ship skwadrons are permitted to bear the clan colours.", 369),
+                "ship skwadrons are permitted to bear the clan colours.", 371),
     gub=_cite("A Warlord may choose for his own ship or escort skwadron one upgrade from the Gubbins list for every "
-              "re-roll he has at its listed cost.", 372),
+              "re-roll he has at its listed cost.", 374),
     # the Blood Axe Warlord's ship's Imperial Navy refit (user 29.10.2026, a row of its own: upgrades.py EXTRA)
     refit_re="^imperial navy refit, rolled randomly", axe_clan="^blood axes",
     refit=_cite("The Warlord\u2019s ship may take one refit from the Imperial Navy refit table (rolled randomly) "
-                "for +20 points.", 369),
-    # J232: a skwadron belongs to one Warlord and is not split (p.373)
+                "for +20 points.", 371),
+    # J232: a skwadron belongs to one Warlord and is not split (p.375)
     split=_cite("Each skwadron must be fielded with the number of ships chosen for it in this list; you can\u2019t "
-                "split up skwadrons or add more ships to them.", 373))
+                "split up skwadrons or add more ships to them.", 375))
 _CZL["sqx"] = [dict(sec="^big ship skwadron$", min=1, max=2, only=True, name="kroozers",
-                    cite=_cite("1-2 Kroozers, chosen from the following list:", 372)),
+                    cite=_cite("1-2 Kroozers, chosen from the following list:", 374)),
                 # J232 (the user 24.10.2026 asked whether a Rok skwadron works like a capital ship, and to fix it):
                 # a Rok skwadron is 1-4 Roks as a Big ship skwadron is 1-2 kroozers. The book prints
-                # the size as the section heading (p.372 "Rok skwadron / 1-4 Roks"), so the sentence is the heading.
-                dict(sec="^roks$", min=1, max=4, only=True, name="Roks", cite=_cite("1\u20134 Roks", 372))]
-# The Warlord on the dearest ship under his OWN command (p.372), not of the whole fleet.
+                # the size as the section heading (p.374 "Rok skwadron / 1-4 Roks"), so the sentence is the heading.
+                dict(sec="^roks$", min=1, max=4, only=True, name="Roks", cite=_cite("1\u20134 Roks", 374))]
+# The Warlord on the dearest ship under his OWN command (p.374), not of the whole fleet.
 _CZL["place"] = [dict(cmd="^ork warlord", dearest=dict(own=True, cite=_cite(
     "He must be embarked on the most expensive ship under his own command (as opposed to the whole fleet), even if it "
-    "is an escort - annotate which one it is.", 372)))]
-# esq (user 27.10.2026, after the Clanz audit): lists whose rules count ESCORT SQUADRONS - p.174 "A single
-# squadron of 2-6 ... may accompany each Rogue Trader capital ship", p.177 "at least one squadron of escort-sized
-# cargo ships", p.179 "At least one squadron of 3-6 escort vessels ... for each cruiser", p.457 "a single squadron
+    "is an escort - annotate which one it is.", 374)))]
+# esq (user 27.10.2026, after the Clanz audit): lists whose rules count ESCORT SQUADRONS - p.184 "A single
+# squadron of 2-6 ... may accompany each Rogue Trader capital ship", p.187 "at least one squadron of escort-sized
+# cargo ships", p.189 "At least one squadron of 3-6 escort vessels ... for each cruiser", p.457 "a single squadron
 # of up to six Xenos escorts", p.487 "one squadron of up to six Tau or Rogue Trader escorts". There the squadrons
 # are the player's: the same letter (sq) is one squadron in any mix, a card without one is a squadron by itself,
 # and the size and the counting rules read the same squadrons (domain.js escortSquadronKeys). Elsewhere a short
@@ -617,11 +597,11 @@ for _re in _p18_list("Demiurg — War Host")["esq"]["sep"]:
 _WAL = _p18_list("Orks — Waaagh!")
 _WAL["sqx"] = [dict(sec="^ork roks$", min=2, max=4, only=True, name="Roks", cite=_cite(
     "Ork Roks may be squadroned with up to three other Roks (total squadron size of four), but not with any other "
-    "vessels.", 367))]
+    "vessels.", 369))]
 _nsq = 0
 for _L in lists_out:
     if _L["nm"] in ("Chaos — Black Crusade", "Chaos — Tzeentch", "Chaos — Nurgle", "Chaos — Khorne", "Chaos — Slaanesh"):
-        _L["sq_noup"] = [dict(re="^daemonship", cite=_cite("Daemonships cannot be used in squadrons.", 227))]
+        _L["sq_noup"] = [dict(re="^daemonship", cite=_cite("Daemonships cannot be used in squadrons.", 237))]
         _nsq += 1
 assert _nsq == 5, _nsq
 _p18_list("Imperial Navy — Bastion Fleets")["sq_need"] = [dict(cmd="^veteran captain", cite=_cite(
@@ -632,7 +612,7 @@ for _L in (_CZL, _WAL):
         assert sum(1 for _s in _L["secs"] if re.search(_x["sec"], _s["t"].strip(), re.I)) == 1, (_L["nm"], _x["sec"])
 for _k in ("tiddla", "big", "uge", "hulk", "rok", "clan_sec", "gub_sec"):
     assert sum(1 for _s in _CZL["secs"] if re.search(_CZL["clanz"][_k], _s["t"].strip(), re.I)) == 1, _k
-# J232: the section heading ("1-4 Roks", p.372) is the book's text, although the extraction does not take it into the section's text
+# J232: the section heading ("1-4 Roks", p.374) is the book's text, although the extraction does not take it into the section's text
 _RAW_HEADS = set(_text_key(_s.get("head") or "") for _Lx in json.load(io.open(os.path.join(_HERE, "lists_raw.json"), encoding="utf-8"))
                  for _s in _Lx.get("sections") or [])
 for _L in lists_out:
@@ -646,7 +626,7 @@ _sc = _p18_list("Demiurg — War Host")["esq"]["sep_cite"]["s"]
 assert _text_key(_sc) in _all_text, "esq: the sentence is not in the book's text: %s" % _sc
 print("J216: squadron exceptions on 2 lists (in Clanz kroozers and Roks, J232), the Daemonship ban on %d lists, the Clanz command" % _nsq)
 
-# Zukov's Klaw is a Goff as part of its 210 points (p.381 "It is of the Goff Clan, ..."), so no clan row is
+# Zukov's Klaw is a Goff as part of its 210 points (p.383 "It is of the Goff Clan, ..."), so no clan row is
 # buyable for it (row_texts.py, the Zukov limits) - and the user asked (27.10.2026) to see it in the upgrade list
 # anyway: a locked free info row, as a battle barge's built-in Mark (chapters_marks.py, req + incl). Added here,
 # after the Zukov limits, so it keeps its own nm condition; "(included)" keeps it apart from the buyable
@@ -661,23 +641,23 @@ _czc = [s for s in _CZL["secs"] if re.search(_CZL["clanz"]["clan_sec"], s["t"].s
 assert len(_czc) == 1
 _czc[0]["ents"].append({"l": "Clan: Goffs (included)", "r": None, "p": 0, "a": 1, "u": 1, "mx": None, "nt": None,
                         "prose": 1, "cond": {"nm": "^zukov"}, "k": "up", "req": 1, "incl": 1,
-                        "desc": _ZK_S, "src_page": 381})
+                        "desc": _ZK_S, "src_page": 383})
 print("Zukov's Klaw: the included Goffs as a locked info row")
 
 # J224: the Waaagh! list's hulk Warlord pays +50 for Extra Power Fields
-# (p.390). The row "Extra Power Fields (Space Hulk)" comes from upgrades.py;
+# (p.392). The row "Extra Power Fields (Space Hulk)" comes from upgrades.py;
 # resolveFleet compares the row the Warlord took with the ship he is aboard (J215):
 # on a hulk the +25 row is red, elsewhere the +50 row. The placement does not change the price
 # (J8), it is a check.
 _WAL["hulk_pf"] = dict(
     cmd="^ork warlord$", sec="^warlord$", row="^Extra Power Fields$",
     hulk_row=r"^Extra Power Fields \(Space Hulk\)$", ship="^ork hulk$",
-    cite=_cite("Extra Powerfields costs +50 pts instead of +25.", 390))
+    cite=_cite("Extra Powerfields costs +50 pts instead of +25.", 392))
 assert sum(1 for _s in _WAL["secs"] if re.search(_WAL["hulk_pf"]["sec"], _s["t"].strip(), re.I)) == 1
 for _k in ("row", "hulk_row"):
     assert sum(1 for _s in _WAL["secs"] if re.search(_WAL["hulk_pf"]["sec"], _s["t"].strip(), re.I)
                for _e in _s["ents"] if re.search(_WAL["hulk_pf"][_k], str(_e["l"]))) == 1, _k
-# The sentence is from the Ork hulk profile's continuation page (p.390, the WARLORDS part), not
+# The sentence is from the Ork hulk profile's continuation page (p.392, the WARLORDS part), not
 # from a list page, so _all_text does not contain it; read by hand from the PDF on 20.10.2026
 # (the same rule in domain.js's hulk special rules).
 print("J224: the Waaagh! hulk Warlord's Extra Power Fields +50")
@@ -728,7 +708,7 @@ for _e in _amcr["ents"]:
 # (_SEC_LIST_KEYS, sec, up_sec). Not for Orks, Tyranids or Necrons; not
 # for lists that already have the Bastion (RT, Exploration, Tau, War Host); nor
 # for Crusade and Grey Knights, which take no ships from other lists
-# (p.99, p.146) - open interpretation T54.
+# (p.99, p.155) - open interpretation T54.
 _MERC_S1 = ("Any fleet except Orks, Tyranids and Necrons can use Demiurg Bastion class vessels; they are purchased "
             "as cruisers but do not contribute to the number of ships required to gain access to battleships, "
             "grand cruisers, etc.")
@@ -754,66 +734,62 @@ for _L in lists_out:
     _L["merc"] = dict(sec="^DEMIURG MERCENARIES$", cite=_cite(_MERC_S1, 483))
     _nmerc += 1
 assert _nmerc == 19, "J217: mercenary sections %d" % _nmerc
-# p.319: the Void Stalker in an Iyanden fleet with conditions.
+# p.317: the Void Stalker in an Iyanden fleet with conditions.
 _IY = _p18_list("Eldar — Iyanden Craftworld")
 _VS_S = ("Up to one Void Stalker may be taken in the fleet as long as the fleet is at least 1000 points and at "
          "least three Corsair Eldar cruisers and / or light cruisers are already present in the fleet.")
 assert _text_key(_VS_S) in _all_text
 _IY["borrow_cond"] = [dict(re="^void stalker", max=1, min_worth=1000, label="Void Stalker in an Iyanden fleet",
                            need=dict(n=3, list_re="^Eldar Corsairs", type_re="cruiser", what="Corsair cruisers"),
-                           cite=_cite(_VS_S, 319))]
+                           cite=_cite(_VS_S, 317))]
 print("J217: Bakka's AdMech cruisers 7, mercenary sections %d, the Void Stalker condition" % _nmerc)
 
 # J218 (check yourself phase 6B): hull choices and RT escorts.
-# p.174 ROGUE TRADER "CRUISERS": "Any cruiser hull allowed in the Rogue Trader,
+# p.184 CAPITAL SHIPS: "If a second Rogue Trader cruiser is taken, it may be
+# any Rogue Trader cruiser variant listed on the Exploration Fleet List." The
+# variants go into the RT list's CAPITAL SHIPS section as rows "Rogue Trader
+# cruiser - X class hull" at Exploration's prices (p.186). v0.36 also printed a
+# box ROGUE TRADER "CRUISERS" ("Any cruiser hull allowed in the Rogue Trader,
 # Exploration or Wolf Pack fleet list may be used and counts fully as a Rogue
-# Trader cruiser." and CAPITAL SHIPS: "If a second Rogue Trader cruiser is taken,
-# it may be any Rogue Trader cruiser variant listed on the Exploration Fleet
-# List." The hulls into the RT list's CAPITAL SHIPS section as rows "Rogue Trader cruiser -
-# X class hull": Exploration's variants at its prices (p.176), the Wolf Pack's other
-# cruisers at its prices (p.178). Light cruisers are not a "cruiser
-# hull": Exploration counts them separately ("Rogue Trader cruisers & Endeavours").
+# Trader cruiser"), which added the Wolf Pack's cruisers and made the second
+# cruiser rule an open interpretation (T55); v0.40 removed the box, so the
+# Wolf Pack hulls are gone and a variant is the second cruiser onwards.
+# Light cruisers are not a cruiser variant: Exploration counts them
+# separately ("Rogue Trader cruisers & Endeavours").
 _RT0 = _p18_list("Rogue Traders")
 _rtcap = _RT0["secs"][_p18_sec(_RT0, "CAPITAL SHIPS")]
-_EXL, _WPL = _p18_list("Rogue Traders — Exploration"), _p18_list("Rogue Traders — Pirates and Wolf Packs")
+_EXL = _p18_list("Rogue Traders — Exploration")
 _seen = set(["180"])
-_rth = 0
-for _src in (_EXL, _WPL):
-    for _e in _src["secs"][_p18_sec(_src, "CAPITAL SHIPS")]["ents"]:
-        _sh = ships.get(str(_e.get("r")))
-        if _e.get("k") != "unit" or not _sh or str(_e["r"]) in _seen:
-            continue
-        if not re.match(r"^cruiser", str(_sh.get("ty", "")), re.I) or re.search(r"light cruiser", _e["l"], re.I):
-            continue
-        _seen.add(str(_e["r"]))
-        _n = _copy.deepcopy(_e)
-        _cls = re.sub(r"\s+cruiser$", "", _e["l"], flags=re.I) if re.search(r"class cruiser$", _e["l"], re.I) else _e["l"]
-        _n["l"] = "Rogue Trader cruiser \u2014 " + _cls + " hull"
-        _n["src_page"] = 174
-        _n["nt"] = ("Counts fully as a Rogue Trader cruiser (Fleets p. 174); %s list price."
-                    % ("Exploration" if _src is _EXL else "Wolf Pack"))
-        _rtcap["ents"].append(_n)
-        _rth += 1
-assert _rth == 8, "J218: RT hulls %d" % _rth
+_rth = []
+for _e in _EXL["secs"][_p18_sec(_EXL, "CAPITAL SHIPS")]["ents"]:
+    _sh = ships.get(str(_e.get("r")))
+    if _e.get("k") != "unit" or not _sh or str(_e["r"]) in _seen:
+        continue
+    if not re.match(r"^cruiser", str(_sh.get("ty", "")), re.I) or re.search(r"light cruiser", _e["l"], re.I):
+        continue
+    _seen.add(str(_e["r"]))
+    _n = _copy.deepcopy(_e)
+    _cls = re.sub(r"\s+cruiser$", "", _e["l"], flags=re.I) if re.search(r"class cruiser$", _e["l"], re.I) else _e["l"]
+    _n["l"] = "Rogue Trader cruiser — " + _cls + " hull"
+    _n["src_page"] = 184
+    _n["nt"] = "A Rogue Trader cruiser variant (Fleets p. 184); Exploration list price."
+    _rtcap["ents"].append(_n)
+    _rth.append(_n["l"])
+assert len(_rth) == 4, "J218: RT hulls (Lunar, Carnage, Tyrant, Murder) %s" % _rth
 _RT_S1 = "If a second Rogue Trader cruiser is taken, it may be any Rogue Trader cruiser variant listed on the Exploration Fleet List."
-_RT_S2 = ("Any cruiser hull allowed in the Rogue Trader, Exploration or Wolf Pack fleet list may be used and counts "
-          "fully as a Rogue Trader cruiser.")
-assert _text_key(_RT_S1) in _all_text and _text_key(_RT_S2) in _all_text
-_RT0["rt_hulls"] = dict(hull="^rogue trader cruiser \u2014 ", all="^rogue trader cruiser", cite=_cite(_RT_S1, 174),
-                        cite2=_cite(_RT_S2, 174),
-                        interp="Open interpretation T55: \"any cruiser hull ... counts fully as a Rogue Trader cruiser\" "
-                               "allows every cruiser, but \"if a second Rogue Trader cruiser is taken\" reads as the "
-                               "first being the Rogue Trader profile; the app warns and does not count it against the fleet.")
-# p.138 Accompanying a fleet: "This may include the specific ship so-called in
+assert _text_key(_RT_S1) in _all_text
+_RT0["rt_hulls"] = dict(hull="^rogue trader cruiser — ", all="^rogue trader cruiser", cite=_cite(_RT_S1, 184),
+                        strict=1)
+# p.148 Accompanying a fleet: "This may include the specific ship so-called in
 # the Inquisition rules, but it can be any Imperial cruiser-class vessel."
 # T56: read as a placement (J215), not as a hull choice. The inquisitor's
 # cruiser is the Imperial cruiser he is aboard: without an Inquisitorial
-# Cruiser and a Blackship the Inquisitor Lord's place is free (p.138), so
+# Cruiser and a Blackship the Inquisitor Lord's place is free (p.148), so
 # the player puts him aboard any cruiser from the Aboard menu.
 # A hull choice (hc) was tried and rejected: it swaps the card's options to
 # the hull choice card's pattern and drops the Inquisitorial cruiser's own options.
 _ninq = 0
-# p.139 RESERVES AND ALLIES (an IN/AdMech fleet led by an Inquisitor): "If taken, a
+# p.149 RESERVES AND ALLIES (an IN/AdMech fleet led by an Inquisitor): "If taken, a
 # Rogue Trader escort squadron may accompany it, but Xenos vessels may not be
 # used." and p.50 Bakka: "One Rogue Trader cruiser and its attendant escorts may
 # be taken for every 750 points in the fleet." The RT list's non-Xenos escorts into the
@@ -830,7 +806,7 @@ for _nm in ("Imperial Navy — Gothic Sector", "Imperial Navy — Bastion Fleets
     _sec = _L["secs"][_p18_sec(_L, "ROGUE TRADERS")]
     for _e in _RTE:
         _n = _copy.deepcopy(_e)
-        _n["src_page"] = 50 if "Bakka" in _nm else 139
+        _n["src_page"] = 50 if "Bakka" in _nm else 149
         _sec["ents"].append(_n)
     # The section's own rules counted the whole section: "one Rogue Trader cruiser for
     # every 750 points" concerns the cruiser, not its escorts (regression J218).
@@ -844,11 +820,11 @@ for _nm in ("Imperial Navy — Gothic Sector", "Imperial Navy — Bastion Fleets
     _bk = "Bakka" in _nm
     _L["rt_esc"] = dict(sec="^ROGUE TRADERS$", esc="^(recommissioned escort|iconoclast destroyer|armed cargo vessel)$",
                         cru="^rogue trader cruiser", needs=None if _bk else "^inquisitor lord",
-                        cite=_cite(_BK_S, 50) if _bk else _cite(_INQ_S, 139))
+                        cite=_cite(_BK_S, 50) if _bk else _cite(_INQ_S, 149))
     _nrte += 1
-print("J218: RT hulls %d, RT escorts on %d lists" % (_rth, _nrte))
+print("J218: RT hulls %d, RT escorts on %d lists" % (len(_rth), _nrte))
 
-# J219 (check yourself phase 6C): Exploration p.177. The auxiliary ships are
+# J219 (check yourself phase 6C): Exploration p.187. The auxiliary ships are
 # borrowed escorts (ally/reserve), the allied capital ships from the same
 # list (one_donor, J213).
 _EX = _p18_list("Rogue Traders — Exploration")
@@ -859,15 +835,15 @@ _ABB = ("If the fleet is large enough that three reserve or allied capital ships
         "battleship may also accompany the fleet for its regular point cost without counting against cruiser limits.")
 for _x in (_AUX1, _AUX2, _AUX3, _ABB):
     assert _text_key(_x) in _all_text, _x
-_EX["aux"] = dict(never=["orks", "dark eldar", "necrons", "tyranids"], cite_one=_cite(_AUX1, 177),
-                  cite_never=_cite(_AUX2, 177))
-_EX["ally_bb"] = dict(cite=_cite(_ABB, 177))
-# p.177's own sentence beside the allies matrix: the same ban, on the book's page.
+_EX["aux"] = dict(never=["orks", "dark eldar", "necrons", "tyranids"], cite_one=_cite(_AUX1, 187),
+                  cite_never=_cite(_AUX2, 187))
+_EX["ally_bb"] = dict(cite=_cite(_ABB, 187))
+# p.187's own sentence beside the allies matrix: the same ban, on the book's page.
 assert _EX.get("ally_xenos") and _EX["ally_xenos"]["when"] == "space marines"
-_EX["ally_xenos"]["src"] = _AUX3 + " (Fleets p. 177) " + _EX["ally_xenos"]["src"]
+_EX["ally_xenos"]["src"] = _AUX3 + " (Fleets p. 187) " + _EX["ally_xenos"]["src"]
 print("J219: Exploration's auxiliary ships and the allied battleship")
 
-# J220 (check yourself phase 6D). p.369 CLAN UPGRADES: "A Blood Axe tiddla
+# J220 (check yourself phase 6D). p.371 CLAN UPGRADES: "A Blood Axe tiddla
 # skwadron of at least six escorts may include up to three Imperial Navy and/or
 # Chaos escorts from any fleet list at their listed cost." The commandeered
 # escorts into their own section (the IN and Chaos lists' ESCORTS, each hull once,
@@ -889,7 +865,7 @@ for _L in lists_out:
             _ba_seen.add(str(_e.get("r")))
             _n = _copy.deepcopy(_e)
             _n["l"] = _e["l"][:1].upper() + _e["l"][1:].lower().replace("class", "class")
-            _n["src_page"] = 369
+            _n["src_page"] = 371
             _ba_ents.append(_n)
 assert len(_ba_ents) == 9, [e["l"] for e in _ba_ents]
 _pd = [i for i, s in enumerate(_CZL["secs"]) if s.get("ct") == "defence"]
@@ -898,7 +874,7 @@ _shift_section_refs(_CZL, _pd[0])
 _CZL["secs"].insert(_pd[0], dict(t="BLOOD AXE COMMANDEERED ESCORTS", text=[_BA_S], ents=_ba_ents, rules=[],
                                  ct="access", noroute=1))
 _CZL["bloodaxe"] = dict(sec="^BLOOD AXE COMMANDEERED ESCORTS$", clan="^clan: blood axes", min=6, max=3,
-                        cite=_cite(_BA_S, 369))
+                        cite=_cite(_BA_S, 371))
 # p.454/456: "Any ship equipped with Wardens can only be equipped with Wardens
 # and may not have other hook-transported escorts." At fleet level: the Wardens
 # and Orcas must be divisible over different ships by their hooks (sh.hk).
@@ -909,7 +885,7 @@ for _nm in ("Tau — Merchant Fleet", "Tau — Commerce Protection"):
     _p18_list(_nm)["warden_only"] = dict(cite=_cite(_WD_S, 454))
 print("J220: Blood Axe commandeered escorts %d, Warden split on 2 lists" % len(_ba_ents))
 
-# J221 p.177: "Reserves and Allied vessels do not have access to the Veteran
+# J221 p.187: "Reserves and Allied vessels do not have access to the Veteran
 # Rogue Trader re-rolls, but allied vessels may purchase up to one special
 # character from its own fleet list (if available)." A special character = the list's
 # named commander; an ordinary Admiral, Pirate Prince or Eldar Hero is not.
@@ -920,7 +896,7 @@ _SC_RE = r"^(lord admiral rath|abaddon|prince yriel|iyanden bearer of the flame|
 _sc_hits = sorted(set(e["l"] for _L in lists_out for _s in _L["secs"] for e in (_s.get("ents") or [])
                       if e.get("k") == "cmd" and re.search(_SC_RE, e["l"], re.I)))
 assert len(_sc_hits) == 5, _sc_hits
-_EX["ally_cmd"] = dict(re=_SC_RE, max=1, cite=_cite(_SC_S, 177))
+_EX["ally_cmd"] = dict(re=_SC_RE, max=1, cite=_cite(_SC_S, 187))
 print("J221: Exploration ally special characters: %s" % ", ".join(_sc_hits))
 
 # The final guard: every section reference points to the section whose name it

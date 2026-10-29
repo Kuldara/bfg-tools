@@ -6,11 +6,11 @@
 (function () {
   const SB = "Starblade — Akaeris & Eriel: words and scenarios by Roy “horizon” Amkreutz; cover, illustrations and page design by K. “Khar” Górniak, with art by Ainagoz Marina and Longinius.";
   const SBP = n => "Starblade p. " + n;
-  const OTHERS = "Written for Akaeris’ Craftworld Eldar and their named ships. Any fleets can play with ships of similar size; the Spirit of Arina is the Flame of Asuryan (FL p. 329), and any Eldar flagship cruiser can stand in for it.";
-  const ARINA = "The Spirit of Arina is the Flame of Asuryan (FL p. 329) with one change: no Aspect Warrior crew — it carries Vampire raiders instead, which the Fleets book’s Flame already has. The scenarios may also be played with the fan Eldar MMS rules, using the Void Dragon profile.";
-  const PHANTOM = "“Phantom lances” on the Shadowhunters are the Fleets book’s shadow lances (FL p. 332).";
+  const OTHERS = "Written for Akaeris’ Craftworld Eldar and their named ships. Any fleets can play with ships of similar size; the Spirit of Arina is the Flame of Asuryan (FL p. 327), and any Eldar flagship cruiser can stand in for it.";
+  const ARINA = "The Spirit of Arina is the Flame of Asuryan (FL p. 327) with one change: no Aspect Warrior crew — it carries Vampire raiders instead, which the Fleets book’s Flame already has. The scenarios may also be played with the fan Eldar MMS rules, using the Void Dragon profile.";
+  const PHANTOM = "“Phantom lances” on the Shadowhunters are the Fleets book’s shadow lances (FL p. 330).";
   const EL = { n: "Eldar", f: "Craftworld Eldar: Akaeris Starblade" };
-  const SHIPS = "<h3>Akaeris’ ships</h3><ul class='plain small'><li><b>Spirit of Arina</b> — the Flame of Asuryan (FL p. 329), without its Aspect Warrior crew</li><li><b>Cerysheal</b> — Dragonship (FL p. 330): weapons battery and launch bays</li><li><b>Eternity, Destiny</b> — Wraithships (FL p. 331): pulsar lance and torpedoes</li><li><b>Starspeed</b> — Shadowhunters (FL p. 332), mixed batteries and shadow lances</li><li><b>Arith Kian, Oriosa Novar, Bennan Bahar, Karun Lir</b> — Corsair Aconites, Hemlocks and Nightshades (FL p. 326–328)</li></ul>";
+  const SHIPS = "<h3>Akaeris’ ships</h3><ul class='plain small'><li><b>Spirit of Arina</b> — the Flame of Asuryan (FL p. 327), without its Aspect Warrior crew</li><li><b>Cerysheal</b> — Dragonship (FL p. 328): weapons battery and launch bays</li><li><b>Eternity, Destiny</b> — Wraithships (FL p. 329): pulsar lance and torpedoes</li><li><b>Starspeed</b> — Shadowhunters (FL p. 330), mixed batteries and shadow lances</li><li><b>Arith Kian, Oriosa Novar, Bennan Bahar, Karun Lir</b> — Corsair Aconites, Hemlocks and Nightshades (FL p. 324–326)</li></ul>";
   const vp = (st, a, b) => { const x = num(st, "va"), y = num(st, "vb"); if (!x && !y) return [null, "Count victory points", "Enter both totals below."]; return x === y ? ["draw", "Level", "Both " + x + " VP."] : [x > y ? "a" : "b", wins(x > y ? a : b), a + " " + x + " – " + b + " " + y + " VP."]; };
   const vpTools = (a, b) => [{ k: "num", id: "va", s: "a", l: a + ": victory points", after: v => v + " VP" }, { k: "num", id: "vb", s: "b", l: b + ": victory points", after: v => v + " VP" }];
   const swap = items => items.map(it => it && (it.s === "a" || it.s === "b") ? Object.assign({}, it, { s: it.s === "a" ? "b" : "a" }) : it);
@@ -31,7 +31,7 @@
     pitch: "A telepathic cry from Farseer Eriel reaches Akaeris mid-strike against an Ork fleet. He turns for home at once — straight through the Orks’ asteroid field.",
     glance: [["Points", "Fixed: 2 Eldar ships against an Ork squadron force"], ["Table", "180 × 120 cm"], ["Battlezone", "D3 asteroid fields in every 60 cm square"], ["First turn", "Eldar"], ["Game ends", "The Eldar get through, or the Spirit of Arina dies"]],
     bring: ["The Spirit of Arina and the Wraithship Eternity", "An Ork Terror ship and 12 escorts", "6 contact markers: 4 for the Ork groups, 2 blanks", "Plenty of asteroid fields"],
-    forces: { a: ["Spirit of Arina, Admiral Akaeris Starblade: Ld 9, 1 re-roll.", "Wraithship Eternity: Ld 8, pulsar lance and torpedoes."], b: ["Terror Kroozer Da Basha (a Terror ship, FL p. 380), Warlord Thruk Usha: Ld 8, 1 re-roll.", "6 Onslaught attack ships “Koolz Dakka”, Ld 5.", "3 Ravager attack ships “Wold Krusha”, Ld 7.", "3 Savage gunships “Meen Leens”, Ld 6.", "Split into four equal groups, each under a contact marker, plus 2 blank markers."] },
+    forces: { a: ["Spirit of Arina, Admiral Akaeris Starblade: Ld 9, 1 re-roll.", "Wraithship Eternity: Ld 8, pulsar lance and torpedoes."], b: ["Terror Kroozer Da Basha (a Terror ship, FL p. 382), Warlord Thruk Usha: Ld 8, 1 re-roll.", "6 Onslaught attack ships “Koolz Dakka”, Ld 5.", "3 Ravager attack ships “Wold Krusha”, Ld 7.", "3 Savage gunships “Meen Leens”, Ld 6.", "Split into four equal groups, each under a contact marker, plus 2 blank markers."] },
     draw: (v, W, H, st) => squares(W, H, st, "ast").concat([{ z: "sun", e: "l" }, R(0, 30, 6, Math.max(4, H - 60), "a", "", { free: "x" }), { z: "arrow", x1: 8, y1: H / 2, x2: 26, y2: H / 2, s: "a" },
       R(60, 0, W - 60, H, "b", "", { dash: 1 }), { z: "edge", e: "r", s: "a", l: "the Eldar escape here" }]),
     fit: () => [150, 90], srcTable: [180, 120],
@@ -44,7 +44,7 @@
     ],
     stools: [AST],
     notes: [ARINA, "Linked games: keep the Eldar ships’ damage and critical hits for the next scenario, Veil of Sorrow.", "Losing the Eternity does not lose the scenario: only the Spirit of Arina’s fate counts."],
-    refs: [["Contact markers", "RB p. 134–135"], ["Flame of Asuryan", "FL p. 329"], ["Wraithship", "FL p. 331"], ["Terror ship", "FL p. 380"], ["Onslaught attack ship", "FL p. 384"], ["Asteroid fields", "RB p. 110"]],
+    refs: [["Contact markers", "RB p. 134–135"], ["Flame of Asuryan", "FL p. 329"], ["Wraithship", "FL p. 329"], ["Terror ship", "FL p. 382"], ["Onslaught attack ship", "FL p. 384"], ["Asteroid fields", "RB p. 110"]],
     play: [
       { w: "Contact markers", s: "a", t: "As in Convoy (RB p. 134–135): an Eldar ship moving within 30 cm reveals a marker; the Orks deploy the group under it after your movement phase. Blank markers are removed." },
       { w: "Start of the Ork movement", s: "b", t: "You may reveal one marker yourself — two if an Eldar ship is on special orders." }
@@ -78,7 +78,7 @@
     ],
     stools: [],
     notes: [ARINA, PHANTOM, "Linked games: the Spirit of Arina and the Eternity keep the damage and critical hits suffered in Dark Crescent Moon."],
-    refs: [["Dragonship", "FL p. 330"], ["Wraithship", "FL p. 331"], ["Shadowhunter", "FL p. 332"], ["Devastation class cruiser", "FL p. 276"], ["Marks of Chaos", "FL p. 232"], ["Victory points", "RB p. 122"]],
+    refs: [["Dragonship", "FL p. 328"], ["Wraithship", "FL p. 329"], ["Shadowhunter", "FL p. 330"], ["Devastation class cruiser", "FL p. 278"], ["Marks of Chaos", "FL p. 232"], ["Victory points", "RB p. 122"]],
     play: [{ w: "No special rules", t: "Standard victory conditions." }],
     tools: [{ k: "html", html: SHIPS }],
     rtools: vpTools("Eldar", "Chaos"),
@@ -110,7 +110,7 @@
     ],
     stools: [],
     notes: [ARINA, PHANTOM, "The source does not say how the Spirit of Arina must “leave the battlefield”; the default is our suggestion."],
-    refs: [["Space station", "FL p. 507"], ["Assault boats", "RB p. 85"], ["Overlord class battlecruiser", "FL p. 66"], ["Flame of Asuryan", "FL p. 329"]],
+    refs: [["Space station", "FL p. 507"], ["Assault boats", "RB p. 85"], ["Overlord class battlecruiser", "FL p. 66"], ["Flame of Asuryan", "FL p. 327"]],
     play: [
       { w: "Assault boats at the station", s: "a", t: "Assault boats from the Spirit of Arina that reach the station search for the informant instead of attacking." },
       { w: "End phase", s: "a", t: "Roll a D6 for each assault boat docked with the station: on a 4+ the informant is found (tool below)." },
@@ -145,7 +145,7 @@
     ],
     stools: [],
     notes: [ARINA, PHANTOM, "The source names the admiral both van Dyck and von Dyck.", "The battle lasts until a fleet is destroyed or disengages, and the Spirit of Arina must also leave by the sunward edge — but the source does not say how that turns into a result. See Agree."],
-    refs: [["Armageddon class battlecruiser", "FL p. 65"], ["Aconite class frigate", "FL p. 326"], ["Hemlock class destroyer", "FL p. 327"], ["Nightshade class destroyer", "FL p. 328"], ["Asteroid fields", "RB p. 110"], ["Victory points", "RB p. 122"]],
+    refs: [["Armageddon class battlecruiser", "FL p. 65"], ["Aconite class frigate", "FL p. 324"], ["Hemlock class destroyer", "FL p. 325"], ["Nightshade class destroyer", "FL p. 328"], ["Asteroid fields", "RB p. 110"], ["Victory points", "RB p. 122"]],
     play: [{ w: "Turn 4", s: "a", t: "The Corsairs arrive from the sunward short edge." }, { w: "The Spirit of Arina", s: "a", t: "It must leave by the sunward short edge, through the asteroids." }],
     fx: T => T === 4 ? [["a", "The Corsairs arrive from the sunward edge"]] : [],
     tools: [{ k: "html", html: SHIPS }],
@@ -241,7 +241,7 @@
     ],
     stools: [AST],
     notes: ["Eriel commands here; Akaeris and the Spirit of Arina are deep in Tau space.", "Which ships must escape is not spelled out; the default is our suggestion."],
-    refs: [["Dragonship", "FL p. 330"], ["Torture class cruiser", "FL p. 352"], ["Corsair class escort", "FL p. 353"], ["Asteroid fields", "RB p. 110"]],
+    refs: [["Dragonship", "FL p. 328"], ["Torture class cruiser", "FL p. 354"], ["Corsair class escort", "FL p. 353"], ["Asteroid fields", "RB p. 110"]],
     play: [
       { w: "Start of each turn: the field drifts", t: "Move every asteroid field, ship and ordnance marker 20 cm toward the short edge opposite the escape edge; ships keep their heading. Fields that fall off are removed. Each player then rolls D3−1 and places that many new fields within 20 cm of the escape edge." },
       { w: "Falling off", t: "A ship pushed off the table may try to come back in a later turn on a 4+. Ordnance pushed off is removed and counts as back aboard for launch capacity." },
@@ -272,12 +272,12 @@
     steps: [
       { t: "Make one long edge sunward. Place a small rogue planet anywhere at least 30 cm from every edge, then D3 gas or dust clouds, D3 asteroid fields and D3 warp rifts at random. Two radiation bursts plague the battle." },
       { s: "a", t: "Deploy along the long edge opposite the sunward edge: up to 20 cm in, at least 60 cm from a short edge." },
-      { s: "b", t: "Your ships arrive using the daemonship rules (FL p. 227)." },
+      { s: "b", t: "Your ships arrive using the daemonship rules (FL p. 237)." },
       { s: "b", t: "You take the first turn." }
     ],
     stools: [],
     notes: [ARINA, "The source gives no game length; the default is our suggestion."],
-    refs: [["Daemonships", "FL p. 226–227"], ["Marks of Chaos", "FL p. 232"], ["Radiation bursts", "RB p. 115"], ["Warp rifts", "RB p. 111"], ["Repulsive class grand cruiser", "FL p. 269"]],
+    refs: [["Daemonships", "FL p. 236–237"], ["Marks of Chaos", "FL p. 232"], ["Radiation bursts", "RB p. 115"], ["Warp rifts", "RB p. 111"], ["Repulsive class grand cruiser", "FL p. 271"]],
     play: [
       { w: "Start of each turn: radiation bursts", t: "Roll a D6 for each of the two bursts: a 5 or 6 sets one off (only one a turn). Roll a D6 for its strength: every ship has that much less Leadership this turn, and fleet commanders may re-roll only for their own ship or squadron (RB p. 115)." },
       { w: "Goal", s: "a", t: "Destroy all four Chaos grand cruisers." }
@@ -312,7 +312,7 @@
     ],
     stools: [{ k: "val", id: "rifts", l: "Warp rifts (D6)", opts: [1, 2, 3, 4, 5, 6], roll: () => d6() }],
     notes: [ARINA, "“Defeat Barha’desh” is not defined, and the source gives no game length; the defaults are our suggestion."],
-    refs: [["Despoiler class battleship", "FL p. 266"], ["Murder class cruiser", "FL p. 279"], ["Warp rifts", "RB p. 111"], ["Flame of Asuryan", "FL p. 329"]],
+    refs: [["Despoiler class battleship", "FL p. 268"], ["Murder class cruiser", "FL p. 279"], ["Warp rifts", "RB p. 111"], ["Flame of Asuryan", "FL p. 329"]],
     play: [{ w: "Goal", s: "a", t: "Defeat Barha’desh: {a:defeat}." }],
     tools: [{ k: "html", html: SHIPS }],
     rtools: [{ k: "ending", id: "how", l: "How did it end?", rows: [["Barha’desh was defeated", "a"], ["The Spirit of Arina was destroyed", "b"], ["The Eldar disengaged", "b"]] }],

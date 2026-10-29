@@ -1,7 +1,7 @@
 /* Blood Axe commandeered escorts (user 29.10.2026: "tee ja julkaise kaikki",
    the plan of the same day). "A Blood Axe tiddla skwadron of at least six
    escorts may include up to three Imperial Navy and/or Chaos escorts from any
-   fleet list at their listed cost" (Fleets p. 369; ruling T59: the six count
+   fleet list at their listed cost" (Fleets p. 371; ruling T59: the six count
    the commandeered ones too). The list prints them in a section of their own,
    BLOOD AXE COMMANDEERED ESCORTS, far below the tiddlas, and a card from it
    was a squadron card of two that the player had to give the tiddla's letter
@@ -129,7 +129,7 @@ export function baTopHTML(){
 /* the row's tag in the section, in place of "squadron card" */
 export function baRowTag(){
   const st = baState();
-  return st.target ? `<span class="tag sq" title="One ship a +, into ${esc(nameOf(st.target))} (Fleets p. 369)">into ${esc(nameOf(st.target))}</span>`
+  return st.target ? `<span class="tag sq" title="One ship a +, into ${esc(nameOf(st.target))} (Fleets p. 371)">into ${esc(nameOf(st.target))}</span>`
     : `<span class="tag no" title="${esc(st.why)}">needs a Blood Axe tiddla</span>`;
 }
 /* the tiddla section's line about them, whatever the Warlord's clan (user

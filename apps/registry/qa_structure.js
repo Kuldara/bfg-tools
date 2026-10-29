@@ -175,7 +175,7 @@ Object.values(SHIPS).forEach(sh => {
     check(typeof r.t === "string" && r.t.trim().length > 0, "rule",
       sh.nm + ": rule row " + i + " is empty");
     /* A cut sentence: ends in a word without punctuation and is long.
-       A page reference ("...on p. 175") and a number are valid endings -
+       A page reference ("...on p. 185") and a number are valid endings -
        the book ends a sentence on them without a full stop. */
     const tail = r.t.trim();
     const endsOk = /[.!?)\]:;]\s*$/.test(tail) ||
@@ -198,7 +198,7 @@ const textKey = t => String(t || "").toLowerCase()
   .replace(/[\u2013\u2014\u2022]/g, " ")
   .replace(/i\.e\./g, "ie").replace(/e\.g\./g, "eg").replace(/pg\./g, "pg")
   .replace(/[^a-z0-9]+/g, " ").trim();
-/* The book itself repeats the same sentence in the tyranid damage table (p.423:
+/* The book itself repeats the same sentence in the tyranid damage table (p.425:
    "The wreck moves 4D6 cm forward..." is on two different results). That is
    not an extraction fault, so it is allowed by name. */
 const DUP_OK = [textKey("The wreck moves 4D6 cm forward in each of its subsequent Movement phases.")];

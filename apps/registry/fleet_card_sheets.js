@@ -256,7 +256,7 @@ const chaos_puuttuu = {
 };
 
 /* Pool extension 9.10.2026: 8 new hulls that have not been printed yet.
- * Names from the book's Famous Ships rows (p. 268-280).
+ * Names from the book's Famous Ships rows (p. 270-282).
  *
  * The grand cruisers are NO LONGER on this sheet (the user on the evening of 9.10.:
  * configurable like IN Bastion, the carrier as a unique model). They are made by their own
@@ -517,7 +517,7 @@ const eldar = {
   ups: ELDAR_UPS,
   units: [
     /* Commanders. The book requires a Pirate Prince in a fleet over 750 points
-       (p. 317), so the sheet must have a commander card. */
+       (p. 315), so the sheet must have a commander card. */
     { row: /^Pirate Prince/i, name: "PRINCE CONANMAOL" },
     { row: /^Eldar Hero/i,    name: "AUTARCH NEIRATHIL" },
     { row: /^Void Stalker class battleship$/i, name: "BRIGHT STAR" },
@@ -542,7 +542,7 @@ const eldar = {
 };
 
 /* ------------------------------------------------------------------ */
-/* DARK ELDAR - Pirates (Fleets p. 351-353)                            */
+/* DARK ELDAR - Pirates (Fleets p. 353-355)                            */
 /* ------------------------------------------------------------------ */
 
 /* The user 2.10.2026: 4 cruisers and 13 escorts, all configurable with
@@ -557,7 +557,7 @@ const eldar = {
    names no Dark Eldar ship at all, so the other names are in the lore style
    (a serpent and poison theme).
 
-   Squadrons: 13 hulls in squadrons of 2-6 (p. 351) = 3-6 squadrons, and a card is
+   Squadrons: 13 hulls in squadrons of 2-6 (p. 353) = 3-6 squadrons, and a card is
    one weapon choice. Six cards cover every legal split; four
    have default members 4+3+3+3 (one squadron per cruiser, the book's "at least
    3 escorts for each capital ship"), two are empty spare cards. */
@@ -581,7 +581,7 @@ const darkeldar = {
        "squadrons: any squadron card fits any squadron, write the hulls in.",
   ups: DARK_ELDAR_UPS,
   units: [
-    /* Required in a fleet over 750 points (p. 351). */
+    /* Required in a fleet over 750 points (p. 353). */
     { row: /^Dread Archon/i, name: "DUKE SLISCUS" },
     { row: /^Torture class cruiser$/i, name: "INCESSANT AGONY" },
     { row: /^Torture class cruiser$/i, name: "RIBALD BLADE" },
@@ -615,7 +615,7 @@ const darkeldar = {
  * The shared human pool (platforms, system ships, mines, Blackstone,
  * Ramilies) runs from the Bastion list: the general defence rows are the same on every
  * list (Fleets p. 499), so the same cards work for AdMech, Space
- * Marines, Chaos and as captured by the orks (p. 360).
+ * Marines, Chaos and as captured by the orks (p. 362).
  *
  * A fort (Ramilies, Fortress-Monastery) prints as two cards and gets
  * its own page: it is kept first on the sheet so the other cards pair
@@ -685,13 +685,13 @@ const pd_orks = {
   limit: 5000,
   title: "Orks – space hulk and Rok, models to print",
   sub: "Three models: Ork Hulk · 2 Roks. Captured platforms, system ships and mines use the cards on " +
-       "the shared Imperial sheet (Fleets pg. 360).",
+       "the shared Imperial sheet (Fleets pg. 362).",
   ups: ORK_UPS,
   /* 10.10.2026 (external review): Dakka Dakka is an "Ork capital ships"
-     rule (Fleets p. 367) and boarding torpedoes +5 "any capital ship ...
-     armed with torpedoes" (p. 359, which lists the Space Hulk separately).
+     rule (Fleets p. 369) and boarding torpedoes +5 "any capital ship ...
+     armed with torpedoes" (p. 361, which lists the Space Hulk separately).
      The hulk is Defence/40 and a Rok Defence/8: the rows are off. The hulk's own boarding
-     torpedoes +15 (p. 389) stays. From 20.10.2026 the app no longer offers these
+     torpedoes +15 (p. 391) stays. From 20.10.2026 the app no longer offers these
      rows to the hulk or the Roks, so their "off" is gone (the sheet fails if
      the app does not offer a named row). */
   units: [
@@ -723,14 +723,14 @@ const pd_tau = {
 };
 
 /* The same Haven model for both: the Eldar Haven and the Dark Eldar pirate base
- * with swapped weapons (Fleets p. 334, 337, 347). */
+ * with swapped weapons (Fleets p. 332, 335, 349). */
 const pd_eldar = {
   out: pdOut("6_Eldar_Haven"),
   list: /^Eldar Corsairs . Later Gothic War/,
   limit: 5000,
   title: "Eldar Corsairs – Haven space station, model to print",
   sub: "One model, two cards: this Haven card for the Corsairs and the pirate base card on the " +
-       "Dark Eldar sheet. Bought from the fleet's own points (Fleets pg. 337).",
+       "Dark Eldar sheet. Bought from the fleet's own points (Fleets pg. 335).",
   ups: ELDAR_UPS,
   units: [
     { row: /^Haven space station$/i, name: "RASH NIEAED" },
@@ -743,7 +743,7 @@ const pd_darkeldar = {
   limit: 5000,
   title: "Dark Eldar – pirate base, the same Haven model",
   sub: "The Haven model as a Dark Eldar pirate base: Slavebringers for bombers and lances for " +
-       "pulsars, the rest of the profile unchanged (Fleets pg. 337, 347).",
+       "pulsars, the rest of the profile unchanged (Fleets pg. 335, 349).",
   ups: DARK_ELDAR_UPS,
   units: [
     { row: /^Haven space station \(pirate base\)$/i, name: "THE GILDED OUBLIETTE" },

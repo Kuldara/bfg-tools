@@ -17,7 +17,7 @@ from .section_kinds import _L, _cls, _e, _r, _s, _sec, _sh, _t, data
 from .ships import ships
 # ---------------------------------------------- the book's chapters and the "own" hull
 # A host list's own page may offer another fleet's ships (the Chaos lists'
-# RENEGADE IMPERIAL VESSELS p.222, Bastion's Chaos hulls p.39). The picker
+# RENEGADE IMPERIAL VESSELS p.232, Bastion's Chaos hulls p.39). The picker
 # shows such a source list yellow, and for that it must know
 # which of the source list's hulls are ITS OWN. A hull reference alone is not enough: the Space
 # Marine lists print Imperial Navy profiles as rapid strike vessels,
@@ -30,8 +30,8 @@ from .ships import ships
 # included the same race's chapters, and then the Imperial Navy chapter's hulls were
 # own to the Adeptus Mechanicus (p.14 "Imperial Navy (including Adeptus
 # Mechanicus)"). The review 16.9. showed it wrong: p.14's race split
-# concerns reserves, and the renegades "do not count as reserves" (p.222), whereas
-# p.222 says "from any Imperial Navy fleet list" and the Mechanicus is a list of its own
+# concerns reserves, and the renegades "do not count as reserves" (p.232), whereas
+# p.232 says "from any Imperial Navy fleet list" and the Mechanicus is a list of its own
 # (p.124 "ADEPTUS MECHANICUS FLEET LIST", p.125 "replaces the original cost for
 # these vessels when used as Adeptus Mechanicus ships"). The player loses
 # nothing: every row of the Explorator route is available through the Imperial Navy
@@ -72,7 +72,7 @@ print("chapter starts: %d (of which list-less %d), lists with a chapter of their
       % (len(_STARTS), len(_LISTLESS), _NATIVE))
 
 # ---------------------------------------------- a Mark that comes built in
-# When the Mark is fixed on the ship - the god's own battle barge (p.258, 260, 262,
+# When the Mark is fixed on the ship - the god's own battle barge (p.260, 262, 264,
 # 264) or a Daemonship on the Nurgle, Khorne and Slaanesh lists ("already
 # included in the cost to upgrade them to Daemonships") - the player did not see
 # it among the ship's upgrades at all, only in the card's text. Now it
@@ -164,7 +164,7 @@ import re as _re
 _PK = "^planet killer"
 MARK_PAID = {
     "Chaos — Nurgle": dict(
-        god="Nurgle", ship="^terminus est$", unless=_PK, pg=262,
+        god="Nurgle", ship="^terminus est$", unless=_PK, pg=264,
         src_ship="Mark of Nurgle: This ship bears the Mark of Nurgle as part "
             "of its point cost; it does not have to be paid for separately by "
             "the ship's commander. The extra hit is already included in its "
@@ -174,7 +174,7 @@ MARK_PAID = {
             "Planet Killer is also present, in which case a Chaos Lord must "
             "lead it."),
     "Chaos — Tzeentch": dict(
-        god="Tzeentch", ship="^scion of prospero$", unless=_PK, pg=258,
+        god="Tzeentch", ship="^scion of prospero$", unless=_PK, pg=260,
         src_ship="Mark of Tzeentch: This ship bears the Mark of Tzeentch as "
             "part of its point cost; it does not have to be paid for "
             "separately by the ship's commander.",
@@ -183,7 +183,7 @@ MARK_PAID = {
             "the Planet Killer is also present, in which case a Chaos Lord "
             "must lead it."),
     "Chaos — Slaanesh": dict(
-        god="Slaanesh", ship="^wage of sin$", unless=_PK, pg=260,
+        god="Slaanesh", ship="^wage of sin$", unless=_PK, pg=262,
         src_ship="Mark of Slaanesh: This ship bears the Mark of Slaanesh as "
             "part of its point cost; it does not have to be paid for "
             "separately by the ship's commander.",
@@ -192,7 +192,7 @@ MARK_PAID = {
             "Planet Killer is also present, in which case a Chaos Lord must "
             "lead it."),
     "Chaos — Khorne": dict(
-        god="Khorne", ship="^slaverer$", dearest=1, pg=264,
+        god="Khorne", ship="^slaverer$", dearest=1, pg=266,
         src_ship="Mark of Khorne: This ship bears the Mark of Khorne as part "
             "of its point cost; it does not have to be paid for separately by "
             "the ship's commander. If it is not the flagship, a Chaos Lord "
@@ -224,11 +224,12 @@ for _L in lists_out:
     _L["mark_paid"] = dict(_mp)
     _MP += 1
 assert _MP == 4, "MARK_PAID: 4 lists expected, got %d" % _MP
-# Only the Mechanicus's two 0 point refits remain required upgrades.
+# No required upgrades remain: v0.36's two (the Mechanicus +1 turret and
+# dorsal lance) are in the v0.40 Mechanicus profiles (p.125).
 _REQ = [(_L["nm"], _e["l"]) for _L in lists_out for _sec in _L["secs"]
         for _e in _sec["ents"] if _e.get("k") == "up" and _e.get("req")
         and not _e.get("incl")]
-assert len(_REQ) == 2, "required upgrades %d: %r" % (len(_REQ), _REQ)
+assert not _REQ, "required upgrades %d: %r" % (len(_REQ), _REQ)
 
 # A control character in a data string. check_control.py reads the files' bytes,
 # but JSON writes a backspace (U+0008) as two ASCII characters, so
@@ -250,7 +251,7 @@ _ctrl_walk(data, "data", _CTRL)
 assert not _CTRL, "a control character in a data string: %s" % _CTRL[:5]
 
 # The PDF's line break splits the word "re-roll" at the hyphen, and the extracted
-# text says "re- roll" (p.147, 151, 258, 373, 404, 486). The card and the
+# text says "re- roll" (p.157, 161, 260, 375, 406, 486). The card and the
 # choice list print the data as it is, so the word is fixed here
 # in every string at once - the rule's sentence and its sec.text pair
 # stay the same byte for byte this way (user 5.10.2026: re-rolls clearly).

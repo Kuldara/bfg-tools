@@ -15,9 +15,9 @@ from .section_guard import lists_out
 from .ships import _k, o, ships
 # For-information sentences the book prints under the OPTIONS heading but that are not
 # choices (spot check 8 rows 36 and 48): "... already included in its
-# profile" (p.186, 188), "... see the special ability above" (p.187) and "If
+# profile" (p.196, 198), "... see the special ability above" (p.197) and "If
 # the torpedo refit is taken, the ship does not have to be modified ..."
-# (p.150). On the card they were tickable options and blocked a finished PTS;
+# (p.160). On the card they were tickable options and blocked a finished PTS;
 # they move to the ship's SPECIAL texts as they are.
 OPT_TO_SR = [("150", "If the torpedo refit is taken"),
              ("186", "already included in its profile"),
@@ -37,13 +37,15 @@ for _pg, _frag in OPT_TO_SR:
 _FREE_OPT = re.compile(r"no (?:additional|extra) (?:points? )?cost|no change in cost|for free\b"
                        r"|already included|no extra points|costs no extra|at no cost"
                        r"|see the special ability above|Instead of taking one of the above", re.I)
-_free_hits = 0
+_free_hits = []
 for _sh in ships.values():
     for _o in _sh.get("ol") or []:
         if _o.get("c") is None and _FREE_OPT.search(_o.get("t") or ""):
             _o["c"] = 0
-            _free_hits += 1
-assert _free_hits == 16, "16 free options expected, found %d" % _free_hits
+            _free_hits.append("p.%s %s" % (_sh["pg"], _o["t"][:40]))
+# v0.40: 18 = the 16 of v0.36, the three new Adeptus Mechanicus light cruiser
+# profiles (p.135-137) and minus the escort drone fire ship, now +5 pts (p.437).
+assert len(_free_hits) == 18, "18 free options expected, found %d: %s" % (len(_free_hits), _free_hits)
 
 # A permanent option ID (P1-8a, apps/registry/docs/save-format.md): page + sha1(normalised
 # text)[:8]. Made from the data, not by hand; a save refers to an option by it and not
@@ -51,7 +53,7 @@ assert _free_hits == 16, "16 free options expected, found %d" % _free_hits
 # saves. domain.js's normOptText does the same normalisation.
 import hashlib as _hashlib, re as _re
 def _opt_id(pgkey, text):
-    n = _re.sub(r"[^a-z0-9]", "", str(text or "").lower())   # the whole text: the two options of p.255 differ only from the 90th character
+    n = _re.sub(r"[^a-z0-9]", "", str(text or "").lower())   # the whole text: the two options of p.257 differ only from the 90th character
     return "%s:%s" % (pgkey, _hashlib.sha1(n.encode("ascii")).hexdigest()[:8])
 _n_ids = 0
 for _k, _sh in ships.items():
@@ -73,7 +75,7 @@ _seetext = [(k, r) for k, sh in ships.items() for o in sh.get("ol") or [] if o.g
 assert not _seetext, "a swap row without a range: %s" % _seetext[:4]
 
 # The narrative sentences of a profile's SPECIAL text stay in the book: the card repeats
-# rules, not story. Hammer (Fleets p. 374): three sentences about Uzog
+# rules, not story. Hammer (Fleets p. 376): three sentences about Uzog
 # Armripper and Garzog were 40 % of the card's rule box (item 10).
 # Each must hit, or the run fails - like KEEP_TEXT.
 DROP_SR = [
@@ -94,7 +96,7 @@ for _frag in DROP_SR:
     assert _hit, "DROP_SR did not hit: %r" % _frag
 # Descriptions of upgrade rows for which the book's section gives no sentence of the row's own or
 # gives the wrong one (spot check 8, 10.9.2026): the orks' Warlord re-roll row got
-# as its description the next paragraph's lead (p.365, 366, 372), and 17 Chaos
+# as its description the next paragraph's lead (p.367, 368, 374), and 17 Chaos
 # Mark rows printed the general text "Fleet-list upgrade", although the list's own
 # page states the Mark's effect. Sentences from the book; set only on a row
 # that has no description of its own (desc).
@@ -158,7 +160,7 @@ for Lx in lists_out:
 print("tyranid bio-refits made per ship: %d" % _bio_per)
 assert _bio_per == 28, "28 tyranid bio-refits expected, found %d" % _bio_per
 
-# Zukov's Klaw (p.381): "It is of the Goff Clan", "It is upgraded to be an
+# Zukov's Klaw (p.383): "It is of the Goff Clan", "It is upgraded to be an
 # Assault Karrier with boarding torpedoes ... but it may not use any other
 # types of attack craft", "It is also equipped with Klaws as part of its point
 # cost" - clans, Assault Karrier, boarding torpedoes, Klaws and torpedo-bommas
@@ -193,26 +195,29 @@ for Lx in lists_out:
             if _sh and any(re.search(r"shark assault boat", o.get("t") or "", re.I) for o in _sh.get("ol") or []):
                 e["optno"] = r"shark assault boat"
                 _optno += 1
-assert _optno == 2, "2 Mechanicus list Shark options expected, found %d" % _optno
+# v0.40: the list's Emperor and Oberon are the Mechanicus profiles (p.128, p.130),
+# which have no Shark option; the check stays in case one comes back.
+assert _optno == 0, "Mechanicus list Shark options: %d (v0.40 has none)" % _optno
 
-# Grey Knights p.144: "An Inquisitor Lord gets one re-roll, and may purchase
-# up to two more re-rolls for +25 points each" also concerns the Ordo Malleus
-# Inquisitor Lord; the extra re-rolls attached only to the row before
-# (spot check 10 row 46).
+# Grey Knights p.154: "An Inquisitor Lord gets one re-roll, which may be used
+# for any ship in the fleet. A second re-roll can be purchased for +25
+# points." also concerns the Ordo Malleus Inquisitor Lord, the section's
+# other row; the extra re-roll attached only to the row before (spot check
+# 10 row 46).
 _gk_rr = 0
 for Lx in lists_out:
     if Lx["nm"] != "Grey Knights":
         continue
     for _si, s in enumerate(Lx["secs"]):
-        if s["t"].strip() != "FLEET COMMANDER":
+        if s["t"].strip() != "Inquisitor Lord":
             continue
         _cmds = [[_si, _ei] for _ei, e in enumerate(s["ents"]) if e.get("k") == "cmd"]
-        assert len(_cmds) == 2, "Grey Knights FLEET COMMANDER: commanders %d" % len(_cmds)
+        assert len(_cmds) == 2, "Grey Knights Inquisitor Lord: commanders %d" % len(_cmds)
         for e in s["ents"]:
             if e.get("k") == "up" and re.search(r"extra re-roll", str(e["l"]), re.I):
                 e["at"] = _cmds
                 _gk_rr += 1
-assert _gk_rr == 2, "Grey Knights: 2 extra re-roll rows expected, found %d" % _gk_rr
+assert _gk_rr == 1, "Grey Knights: 1 extra re-roll row expected, found %d" % _gk_rr
 
 # p.84 Cobra: long range detection gear - "Only Imperial escort squadrons may
 # take this refit, not pirates, Chaos renegades, etc." (spot check 10 row 67).
@@ -254,7 +259,7 @@ for Lx in lists_out:
             _box += 1
 assert _box == 5, "5 commander side box sentences expected (Rath), found %d" % _box
 
-# p.372 Da Ork Clanz, the WARLORD box: AFTER the price rows ("One extra re-roll +20",
+# p.374 Da Ork Clanz, the WARLORD box: AFTER the price rows ("One extra re-roll +20",
 # "Two extra re-rolls +40") come three of the Warlord's own sentences -
 # Gubbins per re-roll, "He must be embarked on the most expensive ship under
 # his own command" and "A Warlord's re-rolls only count for the skwadrons under

@@ -3,7 +3,7 @@ import { listOfIntent } from "./lending.js";
 import { coveredRowExcludes, coversExcludedRow } from "./unit.js";
 
 /* frees: what a row includes for free, so a purchase it replaces is said to
-   be included rather than in conflict (Assault Karrier, Fleets p. 371). A
+   be included rather than in conflict (Assault Karrier, Fleets p. 373). A
    row label is read as it is; an option's sentence anywhere ("it may carry
    boarding torpedoes"). */
 function inclIn(en, text, anywhere){
@@ -195,7 +195,7 @@ export function transition(intent, action, ctx, catalog){
     });
     if(action.state === "take"){
       /* The group rule first: when two options are both a choose-one group
-         and replacements of the same slot (Lite Kroozer, Fleets p.383), the
+         and replacements of the same slot (Lite Kroozer, Fleets p.385), the
          notice names the group - the reason the player sees in the book. */
       if(o.grp){
         var max = Math.max(1, o.gmax || 1);
@@ -265,7 +265,7 @@ export function transition(intent, action, ctx, catalog){
     var at2 = p2 && L ? findUpgradeEntry(L, p2.section, p2.label, sel0.si, sel0.ei) : null;
     var e2 = at2 ? L.secs[at2.si].ents[at2.ei] : null;
     /* Two upgrades that exclude each other (noup: a Daemonship may not have a
-       Chaos Space Marine crew, Fleets pp. 227, 235): the later choice wins,
+       Chaos Space Marine crew, Fleets pp. 237, 245): the later choice wins,
        as in a group, instead of both falling in the clean-up (J20 b). */
     if(action.state === "take" && e2){
       Object.keys(it.upgrades).forEach(function(id5){
@@ -284,10 +284,10 @@ export function transition(intent, action, ctx, catalog){
     }
     /* The upgrade excludes a row (noup) that a taken option covers: the
        option reopens with a notice (Daemonship vs. embarked Chaos Space
-       Marines, Fleets pp. 249, 255). The other way too: a covered row that
+       Marines, Fleets pp. 253, 257). The other way too: a covered row that
        gives way to this upgrade (the Terror ship's boarding torpedoes and an
        Assault Karrier that "takes boarding torpedoes for free", Fleets
-       p. 371, RAW-06). */
+       p. 373, RAW-06). */
     if(action.state === "take" && e2){
       ol.forEach(function(p){
         if(stateOf(p) !== "take") return;

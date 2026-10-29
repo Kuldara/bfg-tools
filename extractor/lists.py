@@ -20,34 +20,34 @@ LISTS = [
     ("Space Marines — Crusade", 98),
     ("Space Marines — Dominion", 100),
     ("Adeptus Mechanicus — Explorator", 124),
-    ("The Emperor's Inquisition", 138),
+    ("The Emperor's Inquisition", 148),
     # Page 144 has its own heading "GREY KNIGHTS FLEET LIST" and under it
     # its own FLEET COMMANDER, CAPITAL SHIPS, ESCORTS and ATTACK RATING.
     # Without this row it merged into the Inquisition, so the list had
     # two commander and two hull sections at different prices.
-    ("Grey Knights", 144),
-    ("Rogue Traders", 174),
-    ("Rogue Traders — Exploration", 176),
-    ("Rogue Traders — Pirates and Wolf Packs", 178),
-    ("Chaos — Incursion", 232),
-    ("Chaos — Black Crusade", 234),
-    ("Chaos — Tzeentch", 236),
-    ("Chaos — Nurgle", 240),
-    ("Chaos — Khorne", 244),
-    ("Chaos — Slaanesh", 248),
+    ("Grey Knights", 154),
+    ("Rogue Traders", 184),
+    ("Rogue Traders — Exploration", 186),
+    ("Rogue Traders — Pirates and Wolf Packs", 188),
+    ("Chaos — Incursion", 242),
+    ("Chaos — Black Crusade", 244),
+    ("Chaos — Tzeentch", 246),
+    ("Chaos — Nurgle", 248),
+    ("Chaos — Khorne", 250),
+    ("Chaos — Slaanesh", 252),
     # The book has two Eldar Corsairs lists: page 316's heading is
     # "GOTHIC SECTOR" and page 317's "LATER GOTHIC WAR". Only
     # the latter has the Void Stalker battleship and two
     # light cruisers. Without the separation they showed as one list
     # with two commander sections.
-    ("Eldar Corsairs \u2014 Gothic Sector", 316),
-    ("Eldar Corsairs \u2014 Later Gothic War", 317),
-    ("Eldar — Iyanden Craftworld", 318),
-    ("Dark Eldar — Pirates", 351),
-    ("Orks — Cyclops Cluster", 365),
-    ("Orks — Waaagh!", 366),
-    ("Orks — Da Ork Clanz", 372),
-    ("Necrons — Harvest Fleet", 404),
+    ("Eldar Corsairs \u2014 Gothic Sector", 314),
+    ("Eldar Corsairs \u2014 Later Gothic War", 315),
+    ("Eldar — Iyanden Craftworld", 316),
+    ("Dark Eldar — Pirates", 353),
+    ("Orks — Cyclops Cluster", 367),
+    ("Orks — Waaagh!", 368),
+    ("Orks — Da Ork Clanz", 374),
+    ("Necrons — Harvest Fleet", 406),
     ("Tyranids — Vanguard Fleet", 429),
     ("Tyranids — Hive Fleet", 430),
     ("Tau — Merchant Fleet", 454),

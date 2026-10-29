@@ -33,7 +33,7 @@
       { s: "a", t: "Choose the short edge you will enter from on turn 1. You take the first turn." }
     ],
     notes: ["On a shorter table the station stays 90 cm from the raiders’ edge; for each full 30 cm of length lost, the defender arrives one turn later (the map’s ticks follow your table). Not playable under 120 cm.", "With agreed homebrew lists other defences may be used, as long as one station-like defence costs 150–250 pts; still no mines."],
-    refs: [["Space station", "FL p. 507"], ["High orbit defences", "FL p. 498–"], ["Haven space station", "FL p. 334"], ["Kor Caste Orbital City", "FL p. 478"]],
+    refs: [["Space station", "FL p. 507"], ["High orbit defences", "FL p. 498–"], ["Haven space station", "FL p. 332"], ["Kor Caste Orbital City", "FL p. 478"]],
     play: [{ w: "Reinforcements", s: "b", t: "Your ships may arrive from turn 1 on your short edge. For each turn after the first they may instead arrive up to 30 cm further along either long edge, measured from your edge." }],
     fx: T => { const d = trapDelay(), t = T - d; return t < 1 ? [["b", "Reinforcements may not arrive yet (shorter table)"]] : t === 1 ? [["b", "Reinforcements: your short edge only"]] : [["b", "Reinforcements: up to " + Math.min(90, 30 * (t - 1)) + (t > 4 ? "+" : "") + " cm along the long edges"]]; },
     tools: [],

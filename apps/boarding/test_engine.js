@@ -60,7 +60,7 @@ eq(B.shipValue(ship({ hp: 8, dp: 8, opts: ["khorne", "abaddon"] }), side("chaos"
 // Ork Warlord doubles, except aboard a Space Hulk (REF step 1).
 eq(B.shipValue(ship({ hp: 10, dp: 10, opts: ["warlord"] }), side("ork", []), "attacker").value, 20, "Ork Warlord x2");
 eq(B.shipValue(ship({ hp: 40, dp: 40, opts: ["warlord", "spacehulk"] }), side("ork", []), "attacker").value, 40, "Warlord on a Space Hulk: no doubling");
-// Grunt assault ship counts as 2 HP before other modifiers (FB p.388).
+// Grunt assault ship counts as 2 HP before other modifiers (FB p.390).
 eq(B.shipValue(ship({ hp: 1, dp: 1, opts: ["hp2"] }), side("ork", []), "attacker").value, 2, "Grunt assault ship counts as 2 HP");
 // Kroot Warsphere x2 (REF step 1).
 eq(B.shipValue(ship({ hp: 10, dp: 10 }), side("kroot", []), "attacker").value, 20, "Kroot Warsphere x2");
@@ -216,13 +216,13 @@ function modVal(att, def, role, id){
 }
 var deSide = side("darkeldar", [ship({ hp: 6, dp: 6 })]);
 eq(B.prepare({ att: deSide, def: plain, round: 1 }).att.mods.filter(function(m){return m.id==="de1";})[0].v,
-  1, "Dark Eldar are +1 in the first round (FL p.342)");
+  1, "Dark Eldar are +1 in the first round (FL p.344)");
 eq(B.prepare({ att: deSide, def: plain, round: 2 }).att.mods.filter(function(m){return m.id==="de2";})[0].v,
   -1, "and -1 in every round after it");
 var xenosLord = side("imperial", [ship({ hp: 8, dp: 8, opts: ["inq_xenos"] })]);
 var alienDef = side("eldar", [ship({ hp: 6, dp: 6 })]);
 eq(modVal(xenosLord, alienDef, "att", "inq_xenos"), 2,
-  "an Ordo Xenos Inquisitor Lord is +2 against aliens (FL p.141)");
+  "an Ordo Xenos Inquisitor Lord is +2 against aliens (FL p.151)");
 eq(modVal(alienDef, xenosLord, "att", "vs_xenos"), -1, "and those aliens take -1");
 eq(modVal(side("imperial", [ship({ hp: 8, dp: 8, opts: ["inq_malleus"] })]), plain, "att", "inq_malleus"), 2,
   "an Ordo Malleus Inquisitor Lord is +2");
@@ -231,17 +231,17 @@ eq(modVal(side("imperial", [ship({ hp: 8, dp: 8, opts: ["inq_hereticus"] })]), p
 eq(modVal(side("chaos", [ship({ hp: 8, dp: 8, opts: ["abaddon"] })]), plain, "att", "abaddon"), 1,
   "Abaddon adds +1 on top of his doubled boarding value");
 eq(modVal(side("chaos", [ship({ hp: 12, dp: 12, opts: ["berzerkers"] })]), plain, "att", "berzerkers"), 2,
-  "a Khorne Berzerker retinue is +2 (FL p.264)");
+  "a Khorne Berzerker retinue is +2 (FL p.266)");
 eq(modVal(side("ork", [ship({ hp: 8, dp: 8, opts: ["megaarmour"] })]), plain, "att", "megaarmour"), 1,
   "mega-armoured boarding parties are +1");
 eq(modVal(side("ork", [ship({ hp: 8, dp: 8, opts: ["goff"] })]), plain, "att", "goff"), 1,
-  "the Goff clan is +1 (FL p.369)");
+  "the Goff clan is +1 (FL p.371)");
 eq(modVal(side("ork", [ship({ hp: 8, dp: 8, opts: ["clanzwarlord"] })]), plain, "att", "clanzwarlord"), 2,
-  "an Ork Clanz Warlord is +2 once per game (FL p.372)");
+  "an Ork Clanz Warlord is +2 once per game (FL p.374)");
 eq(modVal(side("eldar", [ship({ hp: 6, dp: 6, opts: ["aspect"] })]), plain, "att", "aspect"), 2,
-  "an Aspect Warrior Host is +2 (FL p.305)");
+  "an Aspect Warrior Host is +2 (FL p.307)");
 eq(modVal(plain, side("eldar", [ship({ hp: 6, dp: 6, opts: ["talons"] })]), "att", "talons"), -2,
-  "the Talons refit is -2 on whoever boards it (FL p.309)");
+  "the Talons refit is -2 on whoever boards it (FL p.311)");
 eq(modVal(side("imperial", [ship({ hp: 6, dp: 6, opts: ["corridor"] })]),
   side("chaos", [ship({ hp: 8, dp: 8, turrets: 2 })]), "att", "corridor"), null,
   "the corridor bonus is defensive only");
@@ -250,7 +250,7 @@ eq(modVal(side("chaos", [ship({ hp: 8, dp: 8 })]),
   "and it is +1 (FL p.72)");
 eq(modVal(side("chaos", [ship({ hp: 8, dp: 8 })]),
   side("inquisition", [ship({ hp: 12, dp: 12, turrets: 5, opts: ["blackship"] })]), "def", "blackship"), 2,
-  "a Blackship garrison is +2 when defending (FL p.148)");
+  "a Blackship garrison is +2 when defending (FL p.158)");
 
 console.log("== the audit's own cases ==");
 /* Every finding the release audit confirmed gets an assertion, so none of them
@@ -259,13 +259,13 @@ var wards = side("inquisition", [ship({ hp: 6, dp: 6, turrets: 2, opts: ["greykn
 var khorneShip2 = side("chaos", [ship({ hp: 8, dp: 8, opts: ["khorne"] })]);
 eq(B.critBonus(khorneShip2, plain), 1, "the Mark of Khorne adds +1 to the roll to cause a critical");
 eq(B.critBonus(khorneShip2, wards), 0,
-  "but hexagrammic wards ignore that too, not only the doubled value (FL p.142)");
+  "but hexagrammic wards ignore that too, not only the doubled value (FL p.152)");
 eq(B.shipValue(ship({ hp: 40, dp: 40, opts: ["spacehulk", "khorne"] }), side("chaos", []), "defender").value,
-  40, "a space hulk may take no Chaos Mark, so the Mark of Khorne does not double it (FL p.288)");
+  40, "a space hulk may take no Chaos Mark, so the Mark of Khorne does not double it (FL p.290)");
 eq(B.shipValue(ship({ hp: 40, dp: 40, opts: ["spacehulk", "warlord"] }), side("ork", []), "defender").value,
-  40, "and an Ork Warlord aboard does not double it either (FL p.390)");
+  40, "and an Ork Warlord aboard does not double it either (FL p.392)");
 eq(B.sideIsAlien(side("roguetrader", [ship({ hp: 10, dp: 10, opts: ["alien"] })])), true,
-  "a xenos hull in a Rogue Trader fleet is an alien vessel (FL p.141)");
+  "a xenos hull in a Rogue Trader fleet is an alien vessel (FL p.151)");
 eq(B.sideIsAlien(side("roguetrader", [ship({ hp: 8, dp: 8 })])), false,
   "an Imperial hull in the same fleet is not");
 eq(B.prepare({ att: plain, def: side("imperial", [ship({ hp: 8, dp: 8, turrets: 2, opts: ["admech"] })]) }).att.reroll,
@@ -277,7 +277,7 @@ eq(B.effTurrets({ hp: 12, dp: 12, turrets: 4, extraHp: 36, opts: ["fortress"] })
   "the other quadrants add hit points only, never turrets");
 eq(!!B.CRIT_TABLES.orkhulk.note, true, "the hulk tables carry their own footnote");
 eq(B.critLookup(1, "orkhulk").note.indexOf("next higher level") > 0, true,
-  "and it reaches every row, not just one (FL p.391)");
+  "and it reaches every row, not just one (FL p.393)");
 eq(B.extraCritRolls(side("chaos", [ship({ hp: 8, dp: 8, opts: ["berzerkerfleet"] })])), false,
   "the Berzerker Tide needs a Mark of Khorne ship");
 
@@ -290,15 +290,15 @@ var holo = side("eldar", [ship({ name: "Eclipse", hp: 6, dp: 6, opts: ["holofiel
 eq(B.eligibility(plain, holo)[0].target, 2, "holofields ignore the attempt on a 2+");
 eq(B.eligibility(side("inquisition", [ship({ hp: 8, dp: 8, opts: ["inq_xenos"] })]), holo)[0].target, 3,
   "holofields need a 3+ against an Ordo Xenos Inquisitor Lord");
-// FL p.342: a Dark Eldar ship makes "a saving roll for his shadowfields" - the
+// FL p.344: a Dark Eldar ship makes "a saving roll for his shadowfields" - the
 // same save against the whole boarding attempt, under its own name.
 var shade = side("darkeldar", [ship({ name: "Torture", hp: 6, dp: 6, opts: ["holofields"] })]);
 var shadeP = B.eligibility(plain, shade)[0];
-eq(shadeP.target, 2, "shadowfields ignore the attempt on a 2+ (FL p.342)");
-eq(shadeP.field, "shadowfields", "a Dark Eldar save is named shadowfields (FL p.342)");
+eq(shadeP.target, 2, "shadowfields ignore the attempt on a 2+ (FL p.344)");
+eq(shadeP.field, "shadowfields", "a Dark Eldar save is named shadowfields (FL p.344)");
 eq(/shadowfields/.test(shadeP.text) && !/holofields/.test(shadeP.text), true,
   "the Dark Eldar save text says shadowfields, not holofields");
-eq(B.eligibility(plain, holo)[0].field, "holofields", "an Eldar save is named holofields (FL p.303)");
+eq(B.eligibility(plain, holo)[0].field, "holofields", "an Eldar save is named holofields (FL p.305)");
 var hemlock = side("eldar", [ship({ name: "Hemlock", hp: 1, dp: 1, opts: ["noboard", "easyprey"] })]);
 eq(B.eligibility(hemlock, plain)[0].level, "stop", "a Hemlock cannot initiate a boarding action");
 eq(modIds(plain, hemlock, "att").indexOf("easyprey:1") >= 0, true, "boarding a Hemlock gives +1");
@@ -325,7 +325,7 @@ eq(B.prepare({ att: plain, def: holo, round: 2 }).problems
   "a grappled combat does not roll the original holofield save again");
 eq(B.prepare({ att: side("tyranid", [hive]), def: plain }).problems
   .some(function (p) { return p.id === "allislost"; }), true,
-  "a capital ship boarded by Tyranids is reminded about All Is Lost (FL p.418)");
+  "a capital ship boarded by Tyranids is reminded about All Is Lost (FL p.420)");
 
 console.log("== dice ==");
 eq(B.prepare({ att: side("tyranid", [hive]), def: plain }).att.dice, 2, "Tyranids roll 2D6");
@@ -337,7 +337,7 @@ eq([bsfScore.def.used, bsfScore.def.total], [0, B.prepare({ att: plain, def: bsf
   "the Blackstone Fortress scores its modifiers and nothing else");
 
 console.log("== how many dice, and which one counts ==");
-/* FL p.418: Tyranids "roll two D6 and use the highest result in boarding
+/* FL p.420: Tyranids "roll two D6 and use the highest result in boarding
    actions". The mirror image - two dice of which the LOWEST counts - is what
    the books use against Tyranids for hit-and-run (FL p.418, RB p.92), and the
    engine has to be able to say it as clearly as the other. */
@@ -396,7 +396,7 @@ eq([tie.result.name, tie.critNeeds.win, tie.critNeeds.lose], ["Grapple", 7, 7],
 
 console.log("== hexagrammic wards ==");
 /* An Ordo Malleus Inquisitor Lord, and Grey Knights capital ships, ignore Chaos
-   marks affecting boarding actions (FL p.142, p.145; REF p.1). */
+   marks affecting boarding actions (FL p.152, p.155; REF p.1). */
 var khorneShip = ship({ name: "Slaughter", hp: 8, dp: 8, turrets: 2, opts: ["khorne"] });
 var khorneSide = side("chaos", [khorneShip]);
 var plainImp = side("imperial", [ship({ hp: 8, dp: 8, turrets: 2 })]);
@@ -410,7 +410,7 @@ eq(B.eligibility(plainImp, nurgleSide)[0].level, "stop", "the Mark of Nurgle sto
 eq(B.eligibility(gkSide, nurgleSide)[0].level, "note", "Grey Knights may board a Nurgle ship");
 
 console.log("== Tyranid blast asymmetry ==");
-/* FL p.418: boarding places a Blast Marker on the target, so a boarding Tyranid
+/* FL p.420: boarding places a Blast Marker on the target, so a boarding Tyranid
    always has the +1; the enemy never gets it from the Tyranid's own markers. */
 var nid = side("tyranid", [ship({ name: "Hive Ship", hp: 10, dp: 10, turrets: 4 })], { blast: true });
 var nidAtt = B.prepare({ att: nid, def: plainImp });
@@ -423,7 +423,7 @@ eq(nidDef.def.mods.some(function (m) { return m.id === "blast"; }), false,
   "a DEFENDING Tyranid does not get the automatic Blast Marker modifier");
 
 console.log("== Inquisitor Lords do not stack with Space Marines ==");
-/* FL p.144: the Inquisitor Lord bonus is not added on top of an identical
+/* FL p.154: the Inquisitor Lord bonus is not added on top of an identical
    Space Marine or Grey Knights bonus. */
 function ids(att, def, role){ var p=B.prepare({att:att,def:def}); return p[role].mods.map(function(m){return m.id;}); }
 var smWithLord = side("spacemarines", [ship({ hp: 6, dp: 6, opts: ["inq_malleus"] })]);
@@ -491,10 +491,10 @@ eq(B.cataLookup(12,"standard").name, "Warp Drive Implosion", "12 is a warp drive
 eq(B.cataDice(ship({ hp: 8, opts: ["cata3"] }), side("imperial", [])), 3,
   "Mercury rolls 3D6 for catastrophic damage (FL p.64)");
 eq(B.cataDice(ship({ hp: 6, opts: ["fuel_tanker"] }), side("roguetrader", [])), 3,
-  "a Fuel Tanker rolls 3D6 for catastrophic damage (FL p.182)");
+  "a Fuel Tanker rolls 3D6 for catastrophic damage (FL p.192)");
 
 console.log("== space hulks ==");
-/* FL p.288, p.391: space hulks are not crippled by damage like ordinary ships. */
+/* FL p.290, p.393: space hulks are not crippled by damage like ordinary ships. */
 var hulk40 = ship({ name: "Ork Hulk", hp: 40, dp: 8, turrets: 6, opts: ["spacehulk", "orkhulk"] });
 eq(B.isCrippled(hulk40), false, "a space hulk at a fifth of its hits is still not crippled");
 eq(B.effTurrets(hulk40), 6, "so its turrets are not halved either");
@@ -589,7 +589,7 @@ var invalidMarineBlackship = side("inquisition", [ship({ hp: 12, turrets: 5,
   opts: ["blackship", "marines"] })]);
 eq(B.prepare({ att: plainImp, def: invalidMarineBlackship }).def.mods
   .filter(function(m){ return m.id === "marines"; }).length, 0,
-  "a Blackship never receives Space Marine benefits even from invalid saved data (FL p.148)");
+  "a Blackship never receives Space Marine benefits even from invalid saved data (FL p.158)");
 eq(B.prepare({ att: plainImp, def: bsf2 }).def.mods.some(function (m) { return m.id.indexOf("ratio") === 0; }),
   true, "a crewless hull is still compared on boarding value like anyone else");
 

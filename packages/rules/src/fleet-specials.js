@@ -62,7 +62,7 @@ export function checkBorrowedShips(F){
       s: citeText(L.merc.cite) + " " + citeText(DEMIURG_CMD) });
   }
   /* A borrowed ship the fleet list allows only on conditions (Void Stalker
-     in an Iyanden fleet, Fleets p. 319, J217) */
+     in an Iyanden fleet, Fleets p. 317, J217) */
   (L.borrow_cond || []).forEach(function(bc){
     var re = new RegExp(bc.re, "i");
     var hits = members.filter(function(m){ return m.unitRow && m.en && re.test(String(m.en.l)); });
@@ -78,9 +78,10 @@ export function checkBorrowedShips(F){
          (tooMany ? ", " + hits.length + " taken" : ""),
       s: citeText(bc.cite) });
   });
-  /* Rogue Trader cruiser hulls (Fleets p. 174, J218): a hull other than the
-     Rogue Trader profile is read as the second cruiser onwards - a warning,
-     not an error (T55) */
+  /* Rogue Trader cruiser hulls (Fleets p. 184, J218): "If a second Rogue
+     Trader cruiser is taken, it may be any Rogue Trader cruiser variant" - a
+     variant is the second cruiser onwards. strict (v0.40): an error; without
+     it the T55 warning of v0.36, whose "any cruiser hull" box is gone */
   if(L.rt_hulls){
     var RH = L.rt_hulls, hRe = new RegExp(RH.hull, "i"), aRe = new RegExp(RH.all, "i");
     var nH = 0, nA = 0;
@@ -88,10 +89,12 @@ export function checkBorrowedShips(F){
       if(!m.unitRow || !m.en) return;
       if(aRe.test(String(m.en.l))) nA += Math.max(1, m.hulls);
       if(hRe.test(String(m.en.l))) nH += Math.max(1, m.hulls); });
-    if(nH) out.push({ ok: true, warn: nH > nA - 1, t: "Rogue Trader cruiser hulls (second cruiser onwards)",
-      v: nH + " / " + Math.max(0, nA - 1), s: citeText(RH.cite) + " " + citeText(RH.cite2) + " " + RH.interp });
+    var over = nH > nA - 1;
+    if(nH) out.push({ ok: !(RH.strict && over), warn: !RH.strict && over, t: "Rogue Trader cruiser variants (second cruiser onwards)",
+      v: nH + " / " + Math.max(0, nA - 1),
+      s: citeText(RH.cite) + (RH.cite2 ? " " + citeText(RH.cite2) : "") + (RH.interp ? " " + RH.interp : "") });
   }
-  /* Rogue Trader escorts with their cruiser (Fleets pp. 50, 139, J218): one
+  /* Rogue Trader escorts with their cruiser (Fleets pp. 50, 149, J218): one
      squadron per Rogue Trader cruiser, and outside Bakka only in a fleet led
      by an Inquisitor */
   if(L.rt_esc){
@@ -104,7 +107,7 @@ export function checkBorrowedShips(F){
     if(sqR) out.push({ ok: sqR <= cruR && needOk, t: "Rogue Trader escort squadrons (one per Rogue Trader cruiser)",
       v: needOk ? sqR + " / " + cruR : "needs an Inquisitor Lord", s: citeText(RE.cite) });
   }
-  /* Exploration auxiliaries (Fleets p. 177, J219): escorts borrowed from
+  /* Exploration auxiliaries (Fleets p. 187, J219): escorts borrowed from
      another race's list, from one race only and never Orks, Dark Eldar,
      Necrons or Tyranids */
   if(L.aux){
@@ -123,7 +126,7 @@ export function checkBorrowedShips(F){
     });
   }
   /* A single allied battleship once three reserve or allied capital ships
-     are taken (Fleets p. 177, J219) */
+     are taken (Fleets p. 187, J219) */
   if(L.ally_bb){
     var bbN = 0, capN = 0;
     members.forEach(function(m){
@@ -141,13 +144,13 @@ export function checkBorrowedShips(F){
 /* Blood Axe tiddlas, Wardens, an ally's special character, Daemonships and Veteran Captains in squadrons. */
 export function checkListSpecials(F){
   var L = F.L, members = F.members, out = F.out, tookUp = F.tookUp, upRows = F.upRows, allySpecial = F.allySpecial, aboard = F.aboard, sqTags = F.sqTags, sqOf = F.sqOf;
-  /* Blood Axe tiddla (Fleets p. 369, J220): commandeered Imperial Navy and
+  /* Blood Axe tiddla (Fleets p. 371, J220): commandeered Imperial Navy and
      Chaos escorts join a Blood Axe tiddla of at least six (squadron tag), at
      most three of them. Ruling T59 (ChatGPT audit RAW-02, 27.10.2026): "A
      Blood Axe tiddla skwadron of at least six escorts may include up to
      three" counts the skwadron as fielded, the commandeered escorts too, so
      three Brutes and three Cobras are a Blood Axe tiddla; J220 counted the
-     Ork escorts only. The tiddla's 3-10 (p. 372, p. 370 "up to ten") is the
+     Ork escorts only. The tiddla's 3-10 (p. 374, p. 372 "up to ten") is the
      size check's, over the same members (RAW-03). */
   if(L.bloodaxe){
     var BA = L.bloodaxe, CZd = L.clanz;
@@ -201,7 +204,7 @@ export function checkListSpecials(F){
         s: citeText(L.warden_only.cite) });
     }
   }
-  /* An ally's special character (Fleets p. 177, J221): up to one */
+  /* An ally's special character (Fleets p. 187, J221): up to one */
   if(L.ally_cmd){
     var scN = members.filter(function(m){ return !m.own && m.en && m.en.k === "cmd"; });
     var scOk = scN.filter(allySpecial);
@@ -210,7 +213,7 @@ export function checkListSpecials(F){
       v: scOk.length === scN.length ? scOk.length + " / " + L.ally_cmd.max : "not a special character",
       s: citeText(L.ally_cmd.cite) });
   }
-  /* Daemonships cannot be used in squadrons (Fleets p. 227) */
+  /* Daemonships cannot be used in squadrons (Fleets p. 237) */
   (L.sq_noup || []).forEach(function(x){
     sqTags.forEach(function(tag){ sqOf[tag].forEach(function(m){
       if(placeTaken(m, x.re)) out.push({ ok: false, t: "Daemonship in a squadron: " + m.en.l,
@@ -233,7 +236,7 @@ export function checkListSpecials(F){
 /* Da Ork Clanz: each Warlord's own command. Returns the per-Warlord counts. */
 export function checkOrkClanz(F){
   var L = F.L, members = F.members, out = F.out, tookUp = F.tookUp, paidUp = F.paidUp, upRows = F.upRows, CZ = F.CZ, aboard = F.aboard, sqTags = F.sqTags, sqOf = F.sqOf;
-  /* Da Ork Clanz (J216): each Warlord's own command, Fleets pp. 369-373.
+  /* Da Ork Clanz (J216): each Warlord's own command, Fleets pp. 371-375.
      wsum (J226): the same counts per Warlord for the fleet pane's Warlord
      block, so it can say what is missing instead of only that it is red. */
   var wsum = [];
@@ -248,7 +251,7 @@ export function checkOrkClanz(F){
     var clansOf = function(m){ return clanRows.filter(function(x){ return tookUp(m, x[0], x[1]); })
       .map(function(x){ return String(x[2].l).replace(/^clan:\s*/i, "").replace(/\s*\(.*$/, ""); }); };
     /* a ship of one clan by itself (J232): "(0-1) Zukov's Klaw (Goff only)"
-       (Fleets p. 372) is a Goff with no clan row to buy; his Warlord's one
+       (Fleets p. 374) is a Goff with no clan row to buy; his Warlord's one
        clan counts it */
     var clanNames = clanRows.map(function(x){ return String(x[2].l).replace(/^clan:\s*/i, "").replace(/\s*\(.*$/, ""); });
     var bornClan = function(m){
@@ -275,13 +278,13 @@ export function checkOrkClanz(F){
         mine.forEach(function(m){
           if(inSec(m, C.tiddla) || (L.bloodaxe && inSec(m, L.bloodaxe.sec))) return;
           /* a big ship skwadron (1-2 kroozers) and a Rok skwadron (1-4 Roks,
-             Fleets p. 372, J232) are one skwadron by their tag */
+             Fleets p. 374, J232) are one skwadron by their tag */
           var g = (inSec(m, C.big) || inSec(m, C.rok)) && m.intent && m.intent.sq ? "sq:" + m.intent.sq : "u:" + members.indexOf(m);
           groups[g] = 1; });
         var total = tid + Object.keys(groups).length, t1 = Math.min(tid, rr);
         S1.tiddla = tid; S1.total = total;
         /* lone kroozers: a big ship skwadron of one, which a second kroozer
-           of his could join (1-2 kroozers, Fleets p. 372) */
+           of his could join (1-2 kroozers, Fleets p. 374) */
         S1.lone = mine.filter(function(m){
           if(!inSec(m, C.big)) return false;
           var tg = m.intent && m.intent.sq;
@@ -298,7 +301,7 @@ export function checkOrkClanz(F){
         v: uge + " / 1, " + kro + (kro === 1 ? " kroozer" : " kroozers"),
         s: citeText(C.uge1) + " " + citeText(C.uge2) });
       /* the Warlord's own clan (intent.clan, the clan picked for him) is
-         his skwadrons' clan whether or not they buy its benefit (p. 369:
+         his skwadrons' clan whether or not they buy its benefit (p. 371:
          being of a clan "does not obligate the skwadron to take the
          benefits"), so a ship that bought another clan is a second clan
          (ChatGPT audit RAW-04, 27.10.2026) */
@@ -306,7 +309,7 @@ export function checkOrkClanz(F){
       var clans = wClan ? [wClan] : [];
       mine.concat([w]).forEach(function(m){ clansOf(m).concat(bornClan(m)).forEach(function(c){ if(clans.indexOf(c) < 0) clans.push(c); }); });
       /* "Snakebite capital ship skwadrons can only use space hulks or roks"
-         (p. 369): a Snakebite Warlord's kroozer is red even when it did not
+         (p. 371): a Snakebite Warlord's kroozer is red even when it did not
          buy the clan, because it is of his clan all the same */
       if(C.snake && wClan && new RegExp(C.snake_clan, "i").test(wClan)){
         var notSnake = mine.filter(function(m){
@@ -320,9 +323,9 @@ export function checkOrkClanz(F){
       S1.clans = clans;
       var ab = aboard.filter(function(a){ return a.unit === wi; })[0];
       var own = ab && ab.ship != null ? members[ab.ship] : null;
-      /* "his own ship or escort skwadron" (p. 372): every row of the tiddla
+      /* "his own ship or escort skwadron" (p. 374): every row of the tiddla
          he is aboard, and a tiddla's Gubbin counts once, on the row that
-         pays for it (pp. 369-370, ruling T60) */
+         pays for it (pp. 371-372, ruling T60) */
       var ownIx = own ? [members.indexOf(own)] : [];
       tids.forEach(function(t){ var ix = t.ork.concat(t.com); if(t.tag && ownIx.length && ix.indexOf(ownIx[0]) >= 0) ownIx = ix; });
       var g = 0, off = 0;
@@ -331,7 +334,7 @@ export function checkOrkClanz(F){
       if(g) out.push({ ok: g <= rr && !off, t: tag + "Gubbins",
         v: g + " / " + rr + (off ? ", " + off + " not on his own ship" : ""), s: citeText(C.gub) });
       /* "The Warlord's ship may take one refit from the Imperial Navy refit
-         table" (p. 369, Blood Axes): the ship he is aboard, and his clan is
+         table" (p. 371, Blood Axes): the ship he is aboard, and his clan is
          Blood Axes (a row of its own since 29.10.2026) */
       var refitOn = refitRows.length ? mine.filter(function(m){
         return refitRows.some(function(x){ return paidUp(m, x[0], x[1]); }); }) : [];
@@ -345,8 +348,8 @@ export function checkOrkClanz(F){
       }
       S1.gub = g; S1.gubOff = off; S1.ship = own ? members.indexOf(own) : null; S1.skw = ownIx;
     });
-    /* every capital ship of a skwadron takes the clan (Fleets p. 369), and so
-       does every Rok of a Rok skwadron (ruling T58: p. 369 counts Rok
+    /* every capital ship of a skwadron takes the clan (Fleets p. 371), and so
+       does every Rok of a Rok skwadron (ruling T58: p. 371 counts Rok
        skwadrons among the capital ship skwadrons, and only a tiddla skwadron
        pays once). sqTags holds every non-escort skwadron, Roks included.
        A ship of one clan by itself counts with that clan (J242, user
@@ -361,7 +364,7 @@ export function checkOrkClanz(F){
         out.push({ ok: false, t: "Squadron " + tag + ": the clan on every ship",
           v: sets.map(function(x){ return x || "none"; }).join(" / "), s: citeText(C.clan_sq) });
     });
-    /* a skwadron is one Warlord's (J232, Fleets p. 373: "you can't split up
+    /* a skwadron is one Warlord's (J232, Fleets p. 375: "you can't split up
        skwadrons"); a tag across two Warlords is a split skwadron */
     var splitOf = function(label, ixs){
       var wl = [];
@@ -381,7 +384,7 @@ export function checkOrkClanz(F){
 export function checkHulkPowerfields(F){
   var L = F.L, members = F.members, out = F.out, tookUp = F.tookUp, upRows = F.upRows, aboard = F.aboard;
   /* A Warlord aboard a space hulk: "Extra Powerfields costs +50 pts instead
-     of +25" (Fleets p. 390, J224). The +50 row is its own row of the
+     of +25" (Fleets p. 392, J224). The +50 row is its own row of the
      Warlord's; which one he owes depends on the ship he is aboard (J215),
      and placement never changes a price (J8), so it is a check. */
   if(L.hulk_pf){

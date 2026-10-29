@@ -120,7 +120,7 @@ console.log("\n=== F  Khorne: required Mark in the price, the Lord's re-roll cho
   eq(api.upState(wm, msi, mei), "take", "the Mark is chosen in advance");
   eq(api.unitPts(wm), 120, "Warmaster 100 + required Mark 20");
   /* dflt not req: the row opens chosen but can be removed, because
-     the god's own battle barge carries the Mark in its price already (p.264). */
+     the god's own battle barge carries the Mark in its price already (p.266). */
   ok(L.secs[msi].ents[mei].dflt && !L.secs[msi].ents[mei].req,
      "the Mark is a default choice, not locked");
 
@@ -655,7 +655,7 @@ console.log("\n=== Overlapping swap options exclude each other ===");
   });
   eq(checked >= 7, true, "effect options tested (" + checked + ")");
 
-  /* 2. expectations read from the book (Fleets p. 68, 374, 494) */
+  /* 2. expectations read from the book (Fleets p. 68, 376, 494) */
   const one = (pg, re_, want) => {
     const sh = api.SHIPS[String(pg)], at = place(pg);
     const i = (sh.ol || []).findIndex(o => re_.test(o.t));

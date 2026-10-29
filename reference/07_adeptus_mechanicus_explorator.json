@@ -136,21 +136,21 @@
     {
       "key": "No more than one reserve vessel can be taken for every three capital ships",
       "text": "No more than one reserve vessel can be taken for every three capital ships in the fleet.",
-      "page": 122,
+      "page": 123,
       "status": "manual",
       "why": "A reserve rule: the ships come from other lists, which this list does not contain."
     },
     {
       "key": "There are no restrictions on how many reserve Imperial Navy, Space Marine or Rogue Trader escorts",
       "text": "There are no restrictions on how many reserve Imperial Navy, Space Marine or Rogue Trader escorts are included in an Adeptus Mechanicus fleet, as long as Xenos vessels and reserve Space Marine vessels are not included in the same fleet.",
-      "page": 122,
+      "page": 123,
       "status": "manual",
       "why": "Reserve-saanto."
     },
     {
       "key": "Mechanicus vessels can only earn additional refits from the standard Imperial Navy refit table",
       "text": "In the course of a campaign, Mechanicus vessels can only earn additional refits from the standard Imperial Navy refit table or the Space Marines reinforcement table.",
-      "page": 122,
+      "page": 123,
       "status": "manual",
       "why": "Kampanjasaanto."
     }
@@ -191,7 +191,7 @@
   "notes": [
     "The Cruisers section has NO count limit. The book gives none (compare the Imperial lists' '0-12 Cruisers'), so the app is right to enforce nothing.",
     "AdMech ships cost more than the same hulls in the Imperial Navy (e.g. Dictator 255 vs 220). The difference is in the book: Mechanicus Gifts and +1 turret are included in the price.",
-    "Pages 119-122 are largely tables: Mechanicus Gifts (D6), Quest for Knowledge (D6), the Improvement/Alteration tables and Mechanicus Promotions. They are in-game or campaign rolls and not fleet building, so they are left to the player.",
+    "Pages 119-123 are largely tables: Mechanicus Gifts (D6), Quest for Knowledge (D6), the Improvement/Alteration tables and Mechanicus Promotions. They are in-game or campaign rolls and not fleet building, so they are left to the player.",
     "Page 123 is empty."
   ]
 }

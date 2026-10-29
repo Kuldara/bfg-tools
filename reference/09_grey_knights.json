@@ -1,6 +1,6 @@
 {
   "list": "Grey Knights",
-  "book_page": 144,
+  "book_page": 154,
   "read_pages": [
     144,
     145
@@ -10,21 +10,21 @@
     {
       "key": "Grey Knights count as Space Marines in all respects",
       "text": "Grey Knights count as Space Marines in all respects and as such follow all rules for Space Marines as written on pages 92-94.",
-      "page": 144,
+      "page": 154,
       "status": "manual",
       "why": "Refers to the shared Space Marine rules. The cards show the SPECIAL_HULL_RULES rule 'astartes_core', whose fleet pattern also covers the Grey Knights."
     },
     {
       "key": "Grey Knights may not take Thunderhawk annihilators",
       "text": "(Note: Grey Knights may not take Thunderhawk annihilators)",
-      "page": 144,
+      "page": 154,
       "status": "manual",
       "why": "An ordnance choice during the game. An important difference from the Space Marines Crusade list, which explicitly gets them."
     },
     {
       "key": "If the fleet is above 750 points an Inquisitor Lord must lead the fleet",
       "text": "If the fleet is above 750 points an Inquisitor Lord must lead the fleet.",
-      "page": 144,
+      "page": 154,
       "status": "enforced",
       "kind": "mandatory_at",
       "points": 750,
@@ -34,21 +34,21 @@
     {
       "key": "If an Inquisitorial Cruiser is present the Inquisitor Lord must be placed aboard it",
       "text": "If an Inquisitorial Cruiser is present the Inquisitor Lord must be placed aboard it. If the Inquisitorial Cruiser is not present but a Blackship is then the Inquisitor Lord must be placed aboard the Blackship. Otherwise the Inquisitor must be placed on the most expensive ship.",
-      "page": 144,
+      "page": 154,
       "status": "manual",
       "why": "The placement is done at the table."
     },
     {
       "key": "may purchase up to two more re-rolls for +25 points each",
       "text": "An Inquisitor Lord gets one re-roll, and may purchase up to two more re-rolls for +25 points each.",
-      "page": 144,
+      "page": 154,
       "status": "manual",
       "why": "A priced option; the rows 'One extra re-roll 25' and 'Two extra re-rolls 50' can be chosen."
     },
     {
       "key": "You may include a single Grey Knights Battle barge if the remainder of the fleet is at least worth 1000 points",
       "text": "You may include a single Grey Knights Battle barge if the remainder of the fleet is at least worth 1000 points. Furthermore an Ordo Malleus Inquisitor Lord must lead in the fleet.",
-      "page": 145,
+      "page": 155,
       "status": "enforced",
       "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. allowed_at basis=remainder: the points of the fleet's other ships >= 1000 AND an Ordo Malleus Inquisitor Lord in the fleet (cond_pick). Placing the commander as the flagship is left to the player. The earlier gap: two conditions, a points limit and a certain commander. Neither could be enforced - a permission tied to a points limit did not exist as a rule type, and the commander's kind could not be tied to the row's c",
       "kind": "allowed_at",
@@ -60,21 +60,21 @@
     {
       "key": "A Grey Knights fleet may include a single Inquisitorial Cruiser",
       "text": "A Grey Knights fleet may include a single Inquisitorial Cruiser in the fleet.",
-      "page": 145,
+      "page": 155,
       "status": "manual",
       "why": "The number one is enforced as the row limit mx=1 from the book's marking '(0-1)'."
     },
     {
       "key": "A Grey Knights fleet may include a single Blackship",
       "text": "A Grey Knights fleet may include a single Blackship, which as a special vessel does not count toward or against other ship limits in the fleet.",
-      "page": 145,
+      "page": 155,
       "status": "manual",
       "why": "The number one is enforced as the row limit mx=1."
     },
     {
       "key": "One Grey Knights Strike Cruiser may be taken per 500 points",
       "text": "One Grey Knights Strike Cruiser may be taken per 500 points (e.g. one from 0-500 points, two from 501-1000 points, etc.).",
-      "page": 145,
+      "page": 155,
       "status": "enforced",
       "kind": "per_points",
       "each": 1,
@@ -85,7 +85,7 @@
     {
       "key": "escorts in your fleet in squadrons of 2",
       "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13)",
-      "page": 145,
+      "page": 155,
       "status": "enforced",
       "kind": "squadron",
       "min": 2,
@@ -94,42 +94,42 @@
     {
       "key": "The vessel embarking the Inquisitor Lord or one Grey Knights vessel may take Grey Knight Terminators",
       "text": "Grey Knights Terminators +50 pts. The vessel embarking the Inquisitor Lord or one Grey Knights vessel may take Grey Knight Terminators.",
-      "page": 145,
+      "page": 155,
       "status": "manual",
       "why": "A priced option; the row 'Grey Knights Terminators 50 pts' can be chosen."
     },
     {
       "key": "Any Grey Knights capital ship in the fleet may embark an Honour Guard",
       "text": "Grey Knights Honour Guard +10 pts. Any Grey Knights capital ship in the fleet may embark an Honour Guard for +10 points.",
-      "page": 145,
+      "page": 155,
       "status": "manual",
       "why": "A priced option; the row 'Grey Knights Honour Guard 10 pts' can be chosen."
     },
     {
       "key": "Every Grey Knights capital ship in the fleet mounts hexagrammic wards",
       "text": "Every Grey Knights capital ship in the fleet mounts hexagrammic wards throughout its hull and ignores any Chaos marks or Daemonship effects affecting leadership or boarding actions.",
-      "page": 145,
+      "page": 155,
       "status": "manual",
       "why": "Pelinaikainen vaikutus; koskee kaikkia listan runkoaluksia automaattisesti."
     },
     {
       "key": "An enemy Chaos fleet may add one Mark of Chaos; or upgrade a cruiser to a Daemonship",
       "text": "A Grey Knights fleet will only be called when intense demonic activity threatens to overrun an entire Sector. An enemy Chaos fleet may add one Mark of Chaos; or upgrade a cruiser to a Daemonship; for no aditional cost, for each of the following included in the Grey Knights Fleet: ... Ordo Malleus Inquisitor Lord ... Grey Knights Strike Cruiser",
-      "page": 145,
+      "page": 155,
       "status": "manual",
       "why": "An advantage the opponent gets, not the own fleet's composition."
     },
     {
       "key": "A Grey Knights fleet led by an Inquisitor Lord has an attack rating of 3",
       "text": "A Grey Knights fleet led by an Inquisitor Lord has an attack rating of 3 unless a Blackship is accompanying the fleet, in which case its attack rating is 2.",
-      "page": 145,
+      "page": 155,
       "status": "manual",
       "why": "Pelinaikainen arvo."
     },
     {
       "key": "will not take ships from or provide ships to any other fleet list",
       "text": "A Grey Knights fleet will not take ships from or provide ships to any other fleet list as reserves or allies, including Imperial Navy, Rogue Trader or Adeptus Mechanicus fleet lists.",
-      "page": 145,
+      "page": 155,
       "status": "enforced",
       "enforced_by": "fleet_golden",
       "goldens": [
@@ -147,17 +147,17 @@
     {
       "name": "Grey Knights Battlebarge",
       "pts": 440,
-      "page": 147
+      "page": 157
     },
     {
       "name": "Inquisitorial Cruiser",
       "pts": 270,
-      "page": 150
+      "page": 160
     },
     {
       "name": "Inquisition Blackship",
       "pts": 300,
-      "page": 148
+      "page": 158
     },
     {
       "name": "Nova class Frigate",
@@ -199,28 +199,28 @@
     {
       "name": "One extra re-roll",
       "pts": 25,
-      "why": "p.144, in the book only in the body text"
+      "why": "p.154, in the book only in the body text"
     },
     {
       "name": "Two extra re-rolls",
       "pts": 50,
-      "why": "p.144, twice 25"
+      "why": "p.154, twice 25"
     },
     {
       "name": "Ordo Malleus Inquisitor Lord (Ld 10)",
       "pts": 100,
-      "why": "p.144"
+      "why": "p.154"
     },
     {
       "name": "Grey Knights Strike Cruiser",
       "pts": 165,
-      "why": "The book's price on page 145 is a misprint ('vvv'). The same ship costs 165 pts on page 138. Added by hand in the ENTRY_ADDS table, which requires the source sentence to be found in the section's text."
+      "why": "The book's price on page 155 is a misprint ('vvv'). The same ship costs 165 pts on page 148. Added by hand in the ENTRY_ADDS table, which requires the source sentence to be found in the section's text."
     }
   ],
   "notes": [
-    "This list was separated from the Inquisition on 7.9.2026. On page 144 the book has its own heading 'GREY KNIGHTS FLEET LIST' and under it its own FLEET COMMANDER, CAPITAL SHIPS, ESCORTS and ATTACK RATING sections. Before the separation they showed as duplicates under the Inquisition.",
+    "This list was separated from the Inquisition on 7.9.2026. On page 154 the book has its own heading 'GREY KNIGHTS FLEET LIST' and under it its own FLEET COMMANDER, CAPITAL SHIPS, ESCORTS and ATTACK RATING sections. Before the separation they showed as duplicates under the Inquisition.",
     "The separation revealed three hidden dependencies, all tied to the list's NAME: two injections in upgrades.py, two FIXES corrections in build_data.py and one test in test_validator.js. All were fixed to point at the Grey Knights.",
-    "On page 145 the book writes the escorts' page references wrong: 'Rapid strike vessel (Sword) (pg. 104) (pg. 80)' - page 80 is the Falchion and page 82 is the Sword. FIXES corrects these to pages 82 and 84. The same error also concerns the rules page: the book says 104, the right one is 106.",
-    "The Grey Knights Strike Cruiser's price is unreadable in the book ('vvv'). It was added by hand at page 138's price of 165 pts."
+    "On page 155 the book writes the escorts' page references wrong: 'Rapid strike vessel (Sword) (pg. 104) (pg. 80)' - page 80 is the Falchion and page 82 is the Sword. FIXES corrects these to pages 82 and 84. The same error also concerns the rules page: the book says 104, the right one is 106.",
+    "The Grey Knights Strike Cruiser's price is unreadable in the book ('vvv'). It was added by hand at page 148's price of 165 pts."
   ]
 }

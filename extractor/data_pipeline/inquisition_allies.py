@@ -10,10 +10,10 @@ import upgrades
 import swaps, copy
 from .inputs import re
 from .profile_types import _L, _e, _hit, _i, _nm, _r, _x, e, r, x
-from .row_classes import _p18_list, _p18_sec, _p18_unit, _q, _text_key, add_text, i, j, t
+from .row_classes import _p18_list, _p18_sec, _p18_unit, _q, _text_key, add_text, i, t
 from .row_texts import _cmds, _p, _row
 from .ships import o, ships
-# --- 1.1 phase 4: the Inquisition in the host fleet (Fleets p.138) -----------
+# --- 1.1 phase 4: the Inquisition in the host fleet (Fleets p.148) -----------
 # "The Inquisition has no fleet list on its own. Instead, there are various
 # ways to add an Inquisitor or Inquisitorial ships to the Imperial factions."
 #
@@ -23,7 +23,7 @@ from .ships import o, ships
 # Imperial Navy, Space Marine or Adeptus Mechanicus fleet".
 #
 # The Grey Knights Battle barge is NOT included: it needs an Ordo Malleus
-# inquisitor (p.138, p.145), which these lists' commander sections do not
+# inquisitor (p.148, p.155), which these lists' commander sections do not
 # have. It stays on the Grey Knights list, where the condition is modelled (J83).
 _INQ_LORD = ("Any Imperial or Space Marine fleet 750 points or greater may be "
              "led by an Inquisitor Lord.")
@@ -43,7 +43,7 @@ _INQ_RR = ("An Inquisitor Lord gets one re-roll, which may be used for any ship 
            "the fleet.")
 _INQ_RR2 = "A second re-roll can be purchased for +25 points."
 # J148 (a user report 25.9.): the Inquisitorial Cruiser "takes the place of a
-# battlecruiser or strike cruiser in the fleet" (p.138), and the Blackship is the only
+# battlecruiser or strike cruiser in the fleet" (p.148), and the Blackship is the only
 # Inquisition ship that "does not count toward or against other ship limits"
 # - the exception would be empty unless the others counted. The Grey Knights Strike Cruiser
 # is a cruiser, and p.14: "the restrictions on maximum and minimum numbers of
@@ -117,15 +117,15 @@ for _nm in _INQ_HOSTS:
     _cmd = _cmds[0]
     _i = len(_L["secs"])
     _ents = [
-        dict(l="Inquisitor Lord (Ld 9)", r=None, p=75, src_page=138, a=1, mx=1,
+        dict(l="Inquisitor Lord (Ld 9)", r=None, p=75, src_page=148, a=1, mx=1,
              nt=None, k="cmd", ld=dict(kind="fixed", value=9), rr=1),
         _p18_unit("Inquisitorial Cruiser", 150, 270, 138, mx=1),
         _p18_unit("Inquisition Blackship", 148, 300, 138, mx=1),
         _p18_unit("Grey Knights Strike Cruiser", 151, 165, 138),
-        # p.138: "A second re-roll can be purchased for +25 points." The same row
+        # p.148: "A second re-roll can be purchased for +25 points." The same row
         # as on the Inquisition list; the target is the Lord's row (index 0). At the end,
         # so that old saves' rows keep their indexes.
-        dict(l="One extra re-roll", r=None, p=25, src_page=138, a=1, u=1, mx=None,
+        dict(l="One extra re-roll", r=None, p=25, src_page=148, a=1, u=1, mx=None,
              nt=None, prose=1, k="up", grp="rr", at=[[_i, 0]], rr=1),
     ]
     _rules = [
@@ -138,7 +138,7 @@ for _nm in _INQ_HOSTS:
              cond_pick=[dict(sec=_i, re="^inquisitor lord")], src=_INQ_GK),
         # The Inquisitor Lord LEADS the fleet, so he is not taken besides the fleet's own
         # commander but instead of him - the same structure as the Eldar Hero
-        # (p.316, a cap rule across two sections).
+        # (p.314, a cap rule across two sections).
         dict(kind="cap", max=1, ok=True, sec=[_i],
              label="Fleet commander (the list's own or an Inquisitor Lord)",
              pick=[dict(sec=_cmd), dict(sec=_i, re="^inquisitor lord")],
@@ -156,7 +156,7 @@ for _nm in _INQ_HOSTS:
         _r["pick"] = list(_pick) + [dict(sec=_i, re="^inquisitor lord")]
     _inq_n += 1
 assert _inq_n == 8, _inq_n
-print("Inquisition attached to %d host lists (p.138)" % _inq_n)
+print("Inquisition attached to %d host lists (p.148)" % _inq_n)
 
 
 # --- 1.1 phase 4: Bastion Fleets' Chaos reserves (Fleets p.39) ---------------
@@ -222,18 +222,18 @@ print("Bastion's Chaos reserves added: %d hulls (p.39)"
       % len(_BAST["secs"][_bsec]["ents"]))
 
 
-# --- J144: the Ordo Malleus inquisitor and Bastion's Chaos hulls (Fleets p.142)
+# --- J144: the Ordo Malleus inquisitor and Bastion's Chaos hulls (Fleets p.152)
 # The user's decision 16.9.: done together with Strange happenings (J143).
 #
-# p.140: "The listed cost is added to that of the Inquisitor Lord, and its
+# p.150: "The listed cost is added to that of the Inquisitor Lord, and its
 # benefits apply to the ship they are embarked upon." The host lists had only
 # the Inquisitor Lord (J104), so a "fleet led by an Ordo Malleus Inquisitor" was not
 # possible. The Ordo Malleus row is added to five Imperial Navy and
-# Adeptus Mechanicus hosts - the p.142 route concerns only them. It is not added to the Space
+# Adeptus Mechanicus hosts - the p.152 route concerns only them. It is not added to the Space
 # Marine hosts: there Ordo Malleus would open the Grey Knights
-# Battle barge (p.138), which by J83 is a matter of the Grey Knights list.
+# Battle barge (p.148), which by J83 is a matter of the Grey Knights list.
 #
-# p.142 Reserve/allies: "For no change in their cost, a fleet led by an Ordo
+# p.152 Reserve/allies: "For no change in their cost, a fleet led by an Ordo
 # Malleus Inquisitor may take as reserves any Chaos ship listed in the Bastion
 # Fleet List" - five hulls from p.39 at the same prices. They go into the host's own
 # reserve section (ct "reserve"), so they use the same 1:3 budget as
@@ -252,31 +252,31 @@ _OM_FREE = ("These vessels are free of the “Strange Happenings” special rule
             "not take any Grey Knights vessels!")
 _OM_HNR = ("Hit and Run attacks from this ship add +1 to their roll, and such "
            "attacks against this ship subtract -1 from their roll.")
-# The Wards' limit (p.142). The extraction's sentence filter dropped this, so the card
+# The Wards' limit (p.152). The extraction's sentence filter dropped this, so the card
 # ended in "etc." without the limit, and a CSM-crewed ship's +boarding could have
 # read as cancelled (review 16.9.).
 _OM_CSM = ("Rules for Chaos Space Marines still apply normally, and any other special "
-           "rules and effects such as the Forces of Chaos listed on pg.158 of the "
+           "rules and effects such as the Forces of Chaos listed on pg.168 of the "
            "Rulebook remain unaffected.")
-# p.140: the Ordo's price and benefits belong to the Inquisitor Lord's own ship.
+# p.150: the Ordo's price and benefits belong to the Inquisitor Lord's own ship.
 # On a host list's card the Ordo row is its own commander card, so the sentence
 # prints on it; on the Inquisition list it is already in section 13.
 _OM_EMBARK = ("The listed cost is added to that of the Inquisitor Lord, and its "
               "benefits apply to the ship they are embarked upon.")
 _IQL = _p18_list("The Emperor's Inquisition")
 _iq_om = _IQL["secs"][_p18_sec(_IQL, _OM_T)]
-assert [e["l"] for e in _iq_om["ents"]] == ["Ordo Malleus Inquisitor Lord"], _iq_om["ents"]
+assert [e["l"] for e in _iq_om["ents"]] == ["Ordo Malleus Inquisitor Lord (Ld 10)"], _iq_om["ents"]
 assert len(_iq_om.get("own") or []) == len(_iq_om["text"]), "Ordo Malleus: own and text differ in length"
-# The extraction lacked the p.142 Hit and Run sentence that Ordo Hereticus has
-# (p.140). The book's sentence, added with its owner to both copies.
+# The extraction lacked the p.152 Hit and Run sentence that Ordo Hereticus has
+# (p.150). The book's sentence, added with its owner to both copies.
 if not any(_text_key(_OM_HNR) in _text_key(t) for t in _iq_om["text"]):
     _iq_om["text"].insert(1, _OM_HNR)
-    _iq_om["own"].insert(1, "Ordo Malleus Inquisitor Lord")
+    _iq_om["own"].insert(1, "Ordo Malleus Inquisitor Lord (Ld 10)")
 if not any(_text_key(_OM_CSM) in _text_key(t) for t in _iq_om["text"]):
     _slaa = [i for i, t in enumerate(_iq_om["text"]) if t.startswith("Marks of Slaanesh")]
     assert len(_slaa) == 1, _slaa
     _iq_om["text"].insert(_slaa[0] + 1, _OM_CSM)
-    _iq_om["own"].insert(_slaa[0] + 1, "Ordo Malleus Inquisitor Lord")
+    _iq_om["own"].insert(_slaa[0] + 1, "Ordo Malleus Inquisitor Lord (Ld 10)")
 _OM_HOSTS = ("Imperial Navy — Gothic Sector", "Imperial Navy — Bastion Fleets",
              "Imperial Navy — Armageddon Sector", "Imperial Navy — Bakka Sector",
              "Adeptus Mechanicus — Explorator")
@@ -294,7 +294,7 @@ for _nm in _OM_HOSTS:
     _row["mx"] = 1
     _L["secs"].append(dict(
         t=_OM_T, text=[_OM_EMBARK] + list(_iq_om["text"]),
-        own=["Ordo Malleus Inquisitor Lord"] + list(_iq_om["own"]), notes=[],
+        own=["Ordo Malleus Inquisitor Lord (Ld 10)"] + list(_iq_om["own"]), notes=[],
         ents=[_row],
         rules=[dict(kind="requires", ok=True,
                     label="Ordo Malleus Inquisitor needs an Inquisitor Lord",
@@ -318,7 +318,7 @@ for _nm in _OM_HOSTS:
         # Both sentences are the src of rules in the "Checked by the builder"
         # group; as section text they would repeat in the "Check yourself" group.
         t=_OM_RES_T, text=[],
-        notes=["Page 142 names no hulls: it points to the Chaos ships of the Bastion "
+        notes=["Page 152 names no hulls: it points to the Chaos ships of the Bastion "
                "Fleet List, which are the five of page 39, at the same prices."],
         ents=[dict(_p18_unit(e["l"], e["r"], e["p"], 142), **({"optno": e["optno"]} if e.get("optno") else {}))
               for e in _bast_rows],
@@ -338,7 +338,7 @@ for _nm in _OM_HOSTS:
         ]))
     _om_res_n += 1
 assert _om_n == 5 and _om_res_n == 4, (_om_n, _om_res_n)
-print("Ordo Malleus: %d hosts, Chaos reserves for %d hosts (p.142)" % (_om_n, _om_res_n))
+print("Ordo Malleus: %d hosts, Chaos reserves for %d hosts (p.152)" % (_om_n, _om_res_n))
 
 
 # Bakka's own reserve rule (p.50) now overlaps the general rule:
@@ -407,7 +407,7 @@ print("reserve section hulls into the limits: %d rules" % sum(len(v) for v in _l
 
 
 
-# --- 1.1 phase 4: the Rogue Traders' xenos allies (Fleets p.175) ------------
+# --- 1.1 phase 4: the Rogue Traders' xenos allies (Fleets p.185) ------------
 # "For every 750 points in the fleet, Rogue Traders may be accompanied by a
 # single Demiurg or Kroot vessel unless the fleet is using auxiliary ships
 # that cannot be allies with the Demiurg or Kroot (such as Space Marines)."
@@ -415,12 +415,12 @@ print("reserve section hulls into the limits: %d rules" % sum(len(v) for v in _l
 # The XENOS ALLIES section exists on the list and the sentence as its text, but the rows
 # were missing. The prices are read from the Demiurg and Tau lists (p.487, p.494).
 # The sentence does not say "or part thereof", so 750 is read as FULL - unlike
-# e.g. p.174's "for every 750 points or part thereof".
+# e.g. p.184's "for every 750 points or part thereof".
 #
 # The exception clause's condition ("such as Space Marines") is not needed on this list:
-# a Space Marine row is only on the Pirates and Wolf Packs list (p.179), which
-# has its own xenos rules. The Exploration list says on p.176 explicitly that its
-# own rules replace this, and they are already in the data (p.177).
+# a Space Marine row is only on the Pirates and Wolf Packs list (p.189), which
+# has its own xenos rules. The Exploration list says on p.186 explicitly that its
+# own rules replace this, and they are already in the data (p.187).
 _RTX_SRC = ("For every 750 points in the fleet, Rogue Traders may be "
             "accompanied by a single Demiurg or Kroot vessel unless the fleet "
             "is using auxiliary ships that cannot be allies with the Demiurg "
@@ -429,7 +429,7 @@ _RTX = _p18_list("Rogue Traders")
 _rtx = _p18_sec(_RTX, "XENOS ALLIES")
 assert not _RTX["secs"][_rtx]["ents"], "RT: the XENOS ALLIES section already has rows"
 _RTX["secs"][_rtx].setdefault("notes", []).append(
-    "Page 175 allows a Demiurg or Kroot vessel but names no classes and prints "
+    "Page 185 allows a Demiurg or Kroot vessel but names no classes and prints "
     "no prices; the builder offers the Demiurg fleet list's vessels at their "
     "prices there (page 487).")
 _RTX["secs"][_rtx]["ents"] = [
@@ -442,14 +442,14 @@ _RTX["secs"][_rtx]["rules"] = list(_RTX["secs"][_rtx].get("rules") or []) + [dic
     kind="per_points", each=1, per=750, full=True, ok=True, sec=[_rtx],
     label="Demiurg and Kroot vessels (one per full 750 pts)",
     pick=[dict(sec=_rtx)], src=_RTX_SRC)]
-print("the Rogue Traders' xenos allies added: %d hulls (p.175)"
+print("the Rogue Traders' xenos allies added: %d hulls (p.185)"
       % len(_RTX["secs"][_rtx]["ents"]))
 
 # --- 1.1 phase 4: Bakka's Rogue Trader cruiser (Fleets p.50) ----------------
 # "One Rogue Trader cruiser and its attendant escorts may be taken for every
-# 750 points in the fleet." The same reading as p.175: no "or part
+# 750 points in the fleet." The same reading as p.185: no "or part
 # thereof", so full 750s. The escorts ("attendant escorts") stay
-# text: they are the Rogue Trader list's own squadron rule (p.174).
+# text: they are the Rogue Trader list's own squadron rule (p.184).
 _BKRT_SRC = ("One Rogue Trader cruiser and its attendant escorts may be taken "
              "for every 750 points in the fleet.")
 _BK = _p18_list("Imperial Navy \u2014 Bakka Sector")
@@ -465,7 +465,7 @@ _BK["secs"].append(dict(t="ROGUE TRADERS", text=[_BKRT_SRC],
 print("Bakka's Rogue Trader cruiser added (p.50)")
 
 
-# --- 1.1 phase 4: the Chaos renegades (Fleets p.222) -----------------------
+# --- 1.1 phase 4: the Chaos renegades (Fleets p.232) -----------------------
 # "RENEGADE IMPERIAL VESSELS ... For every 1,500 points in a Chaos fleet, one
 # cruiser from any Imperial Navy fleet list up to 185 points and/or up to six
 # Imperial Navy escorts may be taken. Special weapon rules, Nova Cannon,
@@ -476,7 +476,7 @@ print("Bakka's Rogue Trader cruiser added (p.50)")
 # if desired. These vessels may not take any upgrade listed in their profile
 # and do not count as reserves; they count as Chaos vessels in all respects."
 #
-# Page 222 is Chaos's SPECIAL RULES page, which fell outside the lists' rules window
+# Page 232 is Chaos's SPECIAL RULES page, which fell outside the lists' rules window
 # (lists.py rules_pages, six pages). It is not widened:
 # growing the window would bring dozens of pages of narrative to twelve
 # lists. The section and its sentence are recorded here directly, so the player sees
@@ -540,7 +540,7 @@ for _nm in ("Chaos \u2014 Incursion", "Chaos \u2014 Black Crusade", "Chaos \u201
     for _r in _L["secs"][_cru[0]].get("rules") or []:
         if _r.get("kind") == "section_count":
             _r["pick"] = [dict(sec=_cru[0]), dict(sec=_i, re=_REN_CRU_RE)]
-            # The whole p.222 paragraph stuck to the end of the "0-12 Cruisers" row
+            # The whole p.232 paragraph stuck to the end of the "0-12 Cruisers" row
             # without a separator, and the legality panel showed its limit
             # as its own sentence ("0-12 Cruisers Special weapon rules, Nova
             # Cannon, ..."). The rule's src is the channel of the book's sentence, so it
@@ -551,11 +551,11 @@ for _nm in ("Chaos \u2014 Incursion", "Chaos \u2014 Black Crusade", "Chaos \u201
             _L["secs"][_cru[0]].setdefault("notes", []).append(
                 "Renegade Imperial cruisers taken under Renegade Imperial "
                 "Vessels count toward this limit too: the book says they count "
-                "as Chaos vessels in all respects (Fleets p. 222).")
+                "as Chaos vessels in all respects (Fleets p. 232).")
             _hit += 1
     assert _hit == 1, "%s: cruiser limits %d" % (_nm, _hit)
     # The same reasoning as for the cruiser limit: "they count as Chaos vessels in
-    # all respects" (p.222). The review 16.9. found that a renegade counted
+    # all respects" (p.232). The review 16.9. found that a renegade counted
     # towards the 0-12 limit but not towards the ratios "one battleship for every three
     # cruisers or heavy cruisers" - three Murders and a renegade Lunar gave
     # zero battleships instead of one.
@@ -575,4 +575,4 @@ for _nm in ("Chaos \u2014 Incursion", "Chaos \u2014 Black Crusade", "Chaos \u201
             _r["pick"] = [dict(sec=_esc[0]), dict(sec=_i, re=_REN_ESC_RE)]
     _ren_n += 1
 assert _ren_n == 6, _ren_n
-print("the Chaos renegades added to %d lists (p.222)" % _ren_n)
+print("the Chaos renegades added to %d lists (p.232)" % _ren_n)

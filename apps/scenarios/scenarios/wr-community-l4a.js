@@ -38,7 +38,7 @@
       { s: "a", t: "Set up within 15 cm of your long edge." }
     ],
     notes: ["The source gives no table size, first turn or game length. Roll off for the first turn.", "The source’s “no loser than 20cm” is read as “no closer than 20 cm”.", "The original minefields predate the Fleets book; use the minefield rules of FL p. 513 (the source places them itself, so ignore the 15 cm placement limit).", "The line objective is hard to read: three Imperial capital ships (light cruiser or bigger) must form an unbroken chain through the narrows, from one end of the table to the other, with no Chaos ship within 10 cm of the line. Agree how you measure it before play."],
-    refs: [["Space station", "FL p. 507"], ["Orbital torpedo launcher", "FL p. 510"], ["Minefield", "FL p. 513"], ["Vortex torpedoes", "FL p. 21"], ["Chaos Space Marine crews", "FL p. 225"], ["Defence monitor", "FL p. 514"], ["Escort carrier", "FL p. 521"]],
+    refs: [["Space station", "FL p. 507"], ["Orbital torpedo launcher", "FL p. 510"], ["Minefield", "FL p. 513"], ["Vortex torpedoes", "FL p. 21"], ["Chaos Space Marine crews", "FL p. 235"], ["Defence monitor", "FL p. 514"], ["Escort carrier", "FL p. 521"]],
     play: [
       { w: "From turn 3", t: "Each side rolls a D20 every turn for reinforcements, entering from its own deployment zone. Each result arrives only once; repeats are ignored." },
       { w: "Imperial goal", s: "a", t: "Destroy both forts — or destroy a Chaos capital ship and one fort and hold the narrows: three capital ships in an unbroken line through the gap with no Chaos ship within 10 cm of it." },
@@ -69,7 +69,7 @@
     glance: [["Points", "Fixed forces"], ["Table", "Played lengthways"], ["Battlezone", "Outer Reaches or deep space"], ["First turn", "Imperials"], ["Victory", "Major or minor, by the Black Ship’s fate"]],
     bring: ["A super-heavy transport (the Black Ship)", "4 hidden set-up markers"],
     forces: {
-      a: ["The Black Ship: a heavy transport with the Super-Heavy Transport option (FL p. 182).", "Two cruisers and one squadron of five escorts. At most one cruiser with launch bays, and fighters only — no bombers."],
+      a: ["The Black Ship: a heavy transport with the Super-Heavy Transport option (FL p. 192).", "Two cruisers and one squadron of five escorts. At most one cruiser with launch bays, and fighters only — no bombers."],
       b: ["Four cruisers; at most one with launch bays."]
     },
     draw: (v, W, H) => [{ z: "circ", cx: 5, cy: H / 2, r: 15, s: "a", l: "", free: 1 }, { z: "mark", x: 5, y: H / 2, s: "a", l: "", free: 1 }, { z: "text", x: 44, y: H / 2 - 22, l: "Black Ship + escort\nwithin 15 cm", s: "a" },
@@ -84,7 +84,7 @@
       { s: "b", t: "Secretly assign one cruiser to each of four hidden set-up markers. Place them anywhere along either long edge, but not within 45 cm of an Imperial ship." },
       { s: "a", t: "You take the first turn. Your ships may leave the formation as soon as play starts." }
     ],
-    notes: ["The original points to the Merchantmen article’s Super Heavy Troop Transporter; the Remastered equivalent is the heavy transport’s Super-Heavy Transport option (FL p. 182).", "The source lets the desecration be a hit-and-run attack “within 15 cm”. Use that range for this attack only.", "If Chaos destroys the Black Ship after desecrating it, the source names no result — agree it."],
+    notes: ["The original points to the Merchantmen article’s Super Heavy Troop Transporter; the Remastered equivalent is the heavy transport’s Super-Heavy Transport option (FL p. 192).", "The source lets the desecration be a hit-and-run attack “within 15 cm”. Use that range for this attack only.", "If Chaos destroys the Black Ship after desecrating it, the source names no result — agree it."],
     refs: [["Heavy transport (Super-Heavy option)", "FL p. 182"], ["Hit-and-run attacks", "RB p. 91"], ["Daemonships", "FL p. 226"]],
     play: [
       { w: "Hidden markers", s: "b", t: "In your turn, either reveal any markers as their ships (before acting, so they may move and use special orders at once), or move a marker up to 15 cm. A marker cannot shoot or launch." },

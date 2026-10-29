@@ -65,7 +65,7 @@ FLEETS = [
 # A book list may take a hull from another book's section. In boarding what decides is
 # the CREW, not which book section the profile is printed in: the Explorator list
 # takes Imperial Navy hulls but they are Mechanicus ships (FL p.121,
-# p.125), and Chaos renegade hulls are Chaos ships (FL p.222).
+# p.125), and Chaos renegade hulls are Chaos ships (FL p.232).
 #
 # The LIST_CREW table's key is (list name, section heading) and its value:
 #   "own"          = the list's own fleet crews it
@@ -117,9 +117,9 @@ _ALLY = {"crew": "book", "pg": 15, "generic": True,
          "why": "an allied contingent keeps its own crew (FL p.15)"}
 # The stored hulls of Ordo Malleus and Segmentum Obscurus: Chaos profiles
 # with Imperial crews (FL p.39: "crewed with sailors from destroyed or
-# crippled vessels"; FL p.15: reserves are always of the same race; FL p.142).
+# crippled vessels"; FL p.15: reserves are always of the same race; FL p.152).
 _IMP_RESERVE = {"crew": "IMPERIAL NAVY", "pg": 39,
-                "why": "a stored hull with an Imperial crew (FL p.39, p.142)"}
+                "why": "a stored hull with an Imperial crew (FL p.39, p.152)"}
 
 LIST_CREW = {}
 # Every list now ends with the book's PLANETARY DEFENCES (FL p.499): the
@@ -136,10 +136,10 @@ for _l in LIST_FLEET:
     LIST_CREW[(_l, "PLANETARY DEFENCES")] = _DEFENCES
     LIST_CREW[(_l, "DEMIURG MERCENARIES")] = _DEMIURG_MERC
 # Da Ork Clanz: "A Blood Axe tiddla skwadron of at least six escorts may include
-# up to three Imperial Navy and/or Chaos escorts" - crewed by the Blood Axes (FL p.369).
+# up to three Imperial Navy and/or Chaos escorts" - crewed by the Blood Axes (FL p.371).
 LIST_CREW[("Orks — Da Ork Clanz", "BLOOD AXE COMMANDEERED ESCORTS")] = {
-    "crew": "own", "pg": 369,
-    "why": "commandeered escorts crewed by Blood Axes (FL p.369)"}
+    "crew": "own", "pg": 371,
+    "why": "commandeered escorts crewed by Blood Axes (FL p.371)"}
 for _l in ("Imperial Navy \u2014 Gothic Sector", "Imperial Navy \u2014 Armageddon Sector",
            "Imperial Navy \u2014 Bakka Sector", "Adeptus Mechanicus \u2014 Explorator"):
     LIST_CREW[(_l, "ORDO MALLEUS RESERVES")] = _IMP_RESERVE
@@ -160,10 +160,10 @@ for _sec in ("Battleships", "Cruisers", "ESCORTS"):
 for _l in ("Space Marines \u2014 Codex Astartes", "Space Marines \u2014 Dominion"):
     LIST_CREW[(_l, "ESCORTS")] = {"crew": "own", "pg": 106,
                                   "why": "rapid strike vessel = a chapter crew (FL p.106)"}
-# Grey Knights: the whole list is a Space Marine crew (FL p.144).
+# Grey Knights: the whole list is a Space Marine crew (FL p.154).
 LIST_CREW[("Grey Knights", "ESCORTS")] = {
-    "crew": "SPACE MARINES", "pg": 144,
-    "why": "Grey Knights count as Space Marines in all respects (FL p.144)"}
+    "crew": "SPACE MARINES", "pg": 154,
+    "why": "Grey Knights count as Space Marines in all respects (FL p.154)"}
 
 # Explorator: Imperial and chapter hulls are Mechanicus ships, and do not get
 # the Space Marine bonus (FL p.121, p.125).
@@ -180,17 +180,17 @@ for _sec in ("Battleships", "Cruisers", "ESCORTS"):
         # its own row in the ship base and does not go through here.
         "tu_cap": 1, "tu_pg": 119, "tu_check": True}
 
-# The Rogue Trader lists crew their hulls themselves (FL p.174, p.178).
+# The Rogue Trader lists crew their hulls themselves (FL p.184, p.188).
 for _l, _secs in (("Rogue Traders", ("CAPITAL SHIPS", "NOTES FROM NATE MONTES")),
                   ("Rogue Traders \u2014 Exploration",
                    ("CAPITAL SHIPS", "NOTES FROM NATE MONTES", "TRANSPORTS")),
                   ("Rogue Traders \u2014 Pirates and Wolf Packs",
                    ("ESCORTS", "NOTES FROM NATE MONTES"))):
     for _sec in _secs:
-        LIST_CREW[(_l, _sec)] = {"crew": "own", "pg": 174,
-                                 "why": "the rogue trader's own hull (FL p.174, p.178)"}
+        LIST_CREW[(_l, _sec)] = {"crew": "own", "pg": 184,
+                                 "why": "the rogue trader's own hull (FL p.184, p.188)"}
 LIST_CREW[("Rogue Traders \u2014 Pirates and Wolf Packs", "CAPITAL SHIPS")] = {
-    "crew": "own", "ex": [("Space Marine Strike Cruiser", "book")], "pg": 178,
+    "crew": "own", "ex": [("Space Marine Strike Cruiser", "book")], "pg": 188,
     "why": "the pirate's own hull; a Space Marine cruiser stays a chapter ship"}
 for _l in ("Rogue Traders", "Rogue Traders \u2014 Exploration"):
     for _sec in ("XENOS ALLIES", "The Demiurg", "The Kroot"):
@@ -198,12 +198,12 @@ for _l in ("Rogue Traders", "Rogue Traders \u2014 Exploration"):
 
 # Chaos: renegade hulls are Chaos ships in all respects (+1), but they
 # cannot take a Chaos Space Marine crew, a Chaos Lord or a mark
-# (FL p.222, p.225).
+# (FL p.232, p.235).
 for _l in ("Chaos \u2014 Incursion", "Chaos \u2014 Black Crusade", "Chaos \u2014 Tzeentch",
            "Chaos \u2014 Nurgle", "Chaos \u2014 Khorne", "Chaos \u2014 Slaanesh"):
     LIST_CREW[(_l, "RENEGADE IMPERIAL VESSELS")] = {
-        "crew": "own", "fl": ["renegade"], "pg": 222,
-        "why": "they count as Chaos vessels in all respects (FL p.222)"}
+        "crew": "own", "fl": ["renegade"], "pg": 232,
+        "why": "they count as Chaos vessels in all respects (FL p.232)"}
 
 # Tau and Demiurg: the halving rule follows the hull's own branch, not the list
 # (FL p.450), and the War Host's other hulls are allies (FL p.486).
@@ -217,8 +217,8 @@ for _l, _secs in (("Tau \u2014 Merchant Fleet",
     for _sec in _secs:
         LIST_CREW[(_l, _sec)] = {"crew": "book", "pg": 450,
                                  "why": "the hull keeps its own branch's rules (FL p.450, p.486)"}
-_RT_CONTINGENT = {"crew": "ROGUE TRADERS", "pg": 174,
-                  "why": "a rogue trader contingent (FL p.174)"}
+_RT_CONTINGENT = {"crew": "ROGUE TRADERS", "pg": 184,
+                  "why": "a rogue trader contingent (FL p.184)"}
 LIST_CREW[("Tau \u2014 Commerce Protection", "Rogue Traders")] = _RT_CONTINGENT
 LIST_CREW[("Demiurg \u2014 War Host", "Rogue Trader Escorts")] = _RT_CONTINGENT
 LIST_CREW[("Demiurg \u2014 War Host", "Cruisers")] = {
@@ -247,7 +247,7 @@ SHIP_FLAGS = {
         (["cata3"], "rolls 3D6 for catastrophic damage"),
 
     # These hulls skip the Prow Armament Damaged result entirely and do not
-    # move it to the next critical result (FL p.58-60, 63, 268-271).
+    # move it to the next critical result (FL p.58-60, 63, 270-273).
     "IMPERIAL NAVY|VENGEANCE CLASS GRAND CRUISER":
         (["ignoreprow"], "completely ignores prow critical damage"),
     "IMPERIAL NAVY|EXORCIST CLASS GRAND CRUISER":
@@ -328,7 +328,7 @@ SHIP_FLAGS = {
         (["fortress", "ramilies"], None),
 
     # The Rogue Trader list's xenos hulls are alien ships against the Ordo Xenos
-    # (FL p. 141). The fleet tag is not enough, because the same list has
+    # (FL p. 151). The fleet tag is not enough, because the same list has
     # Imperial hulls.
     "ROGUE TRADERS|XENOS VESSEL":
         (["alien"], None),
@@ -629,7 +629,7 @@ def main():
         race = FLEETS[fi][2]
         if race in ("eldar", "darkeldar"):
             # Every Eldar ship has a holofield/shadowfield, and it is
-            # rolled against the whole boarding attempt (FL p.303, p.342).
+            # rolled against the whole boarding attempt (FL p.305, p.344).
             row["on"] = ["holofields"]
         # A variant profile of the same ship (the data's "334b" pirate-base Haven,
         # "392d" Rok as a defence) is the same ship in a boarding action: the

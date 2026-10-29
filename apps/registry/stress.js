@@ -351,7 +351,7 @@ function extremes(li, si, ei){
       const drop = (sh.ol || []).reduce((a, o) =>
         a + (o.c < 0 ? o.c * (squadOf(u) ? api.hulls(u) : 1) : 0), 0);
       /* ...and percentage discounts: a ship bought through the Webway Portal
-         costs half (Fleets p.337, J175), with everything taken too. */
+         costs half (Fleets p.335, J175), with everything taken too. */
       const pct = ups.own.concat(ups.other).reduce((a, x) => a + (x[2].pct < 0 ? x[2].pct : 0), 0);
       const floor = Math.floor((en.p + drop) * (100 + pct) / 100);
       check(api.unitPts(u) >= floor, where,

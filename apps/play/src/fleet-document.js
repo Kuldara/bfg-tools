@@ -32,7 +32,7 @@ export function resolveFleet(f){
   const kept = resolveSaved(clone(f.units), L0, lost);
   const ctxs = kept.map(u => ({ list: listOf(u, L0), host: L0 }));
   /* a Da Ork Clanz tiddla skwadron's clan and Gubbins are on every row of
-     its tag and paid once (Fleets pp. 369-370, ruling T60), as the builder
+     its tag and paid once (Fleets pp. 371-372, ruling T60), as the builder
      resolves them */
   const its = DOMAIN.shareSkwadronUpgrades(kept.map((u, i) => DOMAIN.fromLegacyUnit(u, ctxs[i], DATA)), { list: L0, host: L0 }, DATA);
   const units = kept.map((u, i) => {

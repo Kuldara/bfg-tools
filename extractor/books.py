@@ -5,8 +5,8 @@ The PDFs are not in the repository (they belong to their authors). Put your
 own copies in the folder named by the BFG_BOOKS environment variable, or in
 books/ at the repository root (gitignored), under these names:
 
-    fleets-v0.36.pdf     BFG: Remastered Fleets Book WiP v0.36
-    rulebook-v1.10.pdf   BFG: Remastered Official Rulebook v1.10
+    fleets-v0.40.pdf     BFG: Remastered Fleets Book WiP v0.40
+    rulebook-v1.11.pdf   BFG: Remastered Official Rulebook v1.11
     faq2026.txt          Collected FAQ 2026, text export (check_quotes.py)
     faq2010-allies.txt   2010 FAQ allies matrix, text export (check_quotes.py)
     bsdata_cache/        BattleScribe data (crosscheck_bsdata.py only)
@@ -19,8 +19,8 @@ import os
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BOOKS = os.environ.get("BFG_BOOKS") or os.path.join(REPO, "books")
 
-FLEETS = os.path.join(BOOKS, "fleets-v0.36.pdf")
-RULEBOOK = os.path.join(BOOKS, "rulebook-v1.10.pdf")
+FLEETS = os.path.join(BOOKS, "fleets-v0.40.pdf")
+RULEBOOK = os.path.join(BOOKS, "rulebook-v1.11.pdf")
 FAQ2026 = os.path.join(BOOKS, "faq2026.txt")
 FAQ2010_ALLIES = os.path.join(BOOKS, "faq2010-allies.txt")
 BSDATA = os.path.join(BOOKS, "bsdata_cache")

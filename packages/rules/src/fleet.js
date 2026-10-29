@@ -5,7 +5,7 @@ import { defenceOwnPoints } from "./crits.js";
    and the Clanz command. resolveFleet itself is in resolve-fleet.js. */
 
 /* An alien vessel for the Mechanicus reserve rules ("alien vessels of any
-   type", "Xenos vessels", Fleets pp. 121-122, J213): a hull whose profile is
+   type", "Xenos vessels", Fleets pp. 121-123, J213): a hull whose profile is
    not of the human fleets, or a Rogue Trader xenos vessel. Defences and
    Chaos hulls are not alien. */
 export var HUMAN_FL = /^(IMPERIAL NAVY|SPACE MARINES|ADEPTUS MECHANICUS|INQUISITION|ROGUE TRADERS|CHAOS|HIGH ORBIT|LOW ORBIT|ADDITIONAL)/i;
@@ -35,7 +35,7 @@ export function victoryWorth(sh, en, host){
 }
 /* Where a ship comes from, for "any Imperial Navy, Mechanicus or Rogue
    Trader vessels at all" (Fleets p. 101) and "any Craftworld Eldar vessels"
-   (p. 302): a borrowed ship its own list's race and name, a ship from the
+   (p. 304): a borrowed ship its own list's race and name, a ship from the
    fleet's own access section (ROGUE TRADERS, THE INQUISITION) that heading,
    any other the fleet list's race and name. */
 export function originTags(m, L){
@@ -59,7 +59,7 @@ export function fleetFacts(L, members){
   /* Attack rating: a rule whose condition holds replaces the list's plain
      figure. Two that hold and disagree are both shown - the book does not
      say which wins (a fortress-monastery's 1, p. 99, beside an Inquisitor
-     Lord's 3, p. 139; T53). */
+     Lord's 3, p. 149; T53). */
   var AR = L.ar;
   if(AR){
     var rules = AR.rules || [];
@@ -81,11 +81,12 @@ export function fleetFacts(L, members){
           ? " The book gives both and does not say which applies: agree one with your opponent." : "") });
     }
   }
-  /* What the enemy fleet adds for free: one per Ordo Malleus Inquisitor
-     Lord and Grey Knights Strike Cruiser (Fleets p. 145), one for an Ordo
-     Malleus Inquisitor (p. 142), D6x50 points of escorts for an Ordo Xenos
-     Inquisitor (p. 141). */
+  /* What the enemy fleet adds for free: with an Ordo Malleus Inquisitor
+     Lord one, and one more per Grey Knights Strike Cruiser (Fleets p. 154,
+     needs), one for an Ordo Malleus Inquisitor (p. 152), D6x50 points of
+     escorts for an Ordo Xenos Inquisitor (p. 151). */
   (L.opp || []).forEach(function(o){
+    if(o.needs && !members.some(function(m){ return m.en && new RegExp(o.needs, "i").test(String(m.en.l)); })) return;
     var n = members.filter(function(m){
       return m.en && o.pick.some(function(re){ return new RegExp(re, "i").test(String(m.en.l)); }); })
       .reduce(function(a, m){ return a + (m.hulls || 1); }, 0);
@@ -125,9 +126,9 @@ export function sqClass(m){
 /* ---- Who is aboard which ship (J215) ----
    A commander is aboard one ship of the fleet. Most lists say which: a
    Master of the Fleet on a battle barge (Fleets pp. 97-100), an Inquisitor
-   on the Inquisitorial Cruiser, else the Blackship (p. 138), a Chaos
-   Warmaster on the most expensive ship but never a Daemonship (pp. 232-249),
-   a Chaos Lord on any capital ship but the Warmaster's or Abaddon's (pp. 222,
+   on the Inquisitorial Cruiser, else the Blackship (p. 148), a Chaos
+   Warmaster on the most expensive ship but never a Daemonship (pp. 242-253),
+   a Chaos Lord on any capital ship but the Warmaster's or Abaddon's (pp. 232,
    231, 234). The rules are data (L.place, build_data.py J215); the player's
    own choice is intent.aboard, the uid of the ship. Placement never changes
    a ship's profile (J8): it is a fact for the cards and a check for the
@@ -144,7 +145,7 @@ export function carriesCommander(m){
   if(!m.defence) return true;
   var sh = m.sel && m.sel.sh;
   /* a star fort (Fleets p. 503), a Ramilies or a Haven bought from the
-     fleet's points (pp. 500, 336) - never a platform or a station */
+     fleet's points (pp. 500, 334) - never a platform or a station */
   return !!(sh && (sh.qd || defenceOwnPoints(sh)));
 }
 export function placeRe(re, m){
@@ -162,7 +163,7 @@ export function placeTaken(m, re){
          ((m.R && m.R.options) || []).some(function(o){ return o.state === "take" && x.test(String(o.text)); });
 }
 /* Da Ork Clanz (J216): every skwadron belongs to one Warlord (Fleets
-   p. 372). intent.cmd names him (his uid); without it the ship is the
+   p. 374). intent.cmd names him (his uid); without it the ship is the
    nearest Warlord's above it in the fleet, else the first one's. Returns
    { warlords: [member], of: [member index -> warlord member index or -1] }. */
 export function clanzCommand(L, members){
@@ -183,8 +184,8 @@ export function clanzCommand(L, members){
     var w = (m.intent && m.intent.cmd && byUid[m.intent.cmd]) || last || ws[0];
     of[i] = members.indexOf(w);
   });
-  /* A Blood Axe tiddla's commandeered escorts (Fleets p. 369) are in the
-     command of their tiddla's Warlord: his summary, his dearest ship (p. 372)
+  /* A Blood Axe tiddla's commandeered escorts (Fleets p. 371) are in the
+     command of their tiddla's Warlord: his summary, his dearest ship (p. 374)
      and his checks see them (ChatGPT audit RAW-03, 27.10.2026). */
   clanzTiddlas(L, members).forEach(function(t){
     var wi = of[t.ork[0]];
@@ -193,8 +194,8 @@ export function clanzCommand(L, members){
   return { warlords: ws, of: of };
 }
 /* Explicit escort squadrons (L.esq, 27.10.2026): in a list whose rules count
-   escort squadrons - Rogue Traders p. 174, Exploration p. 177, Pirates and
-   Wolf Packs p. 179, Tau Commerce Protection p. 457, Demiurg War Host
+   escort squadrons - Rogue Traders p. 184, Exploration p. 187, Pirates and
+   Wolf Packs p. 189, Tau Commerce Protection p. 457, Demiurg War Host
    p. 487 - escort cards with the same squadron letter are one squadron, a
    card without one is a squadron by itself. The size check (ruleSquadron)
    and the counting rules (count with units) both read these keys, as the
@@ -204,9 +205,9 @@ export function escortSquadronKeys(L, members){
     return L && L.esq && m.escort && !m.defence && m.unitRow && m.intent && m.intent.sq ? "sq:" + m.intent.sq : "u:" + i; });
 }
 /* Da Ork Clanz tiddla skwadrons: "3-10 Escorts, chosen from the following
-   list in any mix desired" (Fleets p. 372). Escort rows of one tag are one
+   list in any mix desired" (Fleets p. 374). Escort rows of one tag are one
    skwadron, a row without a tag is a skwadron by itself, and a Blood Axe
-   tiddla's commandeered Imperial Navy and Chaos escorts (p. 369) are members
+   tiddla's commandeered Imperial Navy and Chaos escorts (p. 371) are members
    of the tiddla of their tag. Every Clanz check reads these, so two rows are
    never one skwadron for the size check and two for the Warlord's count
    (ChatGPT audit RAW-01, 27.10.2026). Returns [{ tag, ork: [member index],
@@ -238,7 +239,7 @@ export function placeCommanders(L, members, cmdOf){
   var byUid = {};
   members.forEach(function(m){ if(m.intent && m.intent.uid) byUid[m.intent.uid] = m; });
   /* a borrowed commander keeps his own list's placement rule (Yriel's
-     Dragonship, Fleets p. 319, aboard an Exploration fleet - J221) */
+     Dragonship, Fleets p. 317, aboard an Exploration fleet - J221) */
   var ruleOf = function(m){
     var PL = !m.own && m.sel && m.sel.list && m.sel.list.place ? m.sel.list.place : P;
     return PL.filter(function(r){ return new RegExp(r.cmd, "i").test(String(m.en.l)); })[0] || null; };
@@ -275,7 +276,7 @@ export function placeCommanders(L, members, cmdOf){
       if(hit.length){ allowed = hit; why = p.cite; return true; }
       return false; });
     /* own: the most expensive ship of his own command (a Clanz Warlord,
-       Fleets p. 372), not of the whole fleet */
+       Fleets p. 374), not of the whole fleet */
     if(r.dearest && r.dearest.own && cmdOf){
       var mi = members.indexOf(m);
       cut(function(sm){ return cmdOf[members.indexOf(sm)] === mi; }, r.dearest.cite);

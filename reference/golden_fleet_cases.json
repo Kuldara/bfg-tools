@@ -304,7 +304,7 @@
     },
     {
       "id": "dark-eldar-two-escorts-per-cruiser",
-      "page": 351,
+      "page": 353,
       "fleet": {
         "list": "Dark Eldar — Pirates",
         "limit": 1000,
@@ -329,11 +329,11 @@
         ],
         "failing": 1
       },
-      "why": "p.351: 'However, Dark Eldar fleets must contain at least three escorts for every capital ship taken.' One cruiser requires three escorts; with two the fleet is illegal. Torture 210 + 2 x Corsair 50 = 310."
+      "why": "p.353: 'However, Dark Eldar fleets must contain at least three escorts for every capital ship taken.' One cruiser requires three escorts; with two the fleet is illegal. Torture 210 + 2 x Corsair 50 = 310."
     },
     {
       "id": "dark-eldar-three-escorts-per-cruiser",
-      "page": 351,
+      "page": 353,
       "fleet": {
         "list": "Dark Eldar — Pirates",
         "limit": 1000,
@@ -359,7 +359,7 @@
         "others_ok": true,
         "failing": 0
       },
-      "why": "The same sentence p.351 is met with three escorts. Torture 210 + 3 x Corsair 50 = 360."
+      "why": "The same sentence p.353 is met with three escorts. Torture 210 + 3 x Corsair 50 = 360."
     },
     {
       "id": "demiurg-commerce-vessels-do-not-outnumber",
@@ -865,7 +865,7 @@
         ],
         "failing": 1
       },
-      "why": "p.15: 'Reserves can only ever be ships belonging to the same \"race\", chosen from a fleet list of the same \"race\".' The ratio is met (three own cruisers), but the race is not: Chaos is not imperial navy. 545 + Devastation 190 (p.232) = 735."
+      "why": "p.15: 'Reserves can only ever be ships belonging to the same \"race\", chosen from a fleet list of the same \"race\".' The ratio is met (three own cruisers), but the race is not: Chaos is not imperial navy. 545 + Devastation 190 (p.242) = 735."
     },
     {
       "id": "ally-one-per-three-core-vessels",
@@ -905,7 +905,7 @@
         "others_ok": true,
         "failing": 0
       },
-      "why": "p.16: 'In all cases these follow the standard rules for reserves in that no more than one allied vessel may be taken for every three core vessels in the fleet.' An ally is NOT required to be of the same race - p.16 concerns specifically ships of a different race. Fleet-Admiral 50 + 545 + Shadow 210 (p.316) = 805, and the admiral is needed because the fleet is over 750 (p.35)."
+      "why": "p.16: 'In all cases these follow the standard rules for reserves in that no more than one allied vessel may be taken for every three core vessels in the fleet.' An ally is NOT required to be of the same race - p.16 concerns specifically ships of a different race. Fleet-Admiral 50 + 545 + Shadow 210 (p.314) = 805, and the admiral is needed because the fleet is over 750 (p.35)."
     },
     {
       "id": "ally-without-three-core-vessels",
@@ -1160,7 +1160,7 @@
           }
         ]
       },
-      "why": "p.367: 'You may include up to six kroozers in your fleet.' The cap concerns the whole fleet (p.14), so a seventh kroozer taken as a reserve breaks it. On both lists the section heading is KROOZERS. The ratio is met: floor(6/3) = 2. 6 x Terror ship 185 + Kill kroozer 155 = 1265."
+      "why": "p.369: 'You may include up to six kroozers in your fleet.' The cap concerns the whole fleet (p.14), so a seventh kroozer taken as a reserve breaks it. On both lists the section heading is KROOZERS. The ratio is met: floor(6/3) = 2. 6 x Terror ship 185 + Kill kroozer 155 = 1265."
     },
     {
       "id": "reserve-of-a-reserve-is-illegal",
@@ -1238,7 +1238,7 @@
         ],
         "failing": 1
       },
-      "why": "The book's own example p.15: 'However, a Gothic Sector fleet list cannot take Space Marine vessels as reserves, even though it can take as reserves other Imperial Navy vessels from the Segmentum Solar fleet list.' The race list p.14 keeps the Space Marines and the Imperial Navy apart, so the race gate rejects this. The ratio, on the other hand, is met (three own cruisers). 545 + Strike cruiser 145 (p.97) = 690, i.e. under 750. The row's name says WHAT is missing: p.139 opens the same fleet if it is led by an Inquisitor Lord ('Any one of the Imperial Navy, Adeptus Mechanicus and Space Marine fleets led by an Inquisitor may always take ships from the other two as reserves in the normal manner'). So p.15's example describes the default and p.139 the exception; they do not conflict."
+      "why": "The book's own example p.15: 'However, a Gothic Sector fleet list cannot take Space Marine vessels as reserves, even though it can take as reserves other Imperial Navy vessels from the Segmentum Solar fleet list.' The race list p.14 keeps the Space Marines and the Imperial Navy apart, so the race gate rejects this. The ratio, on the other hand, is met (three own cruisers). 545 + Strike cruiser 145 (p.97) = 690, i.e. under 750. The row's name says WHAT is missing: p.149 opens the same fleet if it is led by an Inquisitor Lord ('Any one of the Imperial Navy, Adeptus Mechanicus and Space Marine fleets led by an Inquisitor may always take ships from the other two as reserves in the normal manner'). So p.15's example describes the default and p.149 the exception; they do not conflict."
     },
     {
       "id": "reserves-from-two-fleet-lists-at-once",
@@ -1296,7 +1296,7 @@
     },
     {
       "id": "inquisitorial-cruiser-leads-a-navy-fleet",
-      "page": 138,
+      "page": 148,
       "fleet": {
         "list": "Imperial Navy — Gothic Sector",
         "limit": 1500,
@@ -1335,11 +1335,11 @@
         "others_ok": true,
         "failing": 0
       },
-      "why": "p.138: 'The Inquisition has no fleet list on its own. Instead, there are various ways to add an Inquisitor or Inquisitorial ships to the Imperial factions.' and 'Any Imperial or Space Marine fleet may include a single Inquisitorial Cruiser in the fleet'. The Inquisitor Lord leads the fleet, so p.35's required admiral is met by him. Prices p.138: Inquisitor Lord 75 + Inquisitorial Cruiser 270; cruisers p.35: 180 + 180 + 185. In total 890. This is the community feedback's own example: an Inquisitorial Cruiser leading a Navy fleet."
+      "why": "p.148: 'The Inquisition has no fleet list on its own. Instead, there are various ways to add an Inquisitor or Inquisitorial ships to the Imperial factions.' and 'Any Imperial or Space Marine fleet may include a single Inquisitorial Cruiser in the fleet'. The Inquisitor Lord leads the fleet, so p.35's required admiral is met by him. Prices p.148: Inquisitor Lord 75 + Inquisitorial Cruiser 270; cruisers p.35: 180 + 180 + 185. In total 890. This is the community feedback's own example: an Inquisitorial Cruiser leading a Navy fleet."
     },
     {
       "id": "inquisitor-lord-needs-750-points",
-      "page": 138,
+      "page": 148,
       "fleet": {
         "list": "Imperial Navy — Gothic Sector",
         "limit": 1500,
@@ -1363,11 +1363,11 @@
         ],
         "failing": 1
       },
-      "why": "p.138: 'Any Imperial or Space Marine fleet 750 points or greater may be led by an Inquisitor Lord.' A 255 point fleet does not reach the limit. The limit is read from the fleet's own points (T24). Inquisitor Lord 75 + Lunar 180 = 255."
+      "why": "p.148: 'Any Imperial or Space Marine fleet 750 points or greater may be led by an Inquisitor Lord.' A 255 point fleet does not reach the limit. The limit is read from the fleet's own points (T24). Inquisitor Lord 75 + Lunar 180 = 255."
     },
     {
       "id": "grey-knights-strike-cruiser-needs-an-inquisitor-lord",
-      "page": 138,
+      "page": 148,
       "fleet": {
         "list": "Imperial Navy — Gothic Sector",
         "limit": 1500,
@@ -1400,11 +1400,11 @@
         ],
         "failing": 1
       },
-      "why": "p.138: 'If an Inquisitor Lord is leading the fleet, up to one Grey Knights Strike Cruiser may be taken for every 500 points in the fleet.' The condition is the Inquisitor Lord, not the point total: a fleet led by a Fleet-Admiral gets none. Fleet-Admiral 50 + GK Strike Cruiser 165 + 545 = 760."
+      "why": "p.148: 'If an Inquisitor Lord is leading the fleet, up to one Grey Knights Strike Cruiser may be taken for every 500 points in the fleet.' The condition is the Inquisitor Lord, not the point total: a fleet led by a Fleet-Admiral gets none. Fleet-Admiral 50 + GK Strike Cruiser 165 + 545 = 760."
     },
     {
       "id": "inquisitor-lord-replaces-the-space-marine-commander",
-      "page": 138,
+      "page": 148,
       "fleet": {
         "list": "Space Marines — Codex Astartes",
         "limit": 2000,
@@ -1435,7 +1435,7 @@
         ],
         "failing": 1
       },
-      "why": "p.138: the Inquisitor Lord LEADS the fleet ('may be led by an Inquisitor Lord'), so he is not taken in addition to the fleet's own commander but instead of him - the same structure as with the Eldar Hero (p.316). Master of the Fleet 50 + Inquisitor Lord 75 + Battle barge 425 + 3 x Strike cruiser 145 = 985."
+      "why": "p.148: the Inquisitor Lord LEADS the fleet ('may be led by an Inquisitor Lord'), so he is not taken in addition to the fleet's own commander but instead of him - the same structure as with the Eldar Hero (p.314). Master of the Fleet 50 + Inquisitor Lord 75 + Battle barge 425 + 3 x Strike cruiser 145 = 985."
     },
     {
       "id": "bastion-chaos-reserve-with-three-cruisers",
@@ -1473,7 +1473,7 @@
         "others_ok": true,
         "failing": 0
       },
-      "why": "p.39: 'since a reserve fleet also draws on very old or scarce vessels, you may also use your reserve choices to select any of the following Chaos vessels' (Repulsive, Executor, Hades, Murder, Carnage) and 'These \"reserve\" vessels are picked in the normal manner, so for every three vessels of a given type which you choose from the main fleet list, you may pick one vessel of that type from another Imperial list, or from the above selection of Chaos vessels (but not both).' The row is on Bastion's own list but in the RESERVE section, so it uses the same 1:3 budget as a ship borrowed from elsewhere - exactly why the book says 'but not both'. Prices: Fleet-Admiral 50 + Dictator 220 + Tyrant 185 + Gothic 180 (p.36) + Murder 170 (p.279) = 805."
+      "why": "p.39: 'since a reserve fleet also draws on very old or scarce vessels, you may also use your reserve choices to select any of the following Chaos vessels' (Repulsive, Executor, Hades, Murder, Carnage) and 'These \"reserve\" vessels are picked in the normal manner, so for every three vessels of a given type which you choose from the main fleet list, you may pick one vessel of that type from another Imperial list, or from the above selection of Chaos vessels (but not both).' The row is on Bastion's own list but in the RESERVE section, so it uses the same 1:3 budget as a ship borrowed from elsewhere - exactly why the book says 'but not both'. Prices: Fleet-Admiral 50 + Dictator 220 + Tyrant 185 + Gothic 180 (p.36) + Murder 170 (p.281) = 805."
     },
     {
       "id": "bastion-chaos-reserve-without-three-cruisers",
@@ -1761,7 +1761,7 @@
     },
     {
       "id": "corsairs-craftworld-reserve-needs-an-eldar-hero",
-      "page": 316,
+      "page": 314,
       "fleet": {
         "list": "Eldar Corsairs — Gothic Sector",
         "limit": 2000,
@@ -1795,11 +1795,11 @@
         ],
         "failing": 1
       },
-      "why": "p.316: 'An Eldar Hero must lead the fleet in order to use Craftworld Eldar vessels as reserves.' In a fleet led by a Pirate Prince the Wraithship is not valid. The race list p.14 keeps the Eldar and the Craftworld Eldar apart, so the general race gate would not allow this anyway - the permission is list-specific and conditional. Pirate Prince 100 + Eclipse 250 + 2 x Shadow 210 + Wraithship 160 = 930."
+      "why": "p.314: 'An Eldar Hero must lead the fleet in order to use Craftworld Eldar vessels as reserves.' In a fleet led by a Pirate Prince the Wraithship is not valid. The race list p.14 keeps the Eldar and the Craftworld Eldar apart, so the general race gate would not allow this anyway - the permission is list-specific and conditional. Pirate Prince 100 + Eclipse 250 + 2 x Shadow 210 + Wraithship 160 = 930."
     },
     {
       "id": "corsairs-craftworld-reserve-with-an-eldar-hero",
-      "page": 316,
+      "page": 314,
       "fleet": {
         "list": "Eldar Corsairs — Gothic Sector",
         "limit": 2000,
@@ -1835,11 +1835,11 @@
         "others_ok": true,
         "failing": 0
       },
-      "why": "The same sentence p.316 is met when an Eldar Hero leads the fleet: 'Following this, one Craftworld Eldar Flame of Asuryan, Dragonship or Wraithship may be taken for every three cruisers in the fleet.' Three own cruisers allow one. Eldar Hero 100 + 250 + 2 x 210 + Wraithship 160 = 930."
+      "why": "The same sentence p.314 is met when an Eldar Hero leads the fleet: 'Following this, one Craftworld Eldar Flame of Asuryan, Dragonship or Wraithship may be taken for every three cruisers in the fleet.' Three own cruisers allow one. Eldar Hero 100 + 250 + 2 x 210 + Wraithship 160 = 930."
     },
     {
       "id": "iyanden-corsair-reserve-needs-an-eldar-hero",
-      "page": 319,
+      "page": 317,
       "fleet": {
         "list": "Eldar — Iyanden Craftworld",
         "limit": 2000,
@@ -1873,11 +1873,11 @@
         ],
         "failing": 1
       },
-      "why": "p.319: 'An Eldar Hero must lead the fleet in order to use Corsair Eldar vessels as reserves.' In a fleet led by an Autarch the Corsair cruiser is not valid. Eldar Autarch 75 + Dragonship 260 + 2 x Wraithship 160 + Shadow 210 = 865."
+      "why": "p.317: 'An Eldar Hero must lead the fleet in order to use Corsair Eldar vessels as reserves.' In a fleet led by an Autarch the Corsair cruiser is not valid. Eldar Autarch 75 + Dragonship 260 + 2 x Wraithship 160 + Shadow 210 = 865."
     },
     {
       "id": "iyanden-corsair-reserve-with-an-eldar-hero",
-      "page": 319,
+      "page": 317,
       "fleet": {
         "list": "Eldar — Iyanden Craftworld",
         "limit": 2000,
@@ -1913,11 +1913,11 @@
         "others_ok": true,
         "failing": 0
       },
-      "why": "The same sentence p.319 is met with an Eldar Hero: 'Following this, one Corsair Eldar cruiser or light cruiser may be taken for every three Dragonships and / or Wraithships in the fleet.' One Dragonship and two Wraithships are three, so one Corsair cruiser is valid. Eldar Hero 100 + 260 + 2 x 160 + 210 = 890."
+      "why": "The same sentence p.317 is met with an Eldar Hero: 'Following this, one Corsair Eldar cruiser or light cruiser may be taken for every three Dragonships and / or Wraithships in the fleet.' One Dragonship and two Wraithships are three, so one Corsair cruiser is valid. Eldar Hero 100 + 260 + 2 x 160 + 210 = 890."
     },
     {
       "id": "rogue-traders-kroot-ally-per-750-points",
-      "page": 175,
+      "page": 185,
       "fleet": {
         "list": "Rogue Traders",
         "limit": 2000,
@@ -1950,11 +1950,11 @@
         "others_ok": true,
         "failing": 0
       },
-      "why": "p.175 XENOS ALLIES: 'For every 750 points in the fleet, Rogue Traders may be accompanied by a single Demiurg or Kroot vessel unless the fleet is using auxiliary ships that cannot be allies with the Demiurg or Kroot (such as Space Marines).' The sentence does not say 'or part thereof', so 750 is read as full: at 865 points one. Veteran Rogue Trader 50 + 2 x Rogue Trader Cruiser 185 + 6 x Xenos Vessel 50 + Kroot Warsphere 145 = 865."
+      "why": "p.185 XENOS ALLIES: 'For every 750 points in the fleet, Rogue Traders may be accompanied by a single Demiurg or Kroot vessel unless the fleet is using auxiliary ships that cannot be allies with the Demiurg or Kroot (such as Space Marines).' The sentence does not say 'or part thereof', so 750 is read as full: at 865 points one. Veteran Rogue Trader 50 + 2 x Rogue Trader Cruiser 185 + 6 x Xenos Vessel 50 + Kroot Warsphere 145 = 865."
     },
     {
       "id": "rogue-traders-kroot-ally-under-750-points",
-      "page": 175,
+      "page": 185,
       "fleet": {
         "list": "Rogue Traders",
         "limit": 2000,
@@ -1981,7 +1981,7 @@
         ],
         "failing": 1
       },
-      "why": "The same sentence p.175: a 380 point fleet does not reach 750, so no xenos ally is allowed. Veteran 50 + Rogue Trader Cruiser 185 + Kroot Warsphere 145 = 380."
+      "why": "The same sentence p.185: a 380 point fleet does not reach 750, so no xenos ally is allowed. Veteran 50 + Rogue Trader Cruiser 185 + Kroot Warsphere 145 = 380."
     },
     {
       "id": "bakka-rogue-trader-cruiser-per-750-points",
@@ -2022,7 +2022,7 @@
         "others_ok": true,
         "failing": 0
       },
-      "why": "p.50: 'One Rogue Trader cruiser and its attendant escorts may be taken for every 750 points in the fleet.' Like p.175, the sentence does not say 'or part thereof'. Fleet-Admiral 50 + Dominator 190 + Tyrant 185 + Gothic 180 + Lunar 180 + Rogue Trader Cruiser 185 = 970, i.e. one allowed."
+      "why": "p.50: 'One Rogue Trader cruiser and its attendant escorts may be taken for every 750 points in the fleet.' Like p.185, the sentence does not say 'or part thereof'. Fleet-Admiral 50 + Dominator 190 + Tyrant 185 + Gothic 180 + Lunar 180 + Rogue Trader Cruiser 185 = 970, i.e. one allowed."
     },
     {
       "id": "bakka-rogue-trader-cruiser-under-750-points",
@@ -2057,7 +2057,7 @@
     },
     {
       "id": "chaos-renegade-cruiser-per-1500-points",
-      "page": 222,
+      "page": 232,
       "fleet": {
         "list": "Chaos — Incursion",
         "limit": 2500,
@@ -2094,11 +2094,11 @@
         "others_ok": true,
         "failing": 0
       },
-      "why": "p.222 RENEGADE IMPERIAL VESSELS: 'For every 1,500 points in a Chaos fleet, one cruiser from any Imperial Navy fleet list up to 185 points and/or up to six Imperial Navy escorts may be taken.' 1670 points give one. The same sentence ends: 'they count as Chaos vessels in all respects', so the Lunar is also counted towards the list's own 0-12 Cruisers limit: six own and one renegade is seven. Chaos Warmaster 50 + Desolator 300 + 6 x Devastation 190 + Lunar 180 = 1670."
+      "why": "p.232 RENEGADE IMPERIAL VESSELS: 'For every 1,500 points in a Chaos fleet, one cruiser from any Imperial Navy fleet list up to 185 points and/or up to six Imperial Navy escorts may be taken.' 1670 points give one. The same sentence ends: 'they count as Chaos vessels in all respects', so the Lunar is also counted towards the list's own 0-12 Cruisers limit: six own and one renegade is seven. Chaos Warmaster 50 + Desolator 300 + 6 x Devastation 190 + Lunar 180 = 1670."
     },
     {
       "id": "chaos-renegade-cruiser-under-1500-points",
-      "page": 222,
+      "page": 232,
       "fleet": {
         "list": "Chaos — Incursion",
         "limit": 2500,
@@ -2126,11 +2126,11 @@
         ],
         "failing": 1
       },
-      "why": "The same sentence p.222: 800 points do not reach 1500, so no renegade is allowed. The book does not say 'or part thereof', so 1500 is read as full. Warmaster 50 + 3 x Devastation 190 + Lunar 180 = 800."
+      "why": "The same sentence p.232: 800 points do not reach 1500, so no renegade is allowed. The book does not say 'or part thereof', so 1500 is read as full. Warmaster 50 + 3 x Devastation 190 + Lunar 180 = 800."
     },
     {
       "id": "chaos-renegade-escorts-seven-is-too-many",
-      "page": 222,
+      "page": 232,
       "fleet": {
         "list": "Chaos — Incursion",
         "limit": 2500,
@@ -2166,11 +2166,11 @@
         ],
         "failing": 1
       },
-      "why": "p.222 allows 'up to six Imperial Navy escorts' per full 1500 points. At 1700 points six, so the seventh is illegal. The sentence also says they need not be one squadron ('need not be in a single squadron'), so four and three are fine as squadrons. Warmaster 50 + Desolator 300 + 6 x 190 + 7 x Cobra 30 = 1700."
+      "why": "p.232 allows 'up to six Imperial Navy escorts' per full 1500 points. At 1700 points six, so the seventh is illegal. The sentence also says they need not be one squadron ('need not be in a single squadron'), so four and three are fine as squadrons. Warmaster 50 + Desolator 300 + 6 x 190 + 7 x Cobra 30 = 1700."
     },
     {
       "id": "chaos-renegade-cruiser-fills-the-chaos-limit",
-      "page": 222,
+      "page": 232,
       "fleet": {
         "list": "Chaos — Incursion",
         "limit": 3000,
@@ -2198,7 +2198,7 @@
         ],
         "failing": 1
       },
-      "why": "'They count as Chaos vessels in all respects' (p.222) also means the list's own limits: twelve own cruisers fill the 0-12 Cruisers limit, so the renegade is the thirteenth. Warmaster 50 + 12 x Devastation 190 + Lunar 180 = 2510, and the renegade limit floor(2510/1500) = 1 is met."
+      "why": "'They count as Chaos vessels in all respects' (p.232) also means the list's own limits: twelve own cruisers fill the 0-12 Cruisers limit, so the renegade is the thirteenth. Warmaster 50 + 12 x Devastation 190 + Lunar 180 = 2510, and the renegade limit floor(2510/1500) = 1 is met."
     },
     {
       "id": "crusade-takes-no-reserves-at-all",
@@ -2262,7 +2262,7 @@
     },
     {
       "id": "inquisitor-lord-opens-space-marine-reserves-for-the-navy",
-      "page": 139,
+      "page": 149,
       "fleet": {
         "list": "Imperial Navy — Gothic Sector",
         "limit": 2000,
@@ -2298,11 +2298,11 @@
         "others_ok": true,
         "failing": 0
       },
-      "why": "p.139 RESERVES AND ALLIES: 'Any one of the Imperial Navy, Adeptus Mechanicus and Space Marine fleets led by an Inquisitor may always take ships from the other two as reserves in the normal manner.' Without an inquisitor the race gate rejects the same fleet (p.15, a golden of its own). Inquisitor Lord 75 + Lunar 180 + Gothic 180 + Tyrant 185 + Strike cruiser 145 = 765."
+      "why": "p.149 RESERVES AND ALLIES: 'Any one of the Imperial Navy, Adeptus Mechanicus and Space Marine fleets led by an Inquisitor may always take ships from the other two as reserves in the normal manner.' Without an inquisitor the race gate rejects the same fleet (p.15, a golden of its own). Inquisitor Lord 75 + Lunar 180 + Gothic 180 + Tyrant 185 + Strike cruiser 145 = 765."
     },
     {
       "id": "ork-fleet-may-include-one-rogue-trader-cruiser",
-      "page": 174,
+      "page": 184,
       "fleet": {
         "list": "Orks — Waaagh!",
         "limit": 2000,
@@ -2331,11 +2331,11 @@
         "others_ok": true,
         "failing": 0
       },
-      "why": "p.174: 'Any fleet except Necrons or Tyranids may include a single Rogue Trader capital ship.' An ork fleet is not among the exceptions, so one is valid. 3 x Terror ship 185 + Rogue Trader Cruiser 185 = 740. The Ork Warlord 40 is included, because p.366 requires him from 500 points: 40 + 3 x 185 + 185 = 780."
+      "why": "p.184: 'Any fleet except Necrons or Tyranids may include a single Rogue Trader capital ship.' An ork fleet is not among the exceptions, so one is valid. 3 x Terror ship 185 + Rogue Trader Cruiser 185 = 740. The Ork Warlord 40 is included, because p.368 requires him from 500 points: 40 + 3 x 185 + 185 = 780."
     },
     {
       "id": "ork-fleet-may-not-include-two-rogue-trader-cruisers",
-      "page": 174,
+      "page": 184,
       "fleet": {
         "list": "Orks — Waaagh!",
         "limit": 2000,
@@ -2364,11 +2364,11 @@
         ],
         "failing": 1
       },
-      "why": "The same sentence p.174 says 'a single', so a second is illegal. The book's second sentence gives more only to Tau, Demiurg and Imperial fleets. 3 x 185 + 2 x 185 = 925. The Ork Warlord 40 included (p.366): 40 + 3 x 185 + 2 x 185 = 965."
+      "why": "The same sentence p.184 says 'a single', so a second is illegal. The book's second sentence gives more only to Tau, Demiurg and Imperial fleets. 3 x 185 + 2 x 185 = 925. The Ork Warlord 40 included (p.368): 40 + 3 x 185 + 2 x 185 = 965."
     },
     {
       "id": "navy-fleet-two-rogue-trader-cruisers-per-750",
-      "page": 174,
+      "page": 184,
       "fleet": {
         "list": "Imperial Navy — Gothic Sector",
         "limit": 2000,
@@ -2408,11 +2408,11 @@
         "others_ok": true,
         "failing": 0
       },
-      "why": "p.174: 'Tau, Demiurg and Imperial fleets may include one Rogue Trader cruiser for every 750 points or part thereof in their fleet.' 965 points is at the start of the second band, so two are valid. The same page: 'Rogue Trader cruisers always count against cruiser restrictions in any fleet list that has such restrictions' - that is why 0-12 Cruisers shows five, not three. Fleet-Admiral 50 + Lunar 180 + Gothic 180 + Tyrant 185 + 2 x Rogue Trader Cruiser 185 = 965."
+      "why": "p.184: 'Tau, Demiurg and Imperial fleets may include one Rogue Trader cruiser for every 750 points or part thereof in their fleet.' 965 points is at the start of the second band, so two are valid. The same page: 'Rogue Trader cruisers always count against cruiser restrictions in any fleet list that has such restrictions' - that is why 0-12 Cruisers shows five, not three. Fleet-Admiral 50 + Lunar 180 + Gothic 180 + Tyrant 185 + 2 x Rogue Trader Cruiser 185 = 965."
     },
     {
       "id": "rogue-trader-cruisers-fill-the-navy-cruiser-limit",
-      "page": 174,
+      "page": 184,
       "fleet": {
         "list": "Imperial Navy — Gothic Sector",
         "limit": 3000,
@@ -2440,7 +2440,7 @@
         ],
         "failing": 1
       },
-      "why": "p.174: 'Rogue Trader cruisers always count against cruiser restrictions in any fleet list that has such restrictions.' Twelve own cruisers fill p.35's limit, so the Rogue Trader cruiser is the thirteenth. The ratio - not floor but ceil(2395/750) = 4 - would otherwise allow it. Fleet-Admiral 50 + 12 x Lunar 180 + Rogue Trader Cruiser 185 = 2395."
+      "why": "p.184: 'Rogue Trader cruisers always count against cruiser restrictions in any fleet list that has such restrictions.' Twelve own cruisers fill p.35's limit, so the Rogue Trader cruiser is the thirteenth. The ratio - not floor but ceil(2395/750) = 4 - would otherwise allow it. Fleet-Admiral 50 + 12 x Lunar 180 + Rogue Trader Cruiser 185 = 2395."
     },
     {
       "id": "reserve-takes-an-upgrade-from-the-reserve-list",
@@ -2475,7 +2475,7 @@
           }
         ]
       },
-      "why": "The book's OWN example p.14, word for word: “A player using the 12th Black Crusade fleet list with at least three cruisers can take a Retaliator grand cruiser as reserves from the 13th Black Crusade fleet list and upgrade it to take Chaos Space Marines, but that ship cannot take a Chaos Lord form the 13th Black Crusade list (a special character).” Here the 12th is Chaos — Incursion (p.232) and the 13th is Chaos — Black Crusade (p.234): the Retaliator and the Chaos Space Marine crew are only on the latter. So the borrowed ship keeps its SOURCE LIST's upgrade. 3 x Devastation 190 + Retaliator 260 + Chaos Space Marine crew 35 = 865. (The book reads ‘form’ and not ‘from’; the quotation is word for word.)"
+      "why": "The book's OWN example p.14, word for word: “A player using the 12th Black Crusade fleet list with at least three cruisers can take a Retaliator grand cruiser as reserves from the 13th Black Crusade fleet list and upgrade it to take Chaos Space Marines, but that ship cannot take a Chaos Lord form the 13th Black Crusade list (a special character).” Here the 12th is Chaos — Incursion (p.242) and the 13th is Chaos — Black Crusade (p.244): the Retaliator and the Chaos Space Marine crew are only on the latter. So the borrowed ship keeps its SOURCE LIST's upgrade. 3 x Devastation 190 + Retaliator 260 + Chaos Space Marine crew 35 = 865. (The book reads ‘form’ and not ‘from’; the quotation is word for word.)"
     },
     {
       "id": "reserve-takes-an-upgrade-from-the-host-list",
@@ -2516,7 +2516,7 @@
           }
         ]
       },
-      "why": "p.14 says “either fleet list”, and this is its OTHER half: a borrowed ship also gets the HOST LIST's upgrade. Chaos — Incursion (p.232) has no Chaos Space Marine crew row at all, so a Devastation borrowed from the Incursion can take it only from the host list Chaos — Black Crusade (p.234, +35). p.16 limits this to the same race: both are ‘chaos’. 3 x Devastation 190 + borrowed Devastation 190 + Chaos Space Marine crew 35 = 795. This case was red before the fix: upgradesFor went only through the sections of the unit's own list. **Tightened 15.9.2026 (Codex review):** the case required only the total of 795 points, so it would not have noticed a legal purchase showing red. Now it also requires that no unit produces an error and that the fleet has no unexpected red row. The fleet is 795 points, i.e. over 750, so p.232 requires a Chaos Warmaster; that red row is expected and recorded, so that any other red is a finding."
+      "why": "p.14 says “either fleet list”, and this is its OTHER half: a borrowed ship also gets the HOST LIST's upgrade. Chaos — Incursion (p.242) has no Chaos Space Marine crew row at all, so a Devastation borrowed from the Incursion can take it only from the host list Chaos — Black Crusade (p.244, +35). p.16 limits this to the same race: both are ‘chaos’. 3 x Devastation 190 + borrowed Devastation 190 + Chaos Space Marine crew 35 = 795. This case was red before the fix: upgradesFor went only through the sections of the unit's own list. **Tightened 15.9.2026 (Codex review):** the case required only the total of 795 points, so it would not have noticed a legal purchase showing red. Now it also requires that no unit produces an error and that the fleet has no unexpected red row. The fleet is 795 points, i.e. over 750, so p.242 requires a Chaos Warmaster; that red row is expected and recorded, so that any other red is a finding."
     },
     {
       "id": "different-race-reserve-gets-no-host-upgrades",
@@ -2546,7 +2546,7 @@
       "expect": {
         "total": 790
       },
-      "why": "p.16 limits p.14's “either fleet list” sentence: “Allied and reserve vessels cannot use refits and upgrades from the fleet list they are allied to unless they are of the same race or the rules for that fleet specifically allow it.” In p.14's race list Iyanden is ‘craftworld eldar’ and the Corsairs ‘eldar’ — the book lists them as DIFFERENT races. So the borrowed Shadow does not get Iyanden's own rows ‘Ghostship’ or ‘Aspect Warrior Host’, although the borrowing itself is legal (p.316: an Eldar Hero leads). The case measures specifically the OFFER, not the points: not buying would look the same as a ban. Eldar Hero 100 + 3 x Wraithship 160 + Shadow 210 = 790."
+      "why": "p.16 limits p.14's “either fleet list” sentence: “Allied and reserve vessels cannot use refits and upgrades from the fleet list they are allied to unless they are of the same race or the rules for that fleet specifically allow it.” In p.14's race list Iyanden is ‘craftworld eldar’ and the Corsairs ‘eldar’ — the book lists them as DIFFERENT races. So the borrowed Shadow does not get Iyanden's own rows ‘Ghostship’ or ‘Aspect Warrior Host’, although the borrowing itself is legal (p.314: an Eldar Hero leads). The case measures specifically the OFFER, not the points: not buying would look the same as a ban. Eldar Hero 100 + 3 x Wraithship 160 + Shadow 210 = 790."
     },
     {
       "id": "host-upgrade-on-a-reserve-is-not-an-error",
@@ -2639,7 +2639,7 @@
     },
     {
       "id": "renegade-imperial-vessel-is-not-a-reserve",
-      "page": 222,
+      "page": 232,
       "fleet": {
         "list": "Chaos — Nurgle",
         "limit": 3000,
@@ -2663,11 +2663,11 @@
           }
         ]
       },
-      "why": "p.222: “These vessels may not take any upgrade listed in their profile and do not count as reserves; they count as Chaos vessels in all respects.” and p.15: “Some fleet lists explicitly provide access to ships from other races. These may only be taken exactly as described on their fleet list rules and may not also be taken as reserves.” RENEGADE IMPERIAL VESSELS is the Chaos list's named access to another race's ships, but the section was classified as the kind own and not access, so the reserve-of-a-reserve check did not hit it and Tzeentch's renegade Endeavour was valid as a reserve for Nurgle. Spot check 20, seeds 2026091421, 2026091423 and 2026091442 (P1)."
+      "why": "p.232: “These vessels may not take any upgrade listed in their profile and do not count as reserves; they count as Chaos vessels in all respects.” and p.15: “Some fleet lists explicitly provide access to ships from other races. These may only be taken exactly as described on their fleet list rules and may not also be taken as reserves.” RENEGADE IMPERIAL VESSELS is the Chaos list's named access to another race's ships, but the section was classified as the kind own and not access, so the reserve-of-a-reserve check did not hit it and Tzeentch's renegade Endeavour was valid as a reserve for Nurgle. Spot check 20, seeds 2026091421, 2026091423 and 2026091442 (P1)."
     },
     {
       "id": "renegade-imperial-vessel-gets-no-chaos-space-marine-crew",
-      "page": 222,
+      "page": 232,
       "fleet": {
         "list": "Chaos — Nurgle",
         "limit": 3000,
@@ -2683,11 +2683,11 @@
       "expect": {
         "total": 110
       },
-      "why": "p.222: “Special weapon rules, Nova Cannon, Chaos Lords, Chaos Space Marines, Chaos ordnance or Daemonship upgrades may not be taken for Imperial Navy vessels used in this manner, and cruisers suffer -1Ld for going renegade.” Nurgle's own renegade Endeavour (p.72: 110) was offered the Death Guard Chaos Space Marine crew row. The defect is in the native path, not specific to borrowed ships. Spot check 20, seed 2026091421 (P1)."
+      "why": "p.232: “Special weapon rules, Nova Cannon, Chaos Lords, Chaos Space Marines, Chaos ordnance or Daemonship upgrades may not be taken for Imperial Navy vessels used in this manner, and cruisers suffer -1Ld for going renegade.” Nurgle's own renegade Endeavour (p.72: 110) was offered the Death Guard Chaos Space Marine crew row. The defect is in the native path, not specific to borrowed ships. Spot check 20, seed 2026091421 (P1)."
     },
     {
       "id": "one-crew-per-ship-across-two-lists",
-      "page": 236,
+      "page": 246,
       "fleet": {
         "list": "Chaos — Tzeentch",
         "limit": 3000,
@@ -2711,11 +2711,11 @@
       "expect": {
         "total": 335
       },
-      "why": "p.234: “Any capital ship can be designated as having a Chaos Space Marine crew at +35 points.” and p.236: “Any capital ship can be designated as having a Thousand Sons Chaos Space Marine crew at +35 points.” A ship has one crew. A Desolator borrowed from the Black Crusade (p.234: 300) could buy both the source list's and the host list's crew, 370 points, because J117's same-name suppression does not know the legion's name as a prefix. 300 + 35 = 335. Spot check 20, seed 2026091443 (P1)."
+      "why": "p.244: “Any capital ship can be designated as having a Chaos Space Marine crew at +35 points.” and p.246: “Any capital ship can be designated as having a Thousand Sons Chaos Space Marine crew at +35 points.” A ship has one crew. A Desolator borrowed from the Black Crusade (p.244: 300) could buy both the source list's and the host list's crew, 370 points, because J117's same-name suppression does not know the legion's name as a prefix. 300 + 35 = 335. Spot check 20, seed 2026091443 (P1)."
     },
     {
       "id": "host-strand-of-fortune-needs-a-lord-on-a-reserve",
-      "page": 236,
+      "page": 246,
       "fleet": {
         "list": "Chaos — Tzeentch",
         "limit": 3000,
@@ -2742,11 +2742,11 @@
           }
         ]
       },
-      "why": "p.236: “Any ship led by a Lord of Tzeentch (and not the Warmaster!) may be granted a Strand of Fortune.” The host's Strand of Fortune bought for a borrowed Desolator without any Lord left the budget row green at 0 / 0, because resolveFleet's tookUp reads with the host's indices although on a borrowed ship the host's row is shifted (J118). Natively the same purchase is red 1 / 0. Spot check 20, seed 2026091443 (P1)."
+      "why": "p.246: “Any ship led by a Lord of Tzeentch (and not the Warmaster!) may be granted a Strand of Fortune.” The host's Strand of Fortune bought for a borrowed Desolator without any Lord left the budget row green at 0 / 0, because resolveFleet's tookUp reads with the host's indices although on a borrowed ship the host's row is shifted (J118). Natively the same purchase is red 1 / 0. Spot check 20, seed 2026091443 (P1)."
     },
     {
       "id": "host-upgrade-keeps-its-description-on-a-reserve",
-      "page": 236,
+      "page": 246,
       "fleet": {
         "list": "Chaos — Tzeentch",
         "limit": 3000,
@@ -2764,7 +2764,7 @@
       "expect": {
         "total": 300
       },
-      "why": "p.236: “Once per battle, a single enemy ship within 15 cm takes D6 hits in the end phase (shields have no effect).” is the Warp Beasts' sentence, and the Strand of Fortune has its own. The host's row lost its description on a borrowed ship, because upgradesOf fetched the sentence from the source list's section with a shifted index; on the card a paid ability was left without its mechanics. Spot check 20, seed 2026091443 (P1)."
+      "why": "p.246: “Once per battle, a single enemy ship within 15 cm takes D6 hits in the end phase (shields have no effect).” is the Warp Beasts' sentence, and the Strand of Fortune has its own. The host's row lost its description on a borrowed ship, because upgradesOf fetched the sentence from the source list's section with a shifted index; on the card a paid ability was left without its mechanics. Spot check 20, seed 2026091443 (P1)."
     },
     {
       "id": "mechanicus-vessels-are-reserves-in-a-space-marine-fleet",
@@ -2794,7 +2794,7 @@
           }
         ]
       },
-      "why": "p.121, the first sentence: “Adeptus Mechanicus vessels can be used as reserves in any Imperial Navy or Space Marine fleet list.” The permission is unconditional. The app required an inquisitor, because the only permission recorded for a Space Marine list was p.139's inquisitor-conditioned one and the Mechanicus is a different race (imperial navy vs space marines). 3 x Strike cruiser 145 + Lunar (Mechanicus p.124) 215 = 650. Codex review 15.9.2026."
+      "why": "p.121, the first sentence: “Adeptus Mechanicus vessels can be used as reserves in any Imperial Navy or Space Marine fleet list.” The permission is unconditional. The app required an inquisitor, because the only permission recorded for a Space Marine list was p.149's inquisitor-conditioned one and the Mechanicus is a different race (imperial navy vs space marines). 3 x Strike cruiser 145 + Lunar (Mechanicus p.124) 215 = 650. Codex review 15.9.2026."
     },
     {
       "id": "same-race-donor-cannot-be-an-ally",
@@ -3033,7 +3033,7 @@
     },
     {
       "id": "inquisitorial-cruiser-takes-the-battlecruiser-slot",
-      "page": 138,
+      "page": 148,
       "fleet": {
         "list": "Imperial Navy — Gothic Sector",
         "limit": 1500,
@@ -3066,11 +3066,11 @@
         ],
         "failing": 1
       },
-      "why": "p.138: the Inquisitorial Cruiser “takes the place of a battlecruiser or strike cruiser in the fleet”. Two cruisers carry one battlecruiser (p.35), and the Inquisitorial Cruiser is that one: a Mars besides it is 2 / 1. Before J148 the attachment section's row counted towards nothing and the same fleet was green. Lord 75 + Inq 270 + Lunar 180 + Gothic 180 + Mars 270 = 975."
+      "why": "p.148: the Inquisitorial Cruiser “takes the place of a battlecruiser or strike cruiser in the fleet”. Two cruisers carry one battlecruiser (p.35), and the Inquisitorial Cruiser is that one: a Mars besides it is 2 / 1. Before J148 the attachment section's row counted towards nothing and the same fleet was green. Lord 75 + Inq 270 + Lunar 180 + Gothic 180 + Mars 270 = 975."
     },
     {
       "id": "inquisitor-lord-buys-a-second-re-roll",
-      "page": 138,
+      "page": 148,
       "fleet": {
         "list": "Imperial Navy — Gothic Sector",
         "limit": 1500,
@@ -3110,7 +3110,7 @@
         "others_ok": true,
         "failing": 0
       },
-      "why": "p.138: “An Inquisitor Lord gets one re-roll ... A second re-roll can be purchased for +25 points.” The row was missing from the host lists (J104 brought only the Lord); the Inquisition list had it. Lord 75 + 25 + Lunar 180 + Gothic 180 + Tyrant 185 + Dictator 220 = 865."
+      "why": "p.148: “An Inquisitor Lord gets one re-roll ... A second re-roll can be purchased for +25 points.” The row was missing from the host lists (J104 brought only the Lord); the Inquisition list had it. Lord 75 + 25 + Lunar 180 + Gothic 180 + Tyrant 185 + Dictator 220 = 865."
     },
     {
       "id": "pd-lone-escort-beside-defence-monitor",
@@ -3448,7 +3448,7 @@
     },
     {
       "id": "corsair-lgw-yriel-flame-exempt-from-reserve-rules",
-      "page": 319,
+      "page": 317,
       "fleet": {
         "list": "Eldar Corsairs — Later Gothic War",
         "limit": 1500,
@@ -3511,11 +3511,11 @@
         "others_ok": true,
         "failing": 0
       },
-      "why": "A player's report 9.10.2026. Fleets p.319: 'Yriel may be taken instead of the Hero Fleet Commander as listed in the Corsair and Craftworld Eldar fleet lists.' The same box frees the Flame of Asuryan when Yriel is aboard it: 'it is exempt from the reserve rules' - with exactly a Corsair list without three capital ships as the example. So two Auroras would not be enough for the Hero (p.317: one Craftworld ship per three cruisers), but for Yriel they are. The same box: 'He must be embarked aboard the Flame of Asuryan if it is present, in which case his cost is 125 points.' Prices: Yriel 125 (p.319) + Flame of Asuryan 320 (p.318) + Aurora 2 x 140 = 280 + Aconite 2 x 55 = 110 + Hemlock 6 x 40 = 240 + Nightshade 6 x 40 = 240 (p.317) = 1315."
+      "why": "A player's report 9.10.2026. Fleets p.317: 'Yriel may be taken instead of the Hero Fleet Commander as listed in the Corsair and Craftworld Eldar fleet lists.' The same box frees the Flame of Asuryan when Yriel is aboard it: 'it is exempt from the reserve rules' - with exactly a Corsair list without three capital ships as the example. So two Auroras would not be enough for the Hero (p.315: one Craftworld ship per three cruisers), but for Yriel they are. The same box: 'He must be embarked aboard the Flame of Asuryan if it is present, in which case his cost is 125 points.' Prices: Yriel 125 (p.317) + Flame of Asuryan 320 (p.316) + Aurora 2 x 140 = 280 + Aconite 2 x 55 = 110 + Hemlock 6 x 40 = 240 + Nightshade 6 x 40 = 240 (p.315) = 1315."
     },
     {
       "id": "corsair-lgw-hero-flame-still-needs-three-cruisers",
-      "page": 317,
+      "page": 315,
       "fleet": {
         "list": "Eldar Corsairs — Later Gothic War",
         "limit": 1500,
@@ -3556,11 +3556,11 @@
           }
         ]
       },
-      "why": "The exemption is Yriel's, not the Hero's. Fleets p.317: 'one Craftworld Eldar Flame of Asuryan, Dragonship or Wraithship may be taken for every three cruisers in the fleet.' Two Auroras give zero reserve cruisers. Prices: Eldar Hero 100 + Flame of Asuryan 320 (p.318) + Aurora 2 x 140 = 280 + Aconite 2 x 55 = 110 + Hemlock 6 x 40 = 240 + Nightshade 6 x 40 = 240 (p.317) = 1290."
+      "why": "The exemption is Yriel's, not the Hero's. Fleets p.315: 'one Craftworld Eldar Flame of Asuryan, Dragonship or Wraithship may be taken for every three cruisers in the fleet.' Two Auroras give zero reserve cruisers. Prices: Eldar Hero 100 + Flame of Asuryan 320 (p.316) + Aurora 2 x 140 = 280 + Aconite 2 x 55 = 110 + Hemlock 6 x 40 = 240 + Nightshade 6 x 40 = 240 (p.315) = 1290."
     },
     {
       "id": "corsair-gothic-yriel-flame-without-cruisers",
-      "page": 319,
+      "page": 317,
       "fleet": {
         "list": "Eldar Corsairs — Gothic Sector",
         "limit": 1500,
@@ -3609,11 +3609,11 @@
         "others_ok": true,
         "failing": 0
       },
-      "why": "The same box of p.319 on the Gothic Sector list (p.316): Yriel in place of the Hero, and the Flame of Asuryan with him is 'exempt from the reserve rules', although the fleet has no cruisers at all. Prices: Yriel 125 (p.319) + Flame of Asuryan 320 (p.318) + Aconite 2 x 55 = 110 + Hemlock 6 x 40 = 240 + Nightshade 6 x 40 = 240 (p.316) = 1035."
+      "why": "The same box of p.317 on the Gothic Sector list (p.314): Yriel in place of the Hero, and the Flame of Asuryan with him is 'exempt from the reserve rules', although the fleet has no cruisers at all. Prices: Yriel 125 (p.317) + Flame of Asuryan 320 (p.316) + Aconite 2 x 55 = 110 + Hemlock 6 x 40 = 240 + Nightshade 6 x 40 = 240 (p.314) = 1035."
     },
     {
       "id": "corsair-lgw-yriel-dragonship-is-an-ordinary-reserve",
-      "page": 319,
+      "page": 317,
       "fleet": {
         "list": "Eldar Corsairs — Later Gothic War",
         "limit": 1500,
@@ -3654,11 +3654,11 @@
           }
         ]
       },
-      "why": "The exemption names only the Flame of Asuryan (p.319: 'if the Flame of Asuryan with Yriel is added to the parent fleet it is exempt from the reserve rules'). A Dragonship as Yriel's ship is an ordinary reserve and needs three cruisers (p.317). Prices: Yriel 150 (p.319) + Dragonship 260 (p.318) + Aurora 2 x 140 = 280 + Aconite 2 x 55 = 110 + Hemlock 6 x 40 = 240 + Nightshade 6 x 40 = 240 (p.317) = 1280."
+      "why": "The exemption names only the Flame of Asuryan (p.317: 'if the Flame of Asuryan with Yriel is added to the parent fleet it is exempt from the reserve rules'). A Dragonship as Yriel's ship is an ordinary reserve and needs three cruisers (p.315). Prices: Yriel 150 (p.317) + Dragonship 260 (p.316) + Aurora 2 x 140 = 280 + Aconite 2 x 55 = 110 + Hemlock 6 x 40 = 240 + Nightshade 6 x 40 = 240 (p.315) = 1280."
     },
     {
       "id": "corsair-lgw-yriel-replaces-the-hero",
-      "page": 319,
+      "page": 317,
       "fleet": {
         "list": "Eldar Corsairs — Later Gothic War",
         "limit": 1500,
@@ -3697,11 +3697,11 @@
           }
         ]
       },
-      "why": "Fleets p.319: Yriel is taken IN PLACE of the Hero ('instead of the Hero Fleet Commander'), not beside him; the Hero in turn leads the fleet in place of the ordinary commander (p.317). One of the three. Prices: Yriel 150 (p.319) + Eldar Hero 100 + Aurora 2 x 140 = 280 + Aconite 2 x 55 = 110 + Hemlock 6 x 40 = 240 + Nightshade 6 x 40 = 240 (p.317) = 1120."
+      "why": "Fleets p.317: Yriel is taken IN PLACE of the Hero ('instead of the Hero Fleet Commander'), not beside him; the Hero in turn leads the fleet in place of the ordinary commander (p.315). One of the three. Prices: Yriel 150 (p.317) + Eldar Hero 100 + Aurora 2 x 140 = 280 + Aconite 2 x 55 = 110 + Hemlock 6 x 40 = 240 + Nightshade 6 x 40 = 240 (p.315) = 1120."
     },
     {
       "id": "corsair-lgw-yriel-flame-discount-not-ticked",
-      "page": 319,
+      "page": 317,
       "fleet": {
         "list": "Eldar Corsairs — Later Gothic War",
         "limit": 1500,
@@ -3744,11 +3744,11 @@
         "others_ok": true,
         "failing": 0
       },
-      "why": "Fleets p.319: 'He must be embarked aboard the Flame of Asuryan if it is present, in which case his cost is 125 points.' If the 125 point row is not ticked, the fleet is legal but pays 25 points too much: the app remarks on it. Prices: Yriel 150 (p.319) + Flame of Asuryan 320 (p.318) + Aurora 2 x 140 = 280 + Aconite 2 x 55 = 110 + Hemlock 6 x 40 = 240 + Nightshade 6 x 40 = 240 (p.317) = 1340."
+      "why": "Fleets p.317: 'He must be embarked aboard the Flame of Asuryan if it is present, in which case his cost is 125 points.' If the 125 point row is not ticked, the fleet is legal but pays 25 points too much: the app remarks on it. Prices: Yriel 150 (p.317) + Flame of Asuryan 320 (p.316) + Aurora 2 x 140 = 280 + Aconite 2 x 55 = 110 + Hemlock 6 x 40 = 240 + Nightshade 6 x 40 = 240 (p.315) = 1340."
     },
     {
       "id": "iyanden-yriel-commands-the-flame",
-      "page": 319,
+      "page": 317,
       "fleet": {
         "list": "Eldar — Iyanden Craftworld",
         "limit": 1500,
@@ -3787,7 +3787,7 @@
         "others_ok": true,
         "failing": 0
       },
-      "why": "Fleets p.319: 'you may instead pick the Flame of Asuryan as his command ship to be embarked on.' Yriel is in place of the Hero, so p.318's condition (the Hero leads and is aboard the Flame) is met by him. Before the fix the rule named Yriel in its heading but did not count him. Prices: Yriel 125 (p.319) + Flame of Asuryan 320 + Wraithship 2 x 160 = 320 (p.318) = 765."
+      "why": "Fleets p.317: 'you may instead pick the Flame of Asuryan as his command ship to be embarked on.' Yriel is in place of the Hero, so p.316's condition (the Hero leads and is aboard the Flame) is met by him. Before the fix the rule named Yriel in its heading but did not count him. Prices: Yriel 125 (p.317) + Flame of Asuryan 320 + Wraithship 2 x 160 = 320 (p.316) = 765."
     },
     {
       "id": "pd-ramilies-counts-toward-fleet-worth",
@@ -3912,7 +3912,7 @@
     },
     {
       "id": "corsair-gothic-two-flames-of-asuryan",
-      "page": 329,
+      "page": 327,
       "fleet": {
         "list": "Eldar Corsairs — Gothic Sector",
         "limit": 3000,
@@ -3948,11 +3948,11 @@
           }
         ]
       },
-      "why": "Fleets p.329: 'It is a unique vessel, only one may ever be included in the fleet.' The borrowed row's own 0-1 limit was not counted in the host fleet, so two Flames passed: one exempt with Yriel, the other as an ordinary reserve. Prices: Yriel 125 (p.319) + Flame of Asuryan 2 x 320 = 640 (p.318) + Shadow 3 x 210 = 630 (p.316) = 1395."
+      "why": "Fleets p.327: 'It is a unique vessel, only one may ever be included in the fleet.' The borrowed row's own 0-1 limit was not counted in the host fleet, so two Flames passed: one exempt with Yriel, the other as an ordinary reserve. Prices: Yriel 125 (p.317) + Flame of Asuryan 2 x 320 = 640 (p.316) + Shadow 3 x 210 = 630 (p.314) = 1395."
     },
     {
       "id": "tzeentch-abaddon-leads-at-1000",
-      "page": 231,
+      "page": 241,
       "fleet": {
         "list": "Chaos — Tzeentch",
         "limit": 1500,
@@ -3996,11 +3996,11 @@
           }
         ]
       },
-      "why": "Fleets p.231: 'Abaddon can be chosen to act as fleet commander in any game in which the Chaos fleet is worth 1,000 points or more.' Exactly 1 000 points is enough ('or more'). He acts as the fleet commander, so the required Warmaster (p.236: 'A Chaos Warmaster (and their required capital ship) must be taken in fleets of 750 points or more') is met by him. The user's decision 13.10.2026 (BACKLOG J162). Abaddon 195 (p.234) + Devastation 190 + Carnage 180 + Inferno 180 + Slaughter 165 + 3 x Iconoclast 30 (p.237) = 1000."
+      "why": "Fleets p.241: 'Abaddon can be chosen to act as fleet commander in any game in which the Chaos fleet is worth 1,000 points or more.' Exactly 1 000 points is enough ('or more'). He acts as the fleet commander, so the required Warmaster (p.246: 'A Chaos Warmaster (and their required capital ship) must be taken in fleets of 750 points or more') is met by him. The user's decision 13.10.2026 (BACKLOG J162). Abaddon 195 (p.244) + Devastation 190 + Carnage 180 + Inferno 180 + Slaughter 165 + 3 x Iconoclast 30 (p.247) = 1000."
     },
     {
       "id": "tzeentch-abaddon-not-under-1000",
-      "page": 231,
+      "page": 241,
       "fleet": {
         "list": "Chaos — Tzeentch",
         "limit": 1500,
@@ -4031,11 +4031,11 @@
           }
         ]
       },
-      "why": "Fleets p.231: Abaddon only when the Chaos fleet is 'worth 1,000 points or more'. Abaddon 195 + Devastation 190 + Carnage 180 + Inferno 180 + Slaughter 165 = 910 < 1000. A control for the case tzeentch-abaddon-leads-at-1000."
+      "why": "Fleets p.241: Abaddon only when the Chaos fleet is 'worth 1,000 points or more'. Abaddon 195 + Devastation 190 + Carnage 180 + Inferno 180 + Slaughter 165 = 910 < 1000. A control for the case tzeentch-abaddon-leads-at-1000."
     },
     {
       "id": "khorne-abaddon-or-warmaster-not-both",
-      "page": 231,
+      "page": 241,
       "fleet": {
         "list": "Chaos — Khorne",
         "limit": 2000,
@@ -4073,11 +4073,11 @@
           }
         ]
       },
-      "why": "Fleets p.231: Abaddon 'can be chosen to act as fleet commander' - he is the fleet commander in place of the Warmaster, not beside him (p.234 says the same in the Black Crusade: 'as the Warmaster'). Abaddon and a Chaos Warmaster in the same Khorne fleet: two commanders for one slot."
+      "why": "Fleets p.241: Abaddon 'can be chosen to act as fleet commander' - he is the fleet commander in place of the Warmaster, not beside him (p.244 says the same in the Black Crusade: 'as the Warmaster'). Abaddon and a Chaos Warmaster in the same Khorne fleet: two commanders for one slot."
     },
     {
       "id": "black-crusade-abaddon-at-exactly-1000",
-      "page": 231,
+      "page": 241,
       "fleet": {
         "list": "Chaos — Black Crusade",
         "limit": 1500,
@@ -4112,7 +4112,7 @@
           }
         ]
       },
-      "why": "A conflict in the book: p.231 'in any game in which the Chaos fleet is worth 1,000 points or more', p.234 (the Black Crusade list) 'in any Chaos Fleet worth more than 1,000 points'. The user's decision 13.10.2026 (BACKLOG J162): Abaddon's own general rule (p.231) decides, so exactly 1 000 points is enough in the Black Crusade too. Abaddon 195 + Devastation 190 + Carnage 180 + Inferno 180 + Slaughter 165 + 3 x Iconoclast 30 (p.235) = 1000."
+      "why": "A conflict in the book: p.241 'in any game in which the Chaos fleet is worth 1,000 points or more', p.244 (the Black Crusade list) 'in any Chaos Fleet worth more than 1,000 points'. The user's decision 13.10.2026 (BACKLOG J162): Abaddon's own general rule (p.241) decides, so exactly 1 000 points is enough in the Black Crusade too. Abaddon 195 + Devastation 190 + Carnage 180 + Inferno 180 + Slaughter 165 + 3 x Iconoclast 30 (p.245) = 1000."
     },
     {
       "id": "bakka-refit-not-for-a-reserve",
@@ -4244,7 +4244,7 @@
           }
         ]
       },
-      "why": "p.121 the same sentence: an ordinary Imperial Navy capital ship as a reserve rules out SM reserves (unless an inquisitor leads, p.139). A control for the previous one."
+      "why": "p.121 the same sentence: an ordinary Imperial Navy capital ship as a reserve rules out SM reserves (unless an inquisitor leads, p.149). A control for the previous one."
     },
     {
       "id": "admech-space-marine-strike-cruisers-one-per-three",
@@ -4323,7 +4323,7 @@
     },
     {
       "id": "admech-reserve-escorts-from-the-capital-ships-list",
-      "page": 122,
+      "page": 123,
       "fleet": {
         "list": "Adeptus Mechanicus — Explorator",
         "limit": 2500,
@@ -4356,11 +4356,11 @@
           }
         ]
       },
-      "why": "p.122: \"There are no restrictions on how many reserve Imperial Navy, Space Marine or Rogue Trader escorts are included in an Adeptus Mechanicus fleet, as long as Xenos vessels and reserve Space Marine vessels are not included in the same fleet. Escorts taken in this manner must be taken from the same fleet list reserve capital ships are being drawn from.\" Four Swords from the same list as the reserve Lunar: no 1:3 limit. Before J213 red at 4 / 0 (S0255). Reading T51."
+      "why": "p.123: \"There are no restrictions on how many reserve Imperial Navy, Space Marine or Rogue Trader escorts are included in an Adeptus Mechanicus fleet, as long as Xenos vessels and reserve Space Marine vessels are not included in the same fleet. Escorts taken in this manner must be taken from the same fleet list reserve capital ships are being drawn from.\" Four Swords from the same list as the reserve Lunar: no 1:3 limit. Before J213 red at 4 / 0 (S0255). Reading T51."
     },
     {
       "id": "admech-reserve-escorts-from-another-list-count",
-      "page": 122,
+      "page": 123,
       "fleet": {
         "list": "Adeptus Mechanicus — Explorator",
         "limit": 2500,
@@ -4393,11 +4393,11 @@
           }
         ]
       },
-      "why": "p.122's latter sentence: the lack of limits concerns only escorts from the same list as the reserve capital ships. The Bastion list's Swords are counted with the ordinary 1:3 (T51). A control."
+      "why": "p.123's latter sentence: the lack of limits concerns only escorts from the same list as the reserve capital ships. The Bastion list's Swords are counted with the ordinary 1:3 (T51). A control."
     },
     {
       "id": "rogue-trader-veteran-per-cruiser",
-      "page": 174,
+      "page": 184,
       "fleet": {
         "list": "Rogue Traders",
         "limit": 1500,
@@ -4426,7 +4426,7 @@
           }
         ]
       },
-      "why": "p.174: \"A Veteran Rogue Trader may lead each Rogue Trader cruiser in a fleet.\" One RT cruiser -> at most one Veteran RT. Before J213 the section cap of 2 let two through (S0345). J215: the second Veteran RT is left without a cruiser of his own (the Aboard row)."
+      "why": "p.184: \"A Veteran Rogue Trader may lead each Rogue Trader cruiser in a fleet.\" One RT cruiser -> at most one Veteran RT. Before J213 the section cap of 2 let two through (S0345). J215: the second Veteran RT is left without a cruiser of his own (the Aboard row)."
     },
     {
       "id": "mesme-needs-his-custodian",
@@ -4455,7 +4455,7 @@
     },
     {
       "id": "exploration-allies-from-one-list",
-      "page": 177,
+      "page": 187,
       "fleet": {
         "list": "Rogue Traders — Exploration",
         "limit": 4000,
@@ -4484,11 +4484,11 @@
           }
         ]
       },
-      "why": "p.177: \"Capital ships taken count against the cruiser limit, they can only be from one fleet and cannot be from a fleet list differing from that used to provide escort squadron auxiliary vessels.\" Two ally lists (S0380)."
+      "why": "p.187: \"Capital ships taken count against the cruiser limit, they can only be from one fleet and cannot be from a fleet list differing from that used to provide escort squadron auxiliary vessels.\" Two ally lists (S0380)."
     },
     {
       "id": "exploration-no-demiurg-with-space-marines",
-      "page": 177,
+      "page": 187,
       "fleet": {
         "list": "Rogue Traders — Exploration",
         "limit": 3000,
@@ -4515,7 +4515,7 @@
           }
         ]
       },
-      "why": "p.177: \"Demiurg vessels may not be employed if Space Marines are taken as reserves, allies or escort squadron auxiliary vessels.\" (S0384; the same sentence for the Kroot S0386)."
+      "why": "p.187: \"Demiurg vessels may not be employed if Space Marines are taken as reserves, allies or escort squadron auxiliary vessels.\" (S0384; the same sentence for the Kroot S0386)."
     },
     {
       "id": "vanguard-kraken-must-take-a-weapon",
@@ -4596,7 +4596,7 @@
     },
     {
       "id": "chaos-marine-crew-thunderhawks",
-      "page": 235,
+      "page": 245,
       "fleet": {
         "list": "Chaos — Black Crusade",
         "limit": 1500,
@@ -4617,11 +4617,11 @@
       "expect": {
         "no_issues": true
       },
-      "why": "p.235: \"A ship with a Chaos Space Marine crew may be equipped with Thunderhawk Gunships but if so it may only carry Thunderhawks and may not launch any other attack craft.\" The row was missing from all Chaos lists (S0512)."
+      "why": "p.245: \"A ship with a Chaos Space Marine crew may be equipped with Thunderhawk Gunships but if so it may only carry Thunderhawks and may not launch any other attack craft.\" The row was missing from all Chaos lists (S0512)."
     },
     {
       "id": "chaos-thunderhawks-need-a-marine-crew",
-      "page": 235,
+      "page": 245,
       "fleet": {
         "list": "Chaos — Black Crusade",
         "limit": 1500,
@@ -4637,11 +4637,11 @@
       "expect": {
         "no_issues": true
       },
-      "why": "p.235 control: without a Chaos Space Marine crew the Thunderhawk row is not offered."
+      "why": "p.245 control: without a Chaos Space Marine crew the Thunderhawk row is not offered."
     },
     {
       "id": "siluria-by-agreement",
-      "page": 174,
+      "page": 184,
       "fleet": {
         "list": "Rogue Traders",
         "limit": 1500,
@@ -4663,7 +4663,7 @@
           }
         ]
       },
-      "why": "p.174: \"If both players agree before the game, these ships can be included in a Rogue Trader fleet, as a cruiser and an escort respectively.\" The agreement rule shows as a warning when the row is taken (S0352)."
+      "why": "p.184: \"If both players agree before the game, these ships can be included in a Rogue Trader fleet, as a cruiser and an escort respectively.\" The agreement rule shows as a warning when the row is taken (S0352)."
     },
     {
       "id": "bio-enhancement-by-agreement",
@@ -4777,7 +4777,7 @@
     },
     {
       "id": "attack-rating-crusade-fortress-and-inquisitor-conflict",
-      "page": 139,
+      "page": 149,
       "fleet": {
         "list": "Space Marines — Crusade",
         "limit": 3000,
@@ -4803,7 +4803,7 @@
           }
         ]
       },
-      "why": "p.99 \"If the fleet includes a fortress- monastery, it has an attack rating of 1\" and p.139 \"A Space Marine fleet led by an Inquisitor Lord has an attack rating of 3 unless a Blackship is accompanying the fleet\". The book does not say which wins: both are shown, the conflict is recorded (T53)."
+      "why": "p.99 \"If the fleet includes a fortress- monastery, it has an attack rating of 1\" and p.149 \"A Space Marine fleet led by an Inquisitor Lord has an attack rating of 3 unless a Blackship is accompanying the fleet\". The book does not say which wins: both are shown, the conflict is recorded (T53)."
     },
     {
       "id": "attack-rating-dominion-alone",
@@ -4884,7 +4884,7 @@
     },
     {
       "id": "attack-rating-space-marines-inquisitor-with-blackship",
-      "page": 139,
+      "page": 149,
       "fleet": {
         "list": "Space Marines — Codex Astartes",
         "limit": 1500,
@@ -4908,11 +4908,11 @@
           }
         ]
       },
-      "why": "p.139: \"A Space Marine fleet led by an Inquisitor Lord has an attack rating of 3 unless a Blackship is accompanying the fleet, in which case its attack rating is 2.\" (S0288)"
+      "why": "p.149: \"A Space Marine fleet led by an Inquisitor Lord has an attack rating of 3 unless a Blackship is accompanying the fleet, in which case its attack rating is 2.\" (S0288)"
     },
     {
       "id": "attack-rating-grey-knights-blackship",
-      "page": 145,
+      "page": 155,
       "fleet": {
         "list": "Grey Knights",
         "limit": 1500,
@@ -4936,11 +4936,11 @@
           }
         ]
       },
-      "why": "p.145: \"A Grey Knights fleet led by an Inquisitor Lord has an attack rating of 3 unless a Blackship is accompanying the fleet, in which case its attack rating is 2.\" (S0341)"
+      "why": "p.155: \"A Grey Knights fleet led by an Inquisitor Lord has an attack rating of 3 unless a Blackship is accompanying the fleet, in which case its attack rating is 2.\" (S0341)"
     },
     {
       "id": "attack-rating-corsairs-alone",
-      "page": 302,
+      "page": 304,
       "fleet": {
         "list": "Eldar Corsairs — Gothic Sector",
         "limit": 1500,
@@ -4958,11 +4958,11 @@
           }
         ]
       },
-      "why": "p.302: \"An Eldar Corsair fleet containing no Craftworld Eldar vessels has an attack (or initiative) rating of 4.\""
+      "why": "p.304: \"An Eldar Corsair fleet containing no Craftworld Eldar vessels has an attack (or initiative) rating of 4.\""
     },
     {
       "id": "attack-rating-corsairs-with-craftworld-vessel",
-      "page": 302,
+      "page": 304,
       "fleet": {
         "list": "Eldar Corsairs — Gothic Sector",
         "limit": 1500,
@@ -4986,11 +4986,11 @@
           }
         ]
       },
-      "why": "p.302: \"An Eldar fleet containing any Craftworld Eldar vessels has an attack (or initiative) rating of 3.\""
+      "why": "p.304: \"An Eldar fleet containing any Craftworld Eldar vessels has an attack (or initiative) rating of 3.\""
     },
     {
       "id": "attack-rating-corsairs-led-by-yriel",
-      "page": 319,
+      "page": 317,
       "fleet": {
         "list": "Eldar Corsairs — Gothic Sector",
         "limit": 1500,
@@ -5017,7 +5017,7 @@
           }
         ]
       },
-      "why": "p.319: \"A fleet led by him has an attack rating of 4, even if it includes Craftworld vessels.\" (S0633)"
+      "why": "p.317: \"A fleet led by him has an attack rating of 4, even if it includes Craftworld vessels.\" (S0633)"
     },
     {
       "id": "attack-rating-orks-from-the-rulebook",
@@ -5043,7 +5043,7 @@
     },
     {
       "id": "attack-rating-rogue-traders-not-given",
-      "page": 176,
+      "page": 186,
       "fleet": {
         "list": "Rogue Traders",
         "limit": 1500,
@@ -5062,11 +5062,11 @@
           }
         ]
       },
-      "why": "The Rogue Traders list (p.168-175) has no attack rating. p.176 \"When used with this fleet list, Rogue Traders have an attack (initiative) rating of 3.\" concerns the Exploration list. The app does not pick a number silently (T53)."
+      "why": "The Rogue Traders list (p.178-185) has no attack rating. p.186 \"When used with this fleet list, Rogue Traders have an attack (initiative) rating of 3.\" concerns the Exploration list. The app does not pick a number silently (T53)."
     },
     {
       "id": "ordo-malleus-gives-chaos-a-mark",
-      "page": 142,
+      "page": 152,
       "fleet": {
         "list": "Imperial Navy — Gothic Sector",
         "limit": 1500,
@@ -5094,11 +5094,11 @@
           }
         ]
       },
-      "why": "p.142: \"The enemy Chaos fleet may add one Mark of Chaos or upgrade a cruiser to a Daemonship at no cost.\" (S0035); p.139 \"An Imperial Navy or Adeptus Mechanicus fleet led by an Inquisitor Lord has an attack rating of 2.\""
+      "why": "p.152: \"The enemy Chaos fleet may add one Mark of Chaos or upgrade a cruiser to a Daemonship at no cost.\" (S0035); p.149 \"An Imperial Navy or Adeptus Mechanicus fleet led by an Inquisitor Lord has an attack rating of 2.\""
     },
     {
       "id": "grey-knights-chaos-marks-per-lord-and-strike-cruiser",
-      "page": 145,
+      "page": 155,
       "fleet": {
         "list": "Grey Knights",
         "limit": 1500,
@@ -5124,11 +5124,11 @@
           }
         ]
       },
-      "why": "p.145: \"An enemy Chaos fleet may add one Mark of Chaos; or upgrade a cruiser to a Daemonship; for no aditional cost, for each of the following included in the Grey Knights Fleet:\" Ordo Malleus Inquisitor Lord and Grey Knights Strike Cruiser: 1 + 2 = 3 (S0340)."
+      "why": "p.155: \"An enemy Chaos fleet may add one Mark of Chaos; or upgrade a cruiser to a Daemonship; for no aditional cost, for each of the following included in the Grey Knights Fleet:\" Ordo Malleus Inquisitor Lord and Grey Knights Strike Cruiser: 1 + 2 = 3 (S0340)."
     },
     {
       "id": "ordo-xenos-gives-xenos-escorts",
-      "page": 141,
+      "page": 151,
       "fleet": {
         "list": "The Emperor's Inquisition",
         "limit": 1500,
@@ -5152,7 +5152,7 @@
           }
         ]
       },
-      "why": "p.141: \"The enemy Xenos fleet adds D6×50 points of escort vessels to its fleet for free.\" (S0311)"
+      "why": "p.151: \"The enemy Xenos fleet adds D6×50 points of escort vessels to its fleet for free.\" (S0311)"
     },
     {
       "id": "demiurg-victory-points-worth",
@@ -5186,7 +5186,7 @@
     },
     {
       "id": "attack-rating-chaos",
-      "page": 222,
+      "page": 232,
       "fleet": {
         "list": "Chaos — Incursion",
         "limit": 1500,
@@ -5204,11 +5204,11 @@
           }
         ]
       },
-      "why": "p.222: \"Chaos fleets have a starting attack or initiative rating of 2.\" The sentence is in the race's general rules, not in the lists' section texts."
+      "why": "p.232: \"Chaos fleets have a starting attack or initiative rating of 2.\" The sentence is in the race's general rules, not in the lists' section texts."
     },
     {
       "id": "attack-rating-tyranids",
-      "page": 416,
+      "page": 418,
       "fleet": {
         "list": "Tyranids — Hive Fleet",
         "limit": 1500,
@@ -5226,7 +5226,7 @@
           }
         ]
       },
-      "why": "p.416: \"Tyranids have a starting attack or initiative rating of 3.\" The sentence is in the race's general rules, not in the lists' section texts."
+      "why": "p.418: \"Tyranids have a starting attack or initiative rating of 3.\" The sentence is in the race's general rules, not in the lists' section texts."
     },
     {
       "id": "aboard-mof-codex-battle-barge",
@@ -5421,7 +5421,7 @@
     },
     {
       "id": "aboard-inquisitor-lord-inquisitorial-cruiser-first",
-      "page": 138,
+      "page": 148,
       "fleet": {
         "list": "Imperial Navy — Gothic Sector",
         "limit": 2000,
@@ -5449,11 +5449,11 @@
           }
         ]
       },
-      "why": "p.138: \"They must be aboard an Inquisitorial Cruiser if one is included, otherwise they must be on an Inquisition Blackship if one is included.\" (S0286)"
+      "why": "p.148: \"They must be aboard an Inquisitorial Cruiser if one is included, otherwise they must be on an Inquisition Blackship if one is included.\" (S0286)"
     },
     {
       "id": "aboard-inquisitor-lord-blackship-without-a-cruiser",
-      "page": 138,
+      "page": 148,
       "fleet": {
         "list": "Imperial Navy — Gothic Sector",
         "limit": 2000,
@@ -5478,11 +5478,11 @@
           }
         ]
       },
-      "why": "p.138: \"otherwise they must be on an Inquisition Blackship if one is included.\" (S0286)"
+      "why": "p.148: \"otherwise they must be on an Inquisition Blackship if one is included.\" (S0286)"
     },
     {
       "id": "aboard-grey-knights-inquisitor-most-expensive",
-      "page": 144,
+      "page": 154,
       "fleet": {
         "list": "Grey Knights",
         "limit": 1500,
@@ -5507,11 +5507,11 @@
           }
         ]
       },
-      "why": "p.144: \"Otherwise the Inquisitor must be placed on the most expensive ship.\" (S0326)"
+      "why": "p.154: \"Otherwise the Inquisitor must be placed on the most expensive ship.\" (S0326)"
     },
     {
       "id": "aboard-pirate-captains-two-most-expensive",
-      "page": 178,
+      "page": 188,
       "fleet": {
         "list": "Rogue Traders — Pirates and Wolf Packs",
         "limit": 1500,
@@ -5551,11 +5551,11 @@
           }
         ]
       },
-      "why": "p.178: \"He (or she!) must be placed aboard the most expensive vessel in the fleet (or vessels if more than one Captain is present).\" (S0394) Two captains = the two most expensive ships; the Lunar is not one of them."
+      "why": "p.188: \"He (or she!) must be placed aboard the most expensive vessel in the fleet (or vessels if more than one Captain is present).\" (S0394) Two captains = the two most expensive ships; the Lunar is not one of them."
     },
     {
       "id": "aboard-chaos-warmaster-most-expensive",
-      "page": 232,
+      "page": 242,
       "fleet": {
         "list": "Chaos — Incursion",
         "limit": 1500,
@@ -5580,11 +5580,11 @@
           }
         ]
       },
-      "why": "p.232: \"He must be assigned to the biggest (ie, most expensive) ship and improves its Leadership to the value shown below.\" (S0477)"
+      "why": "p.242: \"He must be assigned to the biggest (ie, most expensive) ship and improves its Leadership to the value shown below.\" (S0477)"
     },
     {
       "id": "aboard-chaos-warmaster-not-on-a-daemonship",
-      "page": 235,
+      "page": 245,
       "fleet": {
         "list": "Chaos — Black Crusade",
         "limit": 1500,
@@ -5614,11 +5614,11 @@
           }
         ]
       },
-      "why": "p.235: \"A Daemon ship may not be commanded by a Warmaster or a Chaos Lord even if it is the largest ship in the fleet.\" p.234: \"He must be assigned to the most expensive ship\" - the most expensive other than a Daemonship."
+      "why": "p.245: \"A Daemon ship may not be commanded by a Warmaster or a Chaos Lord even if it is the largest ship in the fleet.\" p.244: \"He must be assigned to the most expensive ship\" - the most expensive other than a Daemonship."
     },
     {
       "id": "aboard-chaos-lord-not-on-the-warmasters-ship",
-      "page": 222,
+      "page": 232,
       "fleet": {
         "list": "Chaos — Black Crusade",
         "limit": 1500,
@@ -5643,11 +5643,11 @@
           }
         ]
       },
-      "why": "p.222: \"Under no circumstance can a Chaos Lord be placed on the same ship as a Warmaster.\" p.234: \"Any capital ship, apart from that of the Warmaster, may be captained by a Chaos Lord.\" The only capital ship is the Warmaster's."
+      "why": "p.232: \"Under no circumstance can a Chaos Lord be placed on the same ship as a Warmaster.\" p.244: \"Any capital ship, apart from that of the Warmaster, may be captained by a Chaos Lord.\" The only capital ship is the Warmaster's."
     },
     {
       "id": "aboard-chaos-lord-not-with-abaddon",
-      "page": 231,
+      "page": 241,
       "fleet": {
         "list": "Chaos — Black Crusade",
         "limit": 2000,
@@ -5682,11 +5682,11 @@
           }
         ]
       },
-      "why": "p.235: \"If Abaddon is present, he must be aboard the Planet Killer.\" (S0504); p.231: \"You may not place a Chaos Lord on the same ship as Abaddon\" (S0473)"
+      "why": "p.245: \"If Abaddon is present, he must be aboard the Planet Killer.\" (S0504); p.241: \"You may not place a Chaos Lord on the same ship as Abaddon\" (S0473)"
     },
     {
       "id": "aboard-eldar-hero-on-the-flame",
-      "page": 316,
+      "page": 314,
       "fleet": {
         "list": "Eldar Corsairs — Gothic Sector",
         "limit": 1500,
@@ -5714,11 +5714,11 @@
           }
         ]
       },
-      "why": "p.316: \"If the Flame of Asuryan is taken, the Eldar Hero must be embarked aboard it.\" (S0625)"
+      "why": "p.314: \"If the Flame of Asuryan is taken, the Eldar Hero must be embarked aboard it.\" (S0625)"
     },
     {
       "id": "aboard-yriel-dragonship-with-launch-bays",
-      "page": 319,
+      "page": 317,
       "fleet": {
         "list": "Eldar Corsairs — Gothic Sector",
         "limit": 1500,
@@ -5757,7 +5757,7 @@
           }
         ]
       },
-      "why": "p.319: \"When Yriel is taken he must be placed on a Craftworld Eldar Dragonship with launch bays, but you may instead pick the Flame of Asuryan as his command ship to be embarked on.\" (S0631)"
+      "why": "p.317: \"When Yriel is taken he must be placed on a Craftworld Eldar Dragonship with launch bays, but you may instead pick the Flame of Asuryan as his command ship to be embarked on.\" (S0631)"
     },
     {
       "id": "aboard-mesme-on-the-custodian",
@@ -5826,7 +5826,7 @@
     },
     {
       "id": "clanz-smallest-warlord-two-tiddlas",
-      "page": 373,
+      "page": 375,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 500,
@@ -5853,11 +5853,11 @@
           }
         ]
       },
-      "why": "p.373: \"Thus, the smallest fleet a single Warlord with only the one free re-roll may command is two tiddla skwadrons, each with three escorts.\" (S0836)"
+      "why": "p.375: \"Thus, the smallest fleet a single Warlord with only the one free re-roll may command is two tiddla skwadrons, each with three escorts.\" (S0836)"
     },
     {
       "id": "clanz-one-reroll-three-skwadrons",
-      "page": 372,
+      "page": 374,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -5888,11 +5888,11 @@
           }
         ]
       },
-      "why": "p.372: \"For every re-roll a Warlord has (including the first one for free), the Warlord must be in command of one tiddla skwadron of at least three escorts and one other skwadrons.\" Two separate kroozers are two skwadrons (T52: the number is read as exact per the book's examples on p.373). J226: the app pairs the second kroozer by itself when a separate skwadron would not fit; here they are marked separate (A and B)."
+      "why": "p.374: \"For every re-roll a Warlord has (including the first one for free), the Warlord must be in command of one tiddla skwadron of at least three escorts and one other skwadrons.\" Two separate kroozers are two skwadrons (T52: the number is read as exact per the book's examples on p.375). J226: the app pairs the second kroozer by itself when a separate skwadron would not fit; here they are marked separate (A and B)."
     },
     {
       "id": "clanz-two-kroozers-one-big-ship-skwadron",
-      "page": 372,
+      "page": 374,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -5928,11 +5928,11 @@
           }
         ]
       },
-      "why": "p.372: \"1-2 Kroozers, chosen from the following list:\" (S0826) Two kroozers in the same big ship skwadron are one other skwadron."
+      "why": "p.374: \"1-2 Kroozers, chosen from the following list:\" (S0826) Two kroozers in the same big ship skwadron are one other skwadron."
     },
     {
       "id": "clanz-big-ship-skwadron-at-most-two",
-      "page": 372,
+      "page": 374,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1500,
@@ -5967,11 +5967,11 @@
           }
         ]
       },
-      "why": "p.372: \"1-2 Kroozers, chosen from the following list:\" (S0826)"
+      "why": "p.374: \"1-2 Kroozers, chosen from the following list:\" (S0826)"
     },
     {
       "id": "clanz-rok-skwadron-of-four-is-one-skwadron",
-      "page": 372,
+      "page": 374,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 500,
@@ -6004,11 +6004,11 @@
           }
         ]
       },
-      "why": "p.372: \"Rok skwadron / 1–4 Roks / Rok (pg. 392) ... 80 pts\" - a Rok skwadron is 1-4 Roks, and it is one skwadron like the Big ship skwadron (1-2 kroozers). p.373: \"Each skwadron must be fielded with the number of ships chosen for it in this list; you can't split up skwadrons or add more ships to them.\" Four Roks marked into the same skwadron are one 'other' skwadron, not four (J232)."
+      "why": "p.374: \"Rok skwadron / 1–4 Roks / Rok (pg. 394) ... 80 pts\" - a Rok skwadron is 1-4 Roks, and it is one skwadron like the Big ship skwadron (1-2 kroozers). p.375: \"Each skwadron must be fielded with the number of ships chosen for it in this list; you can't split up skwadrons or add more ships to them.\" Four Roks marked into the same skwadron are one 'other' skwadron, not four (J232)."
     },
     {
       "id": "clanz-rok-skwadron-at-most-four",
-      "page": 372,
+      "page": 374,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -6039,11 +6039,11 @@
           }
         ]
       },
-      "why": "p.372: \"Rok skwadron / 1–4 Roks / Rok (pg. 392) ... 80 pts\" - a Rok skwadron is 1-4 Roks, and it is one skwadron like the Big ship skwadron (1-2 kroozers). p.373: \"Each skwadron must be fielded with the number of ships chosen for it in this list; you can't split up skwadrons or add more ships to them.\" A fifth Rok does not fit in the same skwadron (J232)."
+      "why": "p.374: \"Rok skwadron / 1–4 Roks / Rok (pg. 394) ... 80 pts\" - a Rok skwadron is 1-4 Roks, and it is one skwadron like the Big ship skwadron (1-2 kroozers). p.375: \"Each skwadron must be fielded with the number of ships chosen for it in this list; you can't split up skwadrons or add more ships to them.\" A fifth Rok does not fit in the same skwadron (J232)."
     },
     {
       "id": "clanz-rok-skwadron-only-roks",
-      "page": 372,
+      "page": 374,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 500,
@@ -6074,11 +6074,11 @@
           }
         ]
       },
-      "why": "p.372: \"Rok skwadron / 1–4 Roks / Rok (pg. 392) ... 80 pts\" - a Rok skwadron is 1-4 Roks, and it is one skwadron like the Big ship skwadron (1-2 kroozers). p.373: \"Each skwadron must be fielded with the number of ships chosen for it in this list; you can't split up skwadrons or add more ships to them.\" A Rok skwadron has only Roks, as a Big ship skwadron has only kroozers (J232)."
+      "why": "p.374: \"Rok skwadron / 1–4 Roks / Rok (pg. 394) ... 80 pts\" - a Rok skwadron is 1-4 Roks, and it is one skwadron like the Big ship skwadron (1-2 kroozers). p.375: \"Each skwadron must be fielded with the number of ships chosen for it in this list; you can't split up skwadrons or add more ships to them.\" A Rok skwadron has only Roks, as a Big ship skwadron has only kroozers (J232)."
     },
     {
       "id": "clanz-deathskullz-free-looted-are-not-gubbins",
-      "page": 369,
+      "page": 371,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 500,
@@ -6120,11 +6120,11 @@
           }
         ]
       },
-      "why": "p.369: \"Deathskullz capital ships and/or tiddla skwadrons have 'looted' upgrades (torpedoes and/or lances) for no additional cost.\" and \"Clan upgrades are different from Gubbins and may be taken (and paid for) in addition to Gubbins by individual skwadrons.\" The clan's free looted row belongs to every Deathskullz skwadron, not to the Warlord's Gubbins quota (p.372 \"his own ship or escort skwadron\"). The Warlord is on a Kill kroozer, the tiddla gets free Looted Torpedoes (J7, J232)."
+      "why": "p.371: \"Deathskullz capital ships and/or tiddla skwadrons have 'looted' upgrades (torpedoes and/or lances) for no additional cost.\" and \"Clan upgrades are different from Gubbins and may be taken (and paid for) in addition to Gubbins by individual skwadrons.\" The clan's free looted row belongs to every Deathskullz skwadron, not to the Warlord's Gubbins quota (p.374 \"his own ship or escort skwadron\"). The Warlord is on a Kill kroozer, the tiddla gets free Looted Torpedoes (J7, J232)."
     },
     {
       "id": "clanz-skwadron-not-split-between-warlords",
-      "page": 373,
+      "page": 375,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -6166,11 +6166,11 @@
           }
         ]
       },
-      "why": "p.373: \"Each skwadron must be fielded with the number of ships chosen for it in this list; you can't split up skwadrons or add more ships to them.\" and p.372 \"A Warlord's re-rolls only count for the skwadrons under his command\" - a skwadron belongs to one Warlord. The same id on two Warlords' kroozers is a split skwadron (J232)."
+      "why": "p.375: \"Each skwadron must be fielded with the number of ships chosen for it in this list; you can't split up skwadrons or add more ships to them.\" and p.374 \"A Warlord's re-rolls only count for the skwadrons under his command\" - a skwadron belongs to one Warlord. The same id on two Warlords' kroozers is a split skwadron (J232)."
     },
     {
       "id": "clanz-deathskullz-two-free-looted-fleet-gubbins",
-      "page": 369,
+      "page": 371,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 500,
@@ -6216,11 +6216,11 @@
           }
         ]
       },
-      "why": "p.369: \"Deathskullz capital ships and/or tiddla skwadrons have 'looted' upgrades (torpedoes and/or lances) for no additional cost.\" and \"Clan upgrades are different from Gubbins\". Two free looted rows do not use up one re-roll's Gubbins quota in the fleet-level check either (p.370 up_budget, J71). J232 review."
+      "why": "p.371: \"Deathskullz capital ships and/or tiddla skwadrons have 'looted' upgrades (torpedoes and/or lances) for no additional cost.\" and \"Clan upgrades are different from Gubbins\". Two free looted rows do not use up one re-roll's Gubbins quota in the fleet-level check either (p.372 up_budget, J71). J232 review."
     },
     {
       "id": "clanz-zukovs-klaw-is-a-goff",
-      "page": 372,
+      "page": 374,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 500,
@@ -6251,11 +6251,11 @@
           }
         ]
       },
-      "why": "p.372: \"(0–1) Zukov's Klaw (Goff only)\" and p.369: \"A Warlord and his skwadrons may only be from one clan\". Zukov's Klaw is a Goff without a purchasable clan row, so an Evil Sunz tiddla's Warlord cannot lead it (J232 review)."
+      "why": "p.374: \"(0–1) Zukov's Klaw (Goff only)\" and p.371: \"A Warlord and his skwadrons may only be from one clan\". Zukov's Klaw is a Goff without a purchasable clan row, so an Evil Sunz tiddla's Warlord cannot lead it (J232 review)."
     },
     {
       "id": "clanz-largest-warlord-three-rerolls",
-      "page": 373,
+      "page": 375,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 2500,
@@ -6314,11 +6314,11 @@
           }
         ]
       },
-      "why": "p.373: \"The largest fleet a single Warlord with two extra re-rolls (for a total of three) can command is one ‘Uge ship, two skwadrons of two kroozers each and three skwadrons of up to ten escorts each.\" (S0837)"
+      "why": "p.375: \"The largest fleet a single Warlord with two extra re-rolls (for a total of three) can command is one ‘Uge ship, two skwadrons of two kroozers each and three skwadrons of up to ten escorts each.\" (S0837)"
     },
     {
       "id": "clanz-uge-ship-needs-two-kroozers",
-      "page": 373,
+      "page": 375,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1500,
@@ -6356,11 +6356,11 @@
           }
         ]
       },
-      "why": "p.373: \"A Warlord must have two kroozers in order to take a “Uge ship, meaning the Warlord must have at least one extra re-roll to do so.\" (S0839)"
+      "why": "p.375: \"A Warlord must have two kroozers in order to take a “Uge ship, meaning the Warlord must have at least one extra re-roll to do so.\" (S0839)"
     },
     {
       "id": "clanz-one-uge-ship-per-warlord",
-      "page": 373,
+      "page": 375,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 2500,
@@ -6410,11 +6410,11 @@
           }
         ]
       },
-      "why": "p.373: \"There is no restriction for what kinds or how many of what type of skwadrons are in the fleet as long as no Warlord may have more than one ‘Uge Ship, which counts as a skwadron by itself.\" (S0828)"
+      "why": "p.375: \"There is no restriction for what kinds or how many of what type of skwadrons are in the fleet as long as no Warlord may have more than one ‘Uge Ship, which counts as a skwadron by itself.\" (S0828)"
     },
     {
       "id": "clanz-hulk-warlord-leads-only-the-hulk",
-      "page": 373,
+      "page": 375,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 2000,
@@ -6439,11 +6439,11 @@
           }
         ]
       },
-      "why": "p.373: \"A Warlord leading a Space Hulk may only lead it and no other ships, but he is not required to take any extra re-rolls to do so if it is not desired.\" (S0840)"
+      "why": "p.375: \"A Warlord leading a Space Hulk may only lead it and no other ships, but he is not required to take any extra re-rolls to do so if it is not desired.\" (S0840)"
     },
     {
       "id": "clanz-hulk-counts-as-all-skwadrons",
-      "page": 372,
+      "page": 374,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 2000,
@@ -6480,11 +6480,11 @@
           }
         ]
       },
-      "why": "p.372: \"One of your Warlords must be embarked on it, which by itself counts as all the skwadrons that Warlord can have (including a tiddla skwadron), regardless of how many re-rolls the Warlord has.\" (S0829)"
+      "why": "p.374: \"One of your Warlords must be embarked on it, which by itself counts as all the skwadrons that Warlord can have (including a tiddla skwadron), regardless of how many re-rolls the Warlord has.\" (S0829)"
     },
     {
       "id": "clanz-one-clan-per-warlord",
-      "page": 369,
+      "page": 371,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 500,
@@ -6520,11 +6520,11 @@
           }
         ]
       },
-      "why": "p.369: \"A Warlord and his skwadrons may only be from one clan, but as many different clans as desired can be in a single fleet.\" (S0891)"
+      "why": "p.371: \"A Warlord and his skwadrons may only be from one clan, but as many different clans as desired can be in a single fleet.\" (S0891)"
     },
     {
       "id": "clanz-clan-on-every-kroozer-of-the-skwadron",
-      "page": 369,
+      "page": 371,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -6559,11 +6559,11 @@
           }
         ]
       },
-      "why": "p.369: \"If taken, every capital ship in the skwadron must separately take and pay for the clan upgrade, not just individual ships.\" (S0897)"
+      "why": "p.371: \"If taken, every capital ship in the skwadron must separately take and pay for the clan upgrade, not just individual ships.\" (S0897)"
     },
     {
       "id": "clanz-warlords-on-their-own-dearest-ship",
-      "page": 372,
+      "page": 374,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -6607,11 +6607,11 @@
           }
         ]
       },
-      "why": "p.372: \"He must be embarked on the most expensive ship under his own command (as opposed to the whole fleet), even if it is an escort - annotate which one it is.\" (S0822) The first Warlord leads two tiddlas, the second a Terror ship."
+      "why": "p.374: \"He must be embarked on the most expensive ship under his own command (as opposed to the whole fleet), even if it is an escort - annotate which one it is.\" (S0822) The first Warlord leads two tiddlas, the second a Terror ship."
     },
     {
       "id": "clanz-warlord-picked-for-a-ship",
-      "page": 372,
+      "page": 374,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -6655,11 +6655,11 @@
           }
         ]
       },
-      "why": "p.372: \"For every re-roll a Warlord has (including the first one for free), the Warlord must be in command of one tiddla skwadron of at least three escorts and one other skwadrons.\" The player assigns the skwadrons to the Warlords."
+      "why": "p.374: \"For every re-roll a Warlord has (including the first one for free), the Warlord must be in command of one tiddla skwadron of at least three escorts and one other skwadrons.\" The player assigns the skwadrons to the Warlords."
     },
     {
       "id": "clanz-gubbins-on-the-warlords-own-ship",
-      "page": 372,
+      "page": 374,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -6694,7 +6694,7 @@
           }
         ]
       },
-      "why": "p.372: \"A Warlord may choose for his own ship or escort skwadron one upgrade from the Gubbins list for every re-roll he has at its listed cost.\" (S0821) Soopa Boostas is in the tiddla, the Warlord is on the Terror ship."
+      "why": "p.374: \"A Warlord may choose for his own ship or escort skwadron one upgrade from the Gubbins list for every re-roll he has at its listed cost.\" (S0821) Soopa Boostas is in the tiddla, the Warlord is on the Terror ship."
     },
     {
       "id": "squadron-cruisers-two-to-four",
@@ -6902,7 +6902,7 @@
     },
     {
       "id": "escort-squadron-lettered-pirates-short",
-      "page": 179,
+      "page": 189,
       "fleet": {
         "list": "Rogue Traders — Pirates and Wolf Packs",
         "limit": 1000,
@@ -6928,11 +6928,11 @@
           }
         ]
       },
-      "why": "p.179: \"At least one squadron of 3–6 escort vessels must be included for each cruiser in the fleet, organized in any mix desired.\" Two cards with one letter are one squadron of two, short of three."
+      "why": "p.189: \"At least one squadron of 3–6 escort vessels must be included for each cruiser in the fleet, organized in any mix desired.\" Two cards with one letter are one squadron of two, short of three."
     },
     {
       "id": "clanz-lettered-tiddla-short",
-      "page": 372,
+      "page": 374,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -6961,7 +6961,7 @@
           }
         ]
       },
-      "why": "p.372: \"Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired\". A Ravager and an Onslaught with one letter are one tiddla of two."
+      "why": "p.374: \"Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired\". A Ravager and an Onslaught with one letter are one tiddla of two."
     },
     {
       "id": "squadron-of-one-ship",
@@ -7019,7 +7019,7 @@
     },
     {
       "id": "squadron-no-daemonship",
-      "page": 227,
+      "page": 237,
       "fleet": {
         "list": "Chaos — Black Crusade",
         "limit": 1500,
@@ -7047,11 +7047,11 @@
           }
         ]
       },
-      "why": "p.227: \"Daemonships cannot be used in squadrons.\" (S0421)"
+      "why": "p.237: \"Daemonships cannot be used in squadrons.\" (S0421)"
     },
     {
       "id": "squadron-roks-only-with-roks",
-      "page": 367,
+      "page": 369,
       "fleet": {
         "list": "Orks — Waaagh!",
         "limit": 1500,
@@ -7074,11 +7074,11 @@
           }
         ]
       },
-      "why": "p.367: \"Ork Roks may be squadroned with up to three other Roks (total squadron size of four), but not with any other vessels.\" (S0816)"
+      "why": "p.369: \"Ork Roks may be squadroned with up to three other Roks (total squadron size of four), but not with any other vessels.\" (S0816)"
     },
     {
       "id": "squadron-roks-four-at-most",
-      "page": 367,
+      "page": 369,
       "fleet": {
         "list": "Orks — Waaagh!",
         "limit": 1500,
@@ -7109,7 +7109,7 @@
           }
         ]
       },
-      "why": "p.367: \"Ork Roks may be squadroned with up to three other Roks (total squadron size of four), but not with any other vessels.\""
+      "why": "p.369: \"Ork Roks may be squadroned with up to three other Roks (total squadron size of four), but not with any other vessels.\""
     },
     {
       "id": "squadron-veteran-captain-must-be-squadroned",
@@ -7375,7 +7375,7 @@
     },
     {
       "id": "void-stalker-iyanden-needs-three-corsair-cruisers",
-      "page": 319,
+      "page": 317,
       "fleet": {
         "list": "Eldar — Iyanden Craftworld",
         "limit": 2000,
@@ -7406,11 +7406,11 @@
           }
         ]
       },
-      "why": "p.319: \"Up to one Void Stalker may be taken in the fleet as long as the fleet is at least 1000 points and at least three Corsair Eldar cruisers and / or light cruisers are already present in the fleet.\" (S0653)"
+      "why": "p.317: \"Up to one Void Stalker may be taken in the fleet as long as the fleet is at least 1000 points and at least three Corsair Eldar cruisers and / or light cruisers are already present in the fleet.\" (S0653)"
     },
     {
       "id": "void-stalker-iyanden-with-three-corsair-cruisers",
-      "page": 319,
+      "page": 317,
       "fleet": {
         "list": "Eldar — Iyanden Craftworld",
         "limit": 2000,
@@ -7437,11 +7437,11 @@
           }
         ]
       },
-      "why": "p.319: \"at least three Corsair Eldar cruisers and / or light cruisers are already present in the fleet\""
+      "why": "p.317: \"at least three Corsair Eldar cruisers and / or light cruisers are already present in the fleet\""
     },
     {
       "id": "rt-second-cruiser-exploration-variant",
-      "page": 174,
+      "page": 184,
       "fleet": {
         "list": "Rogue Traders",
         "limit": 1500,
@@ -7465,11 +7465,11 @@
         ],
         "total": 380
       },
-      "why": "p.174: \"If a second Rogue Trader cruiser is taken, it may be any Rogue Trader cruiser variant listed on the Exploration Fleet List.\" (S0349) A Lunar at the Exploration price 195 (p.176) + 185."
+      "why": "p.184: \"If a second Rogue Trader cruiser is taken, it may be any Rogue Trader cruiser variant listed on the Exploration Fleet List.\" (S0349) A Lunar at the Exploration price 195 (p.186) + 185."
     },
     {
       "id": "rt-hull-as-the-only-rt-cruiser",
-      "page": 174,
+      "page": 184,
       "fleet": {
         "list": "Rogue Traders",
         "limit": 1500,
@@ -7489,11 +7489,11 @@
           }
         ]
       },
-      "why": "p.174: \"Any cruiser hull allowed in the Rogue Trader, Exploration or Wolf Pack fleet list may be used and counts fully as a Rogue Trader cruiser.\" (S0354) and \"If a second Rogue Trader cruiser is taken\" (S0349): the book does not say whether the only RT cruiser may be another hull (T55, yellow)."
+      "why": "p.184: \"Any cruiser hull allowed in the Rogue Trader, Exploration or Wolf Pack fleet list may be used and counts fully as a Rogue Trader cruiser.\" (S0354) and \"If a second Rogue Trader cruiser is taken\" (S0349): the book does not say whether the only RT cruiser may be another hull (T55, yellow)."
     },
     {
       "id": "rt-hull-counts-as-rt-cruiser",
-      "page": 174,
+      "page": 184,
       "fleet": {
         "list": "Rogue Traders",
         "limit": 1500,
@@ -7519,11 +7519,11 @@
           }
         ]
       },
-      "why": "p.174: \"counts fully as a Rogue Trader cruiser\" (S0354) and \"A Veteran Rogue Trader may lead each Rogue Trader cruiser in a fleet.\""
+      "why": "p.184: \"counts fully as a Rogue Trader cruiser\" (S0354) and \"A Veteran Rogue Trader may lead each Rogue Trader cruiser in a fleet.\""
     },
     {
       "id": "inquisitor-lord-aboard-any-imperial-cruiser",
-      "page": 138,
+      "page": 148,
       "fleet": {
         "list": "Imperial Navy — Gothic Sector",
         "limit": 1500,
@@ -7555,11 +7555,11 @@
           }
         ]
       },
-      "why": "p.138: \"This may include the specific ship so-called in the Inquisition rules, but it can be any Imperial cruiser-class vessel.\" (S0281) T56: read as placement - without an Inquisitorial Cruiser and a Blackship the inquisitor can be aboard any cruiser (J215); the default is the most expensive. The case documents the reading, the behaviour came in J215."
+      "why": "p.148: \"This may include the specific ship so-called in the Inquisition rules, but it can be any Imperial cruiser-class vessel.\" (S0281) T56: read as placement - without an Inquisitorial Cruiser and a Blackship the inquisitor can be aboard any cruiser (J215); the default is the most expensive. The case documents the reading, the behaviour came in J215."
     },
     {
       "id": "rt-attendant-escorts-with-an-inquisitor",
-      "page": 139,
+      "page": 149,
       "fleet": {
         "list": "Imperial Navy — Gothic Sector",
         "limit": 1500,
@@ -7588,11 +7588,11 @@
           }
         ]
       },
-      "why": "p.139: \"Imperial Navy and Adeptus Mechanicus fleets may also take a single Rogue Trader cruiser.\" \"If taken, a Rogue Trader escort squadron may accompany it, but Xenos vessels may not be used.\" (S0298)"
+      "why": "p.149: \"Imperial Navy and Adeptus Mechanicus fleets may also take a single Rogue Trader cruiser.\" \"If taken, a Rogue Trader escort squadron may accompany it, but Xenos vessels may not be used.\" (S0298)"
     },
     {
       "id": "rt-attendant-escorts-need-an-inquisitor",
-      "page": 139,
+      "page": 149,
       "fleet": {
         "list": "Imperial Navy — Gothic Sector",
         "limit": 1500,
@@ -7617,7 +7617,7 @@
           }
         ]
       },
-      "why": "p.139 (RESERVES AND ALLIES, a fleet led by an Inquisitor): \"If taken, a Rogue Trader escort squadron may accompany it, but Xenos vessels may not be used.\" Without an Inquisitor Lord there is no permission."
+      "why": "p.149 (RESERVES AND ALLIES, a fleet led by an Inquisitor): \"If taken, a Rogue Trader escort squadron may accompany it, but Xenos vessels may not be used.\" Without an Inquisitor Lord there is no permission."
     },
     {
       "id": "bakka-rt-attendant-escorts",
@@ -7678,7 +7678,7 @@
     },
     {
       "id": "exploration-auxiliaries-from-one-race",
-      "page": 177,
+      "page": 187,
       "fleet": {
         "list": "Rogue Traders — Exploration",
         "limit": 2000,
@@ -7710,11 +7710,11 @@
           }
         ]
       },
-      "why": "p.177: \"Besides Xenos vessels, auxiliary vessels from only one race can be taken in a fleet.\" (S0373)"
+      "why": "p.187: \"Besides Xenos vessels, auxiliary vessels from only one race can be taken in a fleet.\" (S0373)"
     },
     {
       "id": "exploration-no-ork-auxiliaries",
-      "page": 177,
+      "page": 187,
       "fleet": {
         "list": "Rogue Traders — Exploration",
         "limit": 2000,
@@ -7739,11 +7739,11 @@
           }
         ]
       },
-      "why": "p.177: \"Any race can be used to provide auxiliary vessels except Orks, Dark Eldar, Necrons and Tyranids.\" (S0374)"
+      "why": "p.187: \"Any race can be used to provide auxiliary vessels except Orks, Dark Eldar, Necrons and Tyranids.\" (S0374)"
     },
     {
       "id": "exploration-no-xenos-with-space-marine-auxiliaries",
-      "page": 177,
+      "page": 187,
       "fleet": {
         "list": "Rogue Traders — Exploration",
         "limit": 2000,
@@ -7772,11 +7772,11 @@
           }
         ]
       },
-      "why": "p.177: \"Xenos vessels cannot be employed if Space Marine escorts are used as auxiliary vessels.\" (S0375)"
+      "why": "p.187: \"Xenos vessels cannot be employed if Space Marine escorts are used as auxiliary vessels.\" (S0375)"
     },
     {
       "id": "exploration-allied-battleship-needs-three-capital-ships",
-      "page": 177,
+      "page": 187,
       "fleet": {
         "list": "Rogue Traders — Exploration",
         "limit": 3000,
@@ -7806,11 +7806,11 @@
           }
         ]
       },
-      "why": "p.177: \"If the fleet is large enough that three reserve or allied capital ships are taken, a single (0-1) allied battleship may also accompany the fleet for its regular point cost without counting against cruiser limits.\" (S0381)"
+      "why": "p.187: \"If the fleet is large enough that three reserve or allied capital ships are taken, a single (0-1) allied battleship may also accompany the fleet for its regular point cost without counting against cruiser limits.\" (S0381)"
     },
     {
       "id": "exploration-allied-battleship-with-three-capital-ships",
-      "page": 177,
+      "page": 187,
       "fleet": {
         "list": "Rogue Traders — Exploration",
         "limit": 5000,
@@ -7841,11 +7841,11 @@
           }
         ]
       },
-      "why": "p.177: \"a single (0-1) allied battleship may also accompany the fleet\" when three reserve or allied capital ships are included."
+      "why": "p.187: \"a single (0-1) allied battleship may also accompany the fleet\" when three reserve or allied capital ships are included."
     },
     {
       "id": "clanz-blood-axe-commandeered-escorts",
-      "page": 369,
+      "page": 371,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -7887,11 +7887,11 @@
           }
         ]
       },
-      "why": "p.369: \"A Blood Axe tiddla skwadron of at least six escorts may include up to three Imperial Navy and/or Chaos escorts from any fleet list at their listed cost.\" (S0909) The commandeered ones belong to the tiddla, they are not a skwadron of their own."
+      "why": "p.371: \"A Blood Axe tiddla skwadron of at least six escorts may include up to three Imperial Navy and/or Chaos escorts from any fleet list at their listed cost.\" (S0909) The commandeered ones belong to the tiddla, they are not a skwadron of their own."
     },
     {
       "id": "clanz-commandeered-escorts-need-a-blood-axe-tiddla",
-      "page": 369,
+      "page": 371,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -7923,11 +7923,11 @@
           }
         ]
       },
-      "why": "p.369: \"A Blood Axe tiddla skwadron of at least six escorts may include ...\" - without the Blood Axe clan there is no permission."
+      "why": "p.371: \"A Blood Axe tiddla skwadron of at least six escorts may include ...\" - without the Blood Axe clan there is no permission."
     },
     {
       "id": "clanz-commandeered-escorts-at-most-three",
-      "page": 369,
+      "page": 371,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -7970,11 +7970,11 @@
           }
         ]
       },
-      "why": "p.369: \"may include up to three Imperial Navy and/or Chaos escorts\""
+      "why": "p.371: \"may include up to three Imperial Navy and/or Chaos escorts\""
     },
     {
       "id": "clanz-commandeered-escorts-without-a-tiddla",
-      "page": 369,
+      "page": 371,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -8004,7 +8004,7 @@
           }
         ]
       },
-      "why": "p.369: the commandeered escorts are part of the Blood Axe tiddla, not a separate squadron."
+      "why": "p.371: the commandeered escorts are part of the Blood Axe tiddla, not a separate squadron."
     },
     {
       "id": "tau-wardens-share-no-ship-with-orcas",
@@ -8073,7 +8073,7 @@
     },
     {
       "id": "exploration-ally-special-character",
-      "page": 177,
+      "page": 187,
       "fleet": {
         "list": "Rogue Traders — Exploration",
         "limit": 2500,
@@ -8107,11 +8107,11 @@
           }
         ]
       },
-      "why": "p.177: \"Reserves and Allied vessels do not have access to the Veteran Rogue Trader re-rolls, but allied vessels may purchase up to one special character from its own fleet list (if available).\" (S0382)"
+      "why": "p.187: \"Reserves and Allied vessels do not have access to the Veteran Rogue Trader re-rolls, but allied vessels may purchase up to one special character from its own fleet list (if available).\" (S0382)"
     },
     {
       "id": "exploration-ally-commander-must-be-a-special-character",
-      "page": 177,
+      "page": 187,
       "fleet": {
         "list": "Rogue Traders — Exploration",
         "limit": 2500,
@@ -8141,11 +8141,11 @@
           }
         ]
       },
-      "why": "p.177: \"up to one special character from its own fleet list\" - an ordinary Eldar Hero is not a special character."
+      "why": "p.187: \"up to one special character from its own fleet list\" - an ordinary Eldar Hero is not a special character."
     },
     {
       "id": "exploration-ally-yriel-keeps-his-own-placement",
-      "page": 319,
+      "page": 317,
       "fleet": {
         "list": "Rogue Traders — Exploration",
         "limit": 2500,
@@ -8175,11 +8175,11 @@
           }
         ]
       },
-      "why": "p.319: \"When Yriel is taken he must be placed on a Craftworld Eldar Dragonship with launch bays, but you may instead pick the Flame of Asuryan as his command ship to be embarked on.\" As an ally his own rule goes with him."
+      "why": "p.317: \"When Yriel is taken he must be placed on a Craftworld Eldar Dragonship with launch bays, but you may instead pick the Flame of Asuryan as his command ship to be embarked on.\" As an ally his own rule goes with him."
     },
     {
       "id": "rt-attendant-escorts-not-counted-as-rt-cruisers",
-      "page": 174,
+      "page": 184,
       "fleet": {
         "list": "Imperial Navy — Gothic Sector",
         "limit": 1500,
@@ -8208,7 +8208,7 @@
           }
         ]
       },
-      "why": "p.174: \"Tau, Demiurg and Imperial fleets may include one Rogue Trader cruiser for every 750 points or part thereof in their fleet.\" The escorts (J218) are not Rogue Trader cruisers."
+      "why": "p.184: \"Tau, Demiurg and Imperial fleets may include one Rogue Trader cruiser for every 750 points or part thereof in their fleet.\" The escorts (J218) are not Rogue Trader cruisers."
     },
     {
       "id": "bakka-rt-escorts-not-counted-as-rt-cruisers",
@@ -8243,7 +8243,7 @@
     },
     {
       "id": "waaagh-hulk-warlord-power-fields-50",
-      "page": 390,
+      "page": 392,
       "fleet": {
         "list": "Orks — Waaagh!",
         "limit": 1500,
@@ -8278,11 +8278,11 @@
           }
         ]
       },
-      "why": "Fleets p. 390: 'Extra Powerfields costs +50 pts instead of +25.' for a Warlord aboard a space hulk; p. 366: Extra Power Fields +25; p. 367: 'Each Ork hulk must be assigned an Ork Warlord to command it.' 40 + 50 + 600 = 690 (J224)."
+      "why": "Fleets p. 392: 'Extra Powerfields costs +50 pts instead of +25.' for a Warlord aboard a space hulk; p. 368: Extra Power Fields +25; p. 369: 'Each Ork hulk must be assigned an Ork Warlord to command it.' 40 + 50 + 600 = 690 (J224)."
     },
     {
       "id": "waaagh-hulk-warlord-power-fields-25-red",
-      "page": 390,
+      "page": 392,
       "fleet": {
         "list": "Orks — Waaagh!",
         "limit": 1500,
@@ -8315,11 +8315,11 @@
           }
         ]
       },
-      "why": "Fleets p. 390: 'Extra Powerfields costs +50 pts instead of +25.' for a Warlord aboard a space hulk; p. 366: Extra Power Fields +25; p. 367: 'Each Ork hulk must be assigned an Ork Warlord to command it.' The only Warlord commands the hulk, and the +25 row is the kroozer price: red (J224)."
+      "why": "Fleets p. 392: 'Extra Powerfields costs +50 pts instead of +25.' for a Warlord aboard a space hulk; p. 368: Extra Power Fields +25; p. 369: 'Each Ork hulk must be assigned an Ork Warlord to command it.' The only Warlord commands the hulk, and the +25 row is the kroozer price: red (J224)."
     },
     {
       "id": "waaagh-kroozer-warlord-power-fields-hulk-row-red",
-      "page": 390,
+      "page": 392,
       "fleet": {
         "list": "Orks — Waaagh!",
         "limit": 1500,
@@ -8353,11 +8353,11 @@
           }
         ]
       },
-      "why": "Fleets p. 390: 'Extra Powerfields costs +50 pts instead of +25.' for a Warlord aboard a space hulk; p. 366: Extra Power Fields +25; p. 367: 'Each Ork hulk must be assigned an Ork Warlord to command it.' The +50 price is for a Warlord aboard a space hulk only; aboard a Terror ship it is +25: red (J224)."
+      "why": "Fleets p. 392: 'Extra Powerfields costs +50 pts instead of +25.' for a Warlord aboard a space hulk; p. 368: Extra Power Fields +25; p. 369: 'Each Ork hulk must be assigned an Ork Warlord to command it.' The +50 price is for a Warlord aboard a space hulk only; aboard a Terror ship it is +25: red (J224)."
     },
     {
       "id": "waaagh-two-warlords-hulk-and-kroozer-power-fields",
-      "page": 390,
+      "page": 392,
       "fleet": {
         "list": "Orks — Waaagh!",
         "limit": 1500,
@@ -8408,11 +8408,11 @@
           }
         ]
       },
-      "why": "Fleets p. 390: 'Extra Powerfields costs +50 pts instead of +25.' for a Warlord aboard a space hulk; p. 366: Extra Power Fields +25; p. 367: 'Each Ork hulk must be assigned an Ork Warlord to command it.' The user's Da Slow 'n' Furius list (19.10.2026): Warlord #1 on the hulk +50, Warlord #2 on the Terror +25. 600 + 185 + (40 + 40 + 50) + (40 + 40 + 25) = 1020 (J224). The Terror Warlord's ordinary +25 needs no check row of its own."
+      "why": "Fleets p. 392: 'Extra Powerfields costs +50 pts instead of +25.' for a Warlord aboard a space hulk; p. 368: Extra Power Fields +25; p. 369: 'Each Ork hulk must be assigned an Ork Warlord to command it.' The user's Da Slow 'n' Furius list (19.10.2026): Warlord #1 on the hulk +50, Warlord #2 on the Terror +25. 600 + 185 + (40 + 40 + 50) + (40 + 40 + 25) = 1020 (J224). The Terror Warlord's ordinary +25 needs no check row of its own."
     },
     {
       "id": "clanz-bad-moonz-paid-per-rok",
-      "page": 369,
+      "page": 371,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 500,
@@ -8455,11 +8455,11 @@
           }
         ]
       },
-      "why": "Fleets p. 369: “If taken, every capital ship in the skwadron must separately take and pay for the clan upgrade, not just individual ships. The point cost for clan upgrades for tiddla skwadrons count for the whole skwadron (regardless of how large it is!), not individual escorts.” Ruling T58 (user 26.10.2026): a Rok skwadron is not a tiddla skwadron (p. 372 lists it separately), and p. 369 counts Roks among the capital ship skwadrons (Snakebites: “Snakebite capital ship skwadrons can only use space hulks or roks”), so every Rok pays the clan upgrade. 3 x Ravager attack ship 40 + 3 x Rok 80 + 3 x Bad Moonz 30 = 450 (not 390 with one price for the skwadron)."
+      "why": "Fleets p. 371: “If taken, every capital ship in the skwadron must separately take and pay for the clan upgrade, not just individual ships. The point cost for clan upgrades for tiddla skwadrons count for the whole skwadron (regardless of how large it is!), not individual escorts.” Ruling T58 (user 26.10.2026): a Rok skwadron is not a tiddla skwadron (p. 374 lists it separately), and p. 371 counts Roks among the capital ship skwadrons (Snakebites: “Snakebite capital ship skwadrons can only use space hulks or roks”), so every Rok pays the clan upgrade. 3 x Ravager attack ship 40 + 3 x Rok 80 + 3 x Bad Moonz 30 = 450 (not 390 with one price for the skwadron)."
     },
     {
       "id": "clanz-clan-on-every-rok-of-the-skwadron",
-      "page": 369,
+      "page": 371,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 500,
@@ -8497,11 +8497,11 @@
           }
         ]
       },
-      "why": "Fleets p. 369: “If taken, every capital ship in the skwadron must separately take and pay for the clan upgrade, not just individual ships. The point cost for clan upgrades for tiddla skwadrons count for the whole skwadron (regardless of how large it is!), not individual escorts.” Ruling T58 (user 26.10.2026): a Rok skwadron is not a tiddla skwadron (p. 372 lists it separately), and p. 369 counts Roks among the capital ship skwadrons (Snakebites: “Snakebite capital ship skwadrons can only use space hulks or roks”), so every Rok pays the clan upgrade. One Rok of three paying for the skwadron is the flat price p. 369 allows only a tiddla skwadron. 3 x Ravager attack ship 40 + 3 x Rok 80 + Evil Sunz 20 = 380."
+      "why": "Fleets p. 371: “If taken, every capital ship in the skwadron must separately take and pay for the clan upgrade, not just individual ships. The point cost for clan upgrades for tiddla skwadrons count for the whole skwadron (regardless of how large it is!), not individual escorts.” Ruling T58 (user 26.10.2026): a Rok skwadron is not a tiddla skwadron (p. 374 lists it separately), and p. 371 counts Roks among the capital ship skwadrons (Snakebites: “Snakebite capital ship skwadrons can only use space hulks or roks”), so every Rok pays the clan upgrade. One Rok of three paying for the skwadron is the flat price p. 371 allows only a tiddla skwadron. 3 x Ravager attack ship 40 + 3 x Rok 80 + Evil Sunz 20 = 380."
     },
     {
       "id": "clanz-zukov-skwadron-with-a-goff-kroozer",
-      "page": 381,
+      "page": 383,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 500,
@@ -8542,11 +8542,11 @@
           }
         ]
       },
-      "why": "Fleets p. 369: “If taken, every capital ship in the skwadron must separately take and pay for the clan upgrade, not just individual ships.” p. 381: Zukov’s Klaw “is of the Goff Clan” as part of its 210 points, and p. 372 lists it as “(0–1) Zukov's Klaw (Goff only)” in the Big ship skwadron (1-2 kroozers). Zukov is a Goff by itself and the Lite kroozer bought Goffs, so the skwadron is all Goff (J242: the check read “none / Goffs” before). 3 x Ravager attack ship 40 + Zukov's Klaw 210 + Lite kroozer 90 + Goffs 20 = 440."
+      "why": "Fleets p. 371: “If taken, every capital ship in the skwadron must separately take and pay for the clan upgrade, not just individual ships.” p. 383: Zukov’s Klaw “is of the Goff Clan” as part of its 210 points, and p. 374 lists it as “(0–1) Zukov's Klaw (Goff only)” in the Big ship skwadron (1-2 kroozers). Zukov is a Goff by itself and the Lite kroozer bought Goffs, so the skwadron is all Goff (J242: the check read “none / Goffs” before). 3 x Ravager attack ship 40 + Zukov's Klaw 210 + Lite kroozer 90 + Goffs 20 = 440."
     },
     {
       "id": "clanz-zukov-skwadron-kroozer-without-the-clan",
-      "page": 381,
+      "page": 383,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 500,
@@ -8578,11 +8578,11 @@
           }
         ]
       },
-      "why": "Fleets p. 369: “If taken, every capital ship in the skwadron must separately take and pay for the clan upgrade, not just individual ships.” p. 381: Zukov’s Klaw “is of the Goff Clan” as part of its 210 points, and p. 372 lists it as “(0–1) Zukov's Klaw (Goff only)” in the Big ship skwadron (1-2 kroozers). The skwadron's clan is taken (Zukov's own Goffs), so the other kroozer of the skwadron takes and pays for it too, or goes in a skwadron of its own. 3 x Ravager attack ship 40 + Zukov's Klaw 210 + Lite kroozer 90 = 420."
+      "why": "Fleets p. 371: “If taken, every capital ship in the skwadron must separately take and pay for the clan upgrade, not just individual ships.” p. 383: Zukov’s Klaw “is of the Goff Clan” as part of its 210 points, and p. 374 lists it as “(0–1) Zukov's Klaw (Goff only)” in the Big ship skwadron (1-2 kroozers). The skwadron's clan is taken (Zukov's own Goffs), so the other kroozer of the skwadron takes and pays for it too, or goes in a skwadron of its own. 3 x Ravager attack ship 40 + Zukov's Klaw 210 + Lite kroozer 90 = 420."
     },
     {
       "id": "clanz-two-short-tiddlas-are-not-two-tiddlas",
-      "page": 372,
+      "page": 374,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -8615,11 +8615,11 @@
           }
         ]
       },
-      "why": "Fleets p. 372: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”; p. 373: “Thus, the smallest fleet a single Warlord with only the one free re-roll may command is two tiddla skwadrons, each with three escorts.” ChatGPT audit RAW-01: two Brutes and two Onslaughts, each its own skwadron, are two tiddlas of two - the size check used to pool them into one mixed tiddla while the Warlord's count saw two. 2 x Brute ramship 25 + 2 x Onslaught attack ship 35 = 120."
+      "why": "Fleets p. 374: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”; p. 375: “Thus, the smallest fleet a single Warlord with only the one free re-roll may command is two tiddla skwadrons, each with three escorts.” ChatGPT audit RAW-01: two Brutes and two Onslaughts, each its own skwadron, are two tiddlas of two - the size check used to pool them into one mixed tiddla while the Warlord's count saw two. 2 x Brute ramship 25 + 2 x Onslaught attack ship 35 = 120."
     },
     {
       "id": "clanz-mixed-tiddla-of-four-is-one-skwadron",
-      "page": 372,
+      "page": 374,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -8654,11 +8654,11 @@
           }
         ]
       },
-      "why": "Fleets p. 372: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”; p. 373: “Thus, the smallest fleet a single Warlord with only the one free re-roll may command is two tiddla skwadrons, each with three escorts.” The same four escorts in one tag are one mixed tiddla (any mix desired), so the Warlord still lacks his other skwadron (RAW-01). 2 x 25 + 2 x 35 = 120."
+      "why": "Fleets p. 374: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”; p. 375: “Thus, the smallest fleet a single Warlord with only the one free re-roll may command is two tiddla skwadrons, each with three escorts.” The same four escorts in one tag are one mixed tiddla (any mix desired), so the Warlord still lacks his other skwadron (RAW-01). 2 x 25 + 2 x 35 = 120."
     },
     {
       "id": "clanz-mixed-tiddla-from-two-rows-and-a-rok",
-      "page": 372,
+      "page": 374,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -8696,11 +8696,11 @@
           }
         ]
       },
-      "why": "Fleets p. 372: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”; p. 373: “Thus, the smallest fleet a single Warlord with only the one free re-roll may command is two tiddla skwadrons, each with three escorts.” One Brute and two Savages in one tag are one tiddla of three, and the Rok is the other skwadron; the Warlord's count used to see two tiddlas and a Rok. Brute 25 + 2 x Savage gunship 30 + Rok 80 = 165."
+      "why": "Fleets p. 374: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”; p. 375: “Thus, the smallest fleet a single Warlord with only the one free re-roll may command is two tiddla skwadrons, each with three escorts.” One Brute and two Savages in one tag are one tiddla of three, and the Rok is the other skwadron; the Warlord's count used to see two tiddlas and a Rok. Brute 25 + 2 x Savage gunship 30 + Rok 80 = 165."
     },
     {
       "id": "clanz-blood-axe-three-ork-three-commandeered",
-      "page": 369,
+      "page": 371,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -8748,11 +8748,11 @@
           }
         ]
       },
-      "why": "Fleets p. 369: “A Blood Axe tiddla skwadron of at least six escorts may include up to three Imperial Navy and/or Chaos escorts from any fleet list at their listed cost.” Ruling T59 (ChatGPT audit RAW-02): the skwadron of at least six is the skwadron as fielded, the commandeered escorts included, so three Brutes and three Cobras are a Blood Axe tiddla of six. Rok 80 + 3 x Brute ramship 25 + Blood Axes 0 + 3 x Cobra class destroyer 30 = 245."
+      "why": "Fleets p. 371: “A Blood Axe tiddla skwadron of at least six escorts may include up to three Imperial Navy and/or Chaos escorts from any fleet list at their listed cost.” Ruling T59 (ChatGPT audit RAW-02): the skwadron of at least six is the skwadron as fielded, the commandeered escorts included, so three Brutes and three Cobras are a Blood Axe tiddla of six. Rok 80 + 3 x Brute ramship 25 + Blood Axes 0 + 3 x Cobra class destroyer 30 = 245."
     },
     {
       "id": "clanz-blood-axe-tiddla-of-thirteen",
-      "page": 370,
+      "page": 372,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -8790,11 +8790,11 @@
           }
         ]
       },
-      "why": "Fleets p. 369: “A Blood Axe tiddla skwadron of at least six escorts may include up to three Imperial Navy and/or Chaos escorts from any fleet list at their listed cost.” p. 370: “the maximum number of escorts in an Ork squadron can be up to ten.” The three commandeered escorts are in the tiddla, not beside it (RAW-03). Rok 80 + 10 x 25 + 3 x 30 = 420."
+      "why": "Fleets p. 371: “A Blood Axe tiddla skwadron of at least six escorts may include up to three Imperial Navy and/or Chaos escorts from any fleet list at their listed cost.” p. 372: “the maximum number of escorts in an Ork squadron can be up to ten.” The three commandeered escorts are in the tiddla, not beside it (RAW-03). Rok 80 + 10 x 25 + 3 x 30 = 420."
     },
     {
       "id": "clanz-blood-axe-seven-ork-three-commandeered",
-      "page": 370,
+      "page": 372,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -8837,11 +8837,11 @@
           }
         ]
       },
-      "why": "Fleets p. 369: “A Blood Axe tiddla skwadron of at least six escorts may include up to three Imperial Navy and/or Chaos escorts from any fleet list at their listed cost.” Ten escorts in all with three commandeered is the largest Blood Axe tiddla (p. 370). Rok 80 + 7 x 25 + 3 x 30 = 345."
+      "why": "Fleets p. 371: “A Blood Axe tiddla skwadron of at least six escorts may include up to three Imperial Navy and/or Chaos escorts from any fleet list at their listed cost.” Ten escorts in all with three commandeered is the largest Blood Axe tiddla (p. 372). Rok 80 + 7 x 25 + 3 x 30 = 345."
     },
     {
       "id": "clanz-commandeered-escorts-in-the-warlords-command",
-      "page": 372,
+      "page": 374,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -8888,11 +8888,11 @@
           }
         ]
       },
-      "why": "Fleets p. 372: “He must be embarked on the most expensive ship under his own command (as opposed to the whole fleet), even if it is an escort - annotate which one it is.” Fleets p. 369: “A Blood Axe tiddla skwadron of at least six escorts may include up to three Imperial Navy and/or Chaos escorts from any fleet list at their listed cost.” The Idolators are in the Warlord's Blood Axe tiddla, so they are his and the dearest ship of his command (RAW-03). 3 x Brute ramship 25 + 3 x Idolator class raider 45 + 3 x Savage gunship 30 = 300."
+      "why": "Fleets p. 374: “He must be embarked on the most expensive ship under his own command (as opposed to the whole fleet), even if it is an escort - annotate which one it is.” Fleets p. 371: “A Blood Axe tiddla skwadron of at least six escorts may include up to three Imperial Navy and/or Chaos escorts from any fleet list at their listed cost.” The Idolators are in the Warlord's Blood Axe tiddla, so they are his and the dearest ship of his command (RAW-03). 3 x Brute ramship 25 + 3 x Idolator class raider 45 + 3 x Savage gunship 30 = 300."
     },
     {
       "id": "clanz-blood-axe-warlord-ship-takes-the-in-refit",
-      "page": 369,
+      "page": 371,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -8931,11 +8931,11 @@
           }
         ]
       },
-      "why": "Fleets p. 369: “The Warlord’s ship may take one refit from the Imperial Navy refit table (rolled randomly) for +20 points.” The Blood Axe Warlord is aboard the Terror ship, which takes the refit: a row of its own since 29.10.2026, not a second clan. Terror ship 185 + refit 20 + 3 x Brute ramship 25 = 280."
+      "why": "Fleets p. 371: “The Warlord’s ship may take one refit from the Imperial Navy refit table (rolled randomly) for +20 points.” The Blood Axe Warlord is aboard the Terror ship, which takes the refit: a row of its own since 29.10.2026, not a second clan. Terror ship 185 + refit 20 + 3 x Brute ramship 25 = 280."
     },
     {
       "id": "clanz-in-refit-needs-a-blood-axe-warlord",
-      "page": 369,
+      "page": 371,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -8968,11 +8968,11 @@
           }
         ]
       },
-      "why": "Fleets p. 369: “The Warlord’s ship may take one refit from the Imperial Navy refit table (rolled randomly) for +20 points.” It is the Blood Axes' benefit: a Goff Warlord's ship may not take it."
+      "why": "Fleets p. 371: “The Warlord’s ship may take one refit from the Imperial Navy refit table (rolled randomly) for +20 points.” It is the Blood Axes' benefit: a Goff Warlord's ship may not take it."
     },
     {
       "id": "clanz-in-refit-on-the-warlords-own-ship-only",
-      "page": 369,
+      "page": 371,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1500,
@@ -9010,11 +9010,11 @@
           }
         ]
       },
-      "why": "Fleets p. 369: “The Warlord’s ship may take one refit from the Imperial Navy refit table (rolled randomly) for +20 points.” The Warlord's ship is the one he is aboard (the Terror ship); the other kroozer of his skwadron may not take it."
+      "why": "Fleets p. 371: “The Warlord’s ship may take one refit from the Imperial Navy refit table (rolled randomly) for +20 points.” The Warlord's ship is the one he is aboard (the Terror ship); the other kroozer of his skwadron may not take it."
     },
     {
       "id": "clanz-snakebite-warlord-with-a-kroozer",
-      "page": 369,
+      "page": 371,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -9042,11 +9042,11 @@
           }
         ]
       },
-      "why": "Fleets p. 369: “Snakebite capital ship skwadrons can only use space hulks or roks – no other kind of capital ship skwadrons are permitted to bear the clan colours.” Fleets p. 369: “A Warlord and his skwadrons may only be from one clan, but as many different clans as desired can be in a single fleet.” A Snakebite Warlord's kroozer is of his clan whether or not it buys the clan (ChatGPT audit RAW-04). Kill kroozer 155 + 3 x Brute ramship 25 = 230."
+      "why": "Fleets p. 371: “Snakebite capital ship skwadrons can only use space hulks or roks – no other kind of capital ship skwadrons are permitted to bear the clan colours.” Fleets p. 371: “A Warlord and his skwadrons may only be from one clan, but as many different clans as desired can be in a single fleet.” A Snakebite Warlord's kroozer is of his clan whether or not it buys the clan (ChatGPT audit RAW-04). Kill kroozer 155 + 3 x Brute ramship 25 = 230."
     },
     {
       "id": "clanz-snakebite-warlord-with-a-rok",
-      "page": 369,
+      "page": 371,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -9074,11 +9074,11 @@
           }
         ]
       },
-      "why": "Fleets p. 369: “Snakebite capital ship skwadrons can only use space hulks or roks – no other kind of capital ship skwadrons are permitted to bear the clan colours.” A Rok is allowed. Rok 80 + 3 x Brute ramship 25 = 155."
+      "why": "Fleets p. 371: “Snakebite capital ship skwadrons can only use space hulks or roks – no other kind of capital ship skwadrons are permitted to bear the clan colours.” A Rok is allowed. Rok 80 + 3 x Brute ramship 25 = 155."
     },
     {
       "id": "clanz-warlord-clan-and-a-kroozer-of-another",
-      "page": 369,
+      "page": 371,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -9111,11 +9111,11 @@
           }
         ]
       },
-      "why": "Fleets p. 369: “A Warlord and his skwadrons may only be from one clan, but as many different clans as desired can be in a single fleet.” The Warlord is a Goff, so his kroozer that bought Evil Sunz is a second clan (RAW-04). The Brutes take their Warlord's Goffs as they are added (J226). Kill kroozer 155 + Evil Sunz 20 + 3 x Brute ramship 25 + Goffs 20 = 270."
+      "why": "Fleets p. 371: “A Warlord and his skwadrons may only be from one clan, but as many different clans as desired can be in a single fleet.” The Warlord is a Goff, so his kroozer that bought Evil Sunz is a second clan (RAW-04). The Brutes take their Warlord's Goffs as they are added (J226). Kill kroozer 155 + Evil Sunz 20 + 3 x Brute ramship 25 + Goffs 20 = 270."
     },
     {
       "id": "clanz-goff-warlord-zukov-and-a-goff-kill",
-      "page": 381,
+      "page": 383,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -9162,11 +9162,11 @@
           }
         ]
       },
-      "why": "Fleets p. 381: Zukov's Klaw “is of the Goff Clan” at its 210 points. ChatGPT audit RAW-05 fixture (fixed by J242): a Goff Warlord, a Goff tiddla and a Goff Kill kroozer in Zukov's big ship skwadron. 3 x Brute ramship 25 + Goffs 20 + Kill kroozer 155 + Goffs 20 + Zukov's Klaw 210 = 480."
+      "why": "Fleets p. 383: Zukov's Klaw “is of the Goff Clan” at its 210 points. ChatGPT audit RAW-05 fixture (fixed by J242): a Goff Warlord, a Goff tiddla and a Goff Kill kroozer in Zukov's big ship skwadron. 3 x Brute ramship 25 + Goffs 20 + Kill kroozer 155 + Goffs 20 + Zukov's Klaw 210 = 480."
     },
     {
       "id": "clanz-assault-karrier-boarding-torpedoes-free",
-      "page": 371,
+      "page": 373,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -9204,11 +9204,11 @@
       "expect": {
         "total": 260
       },
-      "why": "Fleets p. 371, Assault Karrier: “It takes boarding torpedoes for free, but it may only use assault boats.” ChatGPT audit RAW-06: bought after the Terror ship's own +5 boarding torpedoes, the Karrier takes them for free (the option reopens), and torpedo-bommas and orbital mines are not offered beside it. 3 x Brute ramship 25 + Terror ship 185 + torpedo launcha 0 + Assault Karrier 0 = 260."
+      "why": "Fleets p. 373, Assault Karrier: “It takes boarding torpedoes for free, but it may only use assault boats.” ChatGPT audit RAW-06: bought after the Terror ship's own +5 boarding torpedoes, the Karrier takes them for free (the option reopens), and torpedo-bommas and orbital mines are not offered beside it. 3 x Brute ramship 25 + Terror ship 185 + torpedo launcha 0 + Assault Karrier 0 = 260."
     },
     {
       "id": "pirates-two-short-escort-cards-are-two-squadrons",
-      "page": 179,
+      "page": 189,
       "fleet": {
         "list": "Rogue Traders — Pirates and Wolf Packs",
         "limit": 1500,
@@ -9244,11 +9244,11 @@
           }
         ]
       },
-      "why": "Fleets p. 179: “At least one squadron of 3–6 escort vessels must be included for each cruiser in the fleet, organized in any mix desired.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. Two cards of two are two squadrons of two; they used to join one mixed squadron for the size check while the count saw two. Rogue Trader cruiser 185 + Gothic class cruiser 180 + 2 x Sword 35 + 2 x Cobra 30 = 495."
+      "why": "Fleets p. 189: “At least one squadron of 3–6 escort vessels must be included for each cruiser in the fleet, organized in any mix desired.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. Two cards of two are two squadrons of two; they used to join one mixed squadron for the size check while the count saw two. Rogue Trader cruiser 185 + Gothic class cruiser 180 + 2 x Sword 35 + 2 x Cobra 30 = 495."
     },
     {
       "id": "pirates-one-mixed-squadron-for-two-cruisers",
-      "page": 179,
+      "page": 189,
       "fleet": {
         "list": "Rogue Traders — Pirates and Wolf Packs",
         "limit": 1500,
@@ -9286,11 +9286,11 @@
           }
         ]
       },
-      "why": "Fleets p. 179: “At least one squadron of 3–6 escort vessels must be included for each cruiser in the fleet, organized in any mix desired.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. Four escorts in one squadron are one squadron, and two cruisers need two. 185 + 180 + 70 + 60 = 495."
+      "why": "Fleets p. 189: “At least one squadron of 3–6 escort vessels must be included for each cruiser in the fleet, organized in any mix desired.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. Four escorts in one squadron are one squadron, and two cruisers need two. 185 + 180 + 70 + 60 = 495."
     },
     {
       "id": "pirates-two-squadrons-of-three",
-      "page": 179,
+      "page": 189,
       "fleet": {
         "list": "Rogue Traders — Pirates and Wolf Packs",
         "limit": 1500,
@@ -9321,11 +9321,11 @@
           }
         ]
       },
-      "why": "Fleets p. 179: “At least one squadron of 3–6 escort vessels must be included for each cruiser in the fleet, organized in any mix desired.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. 185 + 180 + 3 x 35 + 3 x 30 = 560."
+      "why": "Fleets p. 189: “At least one squadron of 3–6 escort vessels must be included for each cruiser in the fleet, organized in any mix desired.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. 185 + 180 + 3 x 35 + 3 x 30 = 560."
     },
     {
       "id": "rt-two-escort-squadrons-for-one-capital-ship",
-      "page": 174,
+      "page": 184,
       "fleet": {
         "list": "Rogue Traders",
         "limit": 1000,
@@ -9352,11 +9352,11 @@
           }
         ]
       },
-      "why": "Fleets p. 174: “A single squadron of 2-6 Rogue Trader escorts and auxiliary vessels may accompany each Rogue Trader capital ship in a fleet, in any mix desired.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. Two cards of three are two squadrons for one capital ship; the check counted six escorts per ship and was green. Rogue Trader Cruiser 185 + 3 x Xenos Vessel 50 + 3 x Recommissioned Escort 30 = 425."
+      "why": "Fleets p. 184: “A single squadron of 2-6 Rogue Trader escorts and auxiliary vessels may accompany each Rogue Trader capital ship in a fleet, in any mix desired.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. Two cards of three are two squadrons for one capital ship; the check counted six escorts per ship and was green. Rogue Trader Cruiser 185 + 3 x Xenos Vessel 50 + 3 x Recommissioned Escort 30 = 425."
     },
     {
       "id": "rt-one-mixed-escort-squadron-for-one-capital-ship",
-      "page": 174,
+      "page": 184,
       "fleet": {
         "list": "Rogue Traders",
         "limit": 1000,
@@ -9390,7 +9390,7 @@
           }
         ]
       },
-      "why": "Fleets p. 174: “A single squadron of 2-6 Rogue Trader escorts and auxiliary vessels may accompany each Rogue Trader capital ship in a fleet, in any mix desired.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. One squadron of six in any mix. 185 + 150 + 90 = 425."
+      "why": "Fleets p. 184: “A single squadron of 2-6 Rogue Trader escorts and auxiliary vessels may accompany each Rogue Trader capital ship in a fleet, in any mix desired.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. One squadron of six in any mix. 185 + 150 + 90 = 425."
     },
     {
       "id": "tau-commerce-two-cards-one-xenos-squadron",
@@ -9509,7 +9509,7 @@
     },
     {
       "id": "exploration-two-single-cargo-cards",
-      "page": 177,
+      "page": 187,
       "fleet": {
         "list": "Rogue Traders — Exploration",
         "limit": 1500,
@@ -9541,11 +9541,11 @@
           }
         ]
       },
-      "why": "Fleets p. 177: “The fleet must include at least one squadron of escort-sized cargo ships of any type (whether or not the scenario requires transports), in a squadron of 2 to 6 ships.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. Two single cargo cards are two squadrons of one, short of two; they used to join one mixed squadron by themselves."
+      "why": "Fleets p. 187: “The fleet must include at least one squadron of escort-sized cargo ships of any type (whether or not the scenario requires transports), in a squadron of 2 to 6 ships.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. Two single cargo cards are two squadrons of one, short of two; they used to join one mixed squadron by themselves."
     },
     {
       "id": "exploration-cargo-cards-in-one-squadron",
-      "page": 177,
+      "page": 187,
       "fleet": {
         "list": "Rogue Traders — Exploration",
         "limit": 1500,
@@ -9578,11 +9578,11 @@
           }
         ]
       },
-      "why": "Fleets p. 177: “The fleet must include at least one squadron of escort-sized cargo ships of any type (whether or not the scenario requires transports), in a squadron of 2 to 6 ships.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. The same two cargo ships with one letter are the one cargo squadron of two."
+      "why": "Fleets p. 187: “The fleet must include at least one squadron of escort-sized cargo ships of any type (whether or not the scenario requires transports), in a squadron of 2 to 6 ships.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. The same two cargo ships with one letter are the one cargo squadron of two."
     },
     {
       "id": "clanz-mixed-tiddla-clan-and-gubbins-for-the-whole-skwadron",
-      "page": 369,
+      "page": 371,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -9667,11 +9667,11 @@
         ],
         "others_ok": true
       },
-      "why": "Fleets p. 369: “The point cost for clan upgrades for tiddla skwadrons count for the whole skwadron (regardless of how large it is!), not individual escorts.” p. 370: “For tiddla skwadrons, the point cost for Gubbins count for the whole skwadron (regardless of how large it is!), not individual escorts.” p. 369: “All Evil Sunz ships gain +5 cm speed.” p. 370 Soopa Boostas: “The ship gains +5 cm speed”. p. 372: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”: Onslaught attack ship 35 pts, Savage gunship 30 pts, Brute ramship 25 pts. Savage 25 cm (p. 385) and Onslaught 20 cm (p. 384). The clan is bought on the Savage card and the Gubbin on the Onslaught card of the same tiddla T, so both cards are Evil Sunz with Soopa Boostas: Savage 35 cm, Onslaught 30 cm. One Gubbin of the Warlord's one re-roll (p. 372). The Brutes are a second tiddla, his other skwadron (p. 373). 3 x 30 + 3 x 35 + 3 x 25 + 20 + 25 = 315. Ruling T60 (28.10.2026): a mixed tiddla is the cards of one Squadron letter, so a clan or a Gubbin taken on any of them is the skwadron's: every card that is offered it has it and it is paid once."
+      "why": "Fleets p. 371: “The point cost for clan upgrades for tiddla skwadrons count for the whole skwadron (regardless of how large it is!), not individual escorts.” p. 372: “For tiddla skwadrons, the point cost for Gubbins count for the whole skwadron (regardless of how large it is!), not individual escorts.” p. 371: “All Evil Sunz ships gain +5 cm speed.” p. 372 Soopa Boostas: “The ship gains +5 cm speed”. p. 374: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”: Onslaught attack ship 35 pts, Savage gunship 30 pts, Brute ramship 25 pts. Savage 25 cm (p. 387) and Onslaught 20 cm (p. 386). The clan is bought on the Savage card and the Gubbin on the Onslaught card of the same tiddla T, so both cards are Evil Sunz with Soopa Boostas: Savage 35 cm, Onslaught 30 cm. One Gubbin of the Warlord's one re-roll (p. 374). The Brutes are a second tiddla, his other skwadron (p. 375). 3 x 30 + 3 x 35 + 3 x 25 + 20 + 25 = 315. Ruling T60 (28.10.2026): a mixed tiddla is the cards of one Squadron letter, so a clan or a Gubbin taken on any of them is the skwadron's: every card that is offered it has it and it is paid once."
     },
     {
       "id": "clanz-mixed-tiddla-clan-on-every-card-paid-once",
-      "page": 369,
+      "page": 371,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -9726,11 +9726,11 @@
         ],
         "others_ok": true
       },
-      "why": "Fleets p. 369: “The point cost for clan upgrades for tiddla skwadrons count for the whole skwadron (regardless of how large it is!), not individual escorts.” p. 372: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”: Onslaught attack ship 35 pts, Savage gunship 30 pts, Brute ramship 25 pts. Evil Sunz +20 pts (p. 369) on both cards of tiddla T is still one purchase: 3 x 30 + 3 x 35 + 3 x 25 + 20 = 290, not 310. Ruling T60 (28.10.2026): a mixed tiddla is the cards of one Squadron letter, so a clan or a Gubbin taken on any of them is the skwadron's: every card that is offered it has it and it is paid once."
+      "why": "Fleets p. 371: “The point cost for clan upgrades for tiddla skwadrons count for the whole skwadron (regardless of how large it is!), not individual escorts.” p. 374: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”: Onslaught attack ship 35 pts, Savage gunship 30 pts, Brute ramship 25 pts. Evil Sunz +20 pts (p. 371) on both cards of tiddla T is still one purchase: 3 x 30 + 3 x 35 + 3 x 25 + 20 = 290, not 310. Ruling T60 (28.10.2026): a mixed tiddla is the cards of one Squadron letter, so a clan or a Gubbin taken on any of them is the skwadron's: every card that is offered it has it and it is paid once."
     },
     {
       "id": "clanz-mixed-tiddla-gubbin-on-every-card-is-one-gubbin",
-      "page": 370,
+      "page": 372,
       "fleet": {
         "list": "Orks — Da Ork Clanz",
         "limit": 1000,
@@ -9790,7 +9790,7 @@
         ],
         "others_ok": true
       },
-      "why": "p. 370: “For tiddla skwadrons, the point cost for Gubbins count for the whole skwadron (regardless of how large it is!), not individual escorts.” p. 370 Extra Turrets: “+20 pts The ship gains +2 Turrets (Escorts get +1 Turret)”; p. 372: “A Warlord may choose for his own ship or escort skwadron one upgrade from the Gubbins list for every re-roll he has”. p. 372: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”: Onslaught attack ship 35 pts, Savage gunship 30 pts, Brute ramship 25 pts. Extra Turrets on both cards of tiddla T is one Gubbin of his one re-roll and one price: each escort has 2 turrets (1 + 1, pp. 384-385). 3 x 30 + 3 x 35 + 3 x 25 + 20 = 290. Ruling T60 (28.10.2026): a mixed tiddla is the cards of one Squadron letter, so a clan or a Gubbin taken on any of them is the skwadron's: every card that is offered it has it and it is paid once."
+      "why": "p. 372: “For tiddla skwadrons, the point cost for Gubbins count for the whole skwadron (regardless of how large it is!), not individual escorts.” p. 372 Extra Turrets: “+20 pts The ship gains +2 Turrets (Escorts get +1 Turret)”; p. 374: “A Warlord may choose for his own ship or escort skwadron one upgrade from the Gubbins list for every re-roll he has”. p. 374: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”: Onslaught attack ship 35 pts, Savage gunship 30 pts, Brute ramship 25 pts. Extra Turrets on both cards of tiddla T is one Gubbin of his one re-roll and one price: each escort has 2 turrets (1 + 1, pp. 386-387). 3 x 30 + 3 x 35 + 3 x 25 + 20 = 290. Ruling T60 (28.10.2026): a mixed tiddla is the cards of one Squadron letter, so a clan or a Gubbin taken on any of them is the skwadron's: every card that is offered it has it and it is paid once."
     }
   ]
 }

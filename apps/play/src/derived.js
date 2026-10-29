@@ -100,7 +100,7 @@ export function renderFleetPop(){
   const rrOwn = frr ? "The fleet's own: " + esc(frr.text) + " (Fleets p. " + frr.page + ")."
     : C && C.rerolls && C.rerolls.text ? esc(unitName(appState.G.cmd)) + ": " + esc(C.rerolls.text) + "." : "";
   const rrRule = frr ? esc(frr.how || "") + " One re-roll per check at most (p. 48)."
-    : fl.rerollsPerTurn ? "One re-roll per check at most (p. 48). It is one per turn (Fleets p. 231), and the enemy's turn is a turn too: " +
+    : fl.rerollsPerTurn ? "One re-roll per check at most (p. 48). It is one per turn (Fleets p. 241), and the enemy's turn is a turn too: " +
         (OPT.orders ? "the box comes back at the start of yours and of the enemy's." : "the box comes back at NEW TURN - tap it back yourself when the enemy's turn starts.") +
         " Lost for the battle if the flagship's bridge is smashed (p. 67)."
     : "One re-roll per check at most; lost for the battle if the flagship's bridge is smashed (p. 48, 67).";
@@ -231,7 +231,7 @@ export function weaponsTable(R, st, esq){
     const alive = esq ? a.ships : 1;
     const full = n == null ? null : n * alive;
     /* the halved value: the rules layer's own when the ship is crippled (a
-       Necron Portal rounds down, Fleets p. 401), else the generic ceil */
+       Necron Portal rounds down, Fleets p. 403), else the generic ceil */
     let half = full == null ? "" : PLAY.half(full);
     /* a star fort's Basilica row is whole while the quadrant is crippled
        (Fleets p. 501): its strength stays the value in force */

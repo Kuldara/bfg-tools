@@ -25,10 +25,10 @@
     sides: { a: { n: "Patrol", f: "Imperial Navy" }, b: { n: "Planet Killer fleet", f: "Chaos" } },
     pitch: "The Planet Killer is heading for Cadia. A small Imperial patrol has six turns to stop it — or at least hurt it.",
     glance: [["Points", "Fixed fleets"], ["Table", "180 × 120 cm"], ["Battlezone", "Any phenomena you like"], ["First turn", "Patrol chooses"], ["Game ends", "After 6 turns"]],
-    bring: ["The Planet Killer (FL p. 252)", "Fixed fleets below"],
+    bring: ["The Planet Killer (FL p. 254)", "Fixed fleets below"],
     forces: {
       a: ["Mars class battlecruiser with an Admiral (Ld 9, 2 re-rolls).", "One Tyrant class cruiser and one Gothic class cruiser.", "A squadron of four Cobra destroyers."],
-      b: ["The Planet Killer (FL p. 252) with a Chaos Warmaster (Ld 9, 3 re-rolls).", "One Devastation class cruiser and one Slaughter class cruiser.", "A squadron of three Iconoclast destroyers."]
+      b: ["The Planet Killer (FL p. 254) with a Chaos Warmaster (Ld 9, 3 re-rolls).", "One Devastation class cruiser and one Slaughter class cruiser.", "A squadron of three Iconoclast destroyers."]
     },
     draw: (v, W, H) => [
       R(W / 2 - 30, 0, 60, 30, "b", ""), { z: "mark", x: W / 2, y: 10, s: "b", l: "" },
@@ -44,7 +44,7 @@
       { t: "Take turns placing one cruiser or one escort squadron at a time in your own zone, up to 30 cm from your edge, until everything is down." },
       { s: "a", t: "The patrol chooses to go first or second." }
     ],
-    refs: [["The Planet Killer", "FL p. 252"], ["Mars class battlecruiser", "FL p. 35"]],
+    refs: [["The Planet Killer", "FL p. 254"], ["Mars class battlecruiser", "FL p. 35"]],
     play: [
       { w: "Patrol, all game", s: "a", t: "You cannot hope to win the war here — slow the fleet down. Destroying the Planet Killer is a major victory, crippling it a minor one." },
       { w: "Chaos, all game", s: "b", t: "Get the Planet Killer and one more capital ship off the opposite long edge (the patrol’s edge) while the Planet Killer is not crippled." },
@@ -293,10 +293,10 @@
       { s: "b", t: "The raiders choose who goes first." }
     ],
     notes: ["The rulebook map shows a grey “Chaos Deployment” band along the top edge from 90 cm, an exit point on the upper part of the right edge, a convoy zone 20 cm deep along the lower 60 cm of the left edge, and the words “Attacker’s Deployment” on the bottom edge. It does not say whether the raiders may also deploy along the bottom edge, nor how long the exit point is — agree before play."],
-    refs: [["Warp rifts", "RB p. 111"], ["Daemonships and warp translation", "FL p. 226–227"]],
+    refs: [["Warp rifts", "RB p. 111"], ["Daemonships and warp translation", "FL p. 236–237"]],
     play: [
       { w: "Warp rifts", t: "Ships crossing a rift test as normal (RB p. 111). Convoy ships lost in a rift count towards the raiders’ goal." },
-      { w: "Transformation", s: "b", t: "A Chaos ship that fails to navigate a warp rift is not lost: in the current Chaos end phase it returns as a daemonship by warp translation (FL p. 226–227). This is permanent, and it happens again every time it fails." },
+      { w: "Transformation", s: "b", t: "A Chaos ship that fails to navigate a warp rift is not lost: in the current Chaos end phase it returns as a daemonship by warp translation (FL p. 236–237). This is permanent, and it happens again every time it fails." },
       { w: "Exit point", s: "a", t: "Transports and escorts leave by the exit point on the right edge." }
     ],
     tools: [
@@ -323,12 +323,12 @@
   {
     id: "bc-macharias-end", grp: "campaign", name: "Macharia’s End", series: "13th Black Crusade · Scenario Seven", trust: "rulebook",
     why: "Official campaign finale with special rules for the Planet Killer’s overcharged gun.", src: "RB p. 198–199", book: "K", suggest: ["Imperial Navy", "Chaos"],
-    others: "Any defending fleet. The attacker needs the Planet Killer (FL p. 252), so it is a Chaos fleet.",
+    others: "Any defending fleet. The attacker needs the Planet Killer (FL p. 254), so it is a Chaos fleet.",
     sides: { a: { n: "Defenders of Macharia", f: "Imperial Navy" }, b: { n: "Planet Killer fleet", f: "Chaos (required)" } },
     pitch: "The Planet Killer has reached Macharia and starts charging its gun. Cripple it before the third charge counter.",
     glance: [["Points", "Defenders 2000 · Chaos 1500 + Planet Killer"], ["Table", "180 × 120 cm"], ["Battlezone", "Macharia at the defenders’ edge"], ["First turn", "Defenders"], ["Game ends", "Macharia dies or the Planet Killer is crippled"]],
-    bring: ["The Planet Killer (FL p. 252)", "Planet Macharia", "Charge counters (coins will do)", "Nova Cannon template"],
-    forces: { a: ["2000 pts.", "Up to 500 pts of it may be a separate vanguard."], b: ["1500 pts.", "Plus the Planet Killer (FL p. 252)."] },
+    bring: ["The Planet Killer (FL p. 254)", "Planet Macharia", "Charge counters (coins will do)", "Nova Cannon template"],
+    forces: { a: ["2000 pts.", "Up to 500 pts of it may be a separate vanguard."], b: ["1500 pts.", "Plus the Planet Killer (FL p. 254)."] },
     draw: (v, W, H) => [
       R(0, 0, 20, H, "a", ""), { z: "text", x: 12.5, y: Math.max(H * .22, 3 + textLen("Main fleet\n20 cm", W) / 2), l: "Main fleet\n20 cm", s: "a", rot: -90 },
       { z: "planet", cx: 0, cy: H / 2, r: 10, l: "" }, { z: "text", x: 36, y: H / 2, l: "Macharia", s: "n" },

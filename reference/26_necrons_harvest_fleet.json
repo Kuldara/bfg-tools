@@ -1,6 +1,6 @@
 {
   "list": "Necrons — Harvest Fleet",
-  "book_page": 404,
+  "book_page": 406,
   "read_pages": [
     398,
     399,
@@ -15,7 +15,7 @@
     {
       "key": "Necron fleets have no Fleet Commander in the conventional sense",
       "text": "Because of this, Necron fleets have no Fleet Commander in the conventional sense, which affects their fleet in the following ways:",
-      "page": 404,
+      "page": 406,
       "status": "out_of_scope",
       "why": "A transition sentence; its content shows in the list having no commander section.",
       "classified_on": "2026-09-09"
@@ -23,28 +23,28 @@
     {
       "key": "a ship carrying a Sepulchre",
       "text": "Leadership is determined normally for Necron fleets, except a ship carrying a Sepulchre (see below) automatically receives a Leadership of 10.",
-      "page": 404,
+      "page": 406,
       "status": "manual",
       "why": "Leadership is rolled at the start of the game; the app does not keep track of it."
     },
     {
       "key": "purchased by the fleet as a whole",
       "text": "A Necron fleet may purchase re-rolls, but they are purchased by the fleet as a whole, rather than being considered Fleet Commander re-rolls.",
-      "page": 404,
+      "page": 406,
       "status": "manual",
       "why": "This is the reason the re-roll rows are not under a commander: they are not bought for a commander but for the fleet."
     },
     {
       "key": "The fleet gets one re-roll and can purchase extra re-rolls",
       "text": "The fleet gets one re-roll and can purchase extra re-rolls at the cost shown.",
-      "page": 404,
+      "page": 406,
       "status": "manual",
       "why": "The first re-roll is free; the rows 'One extra re-roll' (25) and 'Two extra re-rolls' (75) share the group 'rr', so only one of them can be chosen."
     },
     {
       "key": "one tombship for every Scythe class harvest ship",
       "text": "Your fleet may include up to one tombship for every Scythe class harvest ship it contains.",
-      "page": 404,
+      "page": 406,
       "status": "enforced",
       "kind": "ratio",
       "allow": 1,
@@ -54,21 +54,21 @@
     {
       "key": "A single tombship may be upgraded to carry a Sepulchre",
       "text": "A single tombship may be upgraded to carry a Sepulchre.",
-      "page": 404,
+      "page": 406,
       "status": "manual",
-      "why": "Enforced as a per-row limit: Sepulchre mx=1, i.e. the whole fleet may have one, regardless of how many tombships it has. The book does not write '0-1' in front of the row, so the limit was set by hand in the ENTRY_LIMITS table. Until 7.9.2026 the browser counted row limits only for ship rows, so an upgrade row's limit would not have worked - that was fixed at the same time. At first the limit was counted only from the list row's choices, but the Cairn's own profile (p.405) offers the Sepulchre as an option and the list row is then HIDDEN - in practice the player always chooses it from the ship's option, and the limit never triggered once. Now the count asks the same question of both presentations."
+      "why": "Enforced as a per-row limit: Sepulchre mx=1, i.e. the whole fleet may have one, regardless of how many tombships it has. The book does not write '0-1' in front of the row, so the limit was set by hand in the ENTRY_LIMITS table. Until 7.9.2026 the browser counted row limits only for ship rows, so an upgrade row's limit would not have worked - that was fixed at the same time. At first the limit was counted only from the list row's choices, but the Cairn's own profile (p.407) offers the Sepulchre as an option and the list row is then HIDDEN - in practice the player always chooses it from the ship's option, and the limit never triggered once. Now the count asks the same question of both presentations."
     },
     {
       "key": "up to six Scythe class harvest ships and up to three Shroud class light cruisers",
       "text": "Your fleet may include up to six Scythe class harvest ships and up to three Shroud class light cruisers.",
-      "page": 404,
+      "page": 406,
       "status": "manual",
       "why": "Both limits are enforced, but per row: the book also writes them in front of the rows ('0-6', '0-3'). See the entries block's mx fields. So the sentence itself stays as text."
     },
     {
       "key": "up to twelve Jackal class raiders, and up to twelve Dirge class raiders, in squadrons of 2",
       "text": "Your fleet may include up to twelve Jackal class raiders, and up to twelve Dirge class raiders, in squadrons of 2-6.",
-      "page": 404,
+      "page": 406,
       "status": "enforced",
       "kind": "squadron",
       "min": 2,
@@ -78,14 +78,14 @@
     {
       "key": "Necrons have a starting attack or initiative rating of 4",
       "text": "Necrons have a starting attack or initiative rating of 4.",
-      "page": 398,
+      "page": 400,
       "status": "manual",
       "why": "Faktion yhteiset saannot; skenaariotieto."
     },
     {
       "key": "do not have access to any refits or crew skills",
       "text": "Necrons do not have access to any refits or crew skills in the course of a campaign, but the fleet as a whole may earn additional repair points in the same manner other fleet's ships earn refits or crew skills.",
-      "page": 402,
+      "page": 404,
       "status": "manual",
       "why": "A campaign rule. Significant for the list only in that the necrons are offered no refit rows at all."
     }
@@ -106,7 +106,7 @@
     {
       "name": "Cairn class tombship",
       "pts": 500,
-      "page": 405
+      "page": 407
     },
     {
       "name": "Sepulchre",
@@ -117,31 +117,31 @@
     {
       "name": "Scythe class harvest ship",
       "pts": 275,
-      "page": 406,
+      "page": 408,
       "mx": 6
     },
     {
       "name": "Shroud class light cruiser",
       "pts": 155,
-      "page": 407,
+      "page": 409,
       "mx": 3
     },
     {
       "name": "Jackal class raiders",
       "pts": 50,
-      "page": 408,
+      "page": 410,
       "mx": 12
     },
     {
       "name": "Dirge class raiders",
       "pts": 40,
-      "page": 409,
+      "page": 411,
       "mx": 12
     }
   ],
   "notes": [
-    "The whole list is on the book's page 404 and has six sections: MIND OF THE MACHINE, Leadership, Re-rolls, Tombships, Cruisers and ESCORTS/Raiders. Page 405 already starts the ship profiles.",
-    "This is the only list with no commander section at all. The book gives the reason on page 404: the necrons have no Fleet Commander, and the fleet as a whole buys the re-rolls.",
+    "The whole list is on the book's page 406 and has six sections: MIND OF THE MACHINE, Leadership, Re-rolls, Tombships, Cruisers and ESCORTS/Raiders. Page 407 already starts the ship profiles.",
+    "This is the only list with no commander section at all. The book gives the reason on page 406: the necrons have no Fleet Commander, and the fleet as a whole buys the re-rolls.",
     "The Sepulchre costs +50 pts and attaches to the Cairn tombship. The app offers it only to the tombship, because the row is in the Tombships section after the ship.",
     "The tombship ratio is unusual: the denominator is one ship class (Scythe), not the whole section. So the Shroud light cruisers do NOT count as a basis for a tombship, although they are in the same Cruisers section.",
     "A practical combination: six Scythes (1 650 pts) allow six tombships (3 000 pts), so the ratio does not bite until the points limit is very high. One tombship without any Scythe, on the other hand, is always illegal, and that is the most common error."

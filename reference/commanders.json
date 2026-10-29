@@ -25,61 +25,61 @@
     {
       "list": "Eldar — Iyanden Craftworld",
       "label": "Farseers",
-      "page": 318,
+      "page": 316,
       "leadership": null,
       "rerolls_included": 1,
-      "why": "p.318: 'gives the vessel a re-roll which may be used on itself, another capital ship in the same squadron or an escort squadron within 15 cm'; no Ld value. The limit from the same sentence: 'may be used on itself, another capital ship in the same squadron or an escort squadron within 15 cm'.",
+      "why": "p.316: 'gives the vessel a re-roll which may be used on itself, another capital ship in the same squadron or an escort squadron within 15 cm'; no Ld value. The limit from the same sentence: 'may be used on itself, another capital ship in the same squadron or an escort squadron within 15 cm'.",
       "verified": true,
       "rerolls_scope": "own ship, its squadron or an escort squadron within 15 cm"
     },
     {
       "list": "Eldar — Iyanden Craftworld",
       "label": "Prince Yriel",
-      "page": 319,
+      "page": 317,
       "leadership": null,
       "rerolls_included": 1,
-      "why": "p.319: 'He has one re-roll as part of his point cost, but a second or third re-roll can be purchased at +25 points each'; no Ld value is given (taken in place of the Hero).",
+      "why": "p.317: 'He has one re-roll as part of his point cost, but a second or third re-roll can be purchased at +25 points each'; no Ld value is given (taken in place of the Hero).",
       "verified": true
     },
     {
       "list": "Orks — Cyclops Cluster",
       "label": "Ork Warlord",
-      "page": 365,
+      "page": 367,
       "leadership": null,
       "rerolls_included": 1,
-      "why": "p.365: 'Warlords get one re-roll. They can have up to two more re-rolls'; no Ld value (the orks' Ld comes from the ship, p.358).",
+      "why": "p.367: 'Warlords get one re-roll. They can have up to two more re-rolls'; no Ld value (the orks' Ld comes from the ship, p.360).",
       "verified": true
     },
     {
       "list": "Orks — Waaagh!",
       "label": "Ork Warlord",
-      "page": 366,
+      "page": 368,
       "leadership": null,
       "rerolls_included": 1,
-      "why": "p.366: 'Warlords get one re-roll'; no Ld value.",
+      "why": "p.368: 'Warlords get one re-roll'; no Ld value.",
       "verified": true
     },
     {
       "list": "Orks — Da Ork Clanz",
       "label": "Ork Warlord",
-      "page": 372,
+      "page": 374,
       "leadership": null,
       "rerolls_included": 1,
-      "why": "p.372: 'Ork Warlord ... Free. A Warlord has one re-roll, and may purchase one or two more'; no Ld value. The limit p.372: 'A Warlord's re-rolls only count for the skwadrons under his command and not for the whole fleet.'",
+      "why": "p.374: 'Ork Warlord ... Free. A Warlord has one re-roll, and may purchase one or two more'; no Ld value. The limit p.374: 'A Warlord's re-rolls only count for the skwadrons under his command and not for the whole fleet.'",
       "verified": true,
       "rerolls_scope": "his own skwadrons only"
     },
     {
       "list": "The Emperor's Inquisition",
       "label": "Ordo Xenos Inquisitor Lord",
-      "page": 141,
+      "page": 151,
       "leadership": {
         "kind": "modifier",
         "value": 1,
         "max": 10
       },
       "rerolls_included": 0,
-      "why": "p.141: 'The ship adds +1 to its leadership (max. 10).' The sentence is missing from the extracted section text (lists.py), so it is recorded here from the book; the Hereticus (p.140) and the Malleus (p.142) parse from their own text.",
+      "why": "p.151: 'The ship adds +1 to its leadership (max. 10).' The sentence is missing from the extracted section text (lists.py), so it is recorded here from the book; the Hereticus (p.150) and the Malleus (p.152) parse from their own text.",
       "verified": true
     },
     {
@@ -102,8 +102,8 @@
     {
       "list": "Rogue Traders",
       "label": "Veteran Rogue Trader (Ld 9)",
-      "page": 174,
-      "why": "p.174: 'A Veteran Rogue Trader gets one re-roll, which may be used for his vessel or an accompanying Rogue Trader escort squadron.' Ld 9 from the row's heading.",
+      "page": 184,
+      "why": "p.184: 'A Veteran Rogue Trader gets one re-roll, which may be used for his vessel or an accompanying Rogue Trader escort squadron.' Ld 9 from the row's heading.",
       "rerolls_included": 1,
       "rerolls_scope": "own vessel or its Rogue Trader escort squadron",
       "verified": true
@@ -111,8 +111,8 @@
     {
       "list": "Rogue Traders — Exploration",
       "label": "Veteran Rogue Trader (Ld 9)",
-      "page": 176,
-      "why": "p.176: 'A Veteran Rogue Trader gets one re-roll, which may be used for his vessel or an accompanying Rogue Trader escort squadron.' Ld 9 from the row's heading.",
+      "page": 186,
+      "why": "p.186: 'A Veteran Rogue Trader gets one re-roll, which may be used for his vessel or an accompanying Rogue Trader escort squadron.' Ld 9 from the row's heading.",
       "rerolls_included": 1,
       "rerolls_scope": "own vessel or its Rogue Trader escort squadron",
       "verified": true
@@ -120,8 +120,8 @@
     {
       "list": "Chaos — Black Crusade",
       "label": "Abaddon (Ld 10)",
-      "page": 234,
-      "why": "p.234: 'Abaddon receives one re-roll per turn'; p.231: 'Re-rolls: 1 per turn.' and 'Abaddon's fleet is allowed to re-roll a single Command check or Leadership test each turn.' The number is one, but every turn - not once per game like the other commanders (p.11). Ld 10 from the row's heading.",
+      "page": 244,
+      "why": "p.244: 'Abaddon receives one re-roll per turn'; p.241: 'Re-rolls: 1 per turn.' and 'Abaddon's fleet is allowed to re-roll a single Command check or Leadership test each turn.' The number is one, but every turn - not once per game like the other commanders (p.11). Ld 10 from the row's heading.",
       "rerolls_included": 1,
       "rerolls_unit": "per turn",
       "verified": true
@@ -129,50 +129,32 @@
     {
       "list": "Rogue Traders — Pirates and Wolf Packs",
       "label": "Pirate Captain (+1 Ld)",
-      "page": 178,
+      "page": 188,
       "rerolls_included": 1,
       "rerolls_scope": "at most one per turn per Captain",
-      "why": "p.178: 'A Pirate Captain gets one re-roll, and may purchase up to two more re-rolls for +25 points each.' and 'Pirate Captains may use their re-rolls on any vessel or escort squadron in the fleet, but no individual Pirate Captain may use more than one re-roll per turn.' Ld +1 from the row's heading. Review 5.10.2026.",
+      "why": "p.188: 'A Pirate Captain gets one re-roll, and may purchase up to two more re-rolls for +25 points each.' and 'Pirate Captains may use their re-rolls on any vessel or escort squadron in the fleet, but no individual Pirate Captain may use more than one re-roll per turn.' Ld +1 from the row's heading. Review 5.10.2026.",
       "verified": true
     },
     {
       "list": "Chaos — Black Crusade",
       "label": "Chaos Lord (Ld +1)",
-      "page": 234,
+      "page": 244,
       "rerolls_included": 0,
       "rerolls_scope": "his own ship or squadron only",
-      "why": "p.234: 'A Lord may be given a re-roll (which he can use for his own ship or squadron only) at +25 points.' No included re-roll; the limit concerns the purchased one. Ld +1 from the row's heading. Review 5.10.2026.",
+      "why": "p.244: 'A Lord may be given a re-roll (which he can use for his own ship or squadron only) at +25 points.' No included re-roll; the limit concerns the purchased one. Ld +1 from the row's heading. Review 5.10.2026.",
       "verified": true
     },
     {
       "list": "Chaos — Tzeentch",
       "label": "Chaos Lord (Ld +1)",
-      "page": 236,
+      "page": 246,
       "rerolls_included": 0,
       "rerolls_scope": "his own ship or squadron only",
-      "why": "p.236: 'A Lord may be given a Mark of Tzeentch, providing a re-roll (which he can use for his own ship or squadron only) for +25 points.' No included re-roll; the limit concerns the purchased one. Ld +1 from the row's heading. Review 5.10.2026.",
+      "why": "p.246: 'A Lord may be given a Mark of Tzeentch, providing a re-roll (which he can use for his own ship or squadron only) for +25 points.' No included re-roll; the limit concerns the purchased one. Ld +1 from the row's heading. Review 5.10.2026.",
       "verified": true
     },
     {
       "list": "Chaos — Nurgle",
-      "label": "Chaos Lord (Ld +1)",
-      "page": 240,
-      "rerolls_included": 0,
-      "rerolls_scope": "his own ship or squadron only",
-      "why": "p.240: 'A Lord may be given a re-roll (which he can use for his own ship or squadron only) for +25 points.' No included re-roll; the limit concerns the purchased one. Ld +1 from the row's heading. Review 5.10.2026.",
-      "verified": true
-    },
-    {
-      "list": "Chaos — Khorne",
-      "label": "Chaos Lord (Ld +1)",
-      "page": 244,
-      "rerolls_included": 0,
-      "rerolls_scope": "his own ship or squadron only",
-      "why": "p.244: 'A Lord may be given a re-roll (which he can use for his own ship or squadron only) for +25 points.' No included re-roll; the limit concerns the purchased one. Ld +1 from the row's heading. Review 5.10.2026.",
-      "verified": true
-    },
-    {
-      "list": "Chaos — Slaanesh",
       "label": "Chaos Lord (Ld +1)",
       "page": 248,
       "rerolls_included": 0,
@@ -181,21 +163,39 @@
       "verified": true
     },
     {
+      "list": "Chaos — Khorne",
+      "label": "Chaos Lord (Ld +1)",
+      "page": 250,
+      "rerolls_included": 0,
+      "rerolls_scope": "his own ship or squadron only",
+      "why": "p.250: 'A Lord may be given a re-roll (which he can use for his own ship or squadron only) for +25 points.' No included re-roll; the limit concerns the purchased one. Ld +1 from the row's heading. Review 5.10.2026.",
+      "verified": true
+    },
+    {
+      "list": "Chaos — Slaanesh",
+      "label": "Chaos Lord (Ld +1)",
+      "page": 252,
+      "rerolls_included": 0,
+      "rerolls_scope": "his own ship or squadron only",
+      "why": "p.252: 'A Lord may be given a re-roll (which he can use for his own ship or squadron only) for +25 points.' No included re-roll; the limit concerns the purchased one. Ld +1 from the row's heading. Review 5.10.2026.",
+      "verified": true
+    },
+    {
       "list": "Eldar Corsairs — Gothic Sector",
       "label": "Prince Yriel",
-      "page": 319,
+      "page": 317,
       "leadership": null,
       "rerolls_included": 1,
-      "why": "p.319: 'Yriel may be taken instead of the Hero Fleet Commander as listed in the Corsair and Craftworld Eldar fleet lists' - so the row also belongs to this list (p.316), although the box is printed on Iyanden's page. 'He has one re-roll as part of his point cost, but a second or third re-roll can be purchased at +25 points each'; no Ld value is given.",
+      "why": "p.317: 'Yriel may be taken instead of the Hero Fleet Commander as listed in the Corsair and Craftworld Eldar fleet lists' - so the row also belongs to this list (p.314), although the box is printed on Iyanden's page. 'He has one re-roll as part of his point cost, but a second or third re-roll can be purchased at +25 points each'; no Ld value is given.",
       "verified": true
     },
     {
       "list": "Eldar Corsairs — Later Gothic War",
       "label": "Prince Yriel",
-      "page": 319,
+      "page": 317,
       "leadership": null,
       "rerolls_included": 1,
-      "why": "p.319: 'Yriel may be taken instead of the Hero Fleet Commander as listed in the Corsair and Craftworld Eldar fleet lists' - so the row also belongs to this list (p.317), although the box is printed on Iyanden's page. 'He has one re-roll as part of his point cost, but a second or third re-roll can be purchased at +25 points each'; no Ld value is given.",
+      "why": "p.317: 'Yriel may be taken instead of the Hero Fleet Commander as listed in the Corsair and Craftworld Eldar fleet lists' - so the row also belongs to this list (p.315), although the box is printed on Iyanden's page. 'He has one re-roll as part of his point cost, but a second or third re-roll can be purchased at +25 points each'; no Ld value is given.",
       "verified": true
     }
   ]

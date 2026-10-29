@@ -440,7 +440,7 @@
    "g": "checked",
    "f": "reserves",
    "p": 39,
-   "text": "• Repulsive class grand cruiser (pg 269) • Executor class grand cruiser (pg 271) • Hades class heavy cruiser (pg 274) • Murder class cruiser (pg 279) • Carnage class cruiser (pg 277) These ‘reserve’ vessels are picked in the normal manner, so for every three vessels of a given type which you choose from the main fleet list, you may pick one vessel of that type from another Imperial list, or from the above selection of Chaos vessels (but not both)."
+   "text": "• Repulsive class grand cruiser (pg 271) • Executor class grand cruiser (pg 273) • Hades class heavy cruiser (pg 276) • Murder class cruiser (pg 281) • Carnage class cruiser (pg 279) These ‘reserve’ vessels are picked in the normal manner, so for every three vessels of a given type which you choose from the main fleet list, you may pick one vessel of that type from another Imperial list, or from the above selection of Chaos vessels (but not both)."
   },
   {
    "id": "S0062",
@@ -2986,7 +2986,7 @@
    "g": "checked",
    "f": "row_cond",
    "p": 227,
-   "text": "Any Daemon ship may have a single Mark of Chaos with the same effects and cost in points as described on pg 232.",
+   "text": "Any Daemon ship may have a single Mark of Chaos with the same effects and cost in points as described on pg 242.",
    "drop_in": [
     "Chaos — Incursion"
    ]
@@ -3630,7 +3630,7 @@
    "g": "checked",
    "f": "row_cond",
    "p": 234,
-   "text": "Remember, a ship with a Chaos Space Marine crew may have a Mark of Chaos, even if a Warmaster or Lord does not captain it, but is subject to the restriction on pg 225."
+   "text": "Remember, a ship with a Chaos Space Marine crew may have a Mark of Chaos, even if a Warmaster or Lord does not captain it, but is subject to the restriction on pg 235."
   },
   {
    "id": "S0503",
@@ -4897,7 +4897,7 @@
    "g": "checked",
    "f": "row_offered",
    "p": 347,
-   "text": "ELDAR HAVEN An Eldar Haven (pg 334) may be used as a Dark Eldar pirate base."
+   "text": "ELDAR HAVEN An Eldar Haven (pg 332) may be used as a Dark Eldar pirate base."
   },
   {
    "id": "S0685",

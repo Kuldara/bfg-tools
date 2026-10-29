@@ -9,7 +9,7 @@ export var SCHEMA_VERSION = 4;
 export var SEP = "\u0001";          /* same separator as the save's upn keys */
 export var TEXT_KEY_LEN = 40;       /* fallback key when an id no longer matches */
 
-/* Whole text, never truncated: the Chaos battle barge (Fleets p. 255) has two
+/* Whole text, never truncated: the Chaos battle barge (Fleets p. 257) has two
    options that differ only after their 80th character (45 cm/FP 8 versus
    30 cm/FP 10), and a truncated hash gave them one id. */
 export function normOptText(t){
@@ -21,7 +21,7 @@ export function textKey(t){ return String(t == null ? "" : t).slice(0, TEXT_KEY_
    -1 when neither matches. The text fallback covers an id that changed
    because the extracted text was corrected (docs/SAVE_SCHEMA.md); it only
    counts when exactly one option carries that prefix, otherwise the choice
-   would be a guess (p. 255 again: two options share their first 40). */
+   would be a guess (p. 257 again: two options share their first 40). */
 export function optionIndex(sh, id, text){
   var ol = (sh && sh.ol) || [];
   var i, hit = -1, hits = 0;

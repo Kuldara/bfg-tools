@@ -10,7 +10,7 @@ import upgrades
 import swaps, copy
 from .inputs import copy, re
 from .page_refs import v
-from .row_classes import _L, _c, _e, _m, _nm, _own, _p18_list, _p18_sec, _r, _s, _tt, _txt, i, j, k, r, t, x
+from .row_classes import _L, _c, _e, _m, _nm, _own, _p18_list, _p18_sec, _r, _s, _tt, _txt, i, k, r, t, x
 from .row_texts import Lx, _hit, _i, _n, _o, _ox, _sec, _sh, _si, _t, _x, e, s
 from .section_guard import _titles, lists_out
 from .ships import o, ships
@@ -21,7 +21,7 @@ from .ships import o, ships
 # Profile type Cruiser (also heavy, battle and light cruisers) and grand
 # cruiser (Fleets p.14 counts them in the "cruisers" group; p.23 excludes only
 # battleships - J21, raised on Discord), not a battleship. Tyranids (their own Mega-Spore Mines) and Necrons
-# left out (spot check 12). Orks included: p.360 "Orks may buy orbital mines
+# left out (spot check 12). Orks included: p.362 "Orks may buy orbital mines
 # like other fleets at +5 pts per (maximal) launch bay strength ... Ork Space
 # Hulks cannot take orbital mines" (spot check 13; the limit in spot check 12 was wrong).
 _OM_DESC = ("Orbital mines replace all the attack craft in the ship's launch bays: one mine per launch bay "
@@ -51,14 +51,14 @@ for Lx in lists_out:
         Lx["secs"].append(_sec)
     # noup/offopt: mines replace ALL attack craft (p.23), so no
     # torpedo bombers (p.22 "an additional type of attack craft") nor the ship's
-    # own attack craft choices (Shark assault boats p.59, Vampire raiders p.330,
-    # the orks' torpedo-bommas as the ship's own option p.359).
+    # own attack craft choices (Shark assault boats p.59, Vampire raiders p.328,
+    # the orks' torpedo-bommas as the ship's own option p.361).
     _omcond = dict(ty=r"^(grand )?cruiser$", has="launch bay", noup=r"^torpedo[\s-]*bom",
                    offopt=r"shark assault boats|vampire raiders|torpedo[\s-]*bom")
     if Lx["nm"].startswith("Orks"):
-        # p.360 not the Ork Space Hulk; Zukov's Klaw's bays are an Assault Karrier (p.381)
+        # p.362 not the Ork Space Hulk; Zukov's Klaw's bays are an Assault Karrier (p.383)
         _omcond["nmno"] = r"hulk|zukov"
-        # p.371: an Assault Karrier "may only use assault boats" (RAW-06)
+        # p.373: an Assault Karrier "may only use assault boats" (RAW-06)
         _omcond["noup"] += r"|^assault karrier"
     _sec["ents"].append(dict(l="Orbital mines", r=None, p=5, a=1, u=1, mx=None, k="up", per="bay",
                              nt="Per launch bay strength.", prose=1, src_page=23,
@@ -87,7 +87,7 @@ for Lx in lists_out:
 print("torpedo bombers rows with the mine exclusion: %d" % _tbx)
 assert _tbx >= 20, "at least 20 torpedo bombers rows expected, found %d" % _tbx
 
-# p.234 Black Crusade: "Chaos Warmasters get one re-roll. In addition they may
+# p.244 Black Crusade: "Chaos Warmasters get one re-roll. In addition they may
 # be given a single Mark of Chaos." The Marks' prices are under Chaos Lords,
 # and the rows' target (at) was only the Lord (spot check 15 row 36). The Warmaster
 # is added as a target; grp=mark keeps the Mark single.
@@ -108,60 +108,75 @@ for Lx in lists_out:
                 _wm += 1
 assert _wm == 4, "Black Crusade: 4 Warmaster Mark rows expected, found %d" % _wm
 
-# --- J161: Prince Yriel on both Corsair lists (p.319, 9.10.2026) ------------
-# "Yriel may be taken instead of the Hero Fleet Commander as listed in the
-# Corsair and Craftworld Eldar fleet lists." The box is printed on the second page of
-# the Iyanden list (p.319), so the extractor gave the row only to Iyanden
-# - a player report 9.10.2026 and the book check 5.10. (J161). The rows and
-# Yriel's own sentences are COPIED from the Iyanden section, not written again:
-# one source, and the copy inherits everything earlier runs gave the row (rr,
-# ld, prose). The place is the Corsair list's own RESERVES AND ALLIES section, the same
-# as in Iyanden; the section exists, so no section index moves.
-_YR_SRC = ("Yriel may be taken instead of the Hero Fleet Commander as listed in the "
-           "Corsair and Craftworld Eldar fleet lists.")
-_yiy = _p18_list("Eldar \u2014 Iyanden Craftworld")
-_yis = _p18_sec(_yiy, "RESERVES AND ALLIES")
-_ysec = _yiy["secs"][_yis]
-assert [e["l"] for e in _ysec["ents"]] == ["Prince Yriel", "One extra re-roll", "Two extra re-rolls",
-                                            "Embarked aboard the Flame of Asuryan"], [e["l"] for e in _ysec["ents"]]
-assert _ysec["ents"][0]["k"] == "cmd" and _ysec["ents"][0]["p"] == 150 and _ysec["ents"][0].get("rr") == 1
-assert all(e.get("at") == [[_yis, 0]] for e in _ysec["ents"][1:]), [e.get("at") for e in _ysec["ents"]]
-_ytext = [t for t, o in zip(_ysec["text"], _ysec["own"]) if o == "Prince Yriel"]
-assert len(_ytext) == 9 and _YR_SRC in _ytext, _ytext
-# The book's sentence has a misprint ("rules *eg you do not ... fleet list(."):
-# a star in place of the opening bracket and an opening one in place of the closing one.
-# On the card and the legality row it is corrected to be readable; the words are the book's.
-_YBAD = "*eg you do not have to field three capital ships in a Corsair Eldar fleet list(."
-_YGOOD = "(e.g. you do not have to field three capital ships in a Corsair Eldar fleet list)."
-_yfix = [i for i, t in enumerate(_ysec["text"]) if _YBAD in t]
-assert len(_yfix) == 1, "Yriel: the misprinted sentence is not found exactly once (%d)" % len(_yfix)
-_ysec["text"][_yfix[0]] = _ysec["text"][_yfix[0]].replace(_YBAD, _YGOOD)
-_ytext = [t for t, o in zip(_ysec["text"], _ysec["own"]) if o == "Prince Yriel"]
-_yex = [t for t in _ytext if "exempt from the reserve rules" in t]
-_yab = [t for t in _ytext if "in which case his cost is 125 points" in t]
-assert len(_yex) == 1 and len(_yab) == 1
-# p.319: "He must be embarked aboard the Flame of Asuryan if it is present, in
-# which case his cost is 125 points." The row -25 is a tick the player may
-# forget or take without the ship: resolveFleet compares (aboard).
+# --- J161: Prince Yriel on Iyanden and both Corsair lists (p.313) ----------
+# v0.40 gives Yriel his own page (p.313, PRINCE YRIEL: 150 PTS); in v0.36 his
+# box was in the Iyanden RESERVES AND ALLIES section and was copied to the
+# Corsair lists (J161, a player report 9.10.2026). "Yriel may be taken instead
+# of the Hero Fleet Commander as listed in the Corsair and Craftworld Eldar
+# fleet lists", so the section is built here from his page for the three lists,
+# at the end of each list before the defence section: no section index moves.
+_YR_SRC = ("Yriel may be taken instead of the Hero Fleet Commander as listed in the Corsair and "
+           "Craftworld Eldar fleet lists, and is treated as an Eldar Hero with the additions listed here.")
+_YR_ABOARD_S = ("He must be embarked aboard the Flame of Asuryan if it is present, in which case "
+                "Yriel's cost is reduced to 125 points.")
+_YR_EX = ("Furthermore, if the Flame of Asuryan with Yriel is added to the parent fleet it is exempt "
+          "from the reserve rules. (e.g. you do not need to field three capital ships in a Corsair "
+          "Eldar fleet list).")
+_YR_TEXT = [
+    _YR_SRC,
+    "The fleet list chosen becomes the parent fleet when it comes to using reserve ships from the other fleet.",
+    "Prince Yriel must be embarked on a Dragonship equipped with launch bays, or the Flame of Asuryan, "
+    "even if he is leading a Corsair fleet.",
+    _YR_ABOARD_S,
+    _YR_EX,
+    "A second and third re-roll can be purchased at +25 points each.",
+    "Yriel is accompanied by the fiercest members of his own pirate warband, which count as an Aspect "
+    "Warrior host (pg. 307).",
+    "His vessel is equipped with Vampire raiders.",
+    "A fleet led by Yriel has an attack rating of 4, even if it includes Craftworld vessels.",
+]
+# "He must be embarked aboard the Flame of Asuryan if it is present, in which
+# case Yriel's cost is reduced to 125 points." The row -25 is a tick the player
+# may forget or take without the ship: resolveFleet compares (aboard).
 _YR_ABOARD = dict(cmd_re="^prince yriel", ship_re="^flame of asuryan",
-                  up_re="^embarked aboard the flame of asuryan", pg=319, src=_yab[0])
-_yiy["aboard"] = dict(_YR_ABOARD)
-_yn = [0, 0, 0]
-for _nm in ("Eldar Corsairs \u2014 Gothic Sector", "Eldar Corsairs \u2014 Later Gothic War"):
+                  up_re="^embarked aboard the flame of asuryan", pg=313, src=_YR_ABOARD_S)
+def _yriel_sec(_i):
+    return dict(
+        t="Prince Yriel", text=list(_YR_TEXT), own=["Prince Yriel"] * len(_YR_TEXT), notes=[],
+        ents=[dict(l="Prince Yriel", r=None, p=150, src_page=313, a=0, mx=None, nt=None, k="cmd",
+                   ld=dict(kind="fixed", value=10), rr=1),
+              dict(l="One extra re-roll", r=None, p=25, a=1, u=1, mx=None, nt=None, prose=1, src_page=313,
+                   k="up", grp="rr", at=[[_i, 0]], rr=1),
+              dict(l="Two extra re-rolls", r=None, p=50, a=1, u=1, mx=None, nt=None, prose=1, src_page=313,
+                   k="up", grp="rr", at=[[_i, 0]], rr=2),
+              dict(l="Embarked aboard the Flame of Asuryan", r=None, p=-25, a=1, u=1, mx=None,
+                   nt="His cost is reduced to 125 points instead of 150.", prose=1, src_page=313,
+                   k="up", at=[[_i, 0]])],
+        rules=[])
+_yn = [0, 0, 0, 0]
+for _nm in ("Eldar — Iyanden Craftworld", "Eldar Corsairs — Gothic Sector", "Eldar Corsairs — Later Gothic War"):
     _L = _p18_list(_nm)
-    _si = _p18_sec(_L, "RESERVES AND ALLIES")
-    _s = _L["secs"][_si]
-    assert not _s["ents"], "%s: the RESERVES AND ALLIES section already has rows" % _nm
-    _s["ents"] = [copy.deepcopy(e) for e in _ysec["ents"]]
-    for _e in _s["ents"][1:]:
-        _e["at"] = [[_si, 0]]
-    _own = list(_s.get("own") or [None] * len(_s["text"]))
-    assert len(_own) == len(_s["text"])
-    _s["own"] = _own + ["Prince Yriel"] * len(_ytext)
-    _s["text"] = list(_s["text"]) + list(_ytext)
-    # Yriel stands in for the Hero: the same one commander slot, and he fills
-    # the required commander (p.316/317 "a Pirate Prince must be included",
-    # which the Hero replaces).
+    assert not any("yriel" in str(e["l"]).lower() for x in _L["secs"] for e in x["ents"]), "%s: Yriel already exists" % _nm
+    _si = len(_L["secs"])
+    _L["secs"].append(_yriel_sec(_si))
+    _L["aboard"] = dict(_YR_ABOARD)
+    if "Iyanden" in _nm:
+        # Yriel replaces the Hero, the Hero the Autarch: one of the three, and he
+        # fills the required Autarch ("If the fleet is worth over 750 points, an
+        # Autarch must be included to lead it", p.316).
+        _cmd = [dict(sec=_p18_sec(_L, "Autarch")), dict(sec=_p18_sec(_L, "Eldar Hero")), dict(sec=_si, re="^prince yriel")]
+        _L["secs"][_si]["rules"].append(dict(kind="cap", max=1, ok=True, sec=[_si],
+                                             label="Fleet commander (Autarch, Eldar Hero or Prince Yriel)",
+                                             pick=_cmd, src=_YR_SRC))
+        for _x in _L["secs"]:
+            for _r in _x.get("rules") or []:
+                if _r.get("kind") == "mandatory_at" and "an Autarch must be included" in str(_r.get("src", "")):
+                    _r["pick"] = list(_r.get("pick") or [dict(sec=j) for j in (_r.get("sec") or [])]) + [dict(sec=_si, re="^prince yriel")]
+                    _yn[3] += 1
+        continue
+    # Corsairs: Yriel stands in for the Hero: the same one commander slot, and he
+    # fills the required commander (p.314/315 "a Pirate Prince must be
+    # included", which the Hero replaces).
     for _x in _L["secs"]:
         for _r in _x.get("rules") or []:
             if _r.get("label") == "Fleet commander (Pirate Prince or Eldar Hero)":
@@ -172,57 +187,37 @@ for _nm in ("Eldar Corsairs \u2014 Gothic Sector", "Eldar Corsairs \u2014 Later 
             elif _r.get("kind") == "mandatory_at" and "Pirate Prince must be included" in str(_r.get("src", "")):
                 _r["pick"] = list(_r["pick"]) + [dict(sec=_si, re="^prince yriel")]
                 _yn[1] += 1
-    # p.319: "Furthermore, if the Flame of Asuryan with Yriel is added to the
-    # parent fleet it is exempt from the reserve rules *eg you do not have to
-    # field three capital ships in a Corsair Eldar fleet list(." (the book's own
-    # misprint in brackets). The exemption concerns ONLY the Flame with Yriel: not
-    # a Dragonship, not a fleet led by the Hero. Engine: resolveFleet.
-    # p.329: "It is a unique vessel, only one may ever be included in the
-    # fleet." The borrowed row's own 0-1 does not reach the host, so the limit is here.
-    _L["res_exempt"] = dict(re="^flame of asuryan$", needs_re="^prince yriel", pg=319, src=_yex[0],
-                            unique_src="It is a unique vessel, only one may ever be included in the fleet.", unique_pg=329)
-    _L["aboard"] = dict(_YR_ABOARD)
+    # The exemption concerns ONLY the Flame with Yriel: not a Dragonship, not a
+    # fleet led by the Hero. Engine: resolveFleet. p.327: "It is a unique
+    # vessel, only one may ever be included in the fleet." The borrowed row's
+    # own 0-1 does not reach the host, so the limit is here.
+    _L["res_exempt"] = dict(re="^flame of asuryan$", needs_re="^prince yriel", pg=313, src=_YR_EX,
+                            unique_src="It is a unique vessel, only one may ever be included in the fleet.", unique_pg=327)
     _yn[2] += 1
-assert _yn == [2, 2, 2], _yn
-print("Prince Yriel added to %d Corsair lists (p.319)" % _yn[2])
-
-# p.319: the RESERVES AND ALLIES paragraph (Corsair reserves) and Prince Yriel's
-# box are in the same section. Ownerless sentences showed on Yriel's
-# card, although they are the paragraph's ("An Eldar Hero must lead the fleet in
-# order to use Corsair Eldar vessels as reserves") or the box's narrative
-# ("Unlike an Exarch ..."); spot check 15 row 59. ownx: on nobody's card.
-_yr = 0
-for Lx in lists_out:
-    for s in Lx["secs"]:
-        if s["t"] != "RESERVES AND ALLIES" or not s.get("own"):
-            continue
-        if "Prince Yriel" not in s["own"]:
-            continue
-        for _i, _o in enumerate(s["own"]):
-            if _o:
-                continue
-            s["own"][_i] = "RESERVES AND ALLIES"
-            _ox = s.setdefault("ownx", [])
-            if _i not in _ox:
-                _ox.append(_i)
-            _yr += 1
-assert _yr >= 6, "Yriel: at least 6 reserve paragraph sentences expected, found %d" % _yr
+assert _yn == [2, 2, 2, 1], _yn
+print("Prince Yriel added to Iyanden and %d Corsair lists (p.313)" % _yn[2])
 
 # --- Spot check 19, J42: the make-up of squadrons (Fleets p.13) --------------
 # "A single escort may be taken in a fleet as long as there are no other
 # escorts in the fleet and no other restrictions due to the fleet list, such
 # as a minimum of six escorts in a squadron, these restrictions cannot be
-# ignored." The exception (lone) concerns the lists whose sentence refers to p.13
-# ("in squadrons of 2-6 unless specified (see pg 13)"); the lists that set their
-# own size (Rogue Traders, Pirates, Necrons, Tyranids, Tau Defenders) do not get it.
-_lone = 0
+# ignored." The exception (lone) concerns the lists whose sentence in v0.36
+# referred to p.13 ("in squadrons of 2-6 unless specified (see pg 13)"); v0.40
+# writes only "in squadrons of 2-6", so the lists are named. The lists that
+# set their own size (Rogue Traders, Pirates, Necrons, Tyranids, Tau
+# Defenders) do not get it.
+_LONE_LISTS = re.compile(r"^(Imperial Navy|Space Marines|Adeptus Mechanicus|Grey Knights|Chaos|Eldar|"
+                         r"Dark Eldar|Orks — (Cyclops|Waaagh)|Demiurg)")
+_lone = []
 for Lx in lists_out:
+    if not _LONE_LISTS.match(Lx["nm"]):
+        continue
     for s in Lx["secs"]:
         for r in s.get("rules") or []:
-            if r.get("kind") == "squadron" and re.search(r"see pg\.?\s*13", str(r.get("src", "")), re.I):
+            if r.get("kind") == "squadron" and re.search(r"in squadrons of 2\s*[–-]\s*6", str(r.get("src", "")), re.I):
                 r["lone"] = 1
-                _lone += 1
-assert _lone == 21, "21 squadron rules referring to p.13 expected, found %d" % _lone
+                _lone.append(Lx["nm"])
+assert len(_lone) == 21, "21 squadron rules with the p.13 single escort expected, found %d: %s" % (len(_lone), _lone)
 # Armageddon, Fleets p.41: "* Space Marine vessels may not be squadroned with
 # non-Space Marine vessels." (split_fl). Tau p.455: "Defenders are fielded in
 # squadrons of 2-6 ships. They may be combined in squadrons with Messengers if
@@ -247,7 +242,7 @@ for Lx in lists_out:
                 _sq += 1
 assert _sq == 3, "3 squadron flags (Armageddon + two Tau lists) expected, found %d" % _sq
 
-# --- Spot check 19, J45: the Nate Montes condition (p.179) -------------------
+# --- Spot check 19, J45: the Nate Montes condition (p.189) -------------------
 # "Siluria Class Light Cruisers and Havoc Class Frigates are older, outdated
 # ships, and much more commonly seen outside of the Imperial Navy. If both
 # players agree before the game, these ships can be included in a Rogue Trader
@@ -256,20 +251,30 @@ assert _sq == 3, "3 squadron flags (Armageddon + two Tau lists) expected, found 
 _NM_TXT = ("Siluria Class Light Cruisers and Havoc Class Frigates are older, outdated ships, and much more "
            "commonly seen outside of the Imperial Navy. If both players agree before the game, these ships "
            "can be included in a Rogue Trader fleet, as a cruiser and an escort respectively.")
-_NM_NOTE = "Only if both players agree before the game (Fleets p. 179)."
+# v0.40 p.189: the Pirates list no longer offers the Siluria and says so.
+_NM_TXT_PIR = ("Havoc Class Frigates are older, outdated ships, and much more commonly seen outside of the "
+               "Imperial Navy. If both players agree before the game, this ship can be included in a Rogue "
+               "Trader fleet as an escort.")
+_NM_PG = {"Rogue Traders": 184, "Rogue Traders — Exploration": 186, "Rogue Traders — Pirates and Wolf Packs": 189}
 _nm = 0
 for Lx in lists_out:
     for s in Lx["secs"]:
         if s["t"].strip().upper() != "NOTES FROM NATE MONTES":
             continue
-        assert not s.get("text") and not s.get("own"), Lx["nm"]
-        s["text"] = [_NM_TXT]
+        _NM_NOTE = "Only if both players agree before the game (Fleets p. %d)." % _NM_PG[Lx["nm"]]
+        # v0.36 left the text empty; v0.40 extracts the next box with it (KAR
+        # DUNIASH: TRADER'S HAVEN, a station's narrative), so the section keeps
+        # only the sentence (check_quotes.py holds it against the book).
+        s["text"] = [_NM_TXT_PIR if "Pirates" in Lx["nm"] else _NM_TXT]
+        s.pop("own", None)
         for e in s["ents"]:
             if e.get("k") == "up":
                 continue
             e["nt"] = (e["nt"] + " " + _NM_NOTE) if e.get("nt") else _NM_NOTE
             _nm += 1
-assert _nm == 6, "6 Nate Montes rows expected, found %d" % _nm
+# Siluria + Havoc on the two Rogue Trader lists, the Havoc alone on Pirates
+# (v0.40 dropped the Pirates' Siluria): 5 rows.
+assert _nm == 5, "5 Nate Montes rows expected, found %d" % _nm
 
 # --- Spot check 19 round 2: list rules (M10r2) ------------------------------
 def _p19_text(L, i):
@@ -284,7 +289,7 @@ def _p19_text(L, i):
 # J56 p.457: "Up to one Rogue Trader cruiser and its attendant escorts may
 # accompany the fleet for every 750 points of Tau ships in the fleet.
 # Additionally, a single squadron of up to six Xenos escorts can be taken as per
-# the Rogue Trader rules and fleet list." Squadrons 2-6 (RT p.174) and squadrons
+# the Rogue Trader rules and fleet list." Squadrons 2-6 (RT p.184) and squadrons
 # at most cruisers + 1.
 _CP = _p18_list("Tau — Commerce Protection")
 _cpb, _cpc, _cpr = _p18_sec(_CP, "Battleships"), _p18_sec(_CP, "Cruisers"), _p18_sec(_CP, "Rogue Traders")
@@ -323,7 +328,7 @@ for _t in ("Tau Escorts", "Rogue Trader Escorts"):
         kind="squadron", min=2, max=6, lone=1, ok=True, sec=[_i],
         src=_DW_SRC + " Tau, Nicassar and Rogue Trader escorts may not be mixed in the same squadrons."))
 
-# J61 p.177: a required cargo squadron "in a squadron of 2 to 6 ships" and "Any
+# J61 p.187: a required cargo squadron "in a squadron of 2 to 6 ships" and "Any
 # number of cargo ships beyond this number may be taken and organized in
 # squadrons that only contain cargo ships."
 _EX = _p18_list("Rogue Traders — Exploration")
@@ -337,14 +342,14 @@ _EX["secs"][_ext]["rules"].append(dict(
     src=_cs[0] + " Any number of cargo ships beyond this number may be taken and organized in squadrons "
                  "that only contain cargo ships."))
 
-# J62 p.372: "Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired"
+# J62 p.374: "Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired"
 _CZ = _p18_list("Orks — Da Ork Clanz")
 _tz = _p18_sec(_CZ, "Tiddla skwadron")
 assert not _CZ["secs"][_tz].get("rules"), "Clanz: the tiddla section already has a rule"
 _CZ["secs"][_tz]["rules"] = [dict(kind="squadron", min=3, max=10, ok=True, sec=[_tz],
                                   src="Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired")]
 
-# J63 p.318: "an Autarch must be included to lead it. Eldar Autarch (Ld 9) ...
+# J63 p.316: "an Autarch must be included to lead it. Eldar Autarch (Ld 9) ...
 # Iyanden Bearer of the Flame (Ld 10)" - the Dragonship exception ("If your fleet is
 # led by an Autarch") concerns the whole Autarch section, not only the name that has the word.
 _IY = _p18_list("Eldar — Iyanden Craftworld")
@@ -361,10 +366,11 @@ assert _iy == 1, "Iyanden: 1 Autarch exception expected, found %d" % _iy
 
 # J64 and J65 p.431: "Up to 10 % of the fleet's points allowance may be spent on
 # Ordnance markers as long as at least one hive ship is chosen." The markers are
-# upgrades bought for ships (up_sec). "You may include between 6 and 12
-# escort class ships for each hive ship. If no hive ships are chosen, only
-# Kraken and Vanguard drone ships may be included in the fleet." The upper limit concerns
-# only a fleet with a hive ship (when_pick).
+# upgrades bought for ships (up_sec). v0.40: "You may include between 0 and
+# 12 additional escort class ships (of any kind) for each hive ship." (at
+# most 18 with the six drones) and "If no hive ships are chosen, only Kraken
+# and Vanguard drone ships may be included in the fleet." The upper limit
+# concerns only a fleet with a hive ship (when_pick).
 _HF = _p18_list("Tyranids — Hive Fleet")
 _hs, _ho = _p18_sec(_HF, "HIVE SHIPS"), _p18_sec(_HF, "ORDNANCE")
 _hf = 0
@@ -373,13 +379,13 @@ for x in _HF["secs"]:
         if r.get("kind") == "points_share" and str(r.get("label", "")).startswith("Ordnance markers"):
             r["up_sec"] = _ho
             _hf += 1
-        if r.get("label") == "Escorts per hive ship (max)":
+        if r.get("label") == "Escorts per hive ship (six escort drones + up to 12 more)":
             r["when_pick"] = [dict(sec=_hs, _t="hive ships")]
             _hf += 1
 assert _hf == 2, "Hive Fleet: 2 ordnance and escort rules expected, found %d" % _hf
 
 # --- Spot check 19 round 3 (M10r3) --------------------------------------------
-# J70 p.177: "At least one Demiurg vessel of any class may be taken for every
+# J70 p.187: "At least one Demiurg vessel of any class may be taken for every
 # three Rogue Trader cruisers in the fleet. This is separate from and in addition
 # to any reserve or allied cruisers taken, but each Demiurg vessel taken still
 # counts against the twelve-cruiser limit, and no more than one Stronghold may be
@@ -395,26 +401,26 @@ _EX["secs"][_exd]["rules"] = [dict(
     # the check warns when the strict reading ("one for every three") is not met.
     interp=dict(id="T20", strict="min_one",
                 note="Open interpretation: \"At least one Demiurg vessel of any class may be taken for every three "
-                     "Rogue Trader cruisers in the fleet\" (Fleets p. 177) can also be read as one per full three "
+                     "Rogue Trader cruisers in the fleet\" (Fleets p. 187) can also be read as one per full three "
                      "cruisers, which allows none with one or two. The app allows one; agree with your opponent."),
     allow_type="Demiurg vessels", per_type="Rogue Trader cruisers",
     allow_pick=[dict(sec=_exd, _t="the demiurg")],
     per_pick=[dict(sec=_exc, _t="capital ships"), dict(sec=_exn, re="^siluria", _t="notes from nate montes")],
     src="At least one Demiurg vessel of any class may be taken for every three Rogue Trader cruisers in the fleet.")]
 
-# J71 p.370: "A vessel or escort skwadron led by a Warlord may be given up to one
+# J71 p.372: "A vessel or escort skwadron led by a Warlord may be given up to one
 # of the following upgrades per Command re-roll the Warlord has. Each upgrade can
 # only be applied once." A Warlord has one re-roll and can buy one or
-# two more (p.372). Attachment is not modelled (J8), so at fleet level:
+# two more (p.374). Attachment is not modelled (J8), so at fleet level:
 # at most as many Gubbins as the sum of the Warlords' re-rolls (up_budget).
 _czg, _czw = _p18_sec(_CZ, "GUBBINS"), _p18_sec(_CZ, "WARLORD")
-# Which row of the Gubbins section uses up the re-roll allowance: not More Gubbins (p.371 "any number of capital ships",
-# T31) nor Deathskullz's free looted copy (p.369, J7: a clan benefit, not a Gubbin - J232). The same expression
+# Which row of the Gubbins section uses up the re-roll allowance: not More Gubbins (p.373 "any number of capital ships",
+# T31) nor Deathskullz's free looted copy (p.371, J7: a clan benefit, not a Gubbin - J232). The same expression
 # in the Warlord's own check (clanz.gub_re below), so that they do not drift apart.
 _CZ_GUB_RE = r"^(?!Klaws|Shokk-Attack Lance|Assault Karrier|.*\(Deathskullz: free\))"
 _CZ["secs"][_czg].setdefault("rules", []).append(dict(
     kind="up_budget", ok=True, up_sec=_czg, label="Gubbins (one per Warlord re-roll)",
-    # p.371 MORE GUBBINS: "The following gubbins can be taken by any number of
+    # p.373 MORE GUBBINS: "The following gubbins can be taken by any number of
     # capital ships in the fleet" - they do not use the re-roll budget (T31).
     up_re=_CZ_GUB_RE,
     budget=[dict(pick=[dict(sec=_czw, _t="warlord")], units=1),
@@ -459,9 +465,9 @@ _AR["secs"][_arf].setdefault("rules", []).extend([
              "admiral or solar admiral, who will always be assigned to an Imperial Navy vessel and cannot be a "
              "assigned to a Space Marine vessel.")])
 
-# J81 p.234/236/240/244/248: "You can only include a Chaos Warmaster in your fleet
+# J81 p.244/246/248/250/252: "You can only include a Chaos Warmaster in your fleet
 # if it includes any capital ships." Capital ships are the Planet Killer, the Chaos
-# Space Hulk (p.288 "counts as a battleship"), battleships, grand and heavy
+# Space Hulk (p.290 "counts as a battleship"), battleships, grand and heavy
 # cruisers, cruisers and the Activated Blackstone Fortress (a lenient reading).
 _WM_SRC = "You can only include a Chaos Warmaster in your fleet if it includes any capital ships."
 _WM_CAP = ("planet killer", "chaos space hulk", "battleships", "grand cruisers", "heavy cruisers", "cruisers",
@@ -484,7 +490,7 @@ for _L in lists_out:
     _wm += 1
 assert _wm == 5, "5 Chaos Warmaster sentences expected, found %d" % _wm
 
-# J82 p.140: "If desired, vessels with an embarking Inquisitor may gain special
+# J82 p.150: "If desired, vessels with an embarking Inquisitor may gain special
 # characteristics, depending upon the Ordo the Inquisitor leading the fleet is
 # affiliated with." and "The listed cost is added to that of the Inquisitor Lord".
 # The Ordo is an addition to the leading Inquisitor Lord: it needs the Lord, and there is one Ordo.
@@ -496,7 +502,7 @@ _ORDO_AFF = ("If desired, vessels with an embarking Inquisitor may gain special 
              "the Ordo the Inquisitor leading the fleet is affiliated with.")
 _iqs = _p18_sec(_IQ, "INQUISITORS OF THE ORDOS")
 assert _ORDO_AFF in _p19_text(_IQ, _iqs), "Inquisition: the Ordo sentence is missing"
-# The extraction dropped the p.140 price sentence from the section text; it belongs in view for the reader.
+# The extraction dropped the p.150 price sentence from the section text; it belongs in view for the reader.
 assert _ORDO_SRC not in _p19_text(_IQ, _iqs)
 _IQ["secs"][_iqs]["text"].append(_ORDO_SRC)
 _ordo_pick = [dict(sec=i, re="inquisitor lord", _t=_IQ["secs"][i]["t"].strip().lower()) for i in _iqo]
@@ -507,7 +513,7 @@ _IQ["secs"][_iqo[0]].setdefault("rules", []).extend([
     dict(kind="cap", ok=True, max=1, what="Ordo affiliations", label="Ordo affiliation (one Ordo)", pick=_ordo_pick,
          src=_ORDO_AFF)])
 
-# J83 p.138: "A Space Marine fleet led by an Ordo Malleus Inquisitor including at
+# J83 p.148: "A Space Marine fleet led by an Ordo Malleus Inquisitor including at
 # least 1000 points of Inquisition vessels and Grey Knights strike cruisers may
 # include a single Grey Knights battle barge." The barge itself does not count towards the 1 000 points
 # (T22). The "Space Marine fleet" condition cannot be checked: the list is attached to the host.
@@ -523,7 +529,7 @@ _IQ["secs"][_iqc].setdefault("rules", []).extend([
          label="Grey Knights Battle barge (1000 points of Inquisition vessels and Grey Knights strike cruisers)",
          pick=_gkb, of_pick=[dict(sec=_iqc, re="^(?!grey knights battle barge)", _t="capital ships")], src=_GKB_SRC)])
 
-# J84 p.174: "Any fleet except Necrons or Tyranids may include a single Rogue Trader
+# J84 p.184: "Any fleet except Necrons or Tyranids may include a single Rogue Trader
 # capital ship. Tau, Demiurg and Imperial fleets may include one Rogue Trader cruiser
 # for every 750 points or part thereof in their fleet." The host fleet is not known,
 # so a lenient limit: one cruiser per 750 points or part (T23). Heavy
@@ -540,34 +546,34 @@ _RTL["secs"][_rtc].setdefault("rules", []).append(dict(
     interp=dict(id="T23", strict_max=1,
                 note="Open interpretation: any fleet may include \"a single Rogue Trader capital ship\"; only Tau, "
                      "Demiurg and Imperial fleets may include one Rogue Trader cruiser for every 750 points (Fleets "
-                     "p. 174). The app does not know the fleet you join and allows the larger number."),
+                     "p. 184). The app does not know the fleet you join and allows the larger number."),
     pick=[dict(sec=_rtc, re="rogue trader cruiser|dauntless|endeavour", _t="capital ships"),
           dict(sec=_rtn, re="^siluria", _t="notes from nate montes")], src=_RTC_SRC))
 
-# J44 p.175: "To represent this each Rogue Trader cruiser and escort squadron may
-# roll one random crew skill on [???] in the Remastered Rulebook for +10% point
-# value." The table is Rulebook p.159 (CREW SKILLS). Price = 10 % of the unit's points
+# J44 p.185: "To represent this each Rogue Trader cruiser and escort squadron may
+# roll one random crew skill on pg. 159 in the Remastered Rulebook for +10% point
+# value." (v0.36 printed "[???]".) The table is Rulebook p.159 (CREW SKILLS). Price = 10 % of the unit's points
 # before the crew skill, rounded up (T27). p=None: the app shows "see text", and
 # the domain counts the price from the field pct (no app change, user 11.9.).
 _rtb = _p18_sec(_RTL, "THE BEST MONEY CAN BUY")
-_CS_SRC = ("To represent this each Rogue Trader cruiser and escort squadron may roll one random crew skill on [???] "
+_CS_SRC = ("To represent this each Rogue Trader cruiser and escort squadron may roll one random crew skill on pg 159 "
            "in the Remastered Rulebook for +10% point value.")
-assert _CS_SRC in _p19_text(_RTL, _rtb), "Rogue Traders: the crew skill sentence is missing"
+assert _CS_SRC in _p19_text(_RTL, _rtb), "Rogue Traders: the crew skill sentence is missing: %s" % _p19_text(_RTL, _rtb)[:900]
 _rtbe = _RTL["secs"][_rtb]["ents"]
 _xc = [e for e in _rtbe if e["l"] == "Xenotech System, rolled randomly (cruiser)"]
 _xe = [e for e in _rtbe if e["l"] == "Xenotech System, rolled randomly (escort, per ship)"]
 assert len(_xc) == 1 and len(_xe) == 1 and not any(e["l"].startswith("Crew skill") for e in _rtbe)
 _CS_DESC = ("Roll D6 on the Crew Skills table (Rulebook p. 159) before the game and note the result. Cost: +10% of the "
-            "unit's points (hull, options and refits), rounded up. (Fleets p. 175)")
+            "unit's points (hull, options and refits), rounded up. (Fleets p. 185)")
 _rtbe.extend([
     dict(l="Crew skill, rolled randomly (cruiser, +10% of its points)", r=None, p=None, pct=10, a=1, u=1, mx=None,
-         nt=None, prose=1, k="up", cond=dict(_xc[0]["cond"]), desc=_CS_DESC, src_page=175),
+         nt=None, prose=1, k="up", cond=dict(_xc[0]["cond"]), desc=_CS_DESC, src_page=185),
     # A crew skill is not a refit, so the Fast Clipper's "Instead of taking a refit" does not apply to it.
     dict(l="Crew skill, rolled randomly (escort squadron, +10% of its points)", r=None, p=None, pct=10, a=1, u=1,
          mx=None, nt=None, prose=1, k="up",
-         cond={k: v for k, v in _xe[0]["cond"].items() if k != "offopt"}, desc=_CS_DESC, src_page=175)])
+         cond={k: v for k, v in _xe[0]["cond"].items() if k != "offopt"}, desc=_CS_DESC, src_page=185)])
 
-# J86 p.233, 235, 237 ORDNANCE: "Ships with torpedo tubes are armed with normal and
+# J86 p.243, 245, 247 ORDNANCE: "Ships with torpedo tubes are armed with normal and
 # boarding torpedoes." The extraction dropped the sentence from three lists. On the Nurgle,
 # Khorne and Slaanesh pages (241, 245, 249) the paragraph breaks off in the book itself before
 # the sentence (T25, asked of the user).
@@ -578,8 +584,8 @@ for _nm in ("Chaos — Incursion", "Chaos — Black Crusade", "Chaos — Tzeentc
     assert _tx and _tx[0].startswith("Ships with launch bays") and not any("torpedo tubes" in t for t in _tx), _nm
     _tx.insert(1, _CT_SRC)
 # T25 (the user's decision 11.9.2026): the Nurgle, Khorne and Slaanesh paragraph breaks off
-# in the book (p.241 "Ships with torpedo", p.245 and 249 "can have a mixture"; page images).
-# It is completed with the parallel lists' sentences (p.235), and the reader is told so.
+# in the book (p.249 "Ships with torpedo", p.251 and 253 "can have a mixture"; page images).
+# It is completed with the parallel lists' sentences (p.245), and the reader is told so.
 _CL_SRC = ("Ships with launch bays can have a mixture of Swiftdeath fighters, Doomfire bombers and Dreadclaw "
            "assault craft.")
 for _nm in ("Chaos — Nurgle", "Chaos — Khorne", "Chaos — Slaanesh"):
@@ -590,7 +596,7 @@ for _nm in ("Chaos — Nurgle", "Chaos — Khorne", "Chaos — Slaanesh"):
     _tx[0] = _CL_SRC
     _tx.insert(1, _CT_SRC)
     _L["secs"][_p18_sec(_L, "ORDNANCE")].setdefault("notes", []).append(
-        "The paragraph breaks off in the book; completed from the other Chaos fleet lists, Fleets p. 235.")
+        "The paragraph breaks off in the book; completed from the other Chaos fleet lists, Fleets p. 245.")
 
 # v1.1 gaps in view (user 11.9.2026): rules the app does not yet
 # enforce are shown in the fleet's checks as a warning (kind "notice").
@@ -666,7 +672,7 @@ for _nm, _srcB in _HOOK_B.items():
 # so "not yet in the app" would be wrong information. The book's sentence stays visible
 # as section text.
 
-# J88 p.236: "Any ship led by a Lord of Tzeentch (and not the Warmaster!) may be
+# J88 p.246: "Any ship led by a Lord of Tzeentch (and not the Warmaster!) may be
 # granted a Strand of Fortune." Attachment is not modelled (J8): at most as many Strands as
 # Chaos Lords.
 _TZ = _p18_list("Chaos — Tzeentch")
@@ -676,9 +682,9 @@ _TZ["secs"][_tzf].setdefault("rules", []).append(dict(
     kind="up_budget", ok=True, up_sec=_tzf, up_re="^Strand of Fortune", label="Strand of Fortune (one per Chaos Lord)",
     budget=[dict(pick=[dict(sec=_tzl, re="^chaos lord", _t="chaos lords")], units=1)], src=_ST_SRC))
 
-# J89 p.318: "In order to take the Flame of Asuryan, an Eldar Hero must lead the
-# fleet and be embarked aboard it." p.319 Yriel, Bearer of the Flame: "you may
-# instead pick the Flame of Asuryan as his command ship to be embarked on."
+# J89 p.317: "In order to take the Flame of Asuryan, an Eldar Hero must lead the
+# fleet and be embarked aboard it." p.313 Prince Yriel: "Prince Yriel must be
+# embarked on a Dragonship equipped with launch bays, or the Flame of Asuryan".
 _IY = _p18_list("Eldar — Iyanden Craftworld")
 _iyd, _iyh, _iya = _p18_sec(_IY, "Dragonships"), _p18_sec(_IY, "Eldar Hero"), _p18_sec(_IY, "Autarch")
 _FA_SRC = "In order to take the Flame of Asuryan, an Eldar Hero must lead the fleet and be embarked aboard it."
@@ -686,19 +692,17 @@ assert "an Eldar Hero must lead the" in _p19_text(_IY, _iyd), "Iyanden: the Flam
 _IY["secs"][_iyd].setdefault("rules", []).append(dict(
     kind="requires", ok=True, label="Flame of Asuryan needs an Eldar Hero (or Yriel)",
     if_pick=[dict(sec=_iyd, re="^flame of asuryan", _t="dragonships")],
-    # Yriel is a row of the RESERVES AND ALLIES section (p.319): without this pick
+    # Yriel is a row of the RESERVES AND ALLIES section (p.317): without this pick
     # the rule named him in its heading but rejected a Yriel + Flame fleet.
     then_pick=[dict(sec=_iyh, re="^eldar hero", _t="eldar hero"),
                dict(sec=_iya, re="bearer of the flame", _t="autarch"),
-               dict(sec=_p18_sec(_IY, "RESERVES AND ALLIES"), re="^prince yriel", _t="reserves and allies")], min=1,
-    src=_FA_SRC + " Yriel (Fleets p. 319): \"you may instead pick the Flame of Asuryan as his command ship\"."))
+               dict(sec=_p18_sec(_IY, "Prince Yriel"), re="^prince yriel", _t="prince yriel")], min=1,
+    src=_FA_SRC + " Yriel (Fleets p. 313): \"Prince Yriel must be embarked on a Dragonship equipped with launch "
+                  "bays, or the Flame of Asuryan\"."))
 
-# J66 p.144: "If the fleet is above 750 points an Inquisitor Lord must lead the
-# fleet. If an Inquisitorial Cruiser is present the Inquisitor Lord must be
-# placed aboard it." One Inquisitor Lord leads the fleet (T19).
+# J66 p.154: one Inquisitor Lord leads the fleet (T19). v0.40 prints it as the
+# section heading "0-1 Inquisitor Lord", which the parser reads (section_count).
 _GK = _p18_list("Grey Knights")
-_gc = _p18_sec(_GK, "FLEET COMMANDER")
-_GK["secs"][_gc].setdefault("rules", []).append(dict(
-    kind="section_count", min=0, max=1, ok=True, sec=[_gc], label="Fleet commander (one Inquisitor Lord)",
-    src="If the fleet is above 750 points an Inquisitor Lord must lead the fleet. If an Inquisitorial Cruiser "
-        "is present the Inquisitor Lord must be placed aboard it."))
+_gil = _GK["secs"][_p18_sec(_GK, "Inquisitor Lord")]
+assert any(r.get("kind") == "section_count" and r.get("max") == 1 for r in _gil.get("rules") or []), \
+    "Grey Knights: the 0-1 Inquisitor Lord limit is missing"

@@ -61,7 +61,7 @@ LIGATURES = {u"\ufb00": "ff", u"\ufb01": "fi", u"\ufb02": "fl",
              u"\ufb03": "ffi", u"\ufb04": "ffl", u"\ufb05": "st",
              u"\ufb06": "st", u"\u0153": "oe", u"\u00e6": "ae",
              # The book typesets multiplication with a real multiplication sign ("D6×50"),
-             # the recorder with the keyboard's x. Without this p.141 is not found.
+             # the recorder with the keyboard's x. Without this p.151 is not found.
              u"\u00d7": "x"}
 
 #: Not everything in quotation marks is a sentence of the book. In these four
@@ -105,7 +105,7 @@ class Book(object):
             t = re.sub(r"^\s*%d\s*\n" % (i + 1), "", t)
             self.pages.append(norm(t))
         # Without a separator: a sentence of the book often continues on the next page
-        # (p.370 "...to ram and causes" -> p.371 "1Hp before rolling to
+        # (p.372 "...to ram and causes" -> p.373 "1Hp before rolling to
         # inflict damage."), and a separator cut the search exactly there.
         self.all = "".join(self.pages)
 
@@ -147,7 +147,7 @@ def quotes(text):
 
 def split_elision(t):
     """The parts around an elision ("..." or the ellipsis character) and around an
-    editorial insertion in square brackets ("listed on [p.175] can only"), which
+    editorial insertion in square brackets ("listed on [p.185] can only"), which
     stands for words the book prints differently."""
     return [x.strip() for x in re.split(u"\\s*(?:\\.\\.\\.|\u2026|\\[[^\\]]*\\])\\s*", t or "")
             if x and x.strip()]

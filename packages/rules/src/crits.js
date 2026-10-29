@@ -62,12 +62,12 @@ export const DEFENCE_CRIT = [
 export const DEFENCE_CRIT_WIDE = ["11 Hull Breach +D3", "12 Bulkhead Collapse +D6"];
 export const DEFENCE_CRIT_FOOT = "A result it cannot suffer counts as the next highest. 8-9: falls D6 cm toward the planet " +
   "in each of its Movement Phases until repaired; destroyed if it hits. * 10 cannot be repaired (Rulebook p. 101).";
-/* Haven Space Station CRITICAL HITS TABLE, Fleets p. 337 (read from the page
-   image; it matches the text layer). p. 336: "The Haven suffers critical
+/* Haven Space Station CRITICAL HITS TABLE, Fleets p. 335 (read from the page
+   image; it matches the text layer). p. 334: "The Haven suffers critical
    damage on a roll of 5+" in place of the Eldar 4+. Row 9 speaks of a ship
    (printed as the book has it). Row 4 is "Pulsar Lances Off-line" in the
    book and is not renamed for the Dark Eldar base, whose lances are Phantom
-   lances (p. 347): the card says LANCES, which is true of both. */
+   lances (p. 349): the card says LANCES, which is true of both. */
 export const HAVEN_CRIT = [
   ["2", "INFINITY CIRCUIT", "-1Ld"], ["3", "BATTERIES", "OFF"], ["4", "LANCES", "OFF"],
   ["5", "LAUNCH BAYS", "OFF"], ["6", "MAINSAIL", "WEAPONS 1/2"], ["7", "SUPERSTRUCTURE +1", "D6: 1 = +1 HIT"],
@@ -76,7 +76,7 @@ export const HAVEN_CRIT = [
 export const HAVEN_CRIT_WIDE = ["11 Hull Breach +D3", "12 Bulkhead Collapse +D6"];
 export const HAVEN_CRIT_FOOT = "Critical on 5+. 7: roll a D6 at the start of each turn, on a 1 it takes one more Hit. " +
   "8: drifts 5 cm toward the nearest celestial phenomenon and no longer ignores Blast Markers and solar flares. " +
-  "10 also ends the Netherfield. * 9 and 10 cannot be repaired (Fleets pp. 336-337).";
+  "10 also ends the Netherfield. * 9 and 10 cannot be repaired (Fleets pp. 334-335).";
 export const NECRON_CRIT = [
   ["2", "PORT POWER", "ARC + WHIP OFF"], ["3", "STBD POWER", "ARC + WHIP OFF"],
   ["4", "LIGHTNING ARC OFF", "ALL ARCS"], ["5", "POWER FLOW", "ARC + WHIP OFF"],
@@ -85,11 +85,11 @@ export const NECRON_CRIT = [
   ["10", "COMMAND CORE", "-3Ld"]
 ];
 export const NECRON_CRIT_WIDE = ["11 Power Surge +D3; -2Ld", "12 Ruptured Power Core +D6; -2Ld"];
-export const NECRON_CRIT_FOOT = "Necron critical repairs succeed on 4+ (Fleets pg. 402).";
-/* Fleets p.391 "ORK HULK CRITICAL HITS TABLE": the ATTACKER rolls a D6, not
+export const NECRON_CRIT_FOOT = "Necron critical repairs succeed on 4+ (Fleets pg. 404).";
+/* Fleets p.393 "ORK HULK CRITICAL HITS TABLE": the ATTACKER rolls a D6, not
    2D6 on the Critical Damage table. Sub-results get their own rows because
    each -1 is its own tally on the table. Only the Ork hulk: the table is
-   titled for it and sits on its pages; the Chaos hulk's page (p.286) says
+   titled for it and sits on its pages; the Chaos hulk's page (p.288) says
    nothing, and the Rulebook has no hulk critical rule. */
 export const ORK_HULK_CRIT = [
   ["1-2", "HIGH ENERGY: D6 1-2", "-1 DORSAL LANCE"],
@@ -100,10 +100,10 @@ export const ORK_HULK_CRIT = [
   ["3-4", "WEAPONS, ARC HIT: D6 5-6", "-2 WEAPONS BATTERY FP"],
   ["5-6", "THRUSTERS", "to turn: D6 > thruster crits taken"],
 ];
-export const ORK_HULK_CRIT_WIDE = ["Attacker rolls D6 (Fleets p. 391)",
+export const ORK_HULK_CRIT_WIDE = ["Attacker rolls D6 (Fleets p. 393)",
                             "Result that cannot apply: next higher result"];
 export const ORK_HULK_CRIT_FOOT = "Space hulks cannot repair any critical damage during a battle.";
-/* Fleets p.288 "CHAOS SPACE HULK CRITICAL HITS TABLE" - the same shape as the
+/* Fleets p.290 "CHAOS SPACE HULK CRITICAL HITS TABLE" - the same shape as the
    Ork table with one cell of its own: "-1 prow and dorsal lance". */
 export const CHAOS_HULK_CRIT = [
   ["1-2", "HIGH ENERGY: D6 1-2", "-1 PROW AND DORSAL LANCE"],
@@ -114,7 +114,7 @@ export const CHAOS_HULK_CRIT = [
   ["3-4", "WEAPONS, ARC HIT: D6 5-6", "-2 WEAPONS BATTERY FP"],
   ["5-6", "THRUSTERS", "to turn: D6 > thruster crits taken"],
 ];
-export const CHAOS_HULK_CRIT_WIDE = ["Attacker rolls D6 (Fleets p. 288)",
+export const CHAOS_HULK_CRIT_WIDE = ["Attacker rolls D6 (Fleets p. 290)",
                               "Result that cannot apply: next higher result"];
 export const TYRANID_CRIT = [
   ["2", "SPORE CYSTS", "OFF"], ["3", "STARBOARD", "OFF"],
@@ -133,7 +133,7 @@ export const ELDAR_CRIT = [
   ["10", "HOLOFIELDS", "OFF*"]
 ];
 export const ELDAR_CRIT_WIDE = ["11 Hull Breach +D3", "12 Bulkhead Collapse +D6"];
-export const ELDAR_CRIT_FOOT = "Critical on 4+; * results 9 and 10 cannot be repaired (Fleets p. 305).";
+export const ELDAR_CRIT_FOOT = "Critical on 4+; * results 9 and 10 cannot be repaired (Fleets p. 307).";
 export const DARK_ELDAR_CRIT = [
   ["2", "WEAPON SYSTEMS", "ALL OFF"], ["3", "PROW MAIN", "OFF"],
   ["4", "MANOEUVRING", "TEST FOR CTNH"], ["5", "BATTERIES", "OFF"],
@@ -142,10 +142,10 @@ export const DARK_ELDAR_CRIT = [
   ["10", "SHADOWFIELDS", "OFF*"]
 ];
 export const DARK_ELDAR_CRIT_WIDE = ["11 Hull Breach +D3", "12 Bulkhead Collapse +D6"];
-export const DARK_ELDAR_CRIT_FOOT = "* results 9 and 10 cannot be repaired (Fleets p. 344).";
+export const DARK_ELDAR_CRIT_FOOT = "* results 9 and 10 cannot be repaired (Fleets p. 346).";
 
 /* A Chaos hull in a list's own reserve section: Bastion's five (Fleets p. 39)
-   and the same five taken through an Ordo Malleus Inquisitor (p. 142, J144).
+   and the same five taken through an Ordo Malleus Inquisitor (p. 152, J144).
    The list prints them, but they are not its vessels. "Allied and reserve
    vessels cannot use refits and upgrades from the fleet list they are allied
    to unless they are of the same race" (p. 16), and an Explorator's Chaos
@@ -186,14 +186,14 @@ export const ESCORT_LINE = "ESCORT: one unsaved Hit destroys the ship; a Critica
 export const DEFENCE_ONE_HIT_LINE = "DEFENCE: one unsaved Hit destroys it; tick one box per defence lost.";
 
 
-/* Fleets p.391: "Space hulks are not crippled by damage like ordinary
+/* Fleets p.393: "Space hulks are not crippled by damage like ordinary
    ships. They are so big that they must be gradually eroded by enemy
    fire." The name, not the type: "Defence" also covers orbital platforms,
    which do cripple. */
 export function isSpaceHulk(sh){ return /\bhulk\b/i.test(String(sh.nm || "")); }
 /* Planetary defences that are bought as part of the fleet rather than from a
    defence allowance: the Ramilies (Fleets p. 500) and the Eldar Haven
-   (p. 337). They sit in the defences section but not in its one-third sum. */
+   (p. 335). They sit in the defences section but not in its one-third sum. */
 export function isHaven(sh){ return !!sh && /^HAVEN\b/i.test(String(sh.nm || "")); }
 export function defenceOwnPoints(sh){
   return !!sh && (!!sh.qd || isHaven(sh));
@@ -298,14 +298,14 @@ export function crippledLine(sh, rows){
     return "CRIPPLED: Speed -5 cm; Bio-plasma and Pyro-acid 1/2; Spores unchanged; no Torpedoes, Attack Craft, Claws or Tentacles.";
   if(/NECRON/i.test(ctx))
     return "CRIPPLED: Speed -5 cm; weapons and Turrets 1/2; Star Pulse off; Portals 1/2 (round down).";
-  /* The Haven does not move (speed is printed as a dash, Fleets p. 334). */
+  /* The Haven does not move (speed is printed as a dash, Fleets p. 332). */
   if(isHaven(sh))
     return "CRIPPLED: weapons and ordnance 1/2; Holofields unchanged.";
   if(/^ELDAR\b/i.test(String(sh.fl || "")))
     return "CRIPPLED: all Speed values -5 cm; weapons and ordnance 1/2; Holofields unchanged.";
   if(/DARK ELDAR/i.test(ctx))
     return "CRIPPLED: Speed -5 cm; weapons and ordnance 1/2; Shadowfields unchanged.";
-  /* Fleets pp. 197, 393, 495: "Due to their low speed and considerable
+  /* Fleets pp. 207, 395, 495: "Due to their low speed and considerable
      momentum, Caravan Vessels which are crippled or moving though Blast
      markers do not reduce their speed" - the same sentence for Roks and
      Warspheres. p. 492: a Nicassar Caravan "is not slowed down by blast
@@ -329,12 +329,12 @@ export function crippledLine(sh, rows){
 export function isOrkHulk(sh){ return isSpaceHulk(sh) && /\bORK\b/i.test(String(sh.nm || "")); }
 export function isChaosHulk(sh){ return isSpaceHulk(sh) && /\bCHAOS\b/i.test(String(sh.nm || "")); }
 /* Both hulks have their own D6 table on the pages after their profile:
-   Ork p.391, Chaos p.288. The first P1-5 pass read only the Chaos profile
-   page and missed p.288 - a ship's rules can continue past its profile. */
+   Ork p.393, Chaos p.290. The first P1-5 pass read only the Chaos profile
+   page and missed p.290 - a ship's rules can continue past its profile. */
 export function hulkPage(sh){ return isChaosHulk(sh) ? 288 : 391; }
 
 /* The hulk table as the book draws it: three results, each with its own
-   sub-results (Fleets p. 391 Ork, p. 288 Chaos). The flat rows above stay
+   sub-results (Fleets p. 393 Ork, p. 290 Chaos). The flat rows above stay
    for the play page; the printed card uses the groups (user 9.10.2026:
    three main boxes with their sub-categories, and boxes beside the weapon
    rows for the minuses a system has taken).
@@ -357,7 +357,7 @@ export function hulkCritGroups(chaos){
 /* Which critical a weapon row can lose strength to, and by how much: the
    dorsal lance (Chaos: "prow and dorsal lance") -1, a launch bay -1, a
    torpedo salvo -1, a weapons battery -2 Firepower. Ork gunz and heavy gunz
-   are weapons batteries (Fleets p. 360). Four boxes a row, fewer when the
+   are weapons batteries (Fleets p. 362). Four boxes a row, fewer when the
    printed strength runs out sooner. */
 export function hulkLoss(a, chaos){
   var nm = String((a && a[0]) || ""), st = String((a && a[2]) || "").trim();
@@ -387,14 +387,14 @@ export function criticalModel(sh){
   /* Stationary planetary defences with several hits: the Rulebook's own
      table (p. 101), not the ship table - a station has no prow, engines or
      bridge to lose. Tau orbitals "follow all High Orbit and Satellite defence
-     rules" (Fleets p. 451). The Haven has a table of its own (p. 337),
+     rules" (Fleets p. 451). The Haven has a table of its own (p. 335),
      matched before this one. */
   if(isHaven(sh)) return {
     title:"HAVEN CRITICAL HITS (2D6)", rows:HAVEN_CRIT, wide:HAVEN_CRIT_WIDE, foot:HAVEN_CRIT_FOOT
   };
-  /* A Rok bought as a defence (Fleets p. 360) keeps the Rok's own critical
+  /* A Rok bought as a defence (Fleets p. 362) keeps the Rok's own critical
      rule below: "Roks are sufficiently different to both Orbital Defences
-     and true spaceships to require a number of special rules" (p. 393). */
+     and true spaceships to require a number of special rules" (p. 395). */
   if(sh.df && isStationaryDefence(sh) && (sh.hp | 0) > 1 && !isHaven(sh) && !isRockVessel(sh)) return {
     title:"DEFENCES CRITICAL HITS (2D6)", rows:DEFENCE_CRIT,
     wide:DEFENCE_CRIT_WIDE, foot:DEFENCE_CRIT_FOOT
@@ -418,7 +418,7 @@ export function criticalModel(sh){
   /* Roks, Kroot Warspheres and Stryxis Caravan Vessels "lack the complex
      systems of true space craft, so critical hits are not rolled on the
      Critical table. Instead each critical hit inflicts +1 point of damage"
-     (Fleets pp. 393, 495, 197) - rules on the page after the profile. */
+     (Fleets pp. 395, 495, 207) - rules on the page after the profile. */
   if(isRockVessel(sh)) return {
     title:"CRITICAL DAMAGE", rows:[["2-12", "NO CRITICAL", "+1 Hp"]],
     wide:["no critical table", "at 0 Hp: 4 Blast Markers"],
@@ -433,7 +433,7 @@ export function criticalModel(sh){
     foot:"Takes no critical damage: each critical is 1 extra Hp of damage instead (Fleets p. 492)."
   };
   /* Every other hull the book prints as type Defence with more than one hit:
-     the Activated Blackstone Fortress (Fleets p. 284, Defence/16) and the
+     the Activated Blackstone Fortress (Fleets p. 286, Defence/16) and the
      Nicassar Rig (p. 493, Defence/4, "stationary in the same manner as any
      other planetary defence"). Neither page gives a critical rule of its
      own, so Rulebook p. 101 decides - "Some large defensive platforms, such
@@ -452,7 +452,7 @@ export function criticalModel(sh){
 /* The Nicassar Caravan (Fleets p. 492) - not the Stryxis Caravan Vessel. */
 export function isCaravan(sh){ return /^\s*CARAVAN\s*$/i.test(String(sh.nm || "")); }
 /* Roks, Kroot Warspheres and Stryxis Caravan Vessels share one set of rules
-   for movement, criticals and break-up (Fleets pp. 393, 495, 197). */
+   for movement, criticals and break-up (Fleets pp. 395, 495, 207). */
 export function isRockVessel(sh){
   return /^\s*ROK\s*$|WARSPHERE|STRYXIS CARAVAN/i.test(String((sh && sh.nm) || ""));
 }
@@ -470,7 +470,7 @@ export function repairLine(sh, list, en){
   if(sh.sq) return "";
   /* No critical damage to repair: every critical is +1 Damage instead. */
   if(isRockVessel(sh)) return "";
-  /* Fleets p.391: "Space Hulks cannot repair any critical damage in the
+  /* Fleets p.393: "Space Hulks cannot repair any critical damage in the
      course of a battle." */
   if(isOrkHulk(sh) || isChaosHulk(sh))
     return "NO REPAIR: a space hulk cannot repair critical damage during a battle (Fleets p. " +
@@ -490,7 +490,7 @@ export function repairLine(sh, list, en){
    header row. Eldar and Dark Eldar launchers differ from standard, so those
    stay as real rules. */
 export function criticalTriggerLine(sh){
-  /* Fleets p. 336: the Haven's own threshold, not the Eldar ships' 4+. */
+  /* Fleets p. 334: the Haven's own threshold, not the Eldar ships' 4+. */
   if(isHaven(sh))
     return "CRITICAL: Every Hit causes critical damage on 5+; roll 2D6 on the Haven table.";
   if(/^ELDAR\b/i.test(String(sh.fl || "")))

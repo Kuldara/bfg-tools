@@ -33,7 +33,7 @@ export function freeSqTag(){
    plainly right away, e.g. tiddla (escort) skwadrons"): the book's Ork words with
    plain English beside them. On screen only - the book's section names, the
    domain's check rows and the saved fleet keep the book's words (Fleets
-   pp. 359-360, 370, 372, 392). */
+   pp. 361-362, 372, 374, 394). */
 export const ORK_SEC_GLOSS = [
   [/^tiddla skwadron$/i, "escorts \u00b7 3\u201310 in a skwadron"],
   [/^big ship skwadron$/i, "kroozers = cruisers \u00b7 1\u20132 in a skwadron"],
@@ -61,14 +61,14 @@ export function orkPlain(s){
   ORK_WORDS.forEach(([re, en]) => { s = s.replace(re, m => m + " (" + en + ")"); });
   return s;
 }
-/* J232: a Warlord's skwadrons as the book counts them (Fleets p. 372): an
+/* J232: a Warlord's skwadrons as the book counts them (Fleets p. 374): an
    'Uge ship and a hulk each by itself, 1-2 kroozers, 1-4 Roks and 3-10
    tiddla escorts "in any mix desired" by their tag, a card without a tag by
    itself (the domain reads them the same way, clanzTiddlas). */
 export const SKW_MAX = { tiddla: 10, kroozer: 2, rok: 4 };
 export const SKW_LABEL = { tiddla: "tiddla (escorts)", kroozer: "kroozers (cruisers)", uge: "'Uge ship (battleship)", rok: "Roks", hulk: "Space Hulk" };
-const SKW_TIP = { tiddla: "A tiddla skwadron is 3-10 escorts in any mix; the same letter on two cards makes them one (Fleets p. 372)",
-  kroozer: "A big ship skwadron is 1-2 kroozers (Fleets p. 372)", rok: "A Rok skwadron is 1-4 Roks (Fleets p. 372)" };
+const SKW_TIP = { tiddla: "A tiddla skwadron is 3-10 escorts in any mix; the same letter on two cards makes them one (Fleets p. 374)",
+  kroozer: "A big ship skwadron is 1-2 kroozers (Fleets p. 374)", rok: "A Rok skwadron is 1-4 Roks (Fleets p. 374)" };
 export function skwKind(u){
   const C = L().clanz;
   if(!C || !u || u.lst) return "";
@@ -76,12 +76,12 @@ export function skwKind(u){
     : clanzIn(u.s, C.rok) ? "rok" : clanzIn(u.s, C.hulk) ? "hulk" : "";
 }
 /* a Blood Axe tiddla's commandeered escorts are members of the tiddla of
-   their tag (Fleets p. 369), in its count and its line */
-/* Mob Rule and Young Gunz (Fleets p. 370, user 28.10.2026: information,
+   their tag (Fleets p. 371), in its count and its line */
+/* Mob Rule and Young Gunz (Fleets p. 372, user 28.10.2026: information,
    not mechanics): what a tiddla of n escorts gets at the table */
 export function orkTiddlaHint(n){
   return `<span class="wlhint">${n > 5 ? "<b>Mob rule: +1 Ld</b> while more than five ships" : "Mob rule: +1 Ld with six or more ships"}
-    &middot; Young Gunz: on Ld 5&ndash;6 one free escort before the game, ten at most (Fleets p. 370)</span>`;
+    &middot; Young Gunz: on Ld 5&ndash;6 one free escort before the game, ten at most (Fleets p. 372)</span>`;
 }
 export function isCommandeered(u){ const BA = L().bloodaxe; return !!(BA && u && !u.lst && clanzIn(u.s, BA.sec)); }
 const comKind = u => isCommandeered(u) && u.sq ? "tiddla" : "";
@@ -131,7 +131,7 @@ export function skwadronsHTML(RF, wi){
       /* UX-01 (ChatGPT audit 27.10.2026): a second tiddla of the same
          escorts in one choice, instead of filling the first card to ten to
          get a new one - the book's smallest Warlord is "two tiddla
-         skwadrons, each with three escorts" (Fleets p. 373) */
+         skwadrons, each with three escorts" (Fleets p. 375) */
       const ork = tid ? g.units.filter(i => skwKind(appState.S.units[i]) === "tiddla") : [];
       if(ork.length) opts.push(`<option value="again:${ork[ork.length - 1]}">new tiddla of ${esc(shipCall(RF.units[ork[ork.length - 1]]))}</option>`);
       if(opts.length > 1) pick = `<select class="wlsq" data-wlsq="${g.units.join(",")}" aria-label="${esc("Skwadron of " + skwNames(RF, g))}"
@@ -143,10 +143,10 @@ export function skwadronsHTML(RF, wi){
 /* J232: ships handed to a Warlord are his (u.cmd) with the clan chosen for
    him, as addUnitFrom does: a clan bought on one skwadron is that
    skwadron's own choice, so nothing is bought for the player. A clan that
-   then differs turns "one clan" red (Fleets p. 369). */
+   then differs turns "one clan" red (Fleets p. 371). */
 export function handToWarlord(us, to){
   const w = appState.S.units[to];
-  /* a commandeered escort is in its tiddla, which pays the clan once (p. 369) */
+  /* a commandeered escort is in its tiddla, which pays the clan once (p. 371) */
   us.forEach(x => { x.cmd = w.uid; if(w.clan && !isCommandeered(x)) setClan(x, w.clan, true); });
 }
 /* Every Warlord's skwadrons right under him, in his order; a row no Warlord
@@ -156,7 +156,7 @@ export function clanzRegroup(order){
   const RF = fleetResolved(), ws = warlordIdx(RF);
   if(!ws.length || !RF.command) return;
   /* Blood Axe commandeered escorts ride with the tiddla of their tag (Fleets
-     p. 369, J220) */
+     p. 371, J220) */
   const BA = L().bloodaxe;
   const ride = appState.S.units.map((u, i) => !BA || !u.sq || u.lst || RF.command[i] >= 0 || ws.indexOf(i) >= 0 || !clanzIn(u.s, BA.sec) ? -1 :
     appState.S.units.findIndex((x, j) => x.sq === u.sq && RF.command[j] >= 0 && skwKind(x) === "tiddla"));
@@ -170,7 +170,7 @@ export function clanzRegroup(order){
   appState.S.units.splice(0, appState.S.units.length, ...next);
 }
 /* Send to (J232, the user on 24.10.2026: next to the drag button, a send-to
-   drop-down): the whole skwadron - his ships of its tag (Fleets p. 373:
+   drop-down): the whole skwadron - his ships of its tag (Fleets p. 375:
    "you can't split up skwadrons") - goes to the other Warlord, with his
    clan, to the end of his group. */
 export function sendSkwadron(u, uid){
@@ -243,8 +243,8 @@ export function clanzMoveBlock(u, dir){
   save();
   return true;
 }
-/* J232: an Ork hulk with a Warlord aboard (Fleets p. 390, in every Ork list
-   that has one) and what a clan gives the hulk (p. 369 read with p. 390:
+/* J232: an Ork hulk with a Warlord aboard (Fleets p. 392, in every Ork list
+   that has one) and what a clan gives the hulk (p. 371 read with p. 392:
    "Hulks cannot take any upgrade that improves Boarding Value, Turning or
    Speed"). */
 export const isOrkHulkUnit = R => !!R && /\bork hulk\b/i.test(String((R.entry && R.entry.label) || R.className || ""));
@@ -255,7 +255,7 @@ export const HULK_FX = [
 ];
 export const HULK_CLAN_FX = {
   "Goffs": ["+1 to boarding rolls, not boarding value", "+1 Ld to ram"],
-  "Evil Sunz": ["!not for a hulk: speed (p. 390)"],
+  "Evil Sunz": ["!not for a hulk: speed (p. 392)"],
   "Bad Moonz": ["Maniac Gunners: one battery per turn"],
   "Deathskullz": ["free looted torps / lances"],
   "Blood Axes": ["Warlord: random IN refit, +20"],
@@ -265,13 +265,13 @@ export const HULK_CLAN_FX = {
    none of them (the rows go back to their open state). */
 /* keepOff: a move to another Warlord keeps a skwadron's own "not this
    benefit" (its clan row set off): being of a clan does not oblige it to pay
-   for the benefit (Fleets p. 369, ChatGPT audit UX-02). The Warlord's clan
+   for the benefit (Fleets p. 371, ChatGPT audit UX-02). The Warlord's clan
    button buys it for all, which is what it says. */
 export function setClan(u, name, keepOff){
   const ups = upgradesFor(u);
   ups.own.concat(ups.other).forEach(x => {
     const m = /^Clan: (.+?) \(/i.exec(String(x[2].l));
-    /* an included clan (Zukov's Goffs, p. 381) is locked: not bought, not dropped */
+    /* an included clan (Zukov's Goffs, p. 383) is locked: not bought, not dropped */
     if(!m || x[2].incl) return;
     if(name && m[1].toLowerCase() === name.toLowerCase()){
       if(!(keepOff && upState(u, x[0], x[1]) === "off")) setUpState(u, x[0], x[1], "take");
@@ -282,7 +282,7 @@ export function setClan(u, name, keepOff){
 export const CLANS = ["Goffs", "Evil Sunz", "Bad Moonz", "Deathskullz", "Blood Axes", "Snakebites"];
 /* A Warlord's colour (J226): his clan's colour from the book - Goffs black,
    Evil Sunz red, Bad Moonz yellow, Deathskullz blue, Blood Axes green,
-   Snakebites brown (Fleets p. 369) - and before a clan is chosen one of six
+   Snakebites brown (Fleets p. 371) - and before a clan is chosen one of six
    others, by his number. The same colour marks his block, his ships, his
    chip in the catalogue and his button in the bar. */
 export const CLAN_COLOR = { "Goffs": "#8d939c", "Evil Sunz": "#c8372d", "Bad Moonz": "#d4a017", "Deathskullz": "#2f6fd0",
@@ -291,9 +291,9 @@ export const WL_PALETTE = ["#d9711c", "#1b9aa0", "#8e5bd0", "#d0457f", "#6f8f2e"
 export function warlordColor(w, k){ return (w && w.clan && CLAN_COLOR[w.clan]) || WL_PALETTE[k % WL_PALETTE.length]; }
 /* What each clan does and costs, from the list's own clan rows (J227, user
    20.10.2026: "add to the clan choice what effect that clan has"). The text
-   is the book's (Fleets p. 369), the price
+   is the book's (Fleets p. 371), the price
    the row's: every capital ship of a skwadron pays it, and so does every Rok
-   (ruling T58: p. 369 counts Rok skwadrons among the capital ship
+   (ruling T58: p. 371 counts Rok skwadrons among the capital ship
    skwadrons), a tiddla skwadron once (the rows' own note). */
 export function clanInfo(){
   const out = {};
@@ -306,7 +306,7 @@ export function clanInfo(){
 export const clanCost = c => c && c.p ? "+" + c.p + " pts per capital ship or Rok, once per tiddla (escort) skwadron" : "free";
 /* The same as game effects only, one tag each (user 20.10.2026: "highlighted
    somehow so you notice at once ... no description in words at all, just the
-   game effects"). Read from the clan rows' text, Fleets p. 369; a "!"
+   game effects"). Read from the clan rows' text, Fleets p. 371; a "!"
    tag is a restriction, not a bonus. The book's sentence stays in the
    tooltip. */
 export const CLAN_FX = {
@@ -356,16 +356,16 @@ export const UP_FX = [
   [/^Tellyporta/, null, ["teleport hit-and-run to 30cm"]],
   [/^Klaws/, null, ["base contact: 2D6, each 4+ hits past shields", "both hit: latched on"]],
   /* user 28.10.2026: "shields down: 4+ at 30cm" read as if the lance took the
-     target's shields down; the book (p. 371) has it the other way round */
+     target's shields down; the book (p. 373) has it the other way round */
   [/^Shokk-Attack Lance/, null, [
-    ["replaces prow heavy gunz", "The ship's prow heavy gunz batteries are replaced with the lance. Capital ships only, not escorts. (Fleets p. 371)"],
+    ["replaces prow heavy gunz", "The ship's prow heavy gunz batteries are replaced with the lance. Capital ships only, not escorts. (Fleets p. 373)"],
     ["!only at a target with shields down", "Like a teleport attack, it works only against a ship whose shields are already down: they have stopped as many hits as it has shields this turn. It does not take shields down itself. (Fleets p. 371; shields down, Rulebook p. 70; teleport attacks p. 92)"],
-    ["4+ to hit, 30cm", "Roll a D6 for a target within 30 cm: 4+ hits. Holofields and a braced target save normally. A miss puts a blast marker in contact with the target. At escorts the squadron rolls a D6 instead: 4+ puts a blast marker on the closest; 1-3 destroys the nearest escort in range without shields (bracing saves normally). (Fleets p. 371)"],
-    ["hit: D3+1 snotling hordes, +D6 to its Ld", "No damage: D3+1 snotling hordes are teleported aboard. Its next Leadership test or special order rolls an extra D6 (3D6, or one more when it already rolls 3D6). More hits only add hordes. Each special order, passed or failed, gets rid of one horde, and each can be repaired in the End phase like critical damage. (Fleets p. 371)"],
-    ["!not while crippled or braced", "The ship firing the lance cannot use it while crippled or braced. (Fleets p. 371)"]]],
+    ["4+ to hit, 30cm", "Roll a D6 for a target within 30 cm: 4+ hits. Holofields and a braced target save normally. A miss puts a blast marker in contact with the target. At escorts the squadron rolls a D6 instead: 4+ puts a blast marker on the closest; 1-3 destroys the nearest escort in range without shields (bracing saves normally). (Fleets p. 373)"],
+    ["hit: D3+1 snotling hordes, +D6 to its Ld", "No damage: D3+1 snotling hordes are teleported aboard. Its next Leadership test or special order rolls an extra D6 (3D6, or one more when it already rolls 3D6). More hits only add hordes. Each special order, passed or failed, gets rid of one horde, and each can be repaired in the End phase like critical damage. (Fleets p. 373)"],
+    ["!not while crippled or braced", "The ship firing the lance cannot use it while crippled or braced. (Fleets p. 373)"]]],
   [/^Assault Karrier/, null, ["free boarding torpedoes", "+1 assault boat per launch", "!assault boats only"]],
   [/^Imperial Navy refit, rolled randomly/, null, [
-    ["!the Blood Axe Warlord's ship only", "Only the ship a Warlord of the Blood Axes is aboard may take it, one refit (Fleets p. 369)."],
+    ["!the Blood Axe Warlord's ship only", "Only the ship a Warlord of the Blood Axes is aboard may take it, one refit (Fleets p. 371)."],
     ["D6: ship, engine or weapons refit", "Roll a D6: 1-2 ship, 3-4 engine, 5-6 weapons refit, then a D6 on that table; a result the ship already has is rolled again (Rulebook pp. 156, 158-159). The tables are under the row."]]],
   [/^Torpedo-bommas/i, null, ["20cm bombers, no fighter role", "later turns: S2 torpedo salvo each", "added to fighta-bommas"]],
   [/^Boarding torpedoes/, /^Orks/, ["torpedo hits are hit-and-run attacks"]],
@@ -424,12 +424,12 @@ export const UP_FX = [
   [/^Hive Mind Imperative/, null, ["auto-pass one Command check or Ld test"]],
   [/^Hive Mind Influence/, null, ["+1 fleet re-roll"]]
 ];
-/* Ruling T57 (Fleets p. 393): a Rok moves exactly 10 cm, so on a Rok a +5 cm
+/* Ruling T57 (Fleets p. 395): a Rok moves exactly 10 cm, so on a Rok a +5 cm
    speed row says that instead of promising the speed. The tag says it is the
    rule as written, and its hover that the intent is not clear and the players
    may agree otherwise (user 29.10.2026). */
 const ROK_10 = ["!Rok: 10 cm as written (RAW)",
-  "Fleets p. 393: Roks “travel 10 cm forward in a straight line, no more, no less”. Read as written (RAW, ruling T57) the +5 cm leaves a Rok at 10 cm, and the app counts it so. " +
+  "Fleets p. 395: Roks “travel 10 cm forward in a straight line, no more, no less”. Read as written (RAW, ruling T57) the +5 cm leaves a Rok at 10 cm, and the app counts it so. " +
   "The intent (RAI) is not clear: the clan and the Gubbin give their ships +5 cm, and a Rok may still buy them. Agree with your opponent before the game whether the Rok moves 15 cm."];
 export const ROK_FX = [
   [/^Clan: Evil Sunz/, [ROK_10]],
@@ -441,8 +441,8 @@ export const ROK_FX = [
    ones"). Ordnance, fleet upgrades and a commander's own rows say nothing.
    In Da Ork Clanz the GUBBINS heading also holds More Gubbins (Klaws,
    Shokk-Attack Lance, Assault Karrier: any capital ship, not from the
-   Warlord's re-rolls, Fleets p. 371) and Deathskullz's free looted rows
-   (p. 369), which are told apart because only Gubbins use up re-rolls. */
+   Warlord's re-rolls, Fleets p. 373) and Deathskullz's free looted rows
+   (p. 371), which are told apart because only Gubbins use up re-rolls. */
 const UP_KIND = [
   [/^gubbins$/i, up => /^(Klaws|Shokk-Attack Lance|Assault Karrier)\b/.test(up.label) ? "More Gubbins"
     : /Deathskullz: free/.test(up.label) ? "clan benefit" : "Gubbin"],
@@ -465,7 +465,7 @@ export function upFx(up, who, hulk){
     const r = ROK_FX.find(x => x[0].test(lab));
     if(r) return { tags: r[1], color: cm ? CLAN_COLOR[cm[1]] : null };
   }
-  /* J232: on an Ork hulk, or a Warlord aboard one (Fleets p. 390) */
+  /* J232: on an Ork hulk, or a Warlord aboard one (Fleets p. 392) */
   const onHulk = !!hulk || /\bork hulk\b/i.test(String(who || ""));
   if(cm && CLAN_FX[cm[1]]) return { tags: (onHulk && HULK_CLAN_FX[cm[1]]) || CLAN_FX[cm[1]], color: CLAN_COLOR[cm[1]] };
   if(onHulk || /\(Space Hulk/.test(lab)){ const h = HULK_FX.find(x => x[0].test(lab)); if(h) return { tags: h[1], color: null }; }
@@ -473,7 +473,7 @@ export function upFx(up, who, hulk){
   return hit ? { tags: hit[2], color: null } : null;
 }
 /* A ship option whose book sentence only gives the price ("May add Mimic
-   engines for +20 pts", Fleets p. 351; the Sepulchre, p. 404) takes the
+   engines for +20 pts", Fleets p. 353; the Sepulchre, p. 406) takes the
    upgrade row's tags (J230). */
 export const OPT_FX = [[/\bmimic engines\b/i, "Mimic Engines"], [/\bSepulchre\b/, "Sepulchre"]];
 export function optFxHTML(text, list){
@@ -488,12 +488,12 @@ export const fxTagsHTML = (tags, tip) => tags.map(x => {
 }).join("");
 export function clanLineHTML(c, I, hulk){
   const fx = (hulk && HULK_CLAN_FX[c]) || CLAN_FX[c] || [I.desc];
-  return `<li style="--wl:${CLAN_COLOR[c] || "var(--ink-3)"}" title="${esc(I.desc + " (" + clanCost(I) + ", Fleets p. 369)")}"><b>${esc(c)}<span class="wlhint">${I.p ? "+" + I.p + " pts" : "free"}</span></b><span class="fxs">${
+  return `<li style="--wl:${CLAN_COLOR[c] || "var(--ink-3)"}" title="${esc(I.desc + " (" + clanCost(I) + ", Fleets p. 371)")}"><b>${esc(c)}<span class="wlhint">${I.p ? "+" + I.p + " pts" : "free"}</span></b><span class="fxs">${
     fx.map(t => t[0] === "!" ? `<span class="fx lim">${esc(t.slice(1))}</span>` : `<span class="fx">${esc(t)}</span>`).join("")
   }</span></li>`;
 }
 /* The Warlord's re-rolls as one number: one included, two or three with the
-   extra rows (Fleets p. 372). */
+   extra rows (Fleets p. 374). */
 export function setWarlordRerolls(u, n){
   const ups = upgradesFor(u);
   ups.own.concat(ups.other).forEach(x => {
@@ -502,7 +502,7 @@ export function setWarlordRerolls(u, n){
     if(/^Two extra re-rolls/i.test(l)) setUpState(u, x[0], x[1], n === 3 ? "take" : "off");
   });
 }
-/* What a Warlord still needs, in words (Fleets pp. 372-373). */
+/* What a Warlord still needs, in words (Fleets pp. 374-375). */
 export function warlordNeeds(W, RF){
   if(!W) return { ok: true, text: "" };
   if(W.hulk) return W.units.length === 1 ? { ok: true, text: "the Space Hulk is all his skwadrons" }
@@ -512,9 +512,9 @@ export function warlordNeeds(W, RF){
   /* J232: the Ork words with their English */
   if(tid < rr) say.push("add " + (rr - tid) + " tiddla (escort) skwadron" + s(rr - tid) + " of 3 or more escorts");
   if(oth < rr){
-    /* a second tiddla is an other skwadron too (Fleets p. 373: "two tiddla
+    /* a second tiddla is an other skwadron too (Fleets p. 375: "two tiddla
        skwadrons"); an 'Uge ship needs two kroozers of his and is one per
-       Warlord (p. 373) */
+       Warlord (p. 375) */
     const need = rr - oth, opts = ["another tiddla (escorts)", "1\u20132 kroozers (cruisers)"]
       .concat(!W.uge && ((W.kro || 0) >= 2 || need >= 2) ? ["an 'Uge ship (battleship)"] : [], ["1\u20134 Roks"]);
     say.push("add " + need + " other skwadron" + s(need) + ": " + opts.slice(0, -1).join(", ") + " or " + opts[opts.length - 1]);
@@ -533,11 +533,11 @@ export function warlordNeeds(W, RF){
 }
 /* Clanz (J226): the upgrade rows the fleet pane leaves out, by unit index.
    The Warlord's re-rolls are his block's 1-2-3, and the Gubbins his re-rolls
-   pay for go on his own ship only (Fleets p. 372): another ship is not
+   pay for go on his own ship only (Fleets p. 374): another ship is not
    offered them unless one is already taken there, so the red check can be
    put right where it is. On his own ship the other Gubbins stay in the
    list but greyed once he has one for every re-roll (user 27.10.2026: "one
-   upgrade from the Gubbins list for every re-roll he has", p. 372; 28.10.:
+   upgrade from the Gubbins list for every re-roll he has", p. 374; 28.10.:
    greyed, not hidden - clanzDimUps) - a taken one stays, so a fleet that
    has too many can still drop one. More Gubbins and Deathskullz's free
    looted rows are not Gubbins of his (gub_re) and stay. His own ship is
@@ -548,10 +548,10 @@ export function clanzHiddenUps(RF){
   const C = L().clanz, out = [];
   if(!C) return out;
   const wsI = warlordIdx(RF), ships = [].concat(...(RF.warlords || []).map(ownRows));
-  /* the Blood Axe refit (p. 369): on the ship a Blood Axe Warlord is aboard */
+  /* the Blood Axe refit (p. 371): on the ship a Blood Axe Warlord is aboard */
   const axeShips = C.refit_re ? (RF.warlords || []).filter(W => W.ship != null &&
     (W.clans || []).some(c => new RegExp(C.axe_clan, "i").test(c))).map(W => W.ship) : [];
-  /* A Warlord's clan is his skwadrons' clan (p. 369: "A Warlord and his
+  /* A Warlord's clan is his skwadrons' clan (p. 371: "A Warlord and his
      skwadrons may only be from one clan"), so on his ships the other clans'
      rows only take space (user 29.10.2026: "take them away from the ships
      under that clan's boss"). His clan as his block shows it: the one picked
@@ -580,7 +580,7 @@ export function clanzHiddenUps(RF){
   return out;
 }
 /* the Gubbins rows a Warlord's own ship cannot take any more: greyed, with
-   the reason, once his re-rolls are all spent on Gubbins (p. 372) */
+   the reason, once his re-rolls are all spent on Gubbins (p. 374) */
 export function clanzDimUps(RF){
   const C = L().clanz, out = [];
   if(!C) return out;
@@ -602,7 +602,7 @@ export function warlordIdx(RF){
   return appState.S.units.map((u, i) => RF.units[i] && RF.units[i].kind === "commander" && RF.units[i].entry &&
     re.test(RF.units[i].entry.label) ? i : -1).filter(i => i >= 0);
 }
-/* What a Warlord leads, as his row and his card say it (Fleets p. 372: "A
+/* What a Warlord leads, as his row and his card say it (Fleets p. 374: "A
    Warlord's re-rolls only count for the skwadrons under his command"). */
 export function leadsText(RF, wi){
   if(!RF.command) return "";
@@ -620,11 +620,11 @@ export function fleetControlsHTML(RF){
   const caps0 = appState.S.units.map((u, i) => { const R = RF.units[i];
     return R && R.kind === "ship" && !R.squadron && !(R.defence && R.defence.stationary) ? i : -1; }).filter(i => i >= 0);
   /* A Blood Axe tiddla and the escorts it commandeers share a tag too
-     (Fleets p. 369, J220) */
+     (Fleets p. 371, J220) */
   const BA = L().bloodaxe, inSecU = (u, re) => { const sc = listOf(u).secs[u.s]; return !!sc && new RegExp(re, "i").test(String(sc.t).trim()); };
   const com = BA ? appState.S.units.map((u, i) => !u.lst && inSecU(u, BA.sec) ? i : -1).filter(i => i >= 0) : [];
   /* ...and so do tiddla cards of one mixed tiddla ("in any mix desired",
-     Fleets p. 372): the letter is what makes two cards one skwadron, since
+     Fleets p. 374): the letter is what makes two cards one skwadron, since
      a short card no longer joins one by itself (ChatGPT audit RAW-01) */
   const tid = L().clanz ? appState.S.units.map((u, i) => !u.lst && inSecU(u, L().clanz.tiddla) ? i : -1).filter(i => i >= 0) : [];
   /* Clanz (J226): kroozers pair with a button of their own (below), and
@@ -673,9 +673,9 @@ export function fleetControlsHTML(RF){
         <span class="wlhint">each re-roll: one tiddla (escort) skwadron + one other skwadron</span></div>
       <div class="wlrow"><span class="abl">Clan</span><span class="seg wrap">${seg("data-wlclan", `data-c=""`, "None", !clan && !(W && W.clans && W.clans.length > 1))}${
         CLANS.map(c => seg("data-wlclan", `data-c="${esc(c)}"`, c, clan === c,
-          hulk && c === "Evil Sunz" ? "Not for a hulk: it gives speed (Fleets p. 390)"
+          hulk && c === "Evil Sunz" ? "Not for a hulk: it gives speed (Fleets p. 392)"
             : (CI[c] ? CI[c].desc + " (" + clanCost(CI[c]) + ")" : "") + " His clan, bought for every skwadron of his;" +
-              " a skwadron may leave the benefit unpaid (Fleets p. 369): set its Clan row off under Other fleet-list upgrades.",
+              " a skwadron may leave the benefit unpaid (Fleets p. 371): set its Clan row off under Other fleet-list upgrades.",
           hulk && c === "Evil Sunz" && clan !== c)).join("")}</span></div>
       <div class="wlrow"><span class="abl"></span><ul class="wlclans">${(clan && CI[clan] ? [clan] : CLANS.filter(c => CI[c]))
         .map(c => clanLineHTML(c, CI[c], hulk)).join("")}</ul></div>${
@@ -688,7 +688,7 @@ export function fleetControlsHTML(RF){
       <div class="wlrow"><span class="abl">${need.ok ? "Done" : "Needs"}</span><span class="wlneed ${need.ok ? "ok" : "bad"}">${esc(need.text)}</span></div>
       ${ship ? `<div class="wlrow"><span class="abl">Gubbins</span><span class="wlhint">upgrades on his own ship only: ${W.gub || 0} / ${rr}${
         (W.gub || 0) >= rr ? " (all used: another needs another re-roll)" : ""}, ${esc(ship)}${
-        hulk ? " \u00b7 double cost, none for speed, turning or boarding value (Fleets pp. 372, 390)" : ""} \u00b7 Klaws, Shokk-Attack Lance and Assault Karrier on any capital ship (p. 371)</span></div>` : ""}
+        hulk ? " \u00b7 double cost, none for speed, turning or boarding value (Fleets pp. 374, 392)" : ""} \u00b7 Klaws, Shokk-Attack Lance and Assault Karrier on any capital ship (p. 373)</span></div>` : ""}
     </div>`);
   });
   /* Send to (J232, user 24.10.2026: "next to the drag button there could
@@ -696,24 +696,24 @@ export function fleetControlsHTML(RF){
      this is; another one sends the whole skwadron to him (sendSkwadron).
      It replaces the Warlord menu under the row (J216) and keeps its class,
      so the old drivers still find it. A hulk's Warlord leads only the hulk
-     (Fleets p. 373). */
+     (Fleets p. 375). */
   const send = out.send = [];
   if(ws.length >= 2) appState.S.units.forEach((u, i) => {
     const w = RF.command && RF.command[i];
     if(w == null || w < 0 || !skwKind(u)) return;
     send[i] = `<select class="wlin wlsend" data-u="${i}" style="--wl:${warlordColor(appState.S.units[w], ws.indexOf(w))}"
-      aria-label="Warlord of this skwadron" title="The Warlord whose skwadron this is - pick another to send the whole skwadron to him, with his clan (Fleets pp. 369, 372-373)">${
+      aria-label="Warlord of this skwadron" title="The Warlord whose skwadron this is - pick another to send the whole skwadron to him, with his clan (Fleets pp. 371, 374-375)">${
       ws.map((wi, k) => {
         const W2 = (RF.warlords || []).filter(x => x.unit === wi)[0], cl = appState.S.units[wi].clan || "", off = wi !== w && !!(W2 && W2.hulk);
         return `<option value="${esc(appState.S.units[wi].uid)}"${wi === w ? " selected" : ""}${off ? " disabled" : ""}>${wi === w ? "" : "\u2192 "}Warlord ${k + 1}${
           cl ? " \u00b7 " + esc(cl) : ""}${off ? " (leads his hulk only)" : ""}</option>`; }).join("")}</select>`;
   });
-  /* A Warlord aboard an Ork hulk (J232, Fleets p. 390) - Da Ork Clanz and
+  /* A Warlord aboard an Ork hulk (J232, Fleets p. 392) - Da Ork Clanz and
      Waaagh! alike */
   (RF.aboard || []).forEach(a => {
     const cm = RF.units[a.unit], sh = a.ship != null ? RF.units[a.ship] : null;
     if(!cm || !sh || !/warlord/i.test(String((cm.entry && cm.entry.label) || "")) || !isOrkHulkUnit(sh)) return;
-    add(a.unit, `<div class="uctl aboard"><span class="abl">On the hulk</span><span class="wlhint">no doubled boarding value; Maniac Gunners and Looted Torpedoes one weapon system per turn; Extra Powerfields +50; Mad Meks ignore a critical on a 6 (Fleets p. 390)</span></div>`);
+    add(a.unit, `<div class="uctl aboard"><span class="abl">On the hulk</span><span class="wlhint">no doubled boarding value; Maniac Gunners and Looted Torpedoes one weapon system per turn; Extra Powerfields +50; Mad Meks ignore a critical on a 6 (Fleets p. 392)</span></div>`);
   });
   return out;
 }

@@ -42,7 +42,7 @@ const OPEN = {
   "fl-explorers-prize": { a: [{ id: "rnd", l: "Rolling the derelict at random", d: "Number the cruisers you own and roll", o: 1 },
     { id: "rep", l: "Weapons before the four criticals are repaired", d: "None fire until all four are repaired (as written)", o: 1 }] },
   "fl-space-hulk": { a: [{ id: "adep", l: "The attackers’ set-up", d: "Contact markers inside the shaded 45 cm zones, at least 30 cm from the short edges", o: 1 },
-    { id: "hulk", l: "The hulk’s other characteristics", d: "As the Ork Hulk (FL p. 389), with the scenario’s 40 hits and Ld 6", o: 1 }] },
+    { id: "hulk", l: "The hulk’s other characteristics", d: "As the Ork Hulk (FL p. 391), with the scenario’s 40 hits and Ld 6", o: 1 }] },
   "fl-void-malevolent": { a: [{ id: "ord", l: "The ordnance table’s slips", d: "Each fleet’s ordnance moves twice a turn: once in each player’s ordnance phase", o: 1 }] },
   "fl-craftworld-assault": { a: [{ id: "stop", l: "Which fortress rolls to stop an assault point", d: "One 4+ roll per assault point, using the better surviving fortress", o: 1 }] },
   /* --- Classic GW --- */

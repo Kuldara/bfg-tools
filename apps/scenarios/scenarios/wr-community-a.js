@@ -99,16 +99,16 @@
   {
     id: "wr-planet-killer-defence", grp: "community", name: "Planetary Defence", series: "From a battle report", trust: "community", type: "Battle report",
     why: "Not a written scenario: a battle report in which the players made up quick rules for the Planet Killer. The Fleets book has the official rule for exactly this game — the Planet Killer in Exterminatus (FL p. 254) — so that is the default here.", src: "Warp Rift 22, pp. 8–11", book: "O", suggest: ["Imperial Navy", "Chaos"],
-    variants: [["fl", "Fleets book rule (FL p. 254)"], ["report", "As played (report)"]],
-    others: "The attacker needs the Planet Killer (FL p. 252), so Chaos; any fleet can defend.",
+    variants: [["fl", "Fleets book rule (FL p. 256)"], ["report", "As played (report)"]],
+    others: "The attacker needs the Planet Killer (FL p. 254), so Chaos; any fleet can defend.",
     sides: { a: { n: "Defenders", f: "Imperial Navy" }, b: { n: "Planet Killer fleet", f: "Chaos (required)" } },
     pitch: "The Planet Killer goes for a defended world. Get it into position and kill the planet; the defenders have to stop it first.",
     glance: v => v === "fl"
       ? [["Points", "2000 each (as played)"], ["Table", "As Exterminatus"], ["Battlezone", "Primary or inner biosphere, a planet"], ["First turn", "Roll-off"], ["Victory", "Planet destroyed, or the Planet Killer stopped"]]
       : [["Points", "2000 each (as played)"], ["Table", "Not given"], ["Battlezone", "Medium planet with gas clouds and asteroids"], ["First turn", "Roll-off"], ["Victory", "Planet destroyed, or standard victory points"]],
-    bring: v => v === "fl" ? ["The Planet Killer (FL p. 252)", "A planet", "Low orbit table", "Nova cannon template (Armageddon gun)"] : ["The Planet Killer (FL p. 252)", "Medium planet", "Gas clouds and asteroid fields"],
+    bring: v => v === "fl" ? ["The Planet Killer (FL p. 254)", "A planet", "Low orbit table", "Nova cannon template (Armageddon gun)"] : ["The Planet Killer (FL p. 254)", "Medium planet", "Gas clouds and asteroid fields"],
     forces: v => v === "fl"
-      ? { a: ["2000 pts (the report’s size), plus D6×10 pts of planetary defences per 500 pts or part (RB p. 140).", "One capital ship or escort squadron per 500 pts is on patrol and arrives later (RB p. 140–141)."], b: ["2000 pts including the Planet Killer as the exterminator (FL p. 254); it loses no weapons for it."] }
+      ? { a: ["2000 pts (the report’s size), plus D6×10 pts of planetary defences per 500 pts or part (RB p. 140).", "One capital ship or escort squadron per 500 pts is on patrol and arrives later (RB p. 140–141)."], b: ["2000 pts including the Planet Killer as the exterminator (FL p. 256); it loses no weapons for it."] }
       : { a: ["2000 pts (the report’s size)."], b: ["2000 pts including the Planet Killer."] },
     draw: (v, W, H) => v === "fl"
       ? [{ z: "planet", cx: Math.min(W - 20, 150), cy: H / 2, r: 8, l: "planet", free: 1 }, R(30, 30, Math.max(0, W - 60), Math.max(0, H - 60), "a", "", { dash: 1 }), { z: "text", x: W / 2, y: 40, l: "defenders: not within 30 cm of an edge", s: "a" },
@@ -120,7 +120,7 @@
     steps: [
       { t: "Agree the points (the report used 2000). Battlezone: primary or inner biosphere. Place a planet no more than 150 cm from one short edge (roll its size: 1 small, 2–5 medium, 6 large) and declare a sunward edge (RB p. 140).", only: ["fl"] },
       { s: "a", t: "Pick one capital ship or escort squadron per 500 pts to be on patrol, kept off the table. Deploy the rest anywhere, but not within 30 cm of a table edge.", only: ["fl"] },
-      { s: "b", t: "Deploy the whole fleet within 15 cm of the edge furthest from the planet. The Planet Killer is your exterminator (FL p. 254).", only: ["fl"] },
+      { s: "b", t: "Deploy the whole fleet within 15 cm of the edge furthest from the planet. The Planet Killer is your exterminator (FL p. 256).", only: ["fl"] },
       { t: "Set out the low orbit table. Roll off: the higher roll chooses to go first or second.", only: ["fl"] },
       { t: "Agree the points (the report used 2000). Place a medium planet with some gas clouds and asteroid fields around it.", only: ["report"] },
       { t: "Roll off: the winner chooses to set up first or second (in the report the Chaos player chose second).", only: ["report"] },
@@ -133,9 +133,9 @@
       : ["These were the players’ “rudimentary rules” for one game; they never fixed zones, game length or how often the shot may be tried. The report’s pattern: 6+ on the first try, then reload, then 5+ on each later try.", "The report’s analysis: the Chaos player could only win by bombing the planet and disengaging — a single huge ship is not a good fleet."],
     refs: v => v === "fl" ? [["Exterminatus", "RB p. 140–141"], ["The Planet Killer", "FL p. 252–254"], ["Low orbit", "RB p. 116"]] : [["The Planet Killer", "FL p. 252"], ["Reload Ordnance", "RB p. 46"]],
     play: [
-      { w: "Destroying the planet", s: "b", t: "Two ways (FL p. 254). Low orbit: like any exterminator, enter low orbit; at the start of each turn the Planet Killer is within 60 cm of the planet table edge, the planet is destroyed — no 4+ roll needed.", only: ["fl"] },
-      { w: "Armageddon Overcharge", s: "b", t: "Or declare a charge for three consecutive turns: no turning, shooting or special orders, +2 shields. After movement in the third turn fire the nova cannon template 60 cm straight ahead; the first planet or moon its centre hole touches is removed on 2+ in D3 turns (FL p. 253).", only: ["fl"] },
-      { w: "Losing the gun", s: "b", t: "If the Armageddon gun cannot be used for any reason, the Planet Killer can no longer exterminate and Chaos loses (FL p. 254).", only: ["fl"] },
+      { w: "Destroying the planet", s: "b", t: "Two ways (FL p. 256). Low orbit: like any exterminator, enter low orbit; at the start of each turn the Planet Killer is within 60 cm of the planet table edge, the planet is destroyed — no 4+ roll needed.", only: ["fl"] },
+      { w: "Armageddon Overcharge", s: "b", t: "Or declare a charge for three consecutive turns: no turning, shooting or special orders, +2 shields. After movement in the third turn fire the nova cannon template 60 cm straight ahead; the first planet or moon its centre hole touches is removed on 2+ in D3 turns (FL p. 255).", only: ["fl"] },
+      { w: "Losing the gun", s: "b", t: "If the Armageddon gun cannot be used for any reason, the Planet Killer can no longer exterminate and Chaos loses (FL p. 256).", only: ["fl"] },
       { w: "Patrols", s: "a", t: "At the start of each of your turns roll for each patrol not yet in play: speed up to 20 cm arrives on 5+, 25 cm on 4+, 30 cm or more on 3+, on a random table edge (RB p. 141).", only: ["fl"] },
       { w: "Destroying the planet", s: "b", t: "Once the Planet Killer has arrived in orbit, roll a D6 at the start of your next turn: on 6 the planet is destroyed.", only: ["report"] },
       { w: "Trying again", s: "b", t: "The next turn the Planet Killer must reload; after that it may roll again, now needing 5+.", only: ["report"] }

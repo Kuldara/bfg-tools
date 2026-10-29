@@ -78,7 +78,7 @@ export function optionsOf(sel){
     }
     /* An option that covers a list row (cov) inherits the row's exclusions:
        a taken upgrade whose noup names the covered row blocks the option (a
-       Daemonship may not have a Chaos Space Marine crew, Fleets p. 249). */
+       Daemonship may not have a Chaos Space Marine crew, Fleets p. 253). */
     if(st !== "take" && o.cov && sel.list){
       var ups3 = upgradesFor(sel);
       ups3.own.concat(ups3.other).forEach(function(x){
@@ -91,7 +91,7 @@ export function optionsOf(sel){
     /* ...and the covered row's own exclusions too: the Terror ship's +5
        boarding torpedoes are the list's boarding torpedoes row, which gives
        way to an Assault Karrier that "takes boarding torpedoes for free"
-       (Fleets p. 371, ChatGPT audit RAW-06). The words decide the cover here
+       (Fleets p. 373, ChatGPT audit RAW-06). The words decide the cover here
        (optionCoversRow), so this does not need o.cov. */
     if(st !== "take" && sel.list){
       var ups4 = upgradesFor(sel);
@@ -141,7 +141,7 @@ export function coversExcludedRow(list, o, noup){
      q         the book's own limit on them (en.rrq, build_data): scope - whose
                rolls they may be spent on (a Veteran Captain's "own vessel or
                another vessel in their own squadron", p. 38) - or unit
-               (Abaddon's is "1 per turn", p. 231, not once per game)
+               (Abaddon's is "1 per turn", p. 241, not once per game)
    Nothing included and nothing for sale says nothing: a Space Marine
    Captain (Fleets p. 100) has no re-roll to talk about. */
 export function rerollText(included, bought, can, q){
@@ -161,7 +161,7 @@ export function rerollText(included, bought, can, q){
                into use if it is bought
    Open rows of one choose-one group ("One / Two / Three extra re-rolls")
    offer the largest of them, not their sum; separate groups add up (an
-   extra re-roll and the Mark of Tzeentch, Fleets p. 234). rows are resolved
+   extra re-roll and the Mark of Tzeentch, Fleets p. 244). rows are resolved
    upgrade rows (upgradesOf). */
 export function openRerolls(rows){
   var best = {};
@@ -181,9 +181,9 @@ export function rerollBoxes(included, bought, optional){
 }
 /* A ship's OWN re-rolls (review 5.10.2026): the ones its profile carries in
    its cost (sh.rr - the Scion of Prospero's Mark of Tzeentch and Vagaries
-   of Fate, Fleets p. 258) and the re-roll rows taken on it that are not the
+   of Fate, Fleets p. 260) and the re-roll rows taken on it that are not the
    fleet's purchase: a Mark of Tzeentch ("This ship has an extra re-roll",
-   p. 234), a fortress-monastery's ("usable only by the fortress-monastery
+   p. 244), a fortress-monastery's ("usable only by the fortress-monastery
    itself", p. 111). Open options count only for rows that are the ship's
    own - a Mark any ship of the list could take is not an offer to draw on
    every card. null for a ship with none. */
@@ -223,7 +223,7 @@ export function commanderRerollOffer(list, si, ei){
 }
 /* A fleet without a commander can still have a re-roll of its own: "The
    fleet gets one re-roll and can purchase extra re-rolls at the cost shown"
-   (Necrons p. 404, Demiurg p. 486). list.frr is that sentence with its page
+   (Necrons p. 406, Demiurg p. 486). list.frr is that sentence with its page
    (build_data); units are the fleet's resolved units, whose taken
    fleet-wide rows are the extra ones. null when the list has no such rule. */
 export function fleetRerolls(list, units){
@@ -244,7 +244,7 @@ export function fleetRerolls(list, units){
     open = Math.max(0, per.reduce(function(a, x){ return a + x.cap; }, 0) - bought);
     if(!per.some(function(x){ return x.open > 0; })) open = 0;
   }else{
-    /* one purchase for the fleet (p. 404, 486): a row ticked on two ships is
+    /* one purchase for the fleet (p. 406, 486): a row ticked on two ships is
        still one purchase - the legality check says so - and every ship shows
        the same offer, of which nothing is left once a row is taken */
     bought = per.reduce(function(a, x){ return Math.max(a, x.took); }, 0);
@@ -286,7 +286,7 @@ export function upgradesOf(sel){
       bays: en.per === "bay" ? bayStrength(sel.sh, sel) : null,
       ships: en.per === "bay" && sel.escort ? sel.hulls : 1,
       rerolls: en.rr || 0,
-      /* fxg: bought once for the whole fleet, not for this ship (p. 404,
+      /* fxg: bought once for the whole fleet, not for this ship (p. 406,
          486); frw: a fleet re-roll bought ship by ship (Tyranid Hive Mind
          Influence, p. 430) */
       fleetWide: !!(en.fxg || en.frw)
@@ -346,9 +346,9 @@ export const RULE_CARDS = {
 /* What the mine cards add for the fleet that owns the mines and for the one
    ship that never sets them off (BACKLOG J175). Eldar and Dark Eldar
    ordnance "can only be hit by defensive turrets on a roll of 6 ... This
-   includes ... orbital mines" (Fleets p. 304; Dark Eldar p. 345, "turrets
+   includes ... orbital mines" (Fleets p. 306; Dark Eldar p. 347, "turrets
    on a 6"). The Necron Shroud: "As long as it is not crippled a Shroud will
-   never activate orbital mines" (p. 407) - the card is the defender's, so
+   never activate orbital mines" (p. 409) - the card is the defender's, so
    it names the exception for whichever enemy brings one. */
 export var MINE_TURRETS_6 = [[/^dark eldar$/, "Dark Eldar", 345], [/eldar/, "Eldar", 304]];
 export function mineSteps(key, list){
@@ -357,7 +357,7 @@ export function mineSteps(key, list){
   var e6 = MINE_TURRETS_6.filter(function(x){ return x[0].test(race); })[0];
   if(e6) out.push({ h: e6[1] + " mines", t: "Turrets hit " + (key === "minefield" ? "the mines it releases" : "this mine") +
     " only on a 6, like all " + e6[1] + " ordnance (Fleets p. " + e6[2] + ")." });
-  out.push({ h: "Necron Shroud", t: "An uncrippled Necron Shroud never activates orbital mines (Fleets p. 407)." });
+  out.push({ h: "Necron Shroud", t: "An uncrippled Necron Shroud never activates orbital mines (Fleets p. 409)." });
   return out;
 }
 export function ruleCardOf(key, limit, list){
@@ -448,9 +448,9 @@ export function resolveUnit(intent, ctx, catalog){
   var hits = effHits(sel);
   var escort = sel.escort;
   var cm = criticalModel(sh);
-  /* Fleets p. 307 Deathless: a Ghostship suffers a critical only on a 6. */
+  /* Fleets p. 309 Deathless: a Ghostship suffers a critical only on a 6. */
   var ghost = takenUpgradeLabels(sel).some(function(l){ return /^ghostship/i.test(l); });
-  /* Fleets p. 182 Fuel Tanker: "suffer critical damage on a roll of 5+ instead of a 6". */
+  /* Fleets p. 192 Fuel Tanker: "suffer critical damage on a roll of 5+ instead of a 6". */
   var tanker = (sh.ol || []).some(function(o, i){ return optState(sel, i) === "take" && /^fuel tanker/i.test(String(o.t || "")); });
   var rows = weaponRows(sel).map(function(r){ r.state = weaponState(r); return r; });
   /* v1.2: how the card prints the range - one value in its band's frame, or
@@ -473,12 +473,12 @@ export function resolveUnit(intent, ctx, catalog){
   if(sh.qd) rows.forEach(function(r){
     r.zone = /all\s*round/i.test(String((r.a && r.a[3]) || "")) ? "basilica" : "quadrant"; });
   /* Space hulks: a critical wears a weapon row down for the rest of the game
-     ("Space Hulks cannot repair any critical damage", Fleets p. 391), so the
+     ("Space Hulks cannot repair any critical damage", Fleets p. 393), so the
      standard rows carry how they are ticked. */
   var hulk = isSpaceHulk(sh);
   if(hulk) rows.forEach(function(r){ if(r.box == null) r.loss = hulkLoss(r.a, isChaosHulk(sh)); });
   /* v1.2: port / starboard pairs (pairRows). Not on a hulk: every row there
-     is worn down on its own (Fleets p. 391). */
+     is worn down on its own (Fleets p. 393). */
   if(!hulk) pairRows(rows);
   var trackN = function(key){
     var v = key === "shields" ? parseInt(effShieldsText(sel), 10) : key === "turrets" ? parseInt(effTurrets(sel), 10) : 6;

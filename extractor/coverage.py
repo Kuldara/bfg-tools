@@ -64,7 +64,7 @@ REVIEWED = {
     "Cruiser...":
         "the same page-break leak as above",
     "185 pts The Kroot":
-        "page 177 of the Rogue Traders - Exploration list leaked into the Pirates "
+        "page 187 of the Rogue Traders - Exploration list leaked into the Pirates "
         "list's rule texts; the ships are on the Exploration list",
     "145 pts":
         "the same leak: the Kroot Warsphere is on the Exploration list",

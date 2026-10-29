@@ -261,17 +261,17 @@ var __rules = (() => {
        as lances without the word in their name, and both used to fall through
        to the weapon-battery default, reading on the card exactly like the
        Pyro-acid battery beside them: "Bio-plasma: hits like a lance on 4+"
-       (Fleets p. 419) and "Gauss Particle Whip: fires as a lance" (p. 400).
+       (Fleets p. 421) and "Gauss Particle Whip: fires as a lance" (p. 402).
        Pyro-acid and the Lightning Arc stay batteries, because the book calls
-       each one "a weapon battery" (pp. 420, 400) - the default is right for
+       each one "a weapon battery" (pp. 422, 402) - the default is right for
        them and only for them. */
     /* Warp cannons "roll 1 dice per point of Strength and require a 4+ to hit,
-       like a lance" (Fleets p. 284), and the Armageddon gun is fired with the
-       Nova template (p. 252): both read as weapon batteries until the user
+       like a lance" (Fleets p. 286), and the Armageddon gun is fired with the
+       Nova template (p. 254): both read as weapon batteries until the user
        asked for the lance and the nova colours (9.10.2026). */
     [/lance|bio-plasma|particle whip|ion cannon|warp cannon/i, "L", "#1F6F8B", "#DCEAF0"],
     [/nova cannon|bombardment|armageddon gun/i, "N", "#A33A2E", "#F6DFDB"],
-    /* Ork heavy gunz are weapon batteries (Fleets p. 360) and keep the G, but
+    /* Ork heavy gunz are weapon batteries (Fleets p. 362) and keep the G, but
        they are short-ranged and every hit is two: the row must not read as the
        gunz battery beside it. Its own colour, halfway between the nova
        cannon's red and the gunz' yellow, still a pastel (user 12.10.2026:
@@ -298,8 +298,8 @@ var __rules = (() => {
     [/gravitic hook/i, "H", "#00806F", "#D8EDE8"],
     /* Contact weapons. The Ork spelling "klaw" was here but not the Tyranid
        "claws", so Massive Claws and Feeder Tentacles - both "on contact", both
-       Strength "Spec." - carried the weapon-battery badge (Fleets pp. 419-420).
-       The Impaler is an assault module with a Hit & Run of its own (p. 346).
+       Strength "Spec." - carried the weapon-battery badge (Fleets pp. 421-422).
+       The Impaler is an assault module with a Hit & Run of its own (p. 348).
        /torpedo/ is tested before this line, so Boarding torpedoes stay T. */
     [/ram|klaw|claw|tentacle|boarding|impaler/i, "R", "#7A5230", "#EFE2D4"],
     /* This line used to read /pulse|railgun|ion / and so painted three weapons
@@ -308,7 +308,7 @@ var __rules = (() => {
        lances; "Railgun Battery: functions as a standard weapon battery"
        (p. 450) - now the default, like every other battery; and the Star Pulse
        Generator, which is neither: "one attack against every non-Necron target
-       within 20 cm" (p. 400). Only the last one is left here, and it keeps a
+       within 20 cm" (p. 402). Only the last one is left here, and it keeps a
        badge of its own for the same reason the orbital mine has one. */
     [/star pulse/i, "P", "#2E6B4A", "#DFEDE2"]
   ];
@@ -522,18 +522,18 @@ var __rules = (() => {
   // packages/rules/src/commanders.js
   var FORWARD_REF = /\b(shown below|noted below|listed below|the following|as follows)\b/i;
   var COMMANDER_RULES = [
-    /* Fleets p. 141: the Ordo Xenos ship rolls on (or picks from, +5 pts) the
+    /* Fleets p. 151: the Ordo Xenos ship rolls on (or picks from, +5 pts) the
        xenotech table; the table itself is not in the section text. */
     {
       id: "ordo_xenos_table",
       entry: /^ordo xenos inquisitor lord/i,
-      text: "Xenotech refit (D6, or choose for +5 pts): 1 Long Range Sensors: +1 to base Leadership (max 10). 2 Targeting Matrix: all targets count as closing within 30 cm, no right-shift modifiers beyond 30 cm. 3 Advanced Shielding: +1 shield. 4 Ship Defence Grid: +1 turret. 5 Advanced Drive Technology: +5 cm Speed and +1D6 on All Ahead Full. 6 Gravitic Thrusters: double the maximum turn. (Fleets p. 141)"
+      text: "Xenotech refit (D6, or choose for +5 pts): 1 Long Range Sensors: +1 to base Leadership (max 10). 2 Targeting Matrix: all targets count as closing within 30 cm, no right-shift modifiers beyond 30 cm. 3 Advanced Shielding: +1 shield. 4 Ship Defence Grid: +1 turret. 5 Advanced Drive Technology: +5 cm Speed and +1D6 on All Ahead Full. 6 Gravitic Thrusters: double the maximum turn. (Fleets p. 151)"
     },
-    /* Fleets p. 231: the special rules that apply to Abaddon. */
+    /* Fleets p. 241: the special rules that apply to Abaddon. */
     {
       id: "abaddon",
       entry: /^abaddon\b/i,
-      text: `Abaddon the Despoiler: his ship doubles its value in boarding actions and adds +1 to the Boarding modifier. Hit & Run raids against his ship suffer -1; his own teleport attacks add +1 (boarding torpedoes and assault boats do not). "You have failed me for the last time": if his re-roll is used for another ship's or squadron's Command check or Leadership test and it fails again, in the next Chaos Shooting phase his ship directs at least half its firepower and lance strength at them, resolved as if it were an enemy. (Fleets p. 231)`
+      text: `Abaddon the Despoiler: his ship doubles its value in boarding actions and adds +1 to the Boarding modifier. Hit & Run raids against his ship suffer -1; his own teleport attacks add +1 (boarding torpedoes and assault boats do not). "You have failed me for the last time": if his re-roll is used for another ship's or squadron's Command check or Leadership test and it fails again, in the next Chaos Shooting phase his ship directs at least half its firepower and lance strength at them, resolved as if it were an enemy. (Fleets p. 241)`
     },
     {
       id: "mesme",
@@ -660,6 +660,9 @@ var __rules = (() => {
       }
     }
     (L.opp || []).forEach(function(o) {
+      if (o.needs && !members.some(function(m) {
+        return m.en && new RegExp(o.needs, "i").test(String(m.en.l));
+      })) return;
       var n = members.filter(function(m) {
         return m.en && o.pick.some(function(re) {
           return new RegExp(re, "i").test(String(m.en.l));
@@ -1579,10 +1582,10 @@ var __rules = (() => {
       mentions: [/boarding torpedo/i],
       text: "Boarding Torpedoes: a hit is a Hit & Run attack, not damage; never in the same turn as ordinary torpedoes from the same ship; one 45\xB0 turn at the start of each later Ordnance phase; may ignore hulks. (Rulebook p. 78)"
     },
-    /* Fleets pp. 233, 235, 237 ORDNANCE: "Ships with torpedo tubes are armed with
+    /* Fleets pp. 243, 245, 247 ORDNANCE: "Ships with torpedo tubes are armed with
        normal and boarding torpedoes." The Nurgle, Khorne and Slaanesh pages (241,
        245, 249) break off before the sentence in the book (T25). Renegade
-       Imperial hulls keep their own ordnance (Fleets p. 222). */
+       Imperial hulls keep their own ordnance (Fleets p. 232). */
     {
       id: "chaos_torpedoes_233",
       color: "#59636F",
@@ -1611,7 +1614,7 @@ var __rules = (() => {
       text: "Torpedoes: may be normal or boarding torpedoes (Rulebook p. 78). (Fleets p. 237)"
     },
     /* T25 (user decision 11.9.2026): the Nurgle, Khorne and Slaanesh paragraphs
-       (pp. 241, 245, 249) break off in the book; the parallel lists complete them. */
+       (pp. 249, 251, 253) break off in the book; the parallel lists complete them. */
     {
       id: "chaos_torpedoes_241",
       color: "#59636F",
@@ -1686,7 +1689,7 @@ var __rules = (() => {
       opt: /sepulchre/i,
       up: /^sepulchre/i,
       mentions: [/sepulchre/i],
-      text: "Sepulchre: the ship has Leadership 10. Used when not on Special Orders or Crippled: one enemy ship within 20 cm takes a Leadership test; if it fails, its Leadership is permanently -1 and it may use no Special Orders (Brace included) until the end of its next turn. Ordnance within 20 cm, except non-boarding torpedoes, is destroyed on 4+. (Fleets p. 400)"
+      text: "Sepulchre: the ship has Leadership 10. Used when not on Special Orders or Crippled: one enemy ship within 20 cm takes a Leadership test; if it fails, its Leadership is permanently -1 and it may use no Special Orders (Brace included) until the end of its next turn. Ordnance within 20 cm, except non-boarding torpedoes, is destroyed on 4+. (Fleets p. 402)"
     },
     {
       id: "csm_crew",
@@ -1697,7 +1700,7 @@ var __rules = (() => {
       up: /space marine crew/i,
       notOpt: /chosen terminators/i,
       mentions: [/chaos space marine crew/i],
-      text: "Chaos Space Marine crew: Leadership +1, maximum 10. +2 in boarding actions; enemy Hit & Run rolls -1; own Hit & Run by boarding torpedoes, Dreadclaws, Thunderhawks or teleport +1. 2 Assault Points per turn in a Planetary Assault. (Fleets p. 224)"
+      text: "Chaos Space Marine crew: Leadership +1, maximum 10. +2 in boarding actions; enemy Hit & Run rolls -1; own Hit & Run by boarding torpedoes, Dreadclaws, Thunderhawks or teleport +1. 2 Assault Points per turn in a Planetary Assault. (Fleets p. 234)"
     },
     {
       id: "chosen_terminators",
@@ -1707,14 +1710,14 @@ var __rules = (() => {
       opt: /chosen terminators/i,
       up: /chosen terminators/i,
       mentions: [/chosen terminators/i],
-      text: "Chosen Terminators: in a teleport Hit & Run attack roll two dice and choose which counts, +1 as normal. (Fleets p. 224)"
+      text: "Chosen Terminators: in a teleport Hit & Run attack roll two dice and choose which counts, +1 as normal. (Fleets p. 234)"
     },
-    /* Chaos Marks (Fleets p. 232 and the god lists pp. 236-248) and the
-       Daemonship (pp. 227-228): bought as list rows, so they print only when
+    /* Chaos Marks (Fleets p. 242 and the god lists pp. 246-252) and the
+       Daemonship (pp. 237-238): bought as list rows, so they print only when
        taken. On the Nurgle, Khorne and Slaanesh lists the Daemonship price
        includes the Mark ("must take the Mark ..., which is already included",
-       pp. 241, 245, 249), so the Daemonship row brings the Mark's rule with it;
-       Tzeentch pays for it separately (p. 237). ship: not on a commander card,
+       pp. 249, 251, 253), so the Daemonship row brings the Mark's rule with it;
+       Tzeentch pays for it separately (p. 247). ship: not on a commander card,
        whose row already prints the book's own description. */
     {
       id: "daemonship",
@@ -1724,7 +1727,7 @@ var __rules = (() => {
       up: /^daemonship:/i,
       ship: true,
       mentions: [/daemon ?ship/i],
-      text: "Daemonship: may wait in the Warp and arrive in the End phase of any Chaos turn after the first, within 20 cm of a capital ship and scattered 4D6 cm. It is spectral until it translates on a 2+ in a later End phase: enemies within 15 cm are -1 Ld for Special Orders, it cannot act and cannot be attacked. It may disengage at the end of any Movement phase without a roll and return later, repairing D6: 4-5 = +1 Hp, 6 = +2 Hp (+1 if a battleship, +1 per full turn in the Warp), criticals on 4+. No Warmaster, Lord or Chaos Space Marine crew, no squadrons, no Exterminatus or planetary assault points. (Fleets pp. 227-228)"
+      text: "Daemonship: may wait in the Warp and arrive in the End phase of any Chaos turn after the first, within 20 cm of a capital ship and scattered 4D6 cm. It is spectral until it translates on a 2+ in a later End phase: enemies within 15 cm are -1 Ld for Special Orders, it cannot act and cannot be attacked. It may disengage at the end of any Movement phase without a roll and return later, repairing D6: 4-5 = +1 Hp, 6 = +2 Hp (+1 if a battleship, +1 per full turn in the Warp), criticals on 4+. No Warmaster, Lord or Chaos Space Marine crew, no squadrons, no Exterminatus or planetary assault points. (Fleets pp. 237-238)"
     },
     {
       id: "mark_slaanesh",
@@ -1734,7 +1737,7 @@ var __rules = (() => {
       up: /^the mark of slaanesh/i,
       ship: true,
       mentions: [/mark of slaanesh/i],
-      text: "Mark of Slaanesh: enemy ships within 15 cm suffer -2 Leadership; an area effect, not blocked by line of sight. (Fleets pp. 232, 248)"
+      text: "Mark of Slaanesh: enemy ships within 15 cm suffer -2 Leadership; an area effect, not blocked by line of sight. (Fleets pp. 242, 252)"
     },
     {
       id: "mark_slaanesh",
@@ -1744,7 +1747,7 @@ var __rules = (() => {
       up: /^daemonship:/i,
       ship: true,
       mentions: [/mark of slaanesh/i],
-      text: "Mark of Slaanesh (included in the Daemonship): enemy ships within 15 cm suffer -2 Leadership; an area effect, not blocked by line of sight. (Fleets pp. 232, 248-249)"
+      text: "Mark of Slaanesh (included in the Daemonship): enemy ships within 15 cm suffer -2 Leadership; an area effect, not blocked by line of sight. (Fleets pp. 242, 252-253)"
     },
     {
       id: "mark_khorne",
@@ -1754,7 +1757,7 @@ var __rules = (() => {
       up: /^the mark of khorne/i,
       ship: true,
       mentions: [/mark of khorne/i],
-      text: "Mark of Khorne: the ship doubles its value in boarding actions. (Fleets pp. 232, 244)"
+      text: "Mark of Khorne: the ship doubles its value in boarding actions. (Fleets pp. 242, 250)"
     },
     {
       id: "mark_khorne",
@@ -1764,7 +1767,7 @@ var __rules = (() => {
       up: /^daemonship:/i,
       ship: true,
       mentions: [/mark of khorne/i],
-      text: "Mark of Khorne (included in the Daemonship): the ship doubles its value in boarding actions. (Fleets pp. 232, 244-245)"
+      text: "Mark of Khorne (included in the Daemonship): the ship doubles its value in boarding actions. (Fleets pp. 242, 250-251)"
     },
     {
       id: "mark_tzeentch",
@@ -1774,7 +1777,7 @@ var __rules = (() => {
       up: /^the mark of tzeentch/i,
       ship: true,
       mentions: [/mark of tzeentch/i],
-      text: "Mark of Tzeentch: the ship gains one re-roll of its own. (Fleets pp. 232, 236)"
+      text: "Mark of Tzeentch: the ship gains one re-roll of its own. (Fleets pp. 242, 246)"
     },
     {
       id: "mark_nurgle",
@@ -1820,7 +1823,7 @@ var __rules = (() => {
       wep: /^$/,
       opt: /fast clipper/i,
       mentions: [/fast clipper|advanced drive/i],
-      text: "Fast Clipper: the weapons battery is removed; Advanced Drive Technology gives +5 cm Speed (shown above) and +1D6 cm on All Ahead Full. (Fleets pp. 175, 192)"
+      text: "Fast Clipper: the weapons battery is removed; Advanced Drive Technology gives +5 cm Speed (shown above) and +1D6 cm on All Ahead Full. (Fleets pp. 185, 202)"
     },
     {
       id: "aspect_host",
@@ -1829,7 +1832,7 @@ var __rules = (() => {
       wep: /^$/,
       up: /aspect warrior host/i,
       mentions: [/aspect warrior/i],
-      text: "Aspect Warrior Host: +2 in boarding actions, +1 to Hit & Run attacks. Not on a Ghostship. (Fleets pp. 305, 318)"
+      text: "Aspect Warrior Host: +2 in boarding actions, +1 to Hit & Run attacks. Not on a Ghostship. (Fleets pp. 307, 316)"
     },
     {
       id: "ghostship",
@@ -1838,7 +1841,7 @@ var __rules = (() => {
       wep: /^$/,
       up: /^ghostship/i,
       mentions: [/ghostship/i],
-      text: "Ghostship: normal Eldar Leadership. If it fails a Command check for Special Orders it may do nothing but move this turn, and no other Ghostship may test that turn (a failed Brace may still Brace, then does nothing but move next turn). Deathless: critical hits only on a 6. Uncrewed: no Aspect Warriors, no launch bays, no boarding or Hit & Run attacks; enemies get +1 boarding and +1 Hit & Run against it; damage control rolls half the dice. (Fleets p. 307)"
+      text: "Ghostship: normal Eldar Leadership. If it fails a Command check for Special Orders it may do nothing but move this turn, and no other Ghostship may test that turn (a failed Brace may still Brace, then does nothing but move next turn). Deathless: critical hits only on a 6. Uncrewed: no Aspect Warriors, no launch bays, no boarding or Hit & Run attacks; enemies get +1 boarding and +1 Hit & Run against it; damage control rolls half the dice. (Fleets p. 309)"
     },
     {
       id: "klaws",
@@ -1848,7 +1851,7 @@ var __rules = (() => {
       opt: /\bklaws\b/i,
       up: /^klaws/i,
       mentions: [/\bklaws\b/i],
-      text: "Klaws: once per turn, when the ship moves into base contact with an enemy ship, roll 2D6; each 4+ is one hit ignoring shields (not holofields). Brace works; unaffected by Special Orders; a crippled capital ship cannot use them. If both hit it latches on: neither ship moves if the target is the same class or smaller (a larger one moves at half rate), both shoot at half effect with no nova cannon or similar weapons, and it attacks again each End phase (both hitting again adds a third hit). Either may board; Klaw damage causes criticals as normal. (Fleets p. 371)"
+      text: "Klaws: once per turn, when the ship moves into base contact with an enemy ship, roll 2D6; each 4+ is one hit ignoring shields (not holofields). Brace works; unaffected by Special Orders; a crippled capital ship cannot use them. If both hit it latches on: neither ship moves if the target is the same class or smaller (a larger one moves at half rate), both shoot at half effect with no nova cannon or similar weapons, and it attacks again each End phase (both hitting again adds a third hit). Either may board; Klaw damage causes criticals as normal. (Fleets p. 373)"
     },
     {
       id: "power_ram",
@@ -1865,7 +1868,7 @@ var __rules = (() => {
       wep: /\bgunz(?: battery)?\b/i,
       notWep: /heavy gunz/i,
       mentions: [/\bgunz\b/i],
-      text: "Ork Gunz: weapon batteries; roll the printed random Firepower each time they fire. (Fleets p. 360)"
+      text: "Ork Gunz: weapon batteries; roll the printed random Firepower each time they fire. (Fleets p. 362)"
     },
     {
       id: "heavy_gunz",
@@ -1873,7 +1876,7 @@ var __rules = (() => {
       fleet: /ORKS/i,
       wep: /heavy gunz/i,
       mentions: [/heavy gunz/i],
-      text: "Heavy Gunz: weapon batteries without the range column shift; every hit causes 2 Hits. (Fleets p. 360)"
+      text: "Heavy Gunz: weapon batteries without the range column shift; every hit causes 2 Hits. (Fleets p. 362)"
     },
     {
       id: "ork_torpedo",
@@ -1882,7 +1885,7 @@ var __rules = (() => {
       wep: /torpedo/i,
       notOpt: /boarding torpedo|torpedo[- ]?bomma/i,
       mentions: [/torpedo(?:es| launcha| launchas)?/i],
-      text: "Ork Torpedo Launchas: roll the printed salvo Strength each time they fire; a squadron may not combine salvoes. (Fleets p. 360)"
+      text: "Ork Torpedo Launchas: roll the printed salvo Strength each time they fire; a squadron may not combine salvoes. (Fleets p. 362)"
     },
     {
       id: "ork_torpedo_bomma",
@@ -1891,7 +1894,7 @@ var __rules = (() => {
       wep: /torpedo[- ]?bomma/i,
       opt: /torpedo[- ]?bomma/i,
       mentions: [/torpedo[- ]?bomma/i],
-      text: "Torpedo-Bommas: 20 cm bombers, no fighter ability. From the turn after launch each marker may become a Strength-2 torpedo salvo; an additional carrier option. (Fleets p. 359)"
+      text: "Torpedo-Bommas: 20 cm bombers, no fighter ability. From the turn after launch each marker may become a Strength-2 torpedo salvo; an additional carrier option. (Fleets p. 361)"
     },
     {
       id: "ork_fighta_bomma",
@@ -1900,7 +1903,7 @@ var __rules = (() => {
       wep: /launch bay/i,
       range: /fighta-bomma/i,
       mentions: [/fighta-bomma|launch capacit|attack craft/i],
-      text: "Fighta-Bommas: 25 cm fighter/bombers; attack a ship with D3 instead of D6, survivors add +1 attack each after turrets; some may forgo attacks to suppress. Fleet launch capacity: each Ordnance phase roll every variable launch bay Strength and add the fixed ones; attack craft above the total are removed at the end of the turn. (Fleets p. 359)"
+      text: "Fighta-Bommas: 25 cm fighter/bombers; attack a ship with D3 instead of D6, survivors add +1 attack each after turrets; some may forgo attacks to suppress. Fleet launch capacity: each Ordnance phase roll every variable launch bay Strength and add the fixed ones; attack craft above the total are removed at the end of the turn. (Fleets p. 361)"
     },
     {
       id: "eldar_pulsar",
@@ -1908,7 +1911,7 @@ var __rules = (() => {
       fleet: /^ELDAR$/i,
       wep: /pulsar lance/i,
       mentions: [/pulsar lance/i],
-      text: "Pulsar Lance: hits as a lance on 4+; after a hit, roll again until it misses or that shot has caused 3 hits. (Fleets p. 304)"
+      text: "Pulsar Lance: hits as a lance on 4+; after a hit, roll again until it misses or that shot has caused 3 hits. (Fleets p. 306)"
     },
     {
       id: "eldar_shadow",
@@ -1916,7 +1919,7 @@ var __rules = (() => {
       fleet: /^ELDAR$/i,
       wep: /shadow lance/i,
       mentions: [/shadow lance/i],
-      text: "Shadow Lance: counts as a normal lance; it does not gain the Pulsar's repeat-hit rolls. (Fleets p. 304)"
+      text: "Shadow Lance: counts as a normal lance; it does not gain the Pulsar's repeat-hit rolls. (Fleets p. 306)"
     },
     {
       id: "eldar_battery",
@@ -1924,7 +1927,7 @@ var __rules = (() => {
       fleet: /^ELDAR$/i,
       wep: /weapons battery/i,
       mentions: [/weapons batter/i],
-      text: "Eldar Weapons Battery: treat every target as Closing on the Gunnery table. (Fleets p. 304)"
+      text: "Eldar Weapons Battery: treat every target as Closing on the Gunnery table. (Fleets p. 306)"
     },
     {
       id: "eldar_ordnance",
@@ -1932,7 +1935,7 @@ var __rules = (() => {
       fleet: /^ELDAR$/i,
       wep: /launch bay|torpedo/i,
       mentions: [/ordnance|torpedo|attack craft|launch bay/i],
-      text: "Eldar Ordnance: turrets hit it only on 6. Torpedoes re-roll their first failed hit; fighters have a 4+ resilience save and bombers re-roll attacks. (Fleets p. 304)"
+      text: "Eldar Ordnance: turrets hit it only on 6. Torpedoes re-roll their first failed hit; fighters have a 4+ resilience save and bombers re-roll attacks. (Fleets p. 306)"
     },
     {
       id: "dark_battery",
@@ -1940,7 +1943,7 @@ var __rules = (() => {
       fleet: /DARK ELDAR/i,
       wep: /weapons battery/i,
       mentions: [/weapons batter/i],
-      text: "Dark Eldar Weapons Battery: treat every target as Closing on the Gunnery table. (Fleets p. 345)"
+      text: "Dark Eldar Weapons Battery: treat every target as Closing on the Gunnery table. (Fleets p. 347)"
     },
     {
       id: "phantom_lance",
@@ -1948,7 +1951,7 @@ var __rules = (() => {
       fleet: /DARK ELDAR|^ELDAR$/i,
       wep: /phantom lance/i,
       mentions: [/phantom lance/i],
-      text: "Phantom Lance: each Strength die scores 0 hits on 1-3, 1 hit on 4, and 2 hits on 5-6. (Fleets p. 345)"
+      text: "Phantom Lance: each Strength die scores 0 hits on 1-3, 1 hit on 4, and 2 hits on 5-6. (Fleets p. 347)"
     },
     {
       id: "dark_ordnance",
@@ -1956,7 +1959,7 @@ var __rules = (() => {
       fleet: /DARK ELDAR/i,
       wep: /launch bay|torpedo|impaler/i,
       mentions: [/ordnance|torpedo|attack craft|impaler/i],
-      text: "Dark Eldar Ordnance: turrets hit it only on 6; Raptor fighters have a 4+ resilience save and Razorwing bombers re-roll attacks. (Fleets p. 345)"
+      text: "Dark Eldar Ordnance: turrets hit it only on 6; Raptor fighters have a 4+ resilience save and Razorwing bombers re-roll attacks. (Fleets p. 347)"
     },
     {
       id: "dark_torpedo",
@@ -1964,7 +1967,7 @@ var __rules = (() => {
       fleet: /DARK ELDAR/i,
       wep: /torpedo/i,
       mentions: [/leech torpedo|eldar torpedo/i],
-      text: "Dark Eldar Torpedoes: ordinary Eldar torpedoes re-roll their first miss. Leech torpedoes instead cause one automatic critical: Speed -10 cm and no All Ahead Full until every leech is repaired. (Fleets p. 347)"
+      text: "Dark Eldar Torpedoes: ordinary Eldar torpedoes re-roll their first miss. Leech torpedoes instead cause one automatic critical: Speed -10 cm and no All Ahead Full until every leech is repaired. (Fleets p. 349)"
     },
     {
       id: "impaler",
@@ -1972,7 +1975,7 @@ var __rules = (() => {
       fleet: /DARK ELDAR/i,
       wep: /impaler/i,
       mentions: [/impaler/i],
-      text: "Impaler: independent assault module; 4+ save against a fighter, then a special Hit & Run. On 2-6 roll 2D6 on the critical table; a natural 1 loses it for the game. (Fleets p. 346)"
+      text: "Impaler: independent assault module; 4+ save against a fighter, then a special Hit & Run. On 2-6 roll 2D6 on the critical table; a natural 1 loses it for the game. (Fleets p. 348)"
     },
     {
       id: "mimic_engine",
@@ -1981,7 +1984,7 @@ var __rules = (() => {
       wep: /mimic engine/i,
       opt: /mimic engine/i,
       mentions: [/mimic engine/i],
-      text: "Mimic Engines: make one normal move after deployment. If then over 30 cm away, the vessel cannot be targeted in turn 1 until it attacks; no effect against Tyranids or Necrons. (Fleets p. 343)"
+      text: "Mimic Engines: make one normal move after deployment. If then over 30 cm away, the vessel cannot be targeted in turn 1 until it attacks; no effect against Tyranids or Necrons. (Fleets p. 345)"
     },
     {
       id: "tau_railgun",
@@ -2030,7 +2033,7 @@ var __rules = (() => {
       fleet: /NECRON/i,
       wep: /lightning arc/i,
       mentions: [/lightning arc/i],
-      text: "Lightning Arc: weapon battery; all targets count as Closing, holofields cause no right shift, and Firepower may be divided among its fire arcs. (Fleets p. 400)"
+      text: "Lightning Arc: weapon battery; all targets count as Closing, holofields cause no right shift, and Firepower may be divided among its fire arcs. (Fleets p. 402)"
     },
     {
       id: "particle_whip",
@@ -2038,7 +2041,7 @@ var __rules = (() => {
       fleet: /NECRON/i,
       wep: /particle whip/i,
       mentions: [/particle whip/i],
-      text: "Gauss Particle Whip: fires as a lance; a natural 6 to hit ignores shields, holofields and similar saves. (Fleets p. 400)"
+      text: "Gauss Particle Whip: fires as a lance; a natural 6 to hit ignores shields, holofields and similar saves. (Fleets p. 402)"
     },
     {
       id: "star_pulse",
@@ -2046,7 +2049,7 @@ var __rules = (() => {
       fleet: /NECRON/i,
       wep: /star pulse/i,
       mentions: [/star pulse/i],
-      text: "Star Pulse Generator: one attack against every non-Necron target within 20 cm; ordnance is hit on 4+. No use while Crippled or on any Special Order. (Fleets p. 400)"
+      text: "Star Pulse Generator: one attack against every non-Necron target within 20 cm; ordnance is hit on 4+. No use while Crippled or on any Special Order. (Fleets p. 402)"
     },
     {
       id: "portal",
@@ -2054,7 +2057,7 @@ var __rules = (() => {
       fleet: /NECRON/i,
       wep: /\bportal\b/i,
       mentions: [/\bportal/i],
-      text: "Portal: grants the printed number of 10 cm Hit & Run attacks. It works on Special Orders; halve it while Crippled or Braced. (Fleets p. 401)"
+      text: "Portal: grants the printed number of 10 cm Hit & Run attacks. It works on Special Orders; halve it while Crippled or Braced. (Fleets p. 403)"
     },
     {
       id: "bio_plasma",
@@ -2062,7 +2065,7 @@ var __rules = (() => {
       fleet: /TYRANID/i,
       wep: /bio-plasma/i,
       mentions: [/bio-plasma/i],
-      text: "Bio-plasma: hits like a lance on 4+, ignores shields, turrets cannot shoot it down; holofields and reactive saves still work. (Fleets p. 419)"
+      text: "Bio-plasma: hits like a lance on 4+, ignores shields, turrets cannot shoot it down; holofields and reactive saves still work. (Fleets p. 421)"
     },
     {
       id: "feeder",
@@ -2070,7 +2073,7 @@ var __rules = (() => {
       fleet: /TYRANID/i,
       wep: /feeder tentacle/i,
       mentions: [/feeder tentacle/i],
-      text: "Feeder Tentacles: once per turn on contact roll D6; 1-3 = that many Hit & Run attacks, 4-6 = 1 Hit plus one Hit & Run. No attack while Crippled. (Fleets p. 419)"
+      text: "Feeder Tentacles: once per turn on contact roll D6; 1-3 = that many Hit & Run attacks, 4-6 = 1 Hit plus one Hit & Run. No attack while Crippled. (Fleets p. 421)"
     },
     {
       id: "claws",
@@ -2078,7 +2081,7 @@ var __rules = (() => {
       fleet: /TYRANID/i,
       wep: /massive claws/i,
       mentions: [/massive claws/i],
-      text: "Massive Claws: on contact roll 2D6 per pair, each 4+ = 1 Hit ignoring shields (not holofields); one target per turn. Two hits grapple it: neither ship moves (a larger class at half rate), no disengaging, both shoot at half effect, boarding as normal; every End phase attack again, and two hits on a grappled target cause a third additional hit. Not against a ship that made contact in the enemy turn; no attack while Crippled. (Fleets p. 420)"
+      text: "Massive Claws: on contact roll 2D6 per pair, each 4+ = 1 Hit ignoring shields (not holofields); one target per turn. Two hits grapple it: neither ship moves (a larger class at half rate), no disengaging, both shoot at half effect, boarding as normal; every End phase attack again, and two hits on a grappled target cause a third additional hit. Not against a ship that made contact in the enemy turn; no attack while Crippled. (Fleets p. 422)"
     },
     {
       id: "pyro_acid",
@@ -2086,7 +2089,7 @@ var __rules = (() => {
       fleet: /TYRANID/i,
       wep: /pyro-acid/i,
       mentions: [/pyro-acid/i],
-      text: "Pyro-acid Battery: a weapon battery; each critical hit also causes a Fire critical. (Fleets p. 420)"
+      text: "Pyro-acid Battery: a weapon battery; each critical hit also causes a Fire critical. (Fleets p. 422)"
     },
     {
       id: "tyranid_ordnance",
@@ -2129,7 +2132,7 @@ var __rules = (() => {
       wep: /disruptor cannon/i,
       mentions: [/disruptor cannon/i],
       selfText: /functions as a standard lance in all respects/i,
-      text: "Disruptor Cannon: functions as a standard lance in all respects. (Fleets p. 186)"
+      text: "Disruptor Cannon: functions as a standard lance in all respects. (Fleets p. 196)"
     },
     {
       id: "whisperlance",
@@ -2137,47 +2140,47 @@ var __rules = (() => {
       wep: /whisperlance/i,
       mentions: [/whisperlance/i],
       selfText: /behaves as a lance battery in all respects/i,
-      text: "Whisperlance Cannon: functions as a standard lance in all respects. (Fleets p. 188)"
+      text: "Whisperlance Cannon: functions as a standard lance in all respects. (Fleets p. 198)"
     },
     {
       id: "ghost_light",
       color: "#A33B54",
       wep: /ghost-light/i,
       mentions: [/ghost-light/i],
-      text: "Ghost-Light weapons: act as the indicated battery or lance but never roll for or inflict critical damage. (Fleets p. 196)"
+      text: "Ghost-Light weapons: act as the indicated battery or lance but never roll for or inflict critical damage. (Fleets p. 206)"
     },
     {
       id: "hives_nurgle",
       color: "#5D722D",
       wep: /hives of nurgle/i,
       mentions: [/hives of nurgle/i],
-      text: "Hives of Nurgle: function as weapons batteries; after each move place one Blast Marker anywhere along the ship's course. (Fleets p. 263)"
+      text: "Hives of Nurgle: function as weapons batteries; after each move place one Blast Marker anywhere along the ship's course. (Fleets p. 265)"
     },
     {
       id: "warp_cannon",
       color: "#7A3F98",
       wep: /warp cannon/i,
       mentions: [/warp cannon/i],
-      text: "Warp Cannons: hit on 4+ like lances and ignore shields, holofields and similar saves; Brace saves still apply. (Fleets p. 284)"
+      text: "Warp Cannons: hit on 4+ like lances and ignore shields, holofields and similar saves; Brace saves still apply. (Fleets p. 286)"
     },
     {
       id: "armageddon",
       color: "#BD2C2C",
       wep: /armageddon gun/i,
       mentions: [/armageddon gun/i],
-      text: "Armageddon Gun: move the Nova template 90 cm straight ahead; centre causes D6 hits (friend or foe), other contact 1, touched ordnance is destroyed. Line of sight only: an obstacle stops it and takes D6 Blast Markers. Reload Ordnance before firing again - a double 6 is a critical hit and the gun is lost for the battle, any other double lets it fire once more. No use while Crippled, Braced, on AAF or Burn Retros. (Fleets p. 253)"
+      text: "Armageddon Gun: move the Nova template 90 cm straight ahead; centre causes D6 hits (friend or foe), other contact 1, touched ordnance is destroyed. Line of sight only: an obstacle stops it and takes D6 Blast Markers. Reload Ordnance before firing again - a double 6 is a critical hit and the gun is lost for the battle, any other double lets it fire once more. No use while Crippled, Braced, on AAF or Burn Retros. (Fleets p. 255)"
     },
     {
       id: "armageddon_overcharge",
       color: "#BD2C2C",
       wep: /armageddon gun/i,
       mentions: [/overcharge/i],
-      text: "Armageddon Overcharge: declare a charge over three consecutive turns - no turning, shooting or Special Orders, +2 shields, cannot be stopped. After the third turn's move fire 60 cm ahead: every ship touched is destroyed, no saves; the first planet or moon under the centre is removed on 2+ in D3 turns and becomes a 2D6 x 2D6 asteroid field. Then Reload Ordnance for two turns with no shooting. (Fleets p. 253)"
+      text: "Armageddon Overcharge: declare a charge over three consecutive turns - no turning, shooting or Special Orders, +2 shields, cannot be stopped. After the third turn's move fire 60 cm ahead: every ship touched is destroyed, no saves; the first planet or moon under the centre is removed on 2+ in D3 turns and becomes a 2D6 x 2D6 asteroid field. Then Reload Ordnance for two turns with no shooting. (Fleets p. 255)"
     }
   ];
   var STRANGE_HAPPENINGS = "a double on a command check makes the ship unreliable for the rest of the game: once crippled it must try to disengage every turn, and runs for the nearest table edge if it fails. If the double also failed the check, it does nothing this turn but make its minimum move straight ahead. Against Chaos: a second double means it must try to disengage at once, as if crippled, for the rest of the game; if that second double also failed the check, the ship defects to the Chaos player and scores victory points for neither side.";
   var SPECIAL_HULL_RULES = [
-    /* Fleets p.145: every Grey Knights capital ship. Escorts of the list are
+    /* Fleets p.155: every Grey Knights capital ship. Escorts of the list are
        Navy hulls "otherwise unmodified", so the ward is a capital-ship rule. */
     {
       id: "gk_wards",
@@ -2185,7 +2188,7 @@ var __rules = (() => {
       when: function(sh) {
         return !/escort/i.test(String(sh.ty || ""));
       },
-      text: "Hexagrammic wards: ignores Chaos Marks and Daemonship effects on Leadership and boarding (a Mark of Slaanesh does not touch its Leadership, a Mark of Khorne does not double boarding against it). Chaos Space Marine rules still apply. (Fleets p. 145)"
+      text: "Hexagrammic wards: ignores Chaos Marks and Daemonship effects on Leadership and boarding (a Mark of Slaanesh does not touch its Leadership, a Mark of Khorne does not double boarding against it). Chaos Space Marine rules still apply. (Fleets p. 155)"
     },
     /* The Fortress-Monastery has "a base leadership of 10" (Fleets p. 111):
        its own rule below replaces the Astartes Leadership table. */
@@ -2203,12 +2206,12 @@ var __rules = (() => {
       id: "eldar_move",
       fleet: /^ELDAR$/i,
       notDefence: true,
-      text: "Eldar movement: turn to any facing, then use the sunward value of the three-part Speed; move again in your Ordnance phase. No AAF, Burn Retros, CTNH or ramming. Boarding: in either move, but not after shooting or launching ordnance; boarding in the Movement phase gives up the second move. (Fleets pp. 302-305)"
+      text: "Eldar movement: turn to any facing, then use the sunward value of the three-part Speed; move again in your Ordnance phase. No AAF, Burn Retros, CTNH or ramming. Boarding: in either move, but not after shooting or launching ordnance; boarding in the Movement phase gives up the second move. (Fleets pp. 304-307)"
     },
     {
       id: "eldar_holo",
       fleet: /^ELDAR$/i,
-      text: "Holofields: one right column shift against Gunnery; against other attacks save each hit on 2+, placing a Blast Marker for each save. (Fleets pp. 303-304)"
+      text: "Holofields: one right column shift against Gunnery; against other attacks save each hit on 2+, placing a Blast Marker for each save. (Fleets pp. 305-306)"
     },
     {
       id: "dark_move",
@@ -2218,63 +2221,63 @@ var __rules = (() => {
     {
       id: "dark_shadow",
       fleet: /DARK ELDAR/i,
-      text: "Shadowfields: one right column shift against Gunnery; against other attacks save each hit on 2+, placing a Blast Marker for each save. (Fleets pp. 342-343)"
+      text: "Shadowfields: one right column shift against Gunnery; against other attacks save each hit on 2+, placing a Blast Marker for each save. (Fleets pp. 344-345)"
     },
     {
       id: "dark_boarding",
       fleet: /DARK ELDAR/i,
-      text: "Dark Eldar: boarding +1 in round one and -1 thereafter; Hit & Run +1 except Impalers. A Hit & Run may instead take slaves for Victory Points. (Fleets pp. 342-343)"
+      text: "Dark Eldar: boarding +1 in round one and -1 thereafter; Hit & Run +1 except Impalers. A Hit & Run may instead take slaves for Victory Points. (Fleets pp. 344-345)"
     },
     /* Space hulk rule pages - they follow the profile page, which the
-       extractor reads alone. Chaos p.287-288, Ork p.390-391. */
+       extractor reads alone. Chaos p.289-290, Ork p.392-393. */
     {
       id: "hulk_move",
       fleet: /SPACE HULK|ORK HULK/i,
-      text: "Hulk movement: exactly 10 cm straight ahead each turn, never slowed by Blast Markers or damage; a 45\xB0 turn only in every second Movement phase, at the end of the move; no CTNH or Burn Retros. (Fleets pp. 287/390)"
+      text: "Hulk movement: exactly 10 cm straight ahead each turn, never slowed by Blast Markers or damage; a 45\xB0 turn only in every second Movement phase, at the end of the move; no CTNH or Burn Retros. (Fleets pp. 289/392)"
     },
     {
       id: "hulk_gravity",
       fleet: /SPACE HULK|ORK HULK/i,
-      text: "Hulk gravity well: 5 cm from the base edge, like a planet's; ships may orbit and move with it, and a ship breaking orbit decides so before the hulk moves. In a planet's or moon's well the hulk may turn 45\xB0 towards it at the end of its move, even if it turned last phase. (Fleets pp. 287/390)"
+      text: "Hulk gravity well: 5 cm from the base edge, like a planet's; ships may orbit and move with it, and a ship breaking orbit decides so before the hulk moves. In a planet's or moon's well the hulk may turn 45\xB0 towards it at the end of its move, even if it turned last phase. (Fleets pp. 289/392)"
     },
     {
       id: "hulk_upgrades",
       fleet: /SPACE HULK|ORK HULK/i,
-      text: "Hulk upgrades: none that improve Boarding Value, Turning or Speed. (Fleets pp. 288/390)"
+      text: "Hulk upgrades: none that improve Boarding Value, Turning or Speed. (Fleets pp. 290/392)"
     },
     {
       id: "chaos_hulk_ld",
       fleet: /CHAOS SPACE HULK/i,
-      text: "Chaos Space Hulk: -1 Ld applied after all other modifiers, including the Warmaster and Chaos Space Marines. May launch up to twice as many attack craft as its remaining launch bays. (Fleets p. 287)"
+      text: "Chaos Space Hulk: -1 Ld applied after all other modifiers, including the Warmaster and Chaos Space Marines. May launch up to twice as many attack craft as its remaining launch bays. (Fleets p. 289)"
     },
-    /* Fleets p. 245: "Bezerker Fleets led by a Space Hulk may have more than
+    /* Fleets p. 251: "Bezerker Fleets led by a Space Hulk may have more than
        two battleships, but other restrictions remain unchanged." */
     {
       id: "chaos_hulk_using_khorne",
       fleet: /CHAOS SPACE HULK/i,
       list: /Khorne/i,
-      text: "Using the hulk: 0-1 per fleet and it must be the flagship. Not with the Planet Killer, an Activated Blackstone Fortress or another mandatory flagship. Takes no Chaos Mark; counts as a battleship for taking another. A Bezerker Fleet led by it may have more than two battleships. (Fleets pp. 245, 288)"
+      text: "Using the hulk: 0-1 per fleet and it must be the flagship. Not with the Planet Killer, an Activated Blackstone Fortress or another mandatory flagship. Takes no Chaos Mark; counts as a battleship for taking another. A Bezerker Fleet led by it may have more than two battleships. (Fleets pp. 251, 290)"
     },
     {
       id: "chaos_hulk_using",
       fleet: /CHAOS SPACE HULK/i,
       notList: /Khorne/i,
-      text: "Using the hulk: 0-1 per fleet and it must be the flagship. Not with the Planet Killer, an Activated Blackstone Fortress or another mandatory flagship. Takes no Chaos Mark; counts as a battleship for taking another, at most two other battleships. (Fleets p. 288)"
+      text: "Using the hulk: 0-1 per fleet and it must be the flagship. Not with the Planet Killer, an Activated Blackstone Fortress or another mandatory flagship. Takes no Chaos Mark; counts as a battleship for taking another, at most two other battleships. (Fleets p. 290)"
     },
-    /* The hulk's own rule (p.390) replaces the Ork general text (p.358) where
+    /* The hulk's own rule (p.392) replaces the Ork general text (p.360) where
        they conflict - Leadership and the All Ahead Full move - and keeps what
        still applies: no Command check for AAF, +1 in boarding actions. */
     {
       id: "ork_hulk_ld",
       fleet: /ORK HULK/i,
-      text: "Ork Hulk: always Leadership 6 (not the Ork -1). All Ahead Full needs no Command check but gives no extra move; as a Defence it rams on 3D6 Ld (2D6 against another defence). +1 in boarding actions. (Fleets pp. 358, 390)"
+      text: "Ork Hulk: always Leadership 6 (not the Ork -1). All Ahead Full needs no Command check but gives no extra move; as a Defence it rams on 3D6 Ld (2D6 against another defence). +1 in boarding actions. (Fleets pp. 360, 392)"
     },
     {
       id: "ork_hulk_warlord",
       fleet: /ORK HULK/i,
-      text: "Warlord aboard: does not double Boarding Value. Looted Torpedoes and Maniac Gunners affect one weapon system per turn; Extra Powerfields cost +50; Mad Meks ignore a critical on a 6; Mega-armoured Boarding Parties unchanged. (Fleets p. 390)"
+      text: "Warlord aboard: does not double Boarding Value. Looted Torpedoes and Maniac Gunners affect one weapon system per turn; Extra Powerfields cost +50; Mad Meks ignore a critical on a 6; Mega-armoured Boarding Parties unchanged. (Fleets p. 392)"
     },
-    /* Roks, Kroot Warspheres and Stryxis Caravan Vessels (Fleets pp. 393,
+    /* Roks, Kroot Warspheres and Stryxis Caravan Vessels (Fleets pp. 395,
        495, 197): the Rok's own All Ahead Full replaces the Ork one ("any rules
        which are not specifically noted as being modified below, apply in full
        to Roks"). */
@@ -2283,14 +2286,14 @@ var __rules = (() => {
       when: function(sh) {
         return isRockVessel(sh) && !sh.df;
       },
-      text: "Movement: exactly 10 cm straight ahead in each Movement phase; no turns, Burn Retros or Come to New Heading. All Ahead Full: an extra 2D6 cm in any direction at the end of the move, and 10 cm or more to a side becomes the new direction of travel. Crippling and Blast Markers do not reduce its speed; in a gravity well it may make a free 45 degree turn and/or take a stationary or low orbit. (Fleets pp. 393, 495, 197)"
+      text: "Movement: exactly 10 cm straight ahead in each Movement phase; no turns, Burn Retros or Come to New Heading. All Ahead Full: an extra 2D6 cm in any direction at the end of the move, and 10 cm or more to a side becomes the new direction of travel. Crippling and Blast Markers do not reduce its speed; in a gravity well it may make a free 45 degree turn and/or take a stationary or low orbit. (Fleets pp. 395, 495, 207)"
     },
     {
       id: "rok_orks",
       when: function(sh) {
         return /^\s*ROK\s*$/i.test(String(sh.nm || "")) && !sh.df;
       },
-      text: "Orks: Leadership is reduced by 1; All Ahead Full needs no Command check; +1 in boarding actions. (Fleets p. 358)"
+      text: "Orks: Leadership is reduced by 1; All Ahead Full needs no Command check; +1 in boarding actions. (Fleets p. 360)"
     },
     /* Ruling T57: only on a Rok that has bought a speed upgrade, so the card
        says why its speed did not change (see fixedSpeed). */
@@ -2302,22 +2305,22 @@ var __rules = (() => {
       whenSel: function(sel) {
         return statMod(sel, "sp") > 0;
       },
-      text: "Speed upgrades: the Rok still moves exactly 10 cm - the +5 cm of Evil Sunz or Soopa Boostas does not change it. (Fleets pp. 369-370, 393; ruling T57, read as written)"
+      text: "Speed upgrades: the Rok still moves exactly 10 cm - the +5 cm of Evil Sunz or Soopa Boostas does not change it. (Fleets pp. 371-372, 395; ruling T57, read as written)"
     },
-    /* Fleets p. 360, ORK PLANETARY DEFENCES: bought with the defence points,
+    /* Fleets p. 362, ORK PLANETARY DEFENCES: bought with the defence points,
        a Rok "cannot move and count[s] as stationary in all effects ...
        including all rules concerning removal of blast markers from planetary
        defences", "automatically pass[es] all leadership checks" and takes only
        Reload Ordnance and Brace For Impact, "for which they are Leadership 7".
        Its own Ld wording replaces the p. 499 "any other check on Ld 7". The
-       Ork +1 in boarding (p. 358) is a crew rule p. 360 does not take away. */
+       Ork +1 in boarding (p. 360) is a crew rule p. 362 does not take away. */
     {
       id: "rok_defence",
       slot: "orders",
       when: function(sh) {
         return /^\s*ROK\s*$/i.test(String(sh.nm || "")) && !!sh.df;
       },
-      text: "Rok as a planetary defence: cannot move and counts as stationary in all effects - End Phase: remove D6 Blast Markers from it. Automatically passes every Leadership check; special orders only Reload Ordnance and Brace for Impact, both on Ld 7. After setting up each Rok roll 2D6: on a 12 it falls 2D6 cm toward the celestial phenomenon it orbits, and is destroyed if that brings it into contact with an asteroid field or the planet edge. +1 in boarding actions. (Fleets pp. 358, 360)"
+      text: "Rok as a planetary defence: cannot move and counts as stationary in all effects - End Phase: remove D6 Blast Markers from it. Automatically passes every Leadership check; special orders only Reload Ordnance and Brace for Impact, both on Ld 7. After setting up each Rok roll 2D6: on a 12 it falls 2D6 cm toward the celestial phenomenon it orbits, and is destroyed if that brings it into contact with an asteroid field or the planet edge. +1 in boarding actions. (Fleets pp. 360, 362)"
     },
     {
       id: "warsphere_boarding",
@@ -2331,7 +2334,7 @@ var __rules = (() => {
       when: function(sh) {
         return /STRYXIS CARAVAN/i.test(String(sh.nm || ""));
       },
-      text: "Stryxis caravan: the vessels stay grouped in a straight line no more than 10 cm apart and separate only once one of them is destroyed. All Ahead Full is free; no fleet re-rolls. (Fleets p. 197)"
+      text: "Stryxis caravan: the vessels stay grouped in a straight line no more than 10 cm apart and separate only once one of them is destroyed. All Ahead Full is free; no fleet re-rolls. (Fleets p. 207)"
     },
     {
       id: "ork_core",
@@ -2339,15 +2342,15 @@ var __rules = (() => {
       when: function(sh) {
         return !isOrkHulk(sh) && !isRockVessel(sh);
       },
-      text: "Orks: Leadership is reduced by 1; All Ahead Full needs no Command check and adds 2D6 cm; +1 in boarding actions. (Fleets p. 358)"
+      text: "Orks: Leadership is reduced by 1; All Ahead Full needs no Command check and adds 2D6 cm; +1 in boarding actions. (Fleets p. 360)"
     },
-    /* Fleets p. 222: "Chaos has a +1 boarding modifier. The Chaos Space Marine
+    /* Fleets p. 232: "Chaos has a +1 boarding modifier. The Chaos Space Marine
        upgrade replaces this, providing them with a total +2 boarding modifier."
        The list decides, not the profile: a Chaos fleet crews its renegade
-       Imperial hulls too. p. 284: the Activated Blackstone Fortress "has no
+       Imperial hulls too. p. 286: the Activated Blackstone Fortress "has no
        crew". */
     /* Rules of the section a hull was bought from (fleetMatches' sec gate).
-       The build-time restrictions of p. 222 - no Nova Cannon, special weapon
+       The build-time restrictions of p. 232 - no Nova Cannon, special weapon
        rules, Chaos Lords, crews, Chaos ordnance or Daemonship upgrades - are
        already enforced by the catalogue (the rows offer none of them), so the
        card carries what matters at the table. */
@@ -2358,7 +2361,7 @@ var __rules = (() => {
       when: function(sh) {
         return !/escort/i.test(String(sh.ty || ""));
       },
-      text: "Renegade Imperial vessel: -1 Ld for going renegade; +1 in boarding actions as a Chaos vessel. Not a reserve - it counts as a Chaos vessel in all respects. (Fleets p. 222)"
+      text: "Renegade Imperial vessel: -1 Ld for going renegade; +1 in boarding actions as a Chaos vessel. Not a reserve - it counts as a Chaos vessel in all respects. (Fleets p. 232)"
     },
     {
       id: "renegade_escort",
@@ -2367,7 +2370,7 @@ var __rules = (() => {
       when: function(sh) {
         return /escort/i.test(String(sh.ty || ""));
       },
-      text: "Renegade Imperial escort: may be squadroned with other Chaos escorts; +1 in boarding actions as a Chaos vessel. Not a reserve - it counts as a Chaos vessel in all respects. (Fleets p. 222)"
+      text: "Renegade Imperial escort: may be squadroned with other Chaos escorts; +1 in boarding actions as a Chaos vessel. Not a reserve - it counts as a Chaos vessel in all respects. (Fleets p. 232)"
     },
     /* p. 39 offers these Chaos hulls "since a reserve fleet also draws on very
        old or scarce vessels", and Strange happenings opens "In a reserve fleet,
@@ -2387,14 +2390,14 @@ var __rules = (() => {
          read as the ships taken as reserves - a subset of the fleet - so the row
          goes only on the card of a Chaos hull taken from the reserve section.
          The book's sentence "In a reserve fleet, all vessels are prone..."
-         (p. 39) can be read more widely; p. 142 speaks of the rule as a property
+         (p. 39) can be read more widely; p. 152 speaks of the rule as a property
          of these hulls ("These vessels are free of..."). The whole rule is on
          the card (space is not tight when the row is only on these cards), and
-         p. 142's exemption is mentioned: in a fleet led by an Ordo Malleus
+         p. 152's exemption is mentioned: in a fleet led by an Ordo Malleus
          Inquisitor the rule does not apply while his ship is in play. */
-      text: "Strange happenings (reserve vessel): " + STRANGE_HAPPENINGS + " If an Ordo Malleus Inquisitor leads the fleet, this does not apply while the Inquisitor's ship remains in play. (Fleets pp. 39, 142)"
+      text: "Strange happenings (reserve vessel): " + STRANGE_HAPPENINGS + " If an Ordo Malleus Inquisitor leads the fleet, this does not apply while the Inquisitor's ship remains in play. (Fleets pp. 39, 152)"
     },
-    /* J144, Fleets p. 142: a fleet led by an Ordo Malleus Inquisitor "may take as
+    /* J144, Fleets p. 152: a fleet led by an Ordo Malleus Inquisitor "may take as
        reserves any Chaos ship listed in the Bastion Fleet List. These vessels are
        free of the Strange Happenings special rule as long as the Inquisitor's
        ship remains in play" - so the card carries the rule and when it starts.
@@ -2402,16 +2405,16 @@ var __rules = (() => {
     {
       id: "malleus_reserve",
       sec: /^ORDO MALLEUS RESERVES$/i,
-      text: "Ordo Malleus reserve: Chaos ordnance, no ship class variants. Strange happenings applies only once the Inquisitor's ship is out of play: " + STRANGE_HAPPENINGS + " (Fleets pp. 39, 142)"
+      text: "Ordo Malleus reserve: Chaos ordnance, no ship class variants. Strange happenings applies only once the Inquisitor's ship is out of play: " + STRANGE_HAPPENINGS + " (Fleets pp. 39, 152)"
     },
-    /* Fleets p. 178: "All pirate vessels suffer a -1 leadership modifier,
+    /* Fleets p. 188: "All pirate vessels suffer a -1 leadership modifier,
        meaning their unmodified starting leadership will be from 5 to 8."
        Printed on the card like the Ork -1 and the Eldar +1. Not for the
-       xenos: p. 179 has them "use the unmodified leadership from the fleet
-       lists of their respective races", and p. 197 has Stryxis Caravan
-       Vessels "rolling for leadership normally", as does p. 194 for Fra'al
+       xenos: p. 189 has them "use the unmodified leadership from the fleet
+       lists of their respective races", and p. 207 has Stryxis Caravan
+       Vessels "rolling for leadership normally", as does p. 204 for Fra'al
        battleships ("rolling for leadership normally and counting as
-       cruisers"). The Rogue Trader Xenos Vessel (p. 184) is read as xenos
+       cruisers"). The Rogue Trader Xenos Vessel (p. 194) is read as xenos
        too - the line is left off rather than asserted (spot check
        2026-10-18/1, Fra'al found on its third round). */
     {
@@ -2421,9 +2424,9 @@ var __rules = (() => {
       when: function(sh) {
         return !/XENOS VESSEL|STRYXIS|FRA.AL/i.test(String(sh.nm || ""));
       },
-      text: "Pirate vessel: -1 Leadership, for an unmodified starting Leadership of 5-8. (Fleets p. 178)"
+      text: "Pirate vessel: -1 Leadership, for an unmodified starting Leadership of 5-8. (Fleets p. 188)"
     },
-    /* p. 222 refuses Chaos Space Marines to a renegade Imperial hull, so the
+    /* p. 232 refuses Chaos Space Marines to a renegade Imperial hull, so the
        crew clause would be a rule that ship cannot use: the renegade lines
        above carry the +1 on their own (spot check 2026-10-18/1). */
     {
@@ -2433,7 +2436,7 @@ var __rules = (() => {
       when: function(sh) {
         return !/BLACKSTONE/i.test(String(sh.nm || ""));
       },
-      text: "Chaos: +1 in boarding actions; a Chaos Space Marine crew makes it +2 in total. (Fleets p. 222)"
+      text: "Chaos: +1 in boarding actions; a Chaos Space Marine crew makes it +2 in total. (Fleets p. 232)"
     },
     /* Fleets p. 486: "Vessels allied with the Demiurg rely on the basic leadership
        applicable to their fleets. They cannot use Demiurg fleet re-rolls, but if
@@ -2468,18 +2471,18 @@ var __rules = (() => {
     {
       id: "necron_hull",
       fleet: /NECRON/i,
-      text: "Reactive Hull: printed save replaces Brace; Brace improves it to 2+ but Armour becomes 4+. No save against boarding damage, critical damage from unsaved hits, or Hit & Run attacks unless braced; Warp cannons ignore it unless braced. Immune to damage, Leadership and movement modifiers from flares, radiation, gas and Blast Markers. (Fleets p. 402)"
+      text: "Reactive Hull: printed save replaces Brace; Brace improves it to 2+ but Armour becomes 4+. No save against boarding damage, critical damage from unsaved hits, or Hit & Run attacks unless braced; Warp cannons ignore it unless braced. Immune to damage, Leadership and movement modifiers from flares, radiation, gas and Blast Markers. (Fleets p. 404)"
     },
     {
       id: "necron_drive",
       fleet: /NECRON/i,
-      text: "Inertialess Drive: AAF adds D6 x 10 cm and permits one turn per 20 cm travelled. A Necron may fade out automatically at the end of its Movement phase. (Fleets p. 402)"
+      text: "Inertialess Drive: AAF adds D6 x 10 cm and permits one turn per 20 cm travelled. A Necron may fade out automatically at the end of its Movement phase. (Fleets p. 404)"
     },
     {
       id: "tyranid_control",
       fleet: /TYRANID/i,
       notList: /Vanguard/i,
-      text: "Synaptic control: a Hive Ship may test to override Instinctive Behaviour within 45 cm; otherwise follow the Instinctive Orders flowchart. Navigation uses Ld 10. (Fleets pp. 416-418)"
+      text: "Synaptic control: a Hive Ship may test to override Instinctive Behaviour within 45 cm; otherwise follow the Instinctive Orders flowchart. Navigation uses Ld 10. (Fleets pp. 418-420)"
     },
     /* Fleets p. 429: the Vanguard list has no hive ships; its escort squadrons
        lead themselves. */
@@ -2487,18 +2490,18 @@ var __rules = (() => {
       id: "vanguard_control",
       fleet: /TYRANID/i,
       list: /Vanguard/i,
-      text: "Vanguard squadron: Leadership equals the vessels remaining in the squadron, up to 10. At the start of each turn the squadron may test with its own Leadership to override Instinctive Behaviour; if it fails it acts on instinct. Brace for Impact against Ld 7 when no hive ship is within 45 cm. (Fleets pp. 416, 429)"
+      text: "Vanguard squadron: Leadership equals the vessels remaining in the squadron, up to 10. At the start of each turn the squadron may test with its own Leadership to override Instinctive Behaviour; if it fails it acts on instinct. Brace for Impact against Ld 7 when no hive ship is within 45 cm. (Fleets pp. 418, 429)"
     },
     {
       id: "tyranid_target",
       fleet: /TYRANID/i,
-      text: "Target the nearest enemy; Vanguard Drones highlight all targets within 15 cm. Boarding value doubled, 2D6 take the higher. Hit & Run vs Tyranids: 2D6, take the lowest (escort dies on 4+); own +1. (Fleets p. 418)"
+      text: "Target the nearest enemy; Vanguard Drones highlight all targets within 15 cm. Boarding value doubled, 2D6 take the higher. Hit & Run vs Tyranids: 2D6, take the lowest (escort dies on 4+); own +1. (Fleets p. 420)"
     },
     {
       id: "tyranid_spores",
       fleet: /TYRANID/i,
       when: hasSpores,
-      text: "Spores: each cyst is one replenishing shield and one turret. Blast Markers degrade their ordnance roll to 6+; spores may fire at torpedoes and attack craft in the same phase. (Fleets pp. 421-422)"
+      text: "Spores: each cyst is one replenishing shield and one turret. Blast Markers degrade their ordnance roll to 6+; spores may fire at torpedoes and attack craft in the same phase. (Fleets pp. 423-423)"
     },
     {
       id: "tau_core",
@@ -2515,15 +2518,15 @@ var __rules = (() => {
       },
       text: "Deflector: not a shield - it does not count as one for boarding, Blast Markers or other effects which apply to shields. (Fleets pp. 450-451)"
     },
-    /* Fleets p. 329: the Flame "embarks the most fearsome members of Yriel's own
-       pirate warband, which count as an Aspect Warrior fighting crew"; p. 305
+    /* Fleets p. 327: the Flame "embarks the most fearsome members of Yriel's own
+       pirate warband, which count as an Aspect Warrior fighting crew"; p. 307
        gives the bonus. */
     {
       id: "flame_aspect",
       when: function(sh) {
         return /FLAME OF ASURYAN/i.test(String(sh.nm || ""));
       },
-      text: "Aspect Warrior fighting crew (included): +2 in boarding actions, +1 to Hit & Run attacks. (Fleets pp. 305, 329)"
+      text: "Aspect Warrior fighting crew (included): +2 in boarding actions, +1 to Hit & Run attacks. (Fleets pp. 307, 327)"
     },
     /* Fleets p. 118: "the attacker may re-roll the dice if desired during
        boarding actions as well as Hit and Run attacks against Mechanicus
@@ -2554,7 +2557,7 @@ var __rules = (() => {
       list: /Demiurg/i,
       text: "Determination: in a Demiurg war host the ship does not attempt to disengage until it has 2 Hp or fewer. Victory Points: Stronghold 400, Bastion 300, Citadel 200. (Fleets p. 486)"
     },
-    /* Fleets p. 302 / p. 342: the fleet-wide Leadership bonus. */
+    /* Fleets p. 304 / p. 344: the fleet-wide Leadership bonus. */
     {
       id: "eldar_ld",
       fleet: /^ELDAR$/i,
@@ -2563,7 +2566,7 @@ var __rules = (() => {
     {
       id: "dark_ld",
       fleet: /DARK ELDAR/i,
-      text: "Dark Eldar Leadership: add +1 to the rolled Leadership, for 7-10. A Leadership check ignores celestial phenomena (not radiation bursts or explosions); escorts re-roll it for free. (Fleets p. 342)"
+      text: "Dark Eldar Leadership: add +1 to the rolled Leadership, for 7-10. A Leadership check ignores celestial phenomena (not radiation bursts or explosions); escorts re-roll it for free. (Fleets p. 344)"
     },
     /* Fleets p. 451: a profile that says it carries a tracking system. */
     {
@@ -2603,46 +2606,46 @@ var __rules = (() => {
       },
       text: "Repulsor Shielding: ignore Blast Marker and gas cloud effects on Ld, movement and repairs (until Shields Collapsed). Augmented Weapon Relays: batteries one column left; lance hits double on a 6. (Fleets p. 119)"
     },
-    /* Fleets p. 260: the Wage of Sin "always counts as being crewed by Emperor's
+    /* Fleets p. 262: the Wage of Sin "always counts as being crewed by Emperor's
        Children Chaos Space Marines (included it its cost)" and bears the Mark of
-       Slaanesh "as part of its point cost"; pp. 224 and 248 give the effects. */
+       Slaanesh "as part of its point cost"; pp. 234 and 252 give the effects. */
     {
       id: "wage_of_sin_crew",
       when: function(sh) {
         return /^WAGE OF SIN/i.test(String(sh.nm || ""));
       },
-      text: "Chaos Space Marine crew (Emperor's Children, included in the cost): Leadership +1, maximum 10. +2 in boarding actions; enemy Hit & Run rolls -1; own Hit & Run by boarding torpedoes, Dreadclaws, Thunderhawks or teleport +1. 2 Assault Points per turn in a Planetary Assault. (Fleets pp. 224, 260)"
+      text: "Chaos Space Marine crew (Emperor's Children, included in the cost): Leadership +1, maximum 10. +2 in boarding actions; enemy Hit & Run rolls -1; own Hit & Run by boarding torpedoes, Dreadclaws, Thunderhawks or teleport +1. 2 Assault Points per turn in a Planetary Assault. (Fleets pp. 234, 262)"
     },
     {
       id: "wage_of_sin_mark",
       when: function(sh) {
         return /^WAGE OF SIN/i.test(String(sh.nm || ""));
       },
-      text: "Mark of Slaanesh (included in the cost): enemy ships within 15 cm suffer -2 Leadership; an area effect, not blocked by line of sight. (Fleets pp. 248, 260)"
+      text: "Mark of Slaanesh (included in the cost): enemy ships within 15 cm suffer -2 Leadership; an area effect, not blocked by line of sight. (Fleets pp. 252, 262)"
     },
-    /* Fleets pp. 258, 262, 264: the Mark (and on the Slaverer a World Eaters
-       crew) is part of the point cost; pp. 224 and 236-244 give the effects.
-       Fleets p. 381: Zukov's Klaw carries Klaws as part of its cost (p. 371). */
+    /* Fleets pp. 260, 264, 266: the Mark (and on the Slaverer a World Eaters
+       crew) is part of the point cost; pp. 234 and 246-250 give the effects.
+       Fleets p. 383: Zukov's Klaw carries Klaws as part of its cost (p. 373). */
     {
       id: "slaverer_crew",
       when: function(sh) {
         return /^SLAVERER/i.test(String(sh.nm || ""));
       },
-      text: "Chaos Space Marine crew (World Eaters, included in the cost): Leadership +1, maximum 10. +2 in boarding actions; enemy Hit & Run rolls -1; own Hit & Run by boarding torpedoes, Dreadclaws, Thunderhawks or teleport +1. 2 Assault Points per turn in a Planetary Assault. (Fleets pp. 224, 264)"
+      text: "Chaos Space Marine crew (World Eaters, included in the cost): Leadership +1, maximum 10. +2 in boarding actions; enemy Hit & Run rolls -1; own Hit & Run by boarding torpedoes, Dreadclaws, Thunderhawks or teleport +1. 2 Assault Points per turn in a Planetary Assault. (Fleets pp. 234, 266)"
     },
     {
       id: "slaverer_mark",
       when: function(sh) {
         return /^SLAVERER/i.test(String(sh.nm || ""));
       },
-      text: "Mark of Khorne (included in the cost): the ship doubles its value in boarding actions. (Fleets pp. 244, 264)"
+      text: "Mark of Khorne (included in the cost): the ship doubles its value in boarding actions. (Fleets pp. 250, 266)"
     },
     {
       id: "scion_mark",
       when: function(sh) {
         return /^SCION OF PROSPERO/i.test(String(sh.nm || ""));
       },
-      text: "Mark of Tzeentch (included in the cost): the ship gains one re-roll of its own. (Fleets pp. 236, 258)"
+      text: "Mark of Tzeentch (included in the cost): the ship gains one re-roll of its own. (Fleets pp. 246, 260)"
     },
     {
       id: "terminus_mark",
@@ -2884,38 +2887,38 @@ var __rules = (() => {
       },
       text: "Attack craft: it may have twice as many markers in play as it has launch bays remaining. (Fleets p. 502)"
     },
-    /* ---- Eldar Haven (Fleets pp. 334-337); as a Dark Eldar pirate base
-       pp. 337 and 347. The profile bullets (Netherfield, Polarization Field)
+    /* ---- Eldar Haven (Fleets pp. 332-335); as a Dark Eldar pirate base
+       pp. 335 and 349. The profile bullets (Netherfield, Polarization Field)
        and the Eldar holofield and Leadership rules print by themselves. */
     {
       id: "haven_orders",
       slot: "orders",
       when: isHaven,
-      text: "Haven: an Eldar or Dark Eldar fleet commander may lead the battle from it. Special orders: only Lock On, Reload Ordnance and Brace for Impact. (Fleets p. 336)"
+      text: "Haven: an Eldar or Dark Eldar fleet commander may lead the battle from it. Special orders: only Lock On, Reload Ordnance and Brace for Impact. (Fleets p. 334)"
     },
     {
       id: "haven_blast",
       slot: "blast",
       when: isHaven,
-      text: "Large defence: at the end of each turn remove D6 Blast Markers in base contact with it, apart from the normal removal. (Fleets p. 336)"
+      text: "Large defence: at the end of each turn remove D6 Blast Markers in base contact with it, apart from the normal removal. (Fleets p. 334)"
     },
     {
       id: "haven_docking",
       slot: "docking",
       when: isHaven,
-      text: "Docking: Eldar ships dock on a Leadership check. A capital ship docked for a full turn rolls 2 extra repair dice and reloads its ordnance, but may not move, shoot or launch that turn. In a turn with no ship docked the Haven rolls the 2 extra repair dice itself. (Fleets p. 336)"
+      text: "Docking: Eldar ships dock on a Leadership check. A capital ship docked for a full turn rolls 2 extra repair dice and reloads its ordnance, but may not move, shoot or launch that turn. In a turn with no ship docked the Haven rolls the 2 extra repair dice itself. (Fleets p. 334)"
     },
     {
       id: "haven_webway",
       slot: "webway",
       when: isHaven,
-      text: "Webway Portal: ships bought at half cost wait off the table. From turn 2, after the fleet has moved, roll a D6: on 5+ one capital ship or escort squadron arrives at the table edge nearest the Haven and does not move that turn. (Fleets p. 337)"
+      text: "Webway Portal: ships bought at half cost wait off the table. From turn 2, after the fleet has moved, roll a D6: on 5+ one capital ship or escort squadron arrives at the table edge nearest the Haven and does not move that turn. (Fleets p. 335)"
     },
     {
       id: "haven_points",
       slot: "placement",
       when: isHaven,
-      text: "Campaign: a Haven counts as a pirate base, and its value counts against the fleet list in the battles it takes part in. (Fleets p. 337)"
+      text: "Campaign: a Haven counts as a pirate base, and its value counts against the fleet list in the battles it takes part in. (Fleets p. 335)"
     },
     {
       id: "haven_dark",
@@ -2925,14 +2928,14 @@ var __rules = (() => {
           return /phantom/i.test(String(a[0] || ""));
         });
       },
-      text: "Dark Eldar pirate base: Slavebringer assault boats replace the bombers and Phantom lances the Pulsar lances, at no change in cost; nothing else changes - it keeps its holofields and its 5+ critical threshold. (Fleets pp. 337, 347)"
+      text: "Dark Eldar pirate base: Slavebringer assault boats replace the bombers and Phantom lances the Pulsar lances, at no change in cost; nothing else changes - it keeps its holofields and its 5+ critical threshold. (Fleets pp. 335, 349)"
     },
     {
       id: "zukov_klaws",
       when: function(sh) {
         return /^ZUKOV/i.test(String(sh.nm || ""));
       },
-      text: "Klaws (included in the cost): once per turn, when the ship moves into base contact with an enemy ship, roll 2D6; each 4+ is one hit ignoring shields (not holofields). Brace works; unaffected by Special Orders; a crippled capital ship cannot use them. If both hit it latches on: neither ship moves if the target is the same class or smaller (a larger one moves at half rate), both shoot at half effect with no nova cannon or similar weapons, and it attacks again each End phase (both hitting again adds a third hit). Either may board; Klaw damage causes criticals as normal. (Fleets pp. 371, 381)"
+      text: "Klaws (included in the cost): once per turn, when the ship moves into base contact with an enemy ship, roll 2D6; each 4+ is one hit ignoring shields (not holofields). Brace works; unaffected by Special Orders; a crippled capital ship cannot use them. If both hit it latches on: neither ship moves if the target is the same class or smaller (a larger one moves at half rate), both shoot at half effect with no nova cannon or similar weapons, and it attacks again each End phase (both hitting again adds a third hit). Either may board; Klaw damage causes criticals as normal. (Fleets pp. 373, 383)"
     }
   ];
   function fleetMatches(def, sh, list, en, sel) {
@@ -3823,7 +3826,7 @@ var __rules = (() => {
           bays: en.per === "bay" ? bayStrength(sel.sh, sel) : null,
           ships: en.per === "bay" && sel.escort ? sel.hulls : 1,
           rerolls: en.rr || 0,
-          /* fxg: bought once for the whole fleet, not for this ship (p. 404,
+          /* fxg: bought once for the whole fleet, not for this ship (p. 406,
              486); frw: a fleet re-roll bought ship by ship (Tyranid Hive Mind
              Influence, p. 430) */
           fleetWide: !!(en.fxg || en.frw)
@@ -3885,7 +3888,7 @@ var __rules = (() => {
       return x[0].test(race);
     })[0];
     if (e6) out.push({ h: e6[1] + " mines", t: "Turrets hit " + (key === "minefield" ? "the mines it releases" : "this mine") + " only on a 6, like all " + e6[1] + " ordnance (Fleets p. " + e6[2] + ")." });
-    out.push({ h: "Necron Shroud", t: "An uncrippled Necron Shroud never activates orbital mines (Fleets p. 407)." });
+    out.push({ h: "Necron Shroud", t: "An uncrippled Necron Shroud never activates orbital mines (Fleets p. 409)." });
     return out;
   }
   function ruleCardOf(key, limit, list) {
@@ -4232,7 +4235,7 @@ var __rules = (() => {
     ["10", "HOLOFIELDS", "LOST*"]
   ];
   var HAVEN_CRIT_WIDE = ["11 Hull Breach +D3", "12 Bulkhead Collapse +D6"];
-  var HAVEN_CRIT_FOOT = "Critical on 5+. 7: roll a D6 at the start of each turn, on a 1 it takes one more Hit. 8: drifts 5 cm toward the nearest celestial phenomenon and no longer ignores Blast Markers and solar flares. 10 also ends the Netherfield. * 9 and 10 cannot be repaired (Fleets pp. 336-337).";
+  var HAVEN_CRIT_FOOT = "Critical on 5+. 7: roll a D6 at the start of each turn, on a 1 it takes one more Hit. 8: drifts 5 cm toward the nearest celestial phenomenon and no longer ignores Blast Markers and solar flares. 10 also ends the Netherfield. * 9 and 10 cannot be repaired (Fleets pp. 334-335).";
   var NECRON_CRIT = [
     ["2", "PORT POWER", "ARC + WHIP OFF"],
     ["3", "STBD POWER", "ARC + WHIP OFF"],
@@ -4245,7 +4248,7 @@ var __rules = (() => {
     ["10", "COMMAND CORE", "-3Ld"]
   ];
   var NECRON_CRIT_WIDE = ["11 Power Surge +D3; -2Ld", "12 Ruptured Power Core +D6; -2Ld"];
-  var NECRON_CRIT_FOOT = "Necron critical repairs succeed on 4+ (Fleets pg. 402).";
+  var NECRON_CRIT_FOOT = "Necron critical repairs succeed on 4+ (Fleets pg. 404).";
   var ORK_HULK_CRIT = [
     ["1-2", "HIGH ENERGY: D6 1-2", "-1 DORSAL LANCE"],
     ["1-2", "HIGH ENERGY: D6 3-4", "-1 SHIELD"],
@@ -4256,7 +4259,7 @@ var __rules = (() => {
     ["5-6", "THRUSTERS", "to turn: D6 > thruster crits taken"]
   ];
   var ORK_HULK_CRIT_WIDE = [
-    "Attacker rolls D6 (Fleets p. 391)",
+    "Attacker rolls D6 (Fleets p. 393)",
     "Result that cannot apply: next higher result"
   ];
   var ORK_HULK_CRIT_FOOT = "Space hulks cannot repair any critical damage during a battle.";
@@ -4270,7 +4273,7 @@ var __rules = (() => {
     ["5-6", "THRUSTERS", "to turn: D6 > thruster crits taken"]
   ];
   var CHAOS_HULK_CRIT_WIDE = [
-    "Attacker rolls D6 (Fleets p. 288)",
+    "Attacker rolls D6 (Fleets p. 290)",
     "Result that cannot apply: next higher result"
   ];
   var TYRANID_CRIT = [
@@ -4298,7 +4301,7 @@ var __rules = (() => {
     ["10", "HOLOFIELDS", "OFF*"]
   ];
   var ELDAR_CRIT_WIDE = ["11 Hull Breach +D3", "12 Bulkhead Collapse +D6"];
-  var ELDAR_CRIT_FOOT = "Critical on 4+; * results 9 and 10 cannot be repaired (Fleets p. 305).";
+  var ELDAR_CRIT_FOOT = "Critical on 4+; * results 9 and 10 cannot be repaired (Fleets p. 307).";
   var DARK_ELDAR_CRIT = [
     ["2", "WEAPON SYSTEMS", "ALL OFF"],
     ["3", "PROW MAIN", "OFF"],
@@ -4311,7 +4314,7 @@ var __rules = (() => {
     ["10", "SHADOWFIELDS", "OFF*"]
   ];
   var DARK_ELDAR_CRIT_WIDE = ["11 Hull Breach +D3", "12 Bulkhead Collapse +D6"];
-  var DARK_ELDAR_CRIT_FOOT = "* results 9 and 10 cannot be repaired (Fleets p. 344).";
+  var DARK_ELDAR_CRIT_FOOT = "* results 9 and 10 cannot be repaired (Fleets p. 346).";
   function foreignReserveRow(list, en, sh) {
     if (!list || !en || !sh || !/^CHAOS/i.test(String(sh.fl || "")) || /^chaos/i.test(String(list.race || ""))) return false;
     var sec = null;
@@ -6646,12 +6649,13 @@ var __rules = (() => {
         if (aRe.test(String(m.en.l))) nA += Math.max(1, m.hulls);
         if (hRe.test(String(m.en.l))) nH += Math.max(1, m.hulls);
       });
+      var over = nH > nA - 1;
       if (nH) out.push({
-        ok: true,
-        warn: nH > nA - 1,
-        t: "Rogue Trader cruiser hulls (second cruiser onwards)",
+        ok: !(RH.strict && over),
+        warn: !RH.strict && over,
+        t: "Rogue Trader cruiser variants (second cruiser onwards)",
         v: nH + " / " + Math.max(0, nA - 1),
-        s: citeText(RH.cite) + " " + citeText(RH.cite2) + " " + RH.interp
+        s: citeText(RH.cite) + (RH.cite2 ? " " + citeText(RH.cite2) : "") + (RH.interp ? " " + RH.interp : "")
       });
     }
     if (L.rt_esc) {

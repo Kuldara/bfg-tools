@@ -10,17 +10,17 @@ export const WEP = [
      as lances without the word in their name, and both used to fall through
      to the weapon-battery default, reading on the card exactly like the
      Pyro-acid battery beside them: "Bio-plasma: hits like a lance on 4+"
-     (Fleets p. 419) and "Gauss Particle Whip: fires as a lance" (p. 400).
+     (Fleets p. 421) and "Gauss Particle Whip: fires as a lance" (p. 402).
      Pyro-acid and the Lightning Arc stay batteries, because the book calls
-     each one "a weapon battery" (pp. 420, 400) - the default is right for
+     each one "a weapon battery" (pp. 422, 402) - the default is right for
      them and only for them. */
   /* Warp cannons "roll 1 dice per point of Strength and require a 4+ to hit,
-     like a lance" (Fleets p. 284), and the Armageddon gun is fired with the
-     Nova template (p. 252): both read as weapon batteries until the user
+     like a lance" (Fleets p. 286), and the Armageddon gun is fired with the
+     Nova template (p. 254): both read as weapon batteries until the user
      asked for the lance and the nova colours (9.10.2026). */
   [/lance|bio-plasma|particle whip|ion cannon|warp cannon/i, "L", "#1F6F8B", "#DCEAF0"],
   [/nova cannon|bombardment|armageddon gun/i, "N", "#A33A2E", "#F6DFDB"],
-  /* Ork heavy gunz are weapon batteries (Fleets p. 360) and keep the G, but
+  /* Ork heavy gunz are weapon batteries (Fleets p. 362) and keep the G, but
      they are short-ranged and every hit is two: the row must not read as the
      gunz battery beside it. Its own colour, halfway between the nova
      cannon's red and the gunz' yellow, still a pastel (user 12.10.2026:
@@ -47,8 +47,8 @@ export const WEP = [
   [/gravitic hook/i,                "H", "#00806F", "#D8EDE8"],
   /* Contact weapons. The Ork spelling "klaw" was here but not the Tyranid
      "claws", so Massive Claws and Feeder Tentacles - both "on contact", both
-     Strength "Spec." - carried the weapon-battery badge (Fleets pp. 419-420).
-     The Impaler is an assault module with a Hit & Run of its own (p. 346).
+     Strength "Spec." - carried the weapon-battery badge (Fleets pp. 421-422).
+     The Impaler is an assault module with a Hit & Run of its own (p. 348).
      /torpedo/ is tested before this line, so Boarding torpedoes stay T. */
   [/ram|klaw|claw|tentacle|boarding|impaler/i, "R", "#7A5230", "#EFE2D4"],
   /* This line used to read /pulse|railgun|ion / and so painted three weapons
@@ -57,7 +57,7 @@ export const WEP = [
      lances; "Railgun Battery: functions as a standard weapon battery"
      (p. 450) - now the default, like every other battery; and the Star Pulse
      Generator, which is neither: "one attack against every non-Necron target
-     within 20 cm" (p. 400). Only the last one is left here, and it keeps a
+     within 20 cm" (p. 402). Only the last one is left here, and it keeps a
      badge of its own for the same reason the orbital mine has one. */
   [/star pulse/i,                   "P", "#2E6B4A", "#DFEDE2"],
 ];
@@ -212,7 +212,7 @@ export function requiredHullChanges(list, sh){
    Rows an option owns (o.aws) are left out: on thirteen hulls the profile's
    rows are a menu, not a loadout - a Tyranid Kraken picks one of five weapons
    (Fleets p. 435) and an Eldar Dragonship one prow gun and one keel mount
-   (p. 330) - so listing them all would promise a ship nobody can field. They
+   (p. 328) - so listing them all would promise a ship nobody can field. They
    are counted instead, and the picker prints "pick 1 of 5" beside the line.
 
    opts: { max, list } - list folds in what that fleet list forces on the hull. */

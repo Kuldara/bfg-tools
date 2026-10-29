@@ -64,7 +64,7 @@ export const condMetFor = src => {
   if(!g || !g.needs_re) return true;
   /* The engine asks this of the fleet's own ships ("An Eldar Hero must lead
      the fleet in order to use Craftworld Eldar vessels as reserves",
-     Fleets pg. 316), so the picker asks it the same way. */
+     Fleets pg. 314), so the picker asks it the same way. */
   const re = new RegExp(g.needs_re, "i");
   return appState.S.units.some(u => !u.lst && entOf(u) && re.test(String(entOf(u).l)));
 };
@@ -72,7 +72,7 @@ export const condMetFor = src => {
    chosen, so the two can never describe different doors. That is the whole
    point: a Space Marine ship in an Imperial fleet is a legal ALLY with nobody
    in charge, and a legal RESERVE only with an Inquisitor Lord leading
-   (Fleets pg. 139). Answering without the role announced the Inquisitor on a
+   (Fleets pg. 149). Answering without the role announced the Inquisitor on a
    pairing the engine passes green - 194 rows across 21 pairs. */
 export const lendOf = src => DOMAIN.lendSummary(L(), src, DATA,
   { role: appState.SRC_ROLE, condMet: condMetFor(src) });
@@ -80,7 +80,7 @@ export const lendOf = src => DOMAIN.lendSummary(L(), src, DATA,
    able to see which door has ships in it before opening it. */
 /* A list both doors refuse can still be reachable: this fleet's own pages
    may take its hulls (DOMAIN.lendRouteFor) - every Chaos list takes Imperial
-   Navy cruisers and escorts as Renegade Imperial Vessels (pg. 222), Bastion
+   Navy cruisers and escorts as Renegade Imperial Vessels (pg. 232), Bastion
    Fleets takes five Chaos hulls into its reserve fleet (pg. 39). Such a list
    is shown with the limited ones, in both doors, because the door does not
    decide it: the ship is added from this fleet's own section. The groups,
@@ -98,7 +98,7 @@ export const armLineHTML = (sh, en, list) => {
   if(!sh) return "";
   const s = DOMAIN.armSummary(sh, { list });
   /* Options the list row forbids are not this ship's options here: the Rogue
-     Trader rows take no variants (pg. 180) and a reserve fleet no class
+     Trader rows take no variants (pg. 190) and a reserve fleet no class
      variants (pg. 39). */
   const optno = en && en.optno ? new RegExp(en.optno, "i") : null;
   const nOpt = en && en.noopt ? 0
@@ -282,7 +282,7 @@ export function optState(u, i){
   if(u.os && u.os[i]) return u.os[i];
   /* A list row can forbid the ship's own variants: Rogue Traders using a
      Lunar, Tyrant, Carnage or Murder may use "no special variants in the
-     notes of these ships' profiles" (Fleets p.180). Every option is off. */
+     notes of these ships' profiles" (Fleets p.190). Every option is off. */
   if(u.s >= 0){
     /* noopt and optno belong to the ROW the ship was bought from, so they
        follow a borrowed ship into its new fleet and must not touch the
@@ -324,7 +324,7 @@ export function selOf(u){
 }
 /* The unit's canonical intent as its fleet resolves it. A row of a Da Ork
    Clanz tiddla skwadron (a Squadron letter) carries the skwadron's clan and
-   Gubbins - on every row of the tag, paid on one (Fleets pp. 369-370, ruling
+   Gubbins - on every row of the tag, paid on one (Fleets pp. 371-372, ruling
    T60, DOMAIN.shareSkwadronUpgrades) - so the card, the fleet view and the
    points say what the legality panel says. Kept by the rows it depends on:
    selOf is asked many times per render. */
@@ -405,7 +405,7 @@ export function setUpState(u, si, ei, v){
   const id = DOMAIN.upgradeId(Lu.nm, sec.t, en.l);
   applyTransition(u, { type: "upgrade", id: id, state: v });
   /* A Da Ork Clanz tiddla skwadron's clan or Gubbin is one choice for the
-     skwadron (Fleets pp. 369-370, ruling T60): the other rows of its tag
+     skwadron (Fleets pp. 371-372, ruling T60): the other rows of its tag
      that are offered the row get the same answer, so a row never says "off"
      while the skwadron has it. */
   if(si < 1000 && !u.lst && DOMAIN.isSkwadronUpgrade(L(), si, en))
@@ -425,7 +425,7 @@ export function applyRequired(u){
      opening position is the same as before but the player may change it.
      Forcing them here instead would put the lock straight back, and the lock
      is what charged the Chaos Warmaster's Mark twice beside a battle barge
-     that already includes it (Fleets pp. 258, 260, 262, 264). */
+     that already includes it (Fleets pp. 260, 262, 264, 266). */
   DOMAIN.defaultUpgradeKeys(selOf(u)).forEach(k => {
     if(!Object.prototype.hasOwnProperty.call(u.ups, k)) u.ups[k] = "take"; });
 }

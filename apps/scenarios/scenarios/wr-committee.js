@@ -121,7 +121,7 @@
     glance: [["Points", "Fixed forces"], ["Table", "Not given"], ["Battlezone", "Any, rolled as per the rulebook"], ["First turn", "Hunter"], ["Game ends", "Target boarded or a ship destroyed"]],
     bring: ["3 Inquisitorial Operations Vessels", "1 Diasporex Metis class light combat cruiser", "Explosion templates: 5×10, 10×10 and 10×15 cm for each player"],
     forces: {
-      a: ["Jeremiah Crowe, Inquisitor Lord of the Ordo Hereticus: Ld 10, one extra re-roll; Ordo Hereticus boarding and hit-and-run rules (FL p. 131).", "Three Inquisitorial Operations Vessels (fan-made, profile in Play)."],
+      a: ["Jeremiah Crowe, Inquisitor Lord of the Ordo Hereticus: Ld 10, one extra re-roll; Ordo Hereticus boarding and hit-and-run rules (FL p. 141).", "Three Inquisitorial Operations Vessels (fan-made, profile in Play)."],
       b: ["One Metis class light combat cruiser, Ld 8, from the fan-made Diasporex list."]
     },
     draw: (v, W, H) => [
@@ -140,7 +140,7 @@
       { s: "a", t: "Your squadron enters from a long edge, on the line straight out from the Metis. You take the first turn." }
     ],
     notes: ["“Either one of the vessels has been destroyed” is read as the Metis or Crowe’s ships; the victory text covers only the Metis — agree what happens if the hunters are wiped out (presumably a hunter loss)."],
-    refs: [["Ordo Hereticus", "FL p. 131"], ["Diasporex fleet", "fan-made list (Book of the Void I)"], ["Boarding actions", "RB p. 89"]],
+    refs: [["Ordo Hereticus", "FL p. 141"], ["Diasporex fleet", "fan-made list (Book of the Void I)"], ["Boarding actions", "RB p. 89"]],
     play: [
       { w: "Moving through an explosion", t: "A ship that moves through a mighty explosion rolls on the explosion table (tool below). Explosions block line of fire." },
       { w: "Every end phase", t: "Each player picks up two explosion templates and places them elsewhere, following the set-up rules." },

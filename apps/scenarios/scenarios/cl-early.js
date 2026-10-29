@@ -146,7 +146,7 @@
     sides: { a: { n: "Imperial convoy", f: "Imperial Navy + Space Marines" }, b: { n: "Ambushers" } },
     pitch: "The Navy and the Space Marines have taken an Ork hulk intact, at a price. Now it must be towed to a forge world — and the ambush is waiting in the ship graveyards.",
     glance: [["Points", "Convoy 1500 + the hulk · Ambushers 2000"], ["Table", "Not given — use your table"], ["Battlezone", "Ambushers place what they like in their zones"], ["First turn", "Imperial convoy"], ["Game ends", "The hulk escapes, or a side is broken"]],
-    bring: ["An Ork space hulk (FL p. 389)", "Two Space Marine strike cruisers (FL p. 105)", "Asteroid fields and wrecks for the ambushers"],
+    bring: ["An Ork space hulk (FL p. 391)", "Two Space Marine strike cruisers (FL p. 105)", "Asteroid fields and wrecks for the ambushers"],
     forces: {
       a: ["1500 pts, including at least two Space Marine strike cruisers at Ld 6 (skeleton crews — the rest are aboard the hulk).", "Plus the captured Ork space hulk, with only 20 hits left and no working weapons.", "Every capital ship starts with D3 hits of damage from the fight for the hulk (tool below); escorts are undamaged."],
       b: ["2000 pts of any fleet. Orks may not bring another space hulk.", "Undamaged."]
@@ -170,8 +170,8 @@
       { k: "shiproll", id: "d3", l: "Starting damage on Imperial capital ships", cl: "Capital ships", n0: 4, il: i => "Capital ship " + (i + 1), out: d => "D3 = " + Math.ceil(d / 2) + " hits of damage" },
       { k: "roll", id: "zone", l: "Convoy zone", rows: () => [[1, 3, "Left short edge — escape off the right"], [4, 6, "Right short edge — escape off the left"]] }
     ],
-    notes: ["Written for the original 1999 rules, when the Ork hulk profile was new (FL p. 389–390 today).", "The hulk’s launch bays are not on the reactivation table, so they stay dead.", "“Over 15 points of damage” is read as damage taken during this battle: the hulk starts with 20 hits left, so it is useless once it is down to 4 or fewer."],
-    refs: [["Ork Hulk", "FL p. 389–390"], ["Space Marine strike cruiser", "FL p. 105"], ["Victory points", "RB p. 122"]],
+    notes: ["Written for the original 1999 rules, when the Ork hulk profile was new (FL p. 391–392 today).", "The hulk’s launch bays are not on the reactivation table, so they stay dead.", "“Over 15 points of damage” is read as damage taken during this battle: the hulk starts with 20 hits left, so it is useless once it is down to 4 or fewer."],
+    refs: [["Ork Hulk", "FL p. 391–392"], ["Space Marine strike cruiser", "FL p. 105"], ["Victory points", "RB p. 122"]],
     play: [
       { w: "Start of your turn, from turn 2", s: "a", t: "Roll a D6 (tool below). On 4+ a hulk weapon comes back on-line: roll a D10 on the reactivation table; if that weapon already works, roll again." },
       { w: "Orks!", s: "a", t: "A D10 roll of 0 (10) means Orks still aboard: the fight costs the hulk 1 hit. It can happen again." },
@@ -203,7 +203,7 @@
     sides: { a: { n: "Imperium", f: "Imperial Navy" }, b: { n: "Chaos", f: "Chaos (Slaanesh)" } },
     pitch: "A Slaaneshi fleet has seized the hive world Phillipa II. Twenty years of war in five battles, from a desperate blockade run to the fleet action that ends it.",
     glance: [["Points", "400–800 rising to 2000 each"], ["Table", "As each scenario"], ["Battles", "5, each from the rulebook"], ["Players", "Two (a third can play the Eldar)"], ["Victory", "Whoever wins the last battle"]],
-    bring: ["Imperial and Chaos fleets up to 2000 pts", "An Eldar fleet of 700 pts for the side battle", "Mark of Slaanesh rules (FL p. 232)"],
+    bring: ["Imperial and Chaos fleets up to 2000 pts", "An Eldar fleet of 700 pts for the side battle", "Mark of Slaanesh rules (FL p. 242)"],
     forces: {
       a: ["Each battle sets its own points; see the campaign tree on the Play tab.", "Admiral Ramirez leads from battle 4 (Ld 9)."],
       b: ["Each battle sets its own points.", "Lord Janobeg the Vile (Ld 8, Mark of Slaanesh) leads most battles; Warmaster Overfiend Drusil Spittletongue (Ld 9, Mark of Slaanesh) joins the last."]
@@ -214,7 +214,7 @@
       { t: "Play the battles in order from the campaign tree. Each one names its scenario, points and leaders, and the historical ships if you want to refight it exactly." },
       { t: "Record each result in the tree: the ledger under it keeps track of points bonuses and penalties." }
     ],
-    notes: ["Written for the original 1999 rules. Mark of Slaanesh: FL p. 232.", "Battle 4 is called Escalation but the magazine names Cruiser Clash as its scenario, at 1000 pts with battleships — so play Cruiser Clash with its alternatives. Escalating Engagement would fit the name and the historical account just as well; agree which.", "The Liberation lets the Imperials take up to 500 pts of Eldar “if the Imperials will accept their support”; the campaign does not tie this to the Eldar battle. Suggestion: only if the Eldar won it."],
+    notes: ["Written for the original 1999 rules. Mark of Slaanesh: FL p. 242.", "Battle 4 is called Escalation but the magazine names Cruiser Clash as its scenario, at 1000 pts with battleships — so play Cruiser Clash with its alternatives. Escalating Engagement would fit the name and the historical account just as well; agree which.", "The Liberation lets the Imperials take up to 500 pts of Eldar “if the Imperials will accept their support”; the campaign does not tie this to the Eldar battle. Suggestion: only if the Eldar won it."],
     refs: [["Blockade Run, The Bait, Cruiser Clash, Fleet Engagement", "RB p. 128–143"], ["Mark of Slaanesh", "FL p. 232"], ["Siluria class light cruiser", "FL p. 78"]],
     play: [
       { w: "Between battles", t: "Apply the bonuses and penalties in the ledger to the next battle’s points." },
@@ -346,10 +346,10 @@
     sides: { a: { n: "Imperium", f: "Imperial Navy" }, b: { n: "Gork’s Pay", f: "Orks" } },
     pitch: "Warlord Gutztoof has powered down his kroozer deep in an asteroid field he knows like his own boot. Come within 15 cm and it strikes.",
     glance: [["Points", "250 pts of escorts (+ the Thebes) vs one kill kroozer"], ["Table", "Not given — use your table"], ["Battlezone", "Deep space, asteroid field in the centre"], ["First turn", "Imperium"], ["Game ends", "The kroozer or the escorts are gone"]],
-    bring: ["An asteroid field at least 15 × 30 cm", "An Ork kill kroozer (FL p. 382)"],
+    bring: ["An asteroid field at least 15 × 30 cm", "An Ork kill kroozer (FL p. 384)"],
     forces: {
       a: ["250 pts of escorts.", LEIGH, "The Thebes, if she survived Mission 3: all criticals repaired, damage kept."],
-      b: ["The Gork’s Pay: a kill kroozer (FL p. 382) with Warlord Gutztoof, who gives it two extra re-rolls; Maniac Gunners and Mad Meks aboard (FL p. 365)."]
+      b: ["The Gork’s Pay: a kill kroozer (FL p. 384) with Warlord Gutztoof, who gives it two extra re-rolls; Maniac Gunners and Mad Meks aboard (FL p. 367)."]
     },
     draw: (v, W, H) => [
       { z: "hatch", x: W / 2 - 15, y: H / 2 - 7.5, w: 30, h: 15, l: "", free: 1 }, { z: "cm", x: W / 2, y: H / 2 }, { z: "text", x: W / 2, y: H / 2 + 14, l: "field 30 × 15 cm+" },
@@ -366,7 +366,7 @@
       { s: "a", t: "The Imperium takes the first turn." }
     ],
     notes: ["Written for the original 1999 rules; the kill kroozer was on p. 136 of that rulebook, now FL p. 382.", "In the Fleets book a warlord may take only one of Maniac Gunners and Mad Meks; the campaign gives Gutztoof both as a special character.", "The campaign says a Gutztoof who disengages has lost and the Imperials draw the campaign."],
-    refs: [["Kill kroozer", "FL p. 382"], ["Ork warlord, Maniac Gunners, Mad Meks", "FL p. 365"], ["Asteroid fields", "RB p. 110"], ["Siluria class light cruiser", "FL p. 78"]],
+    refs: [["Kill kroozer", "FL p. 384"], ["Ork warlord, Maniac Gunners, Mad Meks", "FL p. 365"], ["Asteroid fields", "RB p. 110"], ["Siluria class light cruiser", "FL p. 78"]],
     play: [
       { w: "End of each Imperial turn", s: "b", t: "If any Imperial ship is within 15 cm of the asteroid field, you may place the Gork’s Pay anywhere in the field, facing any way, and take your turn at once." },
       { w: "Asteroids", s: "b", t: "Gutztoof knows this field like his own boot: the Gork’s Pay never tests for asteroid damage, except on All Ahead Full." },

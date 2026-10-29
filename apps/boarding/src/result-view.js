@@ -361,7 +361,7 @@ function damageBlock(){
   return h.join("");
 }
 
-/* FL p.240: "Ships boarded by them are also infected by plague in addition to
+/* FL p.248: "Ships boarded by them are also infected by plague in addition to
    all damage inflicted normally, affecting it the same way as if it suffered a
    single Fire critical." It is not a critical roll and does not depend on who
    won, so it is stated, not rolled. */
@@ -377,7 +377,7 @@ function arkBlock(){
 }
 
 /* A Berzerker Tide fleet may roll D3 extra critical rolls, and then may take no
-   special orders in the following turn (FL p.244). Neither book says whether the
+   special orders in the following turn (FL p.250). Neither book says whether the
    extra rolls use the same threshold, so the app rolls them the same way and
    says so. */
 function tideSide(){

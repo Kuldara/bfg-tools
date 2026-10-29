@@ -50,25 +50,25 @@ const FLEET_RULES = [
     t: "A Crusade fleet with a fortress-monastery is always the defender. The fortress-monastery is used only as a defence, or in place of the planet in scenarios that have one." },
 
   /* ---------------- Inquisition (and Grey Knights) */
-  { f: "Inquisition", sc: ["convoy"], s: "a", p: "FL p. 139",
+  { f: "Inquisition", sc: ["convoy"], s: "a", p: "FL p. 149",
     t: "A Blackship may be the convoy on its own, counting as eight transports when working out the escort. One Inquisitorial cruiser may join the escort, and the Blackship’s points count against the escorting fleet. (Grey Knights fleets too.)" },
-  { f: "Inquisition", sc: ["exterminatus"], s: "a", p: "FL p. 139, 140, 150",
+  { f: "Inquisition", sc: ["exterminatus"], s: "a", p: "FL p. 149, 150, 160",
     t: "Ships with torpedo tubes can be Exterminators at no cost. An Inquisitorial cruiser with the torpedo refit exterminates on 3+ instead of 4+. A Blackship used as an Exterminator must be led by an Ordo Hereticus Inquisitor.",
-    w: "Exterminating", play: "An Inquisitorial cruiser with torpedoes exterminates on 3+ (FL p. 150)." },
+    w: "Exterminating", play: "An Inquisitorial cruiser with torpedoes exterminates on 3+ (FL p. 160)." },
 
   /* ---------------- Chaos */
-  { f: "Chaos", sc: ["planetary-assault"], s: "a", p: "FL p. 227",
+  { f: "Chaos", sc: ["planetary-assault"], s: "a", p: "FL p. 237",
     t: "Daemonships score no assault points for landing troops.",
-    w: "Landing troops", play: "Daemonships score no assault points (FL p. 227)." },
+    w: "Landing troops", play: "Daemonships score no assault points (FL p. 237)." },
   { f: "Chaos", sc: ["exterminatus"], s: "a", p: "RB p. 140, FL p. 227",
     t: "An Activated Blackstone Fortress may be the Exterminator and keeps all its weapons. Daemonships cannot carry Exterminatus weapons." },
 
   /* ---------------- Dark Eldar */
-  { f: "Dark Eldar", sc: ["convoy"], s: "a", p: "FL p. 347",
+  { f: "Dark Eldar", sc: ["convoy"], s: "a", p: "FL p. 349",
     t: "Defending, the Dark Eldar may use Imperial transports of any type — captured merchantmen on their way to the lair." },
 
   /* ---------------- Orks (fleet rules, all Ork lists) */
-  { f: "Orks", sc: ["planetary-assault", "exterminatus", "surprise-attack"], s: "b", p: "FL p. 360, 367",
+  { f: "Orks", sc: ["planetary-assault", "exterminatus", "surprise-attack"], s: "b", p: "FL p. 362, 369",
     t: "Roks may be bought with the planetary defence points. Bought that way a Rok cannot move, passes Leadership tests automatically and may only Reload Ordnance or Brace for Impact (at Ld 7). Roll 2D6 for each Rok after setting it up: on a 12 it falls 2D6 cm toward the phenomenon it orbits, and is destroyed if it touches an asteroid field or the planet edge. Orks may also use the rulebook’s defences, with a non-moving Space Hulk in place of a Blackstone Fortress." },
 
   /* ---------------- Tau */
@@ -78,21 +78,21 @@ const FLEET_RULES = [
     t: "Defending, the Tau may use a Waystation in any scenario, even one without planetary defences." },
 
   /* ---------------- Rogue Traders */
-  { f: "Rogue Traders", sc: ["convoy"], s: "a", p: "FL p. 177, 182, 192",
+  { f: "Rogue Traders", sc: ["convoy"], s: "a", p: "FL p. 187, 192, 202",
     t: "A heavy transport counts as two transports (one if crippled), an armed cargo vessel as half a transport, rounding down — one alone counts as none. An Exploration fleet pays full cost for its cargo ships." },
-  { f: "Rogue Traders", sc: ["planetary-assault"], s: "a", p: "FL p. 182, 192",
+  { f: "Rogue Traders", sc: ["planetary-assault"], s: "a", p: "FL p. 192, 202",
     t: "Within 30 cm of the planet edge a heavy transport is worth 4 assault points (2 if crippled) instead of a transport’s 2; an armed cargo vessel is worth 1.",
-    w: "Landing troops", play: "Heavy transport 4 assault points (2 crippled), armed cargo vessel 1 (FL p. 182, 192)." },
-  { f: "Rogue Traders", sc: "*", p: "FL p. 175",
+    w: "Landing troops", play: "Heavy transport 4 assault points (2 crippled), armed cargo vessel 1 (FL p. 192, 202)." },
+  { f: "Rogue Traders", sc: "*", p: "FL p. 185",
     t: "A game with a Rogue Trader cruiser must use a sub-plot (Sub-plots tab). Fail it and the enemy scores the cruiser as if crippled — as destroyed if it really was crippled.",
-    w: "End of the game", play: "Rogue Trader cruiser: failed sub-plot = enemy scores it as crippled, or destroyed if it was crippled (FL p. 175)." },
-  { f: "Rogue Traders", sc: "*", p: "FL p. 178",
+    w: "End of the game", play: "Rogue Trader cruiser: failed sub-plot = enemy scores it as crippled, or destroyed if it was crippled (FL p. 185)." },
+  { f: "Rogue Traders", sc: "*", p: "FL p. 188",
     t: "A Pirates fleet rolls its scenario on the raid table. As an attacker of 1,500 pts or more it may play Planetary Assault on a roll of 6." },
 
   /* ---------------- Necrons */
-  { f: "Necrons", sc: "*", p: "FL p. 402",
+  { f: "Necrons", sc: "*", p: "FL p. 404",
     t: "Fading out does not deny victory points: a capital ship that disengages undamaged counts as 10% destroyed, a damaged one or any raider 25%, crippled 50%, destroyed 200% and a drifting hulk 300%.",
-    w: "End of the game", play: "Necron losses: disengaged undamaged 10%, damaged or raider 25%, crippled 50%, destroyed 200%, hulk 300% (FL p. 402)." }
+    w: "End of the game", play: "Necron losses: disengaged undamaged 10%, damaged or raider 25%, crippled 50%, destroyed 200%, hulk 300% (FL p. 404)." }
 ];
 
 /* the rows for this scenario; the general ones ("*") only for the chosen fleet */

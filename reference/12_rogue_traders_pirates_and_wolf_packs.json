@@ -1,6 +1,6 @@
 {
   "list": "Rogue Traders — Pirates and Wolf Packs",
-  "book_page": 178,
+  "book_page": 188,
   "read_pages": [
     178,
     179
@@ -10,21 +10,21 @@
     {
       "key": "All pirate vessels suffer a -1 leadership modifier",
       "text": "All pirate vessels suffer a -1 leadership modifier, meaning their unmodified starting leadership will be from 5 to 8.",
-      "page": 178,
+      "page": 188,
       "status": "manual",
       "why": "The leadership is rolled at the start of the game."
     },
     {
       "key": "Pirate fleets have an attack or initiative rating of 3",
       "text": "Pirate fleets have an attack or initiative rating of 3.",
-      "page": 178,
+      "page": 188,
       "status": "manual",
       "why": "Pelinaikainen arvo."
     },
     {
       "key": "0-3 Pirate Captains",
       "text": "0-3 Pirate Captains",
-      "page": 178,
+      "page": 188,
       "status": "enforced",
       "kind": "section_count",
       "min": 0,
@@ -33,7 +33,7 @@
     {
       "key": "If a pirate fleet has more than 750 points of ships, a Pirate Captain must lead it",
       "text": "If a pirate fleet has more than 750 points of ships, a Pirate Captain must lead it.",
-      "page": 178,
+      "page": 188,
       "status": "enforced",
       "kind": "mandatory_at",
       "points": 750,
@@ -43,7 +43,7 @@
     {
       "key": "A Pirate Captain may be embarked on a cruiser for every 500 points or portion thereof",
       "text": "A Pirate Captain may be embarked on a cruiser for every 500 points or portion thereof in a fleet.",
-      "page": 178,
+      "page": 188,
       "status": "enforced",
       "kind": "per_points",
       "each": 1,
@@ -54,21 +54,21 @@
     {
       "key": "may purchase up to two more re-rolls for +25 points each",
       "text": "A Pirate Captain gets one re-roll, and may purchase up to two more re-rolls for +25 points each.",
-      "page": 178,
+      "page": 188,
       "status": "manual",
       "why": "A priced option; the rows 'One extra re-roll 25' and 'Two extra re-rolls 50' can be chosen."
     },
     {
       "key": "He (or she!) must be placed aboard the most expensive vessel in the fleet",
       "text": "He (or she!) must be placed aboard the most expensive vessel in the fleet (or vessels if more than one Captain is present).",
-      "page": 178,
+      "page": 188,
       "status": "manual",
       "why": "The placement is done at the table."
     },
     {
       "key": "A human pirate fleet may have up to one cruiser for every 500 points of ships",
       "text": "A human pirate fleet may have up to one cruiser for every 500 points of ships in the fleet or portion thereof.",
-      "page": 178,
+      "page": 188,
       "status": "out_of_scope",
       "kind": "per_points",
       "each": 1,
@@ -79,14 +79,14 @@
     {
       "key": "A Pirate Cruiser may consist of a Rogue Trader cruiser or any cruiser from the Imperial or Chaos fleet lists worth 185 points or less",
       "text": "A Pirate Cruiser may consist of a Rogue Trader cruiser or any cruiser from the Imperial or Chaos fleet lists worth 185 points or less. It may also include a single Space Marine strike cruiser! Special variants, refits and Nova Cannons cannot be used.",
-      "page": 178,
+      "page": 188,
       "status": "manual",
       "why": "The ships come from other lists by a price limit. This is the most open list definition in the whole book: it cannot be presented as rows without copying the whole Imperial and Chaos range here."
     },
     {
       "key": "At least one squadron of 3–6 escort vessels must be included for each cruiser",
       "text": "At least one squadron of 3-6 escort vessels must be included for each cruiser in the fleet, organized in any mix desired.",
-      "page": 179,
+      "page": 189,
       "status": "enforced",
       "kind": "squadron",
       "min": 3,
@@ -96,7 +96,7 @@
     {
       "key": "The number of escort vessels that utilize ordnance or lance weaponry may not outnumber",
       "text": "The number of escort vessels that utilize ordnance or lance weaponry may not outnumber those that rely solely on weapon batteries.",
-      "page": 179,
+      "page": 189,
       "status": "out_of_scope",
       "why": "The split is made by armament (ordnance/lance vs. batteries only). The resolver knows the weapon rows, but 'rely solely on weapon batteries' needs a weapon classification for every escort profile - v1.1.",
       "classified_on": "2026-09-09"
@@ -104,7 +104,7 @@
     {
       "key": "Up to 10% of a pirate fleet may be made up of alien escorts",
       "text": "Up to 10% of a pirate fleet may be made up of alien escorts from any race except Tyranids, Necrons or vessels that require support from a capital ship of their race.",
-      "page": 179,
+      "page": 189,
       "status": "enforced",
       "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. points_share: the Xenos rows' points <= 10 % of the fleet's points. The earlier gap: a percentage share of the fleet's points. The engine had no share limit.",
       "kind": "points_share",
@@ -114,14 +114,14 @@
     {
       "key": "vessels of different races may not combine with each other into a single squadron",
       "text": "They can be organized in squadrons of two to six ships, but vessels of different races may not combine with each other into a single squadron, nor can they combine into squadrons with human (Imperial, Chaos or Rogue Trader) vessels.",
-      "page": 179,
+      "page": 189,
       "status": "manual",
       "why": "The skwadron's composition is decided at the table."
     },
     {
       "key": "They may not use any of a Pirate Captain’s re-rolls",
       "text": "Xenos freebooters and corsairs have no allegiance to the human pirates they serve alongside. They may not use any of a Pirate Captain's re-rolls, and will automatically attempt to disengage if the escort squadron is crippled.",
-      "page": 179,
+      "page": 189,
       "status": "manual",
       "why": "Pelinaikainen saanto."
     }
@@ -135,7 +135,7 @@
     {
       "name": "Fra’al Battleship",
       "pts": 250,
-      "page": 194
+      "page": 204
     },
     {
       "name": "Escort Carrier",
@@ -150,17 +150,17 @@
     {
       "name": "Xenos Vessel",
       "pts": 50,
-      "page": 184
+      "page": 194
     },
     {
       "name": "Idolator Raider",
       "pts": 45,
-      "page": 281
+      "page": 283
     },
     {
       "name": "Infidel Raider",
       "pts": 40,
-      "page": 282
+      "page": 284
     },
     {
       "name": "Firestorm Frigate",
@@ -185,17 +185,17 @@
     {
       "name": "Recommissioned Escort",
       "pts": 30,
-      "page": 189
+      "page": 199
     },
     {
       "name": "Iconoclast Destroyer",
       "pts": 30,
-      "page": 190
+      "page": 200
     },
     {
       "name": "Armed Cargo Vessel",
       "pts": 20,
-      "page": 192
+      "page": 202
     },
     {
       "name": "Armed Freighter",
@@ -222,38 +222,38 @@
     {
       "name": "Imperial Power Ram (6+ prow, not with a Nova Cannon)",
       "pts": 5,
-      "why": "p.178 POWER RAM"
+      "why": "p.188 POWER RAM"
     },
     {
       "name": "One extra re-roll",
       "pts": 25,
-      "why": "p.178, in the book only in the body text"
+      "why": "p.188, in the book only in the body text"
     },
     {
       "name": "Two extra re-rolls",
       "pts": 50,
-      "why": "p.178, twice 25"
+      "why": "p.188, twice 25"
     },
     {
       "name": "Xenos Vessel - Pthuxutl war cruiser",
       "pts": 50,
-      "why": "p.186"
+      "why": "p.196"
     },
     {
       "name": "Xenos Vessel - Fra'al raider",
       "pts": 50,
-      "why": "p.187"
+      "why": "p.197"
     },
     {
       "name": "Xenos Vessel - Nekulli whip",
       "pts": 50,
-      "why": "p.188"
+      "why": "p.198"
     }
   ],
   "notes": [
     "The book marks the Fra'al Battleship '(0-2)', from which the app sets the row limit mx=2. The book adds: 'These count as cruisers for fleet building.'",
-    "The Idolator Raider's page reference is wrong in the book (p. 147); the right profile is on page 281. The app corrects this by name and says so in the row's note.",
-    "'Cargo Transport (pg. 85)' points at the Imperial Navy's TRANSPORT profile. The app used to point it wrongly at page 192; fixed 7.9.2026.",
+    "The Idolator Raider's page reference is wrong in the book (p. 157); the right profile is on page 283. The app corrects this by name and says so in the row's note.",
+    "'Cargo Transport (pg. 85)' points at the Imperial Navy's TRANSPORT profile. The app used to point it wrongly at page 202; fixed 7.9.2026.",
     "This list is open by structure: it has no actual cruiser rows at all, because the book defines them by a price limit from other lists. That explains why three rules are enforced but there are four gaps."
   ]
 }

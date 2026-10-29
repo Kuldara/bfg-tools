@@ -36,8 +36,8 @@ from .special_rows import _L
 #     (p.500). Imperial = the lists of the Imperial Navy race (p.14 "Imperial Navy
 #     (including Adeptus Mechanicus)"); the Space Marines have their own
 #     Fortress-Monastery (p.98, p.110), of the others the book says nothing.
-#   - Haven: p.334 is a station of the ELDAR chapter; the Corsair and Craftworld lists.
-#     Dark Eldar get it only with the weapons swapped (p.337, p.347).
+#   - Haven: p.332 is a station of the ELDAR chapter; the Corsair and Craftworld lists.
+#     Dark Eldar get it only with the weapons swapped (p.335, p.349).
 #
 # Row type:
 #   r = profile    -> an ordinary unit row
@@ -137,13 +137,13 @@ _PD_TAU_TEXT = [
     "Tau Orbitals follow all High Orbit and Satellite defence rules.",
     "The Tau may not use any other form of planetary defence.",
 ] + _PD_TEXT[:2]
-# p.360 ORK PLANETARY DEFENCES (J172): "Ork Roks can be taken as planetary
+# p.362 ORK PLANETARY DEFENCES (J172): "Ork Roks can be taken as planetary
 # defences and purchased using planetary defence point allowances ... Ork Roks
 # cannot move and count as stationary in all effects when purchased as
-# defences". The same hull as the list's own Rok (p.392), but as a defence:
+# defences". The same hull as the list's own Rok (p.394), but as a defence:
 # a key of its own, so that the df flag does not take the list Rok's upgrades nor
 # its movement rules. Speed 0 cm tells on the card and in the domain that it does not move.
-# The Rok's own rules (p.393: a critical +1 damage, breaks into 4 Blast markers)
+# The Rok's own rules (p.395: a critical +1 damage, breaks into 4 Blast markers)
 # stay: "Roks are sufficiently different to both Orbital Defences and true
 # spaceships to require a number of special rules" (an interpretation, BACKLOG J172).
 assert "392d" not in ships and ships["392"]["nm"] == "ROK" and ships["392"]["sp"] == "10 cm", ships["392"]
@@ -161,7 +161,7 @@ ships["392d"]["tn"] = "–"
 # so at most two; "acts as a tracking system". Habitat +5: "adds 1 to
 # the damage points". modmax = the whole group's limit; the domain adds the counts.
 _o480 = ships["480"]["ol"]
-assert [o["t"] for o in _o480] == ["Launch Bay +10 pts", "Gravitic hook +5 pts (Orca/Warden needs to be purchased separately)",
+assert [o["t"] for o in _o480] == ["Launch Bay +10 pts", "Gravitic hook +5 pts: Orca/Warden needs to be purchased separately. Can't be equipped with Dhows.",
                                    "Railgun battery +15 pts", "Ion Cannon Turret +15 pts"], [o["t"] for o in _o480]
 assert ships["480"]["sh"] == "1" and ships["480"]["hp"] == 4, ships["480"]
 for _o in _o480:
@@ -177,8 +177,8 @@ for _t, _c, _mx, _md in (("Manufacturing & Research module +10 pts: +1 shield (t
 ships["480"]["modmax"] = dict(n=4, pg=480, src="Normally individual orbital modules are assembled into arrays of up "
                               "to five. In any event the first module of any orbital array must be the core module "
                               "and no more than four other modules can be added to a single core.")
-_PD_ROK_NT = ("A Rok bought as a planetary defence cannot move (Fleets p. 360). Roks squadron only "
-              "with other Roks, up to four (p. 367).")
+_PD_ROK_NT = ("A Rok bought as a planetary defence cannot move (Fleets p. 362). Roks squadron only "
+              "with other Roks, up to four (p. 369).")
 _pd_n = dict(generic=0, ramilies=0, haven=0, tau=0)
 for _L in lists_out:
     assert not any(x["t"].strip().upper() == _PD_TITLE for x in _L["secs"]), \
@@ -207,13 +207,13 @@ for _L in lists_out:
         if _race == "dark eldar":
             _ents.append(_pd_row("Haven space station (pirate base)", "334b", 200, 347))
             _pd_n["haven"] += 1
-        # p.360: "Instead of using the Imperial Blackstone Fortress, Orks use
+        # p.362: "Instead of using the Imperial Blackstone Fortress, Orks use
         # a non-moving Space Hulk" - the same profile and price, a different model.
         if _race == "orks":
             _bs = [e for e in _ents if e["l"] == "Blackstone fortress"]
             assert len(_bs) == 1
             _bs[0]["nt"] = ("Orks field a non-moving Space Hulk in its place, on the same "
-                            "profile and points cost (Fleets p. 360).")
+                            "profile and points cost (Fleets p. 362).")
             _ents.append(_pd_row("Rok", "392d", 80, 360, nt=_PD_ROK_NT))
             _pd_n["orks"] = _pd_n.get("orks", 0) + 1
     _L["secs"].append(dict(t=_PD_TITLE, text=_text, notes=list(_PD_NOTES), rules=_rules, ents=_ents))
@@ -232,11 +232,11 @@ assert _pd_n == dict(generic=30, ramilies=11, haven=4, tau=2, orks=3), _pd_n
 #         "follow all High Orbit and Satellite defence rules" (p.451).
 #         10: the Fortress-Monastery's "base leadership of 10" (p.111).
 #         The Ramilies rolls like a capital ship (p.503) and the Haven by the Eldar
-#         rules (p.336): no field.
+#         rules (p.334): no field.
 #   dor = the allowed special orders. RO+BFI: "cannot take on any special
 #         orders except Reload Ordnance, though they may also attempt to
 #         Brace For Impact" (p.499). RO+LO+BFI: Ramilies p.503,
-#         Fortress-Monastery p.110-111, Haven p.336.
+#         Fortress-Monastery p.110-111, Haven p.334.
 _PD_FLAGS = [
     # key, df, sq, dld, dor
     ("500", 1, 0, None, "RO LO BFI"),
@@ -248,7 +248,7 @@ _PD_FLAGS = [
     ("517", 1, 1, 7, "RO BFI"), ("517b", 1, 1, 7, "RO BFI"), ("517c", 1, 1, 7, "RO BFI"),
     ("478", 1, 0, 7, "RO BFI"), ("479", 1, 0, 7, "RO BFI"),
     ("480", 1, 0, 7, "RO BFI"), ("481", 1, 0, 7, "RO BFI"),
-    # p.360: a Rok as a defence "Reload Ordnance and Brace For Impact, for
+    # p.362: a Rok as a defence "Reload Ordnance and Brace For Impact, for
     # which they are Leadership 7"; other tests pass automatically.
     ("392d", 1, 0, 7, "RO BFI"),
 ]

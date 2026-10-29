@@ -87,8 +87,8 @@
     stools: [{ k: "roll", id: "entry", l: "Convoy’s entry edge", sub: "D6", rows: () => [[1, 3, "The left short edge, as on the map"], [4, 6, "The right short edge"]] }],
     notes: [OLD + PRIV_NOTES,
       "Victory points come only from transports: the attacker scores the cargo value of each transport destroyed, the convoy the value of each transport that leaves by the opposite short edge. Nobody scores for warships. Defending ships that disengage count as destroyed; pack ships may disengage freely.",
-      "The magazine’s Wolf Pack fleet list grew into the Fleets book’s Pirates and Wolf Packs list (FL p. 178–), and its Commerce Protection fleet into FL p. 456. Transports and their variants: FL p. 520–."],
-    refs: [["Pirates and Wolf Packs list", "FL p. 178–"], ["Commerce Protection fleet list", "FL p. 456"], ["Transports, heavy transports", "FL p. 520–"], ["Disengaging", "RB p. 56"]],
+      "The magazine’s Wolf Pack fleet list grew into the Fleets book’s Pirates and Wolf Packs list (FL p. 188–), and its Commerce Protection fleet into FL p. 456. Transports and their variants: FL p. 520–."],
+    refs: [["Pirates and Wolf Packs list", "FL p. 188–"], ["Commerce Protection fleet list", "FL p. 456"], ["Transports, heavy transports", "FL p. 520–"], ["Disengaging", "RB p. 56"]],
     play: [
       { w: "Turns 1–2", s: "a", t: "Bring the convoy on at the marked point; all of it must be on by the end of your second movement phase." }
     ].concat(REVEAL_PLAY, PRIV_PLAY, [
@@ -178,10 +178,10 @@
       { s: "a", t: "Set up the whole fleet within 30 cm of the opposite short edge." },
       { s: "b", t: "Chaos takes the first turn." }
     ],
-    notes: [OLD + "Grey Knights had no fleet list then. The scenario says: use the Space Marine fleet rules (FL p. 94–96); Inquisitor Coldiron gives +1 in boarding actions; Grey Knight ships ignore the Mark of Slaanesh. As an option it allows the Daemonhunter rules from BFG Magazine 16 instead. Today the Fleets book’s Grey Knights list (FL p. 144–151, Daemonhunters p. 145) is their descendant — agree which rules you use.",
+    notes: [OLD + "Grey Knights had no fleet list then. The scenario says: use the Space Marine fleet rules (FL p. 94–96); Inquisitor Coldiron gives +1 in boarding actions; Grey Knight ships ignore the Mark of Slaanesh. As an option it allows the Daemonhunter rules from BFG Magazine 16 instead. Today the Fleets book’s Grey Knights list (FL p. 154–161, Daemonhunters p. 145) is their descendant — agree which rules you use.",
       "The Favoured Concubine may not disengage; the rest of the Chaos fleet may.", "“Boarded” is not defined. Suggestion: only a boarding action counts, not hit-and-run teleport attacks.",
       "The same author wrote the Favoured Concubine up as a character ship for Fanatic Online; this scenario uses a plain Despoiler."],
-    refs: [["Grey Knights fleet list", "FL p. 144–151"], ["Space Marine special rules", "FL p. 94–96"], ["Despoiler class battleship", "FL p. 266"], ["Repulsive grand cruiser", "FL p. 269"], ["Daemonships", "FL p. 226–229"], ["Mark of Slaanesh", "FL p. 232"], ["Boarding actions", "RB p. 89–90"]],
+    refs: [["Grey Knights fleet list", "FL p. 154–161"], ["Space Marine special rules", "FL p. 94–96"], ["Despoiler class battleship", "FL p. 268"], ["Repulsive grand cruiser", "FL p. 271"], ["Daemonships", "FL p. 236–239"], ["Mark of Slaanesh", "FL p. 232"], ["Boarding actions", "RB p. 89–90"]],
     play: [
       { w: "All game", s: "b", t: "The Favoured Concubine may not disengage. Get her off the Grey Knights’ short edge — without being boarded, if you can." },
       { w: "All game", s: "a", t: "Your ships ignore the Mark of Slaanesh. Inquisitor Coldiron aboard the Divine Blade gives +1 in boarding actions." },
@@ -254,10 +254,10 @@
       { k: "val", id: "m2z", l: "Second moon: direction (D6: 1 = due south … 6 = due west)", opts: [1, 2, 3, 4, 5, 6], roll: () => d6(), unit: "" }
     ],
     notes: [OLD + "The source has no map. The battlefield is “120 cm wide by 180 cm long” with north at the top, so the north and south edges are the short ones: “as wide as the quadrant, 15 cm deep” means strips along the short south and north edges, and the north-west asteroid field then runs partly through the Chaos zone, as the text warns.",
-      "The Emperor class is FL p. 53 (365 pts) and names the Legatus Stygies; the Repulsive is FL p. 269 and names the Foe-Reaper. Use the current costs for victory points.",
+      "The Emperor class is FL p. 53 (365 pts) and names the Legatus Stygies; the Repulsive is FL p. 271 and names the Foe-Reaper. Use the current costs for victory points.",
       "Space station: FL p. 507 (150 pts there, 130 here because its weapons battery reaches only 30 cm).",
       "Victory points after 10 turns: the Foe-Reaper counts 125% of its cost if destroyed (and only then); the Legatus Stygies counts 50% if crippled but not destroyed. Holding the field counts for nothing."],
-    refs: [["Emperor class battleship", "FL p. 53"], ["Repulsive grand cruiser", "FL p. 269"], ["Space station", "FL p. 507"], ["Planets, moons", "RB p. 112–113"], ["Asteroid fields", "RB p. 110"], ["Victory points", "RB p. 122"]],
+    refs: [["Emperor class battleship", "FL p. 53"], ["Repulsive grand cruiser", "FL p. 271"], ["Space station", "FL p. 507"], ["Planets, moons", "RB p. 112–113"], ["Asteroid fields", "RB p. 110"], ["Victory points", "RB p. 122"]],
     play: [
       { w: "Legatus Stygies", s: "a", t: "10 hits instead of 12 (crippled at 5 damage). No Shark assault boats. No special orders except Brace for Impact. It starts with its ordnance but may never reload: each launch bay launches once." },
       { w: "The space station", s: "a", t: "Its weapons battery reaches only 30 cm (column shifts as for a 60 cm weapon); lances and launch bays work as normal. It can be crippled and put out of action but never destroyed: no catastrophic damage roll." },

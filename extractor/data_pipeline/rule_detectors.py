@@ -101,7 +101,7 @@ def detect(sent):
                  per=int(m.group(4).replace(",", "")))
         if m.group("full"):
             r["full"] = 1
-        # p.372 Clanz: "one Warlord for every 500 points, or part, that the
+        # p.374 Clanz: "one Warlord for every 500 points, or part, that the
         # fleet is worth - no more, no less" is an exact count, not just an upper limit (J38).
         if re.search(r"no\s+more,?\s+no\s+less", sent, re.I):
             r["exact"] = 1
@@ -175,20 +175,12 @@ def resolve_sections(phrase, sec_titles, own):
 # own description ("+1 modifier on boarding") or a rule without a rule word.
 # Each must hit at least once, or the run fails (item 8).
 KEEP_TEXT = [
-    # p.318: "gives the vessel a re-roll which may be used on itself, another
+    # p.316: "gives the vessel a re-roll which may be used on itself, another
     # capital ship in the same squadron or an escort squadron within 15 cm" -
     # the sentence is also a 0-3 count rule, and without this it disappeared
     # from the commander card (spot check 7 row 76).
     dict(list_has="Eldar \u2014 Iyanden Craftworld", has="gives the vessel a re-roll"),
-    # p.319 Prince Yriel: "He has the following additions as part of his point
-    # cost: ... 2. His vessel is equipped with Vampire raiders." and "The fleet
-    # list chosen becomes the parent fleet when it comes to using reserve ships
-    # from the other fleet." Neither hits the RULEY vocabulary, and they disappeared
-    # from the commander card (spot check 15 row 59).
-    dict(list_has="Eldar \u2014 Iyanden Craftworld", sec="RESERVES AND ALLIES",
-         has="His vessel is equipped with Vampire raiders"),
-    dict(list_has="Eldar \u2014 Iyanden Craftworld", sec="RESERVES AND ALLIES",
-         has="The fleet list chosen becomes the parent fleet"),
+
     dict(list_has="Orks \u2014 Cyclops Cluster", has="+1 modifier on boarding"),
     dict(list_has="Orks \u2014 Waaagh!", has="+1 modifier on boarding"),
 ]
@@ -276,7 +268,7 @@ RULEY = re.compile(r"\b(may|must|cannot|can not|no more|only|per|each|at least|u
 # should stay strict, so that an uncertain sentence stays text and does not turn
 # into a wrong check. Each entry must hit exactly once, which is
 # checked at the end of the run.
-# Spot check 18 (a book inventory): the large ships of the Chaos lists and the p.288 sentences.
+# Spot check 18 (a book inventory): the large ships of the Chaos lists and the p.290 sentences.
 _CHAOS_CAP = [dict(sec="Planet Killer"), dict(sec="Chaos Space Hulk"), dict(sec="Battleships"),
               dict(sec="Grand Cruisers"), dict(sec="Heavy Cruisers"), dict(sec="Cruisers")]
 _CHAOS_HULK_LISTS = (("Chaos \u2014 Incursion", False), ("Chaos \u2014 Black Crusade", True),
@@ -341,24 +333,10 @@ RULE_PICKS = [
                    what="Kroot Warsphere",
                    pick=[dict(sec="Kroot Vessels")])),
 
-    # --- Chaos: Abaddon and the named battleships (fleet spot check 10.9.) --
-    # p.234: "You may include Abaddon the Despoiler as the Warmaster in any
-    # Chaos Fleet worth more than 1,000 points." Abaddon IS the Warmaster: he
-    # fills the required Warmaster (match_src below) and is not beside a
-    # Warmaster. The sentence stays text, because it is a rule of Abaddon's card.
-    dict(list_has="Black Crusade", sec="Abaddon",
-         from_text="Abaddon the Despoiler as the Warmaster in any Chaos Fleet",
-         keep_text=True,
-         src="You may include Abaddon the Despoiler as the Warmaster in any "
-             "Chaos Fleet worth more than 1,000 points.",
-         rules=[dict(kind="allowed_at", points=1000, over=True, label="Abaddon",
-                     pick=[dict(sec="Abaddon")]),
-                dict(kind="cap", max=1, label="Warmaster or Abaddon",
-                     pick=[dict(sec="Chaos Warmaster"), dict(sec="Abaddon")])]),
-    dict(list_has="Black Crusade", sec="Chaos Warmaster",
-         match_src="A Chaos Warmaster (and their required capital ship) must be taken",
-         set=dict(pick=[dict(sec="Chaos Warmaster"), dict(sec="Abaddon")])),
-    # p.237, 241, 245, 249: "A fleet 1,000 points or more may include the X
+    # --- Chaos: the named battleships (fleet spot check 10.9.) --------------
+    # Abaddon: v0.40 removed his Black Crusade section; races.py (J162) builds
+    # his section from his own page (p.241).
+    # p.247, 249, 251, 253: "A fleet 1,000 points or more may include the X
     # as one of its battleships, subject to normal restrictions." The sentence stayed
     # text on all four lists (the Planet Killer's equivalent was already
     # a rule).
@@ -397,7 +375,7 @@ RULE_PICKS = [
     dict(list_has="Tau — Commerce Protection", sec="SQUADRONS",
          match_src="Defenders are fielded in squadrons of 2",
          set=dict(pick=[dict(sec="ESCORTS", re="^defender")])),
-    # p.174 "A single squadron of 2-6 Rogue Trader escorts and auxiliary
+    # p.184 "A single squadron of 2-6 Rogue Trader escorts and auxiliary
     # vessels may accompany each Rogue Trader capital ship in a fleet, in any
     # mix desired. Separately, ... cargo ships ... these squadrons can only
     # contain cargo ships". The size is the parser's squadron rule; the number per
@@ -416,9 +394,9 @@ RULE_PICKS = [
                              dict(sec="NOTES FROM NATE MONTES", re="^siluria")])]),
 
     # --- Eldar Hero and Prince Yriel (fleet spot check S5 10.9.) -----------
-    # p.316/317: "Your fleet may be led by an Eldar Hero, in place of its
+    # p.314/315: "Your fleet may be led by an Eldar Hero, in place of its
     # normal fleet commander." The Hero fills the required Pirate Prince and is not
-    # beside him (the same model as Abaddon p.234).
+    # beside him (the same model as Abaddon p.244).
     # Each Corsair list as its own row: every fix hits exactly once.
     *[dict(list_has=nm, sec="Eldar Hero",
            from_text="Your fleet may be led by an Eldar Hero, in place of its normal fleet commander",
@@ -431,21 +409,11 @@ RULE_PICKS = [
            match_src="If the fleet is worth over 750 points a Pirate Prince must be included",
            set=dict(pick=[dict(sec="Pirate Prince"), dict(sec="Eldar Hero")]))
       for nm in ("Eldar Corsairs — Gothic Sector", "Eldar Corsairs — Later Gothic War")],
-    # p.318 the same Hero sentence in Iyanden; p.319 "Yriel may be taken instead
-    # of the Hero Fleet Commander as listed in the Corsair and Craftworld
-    # Eldar fleet lists." Yriel replaces the Hero, the Hero the Autarch: one of the three.
-    dict(list_has="Iyanden", sec="RESERVES AND ALLIES",
-         from_text="Yriel may be taken instead of the Hero Fleet Commander",
-         keep_text=True,
-         src="Yriel may be taken instead of the Hero Fleet Commander as listed in the "
-             "Corsair and Craftworld Eldar fleet lists.",
-         rule=dict(kind="cap", max=1, label="Fleet commander (Autarch, Eldar Hero or Prince Yriel)",
-                   pick=[dict(sec="Autarch"), dict(sec="Eldar Hero"),
-                         dict(sec="RESERVES AND ALLIES", re="^prince yriel")])),
+    # p.316 the same Hero sentence in Iyanden: the Hero fills the required
+    # Autarch. Prince Yriel (p.313) is added to both in profile_types.py (J161).
     dict(list_has="Iyanden", sec="Autarch",
          match_src="If the fleet is worth over 750 points, an Autarch must be included",
-         set=dict(pick=[dict(sec="Autarch"), dict(sec="Eldar Hero"),
-                        dict(sec="RESERVES AND ALLIES", re="^prince yriel")])),
+         set=dict(pick=[dict(sec="Autarch"), dict(sec="Eldar Hero")])),
 
     # --- Tau -------------------------------------------------------------
     # Four rules that name a SHIP CLASS where the engine
@@ -486,7 +454,7 @@ RULE_PICKS = [
                    what="Messenger class starship",
                    label="Messenger class starships",
                    pick=[dict(sec="ESCORTS", re="messenger")])),
-    # p.367 (spot check 19, J47): "Each Ork hulk must be assigned an Ork Warlord
+    # p.369 (spot check 19, J47): "Each Ork hulk must be assigned an Ork Warlord
     # to command it." Each hulk needs its own Warlord: at least as many Warlords
     # as hulks. Tying a ship to a commander is not modelled
     # (J8), but the count does not need it.
@@ -597,13 +565,21 @@ RULE_PICKS = [
          src="An Imperial Bakka Battlefleet with 1,500 points or greater may be led by Lord Admiral Rath, who must always be placed on a battleship, though it not necessarily be the most expensive one present.",
          keep_text=True,
          rule=dict(kind="allowed_at", points=1500, label="Lord Admiral Rath", pick=[dict(sec="Admiral", re="rath")])),
+    # v0.40 p.154: the Battle barge row is followed by its condition. The
+    # Ordo Malleus Inquisitor Lord is now a row of the 0-1 Inquisitor Lord
+    # section (an alternative to the Ld 9 Lord, not a +100 pts add-on).
     dict(list_has="Grey Knights", sec="CAPITAL SHIPS",
-         from_text="single Grey Knights Battle barge if the remainder of the fleet is at least worth 1000 points",
-         src="You may include a single Grey Knights Battle barge if the remainder of the fleet is at least worth 1000 points. Furthermore an Ordo Malleus Inquisitor Lord must lead in the fleet.",
+         from_text="Can only be included, if the rest of the fleet is at least worth 1000 points",
+         src="Can only be included, if the rest of the fleet is at least worth 1000 points and an Ordo Malleus Inquisitor Lord leads the fleet.",
          keep_text=True,
-         rule=dict(kind="allowed_at", points=1000, basis="remainder", label="Grey Knights Battlebarge",
+         rule=dict(kind="allowed_at", points=1000, basis="remainder", label="Grey Knights Battle barge",
                    pick=[dict(sec="CAPITAL SHIPS", re="battlebarge|battle barge")],
-                   cond_pick=[dict(sec="FLEET COMMANDER", re="ordo malleus")], cond_min=1)),
+                   cond_pick=[dict(sec="Inquisitor Lord", re="ordo malleus")], cond_min=1)),
+    # v0.40 p.154: the commander is required in FLEET COMMANDER, but the
+    # rows are in the next section, 0-1 Inquisitor Lord.
+    dict(list_has="Grey Knights", sec="FLEET COMMANDER",
+         match_src="you must include a Fleet Commander to lead the fleet",
+         set=dict(label="Inquisitor Lord", pick=[dict(sec="Inquisitor Lord")])),
     # --- a count tied to a points limit for one row (per_points + pick) ---
     dict(list_has="Space Marines \u2014 Codex", sec="Battle Barges",
          from_text="one Space Marine battle barge for every 1,000 points or part thereof",
@@ -628,8 +604,8 @@ RULE_PICKS = [
                    pick=[dict(sec="CAPITAL SHIPS", re="grey knights strike cruiser")],
                    cond_pick=[dict(sec="Inquisitor Lord")], cond_min=1)),
     dict(list_has="Grey Knights", sec="CAPITAL SHIPS",
-         from_text="One Grey Knights Strike Cruiser may be taken per 500 points",
-         src="One Grey Knights Strike Cruiser may be taken per 500 points (e.g. one from 0-500 points, two from 501-1000 points, etc.).",
+         from_text="For every 500 points of the fleet, or part thereof, one Grey Knights Strike Cruiser may be included",
+         src="For every 500 points of the fleet, or part thereof, one Grey Knights Strike Cruiser may be included in the fleet.",
          rule=dict(kind="per_points", each=1, per=500, what="Grey Knights Strike Cruiser", label="Grey Knights Strike Cruisers",
                    pick=[dict(sec="CAPITAL SHIPS", re="grey knights strike cruiser")])),
     dict(list_has="Pirates and Wolf Packs", sec="Pirate Captains",
@@ -681,12 +657,15 @@ RULE_PICKS = [
          src="However, Dark Eldar fleets must contain at least three escorts for every capital ship taken.",
          rule=dict(kind="min_ratio", min=3, label="Escorts per capital ship",
                    allow_pick=[dict(sec="ESCORTS")], per_pick=[dict(sec="Cruisers")])),
+    # v0.40 p.431: the six escort drones (next rule) plus "between 0 and 12
+    # additional escort class ships (of any kind) for each hive ship" - at
+    # most 18 per hive ship, as p.430 says ("purchase 6-18 escort ships").
+    # v0.36 said "between 6 and 12 escort class ships".
     dict(list_has="Tyranids \u2014 Hive Fleet", sec="ESCORTS",
-         from_text="between 6 and 12 escort class ships for each hive ship",
-         src="You may include between 6 and 12 escort class ships for each hive ship.",
-         rules=[dict(kind="min_ratio", min=6, label="Escorts per hive ship (min)",
-                     allow_pick=[dict(sec="ESCORTS")], per_pick=[dict(sec="HIVE SHIPS")]),
-                dict(kind="ratio", allow=12, allow_type="escort class ships", per=1, per_type="hive ship", label="Escorts per hive ship (max)",
+         from_text="between 0 and 12 additional escort class ships",
+         src="You may include between 0 and 12 additional escort class ships (of any kind) for each hive ship.",
+         rules=[dict(kind="ratio", allow=18, allow_type="escort class ships", per=1, per_type="hive ship",
+                     label="Escorts per hive ship (six escort drones + up to 12 more)",
                      allow_pick=[dict(sec="ESCORTS")], per_pick=[dict(sec="HIVE SHIPS")])]),
     dict(list_has="Tyranids \u2014 Hive Fleet", sec="ESCORTS",
          from_text="at least six escort drones for every hive ship",
@@ -713,7 +692,7 @@ RULE_PICKS = [
          rule=dict(kind="conditional_cap", label="Space Hulk",
                    pick=[dict(sec="Space Hulks")], cond_pick=[dict(sec="WARLORD")], cond_min=3, max_unmet=0, max_met=1)),
     # --- Spot check 18 (a book inventory) blocks CH and IN -------------------
-    # J24 p.241/245/249: the Daemonship share on the god lists. The base is all large
+    # J24 p.249/251/253: the Daemonship share on the god lists. The base is all large
     # ships; those listed in brackets (the named barge, for Khorne the battleships)
     # cannot take the upgrade, and that is already in the rows' conditions. Tying to
     # the flagship is not modelled (J8).
@@ -733,8 +712,8 @@ RULE_PICKS = [
            "Up to half of the capital ships (not the Wage of Sin or the flagship) in a Pleasurefleet may be "
            "upgraded to Daemonships at the additional points cost shown, based upon the type of vessel chosen.",
            2, "Daemonships (up to half of the capital ships)"))],
-    # J25 p.235: "The Planet Killer also counts as a battleship when working
-    # out how many heavy cruisers and cruisers the fleet requires." J26 p.288:
+    # J25 p.245: "The Planet Killer also counts as a battleship when working
+    # out how many heavy cruisers and cruisers the fleet requires." J26 p.290:
     # Space Hulk "counts as a battleship for purposes of taking another so in
     # order to take a second battleship, the fleet must already have six
     # cruisers" - but "there is no minimum point requirement or ship
@@ -745,7 +724,7 @@ RULE_PICKS = [
                     + [dict(sec="Chaos Space Hulk")],
                     at_least=dict(cond_pick=[dict(sec="Chaos Space Hulk")], count=1)))
       for nm, pk in _CHAOS_HULK_LISTS],
-    # J26 p.288: exclusions and at most two other battleships. The list
+    # J26 p.290: exclusions and at most two other battleships. The list
     # says only "See it's profile for restrictions"; the rule is in the profile.
     *[dict(list_has=nm, sec="Chaos Space Hulk", match_src="You may include up to one Space Hulk in the fleet",
            add=[dict(kind="conditional_cap", label="Chaos Space Hulk: not with the Planet Killer or a mandatory flagship",
@@ -753,7 +732,7 @@ RULE_PICKS = [
                      cond_pick=([dict(sec="Planet Killer")] if pk else [])
                      + [dict(sec="Battleships", re="^(terminus est|wage of sin|scion of prospero)")],
                      cond_min=1, max_unmet=None, max_met=0, src=_HULK_WITH)]
-               # J52 p.245: "Bezerker Fleets led by a Space Hulk may have more than two
+               # J52 p.251: "Bezerker Fleets led by a Space Hulk may have more than two
                # battleships, but other restrictions remain unchanged."
                + ([] if "Khorne" in nm else [
                    dict(kind="conditional_cap", label="Battleships with a Chaos Space Hulk",
@@ -785,7 +764,7 @@ RULE_PICKS = [
     dict(list_has="Bakka", sec="Battlecruisers",
          match_src="You may include up to one battlecruiser in your fleet for every two cruisers",
          set=dict(allow_pick=[dict(sec="Battlecruisers"), dict(sec="RESERVES", re="jovian")])),
-    # J28 p.151: "Up to half of the Grey Knights strike cruisers in a fleet
+    # J28 p.161: "Up to half of the Grey Knights strike cruisers in a fleet
     # may replace their launch bays with one of the refits listed below, in
     # any mix desired." The sentence is in the profile; the rule goes beside the list's GK row.
     *[dict(list_has=nm, sec="CAPITAL SHIPS", match_src=ms,
@@ -795,9 +774,9 @@ RULE_PICKS = [
                      opt_re="replace (its )?launch bays",
                      src="Up to half of the Grey Knights strike cruisers in a fleet may replace their launch "
                          "bays with one of the refits listed below, in any mix desired.")])
-      for nm, ms in (("Grey Knights", "One Grey Knights Strike Cruiser may be taken per 500 points"),
+      for nm, ms in (("Grey Knights", "one Grey Knights Strike Cruiser may be included in the fleet"),
                      ("The Emperor's Inquisition", "up to one Grey Knights Strike Cruiser may be taken"))],
-    # J32 p.373: "However, no more than one of each of the named Ork
+    # J32 p.375: "However, no more than one of each of the named Ork
     # battleships may be in the fleet, no more than one 'Uge ship may be taken
     # in the fleet for every two kroozers, and a Space Hulk may only be taken
     # by a fleet of no less than 1500 points." The limit of the named ones (0-1) is already in
@@ -812,10 +791,10 @@ RULE_PICKS = [
                      allow_pick=[dict(sec="\u2018Uge ship skwadron")], per_pick=[dict(sec="Big ship skwadron")]),
                 dict(kind="allowed_at", points=1500, over=False, label="Space Hulk (1,500 pts or more)",
                      pick=[dict(sec="Space Hulks")])]),
-    # p.174: "If a fleet has more than one Rogue Trader cruiser or also
+    # p.184: "If a fleet has more than one Rogue Trader cruiser or also
     # includes more than one squadron of transports, a Veteran Rogue Trader
     # must be assigned to a Rogue Trader cruiser." The Siluria counts "as a
-    # cruiser" (Nate Montes, p.174); the transport squadrons are Heavy Transports and
+    # cruiser" (Nate Montes, p.184); the transport squadrons are Heavy Transports and
     # cargo ships ("any number of cargo ships of any type (whether or not the
     # scenario requires transports)"). Spot check 18 (J23).
     dict(list_has="Rogue Traders", list_is="Rogue Traders", sec="Veteran Rogue Traders",
@@ -827,7 +806,7 @@ RULE_PICKS = [
                 dict(kind="requires", label="Veteran Rogue Trader required (two or more transport squadrons)",
                      if_pick=[dict(sec="CAPITAL SHIPS", re="transport"), dict(sec="ESCORTS", re="cargo")],
                      if_units=True, if_min=2, then_pick=[dict(sec="Veteran Rogue Traders")], min=1)]),
-    # J213 p.174: "A Veteran Rogue Trader may lead each Rogue Trader cruiser in
+    # J213 p.184: "A Veteran Rogue Trader may lead each Rogue Trader cruiser in
     # a fleet." The section heading cap (2) let two Veterans through for one
     # cruiser (docs/check-yourself S0345). Cruisers as above:
     # the cruisers of the CAPITAL SHIPS section and the Siluria "as a cruiser".
@@ -957,8 +936,8 @@ LORE_SECTIONS = [
     # belong to Armageddon's page range, and rules_pages no longer picks
     # the previous list's pages. The same narrative is now removed from Armageddon's
     # own sections below.
-    dict(list_has="Emperor's Inquisition", sec="FLEET RULES (pg. 132–137)"),
-    dict(list_has="Rogue Traders", sec="FLEET RULES (pg. 168–173)"),
+    dict(list_has="Emperor's Inquisition", sec="FLEET RULES (pg. 142–147)"),
+    dict(list_has="Rogue Traders", sec="FLEET RULES (pg. 178–183)"),
     dict(list_has="Armageddon Sector", sec="THE FIRST TYRANNIC WAR"),
     dict(list_has="Armageddon Sector", sec="LORD ADMIRAL ZACCARIUS RATH"),
     dict(list_has="Armageddon Sector", sec="THE FORGE WORLD OF BAKKA"),
@@ -968,9 +947,9 @@ LORE_SECTIONS = [
 
 # 1b) Sections that do not belong to this list at all.
 #
-#     The book's pages 368-371 are the ORK CLANZ rules. They fall in
+#     The book's pages 370-373 are the ORK CLANZ rules. They fall in
 #     the Waaagh! list's page range (366-371) only because the Clanz list
-#     starts on page 372. Page 368 says so directly:
+#     starts on page 374. Page 370 says so directly:
 #     "The Ork Clanz rules can be used in addition to the normal Ork
 #     rules, but only with its dedicated Clanz fleet list."
 #     Without this removal the Waaagh! list offered 14 Gubbins upgrades and
@@ -982,7 +961,7 @@ LORE_SECTIONS = [
 # 1c) Lists where a section heading's count limit is the size of a SKWADRON, not
 #     the fleet's total. Da Ork Clanz describes every section as
 #     a skwadron's pattern ("1-2 Kroozers", "3-10 Escorts", "1-4 Roks"),
-#     and page 373 says: "There is no restriction for what kinds or how
+#     and page 375 says: "There is no restriction for what kinds or how
 #     many of what type of skwadrons are in the fleet." So a fleet may
 #     have several Rok skwadrons, but a section counter made from the heading number
 #     gave an error from the fifth Rok on.
@@ -1005,7 +984,7 @@ DROP_SECS = [
 ]
 
 # 2) Price table rows. On the book's list page a row has the form
-#    "Despoiler class battleship (pg 266).............400 pts", and
+#    "Despoiler class battleship (pg 268).............400 pts", and
 #    in extraction these stick to the front of the next rule sentence. The rows
 #    are already their own choosable rows, so here they are just
 #    noise. The same content in two forms is exactly the confusion
@@ -1021,7 +1000,7 @@ _COST = r"(?:\+?\d[\d,]*\s*(?:pts|points)(?:\s*each)?|Free)"
 # "Veteran Captain (Ld +1).........+50 pts", "Shokk-Attack Lance.....Free"
 PRICE_ROW = re.compile(r"^\s*" + _LEAD + r"(?:" + _NAME + r"\.{2,}\s*)?"
                        + _COST + r"\b[\s.]*", re.I)
-# "Grey Knights Strike Cruiser (pg 151)......vvv" - the price may be missing or
+# "Grey Knights Strike Cruiser (pg 161)......vvv" - the price may be missing or
 # corrupted, but the page reference still identifies the row.
 PRICE_HEAD = re.compile(r"^\s*" + _LEAD + _NAME +
                         r"\(pg\.?\s*\d+\)\.{2,}\s*(?:v+|" + _COST +
@@ -1074,10 +1053,10 @@ def apply_rule_picks(name, title, sec_titles, rules, text):
             if "at_least" in patch:
                 patch["at_least"] = dict(patch["at_least"], cond_pick=pick_secs(patch["at_least"]["cond_pick"], sec_titles, where))
             hit[0].update(patch)
-            # add: a second rule from the same sentence. p.174 RT escorts: the size
+            # add: a second rule from the same sentence. p.184 RT escorts: the size
             # 2-6 is the parser's squadron rule, the count per ship a ratio.
             for rule in fx.get("add", []):
-                # Its own src, when the rule is on the profile page and not in the list's sentence (p.288).
+                # Its own src, when the rule is on the profile page and not in the list's sentence (p.290).
                 r = dict(rule, src=rule.get("src") or hit[0]["src"], ok=True)
                 for k in list(r):
                     if k == "pick" or k.endswith("_pick"):
@@ -1137,12 +1116,7 @@ def apply_rule_picks(name, title, sec_titles, rules, text):
 # hit exactly once and its source sentence must be found in the section's
 # rule text - otherwise no price is invented but the run fails.
 ENTRY_ADDS = [
-    dict(list_has="Grey Knights", sec="CAPITAL SHIPS",
-         src=r"One Grey Knights Strike Cruiser may be taken per 500 points",
-         entry=dict(l="Grey Knights Strike Cruiser", r=151, p=165, a=0,
-                    mx=None, k="unit",
-                    nt="The book's price on pg. 145 is unreadable ('vvv'); "
-                       "165 pts is what the same ship costs on pg. 138.")),
+
 ]
 
 
@@ -1177,19 +1151,19 @@ ENTRY_LIMITS = [
     dict(list_has="Demiurg \u2014 War Host", sec="Re-rolls",
          entry="Two extra re-rolls", mx=1, fxg="rerolls",
          src=r"purchased by the fleet as a whole"),
-    # The Necrons likewise: "purchased by the fleet as a whole" (p.404).
+    # The Necrons likewise: "purchased by the fleet as a whole" (p.406).
     dict(list_has="Necrons \u2014 Harvest Fleet", sec="Re-rolls",
          entry="One extra re-roll", mx=1, fxg="rerolls",
          src=r"purchased by the fleet as a whole"),
     dict(list_has="Necrons \u2014 Harvest Fleet", sec="Re-rolls",
          entry="Two extra re-rolls", mx=1, fxg="rerolls",
          src=r"purchased by the fleet as a whole"),
-    # J77 p.145: "The vessel embarking the Inquisitor Lord or one Grey Knights
-    # vessel may take Grey Knight Terminators." - one ship in the fleet.
-    dict(list_has="Grey Knights", sec="ORDNANCE AND UPGRADES",
+    # J77 p.155: "The vessel embarking the Inquisitor Lord or one Grey Knights
+    # vessel may board a Grey Knights terminator boarding party." - one ship in the fleet.
+    dict(list_has="Grey Knights", sec="ORDNANCE",
          entry="Grey Knights Terminators", mx=1,
-         src=r"The vessel embarking the Inquisitor Lord or one Grey Knights vessel may take Grey Knight Terminators"),
-    # Rogue Traders Exploration p.177: "no more than one Stronghold may be taken"
+         src=r"The vessel embarking the Inquisitor Lord or one Grey Knights vessel may board a Grey Knights terminator boarding party"),
+    # Rogue Traders Exploration p.187: "no more than one Stronghold may be taken"
     dict(list_has="Rogue Traders \u2014 Exploration", sec="The Demiurg",
          entry="Stronghold Commerce Vessel", mx=1,
          src=r"no more than one Stronghold may be taken"),

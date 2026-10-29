@@ -151,7 +151,7 @@ function showResult(o){
   R = {score:o.score||null, holo:o.holo||null, rolls:o.rolls||{att:[],def:[]}, rrDice:{},
        stage:"main", crits:[], alloc:{att:[],def:[]}, cata:{}, rerolled:{}, seq:0};
   /* A re-roll is decided on the boarding result alone, so nothing else is
-     rolled until the offer has been taken or passed (FL p.118, p.147, p.310). */
+     rolled until the offer has been taken or passed (FL p.118, p.157, p.312). */
   if(R.score && prep && (prep.att.reroll || prep.def.reroll)) R.stage = "reroll";
   else startMain();
   document.getElementById("resultSheet").hidden = false;

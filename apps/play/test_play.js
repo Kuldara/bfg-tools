@@ -495,7 +495,7 @@ function unitIn(listRe, labelRe, hulls){
   check("critTarget: a second 10 is 11, whose extra damage is a D3 (p. 67)", PLAY.critTarget(s4, "10", lunar) === "11" && PLAY.CRITS["11"].extra === "D3");
 }
 {
-  /* Strengths that are dice are not numbers (Fleets p. 360 Ork gunz). */
+  /* Strengths that are dice are not numbers (Fleets p. 362 Ork gunz). */
   check("num: dice expressions are not numbers", PLAY.num("D6+2") === null && PLAY.num("D6") === null && PLAY.num("D3+1 (x0.5)") === null && PLAY.num("10/20/25 cm") === null);
   check("num: bare numbers and squadron counts are", PLAY.num("12") === 12 && PLAY.num("2 squadrons") === 2 && PLAY.num(" 4 ") === 4);
   const kk = unitIn(/^Orks/, /Kill ?Kroozer/i), on = unitIn(/^Orks/, /Onslaught/i, 3);
@@ -504,7 +504,7 @@ function unitIn(listRe, labelRe, hulls){
     const a = PLAY.freshUnit(kk), b = PLAY.freshUnit(kk);
     const rows = PLAY.squadronFire([{ R: kk, st: a }, { R: kk, st: b }]);
     const gunz = rows.find(r => /D6/.test((r.dice || []).join("")));
-    check("two Kill Kroozers: D6+2 gunz are listed as dice, not summed to 124 (p. 99, Fleets p. 360)",
+    check("two Kill Kroozers: D6+2 gunz are listed as dice, not summed to 124 (p. 99, Fleets p. 362)",
           !!gunz && gunz.total === 0 && gunz.dice.length === 2, JSON.stringify(rows.map(r => [r.kind, r.total, r.dice])));
   }
   if(on){
@@ -514,7 +514,7 @@ function unitIn(listRe, labelRe, hulls){
   }
 }
 {
-  /* Necron reactive hulls (Fleets p. 402): the 4+ save "is treated in the
+  /* Necron reactive hulls (Fleets p. 404): the 4+ save "is treated in the
      same manner as a brace save" - not a shield - and Necron ships are
      "immune to Damage, Leadership and Movement modifiers from ... Blast
      Markers". */
@@ -527,7 +527,7 @@ function unitIn(listRe, labelRe, hulls){
     PLAY.addHits(cairn, st, cairn.damage.crippledAt);
     check("... crippled: still text", PLAY.shields(cairn, st).now === null);
     const l = PLAY.leadership(cairn, st, PLAY.freshFleet());
-    check("Necron Ld ignores Under Fire from Blast Markers (Fleets p. 402)", l.now === 7 && !l.mods.some(m => /fire/.test(m.t)), JSON.stringify(l));
+    check("Necron Ld ignores Under Fire from Blast Markers (Fleets p. 404)", l.now === 7 && !l.mods.some(m => /fire/.test(m.t)), JSON.stringify(l));
     check("reactiveHull recognises it, not the Lunar", PLAY.reactiveHull(cairn) && !PLAY.reactiveHull(lunar));
   }
 }
@@ -551,7 +551,7 @@ function unitIn(listRe, labelRe, hulls){
   check("flagship bridge smashed: re-rolls 2 -> 0 and lost for the battle (p. 67)", fl.rerolls === 0 && fl.rerollsLost === true);
 }
 {
-  /* Fleets p. 231 Abaddon: "Re-rolls: 1 per turn." "Abaddon's fleet is
+  /* Fleets p. 241 Abaddon: "Re-rolls: 1 per turn." "Abaddon's fleet is
      allowed to re-roll a single Command check or Leadership test each
      turn." The pool comes back every turn - mine and the enemy's (a Brace
      for Impact check is rolled in the enemy's turn) - RULINGS.md T25. Every
@@ -561,7 +561,7 @@ function unitIn(listRe, labelRe, hulls){
   const ab = set(PLAY.freshFleet(), 1, true);
   ab.rerolls = 0;                                   /* spent this turn */
   PLAY.endTurn([], ab);
-  check("Abaddon (p. 231): the re-roll is back in the enemy's turn", ab.rerolls === 1, String(ab.rerolls));
+  check("Abaddon (p. 241): the re-roll is back in the enemy's turn", ab.rerolls === 1, String(ab.rerolls));
   ab.rerolls = 0;
   PLAY.newTurn([], ab);
   check("... and again at the start of my next turn", ab.rerolls === 1, String(ab.rerolls));
@@ -614,7 +614,7 @@ function unitIn(listRe, labelRe, hulls){
   const pm = P.setRerolls(P.freshFleet(), 3, false, ["included", "bought", "bought"]);
   P.adjustRerolls(pm, 1); P.adjustRerolls(pm, -1);
   check("boxes: plus then minus leaves the fleet's boxes as they were", kinds(P.rerollBoxes(pm)) === "included,bought,bought" && pm.rerolls === 3, kinds(P.rerollBoxes(pm)));
-  /* Fleets p. 231: Abaddon's ONE re-roll is per turn. A box added at the
+  /* Fleets p. 241: Abaddon's ONE re-roll is per turn. A box added at the
      table (a sub-plot's extra re-roll, p. 127) is once per battle like any
      other and does not come back with it. */
   const ab2 = P.setRerolls(P.freshFleet(), 1, true, ["included"]);
@@ -667,12 +667,12 @@ function unitIn(listRe, labelRe, hulls){
   const abOld = P.freshFleet(); abOld.rerolls = 0;
   P.adoptRerolls(abOld, ["included"], { perTurn: true });
   P.newTurn([], abOld);
-  check("boxes: an older Abaddon record gets its per-turn pool back (Fleets p. 231)", abOld.rerollsPerTurn === 1 && kinds(P.rerollBoxes(abOld)) === "included" && abOld.rerolls === 1, kinds(P.rerollBoxes(abOld)) + " perTurn " + abOld.rerollsPerTurn);
-  /* Abaddon's box comes back every turn (Fleets p. 231) */
+  check("boxes: an older Abaddon record gets its per-turn pool back (Fleets p. 241)", abOld.rerollsPerTurn === 1 && kinds(P.rerollBoxes(abOld)) === "included" && abOld.rerolls === 1, kinds(P.rerollBoxes(abOld)) + " perTurn " + abOld.rerollsPerTurn);
+  /* Abaddon's box comes back every turn (Fleets p. 241) */
   const ab = P.setRerolls(P.freshFleet(), 1, true, ["included"]);
   if(has("toggleReroll")) P.toggleReroll(ab, 0);
   P.endTurn([], ab);
-  check("boxes: a per-turn box is free again in the next turn (Fleets p. 231)", has("rerollBoxes") && kinds(P.rerollBoxes(ab)) === "included" && ab.rerolls === 1, has("rerollBoxes") ? kinds(P.rerollBoxes(ab)) : "-");
+  check("boxes: a per-turn box is free again in the next turn (Fleets p. 241)", has("rerollBoxes") && kinds(P.rerollBoxes(ab)) === "included" && ab.rerolls === 1, has("rerollBoxes") ? kinds(P.rerollBoxes(ab)) : "-");
 }
 {
   /* p. 123: a destroyed or disengaged ship's value includes "any Admiral,
@@ -699,9 +699,9 @@ function unitIn(listRe, labelRe, hulls){
     const nova = PLAY.armament(dom, st).find(a => a.nova);
     check("crippled: the nova cannon row is silent (p. 65)", !!nova && !!nova.silent, nova && nova.silent);
   }
-  /* Fleets p. 401: Portals "are still cut in half (rounding down) if a ship
+  /* Fleets p. 403: Portals "are still cut in half (rounding down) if a ship
      is crippled or Braced. A Necron capital ship both crippled and Braced
-     may not make Portal attacks." Fleets p. 400: "A star pulse cannot be
+     may not make Portal attacks." Fleets p. 402: "A star pulse cannot be
      generated while the vessel is using any special order or crippled". */
   const cairn = unitIn(/^Necrons/, /Cairn/i);
   if(cairn){
@@ -710,18 +710,18 @@ function unitIn(listRe, labelRe, hulls){
     check("Cairn Portal 3 when whole", p0 && p0.now === "3", p0 && p0.now);
     PLAY.addHits(cairn, st, cairn.damage.crippledAt);
     const p1 = PLAY.armament(cairn, st).find(a => /portal/i.test(a.name));
-    check("crippled: Portal 3 -> 1, rounding down (Fleets p. 401)", p1 && p1.now === "1" && !p1.silent, p1 && p1.now);
+    check("crippled: Portal 3 -> 1, rounding down (Fleets p. 403)", p1 && p1.now === "1" && !p1.silent, p1 && p1.now);
     const sp = PLAY.armament(cairn, st).find(a => /star pulse/i.test(a.name));
-    check("crippled: no star pulse (Fleets p. 400)", sp && !!sp.silent, sp && sp.silent);
+    check("crippled: no star pulse (Fleets p. 402)", sp && !!sp.silent, sp && sp.silent);
     PLAY.setOrder(st, fl, "BFI", true);
     const p2 = PLAY.armament(cairn, st).find(a => /portal/i.test(a.name));
-    check("crippled and braced: no Portal attacks (Fleets p. 401)", p2 && !!p2.silent, p2 && p2.silent);
+    check("crippled and braced: no Portal attacks (Fleets p. 403)", p2 && !!p2.silent, p2 && p2.silent);
     const st2 = PLAY.freshUnit(cairn), f2 = PLAY.freshFleet();
     PLAY.setOrder(st2, f2, "LO", true);
     const sp2 = PLAY.armament(cairn, st2).find(a => /star pulse/i.test(a.name));
-    check("on Lock On: no star pulse either (Fleets p. 400)", sp2 && !!sp2.silent, sp2 && sp2.silent);
+    check("on Lock On: no star pulse either (Fleets p. 402)", sp2 && !!sp2.silent, sp2 && sp2.silent);
     const p3 = PLAY.armament(cairn, st2).find(a => /portal/i.test(a.name));
-    check("on Lock On: Portal unaffected - not restricted by orders (Fleets p. 401)", p3 && p3.now === "3" && !p3.silent, p3 && p3.now);
+    check("on Lock On: Portal unaffected - not restricted by orders (Fleets p. 403)", p3 && p3.now === "3" && !p3.silent, p3 && p3.now);
   }
   /* squadronLd names the ship whose Leadership it took (p. 95) */
   const a = PLAY.freshUnit(lunar), b = PLAY.freshUnit(lunar), fl = PLAY.freshFleet();
@@ -736,7 +736,7 @@ function unitIn(listRe, labelRe, hulls){
      are in base-to-base contact. Any ships in base-to-base contact ... can
      opt to combine their ordnance together into a bigger attack craft wave
      or torpedo salvo." "Note that some ships (such as Ork Ravagers) cannot
-     for any reason combine salvoes in this manner." (Fleets p. 360 for the
+     for any reason combine salvoes in this manner." (Fleets p. 362 for the
      Ork torpedo launchas.) */
   const a = PLAY.freshUnit(lunar), b = PLAY.freshUnit(lunar);
   const rows = PLAY.squadronFire([{ R: lunar, st: a }, { R: lunar, st: b }]);
@@ -750,7 +750,7 @@ function unitIn(listRe, labelRe, hulls){
   if(rav){
     const st = PLAY.freshUnit(rav);
     const t = PLAY.escortFire(rav, st).find(x => x.torp);
-    check("Ork torpedo launchas: a squadron may not combine salvoes (Fleets p. 360, p. 99)", !!t && t.nocombine === true, JSON.stringify(t));
+    check("Ork torpedo launchas: a squadron may not combine salvoes (Fleets p. 362, p. 99)", !!t && t.nocombine === true, JSON.stringify(t));
     const t2 = PLAY.escortFire(swords, PLAY.freshUnit(swords)).find(x => x.torp);
     check("... other escorts' torpedoes can (Sword has none, Cobra would)", t2 == null || t2.nocombine !== true);
   }
@@ -773,7 +773,7 @@ function unitIn(listRe, labelRe, hulls){
     const r1 = PLAY.freshUnit(ts), r2 = PLAY.freshUnit(ts);
     const rr = PLAY.squadronFire([{ R: ts, st: r1 }, { R: ts, st: r2 }]);
     check("Terror ships: launch bays combine as one wave (p. 99)", rr.some(r => r.kind === "launch bays" && r.contact));
-    check("... torpedo launchas never combine, not even as dice (Fleets p. 360)", !rr.some(r => r.kind === "torpedoes"), JSON.stringify(rr.map(r => [r.kind, r.total, r.dice])));
+    check("... torpedo launchas never combine, not even as dice (Fleets p. 362)", !rr.some(r => r.kind === "torpedoes"), JSON.stringify(rr.map(r => [r.kind, r.total, r.dice])));
   }
 }
 
@@ -803,28 +803,28 @@ function unitIn(listRe, labelRe, hulls){
   check("... 9-11 plasma: 4 markers, lance Str 4 (half of 8)", /4 Blast/.test(c.rows[2].text) && /Strength 4/.test(c.rows[2].text), c.rows[2].text);
   check("... 12 warp: 8 markers, lance Str 8", /8 Blast/.test(c.rows[3].text) && /Strength 8/.test(c.rows[3].text), c.rows[3].text);
   check("... the hulk rows say drifting and blazing", c.rows[0].kind === "drifting" && c.rows[1].kind === "blazing" && c.rows[2].kind === "gone");
-  /* Fleets p. 423: the Tyranid table - 2-7 drifting carcass, 8-9 death
+  /* Fleets p. 425: the Tyranid table - 2-7 drifting carcass, 8-9 death
      throes (roll again after each move), 10-11 biological eruption (half
      starting hits in markers, pyro-acid FP = starting damage), 12 bio-plasma
      detonation (markers = starting hits, bio-plasma Str = half). */
   const hive = unitIn(/^Tyranids/, /^Hive ship/i);
   if(hive){
     const t = PLAY.catastrophic(hive);
-    check("Hive ship: the Tyranid table, Fleets p. 423", t.page === 423 && t.rows.length === 4 && /2-7/.test(t.rows[0].roll) && /8-9/.test(t.rows[1].roll), JSON.stringify(t.rows.map(r => r.roll)));
+    check("Hive ship: the Tyranid table, Fleets p. 425", t.page === 423 && t.rows.length === 4 && /2-7/.test(t.rows[0].roll) && /8-9/.test(t.rows[1].roll), JSON.stringify(t.rows.map(r => r.roll)));
     check("... 10-11: 5 markers, pyro-acid FP 10 (10 hits)", /5 Blast/.test(t.rows[2].text) && /firepower 10/i.test(t.rows[2].text), t.rows[2].text);
     check("... 12: 10 markers, bio-plasma Strength 5", /10 Blast/.test(t.rows[3].text) && /Strength 5/.test(t.rows[3].text), t.rows[3].text);
     check("... death throes is the blazing kind (roll again)", t.rows[1].kind === "blazing");
   }
-  /* Fleets p. 393: a Rok "breaks up. Do not roll for Catastrophic Damage,
+  /* Fleets p. 395: a Rok "breaks up. Do not roll for Catastrophic Damage,
      instead the Rok is replaced by 4 Blast markers." */
   const rok = unitIn(/^Orks/, /^Rok$/i);
   if(rok){
     const r = PLAY.catastrophic(rok);
-    check("Rok: no roll, four blast markers (Fleets p. 393)", r.dice === null && r.rows.length === 1 && r.rows[0].kind === "gone" && /four Blast|4 Blast/i.test(r.rows[0].text), JSON.stringify(r));
+    check("Rok: no roll, four blast markers (Fleets p. 395)", r.dice === null && r.rows.length === 1 && r.rows[0].kind === "gone" && /four Blast|4 Blast/i.test(r.rows[0].text), JSON.stringify(r));
   }
   /* The other vessels that break up with no roll - each carries the book's
      own line in its damage block: Warsphere Fleets p. 495, Stryxis caravan
-     p. 197 - and the Nicassar Caravan, Fleets p. 492: "At 0 Hp it and its
+     p. 207 - and the Nicassar Caravan, Fleets p. 492: "At 0 Hp it and its
      Dhows are destroyed; replace it with four Blast Markers." Its page is
      its own, not a rock vessel's. */
   [[/Rogue Traders$/, /^Kroot Warsphere/i, 495], [/Rogue Traders$/, /^Stryxis Caravan/i, 197], [/^Tau/, /^Nicassar Caravan/i, 492]].forEach(function(w){
@@ -885,9 +885,9 @@ function unitIn(listRe, labelRe, hulls){
         r.total === 12 && r.silent && r.silent.length === 1 && r.silent[0].ship === 2 && r.silent[0].now === 6 && /critical 4/.test(r.silent[0].why), JSON.stringify(r.silent));
 }
 
-/* --- Ork gunz are weapon batteries (Fleets p. 360) ----------------------- */
+/* --- Ork gunz are weapon batteries (Fleets p. 362) ----------------------- */
 {
-  /* Fleets p. 360: "Ork Gunz: weapon batteries" - a dice strength (D6) is
+  /* Fleets p. 362: "Ork Gunz: weapon batteries" - a dice strength (D6) is
      rolled per ship and listed, "Heavy Gunz: weapon batteries ... every hit
      causes 2 Hits" - their numbers sum as a row of their own, since their
      hits are worth double and cannot share a gunnery roll with the rest. */
@@ -896,9 +896,9 @@ function unitIn(listRe, labelRe, hulls){
     const a = PLAY.freshUnit(kk), b = PLAY.freshUnit(kk);
     const rows = PLAY.squadronFire([{ R: kk, st: a }, { R: kk, st: b }]);
     const gunz = rows.find(r => r.kind === "battery" && /^left$/i.test(r.arc));
-    check("two Kill Kroozers: the port gunz are a battery row with the dice listed (Fleets p. 360)", gunz && gunz.total === 0 && JSON.stringify(gunz.dice) === '["D6","D6"]', JSON.stringify(rows.map(r => [r.kind, r.arc, r.total, r.dice])));
+    check("two Kill Kroozers: the port gunz are a battery row with the dice listed (Fleets p. 362)", gunz && gunz.total === 0 && JSON.stringify(gunz.dice) === '["D6","D6"]', JSON.stringify(rows.map(r => [r.kind, r.arc, r.total, r.dice])));
     const heavy = rows.find(r => r.kind === "heavy gunz" && /^left$/i.test(r.arc));
-    check("... the port heavy gunz sum as their own row: 4 + 4 = 8 (Fleets p. 360)", heavy && heavy.total === 8, JSON.stringify(heavy));
+    check("... the port heavy gunz sum as their own row: 4 + 4 = 8 (Fleets p. 362)", heavy && heavy.total === 8, JSON.stringify(heavy));
     check("... no row is left under the bare name 'gunz'", !rows.some(r => r.kind === "gunz"), JSON.stringify(rows.map(r => r.kind)));
   }
 }
@@ -935,12 +935,12 @@ function unitIn(listRe, labelRe, hulls){
   check("... holding the field: half its points, own hulks included (p. 123)", /half its points/.test(hk.list[5]) && /own hulks/.test(hk.list[5]), hk.list[5]);
   check("... an exploding ship: holofields do not save, shields do; markers fan out from where it was (p. 71)", /holofields do not save/.test(c.explode) && /shields do/.test(c.explode) && /fan/.test(c.explode), c.explode);
   check("... the boarded-to-0 exception: a critical hit in the boarding rolls as normal (p. 90)", /p\. 90/.test(c.note) && /critical/.test(c.note), c.note);
-  /* Fleets p. 402: Necron ships may fire on or board their own hulks */
+  /* Fleets p. 404: Necron ships may fire on or board their own hulks */
   const cairn = unitIn(/^Necron/, /Cairn/i);
   if(cairn){
     const n = PLAY.catastrophic(cairn).hulk;
-    check("Necrons MAY fire on or board their own hulk (Fleets p. 402)", /MAY fire on or board/.test(n.list[4]) && /402/.test(n.list[4]), n.list[4]);
-    check("... and a Necron drifting hulk is worth 300 %, other destruction 200 % (Fleets p. 402)", /300 %/.test(n.list[5]) && /200 %/.test(n.list[5]), n.list[5]);
+    check("Necrons MAY fire on or board their own hulk (Fleets p. 404)", /MAY fire on or board/.test(n.list[4]) && /402/.test(n.list[4]), n.list[4]);
+    check("... and a Necron drifting hulk is worth 300 %, other destruction 200 % (Fleets p. 404)", /300 %/.test(n.list[5]) && /200 %/.test(n.list[5]), n.list[5]);
   }
   /* Fleets p. 118: Mechanicus ships may pass a Leadership check to fire
      on their own DRIFTING hulks - not the Navy or allied ships with them */
@@ -949,7 +949,7 @@ function unitIn(listRe, labelRe, hulls){
     const m = PLAY.catastrophic(ark).hulk;
     check("Mechanicus: a Leadership check to fire on their own DRIFTING hulk (Fleets p. 118)", /Leadership check/.test(m.list[4]) && /DRIFTING/.test(m.list[4]) && /118/.test(m.list[4]), m.list[4]);
   }
-  /* Fleets p. 288 / p. 391: a space hulk's explosions are its own - torn
+  /* Fleets p. 290 / p. 393: a space hulk's explosions are its own - torn
      apart into an asteroid field, or hurled back into the Warp */
   const csh = unitIn(/^Chaos/, /Space Hulk/i), osh = unitIn(/^Orks/, /^Ork hulk/i);
   if(csh){
@@ -959,7 +959,7 @@ function unitIn(listRe, labelRe, hulls){
   }
   if(osh){
     const s = PLAY.catastrophic(osh);
-    check("Ork hulk: the same on Fleets p. 391", s.page === 391 && /asteroid field/.test(s.rows[2].text) && /Warp rift/.test(s.rows[3].text), JSON.stringify([s.page, s.rows.map(r => r.name)]));
+    check("Ork hulk: the same on Fleets p. 393", s.page === 391 && /asteroid field/.test(s.rows[2].text) && /Warp rift/.test(s.rows[3].text), JSON.stringify([s.page, s.rows.map(r => r.name)]));
   }
 }
 
@@ -996,21 +996,21 @@ function unitIn(listRe, labelRe, hulls){
   /* a ship still drifts (p. 71) */
   const l = PLAY.catastrophic(lunar);
   check("Lunar: a ship's hulk drifts 4D6 cm (p. 71)", /4D6/.test(l.rows[0].text) && /4D6/.test(l.hulk.list[0]));
-  /* Fleets p. 423 row 12: "Shields and holofields are not effective
+  /* Fleets p. 425 row 12: "Shields and holofields are not effective
      against the detonation" - the Tyranid table must not carry the
      rulebook's "shields do" footer */
   const hive = unitIn(/^Tyranids/, /^Hive ship/i);
   if(hive){
     const t = PLAY.catastrophic(hive);
-    check("Hive ship: the explosion footer does not claim shields save (Fleets p. 423)", !!t.explode && !/shields do\b/.test(t.explode) && /423/.test(t.explode), t.explode);
+    check("Hive ship: the explosion footer does not claim shields save (Fleets p. 425)", !!t.explode && !/shields do\b/.test(t.explode) && /423/.test(t.explode), t.explode);
   }
   /* the page the VP figure comes from */
   check("VP page: a ship cites p. 123, an escort p. 57 and 123", PLAY.concededPage(lunar) === "p. 123" && PLAY.concededPage(swords) === "p. 57, 123", JSON.stringify([PLAY.concededPage(lunar), PLAY.concededPage(swords)]));
   const cairn = unitIn(/^Necron/, /Cairn/i);
-  if(cairn) check("... a Necron ship cites Fleets p. 402", PLAY.concededPage(cairn) === "Fleets p. 402", PLAY.concededPage(cairn));
+  if(cairn) check("... a Necron ship cites Fleets p. 404", PLAY.concededPage(cairn) === "Fleets p. 404", PLAY.concededPage(cairn));
 }
 
-/* --- Necron losses count more (Fleets p. 402) --------------------------- */
+/* --- Necron losses count more (Fleets p. 404) --------------------------- */
 {
   /* "count up the Necron losses using the following modifiers": disengaged
      undamaged 10 %, disengaged damaged or any raider disengaged 25 %,
@@ -1040,7 +1040,7 @@ function unitIn(listRe, labelRe, hulls){
     const rs = PLAY.freshUnit(raid), rp = raid.points | 0;
     check("Necron raiders on the table: 0", PLAY.conceded(raid, rs) === 0);
     rs.disengaged = true;
-    check("... disengaged: 25 % (Fleets p. 402)", PLAY.conceded(raid, rs) === Math.ceil(rp * 0.25), PLAY.conceded(raid, rs));
+    check("... disengaged: 25 % (Fleets p. 404)", PLAY.conceded(raid, rs) === Math.ceil(rp * 0.25), PLAY.conceded(raid, rs));
     rs.disengaged = false; rs.members.forEach(m => { m.dead = true; });
     check("... all destroyed: the full points", PLAY.conceded(raid, rs) === rp, PLAY.conceded(raid, rs));
   }
@@ -1067,7 +1067,7 @@ function unitIn(listRe, labelRe, hulls){
 /* ====================================================================
    PLANETARY DEFENCES (8.10.2026) - Rulebook p. 100-101, 123; Fleets
    p. 496-517, the Ramilies p. 500-505, the Fortress-Monastery p. 110-111,
-   the Haven p. 334-336. Each check was seen red before rules.js was
+   the Haven p. 332-334. Each check was seen red before rules.js was
    changed, or - where the old code already did the right thing - by a
    mutation (RULINGS.md T27-T36).
    ==================================================================== */
@@ -1311,14 +1311,14 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
      leadership." Fleets p. 503: a Ramilies' "Leadership is rolled as for a
      capital ship" and it "can use ... Reload Ordnance, Lock On, Brace for
      Impact". p. 111: "Fortress-Monasteries have a base leadership of 10".
-     p. 336: "An Eldar Haven rolls for leadership following Eldar rules"
+     p. 334: "An Eldar Haven rolls for leadership following Eldar rules"
      and "may only attempt to Lock On, Reload Ordnance or Brace For
      Impact". */
   const fx = fnP("fixedLd"), val = R => { const x = fx(R); return x ? x.value : null; };
   check("no Leadership roll, Ld 7: station, platform, air base, monitor, system ship, fire ship, Tau orbital (Rulebook p. 100, Fleets p. 499)",
         [station, platforms, airbases, monitors, sysships, fireships, tauCity, blackstone, dock].every(R => val(R) === 7), [station, platforms, airbases, monitors, sysships, fireships, tauCity, blackstone, dock].map(val).join(","));
   check("the Fortress-Monastery has Ld 10 without a roll (Fleets p. 111)", val(monastery) === 10, val(monastery));
-  check("the Ramilies (p. 503) and the Haven (p. 336) roll as usual; so does a Lunar", val(ramilies) === null && val(haven) === null && val(lunar) === null, [val(ramilies), val(haven), val(lunar)].join(","));
+  check("the Ramilies (p. 503) and the Haven (p. 334) roll as usual; so does a Lunar", val(ramilies) === null && val(haven) === null && val(lunar) === null, [val(ramilies), val(haven), val(lunar)].join(","));
   check("a commander's own Leadership line is not a ship's fixed Leadership", admiral.leadership && admiral.leadership.kind === "fixed" && val(admiral) === null, JSON.stringify(admiral.leadership));
   const ids = R => (fnP("ordersFor")(R) || []).map(o => o.id).join(",");
   check("orders offered to a station: Reload Ordnance and Brace only (Rulebook p. 100)", ids(station) === "RO,BFI", ids(station));
@@ -1327,7 +1327,7 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
      so Reload Ordnance is not an order it can use - only Brace is left. */
   check("... to a Defence Monitor only Brace: it has no ordnance to reload (Fleets p. 499, 514)", ids(monitors) === "BFI", ids(monitors));
   check("... to fire ships only Brace (Fleets p. 499, 516)", ids(fireships) === "BFI", ids(fireships));
-  check("... to a Ramilies: Lock On, Reload Ordnance, Brace (Fleets p. 503); to a Haven the same three (p. 336)", ids(ramilies) === "LO,RO,BFI" && ids(haven) === "LO,RO,BFI", ids(ramilies) + " / " + ids(haven));
+  check("... to a Ramilies: Lock On, Reload Ordnance, Brace (Fleets p. 503); to a Haven the same three (p. 334)", ids(ramilies) === "LO,RO,BFI" && ids(haven) === "LO,RO,BFI", ids(ramilies) + " / " + ids(haven));
   check("... to a Lunar all six (Rulebook p. 46-47)", ids(lunar) === "AAF,CTNH,BR,LO,RO,BFI", ids(lunar));
   const st = PLAY.freshUnit(station), fl = PLAY.freshFleet();
   check("a station may not Lock On or go All Ahead Full (Rulebook p. 100)", PLAY.canOrder(st, fl, "LO", station) === false && PLAY.canOrder(st, fl, "AAF", station) === false);
@@ -1336,12 +1336,12 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
   check("a Lunar's orders are as before, with or without the unit passed", PLAY.canOrder(PLAY.freshUnit(lunar), fl, "AAF", lunar) === true && PLAY.canOrder(PLAY.freshUnit(lunar), fl, "AAF") === true);
   /* Who a fleet commander may board. Fleets p. 503: "Fleet Commanders may
      be placed aboard a Ramilies"; p. 111: "Fleet Commanders may be placed
-     aboard a fortress"; p. 336: "An Eldar or Dark Eldar fleet commander can
+     aboard a fortress"; p. 334: "An Eldar or Dark Eldar fleet commander can
      lead the battle aboard it instead of a ship". Nothing gives a platform,
      a station, an air base or a defence vessel a commander: they have no
      Leadership value at all (Rulebook p. 100). */
   const may = fnP("mayCarryCommander");
-  check("a commander may board a capital ship, a Ramilies (p. 503), a Fortress-Monastery (p. 111) and a Haven (p. 336)", [lunar, ramilies, monastery, haven].every(R => may(R) === true), [lunar, ramilies, monastery, haven].map(may).join(","));
+  check("a commander may board a capital ship, a Ramilies (p. 503), a Fortress-Monastery (p. 111) and a Haven (p. 334)", [lunar, ramilies, monastery, haven].every(R => may(R) === true), [lunar, ramilies, monastery, haven].map(may).join(","));
   check("... never a platform, a station, a Blackstone, an air base, a monitor, a mine or an escort (Rulebook p. 100)", [platforms, station, blackstone, dock, airbases, monitors, fireships, tauCity, mines, swords, admiral].every(R => may(R) === false),
         [platforms, station, blackstone, dock, airbases, monitors, fireships, tauCity, mines, swords, admiral].map(may).join(","));
   const dflt = fnP("defaultFlagship");
@@ -1357,7 +1357,7 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
      defences "get crippled once they have lost half their damage points"
      and "never drift, they always remain in place". The -5 cm of p. 65 is
      a moving ship's. The profiles print the speed as "0" (Fleets p. 506-
-     511, 517), "0 cm" (p. 500) or a dash (the Haven, p. 334). */
+     511, 517), "0 cm" (p. 500) or a dash (the Haven, p. 332). */
   const ss = PLAY.freshUnit(station);
   const s0 = PLAY.speed(station, ss);
   check("a Space Station's speed '0' is the number 0 (Fleets p. 507)", station.stats.speed === "0" && s0.base === 0 && s0.now === 0 && s0.mods.length === 0, JSON.stringify(s0));
@@ -1367,7 +1367,7 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
   check("... its shields 2 -> 1 and turrets 4 -> 2 are halved like a capital ship's (p. 101, p. 65)", PLAY.shields(station, ss).now === 1 && PLAY.turrets(station, ss).now === 2);
   const hs = PLAY.freshUnit(haven); PLAY.addHits(haven, hs, 4);
   const s2 = PLAY.speed(haven, hs);
-  check("a crippled Haven (speed '-', Fleets p. 334): no -5 either", PLAY.crippled(haven, hs) && s2.mods.length === 0 && s2.still === true, JSON.stringify(s2));
+  check("a crippled Haven (speed '-', Fleets p. 332): no -5 either", PLAY.crippled(haven, hs) && s2.mods.length === 0 && s2.still === true, JSON.stringify(s2));
   const rs = PLAY.freshUnit(ramilies); PLAY.addHits(ramilies, rs, 6);
   check("a crippled Ramilies quadrant (speed '0 cm', p. 500): no -5", PLAY.speed(ramilies, rs).mods.length === 0 && PLAY.speed(ramilies, rs).now === 0, JSON.stringify(PLAY.speed(ramilies, rs)));
   const ls = PLAY.freshUnit(lunar); PLAY.addHits(lunar, ls, 4);
@@ -1487,18 +1487,18 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
   /* The values a ship can start a game with. Rulebook p. 45: "1 Untried
      (Ld 6), 2-3 Experienced (Ld 7), 4-5 Veteran (Ld 8), 6 Crack (Ld 9)".
      Fleets p. 94, Space Marine Leadership: "1-2 Ld 8, 3-4 Ld 9, 5-6 Ld 10",
-     and p. 144: "Grey Knights count as Space Marines in all respects and as
+     and p. 154: "Grey Knights count as Space Marines in all respects and as
      such follow all rules for Space Marines as written on pages 92-94" - a
-     Grey Knights Strike Cruiser taken by an Imperial Navy fleet (p. 138)
-     rolls an 8, a 9 or a 10. Fleets p. 302: Eldar ships have "a Leadership
-     value between 7 and 10". Fleets p. 358: "all Ork ships reduce their
+     Grey Knights Strike Cruiser taken by an Imperial Navy fleet (p. 148)
+     rolls an 8, a 9 or a 10. Fleets p. 304: Eldar ships have "a Leadership
+     value between 7 and 10". Fleets p. 360: "all Ork ships reduce their
      Leadership by -1 from whatever they rolled, giving them a Leadership
      range of 5 to 8". Rulebook p. 48: "Under no circumstance can a ship's
      Leadership be modified higher than Leadership 10." */
   const vals = Array.isArray(PLAY.LD_VALUES) ? PLAY.LD_VALUES : [];
   check("the Leadership choice offers the rulebook's 6, 7, 8 and 9 (Rulebook p. 45)", [6, 7, 8, 9].every(v => vals.indexOf(v) >= 0), vals.join(","));
-  check("... and 10: a Space Marine or Grey Knights ship rolls 8-10 (Fleets p. 94, 144), an Eldar ship 7-10 (p. 302)", vals.indexOf(10) >= 0, vals.join(","));
-  check("... and 5: an Ork ship rolls 5-8 (Fleets p. 358)", vals.indexOf(5) >= 0, vals.join(","));
+  check("... and 10: a Space Marine or Grey Knights ship rolls 8-10 (Fleets p. 94, 154), an Eldar ship 7-10 (p. 304)", vals.indexOf(10) >= 0, vals.join(","));
+  check("... and 5: an Ork ship rolls 5-8 (Fleets p. 360)", vals.indexOf(5) >= 0, vals.join(","));
   check("... nothing else: 5 to 10, in order (Rulebook p. 48: never above 10)", vals.join(",") === "5,6,7,8,9,10", vals.join(","));
 
   /* User decision 13.10.2026 (RULINGS.md T40): the play page automates
@@ -1533,7 +1533,7 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
   check("a fort's re-rolls are the fleet's while the commander is aboard (Fleets p. 111)",
         typeof PLAY.rerollsJoinFleet === "function" && PLAY.rerollsJoinFleet(fort, true) === true);
   check("... and its own without him", typeof PLAY.rerollsJoinFleet === "function" && PLAY.rerollsJoinFleet(fort, false) === false);
-  check("a Scion of Prospero's two stay its own with the Warmaster aboard (p. 258)",
+  check("a Scion of Prospero's two stay its own with the Warmaster aboard (p. 260)",
         typeof PLAY.rerollsJoinFleet === "function" && PLAY.rerollsJoinFleet(scion, true) === false);
 }
 

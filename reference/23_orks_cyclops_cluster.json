@@ -1,6 +1,6 @@
 {
   "list": "Orks — Cyclops Cluster",
-  "book_page": 365,
+  "book_page": 367,
   "read_pages": [
     365
   ],
@@ -9,14 +9,14 @@
     {
       "key": "You may include 1 or more Warlord in your fleet",
       "text": "You may include 1 or more Warlord in your fleet, each of whom must be assigned to a ship or squadron.",
-      "page": 365,
+      "page": 367,
       "status": "manual",
       "why": "Placement on a ship or a skwadron is decided in the game."
     },
     {
       "key": "worth 500 points or more it must include at least 1 Warlord",
       "text": "If the fleet is worth 500 points or more it must include at least 1 Warlord to lead it.",
-      "page": 365,
+      "page": 367,
       "status": "enforced",
       "kind": "mandatory_at",
       "points": 500,
@@ -26,7 +26,7 @@
     {
       "key": "max of one Warlord per 500 points",
       "text": "An Ork fleet can include a max. of one Warlord per 500 points.",
-      "page": 365,
+      "page": 367,
       "status": "enforced",
       "kind": "per_points",
       "each": 1,
@@ -35,35 +35,35 @@
     {
       "key": "if the fleet is worth up to 500 points, it may have one Warlord",
       "text": "ie, if the fleet is worth up to 500 points, it may have one Warlord. If it is worth 500-1,000 points two Warlords may be included, etc.",
-      "page": 365,
+      "page": 367,
       "status": "manual",
       "why": "The book's own example of the previous rule."
     },
     {
       "key": "Warlords get one re-roll",
       "text": "Warlords get one re-roll.",
-      "page": 365,
+      "page": 367,
       "status": "manual",
       "why": "Shown as text of the commander section since 9.9.2026 (the sentence filter knows the words re-roll and leadership, P1-8e). The included re-roll is in the resolver's rerolls.included field and on the commander card; the fleet validator does not enforce the number of re-rolls."
     },
     {
       "key": "may include up to one of the upgrades shown below",
       "text": "A vessel carrying a Warlord doubles its boarding value and may include up to one of the upgrades shown below at the additional cost indicated.",
-      "page": 365,
+      "page": 367,
       "status": "manual",
       "why": "The exclusion is implemented: five upgrades share the group id 'warlord_up', so choosing one switches the others off. Checked below in the entries block's grp field. The hull's doubled boarding value is left to the player."
     },
     {
       "key": "shield value is increased by",
       "text": "Extra Power Fields: The ship's shield value is increased by +1. If this would take it to 3 or more shields, don't forget to mount it on a 60 mm base!",
-      "page": 365,
+      "page": 367,
       "status": "manual",
       "why": "Nakyi 7.9.2026 asti tyhjana: lausesuodatin tunsi sanan 'reduced' muttei sanaa 'increased'."
     },
     {
       "key": "+1 modifier on boarding",
       "text": "Mega-armoured Boarding Parties: +1 modifier on boarding.",
-      "page": 365,
+      "page": 367,
       "status": "manual",
       "why": "The row's own description is kept visible (KEEP_TEXT) - it is the upgrade's effect, not narrative.",
       "classified_on": "2026-09-09"
@@ -71,7 +71,7 @@
     {
       "key": "You may include up to six kroozers in your fleet",
       "text": "You may include up to six kroozers in your fleet.",
-      "page": 365,
+      "page": 367,
       "status": "enforced",
       "kind": "cap",
       "max": 6
@@ -79,7 +79,7 @@
     {
       "key": "escorts in your fleet in squadrons of 2",
       "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
-      "page": 365,
+      "page": 367,
       "status": "enforced",
       "kind": "squadron",
       "min": 2,
@@ -156,43 +156,43 @@
     {
       "name": "Terror ship",
       "pts": 185,
-      "page": 380
+      "page": 382
     },
     {
       "name": "Kill kroozer",
       "pts": 155,
-      "page": 382
+      "page": 384
     },
     {
       "name": "Ravager attack ship",
       "pts": 40,
-      "page": 386
+      "page": 388
     },
     {
       "name": "Onslaught attack ship",
       "pts": 35,
-      "page": 384
+      "page": 386
     },
     {
       "name": "Grunt assault ship",
       "pts": 30,
-      "page": 388
+      "page": 390
     },
     {
       "name": "Savage gunship",
       "pts": 30,
-      "page": 385
+      "page": 387
     },
     {
       "name": "Brute ramship",
       "pts": 25,
-      "page": 387
+      "page": 389
     }
   ],
   "extra_entries": [
     {
       "name": "Dakka Dakka: +2 turrets",
-      "why": "p.365/367 DAKKA DAKKA, the book writes it only in the body text"
+      "why": "p.367/369 DAKKA DAKKA, the book writes it only in the body text"
     },
     {
       "name": "Dakka Dakka: +1 turret (every escort in the squadron)",
@@ -200,20 +200,20 @@
     },
     {
       "name": "Torpedo-bommas",
-      "why": "orkkien yhteiset saannot p.360, +10 per launch bay strength"
+      "why": "orkkien yhteiset saannot p.362, +10 per launch bay strength"
     },
     {
       "name": "Boarding torpedoes",
-      "why": "orkkien yhteiset saannot p.360, +5 pts runkoalukselle"
+      "why": "orkkien yhteiset saannot p.362, +5 pts runkoalukselle"
     },
     {
       "name": "Boarding torpedoes (Space Hulk)",
-      "why": "the orks' shared rules p.360, +15 pts. The Cyclops list has no Space Hulk, so the row is never shown - it is tied to the ship's name."
+      "why": "the orks' shared rules p.362, +15 pts. The Cyclops list has no Space Hulk, so the row is never shown - it is tied to the ship's name."
     }
   ],
   "notes": [
-    "The whole list is on the book's page 365 and has only four sections: WARLORD, KROOZERS, ESCORTS and DAKKA DAKKA. No battleships, no Roks, no Space Hulk and no ORDNANCE section of its own. This is checked: page 364 is a picture page and page 366 starts the Waaagh! list.",
+    "The whole list is on the book's page 367 and has only four sections: WARLORD, KROOZERS, ESCORTS and DAKKA DAKKA. No battleships, no Roks, no Space Hulk and no ORDNANCE section of its own. This is checked: page 366 is a picture page and page 368 starts the Waaagh! list.",
     "The rows 'Terror ship' and 'Kill kroozer' are the same as on the Waaagh! list at the same price; on the Cyclops list, though, there is no battleship section above them, so the cap of six kroozers is the list's only hull ship restriction.",
-    "The Ork Clanz rules (Gubbins, clans, Mob Rule, Young Gunz) do NOT belong to this list. The book says on page 368: 'The Ork Clanz rules can be used in addition to the normal Ork rules, but only with its dedicated Clanz fleet list.'"
+    "The Ork Clanz rules (Gubbins, clans, Mob Rule, Young Gunz) do NOT belong to this list. The book says on page 370: 'The Ork Clanz rules can be used in addition to the normal Ork rules, but only with its dedicated Clanz fleet list.'"
   ]
 }

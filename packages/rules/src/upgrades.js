@@ -59,7 +59,7 @@ export function listOfSec(sel, si){ return si >= HOST_OFF ? sel.host : sel.list;
    shown. */
 /* A host row aimed at EVERY ship of one type heading is a row about the type
    (BACKLOG J120): a Daemonship's cost is "based upon the type of vessel
-   chosen" (Fleets p. 235), and a borrowed ship counts under the heading it
+   chosen" (Fleets p. 245), and a borrowed ship counts under the heading it
    has on its own list (T34, p. 14). So a borrowed cruiser is offered the
    host's "Daemonship: Cruiser" when its own heading is "Cruisers" too. A row
    aimed at chosen hulls stays the host's own (J117), and a row the ship's
@@ -101,7 +101,7 @@ export function selectionOf(intent, ctx, catalog){
   var ol = (sh && sh.ol) || [];
   var opts = intent.options || {};
   /* A list row can forbid the ship's own variants (Rogue Traders using a
-     Lunar, Tyrant, Carnage or Murder, Fleets p. 180): the default state is
+     Lunar, Tyrant, Carnage or Murder, Fleets p. 190): the default state is
      off. An explicit state still wins, as it did in the legacy optState. */
   var dflt = en && en.noopt ? "off" : "opt";
   /* optno: the list forbids one of the hull's options outright - Mechanicus
@@ -216,14 +216,14 @@ export function upState(sel, si, ei){
   /* A default row opens on "take" and stays there until the player says
      otherwise. The difference from req is the whole fix: an explicit answer
      wins, so the Chaos Warmaster's Mark can be dropped beside the battle
-     barge that already carries it (Fleets pp. 258, 260, 262, 264). Absent
+     barge that already carries it (Fleets pp. 260, 262, 264, 266). Absent
      key, not absent value - "off" is an answer and must survive. */
   var k = upgradeKey(si, ei);
   if(en && en.dflt && sel.si === si &&
      !Object.prototype.hasOwnProperty.call(sel.ups, k)) return "take";
   if(sel.ups[k] === "take") return "take";
   /* off0: a row that is a way of BUYING the ship, not a choice at the table
-     - the Webway Portal's half price (Fleets p. 337). An open box on every
+     - the Webway Portal's half price (Fleets p. 335). An open box on every
      card would offer it in play, so it opens on Hide. */
   if(en && en.off0 && !Object.prototype.hasOwnProperty.call(sel.ups, k)) return "off";
   /* One of a choose-one group taken: the others are not open choices any
@@ -310,11 +310,11 @@ export function coveredByShipOption(sel, en){
 /* One ship option is the same purchase as one list row when the row's
    words are all in the option and the price agrees. A per-bay or per-hull
    row is priced by the ship, so its unit price never equals the option's
-   total (Gorbag's Revenge p.377 "torpedo bommas +80" vs "+10 / launch bay");
+   total (Gorbag's Revenge p.379 "torpedo bommas +80" vs "+10 / launch bay");
    there the words decide. An option may also name the row it covers (cov,
-   build_data.py): the Chaos battle barge p.255 "Can embark Chaos Space
+   build_data.py): the Chaos battle barge p.257 "Can embark Chaos Space
    Marines for +35 points" is the list's "<Legion> Chaos Space Marine crew"
-   row (p.244), whose legion name is not in the option text. */
+   row (p.250), whose legion name is not in the option text. */
 export function optionCoversRow(o, en){
   if(o.cov && new RegExp(o.cov, "i").test(String(en.l || ""))) return o.c === en.p;
   var want = upTokens(en.l);
@@ -389,9 +389,9 @@ export function condOK(sel, en, si, ei){
      torpedoes are swapped for a nova cannon. */
   var skip = si == null ? null : upgradeKey(si, ei);
   /* A row with a box is on the ship only while its option is taken: the
-     Dragonship's keel launch bays (Fleets p. 330) carry torpedo bombers only
-     once chosen (p. 319). An exclusion is stricter: a Ghostship "may not be
-     armed with launch bays" (p. 307), so an open weapon choice that could
+     Dragonship's keel launch bays (Fleets p. 328) carry torpedo bombers only
+     once chosen (p. 317). An exclusion is stricter: a Ghostship "may not be
+     armed with launch bays" (p. 309), so an open weapon choice that could
      still add them counts against it until the choice is settled (torpedoes
      taken, or the bays' option otherwise blocked). Replacement rows (alt)
      never count while open: the Tyrant keeps its Power Ram offer until the
@@ -422,7 +422,7 @@ export function condOK(sel, en, si, ei){
   /* has reads the armament as the ship's own choices leave it, before list
      swaps: two list swaps on one ship share the slots by specificity
      (weaponRows), so the Shokk-Attack Lance keeps the prow heavy gunz even
-     when Looted Lances was taken first (Fleets pp. 370-371). */
+     when Looted Lances was taken first (Fleets pp. 372-373). */
   if(c.has){
     var own = weaponRows(sel, skip, true).filter(function(r){ return r.box == null || r.box === "on"; });
     if(!(Array.isArray(c.has) ? c.has : [c.has]).every(function(p){ return rowHit(p, own); })) return false;
@@ -450,16 +450,16 @@ export function condOK(sel, en, si, ei){
   if(c.noopt && (sh.ol || []).some(function(o){ return new RegExp(c.noopt, "i").test(o.t); }))
     return false;
   /* offopt: gone while one of the hull's own options matching it is taken.
-     p.192 Fast Clipper is taken "Instead of taking a refit normally", so it
-     replaces the Xenotech refit (Fleets pp. 175, 192). noopt above asks only
+     p.202 Fast Clipper is taken "Instead of taking a refit normally", so it
+     replaces the Xenotech refit (Fleets pp. 185, 202). noopt above asks only
      whether the hull has such an option at all. */
   if(c.offopt && (sh.ol || []).some(function(o, i){
         return (sel.ost || [])[i] === "take" && new RegExp(c.offopt, "i").test(o.t); }))
     return false;
   /* up / noup: another list upgrade taken on this unit, by label. A Chaos
      Mark is bought only with a Chaos Space Marine crew or, on the Tzeentch
-     list, a Daemonship (Fleets pp. 236-249); a Daemonship may not have a
-     Chaos Space Marine crew (pp. 227, 237, 241, 245, 249). */
+     list, a Daemonship (Fleets pp. 246-253); a Daemonship may not have a
+     Chaos Space Marine crew (pp. 237, 247, 249, 251, 253). */
   if(c.up || c.noup){
     var taken = takenUpgradeLabels(sel, si, ei);
     if(c.up && !taken.some(function(l){ return new RegExp(c.up, "i").test(l); })) return false;
@@ -489,8 +489,8 @@ export function takenUpgradeLabels(sel, si, ei){
     if(!rowAttached(sel, sj, en)) return;
     if(upState(sel, sj, ej) === "take") out.push(String(en.l || ""));
     /* A row hidden behind the ship's own option counts as taken with the
-       option: the battle barge's embarked Chaos Space Marines (p.255) are
-       the crew that lets it take a Mark (p.244). */
+       option: the battle barge's embarked Chaos Space Marines (p.257) are
+       the crew that lets it take a Mark (p.250). */
     else if(sh && (sh.ol || []).some(function(o, i){
         return o.cov && optionCoversRow(o, en) && optState(sel, i) === "take"; }))
       out.push(String(en.l || ""));
@@ -547,7 +547,7 @@ export function upgradesForRaw(sel){
     /* A required upgrade must not hide under the collapsed list: it is always
        in force and appears on the card, so it appears in the builder too. */
     /* A required row with targets belongs to those targets only: the Chaos
-       Warmaster's mandatory Mark (Fleets pp. 236-248) is his row, and used
+       Warmaster's mandatory Mark (Fleets pp. 246-252) is his row, and used
        to appear as a "required" row on every ship of the list. */
     if(en.req){
       if(!at || at.some(function(p){ return p[0] === sel.si && p[1] === sel.ei; })) own.push([si, ei, en]);
@@ -592,7 +592,7 @@ export function requiredUpgradeKeys(sel){
    The four Chaos Warmasters' Marks are default rows, not required ones,
    because the god's own battle barge already carries the Mark in its price -
    "it does not have to be paid for separately by the ship's commander"
-   (Fleets pp. 258, 260, 262, 264). Locked, the app charged it twice: a
+   (Fleets pp. 260, 262, 264, 266). Locked, the app charged it twice: a
    Nurgle Warmaster is 135 (100 + 35) beside a Terminus Est whose 430 already
    includes it, and for Nurgle the Mark's extra hit is in the profile too
    (hp 13 against a plain Chaos battle barge's 12). The requirement itself did

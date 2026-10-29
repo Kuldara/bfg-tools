@@ -40,7 +40,7 @@ const JSON_OUT = arg("json", "");
 const { launch } = require("../../../tools/lib/chrome.js");
 
 /* -------------------------------------------------------------- task -- */
-/* Three Warlords at 1 500 points (one per 500 pts or part, Fleets p. 372).
+/* Three Warlords at 1 500 points (one per 500 pts or part, Fleets p. 374).
    W1: two re-rolls, Goffs, 'Uge ship (Hammer), a big ship skwadron
    (Terror + Kill), two tiddlas (Ravager x4, Brute x3), Gubbins on
    his ship. W2: Kill kroozer + Savage x5. W3: Rok + Onslaught x3. */

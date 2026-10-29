@@ -46,7 +46,7 @@
         "pd-one-third-advice",
         "pd-blackstone-not-fleet-worth"
       ],
-      "why": "The legality panel's row 'Planetary defences (up to one third of the points)' shows the total and a third of the points limit. It WARNS and does not reject: the limit concerns the scenario's defender, and the app does not know the scenario. The Ramilies (p.500) and the Haven (p.337) are not in the total."
+      "why": "The legality panel's row 'Planetary defences (up to one third of the points)' shows the total and a third of the points limit. It WARNS and does not reject: the limit concerns the scenario's defender, and the app does not know the scenario. The Ramilies (p.500) and the Haven (p.335) are not in the total."
     },
     {
       "key": "these additional defences come directly from the points allowed against his or her fleet list",
@@ -59,7 +59,7 @@
         "pd-ramilies-fleet-points",
         "pd-ramilies-counts-toward-fleet-worth"
       ],
-      "why": "Defences use up the points limit (Points limit counts them). INTERPRETATION (the user's decision 8.10.2026, BACKLOG J170): they are still not part of 'what the fleet is worth' - the commander threshold, 'one per 500 points' and the like are counted from the ships. The book does not say either directly. The Ramilies (p.500) and the Haven (p.337) are bought from the fleet's points 'rather than defences', so they are part of the fleet's worth like the Fortress-Monastery."
+      "why": "Defences use up the points limit (Points limit counts them). INTERPRETATION (the user's decision 8.10.2026, BACKLOG J170): they are still not part of 'what the fleet is worth' - the commander threshold, 'one per 500 points' and the like are counted from the ships. The book does not say either directly. The Ramilies (p.500) and the Haven (p.335) are bought from the fleet's points 'rather than defences', so they are part of the fleet's worth like the Fortress-Monastery."
     },
     {
       "key": "Stationary planetary defences may be placed in base contact if desired",
@@ -157,13 +157,13 @@
     }
   ],
   "notes": [
-    "CONFLICT p.499: the right column's box and Rulebook p.100 say that a defence takes all other Leadership tests at 7. At the end of the left column is a loose sentence 'However, they automatically pass any other leadership tests they may be required to make' - a remnant of the old rule. p.360 (Orks) repeats the old form. The app uses the form of the box and the Rulebook (Ld 7).",
+    "CONFLICT p.499: the right column's box and Rulebook p.100 say that a defence takes all other Leadership tests at 7. At the end of the left column is a loose sentence 'However, they automatically pass any other leadership tests they may be required to make' - a remnant of the old rule. p.362 (Orks) repeats the old form. The app uses the form of the box and the Rulebook (Ld 7).",
     "RULEBOOK p.101, oddities of the table (recorded, not harmonised): result 2-3 says 'The station may not fire until its lance armament has been repaired' under the heading 'Lances Damaged'; result 4 silences the batteries entirely, while the Ramilies' table (Fleets p.505) halves them; result 8-9 'Orbit Lost' moves the station, although the same page says 'defences never drift'.",
     "CONFLICT on special torpedoes: p.19 'Escort squadrons and defences may not be equipped with special torpedoes at all', p.503 'A Ramilies can purchase special torpedoes' without a price or a method. The app offers defences no upgrades; the Ramilies' torpedoes are open (BACKLOG J174).",
     "THE BOOK IS SILENT on squadrons of ground targets (Ground/1, p.517). Rulebook p.100's squadron sentence names 'orbital defences or ships that count as defences'. The app gives ground targets one card for 1-6 of them without a squadron rule (no legality row); the row's own limit 0-4 / 0-8 (p.499) is enforced.",
     "THE BOOK IS SILENT on the critical hit of a one-hit defence. Rulebook p.66 names only escorts. The card says only 'one unsaved Hit destroys it'.",
     "p.512: the placement of a mine bought singly is not told; the card uses the general high orbit rule (p.498). p.516: 'every ship within 3D6 cm' does not exclude own ships.",
     "p.517 prints three profiles on one page (Air Base, Defence Laser Silo, Missile Silo) and p.516 a profile without a weapon table (Fire Ship): the extractor does not get them, so they are curated in build_data.py (keys 516, 517b, 517c).",
-    "Haven (p.334-337): no list prints a row for it, and the book does not say how many may be taken or from which points it is paid in a single game (only the campaign sentence p.337: 'counts against the fleet list in battles it takes part in'). The app: on the Corsair and Craftworld lists, for the Dark Eldar with swapped weapons (p.347), from the fleet's points, not in the third's total."
+    "Haven (p.332-335): no list prints a row for it, and the book does not say how many may be taken or from which points it is paid in a single game (only the campaign sentence p.335: 'counts against the fleet list in battles it takes part in'). The app: on the Corsair and Craftworld lists, for the Dark Eldar with swapped weapons (p.349), from the fleet's points, not in the third's total."
   ]
 }

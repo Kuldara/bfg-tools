@@ -177,7 +177,7 @@ const NEC = [
 fleet("Tyranids 1200", "own roster, 1200 pts sheet", 1170, "Tyranids — Hive Fleet", TYR);
 fleet("Orks 1200", "own roster; Brutes 4+3", 1200, "Orks — Waaagh!", ORK);
 fleet("AdMech 1200", "own roster", 1180, "Adeptus Mechanicus — Explorator", ADM);
-fleet("World Eaters 1200", "own roster; Chosen Terminators (+10) not taken: the builder wants the World Eaters crew first (Fleets pp. 224-225)", 1190, "Chaos — Khorne", KHO);
+fleet("World Eaters 1200", "own roster; Chosen Terminators (+10) not taken: the builder wants the World Eaters crew first (Fleets pp. 234-235)", 1190, "Chaos — Khorne", KHO);
 fleet("Space Marines 1200", "own roster; Styx Venerable Battle Barge", 1195, "Space Marines — Crusade", SMC);
 fleet("Eldar Corsairs 1200", "own roster; mixed squadrons as 2+2", 1200, "Eldar Corsairs — Later Gothic War", ELD);
 fleet("Necrons 1200", "own roster", 1200, "Necrons — Harvest Fleet", NEC);
@@ -285,10 +285,10 @@ fleet("Tau 1500", "1500 expansions tab: -3 Castellan -1 Warden, +2 Protector (T'
 ]));
 
 /* ORKS ALT - DA SLOW N FURIUS: a 1500 pts list of its own, not an expansion of the 1200 base.
-   The hulk Warlord's Extra Power Fields +50 (Fleets p. 390): its own row
+   The hulk Warlord's Extra Power Fields +50 (Fleets p. 392): its own row
    "Extra Power Fields (Space Hulk)" and placement on the hulk (J224, J215);
    Terror #1's Warlord on the ordinary +25 row. */
-fleet("Orks Da Slow 'n' Furius 1500", "ORKS ALT sheet: Hulk + 2 Terror + Rok + 5 Brutes, two Warlords (aboard the Hulk and Terror #1) with 3 re-rolls and Extra Power Fields each; aboard the Hulk they cost +50 (Fleets p. 390)", 1500, "Orks — Waaagh!", [
+fleet("Orks Da Slow 'n' Furius 1500", "ORKS ALT sheet: Hulk + 2 Terror + Rok + 5 Brutes, two Warlords (aboard the Hulk and Terror #1) with 3 re-rolls and Extra Power Fields each; aboard the Hulk they cost +50 (Fleets p. 392)", 1500, "Orks — Waaagh!", [
   { sec: /^SPACE HULKS/, row: /^Ork hulk/, name: "Ork Space Hulk" },
   { sec: /^KROOZERS/, row: /^Terror ship/, name: "Terror Ship #1", opts: [/torpedo launcha \(/, /boarding torpedoes/], ups: [[/^FLEET UPGRADES/, /^Torpedo-bommas/]] },
   { sec: /^KROOZERS/, row: /^Terror ship/, name: "Terror Ship #2", opts: [/torpedo launcha \(/, /boarding torpedoes/], ups: [[/^FLEET UPGRADES/, /^Torpedo-bommas/]] },

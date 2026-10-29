@@ -65,12 +65,12 @@ var HULKS = { drifting: "Drifting hulk", blazing: "Blazing hulk" };
 
 /* What a hulk still does, and who may shoot it (p. 71), for the card's
    own line and the table's reminder list; the two fleets that may fire on
-   their own hulks (Necrons Fleets p. 402, Mechanicus p. 118) and what a
-   hulk is worth (p. 123, Necrons Fleets p. 402). */
+   their own hulks (Necrons Fleets p. 404, Mechanicus p. 118) and what a
+   hulk is worth (p. 123, Necrons Fleets p. 404). */
 /* A star fort (Fleets p. 500-505; the Fortress-Monastery by reference,
    p. 110) and any other defence with multiple hits (p. 101) never drift.
    A space hulk is typed a defence but its drifting results stand
-   (Fleets p. 288, p. 391).
+   (Fleets p. 290, p. 393).
    A star fort is the unit whose profile is printed per quadrant
    ("Defence/12 (quadrant)", Fleets p. 500, p. 110) - R.stats.quadrant. A
    unit that merely mentions one in its rules (p. 500: defences "may be
@@ -94,10 +94,10 @@ function hulkRules(R){
   var fl = String(R && R.source && R.source.faction || "");
   var arm = String(R && R.stats && R.stats.armour || "").trim();
   var fixed = staysInPlace(R);
-  var friendly = /NECRON/i.test(fl) ? "Necron ships MAY fire on or board their own hulk, to deny victory points or to set off the explosion (Fleets p. 402)."
+  var friendly = /NECRON/i.test(fl) ? "Necron ships MAY fire on or board their own hulk, to deny victory points or to set off the explosion (Fleets p. 404)."
     : /MECHANICUS/i.test(fl) ? "Friendly ships and ordnance may not fire on or board it - except Mechanicus ships, which may pass a Leadership check to fire on their own DRIFTING hulk (Fleets p. 118); stray friendly torpedoes hit it normally (p. 71)."
     : "Friendly ships and ordnance may not fire on or board it to deny points or to set off the explosion; stray friendly torpedoes still hit it normally (p. 71).";
-  var vp = /NECRON/i.test(fl) ? "Victory points against Necrons: left as a drifting hulk it counts 300 % of its points, destroyed any other way 200 % (Fleets p. 402)."
+  var vp = /NECRON/i.test(fl) ? "Victory points against Necrons: left as a drifting hulk it counts 300 % of its points, destroyed any other way 200 % (Fleets p. 404)."
     : "Whoever holds the field at the end earns half its points value - own hulks included (p. 123).";
   return {
     armour: arm,
@@ -115,12 +115,12 @@ function hulkRules(R){
 }
 
 /* What happens at 0 hits. The Rulebook table (p. 71) for most ships,
-   the Tyranid table (Fleets p. 423), the space hulks' own explosions
-   (Chaos Fleets p. 288, Ork p. 391), the vessels that go straight to four Blast Markers with no roll - the
-   rock vessels (Rok Fleets p. 393, Warsphere p. 495, Stryxis caravan
-   p. 197) and the Nicassar Caravan (p. 492) - each carrying the book's
+   the Tyranid table (Fleets p. 425), the space hulks' own explosions
+   (Chaos Fleets p. 290, Ork p. 393), the vessels that go straight to four Blast Markers with no roll - the
+   rock vessels (Rok Fleets p. 395, Warsphere p. 495, Stryxis caravan
+   p. 207) and the Nicassar Caravan (p. 492) - each carrying the book's
    line in its own damage block, and the ships that roll 3D6 on the
-   standard table (Mercury Fleets p. 64, fuel tanker p. 182). The numbers
+   standard table (Mercury Fleets p. 64, fuel tanker p. 192). The numbers
    a result needs are worked out from the STARTING hits (p. 71). */
 /* boarded: may the table's unit be taken to 0 in a boarding action and
    become a drifting hulk with no roll (p. 90)? Only one that rolls at
@@ -174,17 +174,17 @@ function catastrophicTable(R){
       hulk: hulk, explode: null, note: "This vessel does not roll on the Catastrophic Damage table." };
   }
   if(/TYRANID/i.test(fl)){
-    return { title: "Tyranid catastrophic damage", dice: "2D6", page: 423, fleets: true, rows: [
+    return { title: "Tyranid catastrophic damage", dice: "2D6", page: 425, fleets: true, rows: [
       { roll: "2-7", name: "Drifting carcass", kind: "drifting", extra: "+1 BM", text: "Drifts 4D6 cm forward in each of its Movement phases; place a Blast marker touching its base after each move." },
       { roll: "8-9", name: "Death throes", kind: "blazing", extra: "+1 BM", text: "Drifts 4D6 cm forward each Movement phase; place a Blast marker after each move and roll on this table again." },
       { roll: "10-11", name: "Biological eruption", kind: "gone", extra: half + " BM", text: "Remove the ship, leaving " + half + " Blast markers. Make a pyro-acid attack against every target within 3D6 cm with firepower " + h + "." },
       { roll: "12", name: "Bio-plasma detonation", kind: "gone", extra: h + " BM", text: "Remove the ship, leaving " + h + " Blast markers. Make a bio-plasma attack against every target within 3D6 cm with Strength " + half + "; shields and holofields do not protect." }
-    ], hulk: hulk, explode: "Biological eruption and bio-plasma detonation are area effects; against the detonation neither shields nor holofields protect (Fleets p. 423). Place the Blast Markers as for any explosion: one where the ship was, the rest fanning out from it, touching (p. 71).",
+    ], hulk: hulk, explode: "Biological eruption and bio-plasma detonation are area effects; against the detonation neither shields nor holofields protect (Fleets p. 425). Place the Blast Markers as for any explosion: one where the ship was, the rest fanning out from it, touching (p. 71).",
        note: "Death throes rolls again after every move; a drifting carcass is a hulk for firing and boarding." };
   }
   /* The space hulks: the hulk results as the rulebook's, the explosions
      their own - torn apart into an asteroid field, or hurled back into
-     the Warp (Chaos Space Hulk Fleets p. 288, Ork hulk p. 391). */
+     the Warp (Chaos Space Hulk Fleets p. 290, Ork hulk p. 393). */
   if(/SPACE HULK|^ORK HULK/i.test(nm)){
     var pg = /ORK/i.test(nm) || /ORK/i.test(fl) ? 391 : 288;
     return { title: "Space hulk catastrophic damage", dice: "2D6", page: pg, fleets: true, rows: [
@@ -225,18 +225,18 @@ function fireDamage(R, st){ return standardCrits(R) ? critCount(st, "7") : 0; }
 var LD_TABLE = [null, 6, 7, 7, 8, 8, 9];
 /* The values a ship can start a game with - what the set-up screen offers.
    The table above is the rulebook's; other fleets roll on their own or
-   modify it: Orks "a Leadership range of 5 to 8" (Fleets p. 358; pirates
-   p. 178 and transports p. 85 the same), Adeptus Mechanicus 7-9 (p. 118),
-   Eldar and Dark Eldar "between 7 and 10" (p. 302, 342), Space Marines
+   modify it: Orks "a Leadership range of 5 to 8" (Fleets p. 360; pirates
+   p. 188 and transports p. 85 the same), Adeptus Mechanicus 7-9 (p. 118),
+   Eldar and Dark Eldar "between 7 and 10" (p. 304, 344), Space Marines
    "1-2 Ld 8, 3-4 Ld 9, 5-6 Ld 10" (p. 94) - and Grey Knights "count as
-   Space Marines in all respects" (p. 144), so a Grey Knights Strike Cruiser
-   in an Imperial Navy fleet (p. 138) rolls 8-10 next to ships that roll
+   Space Marines in all respects" (p. 154), so a Grey Knights Strike Cruiser
+   in an Imperial Navy fleet (p. 148) rolls 8-10 next to ships that roll
    6-9. One fleet holds ships of several tables, so every unit is offered
    the whole range. Nothing goes above 10 (p. 48). */
 var LD_VALUES = [5, 6, 7, 8, 9, 10];
 
 /* A bare number, or "2 squadrons" (launch bays, p. 79). Dice ("D6+2",
-   Ork gunz, Fleets p. 360) and text are not numbers and come back null. */
+   Ork gunz, Fleets p. 362) and text are not numbers and come back null. */
 function num(v){
   var m = String(v == null ? "" : v).trim().match(/^(-?\d+)\s*(squadrons?)?\s*$/i);
   return m ? parseInt(m[1], 10) : null;
@@ -316,7 +316,7 @@ function freshFleet(){
     /* rrKinds / rrUsed: one box per re-roll ("included" | "bought" |
        "optional" | "added") and whether it is used - set by setRerolls, or
        laid over an older record's count by adoptRerolls */
-    rerollsPerTurn: 0,    /* a pool that comes back every turn (Abaddon, Fleets p. 231) */
+    rerollsPerTurn: 0,    /* a pool that comes back every turn (Abaddon, Fleets p. 241) */
     rerollsLost: false,   /* flagship Bridge Smashed, p. 67 */
     radiation: 0,         /* radiation burst interference this turn, p. 115 */
     enemyOrders: false    /* "Enemy contacts" +1 when enemy ships are on orders, p. 48 */
@@ -360,7 +360,7 @@ function isStill(R){
   var txt = String(R.stats.speed == null ? "" : R.stats.speed).trim();
   return /^0+\s*(cm)?$/i.test(txt) || (txt !== "" && !/\d/.test(txt));
 }
-/* Necron reactive hulls (Fleets p. 402): "immune to Damage, Leadership and
+/* Necron reactive hulls (Fleets p. 404): "immune to Damage, Leadership and
    Movement modifiers from ... Blast Markers". The resolved unit carries the
    rule text; the card does not model the hull itself. */
 function reactiveHull(R){
@@ -451,7 +451,7 @@ function remaining(R, st){ return R.stats ? Math.max(0, R.stats.hits - (track(R,
    and saves are not shields - shown as text, never halved. */
 function shields(R, st){
   var txt = String(R.stats && R.stats.shields || "").trim();
-  var base = /^\d+$/.test(txt) ? parseInt(txt, 10) : null;   /* "4+ save" is a save, Fleets p. 402 */
+  var base = /^\d+$/.test(txt) ? parseInt(txt, 10) : null;   /* "4+ save" is a save, Fleets p. 404 */
   if(base == null) return { base: null, text: txt, now: null, up: null };
   var now = base;
   if(stdCrit(R, st, "10") || st.hulk || quadGone(R, st)) now = 0;
@@ -487,7 +487,7 @@ function speed(R, st){
   if(!still){
     /* Not for the hulls whose own note says so: Roks, Kroot Warspheres,
        Stryxis and Nicassar Caravans "which are crippled ... do not reduce
-       their speed" (Fleets pp. 197, 393, 492, 495). The page printed
+       their speed" (Fleets pp. 207, 395, 492, 495). The page printed
        "-5 cm" beside "Speed unchanged". */
     if(crippled(R, st) && !/Speed unchanged/i.test(String((R.damage && R.damage.note) || "")))
       mods.push({ t: "crippled", v: -5, page: 65 });
@@ -568,7 +568,7 @@ function armament(R, st){
     var n = m ? parseInt(m[1], 10) : null, now = m ? String(n) : strength;
     if(portal){
       /* Necron Portals ignore special orders but are "cut in half (rounding
-         down) if a ship is crippled or Braced" (Fleets p. 401) */
+         down) if a ship is crippled or Braced" (Fleets p. 403) */
       mult = (cr ? 0.5 : 1) * (br ? 0.5 : 1);
       if(n != null && mult < 1) now = String(Math.floor(n * mult));
     }else if(n != null && mult < 1){
@@ -586,11 +586,11 @@ function armament(R, st){
       silent = "damaged (critical " + {dorsal:"2", starboard:"3", port:"4", prow:"5"}[loc] + ")";
     if(nova && cr) silent = "no nova cannon while crippled";
     else if(nova && order && !order.nova) silent = "no nova cannon on " + order.name;
-    /* Fleets p. 400: "A star pulse cannot be generated while the vessel is
+    /* Fleets p. 402: "A star pulse cannot be generated while the vessel is
        using any special order or crippled" */
     if(pulse && cr) silent = "no star pulse while crippled";
     else if(pulse && (order || br)) silent = "no star pulse on " + (br ? "Brace For Impact" : order.name);
-    /* Fleets p. 401: "both crippled and Braced may not make Portal attacks" */
+    /* Fleets p. 403: "both crippled and Braced may not make Portal attacks" */
     if(portal && cr && br) silent = "no Portal attacks: crippled and braced";
     if(fort && !basilica && qGone) silent = "quadrant destroyed (Fleets p. 501)";
     if(basilica && basLost) silent = "lost: Basilica penetrated, critical 11 (Fleets p. 505)";
@@ -664,7 +664,7 @@ function squadronLd(units, fleet){
    ships add nothing (p. 66: destroyed). */
 /* p. 99: "some ships (such as Ork Ravagers) cannot for any reason combine
    salvoes"; the Ork torpedo launcha rule says so on the card (Fleets
-   p. 360). */
+   p. 362). */
 function noCombine(R){
   return !!(R && (R.rules || []).some(function(r){ return /squadron may not combine salvoes/i.test(String(r.t || "")); }));
 }
@@ -690,7 +690,7 @@ function escortFire(R, st){
    braced, criticals) is summed. Rows combine by weapon kind, range and arc.
    Torpedoes and launch bays combine into one salvo or wave only from
    base-to-base contact (p. 99): their rows carry contact:true, and a ship
-   whose salvoes may never combine (Ork launchas, Fleets p. 360) adds
+   whose salvoes may never combine (Ork launchas, Fleets p. 362) adds
    nothing to them. Nova cannons are not combined. */
 /* Who in a capital-ship squadron is still on the table and firing: a
    destroyed ship (p. 66) or a hulk (p. 71) adds nothing to the sum, and
@@ -716,7 +716,7 @@ function squadronFire(units){
     armament(u.R, u.st).forEach(function(a){
       if(a.nova) return;
       if(a.torp && nc) return;
-      /* Ork gunz are weapon batteries (Fleets p. 360); heavy gunz and
+      /* Ork gunz are weapon batteries (Fleets p. 362); heavy gunz and
          bombardment cannons are batteries with hits of their own kind, so
          they sum in rows of their own */
       var kind = a.torp ? "torpedoes" : a.bays ? "launch bays" :
@@ -730,7 +730,7 @@ function squadronFire(units){
          doing is listed under its row, struck through, so the sum shows
          what it lost and why */
       if(a.silent){ rows[key].silent.push({ ship: idx, name: a.name, now: v == null ? a.now : v, why: a.silent }); return; }
-      /* a dice strength (Ork gunz D6+2, Fleets p. 360) cannot be added to a
+      /* a dice strength (Ork gunz D6+2, Fleets p. 362) cannot be added to a
          number: it is listed beside the sum, rolled at the table */
       if(v == null) rows[key].dice.push(String(a.now)); else rows[key].total += v;
       rows[key].parts.push({ ship: idx, name: a.name, now: v == null ? a.now : v, range: rangeCm(a.range) });
@@ -822,7 +822,7 @@ function conceded(R, st, plus){
   }
   if(R.kind !== "ship") return 0;
   if(isInstallation(R)) return destroyed(R, st) ? pts : 0;
-  /* Fleets p. 402: "count up the Necron losses using the following
+  /* Fleets p. 404: "count up the Necron losses using the following
      modifiers" - disengaged undamaged 10 %, disengaged with any damage or
      any raider that disengages 25 %, crippled 50 %, destroyed 200 %, and
      left as a drifting hulk 300 %. A destroyed raider is a normal loss. */
@@ -860,12 +860,12 @@ function squadronConceded(units){
 }
 
 /* The page the conceded figure comes from, for the card's own line:
-   Necron losses are counted on Fleets p. 402, an escort's disengage on
+   Necron losses are counted on Fleets p. 404, an escort's disengage on
    p. 57, everything else on p. 123. */
 function concededPage(R){
   if(tickUnit(R)) return "Fleets p. 512";
   if(isInstallation(R)) return "p. 123";
-  if(/NECRON/i.test(String(R && R.source && R.source.faction || ""))) return "Fleets p. 402";
+  if(/NECRON/i.test(String(R && R.source && R.source.faction || ""))) return "Fleets p. 404";
   if(R && R.victory) return "p. 123, Fleets p. " + R.victory.page;
   return isEscort(R) ? "p. 57, 123" : "p. 123";
 }
@@ -916,7 +916,7 @@ function flagshipBridgeSmashed(fleet){ fleet.rerolls = 0; fleet.rerollsLost = tr
 /* The fleet's re-rolls at the start of the game. A commander's re-rolls are
    used once per game (Fleets p. 11); Abaddon's are "1 per turn" - "Abaddon's
    fleet is allowed to re-roll a single Command check or Leadership test each
-   turn" (Fleets p. 231) - so that pool is marked to come back. */
+   turn" (Fleets p. 241) - so that pool is marked to come back. */
 /* A ship's own re-rolls that become the fleet's while the commander is
    aboard (Fortress-Monastery, Fleets p. 111; Ramilies p. 503; J168 b). */
 function rerollsJoinFleet(R, commanderAboard){
@@ -945,7 +945,7 @@ function rrLeft(p){ return p.rrUsed.filter(function(u){ return !u; }).length; }
    no count for this pool at all (a fleet without a commander before
    5.10.2026 - its rerolls field is the untouched 0), so the boxes start
    free. o.perTurn: the roster says the pool is per turn (Abaddon, Fleets
-   p. 231); a record older than that flag gets it here. */
+   p. 241); a record older than that flag gets it here. */
 function adoptRerolls(p, kinds, o){
   var k = (kinds || []).slice();
   if(o && o.perTurn != null) p.rerollsPerTurn = o.perTurn ? k.length : 0;
@@ -1029,8 +1029,8 @@ function flagshipBridgeRestored(fleet){
    and dragged freely in the builder - so it cannot say; the fleet list can:
    every list prints its fleet commander before its captains, lords and
    farseers (Bastion: Admiral p. 36, Veteran Captains p. 38; Chaos:
-   Warmaster before Chaos Lords, pp. 232-248; Iyanden: Autarch before
-   Farseers, p. 318). rows: [{kind, s, e}] with the list's section and row
+   Warmaster before Chaos Lords, pp. 242-252; Iyanden: Autarch before
+   Farseers, p. 316). rows: [{kind, s, e}] with the list's section and row
    index; returns the roster index, -1 without a commander. */
 function fleetCommander(rows){
   var best = -1;
@@ -1091,7 +1091,7 @@ function tapHit(R, st, n){
    defences "cannot take on any special orders except Reload Ordnance,
    though they may also attempt to Brace For Impact" (Rulebook p. 100,
    Fleets p. 499); a Ramilies adds Lock On (Fleets p. 503), and so do the
-   Fortress-Monastery (p. 111) and the Eldar Haven (p. 336). */
+   Fortress-Monastery (p. 111) and the Eldar Haven (p. 334). */
 /* The three orders that are about moving. A unit that stays where it is
    (isStill: the Nicassar Rig, "stationary in the same manner as any other
    planetary defence", Fleets p. 493) has no use for them, and the page
@@ -1119,7 +1119,7 @@ function fixedLd(R){
    "Fleet Commanders may be placed aboard a Ramilies" (Fleets p. 503),
    "aboard a fortress" (p. 111) - and the Eldar Haven, whose own rule line
    says a "fleet commander can lead the battle aboard it instead of a
-   ship" (p. 336). A platform, a station, an air base or a defence vessel
+   ship" (p. 334). A platform, a station, an air base or a defence vessel
    has no Leadership value at all (Rulebook p. 100) and no such line. */
 function mayCarryCommander(R){
   if(!R || R.kind !== "ship" || !R.stats || isEscort(R)) return false;

@@ -32,7 +32,7 @@ nothing about the correctness of the values. One difference is deliberate, thoug
   extract.py CUTS the table if a row has >=14 words (a wide
   interstitial sentence). This checker SKIPS such a row and continues. This way
   pages are found where the book has more table than the extractor took.
-  They are not automatically errors: e.g. Torture p.352 is fixed
+  They are not automatically errors: e.g. Torture p.354 is fixed
   by hand in build_data.py. They are reported in a class of their own
   to check, not as a finding.
 
@@ -80,7 +80,7 @@ def cmpable(t):
     on purpose in its stats pattern - it is not a column error but a deliberate
     simplification, and it is reported separately as a remark of its own."""
     t = re.sub(r"\s*\(quadrant\)", "", norm(t), flags=re.I)
-    # p.181 Endeavour prints the TURNS value "90" without a degree sign; build_data
+    # p.191 Endeavour prints the TURNS value "90" without a degree sign; build_data
     # adds the sign (turns_text), and that is a deliberate normalisation, not a
     # column error.
     return re.sub("(\\d)\u00b0$", "\\1", t)
@@ -250,7 +250,7 @@ for pg in sorted(by_page):
     mine = [[norm(r[k]) for k in ARM_KEYS] for r in derived]
     if len(stored) != len(mine):
         # More in the data than on the page = the extractor's cut has been fixed
-        # by hand (Torture p.352, Waystation p.481). More on the page than
+        # by hand (Torture p.354, Waystation p.481). More on the page than
         # in the data = weapons are missing, and that is a finding.
         kind = "B completed by hand" if len(stored) > len(mine) else "B row count"
         add(kind, ref, "data %d weapon rows, from the page %d%s"

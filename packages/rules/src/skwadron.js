@@ -5,15 +5,15 @@ import { isUpgradeEnt, selectionOf, upState, upgradeKey, upgradesFor } from "./u
 /* ---- A tiddla skwadron's own upgrades (ruling T60, 28.10.2026) ----
    Da Ork Clanz: "The point cost for clan upgrades for tiddla skwadrons count
    for the whole skwadron (regardless of how large it is!), not individual
-   escorts" (Fleets p. 369), and "For tiddla skwadrons, the point cost for
+   escorts" (Fleets p. 371), and "For tiddla skwadrons, the point cost for
    Gubbins count for the whole skwadron (regardless of how large it is!), not
-   individual escorts" (p. 370). A mixed tiddla is the rows of one tag
+   individual escorts" (p. 372). A mixed tiddla is the rows of one tag
    (clanzTiddlas), so a clan or a Gubbin is the skwadron's, not a row's:
    taken on any of its rows, every row of the skwadron that is offered it has
    it, and it is paid once - on the first row that took it itself, else on
    the first row offered it, in fleet order. A row priced per escort (Klaws
-   for Grunts, "+5 points per escort", p. 371) stays each row's own. A Blood
-   Axe tiddla's commandeered escorts (p. 369) are of its skwadron too.
+   for Grunts, "+5 points per escort", p. 373) stays each row's own. A Blood
+   Axe tiddla's commandeered escorts (p. 371) are of its skwadron too.
 
    Read with the simulator's own workaround (28.10.2026: bought on one row,
    the effect copied to the others), which this replaces. */
@@ -89,7 +89,7 @@ export function shareSkwadronUpgrades(intents, ctx, catalog){
       takenIn(s, rows).forEach(function(key){ if(!(key in first) && !was[rows[key]]) first[key] = i; });
     });
     /* a clan opens rows of its own on every row it reaches (Deathskullz'
-       free looted upgrades, p. 369), so this runs until nothing is added */
+       free looted upgrades, p. 371), so this runs until nothing is added */
     var offer = [], taken = {};
     for(var pass = 0; pass < 4; pass++){
       var sels = ix.map(function(i){ return selectionOf(cur[i], c0, catalog); });

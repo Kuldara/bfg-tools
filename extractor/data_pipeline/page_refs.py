@@ -57,7 +57,7 @@ for Lx in lists_out:
             # - then the book's reference must not be changed. This happened to
             # the row "Cargo Transport (pg. 85)": the profile on page 85 is
             # "TRANSPORT", and because the word is on the stop list, the row was
-            # pointed to page 192 (Armed Cargo Vessel) and the book was
+            # pointed to page 202 (Armed Cargo Vessel) and the book was
             # blamed for an error.
             if cur is not None and (not cur or (lab & cur)):
                 continue                      # the name and the reference agree
@@ -103,7 +103,7 @@ print("page references fixed by name: %d, flagged as suspicious: %d"
 # A shared profile, the wrong faction on the card.
 #
 # The book prints on the Chaos lists "Vengeance class grand cruiser (pg. 58)",
-# although the Chaos section has the same profile on page 270. The reference is the book's own
+# although the Chaos section has the same profile on page 272. The reference is the book's own
 # cross reference to a shared profile, not a misprint - but on the card it produces
 # the subtitle "Imperial Navy" in a Chaos fleet and steers the player to the wrong
 # section. It is pointed to the faction's own printing if and only if the profiles
@@ -204,7 +204,7 @@ _xenos_base = XENOS_VARIANTS.get("184", [])
 if _xenos_base:
     _sr = (ships.get("184") or {}).get("sr") or ""
     assert XENOS_SOURCE in _sr, (
-        "the Xenos variants' source sentence is not in the SPECIAL block of page 184 - "
+        "the Xenos variants' source sentence is not in the SPECIAL block of page 194 - "
         "the expansion is not made by guessing")
     for _key, _label in _xenos_base:
         assert _key in ships, "Xenos variant %s is missing from the profiles" % _key
@@ -243,7 +243,7 @@ for pg, nm, t, why in sw_skip:
 
 # A page reference without a ship profile is not a ship row.
 #
-# "Auxiliary vessels (pg. 191)" and "Ghostship (pg. 306)" point to
+# "Auxiliary vessels (pg. 201)" and "Ghostship (pg. 308)" point to
 # rule pages, not profiles: the former says escorts may be picked from the allied
 # fleet, the latter is about the Eldar ghost ships.
 # The reference is cleared before classification, so that they become fleet upgrades

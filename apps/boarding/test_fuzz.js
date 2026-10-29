@@ -113,7 +113,7 @@ for (var run = 0; run < RUNS; run++) {
   ["att", "def"].forEach(function (k) {
     var living = B.alive(prep === null ? { ships: [] } : (k === "att" ? att : def));
     if (living.length && living.every(function (s) { return B.has(s, "nocrew"); })) {
-      ok(prep[k].dice === 0, "a crewless side adds no D6 (FL p.284)", { ctx: ctx, k: k });
+      ok(prep[k].dice === 0, "a crewless side adds no D6 (FL p.286)", { ctx: ctx, k: k });
     }
   });
 

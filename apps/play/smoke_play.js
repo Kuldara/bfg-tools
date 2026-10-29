@@ -145,8 +145,8 @@ function run(check){
        Fleets p. 503: a Ramilies' "Leadership is rolled as for a capital
        ship". The cruiser is the flagship here: the Fleet-Admiral's fixed
        Ld 8 stands in for its roll (Fleets p. 35, RULINGS.md T8). Six tiles:
-       Ld 5 (Orks, Fleets p. 358) to Ld 10 (Space Marines, Fleets p. 94) -
-       a fleet may hold ships of another table (Grey Knights, p. 138, 144). */
+       Ld 5 (Orks, Fleets p. 360) to Ld 10 (Space Marines, Fleets p. 94) -
+       a fleet may hold ships of another table (Grey Knights, p. 148, 154). */
     check("smoke: set-up offers Ld tiles to the escort squadron and the Ramilies (Fleets p. 503), not to the Admiral's flagship", tiles(I.lunar) === 0 && tiles(I.sword) === 6 && tiles(I.fort) === 6, [tiles(I.lunar), tiles(I.sword), tiles(I.fort)].join("/"));
     const tileVals = i => (setup.match(new RegExp('data-act="ld" data-i="' + i + '" data-arg="(\\d+)"', "g")) || []).map(s => s.replace(/^.*data-arg="(\d+)"$/, "$1")).join(",");
     check("smoke: ... the tiles are Ld 5 to Ld 10 (Rulebook p. 45; Fleets p. 94, 302, 358)", tileVals(I.sword) === "5,6,7,8,9,10", tileVals(I.sword));
@@ -486,9 +486,9 @@ function run(check){
     pg.ctx.__doc = { ln: L.nm, limit: 9000, units: [saved(L, /^Chaos Warmaster$/, /^Chaos Warmaster/), dsp, saved(L, /^Cruisers$/, /^Murder/)] };
     P(`newGame(resolveFleet(__doc)); V.screen = "setup"; save(); render();
        var MU = U.findIndex(x => /MURDER/.test(x.R.className || "")), DS = U.findIndex(x => /DESPOILER/.test(x.R.className || ""));`);
-    /* Fleets p. 235: "A Daemon ship may not be commanded by a Warmaster or a
+    /* Fleets p. 245: "A Daemon ship may not be commanded by a Warmaster or a
        Chaos Lord even if it is the largest ship in the fleet." */
-    check("smoke: the Warmaster's flagship is the Murder, not the bigger Daemonship (Fleets p. 235, J215)",
+    check("smoke: the Warmaster's flagship is the Murder, not the bigger Daemonship (Fleets p. 245, J215)",
           P(`U[DS].R.upgrades.some(x => /^Daemonship/.test(x.label) && x.state === "take") && G.flag === MU`) === true,
           P(`JSON.stringify([G.flag, MU, DS])`));
   });
@@ -534,13 +534,13 @@ function run(check){
       wl("w3"), sk(/^Tiddla skwadron$/, /^Ravager/, 3, "Ravagers", "w3"), sk(/^Tiddla skwadron$/, /^Onslaught/, 3, "Onslaughts", "w3")] };
     P(`newGame(resolveFleet(__doc)); V.screen = "setup"; save(); render();
        var NX = n => U.findIndex(x => x.u.name === n), WL = U.map((x, i) => x.R.kind === "commander" ? i : -1).filter(i => i >= 0);`);
-    /* Fleets p. 372: "He must be embarked on the most expensive ship under
+    /* Fleets p. 374: "He must be embarked on the most expensive ship under
        his own command (as opposed to the whole fleet), even if it is an
        escort"; Rulebook p. 123: "Assign the Fleet Commander(s) to their
        ship(s)" */
     const at = P(`JSON.stringify(WL.map(j => j === G.cmd ? G.flag : (G.on || {})[j]))`);
     const want = P(`JSON.stringify([NX("Smasha"), NX("Terra"), NX("Ravagers")])`);
-    check("smoke: every Clanz Warlord starts aboard the dearest ship of his own command, an escort squadron too (Fleets p. 372, T43)", at === want, at + " vs " + want);
+    check("smoke: every Clanz Warlord starts aboard the dearest ship of his own command, an escort squadron too (Fleets p. 374, T43)", at === want, at + " vs " + want);
     const setup = P(`renderSetup()`);
     clean("the Clanz set-up screen", setup);
     check("smoke: ... the set-up shows each Warlord's ship", ["Smasha", "Terra", "Ravagers"].every(n => strip(setup).indexOf("aboard " + n) >= 0), strip(setup).slice(0, 400));
@@ -557,7 +557,7 @@ function run(check){
     check("smoke: ... each Warlord rides on his ship's card with his own re-roll boxes",
           P(`[NX("Smasha"), NX("Terra"), NX("Ravagers")].every((s, k) => renderRow(s, false).indexOf('data-act="rrbox" data-i="' + (k ? WL[k] : -1) + '"') >= 0 || renderRow(s, false).indexOf('data-act="rrbox" data-i="' + WL[k] + '"') >= 0)`) === true,
           strip(P(`renderRow(NX("Terra"), false)`)).slice(0, 300));
-    check("smoke: ... a W tag on a ship tells whose re-rolls it may use (Fleets p. 372)",
+    check("smoke: ... a W tag on a ship tells whose re-rolls it may use (Fleets p. 374)",
           /\bW2\b/.test(strip(P(`renderRow(NX("Savages"), false)`))) && /\bW3\b/.test(strip(P(`renderRow(NX("Onslaughts"), false)`))));
     P(`act("crit", NX("Terra"), "9")`);
     check("smoke: ... Bridge Smashed on Warlord 2's ship loses his re-rolls only (p. 67, T43)",
@@ -578,14 +578,14 @@ function run(check){
     P(`newGame(resolveFleet(__doc)); V.screen = "setup"; save(); render(); var HV = U.findIndex(x => /HAVEN/.test(x.R.className || ""));`);
     const setup = P(`renderSetup()`);
     clean("the Eldar set-up screen", setup);
-    /* Fleets p. 336: "An Eldar Haven rolls for leadership following Eldar
+    /* Fleets p. 334: "An Eldar Haven rolls for leadership following Eldar
        rules. An Eldar or Dark Eldar fleet commander can lead the battle
        aboard it instead of a ship." */
-    check("smoke: the Haven rolls its Leadership and may carry the commander (Fleets p. 336)", new RegExp('data-act="ld" data-i="' + P(`HV`) + '"').test(setup) && new RegExp('<option value="' + P(`HV`) + '"').test(setup) && P(`G.flag !== HV`));
+    check("smoke: the Haven rolls its Leadership and may carry the commander (Fleets p. 334)", new RegExp('data-act="ld" data-i="' + P(`HV`) + '"').test(setup) && new RegExp('<option value="' + P(`HV`) + '"').test(setup) && P(`G.flag !== HV`));
     P(`U.forEach((x, i) => { if(x.R.kind === "ship" && G.st[i].ld == null) setLd(i, 8); }); act("start", null); for(let k = 0; k < 4; k++) act("hit", HV);`);
     clean("the crippled Haven's row", P(`renderRow(HV, false)`));
     clean("the crippled Haven's card", P(`V.sheet = HV; V.info = true; var __h = renderSheet(HV); V.info = false; V.sheet = null; __h`));
-    check("smoke: a crippled Haven shows no speed modifier and no 'disengaged' switch: it does not move (Fleets p. 336)", !/[^0-9]-5(?![0-9])/.test(strip(P(`renderRow(HV, false)`))) && !/disengaged/.test(strip(P(`V.sheet = HV; __h = renderSheet(HV); V.sheet = null; __h`))), strip(P(`renderRow(HV, false)`)).slice(0, 200));
+    check("smoke: a crippled Haven shows no speed modifier and no 'disengaged' switch: it does not move (Fleets p. 334)", !/[^0-9]-5(?![0-9])/.test(strip(P(`renderRow(HV, false)`))) && !/disengaged/.test(strip(P(`V.sheet = HV; __h = renderSheet(HV); V.sheet = null; __h`))), strip(P(`renderRow(HV, false)`)).slice(0, 200));
   });
 
   /* --------------------------------------------- Tau: the orbitals --- */
@@ -612,11 +612,11 @@ function run(check){
     pg.ctx.__doc = { ln: L.nm, limit: 1000, units: [saved(L, /^WARLORD$/, /^Ork Warlord$/), sav,
       Object.assign(saved(L, /^Tiddla skwadron$/, /^Onslaught attack ship$/, 3), { sq: "T" })] };
     const got = JSON.parse(P(`(() => { const r = resolveFleet(__doc); return JSON.stringify({ sp: r.units.map(x => x.R.stats ? x.R.stats.speed : null), pts: fleetPoints(r.units) }); })()`) || "{}");
-    /* Fleets p. 369: "The point cost for clan upgrades for tiddla skwadrons
+    /* Fleets p. 371: "The point cost for clan upgrades for tiddla skwadrons
        count for the whole skwadron"; "All Evil Sunz ships gain +5 cm speed";
-       Savage 25 cm (p. 385), Onslaught 20 cm (p. 384); 3 x 30 + 3 x 35 + 20
-       (p. 372) */
-    check("smoke: a clan bought on one card of a mixed tiddla gives every card its speed, paid once (Fleets p. 369, T60)",
+       Savage 25 cm (p. 387), Onslaught 20 cm (p. 386); 3 x 30 + 3 x 35 + 20
+       (p. 374) */
+    check("smoke: a clan bought on one card of a mixed tiddla gives every card its speed, paid once (Fleets p. 371, T60)",
           !!got.sp && got.sp[1] === "30 cm" && got.sp[2] === "25 cm" && got.pts === 215, JSON.stringify(got));
   });
 }

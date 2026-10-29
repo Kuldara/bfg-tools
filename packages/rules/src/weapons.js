@@ -45,7 +45,7 @@ export function weaponRows(sel, skip, noList){
      choice has already replaced (the Kill Kroozer's torpedo launcha, or an
      earlier list swap), and the more specific pattern goes first: the
      Shokk-Attack Lance takes the prow heavy gunz, Looted Lances the rest
-     (Fleets pp. 370-371). */
+     (Fleets pp. 372-373). */
   var lswp = [];
   if(L && !noList) upSecs(sel).forEach(function(sec, si){ sec.ents.forEach(function(en, ei){
     if(!isUpgradeEnt(en) || !en.swp) return;
@@ -144,7 +144,7 @@ export function weaponRows(sel, skip, noList){
   /* A ship's own option can bring a weapon too (Ork boarding torpedoes).
      Take / Option / Hide applies: taken is ticked, offered prints an empty
      box, hidden is not on the card. add is one row or a list of rows (the
-     Murder's port AND starboard lance battery, Fleets p.279). */
+     Murder's port AND starboard lance battery, Fleets p.281). */
   (sh.ol || []).forEach(function(o, i){
     if(!o.add) return;
     var st = optState(sel, i);
@@ -161,7 +161,7 @@ export function weaponRows(sel, skip, noList){
     var rx = new RegExp(o.del, "i");
     /* A replacement row is never the one removed: the Lite Kroozer's
        "additional D6 gunz" puts "Prow gunz D6+2" in the heavy gunz slot and
-       takes the plain "Prow gunz 2" row away (Fleets p.383). */
+       takes the plain "Prow gunz 2" row away (Fleets p.385). */
     for(var k = rows.length - 1; k >= 0; k--)
       if(!rows[k].alt && rx.test(String(rows[k].a[0]))) rows.splice(k, 1);
   });
@@ -181,7 +181,7 @@ export function weaponRows(sel, skip, noList){
       var a = r.a.slice();
       if(sp.rg) a[1] = sp.rg;
       /* rgadd: another ordnance type in the same bays (torpedo-bommas,
-         Fleets p.359): the range cell gains an entry instead of changing. */
+         Fleets p.361): the range cell gains an entry instead of changing. */
       if(sp.rgadd && String(a[1]).indexOf(sp.rgadd) < 0)
         a[1] = (a[1] ? String(a[1]) + " / " : "") + sp.rgadd;
       if(sp.st != null){
@@ -237,12 +237,12 @@ export function statSet(sel, key){
 export function effHits(sel){
   return Math.max(1, ((sel.sh && sel.sh.hp) || 0) + statMod(sel, "hp"));
 }
-/* Ruling T57 (user 26.10.2026, read as written for now): Fleets p. 393 "In
+/* Ruling T57 (user 26.10.2026, read as written for now): Fleets p. 395 "In
    their Movement phase Roks travel 10 cm forward in a straight line, no more,
-   no less." A +5 cm speed upgrade (Evil Sunz p. 369, Soopa Boostas p. 370)
+   no less." A +5 cm speed upgrade (Evil Sunz p. 371, Soopa Boostas p. 372)
    therefore leaves a Rok at 10 cm; the row can still be taken and is still
    paid for. The same holds for the other rock vessels that share the Rok's
-   movement (Kroot Warsphere p. 495, Stryxis Caravan p. 197), none of which
+   movement (Kroot Warsphere p. 495, Stryxis Caravan p. 207), none of which
    is offered a speed upgrade. */
 export function fixedSpeed(sh){ return isRockVessel(sh); }
 export function effSpeed(sel){

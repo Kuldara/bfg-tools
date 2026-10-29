@@ -57,7 +57,7 @@ def words(t):
     return len(re.findall(r"[A-Za-z0-9']+", t or ""))
 
 
-#: A curated addition quotes the book with a label: 'Yriel (Fleets p. 319):
+#: A curated addition quotes the book with a label: 'Yriel (Fleets p. 317):
 #  "you may instead pick ..."' or 'Pg. 373: "There is no ..."'. The label and
 #  the quotation marks go, the quotation itself is checked.
 LABEL = re.compile(r"^\s*(?:Pg\.\s*\d+|[A-Z][A-Za-z']{1,20})\s*:\s*")

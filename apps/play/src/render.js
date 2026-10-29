@@ -264,7 +264,7 @@ export function renderSetup(){
     const R = x.R, st = appState.G.st[i];
     if(R.kind === "commander"){
       /* who he may board: a capital ship, a star fort (Fleets p. 503,
-         p. 111) or a Haven (p. 336) - never a platform, a station or a
+         p. 111) or a Haven (p. 334) - never a platform, a station or a
          defence vessel (PLAY.mayCarryCommander); an Ork Warlord the ships
          the builder gives him, an escort squadron too (J233, carriersOf) */
       const caps = carriersOf(i), fc = i === appState.G.cmd, cur = fc ? appState.G.flag : (appState.G.on || {})[i];
@@ -284,7 +284,7 @@ export function renderSetup(){
     if(R.kind !== "ship") return "";
     const esq = PLAY.isEscort(R);
     /* Ld 5 to Ld 10: the rulebook's table gives 6-9 (p. 45), the fleets'
-       own tables 5 (Orks, Fleets p. 358) to 10 (Space Marines, p. 94), and
+       own tables 5 (Orks, Fleets p. 360) to 10 (Space Marines, p. 94), and
        a fleet may hold ships of another table (PLAY.LD_VALUES) */
     const tiles = PLAY.LD_VALUES.map(v => `<button class="${st.ldRoll === v ? "on" : ""}" data-act="ld" data-i="${i}" data-arg="${v}">${v}</button>`).join("");
     /* no roll: the commander's own line on the flagship, or a Leadership
@@ -317,7 +317,7 @@ export function renderSetup(){
   return `<div class="top"><h1>Set up<small>${esc(appState.G.ln)} ${MID} ${fleetPoints(appState.U)} pts</small></h1>
       <div class="tools">${builderTool()}<button class="tool" data-act="newgame" title="Back to the fleets: this set-up is not kept">Exit</button></div></div>
     <div class="main">${factsCard()}<div class="card"><h2>Leadership</h2>
-      <p>Roll a D6 per capital ship and per escort squadron before the game (p. 45): 1 = Ld 6, 2&ndash;3 = Ld 7, 4&ndash;5 = Ld 8, 6 = Ld 9. Fleets with a table of their own run from Ld 5 (Orks, Fleets p. 358) to Ld 10 (Space Marines, Fleets p. 94). Tap the value the ship fights on: a bonus of its own (an Emperor's +1, Fleets p. 53) is yours to add. SQN groups capital ships into a squadron: one Ld, one order, combined fire (p. 95, 99). Tap a ship's name to give it another one for this game.${appState.L0.clanz ? " Da Ork Clanz: a Warlord may swap Leadership with any one ship or escort squadron under his command (Fleets p. 372) - tap the swapped values." : ""}${anyFixed ? " Planetary defences do not roll: their checks are made on Ld 7 (Rulebook p. 100)." : ""}</p>
+      <p>Roll a D6 per capital ship and per escort squadron before the game (p. 45): 1 = Ld 6, 2&ndash;3 = Ld 7, 4&ndash;5 = Ld 8, 6 = Ld 9. Fleets with a table of their own run from Ld 5 (Orks, Fleets p. 360) to Ld 10 (Space Marines, Fleets p. 94). Tap the value the ship fights on: a bonus of its own (an Emperor's +1, Fleets p. 53) is yours to add. SQN groups capital ships into a squadron: one Ld, one order, combined fire (p. 95, 99). Tap a ship's name to give it another one for this game.${appState.L0.clanz ? " Da Ork Clanz: a Warlord may swap Leadership with any one ship or escort squadron under his command (Fleets p. 374) - tap the swapped values." : ""}${anyFixed ? " Planetary defences do not roll: their checks are made on Ld 7 (Rulebook p. 100)." : ""}</p>
       ${frrRow}${rows}
       <button class="btn" data-act="start" ${ready ? "" : "disabled"}>Start the game</button>
       ${ready ? "" : `<p class="why">To start, pick the Ld of ${missing.length === 1 ? "one more ship" : missing.length + " more ships"}: ${missing.map(i => `<button data-act="seek" data-i="${i}">${esc(unitName(i))}</button>`).join(", ")}</p>`}</div></div>`;
@@ -385,14 +385,14 @@ export function renderRoster(){
 
 
 
-/* Da Ork Clanz, Fleets p. 370 (user 28.10.2026: information only, the
+/* Da Ork Clanz, Fleets p. 372 (user 28.10.2026: information only, the
    player adds it - RULINGS.md T40): "Ork escort skwadrons gain a +1 bonus
    to their Leadership while they contain more than five models". */
 export function mobChip(n){
   return appState.L0 && appState.L0.clanz && n > 5
-    ? `<span class="chip" title="Ork escort skwadrons gain +1 Leadership while they contain more than five models (Fleets p. 370). Add it to the Ld you play with.">mob rule: +1 Ld (${n} ships)</span>` : "";
+    ? `<span class="chip" title="Ork escort skwadrons gain +1 Leadership while they contain more than five models (Fleets p. 372). Add it to the Ld you play with.">mob rule: +1 Ld (${n} ships)</span>` : "";
 }
-/* Young Gunz, Fleets p. 370: "Any Ork escort skwadron with a Leadership of 5
+/* Young Gunz, Fleets p. 372: "Any Ork escort skwadron with a Leadership of 5
    or 6 gets a bonus escort ship added for free" - said at set-up, where the
    Ld is picked; the free ship is the player's to add */
 export function youngGunzNote(i){
@@ -400,7 +400,7 @@ export function youngGunzNote(i){
   const R = appState.U[i].R, st = appState.G.st[i], g = appState.G.grp[i];
   if(!PLAY.isEscort(R) || (st.ld !== 5 && st.ld !== 6)) return "";
   if(isEscGrp(g) && groupUnits(g)[0] !== i) return "";
-  return ` ${MID} <span class="yg" title="Any Ork escort skwadron with a Leadership of 5 or 6 gets a bonus escort ship added for free: any Ork escort class of the list costing no more than the cheapest paid for in the skwadron, ten at most. Young Gunz comes before Mob Rule (Fleets p. 370).">Young Gunz: one free escort (Fleets p. 370)</span>`;
+  return ` ${MID} <span class="yg" title="Any Ork escort skwadron with a Leadership of 5 or 6 gets a bonus escort ship added for free: any Ork escort class of the list costing no more than the cheapest paid for in the skwadron, ten at most. Young Gunz comes before Mob Rule (Fleets p. 372).">Young Gunz: one free escort (Fleets p. 372)</span>`;
 }
 /* A squadron's own colour ties its header and its members together. */
 /* A squadron's colour: the capital squadrons A, B, C take the first three,
@@ -464,11 +464,11 @@ export function squadronTable(units, names){
   /* a dice strength (Ork gunz) is rolled ship by ship and stays on the
      ships' cards (T13): the table says so rather than dropping it */
   const diceRows = all.filter(r => SUMS.test(r.kind) && !(r.total > 0) && (r.dice || []).length);
-  const diceFoot = diceRows.length ? `<p class="foot">Rolled ship by ship, not summed: ${diceRows.map(r => esc(r.kind) + " " + r.dice.map(d => esc(d)).join(", ")).join("; ")} (Fleets p. 360).</p>` : "";
+  const diceFoot = diceRows.length ? `<p class="foot">Rolled ship by ship, not summed: ${diceRows.map(r => esc(r.kind) + " " + r.dice.map(d => esc(d)).join(", ")).join("; ")} (Fleets p. 362).</p>` : "";
   if(!rows.length) return `<p class="foot">No combined fire: nothing with a number to add (p. 99).${firing}</p>${diceFoot}`;
   const trs = rows.map(r => {
     const name = r.kind === "battery" ? "Weapons batteries" : r.kind === "lance" ? "Lances" : r.kind === "torpedoes" ? "Torpedoes, one salvo" : r.kind === "launch bays" ? "Launch bays, one wave" :
-                 r.kind === "heavy gunz" ? "Heavy gunz, 2 hits each (Fleets p. 360)" : "Bombardment cannons";
+                 r.kind === "heavy gunz" ? "Heavy gunz, 2 hits each (Fleets p. 362)" : "Bombardment cannons";
     const [letter, badge] = wepClass(r.kind === "lance" ? "lance battery" : r.kind === "torpedoes" ? "torpedoes" : r.kind === "launch bays" ? "launch bays" : "weapons battery");
     const nums = r.parts.filter(p => PLAY.num(p.now) != null);
     const half = nums.reduce((a, p) => a + PLAY.half(PLAY.num(p.now)), 0);
@@ -531,11 +531,11 @@ export function rrBoxesHTML(i){
   const open = rrOpen(i);
   if(!boxes.length && !open) return "";
   const left = boxes.filter(b => !b.used).length;
-  /* Abaddon's one comes back every turn (Fleets p. 231). Without the
+  /* Abaddon's one comes back every turn (Fleets p. 241). Without the
      orders track the page has no enemy turn to start, so it says who
      brings the box back then. */
-  const perTurn = !pool.rerollsPerTurn ? "" : OPT.orders ? " " + MID + " back every turn (Fleets p. 231)"
-    : " " + MID + " 1 per turn (Fleets p. 231): back at NEW TURN - tap it back yourself for the enemy's turn";
+  const perTurn = !pool.rerollsPerTurn ? "" : OPT.orders ? " " + MID + " back every turn (Fleets p. 241)"
+    : " " + MID + " 1 per turn (Fleets p. 241): back at NEW TURN - tap it back yourself for the enemy's turn";
   const note = pool.rerollsLost ? (i >= 0 && i !== appState.G.cmd ? "lost: his ship's bridge smashed (p. 67)" : "lost: flagship bridge smashed (p. 67)")
     : (left + " of " + boxes.length + " left") + perTurn + (open ? " " + MID + " + open option: tap if bought" : "");
   return `<div class="rrb">${boxes.map((b, k) =>
@@ -546,9 +546,9 @@ export function rrBoxesHTML(i){
 /* A commander's re-rolls in the builder's own words (DOMAIN.rerollText):
    what the price includes, what was bought, and the book's limit on them. */
 export function rrWords(R){ return R.rerolls && R.rerolls.text ? " " + MID + " " + esc(R.rerolls.text) : ""; }
-/* A fleet without a commander: its own re-rolls (Necrons p. 404, Demiurg p. 486). */
+/* A fleet without a commander: its own re-rolls (Necrons p. 406, Demiurg p. 486). */
 export function fleetRR(){ return appState.G.cmd == null && appState.L0 && appState.L0.frr ? DOMAIN.fleetRerolls(appState.L0, appState.U.map(x => x.R)) : null; }
-/* The wreck: what it is now and what it still does (p. 71 / Fleets p. 423). */
+/* The wreck: what it is now and what it still does (p. 71 / Fleets p. 425). */
 export const ICON = {
   drifting: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15l4-2 3 2 4-3 3 2 4-2v4H3z"/><path d="M8 13l1-6 3 1-1 5zM14 12l2-5 2 1-2 4z" opacity=".7"/></svg>',
   blazing: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22c-4 0-7-3-7-7 0-3 2-5 3-7 0 2 1 3 2 3 0-4 2-6 5-8 0 3 1 4 3 6 2 2 3 4 3 6 0 4-3 7-7 7zm0-2c2 0 3-1 3-3 0-1-1-2-2-3 0 1-1 2-2 2 0-2-1-3-1-4-1 1-2 2-2 4 0 2 1 4 4 4z"/></svg>',
@@ -728,7 +728,7 @@ export function renderPop(i){
       <button class="close" data-act="closepop">close</button></div>`;
     return `<div class="pop"><h4>Leadership ${appState.G.grp[i] ? MID + " " + esc(unitName(i)) + " " : ""}${MID} rolled ${l.base == null ? "?" : l.base}${st.ldPerm ? " " + MID + " bridge smashed " + st.ldPerm : ""}</h4>
       ${others2}
-      <p>${l.base == null ? "Roll a D6 (p. 45): 1 = 6, 2-3 = 7, 4-5 = 8, 6 = 9 - or on the fleet's own table: Ld 5 (Orks, Fleets p. 358) to Ld 10 (Space Marines, Fleets p. 94)." : "Command checks: 2D6 equal to or under Ld; -1 under fire, +1 enemy contacts, never above 10 (p. 48) - count those from the table."}</p>
+      <p>${l.base == null ? "Roll a D6 (p. 45): 1 = 6, 2-3 = 7, 4-5 = 8, 6 = 9 - or on the fleet's own table: Ld 5 (Orks, Fleets p. 360) to Ld 10 (Space Marines, Fleets p. 94)." : "Command checks: 2D6 equal to or under Ld; -1 under fire, +1 enemy contacts, never above 10 (p. 48) - count those from the table."}</p>
       <div class="tiles c6">${PLAY.LD_VALUES.map(n => `<button class="${st.ldRoll === n ? "on" : ""}" data-act="ld" data-i="${i}" data-arg="${n}"><b>${n}</b></button>`).join("")}</div>
       ${st.ldFrom === "commander" ? `<p>The commander's Leadership line applies to this flagship: a fixed value stands in for the roll, a bonus is added to it.</p>` : ""}
       <button class="close" data-act="closepop">close</button></div>`;
@@ -745,7 +745,7 @@ export function renderPop(i){
     const l = appState.G.grp[i] ? PLAY.squadronLd(groupUnits(appState.G.grp[i]).map(j => ({ R: appState.U[j].R, st: appState.G.st[j] })), fl) : PLAY.leadership(R, st, fl);
     /* only the orders this unit may take at all (R.orders): a planetary
        defence Reload Ordnance and Brace (Rulebook p. 100), a star fort and
-       a Haven Lock On as well (Fleets p. 503, 111, 336) - its own rule
+       a Haven Lock On as well (Fleets p. 503, 111, 334) - its own rule
        line says which and where */
     const tiles = PLAY.ordersFor(R).filter(o => o.id !== "BFI").map(o =>
       `<button class="${st.order === o.id ? "on" : ""}" data-act="order" data-i="${i}" data-arg="${o.id}" ${PLAY.canOrder(st, fl, o.id, R) || st.order === o.id ? "" : "disabled"}>${esc(o.name)}${appState.V.info ? `<small>${esc(o.line)}</small>` : ""}</button>`).join("");
@@ -912,7 +912,7 @@ export function renderMenu(){
      by one (Fleets p. 512) */
   const rows = appState.U.map((x, i) => x.R.kind === "ship" || PLAY.tickUnit(x.R) ? `<tr><td>${esc(unitName(i))}${cmdPts(i) ? " + " + esc(cmdsAboard(i).map(unitName).join(", ")) : ""}${appState.G.st[i].disengaged ? " (disengaged)" : ""}${isEscGrp(appState.G.grp[i]) ? " (squadron " + grpLabel(appState.G.grp[i]) + ")" : ""}</td><td>${vpOf(i)}</td></tr>` : "").join("");
   const vp = vpTotal(), mo = appState.V.menuOpen || {};
-  const nec = appState.U.some(u => u.R && u.R.source && /NECRON/i.test(String(u.R.source.faction || ""))) ? "; Necrons Fleets p. 402" : "";
+  const nec = appState.U.some(u => u.R && u.R.source && /NECRON/i.test(String(u.R.source.faction || ""))) ? "; Necrons Fleets p. 404" : "";
   const all = TRACK.every(t => OPT[t[0]]), some = TRACK.some(t => OPT[t[0]]);
   return `<div class="menu" data-act="menu"><div class="box">
     <div class="mhd"><h2>Menu</h2><button class="x" data-act="menu" aria-label="Close the menu">&#215;</button></div>

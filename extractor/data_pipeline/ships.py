@@ -8,7 +8,7 @@ until 26.10.2026, split by stage for reading, not for reuse.
 import json, io, re, collections, os, sys
 import upgrades
 import swaps, copy
-from .inputs import P, re
+from .inputs import P, SHIP_ID, re
 # ------------------------------------------------------------------ SHIPS
 def ship_type(p):
     return (p["stats"].get("TYPE/HITS", "") or "").split("/")[0].strip() or "Ship"
@@ -66,7 +66,7 @@ _TURNS_FIXED = [0]
 
 
 def turns_text(t):
-    """p.181 Endeavour prints the TURNS value '90' without a degree sign; the card
+    """p.191 Endeavour prints the TURNS value '90' without a degree sign; the card
     printed it as is (spot check 6). A bare number is degrees.
     The defence structures' '0' (p.506-517) stays: it is not an angle but
     'does not turn', and the book prints it without a sign."""
@@ -79,7 +79,7 @@ def turns_text(t):
 
 ships = {}
 for p in P:
-    ships[str(p["page"])] = dict(
+    ships[SHIP_ID[p["page"]]] = dict(
         pg=p["page"], fl=p["fleet"], nm=p["title"], bp=p["pts"],
         ty=ship_type(p), hp=hits(p),
         sp=p["stats"].get("SPEED", ""), tn=turns_text(p["stats"].get("TURNS", "")),
@@ -98,22 +98,16 @@ for p in P:
     )
 
 # The book's two [???] cross references point to the Rogue Trader Xenotech Systems
-# table on page 175. The card prints the corrected reference.
+# table on page 185. The card prints the corrected reference.
 if "184" in ships:
-    ships["184"]["sr"] = ships["184"]["sr"].replace("[???]", "p. 175")
+    ships["184"]["sr"] = ships["184"]["sr"].replace("[???]", "p. 185")
 if "192" in ships:
-    ships["192"]["op"] = ships["192"]["op"].replace("[???]", "p. 175")
+    ships["192"]["op"] = ships["192"]["op"].replace("[???]", "p. 185")
     ships["192"]["ol"] = parse_options(ships["192"]["op"])
 
-# On page 481 (Tau Waystation) the SPECIAL box and the table's Ion cannon row
-# overlap, and the text extraction merged the weapon row into the first
-# sentence: "even if Ion cannon 30 cm 1 All round planetary defences
-# are not normally permitted". The book's sentence is "even if planetary defences
-# are not normally permitted"; the weapon row is already in the table (aw) on its own.
-if "481" in ships:
-    _bad = "even if Ion cannon 30 cm 1 All round planetary defences"
-    assert _bad in ships["481"]["sr"], "p.481: the expected extraction error is missing - check extract.py"
-    ships["481"]["sr"] = ships["481"]["sr"].replace(_bad, "even if planetary defences")
+# Page 481 (Tau Waystation): in v0.36 the SPECIAL box and the table's Ion
+# cannon row overlapped and the extraction merged them; v0.40 fixed the layout.
+assert "Ion cannon 30 cm" not in ships["481"]["sr"], "p.481: the Ion cannon row is in the SPECIAL text again"
 
 # --- Planetary defences: three profiles the extractor does not get (8.10.2026) ---
 # extract.py reads one profile per page and needs both a TYPE/HITS and an
@@ -145,14 +139,14 @@ ships["517c"] = dict(
     pg=517, fl="LOW ORBIT DEFENCES", nm="MISSILE SILO", bp=5, ty="Ground", hp=1,
     sp="0", tn="0", sh="0", ar="6+", tu="0", tl="TURRETS", qd=0,
     aw=[["Torpedoes", "30 cm", "6", "Front"]], op="", ol=[], sr="")
-# p.337 and p.347: "An Eldar Haven space station ... may be used as a Dark Eldar
+# p.335 and p.349: "An Eldar Haven space station ... may be used as a Dark Eldar
 # pirate base by trading its bombers for Slavebringer assault boats and its
 # Pulsar Lances for Phantom Lances for no change in cost. It is otherwise
-# unchanged." The book prints no profile of its own for the base: the Haven's (p.334)
+# unchanged." The book prints no profile of its own for the base: the Haven's (p.332)
 # rows swapped. The fighters stay (Darkstar 30 cm) - the swap names only
-# the bombers and the lances; the Slavebringer's speed 30 cm is from the p.345 table.
+# the bombers and the lances; the Slavebringer's speed 30 cm is from the p.347 table.
 # Range 45 cm and strength 3 are the Haven's own ("otherwise unchanged");
-# the Dark Eldar ships' phantom lances are 30 cm (p.352), which is not carried over.
+# the Dark Eldar ships' phantom lances are 30 cm (p.354), which is not carried over.
 assert "334b" not in ships and ships["334"]["nm"] == "HAVEN SPACE STATION"
 assert [a[0] for a in ships["334"]["aw"]] == ["Weapons battery", "Launch bays", "Pulsar lances"], ships["334"]["aw"]
 ships["334b"] = dict(ships["334"])
@@ -187,7 +181,7 @@ if "480" in ships:
 # table on purpose, so the other configurations are added as explicit profiles. They
 # get a synthetic key (e.g. 458b), but the card's source page is still 458.
 # The named variants of the Xenos Vessel. The book has one list row at 50 points,
-# but pages 186-188 give three named ships at the same price, each
+# but pages 196-198 give three named ships at the same price, each
 # with its own weapon and special rule. Without the expansion they are in the data
 # but available to no one.
 XENOS_VARIANTS = {
@@ -198,7 +192,7 @@ XENOS_VARIANTS = {
         ("188", "Nekulli whip"),
     ],
 }
-# The source sentence that must be found in the SPECIAL block of page 184. If the book
+# The source sentence that must be found in the SPECIAL block of page 194. If the book
 # changes, the expansion must not stay in force on an old assumption.
 XENOS_SOURCE = "all of them cost 50 points"
 
@@ -283,7 +277,7 @@ if "472" in ships:
     )
     ships["472"]["ol"] = parse_options(ships["472"]["op"])
 
-# The OPTIONS box of page 255 (Chaos battle barge) has two narrative
+# The OPTIONS box of page 257 (Chaos battle barge) has two narrative
 # paragraphs: "Pre-Heresy battle barges were widely emulated..." (it was its own
 # "see text" option) and the tail of the Chosen Terminators row "A number of
 # Primarchs...". Neither is a choice. The same treatment as p.472:
@@ -293,7 +287,7 @@ if "255" in ships:
     _op = ships["255"]["op"]
     assert _op.startswith("Pre-Heresy battle barges were widely emulated"), _op[:60]
     _tail = " A number of Primarchs, and even renowned Battle-Captains ordered subtle modifications"
-    assert _tail in _op, "p.255: the Primarchs sentence is missing"
+    assert _tail in _op, "p.257: the Primarchs sentence is missing"
     _op = _op[_op.index("\u2022 Chaos battle barges can be led"):]
     _op = _op[:_op.index(_tail)] + _op[_op.index(" \u2022 For no change in cost"):]
     ships["255"]["op"] = _op
@@ -302,7 +296,7 @@ if "255" in ships:
     _ct = next(o for o in ships["255"]["ol"] if o["t"].startswith("If Chaos Space Marines are taken"))
     assert _ct.get("dep") == 1 and _ct["t"].endswith("+10 points."), _ct
 
-# The two paragraphs of the OPTIONS box of page 194 (Fra'al Battleship) are
+# The two paragraphs of the OPTIONS box of page 204 (Fra'al Battleship) are
 # rules, not purchases: "... they may be used as a substitution for an enemy
 # in any scenario ..." and "Up to two ships in a pirate fleet may be Fra'al
 # battleships, rolling for leadership normally and counting as cruisers against
@@ -389,7 +383,7 @@ if "353" in ships:
         mimic,
     ]
 
-# Hammer (p.374): "Prow bombardment cannon OR Prow torpedoes" is not a
+# Hammer (p.376): "Prow bombardment cannon OR Prow torpedoes" is not a
 # build choice - "In each turn, these launchas can either fire torpedoes or
 # be used as a bombardment cannon." Both rows are always on the ship, and
 # the firing choice is in the SPECIAL text (the user's finding 10.9.2026).
