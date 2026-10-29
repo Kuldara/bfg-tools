@@ -15,7 +15,7 @@
 
 import { citeText, clanzTiddlas, escortSquadronKeys } from "./fleet.js";
 import { upCost } from "./pricing.js";
-import { HOST_OFF, isUpgradeEnt, optState, upState, upgradeTakenAnyWay, upgradesFor } from "./upgrades.js";
+import { HOST_OFF, isUpgradeEnt, optState, sharedBy, upState, upgradeTakenAnyWay, upgradesFor } from "./upgrades.js";
 import { secNameIssues } from "./validation.js";
 
 /* The counting helpers the checks share, over this list and these members. */
@@ -118,7 +118,7 @@ export function fleetCounters(L, catalog, members){
       var ups;
       try { ups = upgradesFor(m.sel); } catch(e){ return a; }
       return a + ups.own.concat(ups.other).filter(function(x){
-        return x[0] === secIdx && upState(m.sel, x[0], x[1]) === "take";
+        return x[0] === secIdx && upState(m.sel, x[0], x[1]) === "take" && !sharedBy(m.sel, x[0], x[1]);
       }).reduce(function(b, x){ return b + upCost(m.sel, x[2]); }, 0);
     }, 0);
   };
@@ -128,6 +128,10 @@ export function fleetCounters(L, catalog, members){
      without the move the key hit the donor list's row and the host's budget
      row stayed green (spot check 20, seed 2026091443). */
   var tookUp = function(m, si, ei){ return upgradeTakenAnyWay(m.sel, m.own ? si : HOST_OFF + si, ei); };
+  /* ...and paid for on this row: a Da Ork Clanz tiddla skwadron's clan or
+     Gubbin is taken on each of its rows but bought once (ruling T60), so a
+     count of purchases counts the row that pays */
+  var paidUp = function(m, si, ei){ return tookUp(m, si, ei) && !sharedBy(m.sel, m.own ? si : HOST_OFF + si, ei); };
   var upRows = function(secIdx, re){
     var rows = [];
     (L.secs[secIdx] ? L.secs[secIdx].ents : []).forEach(function(en, ei){
@@ -141,7 +145,7 @@ export function fleetCounters(L, catalog, members){
   var allySpecial = function(m){
     return !!(L.ally_cmd && m.role === "ally" && m.en && m.en.k === "cmd" &&
               new RegExp(L.ally_cmd.re, "i").test(String(m.en.l))); };
-  return { secKey: secKey, matches: matches, secShips: secShips, secUnits: secUnits, pickHas: pickHas, count: count, pointsOfPick: pointsOfPick, distinctKinds: distinctKinds, upShare: upShare, condMet: condMet, tookUp: tookUp, upRows: upRows, allySpecial: allySpecial };
+  return { secKey: secKey, matches: matches, secShips: secShips, secUnits: secUnits, pickHas: pickHas, count: count, pointsOfPick: pointsOfPick, distinctKinds: distinctKinds, upShare: upShare, condMet: condMet, tookUp: tookUp, paidUp: paidUp, upRows: upRows, allySpecial: allySpecial };
 }
 
 /* The list's own section rules (the rule kinds above), one row per rule. */
@@ -602,12 +606,12 @@ function ruleHookCapacity(F, r, sec, si, lab){
    the Warlord has" (p. 370): each Warlord has one re-roll and may buy
    more. The ship-to-Warlord binding is not modelled, the sum is. */
 function ruleUpBudget(F, r, sec, si, lab){
-  var members = F.members, out = F.out, count = F.count, tookUp = F.tookUp, upRows = F.upRows;
+  var members = F.members, out = F.out, count = F.count, tookUp = F.tookUp, paidUp = F.paidUp, upRows = F.upRows;
   var usedB = 0, budget = 0;
   /* up_re: only these rows use the budget - a Strand of Fortune per Lord
      of Tzeentch (Fleets p. 236), not every Force of Chaos. */
   var budRows = upRows(r.up_sec, r.up_re ? new RegExp(r.up_re, "i") : null);
-  members.forEach(function(m){ budRows.forEach(function(x){ if(tookUp(m, x[0], x[1])) usedB++; }); });
+  members.forEach(function(m){ budRows.forEach(function(x){ if(paidUp(m, x[0], x[1])) usedB++; }); });
   (r.budget || []).forEach(function(b){
     if(b.pick) budget += (b.units || 1) * count(b.pick, null, true);
     if(b.up_re) upRows(b.up_sec, new RegExp(b.up_re, "i")).forEach(function(x){

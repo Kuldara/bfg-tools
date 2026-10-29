@@ -968,7 +968,7 @@ var __rules = (() => {
     var p = 0;
     var ups = upgradesFor(sel);
     ups.own.concat(ups.other).forEach(function(x) {
-      if (upState(sel, x[0], x[1]) === "take") p += upCost(sel, x[2]);
+      if (upState(sel, x[0], x[1]) === "take" && !sharedBy(sel, x[0], x[1])) p += upCost(sel, x[2]);
     });
     return p;
   }
@@ -996,7 +996,7 @@ var __rules = (() => {
     var p = hullOptionPts(sel);
     var ups = upgradesFor(sel);
     ups.own.concat(ups.other).forEach(function(x) {
-      if (!x[2].pct && upState(sel, x[0], x[1]) === "take") p += upCost(sel, x[2]);
+      if (!x[2].pct && upState(sel, x[0], x[1]) === "take" && !sharedBy(sel, x[0], x[1])) p += upCost(sel, x[2]);
     });
     return p;
   }
@@ -1068,6 +1068,7 @@ var __rules = (() => {
       sel.ost,
       sel.oqty,
       sel.ups,
+      sel.shared,
       sel.hulls,
       sel.adjust,
       sel.custom,
@@ -3794,9 +3795,12 @@ var __rules = (() => {
         return {
           id: upgradeId(listOfSec(sel, si).nm, secOf(sel, si).t, en.l),
           label: en.l,
-          cost: upCost(sel, en),
+          /* shared (ruling T60): the label of the row of its tiddla skwadron
+             that pays for it; taken here at no cost */
+          cost: sharedBy(sel, si, ei) ? 0 : upCost(sel, en),
           price: en.p == null ? null : en.p,
           per: en.per || null,
+          shared: sharedBy(sel, si, ei),
           state: upState(sel, si, ei),
           owner,
           required: !!en.req,
@@ -4657,6 +4661,12 @@ var __rules = (() => {
           ups[upgradeKey(HOST_OFF + at3.si, at3.ei)] = intent.upgrades[id];
       }
     });
+    var shared = {};
+    Object.keys(intent.shared || {}).forEach(function(id) {
+      var p = splitUpgradeId(id);
+      var at4 = p && L && p.list === L.nm ? findUpgradeEntry(L, p.section, p.label, at ? at.si : -1, at ? at.ei : -1) : null;
+      if (at4 && intent.shared[id]) shared[upgradeKey(at4.si, at4.ei)] = String(intent.shared[id]);
+    });
     var fleet = ctx ? ctx.host || ctx.list || null : null;
     return {
       list: L,
@@ -4669,6 +4679,7 @@ var __rules = (() => {
       ost,
       oqty,
       ups,
+      shared,
       hulls: intent.hulls > 0 ? intent.hulls : 1,
       custom: intent.custom == null ? null : intent.custom,
       adjust: intent.adjust ? +intent.adjust : 0,
@@ -4682,6 +4693,9 @@ var __rules = (() => {
       escort: !!(sh && (sh.sq || /escort/i.test(sh.ty || ""))),
       defence: !!(sh && sh.df || at && L.secs[at.si].ct === "defence")
     };
+  }
+  function sharedBy(sel, si, ei) {
+    return sel.shared && sel.shared[upgradeKey(si, ei)] || null;
   }
   function optState(sel, i) {
     return sel.ost[i] || "opt";
@@ -5959,7 +5973,7 @@ var __rules = (() => {
           return a;
         }
         return a + ups.own.concat(ups.other).filter(function(x) {
-          return x[0] === secIdx && upState(m.sel, x[0], x[1]) === "take";
+          return x[0] === secIdx && upState(m.sel, x[0], x[1]) === "take" && !sharedBy(m.sel, x[0], x[1]);
         }).reduce(function(b, x) {
           return b + upCost(m.sel, x[2]);
         }, 0);
@@ -5971,6 +5985,9 @@ var __rules = (() => {
     var tookUp = function(m, si, ei) {
       return upgradeTakenAnyWay(m.sel, m.own ? si : HOST_OFF + si, ei);
     };
+    var paidUp = function(m, si, ei) {
+      return tookUp(m, si, ei) && !sharedBy(m.sel, m.own ? si : HOST_OFF + si, ei);
+    };
     var upRows = function(secIdx, re) {
       var rows = [];
       (L.secs[secIdx] ? L.secs[secIdx].ents : []).forEach(function(en, ei) {
@@ -5981,7 +5998,7 @@ var __rules = (() => {
     var allySpecial = function(m) {
       return !!(L.ally_cmd && m.role === "ally" && m.en && m.en.k === "cmd" && new RegExp(L.ally_cmd.re, "i").test(String(m.en.l)));
     };
-    return { secKey, matches, secShips, secUnits, pickHas, count, pointsOfPick, distinctKinds, upShare, condMet, tookUp, upRows, allySpecial };
+    return { secKey, matches, secShips, secUnits, pickHas, count, pointsOfPick, distinctKinds, upShare, condMet, tookUp, paidUp, upRows, allySpecial };
   }
   function checkSectionRules(F) {
     var L = F.L, out = F.out;
@@ -6427,12 +6444,12 @@ var __rules = (() => {
     });
   }
   function ruleUpBudget(F, r, sec, si, lab) {
-    var members = F.members, out = F.out, count = F.count, tookUp = F.tookUp, upRows = F.upRows;
+    var members = F.members, out = F.out, count = F.count, tookUp = F.tookUp, paidUp = F.paidUp, upRows = F.upRows;
     var usedB = 0, budget = 0;
     var budRows = upRows(r.up_sec, r.up_re ? new RegExp(r.up_re, "i") : null);
     members.forEach(function(m) {
       budRows.forEach(function(x) {
-        if (tookUp(m, x[0], x[1])) usedB++;
+        if (paidUp(m, x[0], x[1])) usedB++;
       });
     });
     (r.budget || []).forEach(function(b) {
@@ -6840,7 +6857,7 @@ var __rules = (() => {
     });
   }
   function checkOrkClanz(F) {
-    var L = F.L, members = F.members, out = F.out, tookUp = F.tookUp, upRows = F.upRows, CZ = F.CZ, aboard = F.aboard, sqTags = F.sqTags, sqOf = F.sqOf;
+    var L = F.L, members = F.members, out = F.out, tookUp = F.tookUp, paidUp = F.paidUp, upRows = F.upRows, CZ = F.CZ, aboard = F.aboard, sqTags = F.sqTags, sqOf = F.sqOf;
     var wsum = [];
     if (CZ && CZ.warlords.length) {
       var C = L.clanz;
@@ -6961,12 +6978,17 @@ var __rules = (() => {
           return a.unit === wi;
         })[0];
         var own = ab && ab.ship != null ? members[ab.ship] : null;
+        var ownIx = own ? [members.indexOf(own)] : [];
+        tids.forEach(function(t) {
+          var ix = t.ork.concat(t.com);
+          if (t.tag && ownIx.length && ix.indexOf(ownIx[0]) >= 0) ownIx = ix;
+        });
         var g = 0, off = 0;
         mine.forEach(function(m) {
           gubRows.forEach(function(x) {
-            if (tookUp(m, x[0], x[1])) {
+            if (paidUp(m, x[0], x[1])) {
               g++;
-              if (m !== own) off++;
+              if (ownIx.indexOf(members.indexOf(m)) < 0) off++;
             }
           });
         });
@@ -6979,6 +7001,7 @@ var __rules = (() => {
         S1.gub = g;
         S1.gubOff = off;
         S1.ship = own ? members.indexOf(own) : null;
+        S1.skw = ownIx;
       });
       sqTags.forEach(function(tag) {
         var ms = sqOf[tag], sets = ms.map(function(m) {
@@ -7062,6 +7085,130 @@ var __rules = (() => {
     }
   }
 
+  // packages/rules/src/skwadron.js
+  function isSkwadronUpgrade(L, si, en) {
+    var C = L && L.clanz, sec = L && L.secs[si];
+    if (!C || !sec || !isUpgradeEnt(en) || en.incl || en.req || en.per === "hull" || en.per === "bay") return false;
+    var t = String(sec.t).trim();
+    return [C.clan_sec, C.gub_sec].some(function(re) {
+      return !!re && new RegExp(re, "i").test(t);
+    });
+  }
+  function skwadrons(intents, L, catalog) {
+    var c0 = { list: L, host: L };
+    var members = intents.map(function(it) {
+      var sel = it ? selectionOf(it, c0, catalog) : null;
+      return {
+        intent: it || {},
+        own: !!(sel && sel.list && sel.list.nm === L.nm),
+        unitRow: !!(sel && sel.en) && !isUpgradeEnt(sel.en),
+        si: sel ? sel.si : -1,
+        hulls: sel ? sel.hulls : 1
+      };
+    });
+    return clanzTiddlas(L, members).filter(function(t) {
+      return !!t.tag;
+    }).map(function(t) {
+      return t.ork.concat(t.com).sort(function(a, b) {
+        return a - b;
+      });
+    });
+  }
+  function skwadronMates(intents, i, ctx, catalog) {
+    var L = ctx && (ctx.host || ctx.list);
+    if (!L || !L.clanz || !intents[i] || !intents[i].sq) return [];
+    var g = skwadrons(intents, L, catalog).filter(function(ix) {
+      return ix.indexOf(i) >= 0;
+    })[0];
+    return g ? g.filter(function(j) {
+      return j !== i;
+    }) : [];
+  }
+  function shareSkwadronUpgrades(intents, ctx, catalog) {
+    var L = ctx && (ctx.host || ctx.list);
+    var list = intents || [];
+    var stale = list.some(function(it) {
+      return it && it.shared;
+    });
+    if (!L || !L.clanz || !stale && !list.some(function(it) {
+      return it && it.sq;
+    })) return list;
+    var c0 = { list: L, host: L };
+    var copy = function(it) {
+      var x = JSON.parse(JSON.stringify(it));
+      x.upgrades = x.upgrades || {};
+      delete x.shared;
+      return x;
+    };
+    var cur = list.map(function(it) {
+      return it && it.shared ? copy(it) : it;
+    });
+    var own = function(i) {
+      if (cur[i] === list[i]) cur[i] = copy(list[i]);
+      return cur[i];
+    };
+    var rowsOf = function(sel) {
+      var out = {}, u = upgradesFor(sel);
+      u.own.concat(u.other).forEach(function(x) {
+        if (isSkwadronUpgrade(L, x[0], x[2])) out[upgradeKey(x[0], x[1])] = upgradeId(L.nm, L.secs[x[0]].t, x[2].l);
+      });
+      return out;
+    };
+    var takenIn = function(sel, rows) {
+      return Object.keys(rows).filter(function(key) {
+        var p = key.split(":");
+        return upState(sel, +p[0], +p[1]) === "take";
+      });
+    };
+    skwadrons(cur, L, catalog).forEach(function(ix) {
+      if (ix.length < 2) return;
+      var first = {};
+      ix.forEach(function(i) {
+        var s = selectionOf(cur[i], c0, catalog), rows = rowsOf(s), was = list[i] && list[i].shared || {};
+        takenIn(s, rows).forEach(function(key) {
+          if (!(key in first) && !was[rows[key]]) first[key] = i;
+        });
+      });
+      var offer = [], taken = {};
+      for (var pass = 0; pass < 4; pass++) {
+        var sels = ix.map(function(i) {
+          return selectionOf(cur[i], c0, catalog);
+        });
+        offer = sels.map(rowsOf);
+        taken = {};
+        sels.forEach(function(s, k) {
+          takenIn(s, offer[k]).forEach(function(key) {
+            taken[key] = offer[k][key];
+          });
+        });
+        var added = false;
+        ix.forEach(function(i, k) {
+          Object.keys(taken).forEach(function(key) {
+            var p = key.split(":");
+            if (!offer[k][key] || upState(sels[k], +p[0], +p[1]) === "take") return;
+            own(i).upgrades[taken[key]] = "take";
+            added = true;
+          });
+        });
+        if (!added) break;
+      }
+      Object.keys(taken).forEach(function(key) {
+        var at = ix.filter(function(i, k) {
+          return !!offer[k][key];
+        });
+        var payer = at.indexOf(first[key]) >= 0 ? first[key] : at[0];
+        var by = String(cur[payer].entry && cur[payer].entry.label || "another row");
+        at.forEach(function(i) {
+          if (i === payer) return;
+          var x = own(i);
+          x.shared = x.shared || {};
+          x.shared[taken[key]] = by;
+        });
+      });
+    });
+    return cur;
+  }
+
   // packages/rules/src/resolve-fleet.js
   function resolveFleet(fleetIntent, catalog) {
     var L = catalog.lists.filter(function(x) {
@@ -7069,7 +7216,8 @@ var __rules = (() => {
     })[0] || null;
     var ctx = { list: L, host: L };
     var lim = fleetIntent.limit | 0;
-    var members = (fleetIntent.units || []).map(function(it) {
+    var units = shareSkwadronUpgrades(fleetIntent.units || [], ctx, catalog);
+    var members = units.map(function(it) {
       var sel = selectionOf(it, ctx, catalog);
       var R = resolveUnit(it, ctx, catalog);
       var en = sel.en;
@@ -7184,7 +7332,8 @@ var __rules = (() => {
          unit index, -1 = none) */
       command: CZ ? CZ.of : null,
       /* Clanz (J226): per Warlord {unit, n, rr, tiddla, total, hulk,
-         uge, kro, lone, clans, gub, gubOff, ship, units} */
+         uge, kro, lone, clans, gub, gubOff, ship, skw (the rows of his
+         ship's skwadron), units} */
       warlords: wsum
     };
   }
@@ -7314,7 +7463,12 @@ var __rules = (() => {
     effHits,
     effShieldsText,
     effTurrets,
-    effSpeed
+    effSpeed,
+    /* ruling T60: a Da Ork Clanz tiddla skwadron's clan and Gubbins */
+    shareSkwadronUpgrades,
+    skwadronMates,
+    isSkwadronUpgrade,
+    sharedBy
   };
   var index_default = DOMAIN;
   return __toCommonJS(index_exports);

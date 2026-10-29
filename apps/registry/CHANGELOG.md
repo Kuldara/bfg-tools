@@ -54,6 +54,30 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   (was 36); growing the cards in Your fleet instead would have taken 52.
 
 ### Fixed
+- **Da Ork Clanz: a mixed tiddla's clan and Gubbins are the whole skwadron's,
+  paid once.** Fleets p. 369: "The point cost for clan upgrades for tiddla
+  skwadrons count for the whole skwadron (regardless of how large it is!), not
+  individual escorts"; p. 370 says the same of Gubbins. The builder priced and
+  applied them per card: Evil Sunz bought on the Savage card of tiddla T left
+  its Onslaught card at 20 cm, and Evil Sunz on both cards cost 40 instead of
+  20 (three Savages, three Onslaughts and three Brutes: 310 instead of 290).
+  A Gubbin on both cards was also two of the Warlord's Gubbins.
+  **Ruling T60** (28.10.2026): a mixed tiddla is the cards of one Squadron
+  letter (RAW-01), so a clan row or a Gubbin taken on any of them is the
+  skwadron's. Every card of the tiddla that is offered it has it - its effect
+  is on each card, in the fleet view, the printed card and Play - and it is
+  paid once, on the card that bought it (when several did, the first of them
+  in the fleet); the other cards say "paid on Savage gunship" ("skwadron" on
+  the printed card). Taking, opening or hiding the row on one card does the
+  same on the others. It counts once among the Warlord's Gubbins, and every
+  card of the tiddla he is aboard is "his own ship or escort skwadron"
+  (p. 372). Klaws for Grunts stay each card's own: "+5 points per escort"
+  (p. 371). A Blood Axe tiddla's commandeered escorts are of its skwadron
+  (p. 369), so its Gubbins reach them where their card is offered the row.
+  Golden cases `clanz-mixed-tiddla-clan-and-gubbins-for-the-whole-skwadron`,
+  `clanz-mixed-tiddla-clan-on-every-card-paid-once`,
+  `clanz-mixed-tiddla-gubbin-on-every-card-is-one-gubbin`; the engine's
+  `shareSkwadronUpgrades` (packages/rules/CONTRACT.md).
 - Da Ork Clanz: a Warlord's own ship cannot take another Gubbin once he has
   one for every re-roll ("one upgrade from the Gubbins list for every re-roll he
   has", Fleets p. 372; user 27.10.2026). The other Gubbins stay in the list,

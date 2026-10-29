@@ -232,7 +232,7 @@ export function checkListSpecials(F){
 
 /* Da Ork Clanz: each Warlord's own command. Returns the per-Warlord counts. */
 export function checkOrkClanz(F){
-  var L = F.L, members = F.members, out = F.out, tookUp = F.tookUp, upRows = F.upRows, CZ = F.CZ, aboard = F.aboard, sqTags = F.sqTags, sqOf = F.sqOf;
+  var L = F.L, members = F.members, out = F.out, tookUp = F.tookUp, paidUp = F.paidUp, upRows = F.upRows, CZ = F.CZ, aboard = F.aboard, sqTags = F.sqTags, sqOf = F.sqOf;
   /* Da Ork Clanz (J216): each Warlord's own command, Fleets pp. 369-373.
      wsum (J226): the same counts per Warlord for the fleet pane's Warlord
      block, so it can say what is missing instead of only that it is red. */
@@ -318,12 +318,17 @@ export function checkOrkClanz(F){
       S1.clans = clans;
       var ab = aboard.filter(function(a){ return a.unit === wi; })[0];
       var own = ab && ab.ship != null ? members[ab.ship] : null;
+      /* "his own ship or escort skwadron" (p. 372): every row of the tiddla
+         he is aboard, and a tiddla's Gubbin counts once, on the row that
+         pays for it (pp. 369-370, ruling T60) */
+      var ownIx = own ? [members.indexOf(own)] : [];
+      tids.forEach(function(t){ var ix = t.ork.concat(t.com); if(t.tag && ownIx.length && ix.indexOf(ownIx[0]) >= 0) ownIx = ix; });
       var g = 0, off = 0;
       mine.forEach(function(m){ gubRows.forEach(function(x){
-        if(tookUp(m, x[0], x[1])){ g++; if(m !== own) off++; } }); });
+        if(paidUp(m, x[0], x[1])){ g++; if(ownIx.indexOf(members.indexOf(m)) < 0) off++; } }); });
       if(g) out.push({ ok: g <= rr && !off, t: tag + "Gubbins",
         v: g + " / " + rr + (off ? ", " + off + " not on his own ship" : ""), s: citeText(C.gub) });
-      S1.gub = g; S1.gubOff = off; S1.ship = own ? members.indexOf(own) : null;
+      S1.gub = g; S1.gubOff = off; S1.ship = own ? members.indexOf(own) : null; S1.skw = ownIx;
     });
     /* every capital ship of a skwadron takes the clan (Fleets p. 369), and so
        does every Rok of a Rok skwadron (ruling T58: p. 369 counts Rok

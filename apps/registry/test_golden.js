@@ -782,7 +782,7 @@ function matchCheckRow(row, x) {
 const keyOfCheck = x => (x.src ? '"' + String(x.src).slice(0, 44) + '"' : "/" + x.label + "/");
 
 const FLEET_EXPECT_KEYS = ["aboard", "checks", "facts", "failing", "no_issues",
-                          "others_ok", "total"];
+                          "others_ok", "total", "units"];
 
 function runFleetCase(c) {
   const r = { id: c.id, page: c.page, status: c.status || "expect_pass",
@@ -860,6 +860,34 @@ function runFleetCase(c) {
                       " (" + a.choices.join(", ") + ")");
     });
   }
+  /* What one row resolves to inside its fleet (ruling T60: a Clanz tiddla's
+     clan and Gubbins reach every row of its tag). entry = a row regex, nth =
+     which of its rows; speed / turrets / shields / hits, upgrades [{match,
+     state}]. The card's resolved unit and the fleet's must both say it, and
+     the fleet view's price is the same as theirs. */
+  (e.units || []).forEach(x => {
+    const us = api.getS().units, RF = api.fleetResolved();
+    const at = us.map((u, i) => i).filter(i => new RegExp(x.entry, "i").test(String(((api.resolveUnit(us[i]) || {}).entry || {}).label || "")));
+    const i = at[x.nth || 0];
+    if (i == null) { r.checks.push("unit /" + x.entry + "/: not in the fleet"); return; }
+    const Rc = api.resolveUnit(us[i]);
+    [["card", Rc], ["fleet", RF.units[i]]].forEach(([w, R]) => {
+      const k = "unit /" + x.entry + "/ (" + w + ")";
+      if (!R) { r.checks.push(k + ": not resolved"); return; }
+      ["speed", "turrets", "shields", "hits"].forEach(f => {
+        if (x[f] != null && String(R.stats && R.stats[f]) !== String(x[f]))
+          r.checks.push(k + ": " + f + " " + (R.stats && R.stats[f]) + " != " + x[f]); });
+      (x.upgrades || []).forEach(y => {
+        const up = (R.upgrades || []).find(o => new RegExp(y.match, "i").test(o.label));
+        if (!up) { r.checks.push(k + ": no upgrade " + y.match); return; }
+        if (y.state && up.state !== y.state) r.checks.push(k + ": " + y.match + " state " + up.state + " != " + y.state);
+      });
+    });
+    const pv = api.unitPts(us[i]);
+    if (!Rc || !RF.units[i] || pv !== Rc.points || pv !== RF.units[i].points)
+      r.checks.push("unit /" + x.entry + "/: points disagree: fleet view " + pv + ", card " + (Rc && Rc.points) +
+                    ", fleet " + (RF.units[i] && RF.units[i].points));
+  });
   if (e.others_ok)
     cs.filter(row => !row.ok && claimed.indexOf(row) < 0).forEach(row =>
       r.checks.push("unexpected red: " + row.t + " (" + row.v + ")"));

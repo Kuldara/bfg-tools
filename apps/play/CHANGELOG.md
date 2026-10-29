@@ -6,6 +6,10 @@ a tag `play-v<version>` deploys the Registry's site.
 ## Unreleased
 
 ### Fixed
+- Da Ork Clanz: a clan or a Gubbin bought on one card of a mixed tiddla (one
+  Squadron letter) is on every card of it and paid once, as the builder has it
+  (Fleets pp. 369-370, ruling T60 in the Registry's changelog). An Onslaught in
+  an Evil Sunz tiddla whose clan was bought on its Savage card moved 20 cm.
 - A second fleet link opened in a tab where Play is already open (an older
   "to phone" code; new ones open the builder) is read too: the page listens to
   changes of the address instead of reading it only when it opens (J240).

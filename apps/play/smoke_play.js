@@ -601,6 +601,24 @@ function run(check){
     clean("the Tau roster", P(`renderRoster()`));
     for(let i = 0; i < units.length; i++) clean("the card of " + P(`unitName(${i})`), P(`V.sheet = ${i}; V.info = true; var __h = renderSheet(${i}); V.info = false; V.sheet = null; __h`));
   });
+
+  /* ------------ T60: a mixed tiddla's clan is the whole skwadron's --- */
+  guard("the Clanz mixed tiddla", () => {
+    const pg = open(), P = pg.P;
+    const L = pg.DATA.lists.find(x => /^Orks . Da Ork Clanz$/.test(x.nm));
+    /* Evil Sunz bought on the Savage card only, as a fleet saved before
+       28.10.2026 has it (docs/save-format.md: upn) */
+    const sav = Object.assign(saved(L, /^Tiddla skwadron$/, /^Savage gunship$/, 3), { sq: "T", upn: { "CLAN UPGRADES\u0001Clan: Evil Sunz (Red)": "take" } });
+    pg.ctx.__doc = { ln: L.nm, limit: 1000, units: [saved(L, /^WARLORD$/, /^Ork Warlord$/), sav,
+      Object.assign(saved(L, /^Tiddla skwadron$/, /^Onslaught attack ship$/, 3), { sq: "T" })] };
+    const got = JSON.parse(P(`(() => { const r = resolveFleet(__doc); return JSON.stringify({ sp: r.units.map(x => x.R.stats ? x.R.stats.speed : null), pts: fleetPoints(r.units) }); })()`) || "{}");
+    /* Fleets p. 369: "The point cost for clan upgrades for tiddla skwadrons
+       count for the whole skwadron"; "All Evil Sunz ships gain +5 cm speed";
+       Savage 25 cm (p. 385), Onslaught 20 cm (p. 384); 3 x 30 + 3 x 35 + 20
+       (p. 372) */
+    check("smoke: a clan bought on one card of a mixed tiddla gives every card its speed, paid once (Fleets p. 369, T60)",
+          !!got.sp && got.sp[1] === "30 cm" && got.sp[2] === "25 cm" && got.pts === 215, JSON.stringify(got));
+  });
 }
 
 module.exports = run;

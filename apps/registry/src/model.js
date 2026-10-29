@@ -320,7 +320,37 @@ export function selOf(u){
   /* ctx.list = the unit's own list, ctx.host = the fleet's list. Two
      different things: p. 14 lets a borrowed ship take upgrades from both. */
   const ctx = { list: listOf(u), host: L() };
-  return DOMAIN.selectionOf(DOMAIN.fromLegacyUnit(u, ctx, DATA), ctx, DATA);
+  return DOMAIN.selectionOf(intentOf(u, ctx), ctx, DATA);
+}
+/* The unit's canonical intent as its fleet resolves it. A row of a Da Ork
+   Clanz tiddla skwadron (a Squadron letter) carries the skwadron's clan and
+   Gubbins - on every row of the tag, paid on one (Fleets pp. 369-370, ruling
+   T60, DOMAIN.shareSkwadronUpgrades) - so the card, the fleet view and the
+   points say what the legality panel says. Kept by the rows it depends on:
+   selOf is asked many times per render. */
+const SHARE_MEMO = new Map();
+export function intentOf(u, ctx){
+  ctx = ctx || { list: listOf(u), host: L() };
+  const it = DOMAIN.fromLegacyUnit(u, ctx, DATA);
+  if(!u.sq || u.lst || !L().clanz) return it;
+  const mates = appState.S.units.filter(x => x.sq === u.sq && !x.lst), k = mates.indexOf(u);
+  if(k < 0 || mates.length < 2) return it;
+  const sig = L().nm + "|" + JSON.stringify(mates);
+  let its = SHARE_MEMO.get(sig);
+  if(!its){
+    const c0 = { list: L(), host: L() };
+    its = DOMAIN.shareSkwadronUpgrades(mates.map(x => DOMAIN.fromLegacyUnit(x, c0, DATA)), c0, DATA);
+    if(SHARE_MEMO.size > 200) SHARE_MEMO.clear();
+    SHARE_MEMO.set(sig, its);
+  }
+  return its[k];
+}
+/* The other rows of u's tiddla skwadron (ruling T60), [] for any other row. */
+export function skwadronMates(u){
+  if(!u.sq || u.lst || !L().clanz) return [];
+  const us = appState.S.units, c0 = { list: L(), host: L() };
+  return DOMAIN.skwadronMates(us.map(x => DOMAIN.fromLegacyUnit(x, { list: listOf(x), host: L() }, DATA)), us.indexOf(u), c0, DATA)
+    .map(j => us[j]);
 }
 
 /* Launch bay strength = the sum of the strengths on every launch bay row. The
@@ -372,7 +402,17 @@ export function setUpState(u, si, ei, v){
   const Lu = si >= 1000 ? L() : listOf(u);
   const sec = Lu.secs[si >= 1000 ? si - 1000 : si], en = sec && sec.ents[ei];
   if(!en) return;
-  applyTransition(u, { type: "upgrade", id: DOMAIN.upgradeId(Lu.nm, sec.t, en.l), state: v });
+  const id = DOMAIN.upgradeId(Lu.nm, sec.t, en.l);
+  applyTransition(u, { type: "upgrade", id: id, state: v });
+  /* A Da Ork Clanz tiddla skwadron's clan or Gubbin is one choice for the
+     skwadron (Fleets pp. 369-370, ruling T60): the other rows of its tag
+     that are offered the row get the same answer, so a row never says "off"
+     while the skwadron has it. */
+  if(si < 1000 && !u.lst && DOMAIN.isSkwadronUpgrade(L(), si, en))
+    skwadronMates(u).forEach(x => {
+      const ups = upgradesFor(x);
+      if(ups.own.concat(ups.other).some(y => y[0] === si && y[1] === ei)) applyTransition(x, { type: "upgrade", id: id, state: v });
+    });
 }
 
 /* Required upgrades are attached as soon as a unit is added. */

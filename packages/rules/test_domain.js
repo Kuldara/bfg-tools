@@ -3972,6 +3972,75 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
         cap(hk([orb({ "^Gravitic hook": 2 })])) === cap(hk([])) + 2, [cap(hk([])), cap(hk([orb({ "^Gravitic hook": 2 })]))].join(" -> "));
 })();
 
+/* ---- ruling T60: a Da Ork Clanz tiddla skwadron's clan and Gubbins ----
+   Fleets p. 369: "The point cost for clan upgrades for tiddla skwadrons count
+   for the whole skwadron (regardless of how large it is!), not individual
+   escorts." p. 370: "For tiddla skwadrons, the point cost for Gubbins count
+   for the whole skwadron ...". p. 371 Klaws: "(Not for escorts except the
+   Grunt at +5 points per escort.)" p. 369 Deathskullz: "tiddla skwadrons have
+   'looted' upgrades (torpedoes and/or lances) for no additional cost", and a
+   Blood Axe tiddla "may include up to three Imperial Navy and/or Chaos
+   escorts". Prices p. 372: Savage 30, Onslaught 35, Grunt 30, Brute 25;
+   Evil Sunz +20 (p. 369), Soopa Boostas +25 (p. 370). Speeds: Savage 25 cm
+   (p. 385), Onslaught 20 cm (p. 384), Sword 25 cm (p. 82). */
+(function(){
+  const L = catalog.lists.find(x => /Da Ork Clanz/.test(x.nm)), ctx = { list: L, host: L };
+  const row = (secRe, labRe) => {
+    for(const s of L.secs){ if(!secRe.test(String(s.t).trim())) continue; const e = s.ents.find(x => labRe.test(x.l)); if(e) return { s, e }; }
+    throw new Error("T60: no row " + secRe + " / " + labRe);
+  };
+  const up = (secRe, labRe) => { const r = row(secRe, labRe); return DOMAIN.upgradeId(L.nm, r.s.t, r.e.l); };
+  const ES = up(/^CLAN UPGRADES$/, /^Clan: Evil Sunz/), DS = up(/^CLAN UPGRADES$/, /^Clan: Deathskullz/), BA = up(/^CLAN UPGRADES$/, /^Clan: Blood Axes/);
+  const SB = up(/^GUBBINS$/, /^Soopa Boostas$/), KL = up(/^GUBBINS$/, /^Klaws \(Grunt/), LL = up(/^GUBBINS$/, /^Looted Lances \(escorts: 15 cm\) \(Deathskullz/);
+  const unit = (secRe, labRe, n, sq, ups) => {
+    const r = row(secRe, labRe);
+    const it = { schemaVersion: DOMAIN.SCHEMA_VERSION, role: "core", entry: { list: L.nm, section: r.s.t, label: r.e.l },
+      ref: r.e.r == null ? null : String(r.e.r), hull: null, hulls: n, name: "", note: "", adjust: 0, custom: null,
+      members: [], options: {}, upgrades: {} };
+    if(sq) it.sq = sq;
+    (ups || []).forEach(id => { it.upgrades[id] = "take"; });
+    return it;
+  };
+  const T = /^Tiddla skwadron$/, wl = unit(/^WARLORD$/, /^Ork Warlord$/, 1);
+  const fleet = us => DOMAIN.resolveFleet({ list: L.nm, limit: 1000, units: [wl].concat(us) }, catalog);
+  const upOf = (R, id) => (R.upgrades || []).find(x => x.id === id) || {};
+
+  const mix = [unit(T, /^Savage gunship/, 3, "T", [ES]), unit(T, /^Onslaught attack ship/, 3, "T", [SB])];
+  const F1 = fleet(mix), sav = F1.units[1], ons = F1.units[2];
+  check("T60: the clan bought on the Savage card and the Gubbin on the Onslaught card reach both (pp. 369-370)",
+        sav.stats.speed === "35 cm" && ons.stats.speed === "30 cm", sav.stats.speed + " / " + ons.stats.speed);
+  check("T60: ... each paid once: 3 x 30 + 3 x 35 + 20 + 25 = 240", F1.totals.points === 240, String(F1.totals.points));
+  check("T60: ... on the card that bought it; the other says which card pays",
+        upOf(sav, ES).cost === 20 && !upOf(sav, ES).shared && upOf(ons, ES).state === "take" && upOf(ons, ES).cost === 0 &&
+        upOf(ons, ES).shared === "Savage gunship" && upOf(ons, SB).cost === 25 && upOf(sav, SB).shared === "Onslaught attack ship",
+        JSON.stringify([upOf(sav, ES), upOf(ons, ES)].map(x => [x.state, x.cost, x.shared])));
+  const its = DOMAIN.shareSkwadronUpgrades([wl].concat(mix), ctx, catalog);
+  check("T60: a card resolved alone from the shared intents is the fleet's unit",
+        [1, 2].every(i => { const R = DOMAIN.resolveUnit(its[i], ctx, catalog); return R.points === F1.units[i].points && R.stats.speed === F1.units[i].stats.speed; }));
+  check("T60: sharing twice is sharing once", same(DOMAIN.shareSkwadronUpgrades(its, ctx, catalog), its));
+  const frozen = DOMAIN.deepFreeze(JSON.parse(JSON.stringify([wl].concat(mix))));
+  check("T60: the intents are not changed (frozen input) and the Warlord's row is the same object",
+        (() => { try{ const o = DOMAIN.shareSkwadronUpgrades(frozen, ctx, catalog); return o[0] === frozen[0] && o[2] !== frozen[2] && !frozen[2].shared; }catch(e){ return false; } })());
+  check("T60: the skwadron's other rows", same(DOMAIN.skwadronMates([wl].concat(mix), 1, ctx, catalog), [2]) &&
+        same(DOMAIN.skwadronMates([wl].concat(mix), 0, ctx, catalog), []));
+
+  check("T60: the clan on both cards of one tiddla is one purchase: 90 + 105 + 20 = 215, not 235",
+        fleet([unit(T, /^Savage gunship/, 3, "T", [ES]), unit(T, /^Onslaught attack ship/, 3, "T", [ES])]).totals.points === 215);
+  const apart = fleet([unit(T, /^Savage gunship/, 3, null, [ES]), unit(T, /^Onslaught attack ship/, 3, null, [])]);
+  check("T60: two cards without a letter are two tiddlas: the clan stays on its own card",
+        apart.units[2].stats.speed === "20 cm" && apart.totals.points === 215, apart.units[2].stats.speed + " " + apart.totals.points);
+  const kl = fleet([unit(T, /^Grunt assault ship/, 3, "T", [KL]), unit(T, /^Grunt assault ship/, 2, "T", [])]);
+  check("T60: Klaws are +5 per escort, each card's own (p. 371): 5 x 30 + 3 x 5 = 165",
+        kl.totals.points === 165 && upOf(kl.units[2], KL).state !== "take", kl.totals.points + " " + upOf(kl.units[2], KL).state);
+  const ds = fleet([unit(T, /^Savage gunship/, 3, "T", [DS, LL]), unit(T, /^Savage gunship/, 2, "T", [])]);
+  const lance = R => R.weapons.some(w => w.state === "active" && /lance/i.test(w.a[0]) && /15/.test(String(w.a[1])));
+  check("T60: Deathskullz' free looted lances reach the tiddla's other card (p. 369): 5 x 30 + 30 = 180",
+        lance(ds.units[1]) && lance(ds.units[2]) && ds.totals.points === 180, ds.totals.points + " " + lance(ds.units[2]));
+  const ba = fleet([unit(T, /^Brute ramship/, 3, "T", [BA, SB]), unit(/^BLOOD AXE COMMANDEERED ESCORTS$/, /^Sword class frigate/, 3, "T", [])]);
+  check("T60: a Blood Axe tiddla's commandeered escorts are of its skwadron: its Soopa Boostas reach them (pp. 369-370)",
+        ba.units[2].stats.speed === "30 cm" && upOf(ba.units[2], SB).cost === 0, ba.units[2].stats.speed + " " + JSON.stringify(upOf(ba.units[2], SB)));
+})();
+
 /* ---- 4. purity --------------------------------------------------------- */
 check("the catalog is byte for byte the same after the run", JSON.stringify(catalog) === JSON.stringify(JSON.parse(RAW)));
 

@@ -531,11 +531,14 @@ export function warlordNeeds(W, RF){
    upgrade from the Gubbins list for every re-roll he has", p. 372; 28.10.:
    greyed, not hidden - clanzDimUps) - a taken one stays, so a fleet that
    has too many can still drop one. More Gubbins and Deathskullz's free
-   looted rows are not Gubbins of his (gub_re) and stay. */
+   looted rows are not Gubbins of his (gub_re) and stay. His own ship is
+   every row of the tiddla he is aboard ("his own ship or escort skwadron",
+   W.skw; its Gubbin is the skwadron's, ruling T60). */
+const ownRows = W => W.skw || (W.ship != null ? [W.ship] : []);
 export function clanzHiddenUps(RF){
   const C = L().clanz, out = [];
   if(!C) return out;
-  const wsI = warlordIdx(RF), ships = (RF.warlords || []).map(W => W.ship);
+  const wsI = warlordIdx(RF), ships = [].concat(...(RF.warlords || []).map(ownRows));
   appState.S.units.forEach((u, i) => {
     const R = RF.units[i];
     if(!R || u.lst) return;
@@ -556,7 +559,7 @@ export function clanzHiddenUps(RF){
 export function clanzDimUps(RF){
   const C = L().clanz, out = [];
   if(!C) return out;
-  const full = (RF.warlords || []).filter(W => W.ship != null && (W.gub || 0) >= (W.rr || 1)).map(W => W.ship);
+  const full = [].concat(...(RF.warlords || []).filter(W => W.ship != null && (W.gub || 0) >= (W.rr || 1)).map(ownRows));
   appState.S.units.forEach((u, i) => {
     const R = RF.units[i];
     if(!R || u.lst || full.indexOf(i) < 0) return;

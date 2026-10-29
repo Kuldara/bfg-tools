@@ -1,5 +1,5 @@
 import { critIcon, giftsHTML, wepClass } from "./format.js";
-import { L, listOf, shortWeaponName, strengthCell } from "./model.js";
+import { L, intentOf, listOf, shortWeaponName, strengthCell } from "./model.js";
 import { ruleCardHTML } from "./rule-card.js";
 import { fortPlanCardHTML, fortRulesCardHTML } from "./star-fort-cards.js";
 import { appState } from "./state.js";
@@ -29,7 +29,8 @@ import DOMAIN from "../../../packages/rules/domain.js";
    P1-8d gives them projections. */
 export function resolveUnit(u){
   const ctx = { list: listOf(u), host: L() };
-  return DOMAIN.resolveUnit(DOMAIN.fromLegacyUnit(u, ctx, DATA), ctx, DATA);
+  /* intentOf: a Clanz tiddla row with its skwadron's clan and Gubbins (T60) */
+  return DOMAIN.resolveUnit(intentOf(u, ctx), ctx, DATA);
 }
 
 /* A replacement weapon is not a profile row, so it has no pre-computed star.
@@ -163,7 +164,9 @@ export function optRowsHTML(R){
   const openUps = [];
   R.upgrades.forEach(up => {
     if(up.state === "off") return;
-    const cost = upCostText(up);
+    /* the skwadron pays for it on another of its rows (ruling T60): the
+       card's narrow price column says so in one word */
+    const cost = up.shared ? "skwadron" : upCostText(up);
     /* Every offered row now opens as an empty box (user 30.9.2026): the open
        ones are gathered into one line below; the book's sentence comes with
        the tick. */

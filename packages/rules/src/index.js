@@ -3,7 +3,7 @@
    into domain.js, which the apps, the tests and the simulator load. */
 import { shipFor, venerableView, SCHEMA_VERSION, SEP, TEXT_KEY_LEN, normOptText, textKey, optionIndex, upgradeId, splitUpgradeId, splitMembers, joinMembers, findEntry, findUpgradeEntry, fromLegacyUnit, toLegacyUnit, deepFreeze } from "./legacy.js";
 import { lendVerdict, lendGrantFor, lendRowVerdict, lendSummary, lendOwnRoute, lendRouteFor, lendOfferable, sectionNeeds, hostReserveRow } from "./lending.js";
-import { defaultUpgradeKeys, isUpgradeEnt, upgradeKey, selectionOf, optState, optCount, upState, bayStrength, prowArmour, upTokens, coveredByShipOption, upgradeTakenAnyWay, condOK, upgradesFor, requiredUpgradeKeys } from "./upgrades.js";
+import { defaultUpgradeKeys, isUpgradeEnt, upgradeKey, selectionOf, sharedBy, optState, optCount, upState, bayStrength, prowArmour, upTokens, coveredByShipOption, upgradeTakenAnyWay, condOK, upgradesFor, requiredUpgradeKeys } from "./upgrades.js";
 import { upCost, upgradePts, hullPts, pointsOf, maxPointsOf, timesStrength } from "./pricing.js";
 import { weaponRows, statMod, statSet, effHits, effShieldsText, effTurrets, effSpeed } from "./weapons.js";
 import { WEP, wepClass, rangeCell, RANGE_BANDS, pairRows, armAbbr, armStrength, armSummary, armSummaryRows, weaponBoxes, armSummaryText, ARM_ORDER, condShipOnly, requiredHullChanges } from "./arms.js";
@@ -12,6 +12,7 @@ import { ownedText, starsForRow, hullOptionsOf, wepKey, SPECIAL_WEAPON_RULES, SP
 import { commanderRules } from "./commanders.js";
 import { validateIntent, transition } from "./validation.js";
 import { resolveFleet } from "./resolve-fleet.js";
+import { isSkwadronUpgrade, shareSkwadronUpgrades, skwadronMates } from "./skwadron.js";
 import { weaponState, optionsOf, upgradesOf, resolveUnit, RULE_CARDS, ruleCardOf, shipLeadership, rerollText, commanderRerollOffer, fleetRerolls, rerollBoxes, openRerolls, shipRerolls } from "./unit.js";
 
 const DOMAIN = {
@@ -62,7 +63,10 @@ const DOMAIN = {
   upCost: upCost, upgradePts: upgradePts, hullPts: hullPts,
   pointsOf: pointsOf, maxPointsOf: maxPointsOf, timesStrength: timesStrength,
   weaponRows: weaponRows, statMod: statMod, statSet: statSet,
-  effHits: effHits, effShieldsText: effShieldsText, effTurrets: effTurrets, effSpeed: effSpeed
+  effHits: effHits, effShieldsText: effShieldsText, effTurrets: effTurrets, effSpeed: effSpeed,
+  /* ruling T60: a Da Ork Clanz tiddla skwadron's clan and Gubbins */
+  shareSkwadronUpgrades: shareSkwadronUpgrades, skwadronMates: skwadronMates,
+  isSkwadronUpgrade: isSkwadronUpgrade, sharedBy: sharedBy
 };
 
 export default DOMAIN;

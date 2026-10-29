@@ -1,5 +1,5 @@
 import { optionsOf } from "./unit.js";
-import { bayStrength, isUpgradeEnt, optCount, optState, secOf, upSecs, upState, upgradeKey, upgradesFor } from "./upgrades.js";
+import { bayStrength, isUpgradeEnt, optCount, optState, secOf, sharedBy, upSecs, upState, upgradeKey, upgradesFor } from "./upgrades.js";
 
 export function upCost(sel, en){
   /* pct: "+10% point value" (Rogue Trader crew skill, Fleets p. 175) - a share
@@ -17,12 +17,14 @@ export function upCost(sel, en){
 /* Price what is actually offered, not what the raw state still remembers.
    A row that upgradesFor() hides - because the ship no longer qualifies,
    or because the ship's own option already covers it - must not keep
-   charging. Visibility, the card and the price read the same set. */
+   charging. Visibility, the card and the price read the same set. A row
+   another row of its tiddla skwadron pays for (sharedBy, ruling T60) is
+   taken and costs nothing here. */
 export function upgradePts(sel){
   var p = 0;
   var ups = upgradesFor(sel);
   ups.own.concat(ups.other).forEach(function(x){
-    if(upState(sel, x[0], x[1]) === "take") p += upCost(sel, x[2]);
+    if(upState(sel, x[0], x[1]) === "take" && !sharedBy(sel, x[0], x[1])) p += upCost(sel, x[2]);
   });
   return p;
 }
@@ -65,7 +67,7 @@ export function pctBase(sel){
   var p = hullOptionPts(sel);
   var ups = upgradesFor(sel);
   ups.own.concat(ups.other).forEach(function(x){
-    if(!x[2].pct && upState(sel, x[0], x[1]) === "take") p += upCost(sel, x[2]);
+    if(!x[2].pct && upState(sel, x[0], x[1]) === "take" && !sharedBy(sel, x[0], x[1])) p += upCost(sel, x[2]);
   });
   return p;
 }
@@ -140,7 +142,7 @@ export var MAX_SEARCH_NODES = 600;
 export var MAXPTS = {}, MAXPTS_N = 0;
 export function maxPointsOf(sel){
   var sig = JSON.stringify([sel.list && sel.list.nm, sel.host && sel.host.nm, sel.si, sel.ei, sel.sh && [sel.sh.nm, sel.sh.pg],
-                            sel.ost, sel.oqty, sel.ups, sel.hulls, sel.adjust, sel.custom, sel.escort]);
+                            sel.ost, sel.oqty, sel.ups, sel.shared, sel.hulls, sel.adjust, sel.custom, sel.escort]);
   if(Object.prototype.hasOwnProperty.call(MAXPTS, sig)) return MAXPTS[sig];
   var v = maxPointsSearch(sel);
   if(++MAXPTS_N > 3000){ MAXPTS = {}; MAXPTS_N = 1; }

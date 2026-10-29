@@ -6,7 +6,7 @@ import { upgradeId } from "./legacy.js";
 import { roleOfIntent } from "./lending.js";
 import { hullPts, maxPointsOf, pointsOf, upCost } from "./pricing.js";
 import { boughtDefs, hullOptionsOf, optStars, ownedText, specialLines, starredKeys, starsForRow } from "./special-rules.js";
-import { HOST_OFF, bayStrength, isUpgradeEnt, listOfSec, optCount, optState, optionCoversRow, secOf, selectionOf, takenUpgradeLabels, upState, upgradeKey, upgradesFor } from "./upgrades.js";
+import { HOST_OFF, bayStrength, isUpgradeEnt, listOfSec, optCount, optState, optionCoversRow, secOf, selectionOf, sharedBy, takenUpgradeLabels, upState, upgradeKey, upgradesFor } from "./upgrades.js";
 import { validateIntent } from "./validation.js";
 import { effHits, effShieldsText, effSpeed, effTurrets, statSet, weaponRows } from "./weapons.js";
 
@@ -265,7 +265,10 @@ export function upgradesOf(sel){
     var si = x[0], ei = x[1], en = x[2];
     return {
       id: upgradeId(listOfSec(sel, si).nm, secOf(sel, si).t, en.l), label: en.l,
-      cost: upCost(sel, en), price: en.p == null ? null : en.p, per: en.per || null,
+      /* shared (ruling T60): the label of the row of its tiddla skwadron
+         that pays for it; taken here at no cost */
+      cost: sharedBy(sel, si, ei) ? 0 : upCost(sel, en), price: en.p == null ? null : en.p, per: en.per || null,
+      shared: sharedBy(sel, si, ei),
       state: upState(sel, si, ei), owner: owner, required: !!en.req,
       /* incl: a Mark that comes with the ship, not a choice (build_data). */
       included: !!en.incl,

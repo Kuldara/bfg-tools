@@ -30,11 +30,14 @@ export function resolveFleet(f){
   if(!L0) return { error: "The fleet list \"" + f.ln + "\" is not in this build." };
   const lost = [];
   const kept = resolveSaved(clone(f.units), L0, lost);
-  const units = kept.map(u => {
-    const ctx = { list: listOf(u, L0), host: L0 };
-    const it = DOMAIN.fromLegacyUnit(u, ctx, DATA);
-    const R = DOMAIN.resolveUnit(it, ctx, DATA);
-    return R ? { u: u, R: R, it: it } : null;
+  const ctxs = kept.map(u => ({ list: listOf(u, L0), host: L0 }));
+  /* a Da Ork Clanz tiddla skwadron's clan and Gubbins are on every row of
+     its tag and paid once (Fleets pp. 369-370, ruling T60), as the builder
+     resolves them */
+  const its = DOMAIN.shareSkwadronUpgrades(kept.map((u, i) => DOMAIN.fromLegacyUnit(u, ctxs[i], DATA)), { list: L0, host: L0 }, DATA);
+  const units = kept.map((u, i) => {
+    const R = DOMAIN.resolveUnit(its[i], ctxs[i], DATA);
+    return R ? { u: u, R: R, it: its[i] } : null;
   }).filter(Boolean);
   return { L0: L0, units: units, lost: lost,
            fp: fnv(JSON.stringify([f.ln, f.units])),

@@ -111,6 +111,9 @@ export function starHTML(refs){
 /* Price text for a list upgrade from the resolved row: multiplier and
    result both, because "+10 / bay" alone does not help you add up points. */
 export function upCostText(up){
+  /* a Da Ork Clanz tiddla skwadron's clan or Gubbin, bought once for the
+     skwadron and paid on another of its rows (ruling T60) */
+  if(up.shared) return "paid on " + up.shared;
   if(up.price == null) return "see text";
   if(!up.price) return "free";
   const sign = up.price > 0 ? "+" : "";

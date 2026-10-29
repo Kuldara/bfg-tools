@@ -138,13 +138,22 @@ export function selectionOf(intent, ctx, catalog){
         ups[upgradeKey(HOST_OFF + at3.si, at3.ei)] = intent.upgrades[id];
     }
   });
+  /* shared (ruling T60, skwadron.js): a tiddla skwadron's clan or Gubbin
+     that another row of the skwadron pays for - taken here, priced there.
+     The value is the paying row's label. */
+  var shared = {};
+  Object.keys(intent.shared || {}).forEach(function(id){
+    var p = splitUpgradeId(id);
+    var at4 = p && L && p.list === L.nm ? findUpgradeEntry(L, p.section, p.label, at ? at.si : -1, at ? at.ei : -1) : null;
+    if(at4 && intent.shared[id]) shared[upgradeKey(at4.si, at4.ei)] = String(intent.shared[id]);
+  });
   /* fleet: the list of the FLEET the ship serves in, whatever list the ship
      itself came from. Not hostUp - that is null for a fleet's own ships and
      for another race's. Callers without a host pass the fleet as ctx.list. */
   var fleet = ctx ? (ctx.host || ctx.list || null) : null;
   return {
     list: L, host: hostUp, fleet: fleet, sh: sh, en: en, si: at ? at.si : -1, ei: at ? at.ei : -1,
-    ost: ost, oqty: oqty, ups: ups,
+    ost: ost, oqty: oqty, ups: ups, shared: shared,
     hulls: intent.hulls > 0 ? intent.hulls : 1,
     custom: intent.custom == null ? null : intent.custom,
     adjust: intent.adjust ? +intent.adjust : 0,
@@ -160,6 +169,9 @@ export function selectionOf(intent, ctx, catalog){
   };
 }
 
+/* The label of the row that pays for this one's skwadron upgrade, or null
+   when this row pays for it itself (ruling T60). */
+export function sharedBy(sel, si, ei){ return (sel.shared && sel.shared[upgradeKey(si, ei)]) || null; }
 export function optState(sel, i){ return sel.ost[i] || "opt"; }
 export function optCount(sel, i){ return sel.oqty[i] || 1; }
 

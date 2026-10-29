@@ -9457,6 +9457,218 @@
         ]
       },
       "why": "Fleets p. 177: “The fleet must include at least one squadron of escort-sized cargo ships of any type (whether or not the scenario requires transports), in a squadron of 2 to 6 ships.” The squadrons are the player's (27.10.2026, as the Clanz tiddlas): the same Squadron letter makes cards one squadron in any mix, a card without one is a squadron by itself, and the size and the count read the same squadrons. The same two cargo ships with one letter are the one cargo squadron of two."
+    },
+    {
+      "id": "clanz-mixed-tiddla-clan-and-gubbins-for-the-whole-skwadron",
+      "page": 369,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Savage gunship",
+            "n": 3,
+            "sq": "T",
+            "ups": [
+              {
+                "upgrade": "^Clan: Evil Sunz"
+              }
+            ]
+          },
+          {
+            "entry": "^Onslaught attack ship",
+            "n": 3,
+            "sq": "T",
+            "ups": [
+              {
+                "upgrade": "^Soopa Boostas"
+              }
+            ]
+          },
+          {
+            "entry": "^Brute ramship",
+            "n": 3
+          }
+        ]
+      },
+      "expect": {
+        "total": 315,
+        "checks": [
+          {
+            "label": "^Tiddla skwadron T",
+            "ok": true,
+            "v": "6 escorts: 3 Savage gunship + 3 Onslaught attack ship"
+          },
+          {
+            "label": "^Warlord 1: one clan",
+            "ok": true,
+            "v": "Evil Sunz"
+          },
+          {
+            "label": "^Warlord 1: Gubbins",
+            "ok": true,
+            "v": "1 / 1"
+          }
+        ],
+        "units": [
+          {
+            "entry": "^Savage gunship",
+            "speed": "35 cm",
+            "upgrades": [
+              {
+                "match": "^Clan: Evil Sunz",
+                "state": "take"
+              },
+              {
+                "match": "^Soopa Boostas",
+                "state": "take"
+              }
+            ]
+          },
+          {
+            "entry": "^Onslaught attack ship",
+            "speed": "30 cm",
+            "upgrades": [
+              {
+                "match": "^Clan: Evil Sunz",
+                "state": "take"
+              },
+              {
+                "match": "^Soopa Boostas",
+                "state": "take"
+              }
+            ]
+          }
+        ],
+        "others_ok": true
+      },
+      "why": "Fleets p. 369: “The point cost for clan upgrades for tiddla skwadrons count for the whole skwadron (regardless of how large it is!), not individual escorts.” p. 370: “For tiddla skwadrons, the point cost for Gubbins count for the whole skwadron (regardless of how large it is!), not individual escorts.” p. 369: “All Evil Sunz ships gain +5 cm speed.” p. 370 Soopa Boostas: “The ship gains +5 cm speed”. p. 372: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”: Onslaught attack ship 35 pts, Savage gunship 30 pts, Brute ramship 25 pts. Savage 25 cm (p. 385) and Onslaught 20 cm (p. 384). The clan is bought on the Savage card and the Gubbin on the Onslaught card of the same tiddla T, so both cards are Evil Sunz with Soopa Boostas: Savage 35 cm, Onslaught 30 cm. One Gubbin of the Warlord's one re-roll (p. 372). The Brutes are a second tiddla, his other skwadron (p. 373). 3 x 30 + 3 x 35 + 3 x 25 + 20 + 25 = 315. Ruling T60 (28.10.2026): a mixed tiddla is the cards of one Squadron letter, so a clan or a Gubbin taken on any of them is the skwadron's: every card that is offered it has it and it is paid once."
+    },
+    {
+      "id": "clanz-mixed-tiddla-clan-on-every-card-paid-once",
+      "page": 369,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Savage gunship",
+            "n": 3,
+            "sq": "T",
+            "ups": [
+              {
+                "upgrade": "^Clan: Evil Sunz"
+              }
+            ]
+          },
+          {
+            "entry": "^Onslaught attack ship",
+            "n": 3,
+            "sq": "T",
+            "ups": [
+              {
+                "upgrade": "^Clan: Evil Sunz"
+              }
+            ]
+          },
+          {
+            "entry": "^Brute ramship",
+            "n": 3
+          }
+        ]
+      },
+      "expect": {
+        "total": 290,
+        "checks": [
+          {
+            "label": "^Warlord 1: one clan",
+            "ok": true,
+            "v": "Evil Sunz"
+          }
+        ],
+        "units": [
+          {
+            "entry": "^Savage gunship",
+            "speed": "30 cm"
+          },
+          {
+            "entry": "^Onslaught attack ship",
+            "speed": "25 cm"
+          }
+        ],
+        "others_ok": true
+      },
+      "why": "Fleets p. 369: “The point cost for clan upgrades for tiddla skwadrons count for the whole skwadron (regardless of how large it is!), not individual escorts.” p. 372: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”: Onslaught attack ship 35 pts, Savage gunship 30 pts, Brute ramship 25 pts. Evil Sunz +20 pts (p. 369) on both cards of tiddla T is still one purchase: 3 x 30 + 3 x 35 + 3 x 25 + 20 = 290, not 310. Ruling T60 (28.10.2026): a mixed tiddla is the cards of one Squadron letter, so a clan or a Gubbin taken on any of them is the skwadron's: every card that is offered it has it and it is paid once."
+    },
+    {
+      "id": "clanz-mixed-tiddla-gubbin-on-every-card-is-one-gubbin",
+      "page": 370,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Savage gunship",
+            "n": 3,
+            "sq": "T",
+            "ups": [
+              {
+                "upgrade": "^Extra Turrets \\(escorts"
+              }
+            ]
+          },
+          {
+            "entry": "^Onslaught attack ship",
+            "n": 3,
+            "sq": "T",
+            "ups": [
+              {
+                "upgrade": "^Extra Turrets \\(escorts"
+              }
+            ]
+          },
+          {
+            "entry": "^Brute ramship",
+            "n": 3
+          }
+        ]
+      },
+      "expect": {
+        "total": 290,
+        "checks": [
+          {
+            "label": "^Warlord 1: Gubbins",
+            "ok": true,
+            "v": "1 / 1"
+          },
+          {
+            "label": "^Gubbins \\(one per Warlord re-roll\\)",
+            "ok": true,
+            "v": "1 / 1"
+          }
+        ],
+        "units": [
+          {
+            "entry": "^Savage gunship",
+            "turrets": "2"
+          },
+          {
+            "entry": "^Onslaught attack ship",
+            "turrets": "2"
+          }
+        ],
+        "others_ok": true
+      },
+      "why": "p. 370: “For tiddla skwadrons, the point cost for Gubbins count for the whole skwadron (regardless of how large it is!), not individual escorts.” p. 370 Extra Turrets: “+20 pts The ship gains +2 Turrets (Escorts get +1 Turret)”; p. 372: “A Warlord may choose for his own ship or escort skwadron one upgrade from the Gubbins list for every re-roll he has”. p. 372: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”: Onslaught attack ship 35 pts, Savage gunship 30 pts, Brute ramship 25 pts. Extra Turrets on both cards of tiddla T is one Gubbin of his one re-roll and one price: each escort has 2 turrets (1 + 1, pp. 384-385). 3 x 30 + 3 x 35 + 3 x 25 + 20 = 290. Ruling T60 (28.10.2026): a mixed tiddla is the cards of one Squadron letter, so a clan or a Gubbin taken on any of them is the skwadron's: every card that is offered it has it and it is paid once."
     }
   ]
 }

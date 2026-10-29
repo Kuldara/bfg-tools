@@ -49,8 +49,24 @@ CanonicalUnitIntent = {
   upgrades: { [upgradeId]: "take" | "off" },
   /* optional, for fleets (docs: save schema): uid, aboard, sq, cmd,
      clan (a Da Ork Clanz Warlord's own clan, "Goffs") */
+  /* derived, never saved: shared: { [upgradeId]: "Savage gunship" } -
+     the row of its skwadron that pays for this taken row (below) */
 }
 ```
+
+A Da Ork Clanz tiddla skwadron's clan and Gubbins are the skwadron's: "The point
+cost for clan upgrades for tiddla skwadrons count for the whole skwadron"
+(Fleets p. 369, the same for Gubbins p. 370; ruling T60). A mixed tiddla is
+several rows with one `sq`, so a unit alone cannot know it.
+`shareSkwadronUpgrades(intents, { list, host }, catalog)` takes the fleet's
+intents and returns them with every row of such a skwadron taking the
+skwadron's rows, and `shared` on every row but the one that pays (the row
+that bought it, else the first). `resolveFleet` calls it first; an app that
+resolves a fleet's rows one by one (the Registry's cards, Play) calls it on
+the fleet before `resolveUnit`. A shared row resolves `state: "take"`,
+`cost: 0` and `shared` = the paying row's label. `skwadronMates` gives the
+other rows of a row's skwadron (the Registry gives them the player's answer
+too), `isSkwadronUpgrade` the rows that are shared.
 
 `optionId` is the page plus a hash of the normalised option text, given in the
 data (`ships[id].ol[i].id`, made by `extractor/build_data.py`). `upgradeId` is
@@ -96,7 +112,7 @@ ResolvedUnit = {
   },
   hull:     null | { chosen: "61", choices: ["52", ..., "103"] },
   options:  [ { id, text, cost, state, qty, group, blockedBy, dependsOn } ],
-  upgrades: [ { id, label, cost, state, owner, source } ],
+  upgrades: [ { id, label, cost, state, owner, source, shared } ],   // shared: see the intent
   rules:    [ { t, refs, ast, canonical, hull } ],
   stars:    { weapons, options, rules },
   issues:   [ { code, severity: "error" | "warning", path, message, sourcePage } ],

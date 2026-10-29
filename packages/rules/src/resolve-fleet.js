@@ -14,6 +14,7 @@ import { checkReserveRaces, checkReserveSources, checkReserveTypes } from "./fle
 import { checkRowLimits, checkSectionRules, fleetCounters } from "./fleet-sections.js";
 import { checkBorrowedShips, checkHulkPowerfields, checkListSpecials, checkOrkClanz, checkSquadrons } from "./fleet-specials.js";
 import { roleOfIntent } from "./lending.js";
+import { shareSkwadronUpgrades } from "./skwadron.js";
 import { resolveUnit } from "./unit.js";
 import { isUpgradeEnt, selectionOf } from "./upgrades.js";
 
@@ -21,7 +22,10 @@ export function resolveFleet(fleetIntent, catalog){
   var L = catalog.lists.filter(function(x){ return x.nm === fleetIntent.list; })[0] || null;
   var ctx = { list: L, host: L };
   var lim = fleetIntent.limit | 0;
-  var members = (fleetIntent.units || []).map(function(it){
+  /* a Da Ork Clanz tiddla skwadron's clan and Gubbins are the skwadron's,
+     on every row and paid once (Fleets pp. 369-370, ruling T60) */
+  var units = shareSkwadronUpgrades(fleetIntent.units || [], ctx, catalog);
+  var members = units.map(function(it){
     var sel = selectionOf(it, ctx, catalog);
     var R = resolveUnit(it, ctx, catalog);
     var en = sel.en;
@@ -117,6 +121,7 @@ export function resolveFleet(fleetIntent, catalog){
               unit index, -1 = none) */
            command: CZ ? CZ.of : null,
            /* Clanz (J226): per Warlord {unit, n, rr, tiddla, total, hulk,
-              uge, kro, lone, clans, gub, gubOff, ship, units} */
+              uge, kro, lone, clans, gub, gubOff, ship, skw (the rows of his
+              ship's skwadron), units} */
            warlords: wsum };
 }
