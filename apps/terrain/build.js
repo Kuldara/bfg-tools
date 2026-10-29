@@ -6,6 +6,7 @@
 "use strict";
 const path = require("path");
 const kit = require("../../tools/lib/kit.js");
+const preview = require("../../tools/og/meta.js");
 
 const HERE = "apps/terrain";
 const OUT = "dist/terrain/";
@@ -24,7 +25,8 @@ async function build() {
   kit.guards.cssVars(page, "terrain");
   const b = kit.guards.badge(page, "terrain", BADGE_HOSTS);
   kit.guards.externalUrls(page, "terrain", ALLOWED, b);
-  const out = [kit.write(OUT + "index.html", page)];
+  /* link preview tags (tools/og): after the guards, the page's own address is in them */
+  const out = [kit.write(OUT + "index.html", preview.addTo(page, "terrain")), preview.copyImage("terrain", OUT)];
   for (const f of ["favicon.png", "apple-touch-icon.png"]) out.push(kit.copy(HERE + "/" + f, OUT + f));
   return { out };
 }

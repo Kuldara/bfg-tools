@@ -9,6 +9,7 @@
 "use strict";
 const path = require("path");
 const kit = require("../../tools/lib/kit.js");
+const preview = require("../../tools/og/meta.js");
 const APP = require("./app.json");
 
 const HERE = "apps/play";
@@ -81,7 +82,7 @@ async function build() {
   kit.guards.externalUrls(page, PAGE, ALLOWED);
 
   if (page.split("</head>").length !== 2 || page.split("</body>").length !== 2) throw new Error(PAGE + ": one head and one body expected");
-  const site = page.replace("</head>", HEAD_PWA + "</head>").replace("</body>", SW_REG + "</body>");
+  const site = preview.addTo(page, "play").replace("</head>", HEAD_PWA + "</head>").replace("</body>", SW_REG + "</body>");
   const cache = "gfp-" + kit.sha(site).slice(0, 12);
 
   const out = [];
@@ -90,6 +91,7 @@ async function build() {
   out.push(kit.write(OUT + "sw.js", serviceWorker(cache)));
   out.push(kit.copy(HERE + "/assets/icon-192.png", OUT + "icon-192.png"));
   out.push(kit.copy(HERE + "/assets/icon-512.png", OUT + "icon-512.png"));
+  out.push(preview.copyImage("play", OUT));
   return { out };
 }
 

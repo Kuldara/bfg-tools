@@ -1,0 +1,28 @@
+{
+ "style": "classic",
+ "sha": "4865b119f7ab087ce119524153ee010220b469820f5426a9bf26ef7fdb59ee45",
+ "shows": {
+  "head": [
+   "GOTHIC FLEET",
+   "PLAY"
+  ],
+  "tagline": "Your Registry fleet at the table, on your phone",
+  "stats": [
+   {
+    "n": 32,
+    "label": "fleet lists"
+   },
+   {
+    "n": 186,
+    "label": "ship profiles"
+   }
+  ],
+  "bullets": [
+   "hits and criticals",
+   "orders and braces",
+   "fleet by link or QR",
+   "works offline"
+  ],
+  "books": "Fleets v0.40 · Rulebook v1.11"
+ }
+}

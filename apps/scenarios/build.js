@@ -13,6 +13,7 @@
 "use strict";
 const path = require("path"), fs = require("fs");
 const kit = require("../../tools/lib/kit.js");
+const preview = require("../../tools/og/meta.js");
 const battlezone = require("../../packages/battlezone/index.js");
 const APP = require("./app.json");
 
@@ -51,7 +52,8 @@ async function build() {
     kit.guards.externalUrls(text, f, ALLOWED);
   }
 
-  const out = [kit.write(OUT + "index.html", page)];
+  /* link preview tags (tools/og): after the guards, the page's own address is in them */
+  const out = [kit.write(OUT + "index.html", preview.addTo(page, "scenarios")), preview.copyImage("scenarios", OUT)];
   for (const [f, text] of Object.entries(files)) out.push(kit.write(OUT + f, text));
   for (const f of ["favicon.png", "apple-touch-icon.png"]) out.push(kit.copy(HERE + "/" + f, OUT + f));
   return { out };

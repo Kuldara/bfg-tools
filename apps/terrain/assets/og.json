@@ -1,0 +1,28 @@
+{
+ "style": "classic",
+ "sha": "68350fd5846f286f72d00baf6a4f4af0329bc9c716a7683d6d5fb96b24d15e23",
+ "shows": {
+  "head": [
+   "BATTLEZONE",
+   "GENERATOR"
+  ],
+  "tagline": "Celestial phenomena rolled by the book",
+  "stats": [
+   {
+    "n": 6,
+    "label": "battlezones"
+   },
+   {
+    "n": 5,
+    "label": "kinds of phenomena"
+   }
+  ],
+  "bullets": [
+   "Rulebook Method 2",
+   "any table size",
+   "the rules for what it rolled",
+   "a seed to share"
+  ],
+  "books": "Fleets v0.40 · Rulebook v1.11"
+ }
+}

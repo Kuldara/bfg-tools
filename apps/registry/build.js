@@ -13,6 +13,8 @@
 const path = require("path");
 const kit = require("../../tools/lib/kit.js");
 const { counts } = require("./counts.js");
+const preview = require("../../tools/og/meta.js");
+const { facts } = require("../../tools/og/facts.js");
 const APP = require("./app.json");
 
 const HERE = "apps/registry";
@@ -80,8 +82,7 @@ async function build() {
   const data = kit.read("data/bfg_data.json");
   if (/<\/script/i.test(data)) throw new Error("the data contains </script");
   const n = counts(JSON.parse(data));
-  const description = "Free fleet builder and printable ship cards for Battlefleet Gothic: Remastered. " +
-    `${n.lists} fleet lists, ${n.profiles} ship profiles, ${n.cards} cards - one HTML file, no install, works offline.`;
+  const description = facts("registry").description;
 
   const script = await kit.bundle({
     entry: HERE + "/src/index.js", globalName: "GFR",
@@ -89,23 +90,15 @@ async function build() {
   });
 
   let page = kit.expandIncludes(kit.read(HERE + "/index.html"), HERE);
-  page = kit.fill(page, "description", description, 2);
+  page = kit.fill(page, "description", description);
   page = kit.fill(page, "icon", ICON);
   page = kit.fill(page, "fonts", "<style>\n" + kit.read("packages/ui/fonts.css") + "</style>");
   page = page.replace("<!--BFGTOOLS--><!--/BFGTOOLS-->", "<!--BFGTOOLS-->" + kit.badge("registry") + "<!--/BFGTOOLS-->");
   page = kit.fill(page, "data", data);
   page = kit.fill(page, "script", "\n" + script);
 
-  const siteMeta = [
-    `<meta property="og:url" content="${BASE}/">`,
-    `<meta property="og:image" content="${BASE}/og.png">`,
-    '<meta property="og:image:type" content="image/png">',
-    '<meta property="og:image:width" content="1200">',
-    '<meta property="og:image:height" content="630">',
-    `<meta property="og:image:alt" content="A printable Battlefleet Gothic ship card next to the numbers ${n.lists} fleet lists, ${n.profiles} profiles, ${n.cards} cards.">`,
-    `<meta name="twitter:image" content="${BASE}/og.png">`,
-    `<link rel="canonical" href="${BASE}/">`,
-  ].join("\n");
+  /* link preview tags (tools/og): the site only */
+  const siteMeta = preview.tags("registry").trimEnd();
   const site = kit.fill(page, "site-meta", siteMeta);
   const single = kit.fill(page, "site-meta", "").replace("\n\n<!--", "\n<!--");
   const shared = single.replace(PLAY_LINK, m => { return ""; });
@@ -123,7 +116,7 @@ async function build() {
   const out = [];
   out.push(kit.write("dist/registry/index.html", site));
   out.push(kit.write("dist/registry/bfg_data.json", data));
-  out.push(kit.copy(HERE + "/assets/og.png", "dist/registry/og.png"));
+  out.push(preview.copyImage("registry", "dist/registry"));
   out.push(kit.write("dist/registry/_headers", HEADERS));
   out.push(kit.write("dist/share/Gothic Fleet Registry.zip", kit.zip([["Gothic Fleet Registry.html", shared]])));
   return { out, counts: n };

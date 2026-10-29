@@ -5,6 +5,9 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 
 ## Unreleased
 
+### Added
+- Link preview (29.10.2026): a link to the app in Discord and elsewhere shows its own image (the app itself, the numbers from the data) and text. `npm test` fails when the image is out of date (`npm run og`).
+
 ### Changed: Fleets WiP v0.40 and Rulebook v1.11 (29.10.2026)
 - The data is read from **Fleets WiP v0.40**; the Rulebook is **v1.11** (the
   same pages as v1.10). Every page on the cards, the checks and the hovers is

@@ -4,6 +4,9 @@ Releases are tags `boarding-v<yyyy.mm.dd>`.
 
 ## Unreleased
 
+### Added
+- Link preview (29.10.2026): a link to the app in Discord and elsewhere shows its own image (the app itself, the numbers from the data) and text. `npm test` fails when the image is out of date (`npm run og`).
+
 ### Changed
 - Fleets WiP v0.40 and Rulebook v1.11 (29.10.2026): the ships and citations follow v0.40 (pages; the Grey Knights and Mechanicus lists).
 

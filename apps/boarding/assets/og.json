@@ -1,0 +1,32 @@
+{
+ "style": "classic",
+ "sha": "7fdb463444b44e9c4ffc2d6c4fc92c4813a23ca1e3abeb297371ff6a013134d4",
+ "shows": {
+  "head": [
+   "BOARDING",
+   "ACTIONS"
+  ],
+  "tagline": "The whole End Phase boarding action, resolved by the book",
+  "stats": [
+   {
+    "n": 247,
+    "label": "ships"
+   },
+   {
+    "n": 20,
+    "label": "fleets"
+   },
+   {
+    "n": "1",
+    "label": "tap to resolve"
+   }
+  ],
+  "bullets": [
+   "the app rolls or you do",
+   "every modifier shown",
+   "criticals and all",
+   "works offline"
+  ],
+  "books": "Fleets v0.40 · Rulebook v1.11"
+ }
+}

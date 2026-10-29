@@ -53,7 +53,8 @@ misprints are corrected explicitly in the data, each with its page. See
 index.html          the page: markup, @@include lines for styles/, build markers
 styles/             13 CSS files in cascade order (tokens, chrome, layout, card, print, ...)
 src/                ES modules (ARCHITECTURE.md lists them); index.js is the entry
-assets/og.png       link preview image; make_og.py draws it from counts.js
+assets/og.png       link preview image, made by tools/og.js (npm run og); og.json says what it shows.
+                    make_og.py and published_counts.py are the old way, superseded
 counts.js           the numbers the page advertises, one rule for all
 build.js            npm run build -> dist/registry/ and dist/share/
 test-support.js     loads src/ into Node for the tests

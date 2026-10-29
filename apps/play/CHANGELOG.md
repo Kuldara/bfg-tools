@@ -5,6 +5,9 @@ a tag `play-v<version>` deploys the Registry's site.
 
 ## Unreleased
 
+### Added
+- Link preview (29.10.2026): a link to the app in Discord and elsewhere shows its own image (the app itself, the numbers from the data) and text. `npm test` fails when the image is out of date (`npm run og`).
+
 ### Changed
 - Fleets WiP v0.40 and Rulebook v1.11 (29.10.2026): the cards and rules cite v0.40 pages; the fleet data is the Registry's v0.40 data (the power ram as a ship option, the Mechanicus profiles, mines that ignore shields).
 

@@ -37,6 +37,7 @@ const STEPS = [
   ["data",      "pricing coverage",        [PY, "extractor/coverage.py"]],
   ["data",      "option effects",          [PY, "extractor/audit_effects.py", "--json"], { json: "effects" }],
   ["data",      "list upgrade effects",    [PY, "extractor/audit_upgrades.py", "--json"], { json: "upgrades" }],
+  ["build",     "link previews current",   ["node", "tools/og.js", "--check"]],
   ["data",      "no control characters",   [PY, "tools/check_control.py"]],
   ["rules",     "domain.js is current",    ["node", "packages/rules/build.js", "--check"]],
   ["rules",     "domain",                  ["node", "packages/rules/test_domain.js"]],

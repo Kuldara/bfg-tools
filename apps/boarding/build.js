@@ -9,6 +9,7 @@
 "use strict";
 const path = require("path");
 const kit = require("../../tools/lib/kit.js");
+const preview = require("../../tools/og/meta.js");
 
 const HERE = "apps/boarding";
 const BADGE_HOSTS = ["bfgtools.kuldare.com", "bfgtools.boarding.kuldare.com", "terrain-generator.kuldare.com",
@@ -52,7 +53,8 @@ async function build() {
   kit.guards.externalUrls(page, "boarding", ALLOWED, b);
 
   const out = [];
-  out.push(kit.write("dist/boarding/index.html", page));
+  /* link preview tags (tools/og): the site only, after the guards (the page's own address is in them) */
+  out.push(kit.write("dist/boarding/index.html", preview.addTo(page, "boarding")), preview.copyImage("boarding", "dist/boarding"));
   out.push(kit.write("dist/share/Boarding.zip", kit.zip([["Boarding.html", page], ["README.txt", kit.read(HERE + "/README.md")]])));
   return { out };
 }

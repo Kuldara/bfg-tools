@@ -4,6 +4,9 @@ Releases are tags `terrain-v<yyyy.mm.dd>`.
 
 ## Unreleased
 
+### Added
+- Link preview (29.10.2026): a link to the app in Discord and elsewhere shows its own image (the app itself, the numbers from the data) and text. `npm test` fails when the image is out of date (`npm run og`).
+
 ### Changed
 - Rulebook v1.11 (29.10.2026): the same pages as v1.10; the Fleets citations are v0.40 pages.
 

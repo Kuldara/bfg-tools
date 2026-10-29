@@ -12,6 +12,7 @@
     "test:quick": "node tools/test.js --quick",
     "check:books": "node tools/test.js --books",
     "serve": "node tools/serve.js",
+    "og": "node tools/og.js",
     "publish": "node tools/publish.js",
     "backup": "node tools/backup.js"
   },

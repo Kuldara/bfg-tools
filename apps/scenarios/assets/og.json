@@ -1,0 +1,32 @@
+{
+ "style": "classic",
+ "sha": "7341fdaf460cb43f398e4da9009f0b6fa4073672ca8c3c584a5d9b1cd868fb8a",
+ "shows": {
+  "head": [
+   "SCENARIO",
+   "LIBRARY"
+  ],
+  "tagline": "Every Battlefleet Gothic scenario, laid out for the table",
+  "stats": [
+   {
+    "n": 216,
+    "label": "scenarios"
+   },
+   {
+    "n": 52,
+    "label": "classic GW"
+   },
+   {
+    "n": 58,
+    "label": "Warp Rift"
+   }
+  ],
+  "bullets": [
+   "a map for your table",
+   "set-up checklist",
+   "turn reminders",
+   "victory check"
+  ],
+  "books": "Fleets v0.40 · Rulebook v1.11"
+ }
+}

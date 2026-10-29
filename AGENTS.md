@@ -160,7 +160,15 @@ npm test                    # everything that needs only the repository
 npm run test:quick          # the same without the slow runs
 npm run check:books         # the checks against the PDFs (needs books/)
 node tools/test.js --list   # every step and its command
+npm run og                  # link preview images (after a build; needs Chrome)
 ```
+
+**Link previews** (what Discord shows for a link): `tools/og.js` photographs each
+app's built page into `apps/<app>/assets/og.png` and writes the numbers on it
+to `og.json`; the og:/twitter: tags come from the same `tools/og/facts.js` at
+build time. `npm test` fails when the data no longer matches an image: run
+`npm run build`, `npm run og` and commit the images. The layouts are in
+`tools/og/styles.js` (`--try=<layouts> --out=<dir>` renders them for choosing).
 
 Single checks, for the Registry:
 

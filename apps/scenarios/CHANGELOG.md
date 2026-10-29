@@ -4,6 +4,9 @@ Releases are tags `scenarios-v<version>`; the version is in `app.json`.
 
 ## Unreleased
 
+### Added
+- Link preview (29.10.2026): a link to the app in Discord and elsewhere shows its own image (the app itself, the numbers from the data) and text. `npm test` fails when the image is out of date (`npm run og`).
+
 ### Changed
 - Fleets WiP v0.40 and Rulebook v1.11 (29.10.2026): "FL p." citations are v0.40 pages. The link to the Fleets PDF on specialist-arms.com still opens v0.36, the version hosted there, at the page with the same text.
 

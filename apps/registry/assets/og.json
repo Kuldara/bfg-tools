@@ -1,0 +1,32 @@
+{
+ "style": "classic",
+ "sha": "cd4ffa53931898a5e48539e70ba9b38371b334f04f410cfac0d7e63e0b7d7ecd",
+ "shows": {
+  "head": [
+   "GOTHIC FLEET",
+   "REGISTRY"
+  ],
+  "tagline": "Fleet builder and printable ship cards",
+  "stats": [
+   {
+    "n": 32,
+    "label": "fleet lists"
+   },
+   {
+    "n": 186,
+    "label": "profiles"
+   },
+   {
+    "n": 734,
+    "label": "cards"
+   }
+  ],
+  "bullets": [
+   "free",
+   "one HTML file",
+   "no install",
+   "works offline"
+  ],
+  "books": "Fleets v0.40 · Rulebook v1.11"
+ }
+}
