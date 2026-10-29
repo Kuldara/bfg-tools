@@ -108,8 +108,11 @@ const APPS = Object.keys(MAKERS);
 function facts(id) {
   const A = appJson(id);
   const f = MAKERS[id]();
-  f.id = id; f.title = A.name; f.url = A.url.replace(/\/$/, "") + "/"; f.books = books();
-  f.image = f.url + "og.png";
+  /* a site's address, or a page's (Play is a page inside the Registry's site:
+     /play/ itself is a 404); the image is next to the page */
+  f.id = id; f.title = A.name; f.books = books();
+  f.url = /\.html$/.test(A.url) ? A.url : A.url.replace(/\/$/, "") + "/";
+  f.image = f.url.replace(/[^/]*$/, "") + "og.png";
   return f;
 }
 

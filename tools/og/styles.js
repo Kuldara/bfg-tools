@@ -9,7 +9,8 @@ const fs = require("fs"), path = require("path");
 const FONTS = fs.readFileSync(path.join(__dirname, "..", "..", "packages", "ui", "fonts.css"), "utf8");
 
 const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
-const host = f => f.url.replace(/^https:\/\//, "").replace(/\/$/, "");
+/* the address as a reader would type it: no scheme, no page file name */
+const host = f => f.url.replace(/^https:\/\//, "").replace(/[^/]*\.html$/, "").replace(/\/$/, "");
 const page = (css, body) => `<!DOCTYPE html><html><head><meta charset="utf-8"><style>${FONTS}
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{width:1200px;height:630px;overflow:hidden}
