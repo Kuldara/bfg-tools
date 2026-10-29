@@ -14,6 +14,9 @@ const attr = s => String(s).replace(/&/g, "&amp;").replace(/"/g, "&quot;").repla
 
 function tags(id) {
   const f = facts(id);
+  /* Discord and the others keep an image by its address (and the site sends
+     og.png with a week's cache): a new image gets a new address */
+  f.image += "?v=" + kit.sha(kit.readBytes(path.join("apps", id, "assets", "og.png"))).slice(0, 10);
   return [
     '<meta property="og:type" content="website">',
     `<meta property="og:site_name" content="${attr(f.title)}">`,
