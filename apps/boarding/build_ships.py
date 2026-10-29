@@ -172,13 +172,19 @@ for _sec in ("Battleships", "Cruisers", "ESCORTS"):
         "crew": "own", "pg": 121,
         "why": "count as Mechanicus vessels ... nor do they get any boarding "
                "action bonuses Space Marine escorts may have (FL p.121)",
-        # FL p.119: "All Mechanicus capital ships add +1 to a given vessel's
-        # original turret value" and "These improvements are already included in
-        # the point cost". FL p.121: escorts do not get it automatically
+        # Fleets v0.40: the list's capital ships are the Mechanicus profiles
+        # (p.126-137) with the +1 turret printed in them (p.125), so nothing is
+        # added here any more. FL p.121: escorts do not get it automatically
         # (they can buy it, and that is handled by the card's turret adjuster).
-        # FL p.126: the Omnissiah's Victory gets no refits at all - it is
-        # its own row in the ship base and does not go through here.
-        "tu_cap": 1, "tu_pg": 119, "tu_check": True}
+        }
+
+# Bakka p.49 (v0.40): Mechanicus cruisers "may be taken instead of and in the
+# same manner as Imperial Navy battlecruisers ... They utilize all rules for
+# Adeptus Mechanicus vessels" - the rows are the Mechanicus profiles now, and
+# their crew is the book's (Mechanicus).
+LIST_CREW[("Imperial Navy \u2014 Bakka Sector", "Battlecruisers")] = {
+    "crew": "book", "ex": (("Mars", "own"), ("Overlord", "own"), ("Armageddon", "own"), ("Dominion", "own"), ("Jovian", "own")),
+    "pg": 49, "why": "Mechanicus cruisers taken as battlecruisers use all rules for Adeptus Mechanicus vessels (FL p.49)"}
 
 # The Rogue Trader lists crew their hulls themselves (FL p.184, p.188).
 for _l, _secs in (("Rogue Traders", ("CAPITAL SHIPS", "NOTES FROM NATE MONTES")),
@@ -583,7 +589,7 @@ def main():
     problems = []
     out_ships = []
 
-    for sid, s in sorted(ships_in.items(), key=lambda kv: (int(re.match(r"\d+", kv[0]).group(0)), kv[0])):
+    for sid, s in sorted(ships_in.items(), key=lambda kv: (int(re.search(r"\d+", kv[0]).group(0)), kv[0])):
         fl = s["fl"]
         if fl not in fleet_keys:
             problems.append("unknown fleet: %s (%s)" % (fl, s["nm"]))

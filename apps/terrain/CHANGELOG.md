@@ -4,6 +4,9 @@ Releases are tags `terrain-v<yyyy.mm.dd>`.
 
 ## Unreleased
 
+### Changed
+- Rulebook v1.11 (29.10.2026): the same pages as v1.10; the Fleets citations are v0.40 pages.
+
 ### Changed (for developers)
 - The page's script is ES modules in `src/` (chart, rules, events, controls),
   bundled with the core into the page by the build (`window.BZG`); the styles

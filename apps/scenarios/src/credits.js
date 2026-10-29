@@ -7,7 +7,7 @@ import { esc } from "./helpers.js";
 export const GW_CREDIT = "Battlefleet Gothic by Andy Chambers, Gavin Thorpe, Jervis Johnson, Matt Keefe, Andy Hall, Pete Haines, Tim Adcock, Warwick Kinrade, Bob Henderson, Ray Bell and Nate Montes (RB p. 3).";
 /* Remastered is the official rules version, not a separate author credit (horizon 23.10.: "I would not give credits
    to Simon or me. Just fold those credits together and add Nate, Ray and Bob"). */
-export const RB_CREDIT = "BFG Remastered Rulebook v1.10,";
+export const RB_CREDIT = "BFG Remastered Rulebook v1.11,";
 export const ARMADA = "First published in Battlefleet Gothic: Armada (Games Workshop, 2004), Third Armageddon War campaign.";
 export const AI_CREDIT = "Reprinted by the BFG Rules Review Committee in Armada Indomitus: Codex Orks, a supplement in Warp Rift 48 (February 2026).";
 export const INFO = {

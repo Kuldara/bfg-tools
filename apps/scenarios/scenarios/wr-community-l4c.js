@@ -67,7 +67,7 @@
       { t: "Play the first battle, Surprise Attack, from the campaign tree." }
     ],
     notes: ["The source points to “Ship Experience, rulebook page 154” — an older rulebook. Use the Remastered campaign rules for renown and crew skills (RB p. 152, 159).", "Mersk, The Bricabrac, Curtain Cloud Nebula and the Anomaly are only flavour for the terrain."],
-    refs: [["Campaign rules", "RB p. 144–"], ["Renown and crew skills", "RB p. 152, 159"], ["Refit tables", "RB p. 158–159"], ["Necron Tomb Ship", "FL p. 405"]],
+    refs: [["Campaign rules", "RB p. 144–"], ["Renown and crew skills", "RB p. 152, 159"], ["Refit tables", "RB p. 158–159"], ["Necron Tomb Ship", "FL p. 407"]],
     play: [
       { w: "Before each battle", s: "c", t: "Declare which side you fight for. You take your turn with that player and count as their ally for the game. The tree usually shows the sensible choice — except in the first battle." },
       { w: "Between battles", t: "Destroyed ships stay lost; everything else is repaired." }

@@ -1,7 +1,7 @@
 # Ship data: `bfg_data.json`
 
 Every ship profile and fleet list of *Battlefleet Gothic: Remastered*, read from
-the Fleets Book WiP v0.36 and the Rulebook v1.10. The Registry, Play and Boarding
+the Fleets Book WiP v0.40 and the Rulebook v1.11. Ship ids are the v0.36 profile pages, frozen (extractor/ship_ids.json); a ship's pg is its page in v0.40. The Registry, Play and Boarding
 are built from this file, and other projects read it too. This page is the
 contract for those readers.
 

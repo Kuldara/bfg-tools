@@ -6,8 +6,8 @@ import { d6, endingResult, entryInfo, get, num, save, wins } from "./state.js";
 /* ---------------------------------------------------------------- data */
 export const WR = "https://specialist-arms.com/bfg/warprift/";
 export const TRUST = {
-  rulebook:  { l: "Rulebook",      d: "Printed in the BFG Remastered Rulebook v1.10." },
-  fleets:    { l: "Fleets book",   d: "Printed in the BFG Remastered Fleets book v0.36." },
+  rulebook:  { l: "Rulebook",      d: "Printed in the BFG Remastered Rulebook v1.11." },
+  fleets:    { l: "Fleets book",   d: "Printed in the BFG Remastered Fleets book v0.40." },
   classic:   { l: "Classic GW",    d: "Published by Games Workshop or its Fanatic imprint, 1999–2008, for the original rules." },
   wr:        { l: "Warp Rift",     d: "From the Warp Rift fan magazine. Everything in it is fan work, whoever wrote it." },
   fan:       { l: "Fan supplement", d: "From a fan-made supplement or tournament pack outside Warp Rift. Fan work, like Warp Rift." }
@@ -486,7 +486,7 @@ export const SC = [
     { s: "b", t: "No deployment. You move on from any point of either long edge in your first turn." },
     { s: "b", t: "The raiders take the first turn." }
   ],
-  refs: [["Heavy Transport", "FL p. 182"], ["Battlezone generators", "RB p. 107–108"]],
+  refs: [["Heavy Transport", "FL p. 192"], ["Battlezone generators", "RB p. 107–108"]],
   play: [
     { w: "Turn 1", s: "b", t: "Move on from any point along either long edge." },
     { w: "All game", s: "a", t: "Get transports off the short edge opposite the one you started on. Each one that leaves counts towards the 3 needed.", not: ["run"] },
@@ -562,7 +562,7 @@ export const SC = [
     a: ["Up to 1500 pts of cruisers, battlecruisers and battleships only (normal list restrictions apply).", "Up to four minefields.", "Historically the battle was fought with Armageddon class battlecruisers."],
     b: ["No ships at the start. Roll for arrivals at the start of every turn (Play tab)."]
   },
-  variants: [["rb", "Rulebook v1.10"], ["ai", "Armada Indomitus 2026"]],
+  variants: [["rb", "Rulebook v1.11"], ["ai", "Armada Indomitus 2026"]],
   mapNote: "The rulebook mentions a deployment map that is not printed.",
   steps: [
     { t: "Roll the celestial phenomena for the Outer Reaches (RB p. 108)." },
@@ -714,7 +714,7 @@ export const SC = [
 /* ===================================================== WR: DIASPOREX GAMBIT */
 {
   id: "diasporex-gambit", grp: "committee", name: "The Hammer Needs an Anvil", series: "The Diasporex Gambit · Scenario One", trust: "committee",
-  why: "By Roy “horizon” Amkreutz, Warp Rift’s editor. Every ship is in Fleets v0.36.",
+  why: "By Roy “horizon” Amkreutz, Warp Rift’s editor. Every ship is in Fleets v0.40.",
   src: "Warp Rift 34, pp. 44–45", book: "O", suggest: ["Inquisition", "Rogue Traders"],
   others: "Suggestion: any boarding-strong cruiser can hunt any small convoy of one cruiser, two armed escorts and four transports. The Ordo Hereticus bonuses belong to the Inquisition only.",
   sides: { a: { n: "Hunter", f: "Inquisition" }, b: { n: "Hunted", f: "Rogue Traders" } },
@@ -752,7 +752,7 @@ export const SC = [
 /* ===================================================== WR: EVENT HORIZON */
 {
   id: "event-horizon", grp: "committee", name: "Event Horizon", series: "Warp Rift 43 · 20th anniversary issue", trust: "committee",
-  why: "By Roy “horizon” Amkreutz, Warp Rift’s editor. Uses Fleets v0.36 lists plus the scenario’s own ship profile.",
+  why: "By Roy “horizon” Amkreutz, Warp Rift’s editor. Uses Fleets v0.40 lists plus the scenario’s own ship profile.",
   src: "Warp Rift 43, pp. 56–58", book: "O", suggest: ["Adeptus Mechanicus", "Inquisition", "Rogue Traders"],
   others: "Any two fleets of 750 pts. The source’s list limits (no Grey Knights, Black Ships or Mechanicus reserves) only matter for an Inquisition fleet.",
   sides: { a: { n: "Fleet 1", f: "Adeptus Mechanicus" }, b: { n: "Fleet 2", f: "Inquisition or Rogue Traders" } },

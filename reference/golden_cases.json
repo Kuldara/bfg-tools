@@ -434,7 +434,7 @@
           "count": 3
         }
       },
-      "why": "p.432: 'Choose up to three port/starboard weapon sets ... (each set gives both a port and a starboard weapon)'. Launch bays +20 pts per set: 200 + 60 = 260. Three sets are three port and three starboard: the resolver carries count=3 and the row's firepower is the sum '3 / 3 squadrons' (the package's choice: instances to the resolver, the sum to the card). Implemented P1-6 (count + sum)."
+      "why": "p.432: 'Choose up to three port/starboard weapon sets ... Choose up to three port/starboard weapon sets for the point cost listed below'. Launch bays +20 pts per set: 200 + 60 = 260. Three sets are three port and three starboard: the resolver carries count=3 and the row's firepower is the sum '3 / 3 squadrons' (the package's choice: instances to the resolver, the sum to the card). Implemented P1-6 (count + sum)."
     },
     {
       "id": "gorbag-boarding-torpedoes",
@@ -3197,7 +3197,7 @@
       "expect": {
         "upgrade_not_offered": "Imperial Power Ram"
       },
-      "why": "p.186 POWER RAM: 'may be taken by any Rogue Trader capital ship with a 6+ prow'. The Armed Cargo Vessel is an escort (5+) - the row was offered anyway. Spot check 6 rows 2, 6, 12, 14, 32, 37, 41, 45, 54, 57, 81, 88."
+      "why": "p.186 POWER RAM: 'if it is part of an Imperial Navy, Adeptus Mechanicus, Inquisition, or Rogue Trader fleet list'. The Armed Cargo Vessel is an escort (5+) - the row was offered anyway. Spot check 6 rows 2, 6, 12, 14, 32, 37, 41, 45, 54, 57, 81, 88."
     },
     {
       "id": "rt-power-ram-cruiser-offered",
@@ -3224,7 +3224,7 @@
       "expect": {
         "upgrade_not_offered": "Imperial Power Ram"
       },
-      "why": "FAQ 2026 *Power ram*: 'Note of authors: only Imperial Navy, Rogue Trader and Adeptus Mechanicus ships meeting the prow requirements may take the power ram as an upgrade. Thus it is not available for Strike Cruisers in the Battlefleet Armageddon fleet list.' Fleets p. 32 says 'any Imperial capital ship with a 6+ prow'; the FAQ wins in a conflict (the user's decision 20.10.2026). The Armageddon list's Space Marine Strike Cruiser (p. 41, profile p. 105) is the case the FAQ names."
+      "why": "FAQ 2026 *Power ram*: 'Note of authors: only Imperial Navy, Rogue Trader and Adeptus Mechanicus ships meeting the prow requirements may take the power ram as an upgrade. Thus it is not available for Strike Cruisers in the Battlefleet Armageddon fleet list.' Fleets p. 32 says 'if it is part of an Imperial Navy, Adeptus Mechanicus, Inquisition, or Rogue Trader fleet list'; the FAQ wins in a conflict (the user's decision 20.10.2026). The Armageddon list's Space Marine Strike Cruiser (p. 41, profile p. 105) is the case the FAQ names."
     },
     {
       "id": "faq26-armageddon-sm-battle-barge-no-power-ram",
@@ -3235,7 +3235,7 @@
       "expect": {
         "upgrade_not_offered": "Imperial Power Ram"
       },
-      "why": "FAQ 2026 *Power ram*: 'Note of authors: only Imperial Navy, Rogue Trader and Adeptus Mechanicus ships meeting the prow requirements may take the power ram as an upgrade. Thus it is not available for Strike Cruisers in the Battlefleet Armageddon fleet list.' Fleets p. 32 says 'any Imperial capital ship with a 6+ prow'; the FAQ wins in a conflict (the user's decision 20.10.2026). The Space Marine Battle barge is not an IN, RT or AdMech ship."
+      "why": "FAQ 2026 *Power ram*: 'Note of authors: only Imperial Navy, Rogue Trader and Adeptus Mechanicus ships meeting the prow requirements may take the power ram as an upgrade. Thus it is not available for Strike Cruisers in the Battlefleet Armageddon fleet list.' Fleets p. 32 says 'if it is part of an Imperial Navy, Adeptus Mechanicus, Inquisition, or Rogue Trader fleet list'; the FAQ wins in a conflict (the user's decision 20.10.2026). The Space Marine Battle barge is not an IN, RT or AdMech ship."
     },
     {
       "id": "faq26-gothic-gk-strike-cruiser-no-power-ram",
@@ -3246,7 +3246,7 @@
       "expect": {
         "upgrade_not_offered": "Imperial Power Ram"
       },
-      "why": "FAQ 2026 *Power ram*: 'Note of authors: only Imperial Navy, Rogue Trader and Adeptus Mechanicus ships meeting the prow requirements may take the power ram as an upgrade. Thus it is not available for Strike Cruisers in the Battlefleet Armageddon fleet list.' Fleets p. 32 says 'any Imperial capital ship with a 6+ prow'; the FAQ wins in a conflict (the user's decision 20.10.2026). The Grey Knights Strike Cruiser (p. 161) in THE INQUISITION attachment section is a Strike Cruiser and not an IN ship."
+      "why": "FAQ 2026 *Power ram*: 'Note of authors: only Imperial Navy, Rogue Trader and Adeptus Mechanicus ships meeting the prow requirements may take the power ram as an upgrade. Thus it is not available for Strike Cruisers in the Battlefleet Armageddon fleet list.' Fleets p. 32 says 'if it is part of an Imperial Navy, Adeptus Mechanicus, Inquisition, or Rogue Trader fleet list'; the FAQ wins in a conflict (the user's decision 20.10.2026). The Grey Knights Strike Cruiser (p. 161) in THE INQUISITION attachment section is a Strike Cruiser and not an IN ship."
     },
     {
       "id": "faq26-pirates-sm-strike-cruiser-no-power-ram",
@@ -3257,7 +3257,7 @@
       "expect": {
         "upgrade_not_offered": "Imperial Power Ram"
       },
-      "why": "FAQ 2026 *Power ram*: 'Note of authors: only Imperial Navy, Rogue Trader and Adeptus Mechanicus ships meeting the prow requirements may take the power ram as an upgrade. Thus it is not available for Strike Cruisers in the Battlefleet Armageddon fleet list.' Fleets p. 32 says 'any Imperial capital ship with a 6+ prow'; the FAQ wins in a conflict (the user's decision 20.10.2026). The Pirates list's row (p. 188) says 'any Rogue Trader capital ship'; the Space Marine Strike Cruiser is excluded as in Armageddon (the FAQ's spirit, recorded in FAQ2026_tarkistus.md)."
+      "why": "FAQ 2026 *Power ram*: 'Note of authors: only Imperial Navy, Rogue Trader and Adeptus Mechanicus ships meeting the prow requirements may take the power ram as an upgrade. Thus it is not available for Strike Cruisers in the Battlefleet Armageddon fleet list.' Fleets p. 32 says 'if it is part of an Imperial Navy, Adeptus Mechanicus, Inquisition, or Rogue Trader fleet list'; the FAQ wins in a conflict (the user's decision 20.10.2026). The Pirates list's row (p. 188) says 'if it is part of an Imperial Navy, Adeptus Mechanicus, Inquisition, or Rogue Trader fleet list'; the Space Marine Strike Cruiser is excluded as in Armageddon (the FAQ's spirit, recorded in FAQ2026_tarkistus.md)."
     },
     {
       "id": "ram-armageddon-gothic-offered",
@@ -3306,7 +3306,7 @@
           "shields protect normally"
         ]
       },
-      "why": "FAQ 2026 *Do orbital mines interact with shields when exploding?*: 'if a mine is activated in the ordnance phase and attacks your ship, it behaves like ordnance and ignores shields, rolling 8 d6 against armour (or 4 d6 if hit by turrets)'. In conflict with Fleets p. 512 ('Shields protect against hits from mines normally'); the FAQ wins."
+      "why": "FAQ 2026 *Do orbital mines interact with shields when exploding?*: 'if a mine is activated in the ordnance phase and attacks your ship, it behaves like ordnance and ignores shields, rolling 8 d6 against armour (or 4 d6 if hit by turrets)'. Fleets v0.40 p. 512 now says the same: 'As with other ordnance, attacks ignore the target's shields.'"
     },
     {
       "id": "faq26-pd-orbital-mine-card-ignores-shields",
@@ -3316,13 +3316,13 @@
       "n": 1,
       "expect": {
         "card_contains": [
-          "Shields do not protect"
+          "the attack ignores shields"
         ],
         "card_lacks": [
           "Shields work as normal"
         ]
       },
-      "why": "The same FAQ 2026 item as faq26-dictator-orbital-mines-ignore-shields: the defence's mine card."
+      "why": "Fleets v0.40 p.512: 'As with other ordnance, attacks ignore the target's shields.' (FAQ 2026 said the same; v0.36 p.512 said shields protect.)"
     },
     {
       "id": "faq26-de-corsair-escort-no-minimum-move",
@@ -3349,7 +3349,7 @@
       "expect": {
         "upgrade_not_offered": "Power Ram"
       },
-      "why": "p.186: 'any Rogue Trader capital ship' and p.32 'any Imperial capital ship' - the Demiurg Citadel (p.490) is an ally, not a Rogue Trader ship. Spot check 6 row 70."
+      "why": "p.186: 'if it is part of an Imperial Navy, Adeptus Mechanicus, Inquisition, or Rogue Trader fleet list' and p.32 'any Imperial capital ship' - the Demiurg Citadel (p.490) is an ally, not a Rogue Trader ship. Spot check 6 row 70."
     },
     {
       "id": "crusade-honour-guard-escort-not-offered",
@@ -3373,7 +3373,7 @@
       "expect": {
         "upgrade_not_offered": "Grey Knights (Honour Guard|Terminators)"
       },
-      "why": "p.155: 'Any Grey Knights capital ship in the fleet may embark an Honour Guard'; Terminators 'The vessel embarking the Inquisitor Lord or one Grey Knights vessel' - both are capital ship rows, offered to an escort. Spot check 6 row 23."
+      "why": "p.155: 'Every Grey Knights vessel in the fleet may embark an Honour Guard'; Terminators 'The vessel embarking the Inquisitor Lord or one Grey Knights vessel' - both are capital ship rows, offered to an escort. Spot check 6 row 23."
     },
     {
       "id": "omnissiah-victory-no-gifts-table",
@@ -3518,7 +3518,7 @@
       "expect": {
         "upgrade_not_offered": "Warp Beasts|Strand of Fortune"
       },
-      "why": "p.246: 'Up to two capital ships ... that have the Mark of Tzeentch'; 'Any ship led by a Lord of Tzeentch' - neither for an Idolator escort. Spot check 6 row 33."
+      "why": "p.246: 'Up to two capital ships ... including daemonships'; 'Any ship led by a Lord of Tzeentch' - neither for an Idolator escort. Spot check 6 row 33."
     },
     {
       "id": "clanz-onslaught-no-boarding-torpedoes",
@@ -3698,7 +3698,7 @@
       "ship": "105",
       "select": [
         {
-          "option": "strength-6, speed: 30 cm torpedo tubes"
+          "option": "Strength 6, speed: 30 cm torpedo tubes"
         }
       ],
       "expect": {
@@ -3713,7 +3713,7 @@
           "see text"
         ]
       },
-      "why": "p.105 OPTIONS: 'May replace its launch bays for strength-6, speed: 30 cm torpedo tubes' without a price = free; the torpedo tubes fire from the prow (the card had the arc '-'). Spot check 6 row 68."
+      "why": "p.105 OPTIONS: 'May replace its launch bays for Strength 6, speed: 30 cm torpedo tubes' without a price = free; the torpedo tubes fire from the prow (the card had the arc '-'). Spot check 6 row 68."
     },
     {
       "id": "demiurg-emissary-no-torpedo-bombers",
@@ -3994,9 +3994,9 @@
       "ship": "am132",
       "select": [],
       "expect": {
-        "upgrade_not_offered": "Nova Cannon instead of prow torpedoes"
+        "upgrade_not_offered": "Can replace its prow torpedoes with a nova cannon at a cost of +20 pts"
       },
-      "why": "v0.40: the Mechanicus Tyrant (p.132) has its own nova cannon option; the list no longer has the row 'Nova Cannon instead of prow torpedoes' (p.121's sentence is in the profiles)."
+      "why": "v0.40: the Mechanicus Tyrant (p.132) has its own nova cannon option; the list no longer has the row 'Can replace its prow torpedoes with a nova cannon at a cost of +20 pts' (p.121's sentence is in the profiles)."
     },
     {
       "id": "mechanicus-gothic-nova-cannon-offered",
@@ -4087,7 +4087,7 @@
           "state": "off"
         },
         {
-          "upgrade": "Power Ram",
+          "option": "power ram",
           "state": "off"
         }
       ],
@@ -4097,7 +4097,7 @@
           "<span>PTS</span><i>110</i>"
         ]
       },
-      "why": "The user 10.9.: all options taken -> PTS is computed on the card (p.191 110 + a free option). 30.9.2026: the list's upgrade rows open as Option; the case concerns the fixed PTS field, so they are hidden here separately: Xenotech, Crew skill and Special torpedoes. 20.10.2026 (J223): the 6+ prow option makes the ship eligible for the Power Ram (Fleets p. 32: 'any Imperial capital ship with a 6+ prow', the RT list p. 186), so the ram is now one of the options to resolve and is hidden here like the others."
+      "why": "The user 10.9.: all options taken -> PTS is computed on the card (p.191 110 + a free option). 30.9.2026: the list's upgrade rows open as Option; the case concerns the fixed PTS field, so they are hidden here separately: Xenotech, Crew skill and Special torpedoes. 20.10.2026 (J223): the 6+ prow option makes the ship eligible for the Power Ram (Fleets p. 32: 'if it is part of an Imperial Navy, Adeptus Mechanicus, Inquisition, or Rogue Trader fleet list', the RT list p. 186), so the ram is one of the options to resolve (v0.40: the ship's own option, p.191) and is hidden here like the others."
     },
     {
       "id": "pts-fixed-all-hidden",
@@ -4119,6 +4119,10 @@
         },
         {
           "upgrade": "Special torpedoes",
+          "state": "off"
+        },
+        {
+          "option": "power ram",
           "state": "off"
         }
       ],
@@ -5090,7 +5094,7 @@
       "expect": {
         "upgrade_not_offered": "^Grey Knights Honour Guard"
       },
-      "why": "p.155: 'Any Grey Knights capital ship in the fleet may embark an Honour Guard for +10 points'; p.158 Blackship: 'Even when used in fleets with Space Marines, they are not crewed by Space Marines and do not get additional Space Marine benefits.'"
+      "why": "p.155: 'Every Grey Knights vessel in the fleet may embark an Honour Guard'; p.158 Blackship: 'Even when used in fleets with Space Marines, they are not crewed by Space Marines and do not get additional Space Marine benefits.'"
     },
     {
       "id": "gk-inquisitorial-cruiser-no-honour-guard",
@@ -5101,7 +5105,7 @@
       "expect": {
         "upgrade_not_offered": "^Grey Knights Honour Guard"
       },
-      "why": "p.155: Honour Guard 'Any Grey Knights capital ship'; the Terminators sentence distinguishes 'The vessel embarking the Inquisitor Lord or one Grey Knights vessel' - the Inquisitor's ship is not a Grey Knights ship."
+      "why": "p.155: Honour Guard 'Every Grey Knights vessel'; the Terminators sentence distinguishes 'The vessel embarking the Inquisitor Lord or one Grey Knights vessel' - the Inquisitor's ship is not a Grey Knights ship."
     },
     {
       "id": "gk-strike-cruiser-honour-guard",
@@ -5112,7 +5116,7 @@
       "expect": {
         "upgrade_offered": "^Grey Knights Honour Guard"
       },
-      "why": "p.155: 'Any Grey Knights capital ship in the fleet may embark an Honour Guard' - Grey Knights Strike Cruiser on sellainen."
+      "why": "p.155: 'Every Grey Knights vessel in the fleet may embark an Honour Guard' - Grey Knights Strike Cruiser on sellainen."
     },
     {
       "id": "khorne-slaverer-crew-included",
@@ -5580,7 +5584,7 @@
         "points": 650,
         "upgrade_offered": "Chaos Space Marine crew$"
       },
-      "why": "p.289 LEADERSHIP: “Due to their enormous size, Chaos Space Hulks always impart a -1 Ld modifier. This is applied after all other modifiers and bonuses, including the Warmaster’s base leadership, having Chaos Space Marines embarked, etc.” p.290 UPGRADES: “Hulks cannot take any upgrade that improves Boarding Value, Turning or Speed.” The CSM crew's +2 is a boarding die modifier (p.232: “providing them with a total +2 boarding modifier”), not Boarding Value; p.392 allows the Ork hulk the equivalent: “Mega-armoured Boarding Parties is unchanged.” Spot check 12's ban was a reading error (spot check 19 round 3, T21)."
+      "why": "p.289 LEADERSHIP: “Due to their enormous size, Chaos Space Hulks always impart a -1 Ld modifier. This is applied after all other modifiers and bonuses, including the Warmaster’s base leadership, having Chaos Space Marines embarked, etc.” p.290 UPGRADES: “Upgrades that increase its boarding value or speed may not be taken.” The CSM crew's +2 is a boarding die modifier (p.232: “providing them with a total +2 boarding modifier”), not Boarding Value; p.392 allows the Ork hulk the equivalent: “Mega-armoured Boarding Parties is unchanged.” Spot check 12's ban was a reading error (spot check 19 round 3, T21)."
     },
     {
       "id": "black-crusade-chaos-space-hulk-csm-crew",
@@ -5592,7 +5596,7 @@
         "points": 650,
         "upgrade_offered": "^Chaos Space Marine crew$"
       },
-      "why": "p.289 LEADERSHIP: “Due to their enormous size, Chaos Space Hulks always impart a -1 Ld modifier. This is applied after all other modifiers and bonuses, including the Warmaster’s base leadership, having Chaos Space Marines embarked, etc.” p.290 UPGRADES: “Hulks cannot take any upgrade that improves Boarding Value, Turning or Speed.” The CSM crew's +2 is a boarding die modifier (p.232), not Boarding Value; p.392: “Mega-armoured Boarding Parties is unchanged.” Spot check 12's ban was a reading error (spot check 19 round 3, T21)."
+      "why": "p.289 LEADERSHIP: “Due to their enormous size, Chaos Space Hulks always impart a -1 Ld modifier. This is applied after all other modifiers and bonuses, including the Warmaster’s base leadership, having Chaos Space Marines embarked, etc.” p.290 UPGRADES: “Upgrades that increase its boarding value or speed may not be taken.” The CSM crew's +2 is a boarding die modifier (p.232), not Boarding Value; p.392: “Mega-armoured Boarding Parties is unchanged.” Spot check 12's ban was a reading error (spot check 19 round 3, T21)."
     },
     {
       "id": "iyanden-flame-of-asuryan-aspect-host-included",
@@ -5890,7 +5894,7 @@
           "nova cannon"
         ]
       },
-      "why": "p.188: “A human pirate fleet may have up to one cruiser for every 500 points of ships in the fleet or portion thereof. A Pirate Cruiser may consist of a Rogue Trader cruiser or any cruiser from the Imperial or Chaos fleet lists worth 185 points or less. It may also include a single Space Marine strike cruiser! Special variants, refits and Nova Cannons cannot be used.” Lunar p.71: 180 pts; the Nova Cannon swap is not available."
+      "why": "p.188: “A human pirate fleet may have up to one cruiser for every 500 points of ships in the fleet or portion thereof.” “A Pirate Cruiser may consist of a Rogue Trader cruiser or any cruiser from the Imperial or Chaos fleet lists worth 185 points or less. It may also include a single Space Marine strike cruiser! Special variants, refits and Nova Cannons cannot be used.” Lunar p.71: 180 pts; the Nova Cannon swap is not available."
     },
     {
       "id": "pirates-chaos-murder-cruiser",
@@ -5901,7 +5905,7 @@
       "expect": {
         "points": 170
       },
-      "why": "p.188: “A human pirate fleet may have up to one cruiser for every 500 points of ships in the fleet or portion thereof. A Pirate Cruiser may consist of a Rogue Trader cruiser or any cruiser from the Imperial or Chaos fleet lists worth 185 points or less. It may also include a single Space Marine strike cruiser! Special variants, refits and Nova Cannons cannot be used.” Murder p.281: 170 pts (the Chaos list, under 185)."
+      "why": "p.188: “A human pirate fleet may have up to one cruiser for every 500 points of ships in the fleet or portion thereof.” “A Pirate Cruiser may consist of a Rogue Trader cruiser or any cruiser from the Imperial or Chaos fleet lists worth 185 points or less. It may also include a single Space Marine strike cruiser! Special variants, refits and Nova Cannons cannot be used.” Murder p.281: 170 pts (the Chaos list, under 185)."
     },
     {
       "id": "pirates-space-marine-strike-cruiser",
@@ -5912,7 +5916,7 @@
       "expect": {
         "points": 145
       },
-      "why": "p.188: “A human pirate fleet may have up to one cruiser for every 500 points of ships in the fleet or portion thereof. A Pirate Cruiser may consist of a Rogue Trader cruiser or any cruiser from the Imperial or Chaos fleet lists worth 185 points or less. It may also include a single Space Marine strike cruiser! Special variants, refits and Nova Cannons cannot be used.” Strike Cruiser p.105: 145 pts."
+      "why": "p.188: “A human pirate fleet may have up to one cruiser for every 500 points of ships in the fleet or portion thereof.” “A Pirate Cruiser may consist of a Rogue Trader cruiser or any cruiser from the Imperial or Chaos fleet lists worth 185 points or less. It may also include a single Space Marine strike cruiser! Special variants, refits and Nova Cannons cannot be used.” Strike Cruiser p.105: 145 pts."
     },
     {
       "id": "pirates-stryxis-caravan",
@@ -5967,7 +5971,7 @@
       "expect": {
         "upgrade_not_offered": "^Clan: Evil Sunz"
       },
-      "why": "p.392: “Hulks cannot take any upgrade that improves Boarding Value, Turning or Speed.” p.374: “Space Hulks so led can take upgrades from the list of Gubbins for double the listed cost. Upgrades that increase its boarding value or speed may not be taken.” p.371: “Evil Sunz......................................+20 pts/Red (...) All Evil Sunz ships gain +5 cm speed.”"
+      "why": "p.392: “Upgrades that increase its boarding value or speed may not be taken.” p.374: “Space Hulks so led can take upgrades from the list of Gubbins for double the listed cost. Upgrades that increase its boarding value or speed may not be taken.” p.371: “Evil Sunz......................................+20 pts/Red (...) All Evil Sunz ships gain +5 cm speed.”"
     },
     {
       "id": "clanz-hulk-goffs-not-evil-sunz",
@@ -5979,7 +5983,7 @@
         "upgrade_offered": "^Clan: Goffs",
         "upgrade_not_offered": "^Clan: Evil Sunz"
       },
-      "why": "p.392: “Hulks cannot take any upgrade that improves Boarding Value, Turning or Speed.” The same page on the Warlord's upgrades: “Mega-armoured Boarding Parties is unchanged.” p.372: “The ship has an additional +1 modifier when rolling for boarding actions and hit-and-run attacks of any type.” p.371: “All Goff ships (including tiddla skwadrons) gain a +1 bonus to the dice roll during boarding actions and a +1 Leadership bonus when attempting to ram.” A die modifier is not Boarding Value, so the Goffs do for a hulk; the Evil Sunz (“+5 cm speed”) do not. J33's Goffs ban was a reading error (spot check 19 round 3, T15)."
+      "why": "p.392: “Upgrades that increase its boarding value or speed may not be taken.” The same page on the Warlord's upgrades: “Mega-armoured Boarding Parties is unchanged.” p.372: “The ship has an additional +1 modifier when rolling for boarding actions and hit-and-run attacks of any type.” p.371: “All Goff ships (including tiddla skwadrons) gain a +1 bonus to the dice roll during boarding actions and a +1 Leadership bonus when attempting to ram.” A die modifier is not Boarding Value, so the Goffs do for a hulk; the Evil Sunz (“+5 cm speed”) do not. J33's Goffs ban was a reading error (spot check 19 round 3, T15)."
     },
     {
       "id": "clanz-rok-no-critical-table",
@@ -6309,7 +6313,7 @@
           "may have more than two battleships"
         ]
       },
-      "why": "p.251: “You may include up to one Space Hulk in the fleet, which must be the flagship if chosen. Bezerker Fleets led by a Space Hulk may have more than two battleships, but other restrictions remain unchanged.” (spot check 19 round 2, M8r2 and M10r2)"
+      "why": "p.251: “You may include up to one Space Hulk in the fleet, which must be the flagship if chosen. Berzerker Fleets led by a Space Hulk may have more than two battleships, but other restrictions remain unchanged.” (spot check 19 round 2, M8r2 and M10r2)"
     },
     {
       "id": "iyanden-flame-aspect-crew",
@@ -6367,7 +6371,7 @@
           "ignores celestial phenomena"
         ]
       },
-      "why": "FAQ 2026 *Eldar & Celestial Phenomena*: the Eldar do not ignore everything - asteroids, planets and a radiation burst as for others, the warp rift's test 2D6 (not 3D6) and a rift always blocks line of fire; gas cloud and solar flare with an Ld test as in the book. p.305: “Eldar ships can make a leadership check to ignore all effects of celestial phenomena such as gas clouds, solar flares, etc. Escorts may re-roll this result for free. If an Eldar vessel passes its leadership check during a solar flare, it will take no damage but turn directly away from the sun edge and move 2D6 cm.” p.307: “An Eldar vessel intending to board an opponent may do so in either movement phase, but it may not shoot or launch ordnance before doing so. If it boards in its movement phase, it may not make its second movement.” (spot check 19 round 2, M8r2)"
+      "why": "p.305: “Eldar ships can make a leadership test to ignore or change the effects of celestial phenomena. Escorts may re-roll this result for free.” Gas clouds and solar flares with a Leadership test; asteroids, planets and radiation bursts as for any fleet; warp rifts tested on 2D6 instead of 3D6 and they always block the line of fire (v0.40 prints what FAQ 2026 *Eldar & Celestial Phenomena* said). p.307: “An Eldar vessel intending to board an opponent may do so in either movement phase, but it may not shoot or launch ordnance before doing so. If it boards in its movement phase, it may not make its second movement.” (spot check 19 round 2, M8r2)"
     },
     {
       "id": "rt-endeavour-xenotech-choose-needs-roll",
@@ -6412,7 +6416,7 @@
           "squadron 2–6"
         ]
       },
-      "why": "The list: “You may include any number of escorts in your fleet in squadrons of 2–6 unless specified (see pg 13).” Fleets p.13: “If any more than one escort is taken in a fleet list, then all escorts must be formed in squadrons of at least two or whatever minimum is required by that particular fleet list.” The card's squadron box tells the list's limits (the user's request 11.9., J69)."
+      "why": "The list: “You may include any number of escorts in your fleet in squadrons of 2–6.” Fleets p.13: “If any more than one escort is taken in a fleet list, then all escorts must be formed in squadrons of at least two or whatever minimum is required by that particular fleet list.” The card's squadron box tells the list's limits (the user's request 11.9., J69)."
     },
     {
       "id": "clanz-ravager-squadron-range",
@@ -6852,7 +6856,7 @@
     },
     {
       "id": "iyanden-yriel-vampire-raiders-on-card",
-      "page": 317,
+      "page": 313,
       "list": "Eldar — Iyanden Craftworld",
       "entry": "^Prince Yriel",
       "select": [],
@@ -6865,7 +6869,7 @@
           "Corsair Eldar escort vessels"
         ]
       },
-      "why": "p.317 PRINCE YRIEL: 'Prince Yriel has at his disposal the very finest weaponry and resources available to the Iyanden Eldar. He has the following additions as part of his point cost: 1. He is accompanied by the fiercest members of Yriel’s own pirate warband, which count as an Aspect Warrior host. 2. His vessel is equipped with Vampire raiders. 3. He has one re-roll as part of his point cost, but a second or third re-roll can be purchased at +25 points each.' Item 2 was missing from the card. The Corsair reserve rules belong to the neighbouring RESERVES AND ALLIES paragraph, not to Yriel's box ('An Eldar Hero must lead the fleet in order to use Corsair Eldar vessels as reserves'). Spot check 15 (J15) row 59."
+      "why": "p.313 PRINCE YRIEL: “Yriel is accompanied by the fiercest members of his own pirate warband, which count as an Aspect Warrior host (pg. 307). His vessel is equipped with Vampire raiders.” Item 2 was missing from the card before. The Corsair reserve rules belong to the list's RESERVES AND ALLIES paragraph, not to Yriel's page. Spot check 15 (J15) row 59."
     },
     {
       "id": "rt-fast-clipper-no-xenotech-refit",
@@ -7153,7 +7157,7 @@
           "Orbital Mine × 4  20 pts"
         ]
       },
-      "why": "p.499: 'Orbital mine (pg. 512)... 5 pts' -> four = 20. p.512: no TYPE/HITS profile, only SPECIAL: 'The orbital mine moves 10 cm towards the nearest enemy ship in each ordnance phase.' 'If it moves into contact with the base of an enemy ship it detonates and rolls eight dice to hit the target vessel. ... If the mine is hit it rolls four Attack dice instead of eight.' The row has no hull, so before the implementation it printed no card at all and the number was always 1. The card is a rule card: the phases and one tick box per bought mine ('Individual mines purchased separately count for victory points when destroyed'). The type word must not be the internal 'fleet option' / 'option': the row is a defence."
+      "why": "p.499: 'Orbital mine (pg. 512)... 5 pts' -> four = 20. p.512: no TYPE/HITS profile, only SPECIAL: 'The orbital mine moves 10 cm towards the nearest enemy ship in each ordnance phase.' 'If it moves into contact with the base of an enemy ship it detonates and rolls eight dice against the ship's armour value. ... If the mine is hit it rolls four Attack dice instead of eight.' The row has no hull, so before the implementation it printed no card at all and the number was always 1. The card is a rule card: the phases and one tick box per bought mine ('Individual mines purchased separately count for victory points when destroyed'). The type word must not be the internal 'fleet option' / 'option': the row is a defence."
     },
     {
       "id": "pd-minefield-rule-card",
@@ -7294,7 +7298,7 @@
           "Shadowhunters"
         ]
       },
-      "why": "A player report 9.10.2026 and J161. p.317: 'Yriel may be taken instead of the Hero Fleet Commander as listed in the Corsair and Craftworld Eldar fleet lists.' So the row also belongs to the Corsair list (p.315): 150 pts, 'He has one re-roll as part of his point cost, but a second or third re-roll can be purchased at +25 points each.' The card has the sentences of his own box ('His vessel is equipped with Vampire raiders.'), not the list's reserve paragraph's sentences."
+      "why": "A player report 9.10.2026 and J161. p.317: 'Yriel may be taken instead of the Hero Fleet Commander as listed in the Corsair and Craftworld Eldar fleet lists.' So the row also belongs to the Corsair list (p.315): 150 pts, 'A second and third re-roll can be purchased at +25 points each.' The card has the sentences of his own box ('His vessel is equipped with Vampire raiders.'), not the list's reserve paragraph's sentences."
     },
     {
       "id": "corsair-gothic-yriel-aboard-the-flame-125",
@@ -7318,7 +7322,7 @@
           "Vampire raiders"
         ]
       },
-      "why": "p.317: 'He must be embarked aboard the Flame of Asuryan if it is present, in which case his cost is 125 points.' and 'a second or third re-roll can be purchased at +25 points each'. Aboard the Flame 125, two extra re-rolls 2 x 25 = 50: 125 + 50 = 175, three re-rolls. The same row on the Gothic Sector list (p.314)."
+      "why": "p.317: 'He must be embarked aboard the Flame of Asuryan if it is present, in which case Yriel's cost is reduced to 125 points.' and 'A second and third re-roll can be purchased at +25 points each'. Aboard the Flame 125, two extra re-rolls 2 x 25 = 50: 125 + 50 = 175, three re-rolls. The same row on the Gothic Sector list (p.314)."
     },
     {
       "id": "incursion-activated-blackstone-defence-criticals",
@@ -7670,7 +7674,7 @@
           "doubles its value in boarding actions"
         ]
       },
-      "why": "Fleets p.241 ABADDON AS FLEET COMMANDER: 'Abaddon can be chosen to act as fleet commander in any game in which the Chaos fleet is worth 1,000 points or more.' The rule concerns any Chaos fleet, and the Tzeentch list's own Planet Killer row allows for him (p.247: 'If Abaddon is present, he must be aboard the Planet Killer'). The list's Fleet Commander section does not list him; the user's decision 13.10.2026 (BACKLOG J162): allowed on all four god lists. The price 195 is printed only in the Black Crusade list (p.244); 'Re-rolls: 1 per turn' (p.241)."
+      "why": "Fleets p.241 ABADDON AS FLEET COMMANDER: 'Abaddon can be chosen to act as fleet commander in any game in which the Chaos fleet is worth 1,000 points or more.' The rule concerns any Chaos fleet, and the Tzeentch list's own Planet Killer row allows for him (p.247: 'If the Planet Killer is present, Abaddon must be aboard it'). The list's Fleet Commander section does not list him; the user's decision 13.10.2026 (BACKLOG J162): allowed on all four god lists. The price 195 is printed only in the Black Crusade list (p.244); 'Re-rolls: 1 per turn' (p.241)."
     },
     {
       "id": "nurgle-abaddon-row",
@@ -7685,7 +7689,7 @@
           "doubles its value in boarding actions"
         ]
       },
-      "why": "Fleets p.241 ABADDON AS FLEET COMMANDER: 'Abaddon can be chosen to act as fleet commander in any game in which the Chaos fleet is worth 1,000 points or more.' The rule concerns any Chaos fleet, and the Nurgle list's own Planet Killer row allows for him (p.249: 'If Abaddon is present, he must be aboard the Planet Killer'). The list's Fleet Commander section does not list him; the user's decision 13.10.2026 (BACKLOG J162): allowed on all four god lists. The price 195 is printed only in the Black Crusade list (p.244); 'Re-rolls: 1 per turn' (p.241)."
+      "why": "Fleets p.241 ABADDON AS FLEET COMMANDER: 'Abaddon can be chosen to act as fleet commander in any game in which the Chaos fleet is worth 1,000 points or more.' The rule concerns any Chaos fleet, and the Nurgle list's own Planet Killer row allows for him (p.249: 'If the Planet Killer is present, Abaddon must be aboard it'). The list's Fleet Commander section does not list him; the user's decision 13.10.2026 (BACKLOG J162): allowed on all four god lists. The price 195 is printed only in the Black Crusade list (p.244); 'Re-rolls: 1 per turn' (p.241)."
     },
     {
       "id": "khorne-abaddon-row",
@@ -7700,7 +7704,7 @@
           "doubles its value in boarding actions"
         ]
       },
-      "why": "Fleets p.241 ABADDON AS FLEET COMMANDER: 'Abaddon can be chosen to act as fleet commander in any game in which the Chaos fleet is worth 1,000 points or more.' The rule concerns any Chaos fleet, and the Khorne list's own Planet Killer row allows for him (p.251: 'If Abaddon is present, he must be aboard the Planet Killer'). The list's Fleet Commander section does not list him; the user's decision 13.10.2026 (BACKLOG J162): allowed on all four god lists. The price 195 is printed only in the Black Crusade list (p.244); 'Re-rolls: 1 per turn' (p.241)."
+      "why": "Fleets p.241 ABADDON AS FLEET COMMANDER: 'Abaddon can be chosen to act as fleet commander in any game in which the Chaos fleet is worth 1,000 points or more.' The rule concerns any Chaos fleet, and the Khorne list's own Planet Killer row allows for him (p.251: 'If the Planet Killer is present, Abaddon must be aboard it'). The list's Fleet Commander section does not list him; the user's decision 13.10.2026 (BACKLOG J162): allowed on all four god lists. The price 195 is printed only in the Black Crusade list (p.244); 'Re-rolls: 1 per turn' (p.241)."
     },
     {
       "id": "slaanesh-abaddon-row",
@@ -7715,7 +7719,7 @@
           "doubles its value in boarding actions"
         ]
       },
-      "why": "Fleets p.241 ABADDON AS FLEET COMMANDER: 'Abaddon can be chosen to act as fleet commander in any game in which the Chaos fleet is worth 1,000 points or more.' The rule concerns any Chaos fleet, and the Slaanesh list's own Planet Killer row allows for him (p.253: 'If Abaddon is present, he must be aboard the Planet Killer'). The list's Fleet Commander section does not list him; the user's decision 13.10.2026 (BACKLOG J162): allowed on all four god lists. The price 195 is printed only in the Black Crusade list (p.244); 'Re-rolls: 1 per turn' (p.241)."
+      "why": "Fleets p.241 ABADDON AS FLEET COMMANDER: 'Abaddon can be chosen to act as fleet commander in any game in which the Chaos fleet is worth 1,000 points or more.' The rule concerns any Chaos fleet, and the Slaanesh list's own Planet Killer row allows for him (p.253: 'If the Planet Killer is present, Abaddon must be aboard it'). The list's Fleet Commander section does not list him; the user's decision 13.10.2026 (BACKLOG J162): allowed on all four god lists. The price 195 is printed only in the Black Crusade list (p.244); 'Re-rolls: 1 per turn' (p.241)."
     },
     {
       "id": "renegade-lunar-no-csm-clause",
@@ -7731,7 +7735,7 @@
           "Chaos Space Marine crew makes it"
         ]
       },
-      "why": "Fleets p.232: 'Chaos has a +1 boarding modifier.' and of the renegade hulls 'Special weapon rules, Nova Cannon, Chaos Lords, Chaos Space Marines, Chaos ordnance or Daemonship upgrades may not be taken for Imperial Navy vessels used in this manner'. A renegade Lunar gets the +1 ('they count as Chaos vessels in all respects'), but the Chaos Space Marine crew sentence is a rule this ship cannot use - off the card (spot check 2026-10-18/1, seed 20261018)."
+      "why": "Fleets p.232: 'Chaos has a +1 boarding modifier.' and of the renegade hulls 'Weapon refits, Nova Cannon, Chaos Lords, Chaos Space Marines, Chaos ordnance or Daemonship upgrades may not be taken for Imperial Navy vessels used in this manner'. A renegade Lunar gets the +1 ('they count as Chaos vessels in all respects'), but the Chaos Space Marine crew sentence is a rule this ship cannot use - off the card (spot check 2026-10-18/1, seed 20261018)."
     },
     {
       "id": "nurgle-murder-keeps-csm-clause",
@@ -7918,7 +7922,7 @@
         "armour": "5+",
         "upgrade_not_offered": "Power Ram"
       },
-      "why": "Fleets p. 32: 'The Imperial Power Ram may be taken by any Imperial capital ship with a 6+ prow for +5 points unless it has a Nova Cannon.' Endeavour p. 72: 'May increase the prow armour to 6+ for no additional cost. However, if this option is taken, the turning radius of these vessels is reduced to 45 degrees.' Without the option the Endeavour's prow is 5+ (p. 72), so no ram (J223)."
+      "why": "Fleets p. 32: 'If the prow armour is increased, the ship may also take a power ram for +5 points' Endeavour p. 72: 'May increase the prow armour to 6+ for no additional cost. However, if this option is taken, the turning radius of these vessels is reduced to 45 degrees.' Without the option the Endeavour's prow is 5+ (p. 72), so no ram (J223)."
     },
     {
       "id": "ram-defiant-6plus-prow-option",

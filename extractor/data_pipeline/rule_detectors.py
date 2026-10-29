@@ -614,7 +614,7 @@ RULE_PICKS = [
          rule=dict(kind="per_points", each=1, per=500, what="Pirate Captain", label="Pirate Captains", pick=[dict(sec="Pirate Captains")])),
     dict(list_has="Tau \u2014 Commerce Protection", sec="Battleships",
          from_text="up to one Custodian per FULL 750 points of Tau vessels",
-         src="Your fleet may include up to one Custodian per FULL 750 points of Tau vessels. Allied, Subject, Mercenary and Reserve vessels don't count toward this total.",
+         src="Your fleet may include up to one Custodian per FULL 750 points of Tau vessels. Allied vessels don't count toward this total.",
          keep_text=True,
          rule=dict(kind="per_points", each=1, per=750, full=True, what="Custodian", label="Custodian class starships",
                    pick=[dict(sec="Battleships", re="custodian")],

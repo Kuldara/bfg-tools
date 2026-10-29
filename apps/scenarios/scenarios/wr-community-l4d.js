@@ -172,7 +172,7 @@
       { s: "b", t: "Eldar deploy last, anywhere within 30 cm of the Gate." }
     ],
     notes: ["“Defender roll for holofields if eldar are not present” is unclear — read here as: without Eldar, roll off for who controls the Gate’s holofield saves.", "How more than two fleets share the long edges is not given."],
-    refs: [["Warp rifts", "RB p. 111"], ["Holofields", "FL p. 303"]],
+    refs: [["Warp rifts", "RB p. 111"], ["Holofields", "FL p. 305"]],
     play: [
       { w: "The Gate", t: "Immobile: 10 hits, armour 6+, holofield, 3 turrets. It never fires, moves or takes orders." },
       { w: "If it is destroyed", t: "Remove it: every ship within 15 cm takes D6 lance hits (shields and armour as normal). A warp rift opens in its place for the rest of the game, and Leadership checks within 15 cm of it are at −1." },

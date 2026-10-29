@@ -3,7 +3,7 @@
 [![CI](https://github.com/Kuldara/bfg-tools/actions/workflows/ci.yml/badge.svg)](https://github.com/Kuldara/bfg-tools/actions/workflows/ci.yml)
 
 Free fan-made browser tools for **Battlefleet Gothic**, built on the BFG: Remastered
-rules (Rulebook v1.10, Fleets Book WiP v0.36 and the Collected FAQ 2026). Every tool
+rules (Rulebook v1.11, Fleets Book WiP v0.40 and the Collected FAQ 2026). Every tool
 is a static page: no accounts, no server code, nothing fetched from anywhere else.
 
 | Tool | What it does | Live | Mirror | Source |

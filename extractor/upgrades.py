@@ -119,8 +119,11 @@ ROW_CONDS = [
     # Cruiser are not Grey Knights ships (spot check 9 row 6).
     (re.compile(r"^Grey Knights$"), re.compile(r"^ORDNANCE$"),
      re.compile(r"^Grey Knights Honour Guard$", re.I), dict(cap=1, nmno=r"blackship|inquisitorial")),
+    # v0.40 p.246: "Up to two capital ships (including the flagship) can have
+    # daemonic entities and warp beasts swirl about its hull, including
+    # daemonships." - no Mark of Tzeentch needed any more.
     (re.compile(r"Tzeentch"), re.compile(r"^FORCES OF CHAOS$"),
-     re.compile(r"^Warp Beasts$", re.I), dict(cap=1, up=r"^the mark of tzeentch")),
+     re.compile(r"^Warp Beasts$", re.I), dict(cap=1)),
     # p.246 "Any ship led by a Lord of Tzeentch (and not the Warmaster!)" and
     # p.247 "A Daemonship may not be commanded by a Warmaster or a Chaos Lord"
     # (spot check 11 rows 60, 61, 69).

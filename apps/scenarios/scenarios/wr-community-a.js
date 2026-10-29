@@ -37,7 +37,7 @@
       { t: "Brief the Imperial players: contact with a colony has been lost; investigate with caution, and destroy any enemies found." }
     ],
     notes: ["The source gives no first turn, deployment depth or game length — agree them. The author advises the Imperials to move their minimum distance until the enemy is found.", "The author’s first game kept the Imperial players in the dark until the Orks moved — part of the fun."],
-    refs: [["Ork hulk", "FL p. 389"], ["Rok", "FL p. 392"], ["Asteroid fields", "RB p. 104–116"]],
+    refs: [["Ork hulk", "FL p. 389"], ["Rok", "FL p. 394"], ["Asteroid fields", "RB p. 104–116"]],
     play: [
       { w: "Every turn: scanning", s: "a", t: "Each capital ship rolls a D6; a 6 is a ‘ping’. A ship’s first ping reveals that something is in one of the rear clusters (roll which: 1–2, 3–4, 5–6). The same ship’s second ping confirms enemy ships there — but not what they are." },
       { w: "Activation", s: "b", t: "When an Imperial ship reaches the orbit of the small planet (60 cm from the rear clusters), the Orks wake up and move and fight normally." },
@@ -131,7 +131,7 @@
     notes: v => v === "fl"
       ? ["The players’ own quick rules (6+, reload, then 5+) are the other version. The Fleets book’s rule for this exact situation — the Planet Killer as an exterminator — is used here.", "The report’s analysis: the Chaos player could only win by bombing the planet and disengaging — a single huge ship is not a good fleet."]
       : ["These were the players’ “rudimentary rules” for one game; they never fixed zones, game length or how often the shot may be tried. The report’s pattern: 6+ on the first try, then reload, then 5+ on each later try.", "The report’s analysis: the Chaos player could only win by bombing the planet and disengaging — a single huge ship is not a good fleet."],
-    refs: v => v === "fl" ? [["Exterminatus", "RB p. 140–141"], ["The Planet Killer", "FL p. 252–254"], ["Low orbit", "RB p. 116"]] : [["The Planet Killer", "FL p. 252"], ["Reload Ordnance", "RB p. 46"]],
+    refs: v => v === "fl" ? [["Exterminatus", "RB p. 140–141"], ["The Planet Killer", "FL p. 254–254"], ["Low orbit", "RB p. 116"]] : [["The Planet Killer", "FL p. 254"], ["Reload Ordnance", "RB p. 46"]],
     play: [
       { w: "Destroying the planet", s: "b", t: "Two ways (FL p. 256). Low orbit: like any exterminator, enter low orbit; at the start of each turn the Planet Killer is within 60 cm of the planet table edge, the planet is destroyed — no 4+ roll needed.", only: ["fl"] },
       { w: "Armageddon Overcharge", s: "b", t: "Or declare a charge for three consecutive turns: no turning, shooting or special orders, +2 shields. After movement in the third turn fire the nova cannon template 60 cm straight ahead; the first planet or moon its centre hole touches is removed on 2+ in D3 turns (FL p. 255).", only: ["fl"] },
@@ -233,7 +233,7 @@
       { s: "a", t: "No deployment. You move on from the corridor edge or along the long edges (tool in Play), and you go first. At least one unit must come on in turn 1." }
     ],
     stools: [{ k: "num", id: "pts", l: "Agreed points total", s: "b", after: v => v ? "Convoy: <b>" + Math.ceil(v / 100) + " transports</b>" : "Enter the points to get the number of transports" }],
-    refs: [["Convoy (the book’s smaller version)", "RB p. 134"], ["Heavy transports", "FL p. 182"], ["Battlezone generators", "RB p. 107–108"]],
+    refs: [["Convoy (the book’s smaller version)", "RB p. 134"], ["Heavy transports", "FL p. 192"], ["Battlezone generators", "RB p. 107–108"]],
     play: [
       { w: "Raider entry", s: "a", t: "Turn 1: from the escape corridor edge, or up to 30 cm along either long edge from that end. Each later turn: 30 cm further along the long edges (not the corridor edge). Units never brought on count as disengaged." },
       { w: "Turn 2", s: "b", t: "The rearguard moves on from the convoy’s board edge.", not: ["v05"] },

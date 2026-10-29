@@ -827,19 +827,19 @@ eq(ordFail(), false, "Hive Fleet: 15 points of markers in a 250 point fleet is f
 /* J65 p.431: "You may include between 6 and 12 escort class ships for each
    hive ship. If no hive ships are chosen, only Kraken and Vanguard drone
    ships may be included in the fleet." */
-const hiveMax = () => failed().some(c => /^Escorts per hive ship \(max\)/.test(c.t));
+const hiveMax = () => failed().some(c => /^Escorts per hive ship/.test(c.t));
 build(hfl, 500, [["Kraken", 2]]);
 eq(hiveMax(), false, "Hive Fleet: two Krakens without a hive ship is fine");
-build(hfl, 1500, [["Hive ship", 1], ["Kraken", 13]]);
-eq(hiveMax(), true, "Hive Fleet: thirteen escorts with one hive ship fails");
-/* J66 p.154: "If the fleet is above 750 points an Inquisitor Lord must lead
-   the fleet. If an Inquisitorial Cruiser is present the Inquisitor Lord must
-   be placed aboard it." One Inquisitor Lord leads the fleet (T19). */
+/* v0.40 p.430-431: six escort drones + up to 12 more = at most 18 per hive ship */
+build(hfl, 1500, [["Hive ship", 1], ["Kraken", 19]]);
+eq(hiveMax(), true, "Hive Fleet: nineteen escorts with one hive ship fails");
+/* J66 p.154: one Inquisitor Lord leads the fleet (T19); v0.40 prints it as
+   the section heading "0-1 Inquisitor Lord". */
 const gkl = listIndex("Grey Knights");
-const gkCmd = () => failed().some(c => /^Fleet commander \(one Inquisitor Lord\)/.test(c.t));
-build(gkl, 1500, [["Inquisitor Lord (Ld 9)", 1], ["Ordo Malleus Inquisitor Lord", 1]]);
+const gkCmd = () => failed().some(c => /^Inquisitor Lord$/.test(c.t));
+build(gkl, 1500, [["Inquisitor Lord (Ld 9)", 1], ["Ordo Malleus Inquisitor Lord (Ld 10)", 1]]);
 eq(gkCmd(), true, "Grey Knights: two Inquisitor Lords fail");
-build(gkl, 1500, [["Ordo Malleus Inquisitor Lord", 1]]);
+build(gkl, 1500, [["Ordo Malleus Inquisitor Lord (Ld 10)", 1]]);
 eq(gkCmd(), false, "Grey Knights: one Inquisitor Lord is fine");
 /* Spot check 19 round 3 (M10r3). */
 /* J70 p.187: "At least one Demiurg vessel of any class may be taken for every
@@ -869,7 +869,7 @@ build(dml, 1500, [["Master of the Fleet", 1], ["Strike cruiser", 1], ["Space Mar
 eq(failed().some(c => /^Space Marine Captains/.test(c.t)), true, "Dominion: a Space Marine Captain without an Imperial Navy hull fails");
 /* J77 p.155: "The vessel embarking the Inquisitor Lord or one Grey Knights
    vessel may take Grey Knight Terminators." One ship in the fleet. */
-buildU(gkl, 1500, [["Ordo Malleus Inquisitor Lord", 1],
+buildU(gkl, 1500, [["Ordo Malleus Inquisitor Lord (Ld 10)", 1],
                    ["Grey Knights Strike Cruiser", 1, [], 0, ["Grey Knights Terminators"]],
                    ["Grey Knights Strike Cruiser", 1, [], 0, ["Grey Knights Terminators"]]]);
 eq(failed().some(c => c.t === "Grey Knights Terminators"), true, "Grey Knights: Terminators on two ships fails");

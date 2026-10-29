@@ -16,10 +16,19 @@ The rules come from three sources, in this order of precedence:
 1. **Collected FAQ 2026** of the BFG: Remastered authors (the High Admiralty):
    where it contradicts the books, the FAQ wins. Cite it by the heading of the
    entry ("FAQ 2026, *Power ram*") and the book page it changes.
-2. **Fleets Book WiP v0.36** (28 Aug 2025) and **Rulebook v1.10** (7 May 2024).
-   The printed page number is the PDF page.
-3. A newer book version wins over the FAQ. The apps follow v1.10; do not switch
-   to v1.11 without a decision.
+2. **Fleets Book WiP v0.40** (29 Oct 2026) and **Rulebook v1.11** (13 Aug 2026),
+   in use since 29.10.2026. The printed page number is the PDF page; v1.11 has
+   the same pages as v1.10.
+3. A newer book version wins over the FAQ: v0.40 settles several FAQ 2026
+   entries itself (the power ram as a ship option, mines and shields, the Eldar
+   and celestial phenomena). Do not switch to another version without a decision.
+
+**Ship ids are frozen.** A ship's id is the page of its profile in Fleets v0.36
+(`extractor/ship_ids.json`), because readers of the data (Jodrell's Ship
+Profiles) and saved fleets use it; the ship's `pg` is its page in the current
+book. Profiles new in v0.40 have ids that are not pages (`am128`, the
+Mechanicus profiles p.128-137). Page citations in the code and the reference
+files are v0.40 pages.
 
 The books are not in the repository (see `extractor/books.py` for where your
 copies go).

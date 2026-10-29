@@ -99,7 +99,7 @@
     ],
     stools: [{ k: "num", id: "pts", l: "Convoy warship points", after: n => n ? "Needs <b>" + Math.ceil(n * 1.5 / 100) + "</b> cargo points — e.g. " + Math.ceil(n * 1.5 / 200) + " standard transports at 2 points each." : "Type your warship points." }],
     notes: ["Cargo points are the Anargo Sector Project’s: its example counts 30 points as fifteen freighters or three heavy barges. Counting a standard transport as 2 is our reading; a heavy transport counts as two transports in the current rules (FL p. 192).", "The survival levels are read as bands: 0–29% attacker’s major win, 30–59% attacker’s win, 60–89% convoy’s win, 90%+ convoy’s major win."],
-    refs: [["Transports", "FL p. 85"], ["Heavy transport", "FL p. 182"], ["Disengaging", "RB p. 56"]],
+    refs: [["Transports", "FL p. 85"], ["Heavy transport", "FL p. 192"], ["Disengaging", "RB p. 56"]],
     play: [{ w: "Transports", s: "a", t: "Transports may only disengage once crippled. A crippled transport that gets away counts as surviving (with half its cargo). Everything else disengages normally." }],
     tools: [],
     rtools: [{ k: "num", id: "c0", l: "Cargo points at the start", after: n => n ? "" : "" }, { k: "num", id: "c1", l: "Cargo points surviving (crippled = half, round down)", after: n => n ? "" : "" }],

@@ -214,7 +214,7 @@
     notes: [OLD + "Escalating Engagement: RB p. 138–139. Abaddon’s re-roll and “You have failed me for the last time”: FL p. 230–231. Blood Bond and Desperate Mission: RB p. 125, 127.",
       "Ahriman is described by the magazine itself as unofficial: use him only with your opponent’s permission.",
       "The article says the result shapes the rest of the Cerberus campaign but gives no rule for it; play it on its own or as the opening of the Cerberus War scenarios."],
-    refs: [["Escalating Engagement", "RB p. 138–139"], ["Abaddon’s rules", "FL p. 230–231"], ["Sub-plots", "RB p. 124–127"], ["Mark of Tzeentch", "FL p. 232"]],
+    refs: [["Escalating Engagement", "RB p. 138–139"], ["Abaddon’s rules", "FL p. 240–241"], ["Sub-plots", "RB p. 124–127"], ["Mark of Tzeentch", "FL p. 242"]],
     play: [
       { w: "End of Chaos turn 1", s: "b", t: "Place your fleet’s single contact marker on any table edge. The whole rest of the fleet arrives there at the start of turn 2 — no roll needed." },
       { w: "Imperial reinforcements", s: "a", t: "As in Escalating Engagement: draw a marker each end phase, place it on a random edge, roll to arrive." },

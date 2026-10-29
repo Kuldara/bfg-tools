@@ -25,7 +25,7 @@ export const SPECIAL_WEAPON_RULES = [
    text:"Special Torpedoes: roll a D6 before the game, one type per ship - 1 Short Burn*, 2 Guided*, 3 Seeking, 4 Barrage Bombs*, 5 Melta, 6 Vortex (* for the whole game, the rest for one salvo). Short Burn: speed 40 cm; after moving and attacking roll a D6 per salvo, on a 6 it becomes a Blast Marker. Guided: turns up to 45 degrees at the start of the Ordnance phase if the launching ship passes a Leadership test; if it fails, one enemy ship that passes a test turns them. Seeking: turns up to 45 degrees towards the nearest (largest) enemy ship; detonates in Blast Markers on a 5+; never attacks friendly ships. Barrage Bombs: may launch in low orbit; 1 assault point (2 from Strength 7); against ships they hit like direct fire. Melta: each hit is an automatic Fire critical instead of damage. Vortex: each hit causes a critical. A prow critical while carrying unused Melta or Vortex torpedoes: +D3 Fire criticals (Melta) or +D3 damage and a critical (Vortex). (Fleets pp. 19-21)"},
   {id:"orbital_mine", color:"#6B6E1C", wep:/orbital mine/i,
    mentions:[/orbital mine/i],
-   text:"Orbital Mines: launched like attack craft, one per launch bay Strength; no waves, not subject to ordnance limits. Each moves 10 cm towards the nearest enemy ship in every Ordnance phase; on contact with its base it detonates with 8 dice against armour (4 if turrets hit the mine); shields do not protect (FAQ 2026). A critical to the launch bays causes an extra D3 damage. (Fleets pp. 23, 512)"},
+   text:"Orbital Mines: launched like attack craft, one per launch bay Strength; no waves, not subject to ordnance limits. Each moves 10 cm towards the nearest enemy ship in every Ordnance phase; on contact with its base it detonates with 8 dice against armour (4 if turrets hit the mine); as with other ordnance, shields do not protect (Fleets p. 512). A critical to the launch bays causes an extra D3 damage. (Fleets pp. 23, 512)"},
   {id:"bombardment", color:"#7B3FB2", wep:/bombardment cannon/i,
    mentions:[/bombardment cannon/i,/bombardment shells/i],
    text:"Bombardment Cannon: a weapon battery that always hits on 4+ (ordnance too) and causes criticals on 4+. (Fleets p. 94)"},
@@ -131,8 +131,9 @@ export const SPECIAL_WEAPON_RULES = [
    text:"Ghostship: normal Eldar Leadership. If it fails a Command check for Special Orders it may do nothing but move this turn, and no other Ghostship may test that turn (a failed Brace may still Brace, then does nothing but move next turn). Deathless: critical hits only on a 6. Uncrewed: no Aspect Warriors, no launch bays, no boarding or Hit & Run attacks; enemies get +1 boarding and +1 Hit & Run against it; damage control rolls half the dice. (Fleets p. 309)"},
   {id:"klaws", color:"#A97913", fleet:/ORKS/i, wep:/^$/, opt:/\bklaws\b/i, up:/^klaws/i, mentions:[/\bklaws\b/i],
    text:"Klaws: once per turn, when the ship moves into base contact with an enemy ship, roll 2D6; each 4+ is one hit ignoring shields (not holofields). Brace works; unaffected by Special Orders; a crippled capital ship cannot use them. If both hit it latches on: neither ship moves if the target is the same class or smaller (a larger one moves at half rate), both shoot at half effect with no nova cannon or similar weapons, and it attacks again each End phase (both hitting again adds a third hit). Either may board; Klaw damage causes criticals as normal. (Fleets p. 373)"},
-  {id:"power_ram", color:"#8A7340", wep:/^$/, up:/power ram/i, mentions:[/power ram/i],
-   text:"Power Ram: one automatic hit on a successful ram, before rolling for hits. Not with a Nova Cannon. (Fleets p. 118)"},
+  /* v0.40: an option of each ship that may take it (its profile), no longer a list row */
+  {id:"power_ram", color:"#8A7340", wep:/^$/, up:/power ram/i, opt:/take a power ram/i, mentions:[/power ram/i],
+   text:"Power Ram: one automatic hit during a successful ram on a target vessel, before rolling for hits inflicted. It does not count as a separate refit. (Fleets v0.40, the ship's profile)"},
   {id:"ork_gunz", color:"#A97913", fleet:/ORKS/i, wep:/\bgunz(?: battery)?\b/i,
    notWep:/heavy gunz/i, mentions:[/\bgunz\b/i],
    text:"Ork Gunz: weapon batteries; roll the printed random Firepower each time they fire. (Fleets p. 362)"},
@@ -279,7 +280,7 @@ export const SPECIAL_HULL_RULES = [
   {id:"eldar_holo", fleet:/^ELDAR$/i,
    text:"Holofields: one right column shift against Gunnery; against other attacks save each hit on 2+, placing a Blast Marker for each save. (Fleets pp. 305-306)"},
   {id:"dark_move", fleet:/DARK ELDAR/i,
-   text:"Dark Eldar movement: CTNH succeeds automatically; no minimum move, escorts included; cannot use Burn Retros. (Fleets p. 342; FAQ 2026)"},
+   text:"Dark Eldar movement: CTNH succeeds automatically; no minimum move, escorts included; cannot use Burn Retros. (Fleets p. 344)"},
   {id:"dark_shadow", fleet:/DARK ELDAR/i,
    text:"Shadowfields: one right column shift against Gunnery; against other attacks save each hit on 2+, placing a Blast Marker for each save. (Fleets pp. 344-345)"},
   {id:"dark_boarding", fleet:/DARK ELDAR/i,
@@ -288,10 +289,16 @@ export const SPECIAL_HULL_RULES = [
      extractor reads alone. Chaos p.289-290, Ork p.392-393. */
   {id:"hulk_move", fleet:/SPACE HULK|ORK HULK/i,
    text:"Hulk movement: exactly 10 cm straight ahead each turn, never slowed by Blast Markers or damage; a 45\u00b0 turn only in every second Movement phase, at the end of the move; no CTNH or Burn Retros. (Fleets pp. 289/392)"},
-  {id:"hulk_gravity", fleet:/SPACE HULK|ORK HULK/i,
-   text:"Hulk gravity well: 5 cm from the base edge, like a planet's; ships may orbit and move with it, and a ship breaking orbit decides so before the hulk moves. In a planet's or moon's well the hulk may turn 45\u00b0 towards it at the end of its move, even if it turned last phase. (Fleets pp. 289/392)"},
-  {id:"hulk_upgrades", fleet:/SPACE HULK|ORK HULK/i,
-   text:"Hulk upgrades: none that improve Boarding Value, Turning or Speed. (Fleets pp. 290/392)"},
+  /* v0.40: only the Chaos hulk keeps its own gravity well (p.289); the Ork
+     hulk's was removed on purpose "for now", and the differences between the
+     two hulks are under the authors' review (Discord 29.10.2026). */
+  {id:"hulk_gravity", fleet:/CHAOS SPACE HULK/i,
+   text:"Hulk gravity well: 5 cm from the base edge, like a planet's; ships may orbit and move with it, and a ship breaking orbit decides so before the hulk moves. In a planet's or moon's well the hulk may turn 45\u00b0 towards it at the end of its move, even if it turned last phase. (Fleets p. 289; the Ork hulk has none in v0.40, under the authors' review)"},
+  /* v0.40 removed the hulk profiles' Upgrades paragraph; the Clanz list's own
+     sentence stands (p.374), and the authors: "the upgrades will tell you if
+     they are not for the Hulk" (under review, 29.10.2026). */
+  {id:"hulk_upgrades", fleet:/ORK HULK/i, list:/Clanz/i,
+   text:"Space Hulk upgrades: Gubbins at double the listed cost; none that increase its boarding value or speed. (Fleets p. 374; the hulk rules are under the authors' review)"},
   {id:"chaos_hulk_ld", fleet:/CHAOS SPACE HULK/i,
    text:"Chaos Space Hulk: -1 Ld applied after all other modifiers, including the Warmaster and Chaos Space Marines. May launch up to twice as many attack craft as its remaining launch bays. (Fleets p. 289)"},
   /* Fleets p. 251: "Bezerker Fleets led by a Space Hulk may have more than
@@ -455,7 +462,7 @@ export const SPECIAL_HULL_RULES = [
    text:"Determination: in a Demiurg war host the ship does not attempt to disengage until it has 2 Hp or fewer. Victory Points: Stronghold 400, Bastion 300, Citadel 200. (Fleets p. 486)"},
   /* Fleets p. 304 / p. 344: the fleet-wide Leadership bonus. */
   {id:"eldar_ld", fleet:/^ELDAR$/i,
-   text:"Eldar Leadership: add +1 to the rolled Leadership, for a value of 7-10. A Leadership check ignores gas clouds and solar flares (passing in a flare: no damage, turn away from the sun edge and move 2D6 cm); escorts re-roll it for free. Warp rift test on 2D6; asteroids, planets and radiation bursts as for any fleet. (Fleets pp. 302-303; FAQ 2026)"},
+   text:"Eldar Leadership: add +1 to the rolled Leadership, for a value of 7-10. A Leadership check ignores gas clouds and solar flares (passing in a flare: no damage, turn away from the sun edge and move 2D6 cm); escorts re-roll it for free. Warp rift test on 2D6, and a warp rift always blocks the line of fire; asteroids, planets and radiation bursts as for any fleet. (Fleets pp. 304-305)"},
   {id:"dark_ld", fleet:/DARK ELDAR/i,
    text:"Dark Eldar Leadership: add +1 to the rolled Leadership, for 7-10. A Leadership check ignores celestial phenomena (not radiation bursts or explosions); escorts re-roll it for free. (Fleets p. 344)"},
   /* Fleets p. 451: a profile that says it carries a tracking system. */

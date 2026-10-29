@@ -78,7 +78,7 @@ function refBattle(){
 }
 export function showRef(tab){
   var tabs = ["Order","Multi","Results","Crits","Battle"];
-  openSheet({title:"Reference", sub:"Rulebook v1.10", mode:"list", tabs:tabs, tab:tab===undefined?2:tab,
+  openSheet({title:"Reference", sub:"Rulebook v1.11", mode:"list", tabs:tabs, tab:tab===undefined?2:tab,
     items:function(ti){ return ti===0?refSeq() : ti===1?refMulti() : ti===3?refCrits() : ti===4?refBattle() : refResults(); },
     onPick:function(v){
       if(v!=="reset") return;

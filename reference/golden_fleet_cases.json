@@ -241,7 +241,7 @@
         ],
         "failing": 1
       },
-      "why": "p.35: 'in squadrons of 2-6 unless specified'. Seven Cobras in one squadron exceed the maximum; p.13's single escort exception does not apply, because there is more than one escort. 7 x 30 = 210 + 180 + 180 = 570."
+      "why": "p.35: 'in squadrons of 2–6'. Seven Cobras in one squadron exceed the maximum; p.13's single escort exception does not apply, because there is more than one escort. 7 x 30 = 210 + 180 + 180 = 570."
     },
     {
       "id": "marines-two-battle-barges-under-1000",
@@ -283,7 +283,7 @@
             "entry": "^Battle barge$"
           },
           {
-            "entry": "^Strike cruisers$",
+            "entry": "^Strike cruiser$",
             "repeat": 2
           }
         ]
@@ -1224,7 +1224,7 @@
           {
             "list": "Space Marines — Codex Astartes",
             "role": "reserve",
-            "entry": "^Strike cruisers$"
+            "entry": "^Strike cruiser$"
           }
         ]
       },
@@ -1419,7 +1419,7 @@
             "entry": "^Battle barge$"
           },
           {
-            "entry": "^Strike cruisers$",
+            "entry": "^Strike cruiser$",
             "repeat": 3
           }
         ]
@@ -2208,13 +2208,13 @@
         "limit": 2000,
         "units": [
           {
-            "entry": "^Strike cruisers$",
+            "entry": "^Strike cruiser$",
             "repeat": 3
           },
           {
             "list": "Space Marines — Codex Astartes",
             "role": "reserve",
-            "entry": "^Strike cruisers$"
+            "entry": "^Strike cruiser$"
           }
         ]
       },
@@ -2238,13 +2238,13 @@
         "limit": 2000,
         "units": [
           {
-            "entry": "^Strike cruisers$",
+            "entry": "^Strike cruiser$",
             "repeat": 3
           },
           {
             "list": "Space Marines — Crusade",
             "role": "reserve",
-            "entry": "^Strike cruisers$"
+            "entry": "^Strike cruiser$"
           }
         ]
       },
@@ -2282,7 +2282,7 @@
           {
             "list": "Space Marines — Codex Astartes",
             "role": "reserve",
-            "entry": "^Strike cruisers$"
+            "entry": "^Strike cruiser$"
           }
         ]
       },
@@ -2509,10 +2509,6 @@
           {
             "src": "for every three battleships, cruisers or escorts",
             "ok": true
-          },
-          {
-            "ok": false,
-            "label": "^Chaos Warmaster \\(from 750 pts\\)$"
           }
         ]
       },
@@ -2561,7 +2557,7 @@
             "role": "reserve",
             "ups": [
               {
-                "upgrade": "^Nova Cannon instead of prow torpedoes$",
+                "upgrade": "^Special torpedoes \\(Strength up to 6\\)$",
                 "state": "take"
               }
             ]
@@ -2572,7 +2568,7 @@
         "total": 280,
         "no_issues": true
       },
-      "why": "p.14: “Reserve vessels may take any upgrades, refits, etc. available to either fleet list”. A Dominion borrowed from Bakka (p.49: 260) takes the Explorator list's own Nova Cannon row (+20, p.121: “All Adeptus Mechanicus cruisers (not light cruisers) with armour 6+ prows can replace their prow torpedoes with a Nova Cannon for +20 points”). The purchase was priced and took effect correctly (Prow nova cannon, Power Ram went away), but validateIntent resolved the id only from the unit's own list and gave the error upgrade.unknown_id, which the player saw as red. Spot check 20, seed 2026091412. 260 + 20 = 280."
+      "why": "p.14: “Reserve vessels may take any upgrades, refits, etc. available to either fleet list”. A Dominion borrowed from Bakka (p.49: 260) takes the Explorator list's own row Special torpedoes (Strength up to 6) (+20, p.125). Before, validateIntent resolved the id only from the unit's own list and gave the error upgrade.unknown_id. Spot check 20, seed 2026091412 (v0.40: the list's Nova Cannon row is gone, the case uses another host row). 260 + 20 = 280."
     },
     {
       "id": "armageddon-space-marine-vessels-are-not-lent",
@@ -2663,7 +2659,7 @@
           }
         ]
       },
-      "why": "p.232: “These vessels may not take any upgrade listed in their profile and do not count as reserves; they count as Chaos vessels in all respects.” and p.15: “Some fleet lists explicitly provide access to ships from other races. These may only be taken exactly as described on their fleet list rules and may not also be taken as reserves.” RENEGADE IMPERIAL VESSELS is the Chaos list's named access to another race's ships, but the section was classified as the kind own and not access, so the reserve-of-a-reserve check did not hit it and Tzeentch's renegade Endeavour was valid as a reserve for Nurgle. Spot check 20, seeds 2026091421, 2026091423 and 2026091442 (P1)."
+      "why": "p.232: “These vessels do not count as reserves; they count as Chaos vessels in all respects.” and p.15: “Some fleet lists explicitly provide access to ships from other races. These may only be taken exactly as described on their fleet list rules and may not also be taken as reserves.” RENEGADE IMPERIAL VESSELS is the Chaos list's named access to another race's ships, but the section was classified as the kind own and not access, so the reserve-of-a-reserve check did not hit it and Tzeentch's renegade Endeavour was valid as a reserve for Nurgle. Spot check 20, seeds 2026091421, 2026091423 and 2026091442 (P1)."
     },
     {
       "id": "renegade-imperial-vessel-gets-no-chaos-space-marine-crew",
@@ -2683,7 +2679,7 @@
       "expect": {
         "total": 110
       },
-      "why": "p.232: “Special weapon rules, Nova Cannon, Chaos Lords, Chaos Space Marines, Chaos ordnance or Daemonship upgrades may not be taken for Imperial Navy vessels used in this manner, and cruisers suffer -1Ld for going renegade.” Nurgle's own renegade Endeavour (p.72: 110) was offered the Death Guard Chaos Space Marine crew row. The defect is in the native path, not specific to borrowed ships. Spot check 20, seed 2026091421 (P1)."
+      "why": "p.232: “Weapon refits, Nova Cannon, Chaos Lords, Chaos Space Marines, Chaos ordnance or Daemonship upgrades may not be taken for Imperial Navy vessels used in this manner, and cruisers suffer -1 Ld for going renegade.” Nurgle's own renegade Endeavour (p.72: 110) was offered the Death Guard Chaos Space Marine crew row. The defect is in the native path, not specific to borrowed ships. Spot check 20, seed 2026091421 (P1)."
     },
     {
       "id": "one-crew-per-ship-across-two-lists",
@@ -2774,7 +2770,7 @@
         "limit": 3000,
         "units": [
           {
-            "entry": "^Strike cruisers$",
+            "entry": "^Strike cruiser$",
             "repeat": 3
           },
           {
@@ -2953,7 +2949,7 @@
             "repeat": 6
           },
           {
-            "entry": "^Strike cruisers$",
+            "entry": "^Strike cruiser$",
             "list": "Space Marines — Codex Astartes",
             "role": "ally"
           },
@@ -2989,7 +2985,7 @@
             "entry": "^Xenos Vessel$"
           },
           {
-            "entry": "^Strike cruisers$",
+            "entry": "^Strike cruiser$",
             "list": "Space Marines — Codex Astartes",
             "role": "ally"
           }
@@ -3511,7 +3507,7 @@
         "others_ok": true,
         "failing": 0
       },
-      "why": "A player's report 9.10.2026. Fleets p.317: 'Yriel may be taken instead of the Hero Fleet Commander as listed in the Corsair and Craftworld Eldar fleet lists.' The same box frees the Flame of Asuryan when Yriel is aboard it: 'it is exempt from the reserve rules' - with exactly a Corsair list without three capital ships as the example. So two Auroras would not be enough for the Hero (p.315: one Craftworld ship per three cruisers), but for Yriel they are. The same box: 'He must be embarked aboard the Flame of Asuryan if it is present, in which case his cost is 125 points.' Prices: Yriel 125 (p.317) + Flame of Asuryan 320 (p.316) + Aurora 2 x 140 = 280 + Aconite 2 x 55 = 110 + Hemlock 6 x 40 = 240 + Nightshade 6 x 40 = 240 (p.315) = 1315."
+      "why": "A player's report 9.10.2026. Fleets p.317: 'Yriel may be taken instead of the Hero Fleet Commander as listed in the Corsair and Craftworld Eldar fleet lists.' The same box frees the Flame of Asuryan when Yriel is aboard it: 'it is exempt from the reserve rules' - with exactly a Corsair list without three capital ships as the example. So two Auroras would not be enough for the Hero (p.315: one Craftworld ship per three cruisers), but for Yriel they are. The same box: 'He must be embarked aboard the Flame of Asuryan if it is present, in which case Yriel's cost is reduced to 125 points.' Prices: Yriel 125 (p.317) + Flame of Asuryan 320 (p.316) + Aurora 2 x 140 = 280 + Aconite 2 x 55 = 110 + Hemlock 6 x 40 = 240 + Nightshade 6 x 40 = 240 (p.315) = 1315."
     },
     {
       "id": "corsair-lgw-hero-flame-still-needs-three-cruisers",
@@ -3744,7 +3740,7 @@
         "others_ok": true,
         "failing": 0
       },
-      "why": "Fleets p.317: 'He must be embarked aboard the Flame of Asuryan if it is present, in which case his cost is 125 points.' If the 125 point row is not ticked, the fleet is legal but pays 25 points too much: the app remarks on it. Prices: Yriel 150 (p.317) + Flame of Asuryan 320 (p.316) + Aurora 2 x 140 = 280 + Aconite 2 x 55 = 110 + Hemlock 6 x 40 = 240 + Nightshade 6 x 40 = 240 (p.315) = 1340."
+      "why": "Fleets p.317: 'He must be embarked aboard the Flame of Asuryan if it is present, in which case Yriel's cost is reduced to 125 points.' If the 125 point row is not ticked, the fleet is legal but pays 25 points too much: the app remarks on it. Prices: Yriel 150 (p.317) + Flame of Asuryan 320 (p.316) + Aurora 2 x 140 = 280 + Aconite 2 x 55 = 110 + Hemlock 6 x 40 = 240 + Nightshade 6 x 40 = 240 (p.315) = 1340."
     },
     {
       "id": "iyanden-yriel-commands-the-flame",
@@ -3787,7 +3783,7 @@
         "others_ok": true,
         "failing": 0
       },
-      "why": "Fleets p.317: 'you may instead pick the Flame of Asuryan as his command ship to be embarked on.' Yriel is in place of the Hero, so p.316's condition (the Hero leads and is aboard the Flame) is met by him. Before the fix the rule named Yriel in its heading but did not count him. Prices: Yriel 125 (p.317) + Flame of Asuryan 320 + Wraithship 2 x 160 = 320 (p.316) = 765."
+      "why": "Fleets p.317: 'or the Flame of Asuryan, even if he is leading a Corsair fleet.' Yriel is in place of the Hero, so p.316's condition (the Hero leads and is aboard the Flame) is met by him. Before the fix the rule named Yriel in its heading but did not count him. Prices: Yriel 125 (p.317) + Flame of Asuryan 320 + Wraithship 2 x 160 = 320 (p.316) = 765."
     },
     {
       "id": "pd-ramilies-counts-toward-fleet-worth",
@@ -3989,14 +3985,10 @@
             "label": "^Warmaster or Abaddon$",
             "ok": true,
             "v": "1 / 1"
-          },
-          {
-            "src": "A Chaos Warmaster (and their required capital ship) must be taken in fleets of 750 points or more",
-            "ok": true
           }
         ]
       },
-      "why": "Fleets p.241: 'Abaddon can be chosen to act as fleet commander in any game in which the Chaos fleet is worth 1,000 points or more.' Exactly 1 000 points is enough ('or more'). He acts as the fleet commander, so the required Warmaster (p.246: 'A Chaos Warmaster (and their required capital ship) must be taken in fleets of 750 points or more') is met by him. The user's decision 13.10.2026 (BACKLOG J162). Abaddon 195 (p.244) + Devastation 190 + Carnage 180 + Inferno 180 + Slaughter 165 + 3 x Iconoclast 30 (p.247) = 1000."
+      "why": "Fleets p.241: 'Abaddon can be chosen to act as fleet commander in any game in which the Chaos fleet is worth 1,000 points or more.' Exactly 1 000 points is enough ('or more'). He acts as the fleet commander, in place of the Warmaster (cap 1). v0.40 makes the Warmaster '0-1' with no required commander."
     },
     {
       "id": "tzeentch-abaddon-not-under-1000",
@@ -4112,7 +4104,7 @@
           }
         ]
       },
-      "why": "A conflict in the book: p.241 'in any game in which the Chaos fleet is worth 1,000 points or more', p.244 (the Black Crusade list) 'in any Chaos Fleet worth more than 1,000 points'. The user's decision 13.10.2026 (BACKLOG J162): Abaddon's own general rule (p.241) decides, so exactly 1 000 points is enough in the Black Crusade too. Abaddon 195 + Devastation 190 + Carnage 180 + Inferno 180 + Slaughter 165 + 3 x Iconoclast 30 (p.245) = 1000."
+      "why": "A conflict in the book: p.241 'in any game in which the Chaos fleet is worth 1,000 points or more', p.244 (the Black Crusade list) 'worth 1,000 points or more'. The user's decision 13.10.2026 (BACKLOG J162): Abaddon's own general rule (p.241) decides, so exactly 1 000 points is enough in the Black Crusade too. Abaddon 195 + Devastation 190 + Carnage 180 + Inferno 180 + Slaughter 165 + 3 x Iconoclast 30 (p.245) = 1000."
     },
     {
       "id": "bakka-refit-not-for-a-reserve",
@@ -4189,7 +4181,7 @@
             "repeat": 3
           },
           {
-            "entry": "^Strike cruisers",
+            "entry": "^Strike cruiser",
             "list": "Space Marines — Codex Astartes",
             "role": "reserve"
           }
@@ -4230,7 +4222,7 @@
             "role": "reserve"
           },
           {
-            "entry": "^Strike cruisers",
+            "entry": "^Strike cruiser",
             "list": "Space Marines — Codex Astartes",
             "role": "reserve"
           }
@@ -4261,7 +4253,7 @@
             "repeat": 3
           },
           {
-            "entry": "^Strike cruisers",
+            "entry": "^Strike cruiser",
             "list": "Space Marines — Codex Astartes",
             "role": "reserve",
             "repeat": 2
@@ -4294,7 +4286,7 @@
             "repeat": 9
           },
           {
-            "entry": "^Strike cruisers",
+            "entry": "^Strike cruiser",
             "list": "Space Marines — Codex Astartes",
             "role": "reserve",
             "repeat": 3
@@ -4451,7 +4443,7 @@
           }
         ]
       },
-      "why": "p.453: \"Kor'O'Mesme is embarked aboard the Kor'or'vesh vessel Bor'kan Or'es El'Leath Se'arle O'Mesme (Custodian Class Battleship).\" Mesme without a Custodian is without his own ship (S1094)."
+      "why": "p.453: \"Kor'O'Mesme is embarked aboard the Kor'or'vesh vessel Bor'kan Or'es El'Leath Se'arle O'Mesme.\" Mesme without a Custodian is without his own ship (S1094)."
     },
     {
       "id": "exploration-allies-from-one-list",
@@ -4501,7 +4493,7 @@
             "entry": "^Bastion Commerce Vessel"
           },
           {
-            "entry": "^Strike cruisers",
+            "entry": "^Strike cruiser",
             "list": "Space Marines — Codex Astartes",
             "role": "ally"
           }
@@ -4759,7 +4751,7 @@
             "entry": "^Fortress-Monastery"
           },
           {
-            "entry": "^Strike cruisers",
+            "entry": "^Strike cruiser",
             "repeat": 2
           }
         ]
@@ -4786,7 +4778,7 @@
             "entry": "^Fortress-Monastery"
           },
           {
-            "entry": "^Strike cruisers",
+            "entry": "^Strike cruiser",
             "repeat": 2
           },
           {
@@ -4936,7 +4928,7 @@
           }
         ]
       },
-      "why": "p.155: \"A Grey Knights fleet led by an Inquisitor Lord has an attack rating of 3 unless a Blackship is accompanying the fleet, in which case its attack rating is 2.\" (S0341)"
+      "why": "p.155: \"A Grey Knights fleet has an attack rating of 3 unless a Blackship is accompanying the fleet, in which case its attack rating is 2.\" (S0341)"
     },
     {
       "id": "attack-rating-corsairs-alone",
@@ -5017,7 +5009,7 @@
           }
         ]
       },
-      "why": "p.317: \"A fleet led by him has an attack rating of 4, even if it includes Craftworld vessels.\" (S0633)"
+      "why": "p.317: \"A fleet led by Yriel has an attack rating of 4, even if it includes Craftworld vessels.\" (S0633)"
     },
     {
       "id": "attack-rating-orks-from-the-rulebook",
@@ -5098,7 +5090,7 @@
     },
     {
       "id": "grey-knights-chaos-marks-per-lord-and-strike-cruiser",
-      "page": 155,
+      "page": 154,
       "fleet": {
         "list": "Grey Knights",
         "limit": 1500,
@@ -5124,7 +5116,7 @@
           }
         ]
       },
-      "why": "p.155: \"An enemy Chaos fleet may add one Mark of Chaos; or upgrade a cruiser to a Daemonship; for no aditional cost, for each of the following included in the Grey Knights Fleet:\" Ordo Malleus Inquisitor Lord and Grey Knights Strike Cruiser: 1 + 2 = 3 (S0340)."
+      "why": "p.154: 'The enemy Chaos fleet may add one Mark of Chaos or upgrade a cruiser to a Daemonship at no cost, and may also do so again as many times as there are Grey Knights strike cruisers in the fleet.' The Ordo Malleus Inquisitor Lord and two strike cruisers: 1 + 2 = 3. p.155: 'A Grey Knights fleet has an attack rating of 3 unless a Blackship is accompanying the fleet'."
     },
     {
       "id": "ordo-xenos-gives-xenos-escorts",
@@ -5239,7 +5231,7 @@
             "entry": "^Master of the Fleet"
           },
           {
-            "entry": "^Strike cruisers"
+            "entry": "^Strike cruiser"
           },
           {
             "entry": "^Battle barge"
@@ -5273,10 +5265,10 @@
         "units": [
           {
             "entry": "^Master of the Fleet",
-            "aboard": "^Strike cruisers"
+            "aboard": "^Strike cruiser"
           },
           {
-            "entry": "^Strike cruisers"
+            "entry": "^Strike cruiser"
           },
           {
             "entry": "^Battle barge"
@@ -5494,7 +5486,7 @@
             "entry": "^Grey Knights Strike Cruiser"
           },
           {
-            "entry": "^Grey Knights Battlebarge"
+            "entry": "^Grey Knights Battle barge"
           }
         ]
       },
@@ -5502,12 +5494,12 @@
         "aboard": [
           {
             "cmd": "^Inquisitor Lord",
-            "ship": "^Grey Knights Battlebarge",
+            "ship": "^Grey Knights Battle barge",
             "choices": 1
           }
         ]
       },
-      "why": "p.154: \"Otherwise the Inquisitor must be placed on the most expensive ship.\" (S0326)"
+      "why": "p.154: \"If none of these ships is present, they have to be placed on the most expensive ship in the fleet.\" (S0326)"
     },
     {
       "id": "aboard-pirate-captains-two-most-expensive",
@@ -5682,7 +5674,7 @@
           }
         ]
       },
-      "why": "p.245: \"If Abaddon is present, he must be aboard the Planet Killer.\" (S0504); p.241: \"You may not place a Chaos Lord on the same ship as Abaddon\" (S0473)"
+      "why": "p.245: \"If the Planet Killer is present, Abaddon must be aboard it.\" (S0504); p.241: \"You may not place a Chaos Lord on the same ship as Abaddon\" (S0473)"
     },
     {
       "id": "aboard-eldar-hero-on-the-flame",
@@ -5757,7 +5749,7 @@
           }
         ]
       },
-      "why": "p.317: \"When Yriel is taken he must be placed on a Craftworld Eldar Dragonship with launch bays, but you may instead pick the Flame of Asuryan as his command ship to be embarked on.\" (S0631)"
+      "why": "p.317: \"Prince Yriel must be embarked on a Dragonship equipped with launch bays, or the Flame of Asuryan, even if he is leading a Corsair fleet.\" (S0631)"
     },
     {
       "id": "aboard-mesme-on-the-custodian",
@@ -5786,7 +5778,7 @@
           }
         ]
       },
-      "why": "p.453: \"Kor’O’Mesme is embarked aboard the Kor’or’vesh vessel Bor’kan Or’es El’Leath Se’arle O’Mesme (Custodian Class Battleship).\" (S1094)"
+      "why": "p.453: \"Kor'O'Mesme is embarked aboard the Kor'or'vesh vessel Bor'kan Or'es El'Leath Se'arle O'Mesme.\" (S1094)"
     },
     {
       "id": "aboard-admiral-free-choice",
@@ -6251,7 +6243,7 @@
           }
         ]
       },
-      "why": "p.374: \"(0–1) Zukov's Klaw (Goff only)\" and p.371: \"A Warlord and his skwadrons may only be from one clan\". Zukov's Klaw is a Goff without a purchasable clan row, so an Evil Sunz tiddla's Warlord cannot lead it (J232 review)."
+      "why": "p.374: \"(0–1) Zukov's Klaw (Goff)\" and p.371: \"A Warlord and his skwadrons may only be from one clan\". Zukov's Klaw is a Goff without a purchasable clan row, so an Evil Sunz tiddla's Warlord cannot lead it (J232 review)."
     },
     {
       "id": "clanz-largest-warlord-three-rerolls",
@@ -6830,7 +6822,7 @@
         ],
         "failing": 1
       },
-      "why": "p.35: escorts 'in squadrons of 2-6 unless specified'. Four Cobras and three Swords given one letter are one squadron of seven, over the maximum, although each card alone is within it."
+      "why": "p.35: escorts 'in squadrons of 2–6'. Four Cobras and three Swords given one letter are one squadron of seven, over the maximum, although each card alone is within it."
     },
     {
       "id": "escort-squadron-lettered-space-marine-with-navy",
@@ -7457,7 +7449,7 @@
       "expect": {
         "checks": [
           {
-            "label": "^Rogue Trader cruiser hulls",
+            "label": "^Rogue Trader cruiser variants",
             "ok": true,
             "warn": false,
             "v": "1 / 1"
@@ -7468,28 +7460,27 @@
       "why": "p.184: \"If a second Rogue Trader cruiser is taken, it may be any Rogue Trader cruiser variant listed on the Exploration Fleet List.\" (S0349) A Lunar at the Exploration price 195 (p.186) + 185."
     },
     {
-      "id": "rt-hull-as-the-only-rt-cruiser",
+      "id": "rt-variant-as-the-only-rt-cruiser",
       "page": 184,
       "fleet": {
         "list": "Rogue Traders",
         "limit": 1500,
         "units": [
           {
-            "entry": "^Rogue Trader cruiser — Gothic class hull"
+            "entry": "^Rogue Trader cruiser — Lunar class hull"
           }
         ]
       },
       "expect": {
         "checks": [
           {
-            "label": "^Rogue Trader cruiser hulls",
-            "ok": true,
-            "warn": true,
+            "label": "^Rogue Trader cruiser variants",
+            "ok": false,
             "v": "1 / 0"
           }
         ]
       },
-      "why": "p.184: \"Any cruiser hull allowed in the Rogue Trader, Exploration or Wolf Pack fleet list may be used and counts fully as a Rogue Trader cruiser.\" (S0354) and \"If a second Rogue Trader cruiser is taken\" (S0349): the book does not say whether the only RT cruiser may be another hull (T55, yellow)."
+      "why": "p.184: \"If a second Rogue Trader cruiser is taken, it may be any Rogue Trader cruiser variant listed on the Exploration Fleet List.\" v0.40 removed the box that let any cruiser hull count fully as a Rogue Trader cruiser (T55), so a variant is the second cruiser onwards: alone it is an error."
     },
     {
       "id": "rt-hull-counts-as-rt-cruiser",
@@ -7519,10 +7510,10 @@
           }
         ]
       },
-      "why": "p.184: \"counts fully as a Rogue Trader cruiser\" (S0354) and \"A Veteran Rogue Trader may lead each Rogue Trader cruiser in a fleet.\""
+      "why": "p.184: \"If a second Rogue Trader cruiser is taken, it may be any Rogue Trader cruiser variant listed on the Exploration Fleet List.\" (S0354) and \"A Veteran Rogue Trader may lead each Rogue Trader cruiser in a fleet.\""
     },
     {
-      "id": "inquisitor-lord-aboard-any-imperial-cruiser",
+      "id": "inquisitor-lord-aboard-the-most-expensive-ship",
       "page": 148,
       "fleet": {
         "list": "Imperial Navy — Gothic Sector",
@@ -7545,7 +7536,7 @@
           {
             "cmd": "^Inquisitor Lord",
             "ship": "^Dictator class cruiser",
-            "choices": 2
+            "choices": 1
           }
         ],
         "checks": [
@@ -7555,7 +7546,7 @@
           }
         ]
       },
-      "why": "p.148: \"This may include the specific ship so-called in the Inquisition rules, but it can be any Imperial cruiser-class vessel.\" (S0281) T56: read as placement - without an Inquisitorial Cruiser and a Blackship the inquisitor can be aboard any cruiser (J215); the default is the most expensive. The case documents the reading, the behaviour came in J215."
+      "why": "p.148: \"If none of these ships is present, they have to be placed on the most expensive ship in the fleet.\" v0.40 removed the v0.36 sentence that let the Inquisitorial cruiser be any Imperial cruiser (T56), so the Dictator (220) is the only place."
     },
     {
       "id": "rt-attendant-escorts-with-an-inquisitor",
@@ -8175,7 +8166,7 @@
           }
         ]
       },
-      "why": "p.317: \"When Yriel is taken he must be placed on a Craftworld Eldar Dragonship with launch bays, but you may instead pick the Flame of Asuryan as his command ship to be embarked on.\" As an ally his own rule goes with him."
+      "why": "p.317: \"Prince Yriel must be embarked on a Dragonship equipped with launch bays, or the Flame of Asuryan, even if he is leading a Corsair fleet.\" As an ally his own rule goes with him."
     },
     {
       "id": "rt-attendant-escorts-not-counted-as-rt-cruisers",
@@ -8542,7 +8533,7 @@
           }
         ]
       },
-      "why": "Fleets p. 371: “If taken, every capital ship in the skwadron must separately take and pay for the clan upgrade, not just individual ships.” p. 383: Zukov’s Klaw “is of the Goff Clan” as part of its 210 points, and p. 374 lists it as “(0–1) Zukov's Klaw (Goff only)” in the Big ship skwadron (1-2 kroozers). Zukov is a Goff by itself and the Lite kroozer bought Goffs, so the skwadron is all Goff (J242: the check read “none / Goffs” before). 3 x Ravager attack ship 40 + Zukov's Klaw 210 + Lite kroozer 90 + Goffs 20 = 440."
+      "why": "Fleets p. 371: “If taken, every capital ship in the skwadron must separately take and pay for the clan upgrade, not just individual ships.” p. 383: Zukov’s Klaw “is of the Goff Clan” as part of its 210 points, and p. 374 lists it as “(0–1) Zukov's Klaw (Goff)” in the Big ship skwadron (1-2 kroozers). Zukov is a Goff by itself and the Lite kroozer bought Goffs, so the skwadron is all Goff (J242: the check read “none / Goffs” before). 3 x Ravager attack ship 40 + Zukov's Klaw 210 + Lite kroozer 90 + Goffs 20 = 440."
     },
     {
       "id": "clanz-zukov-skwadron-kroozer-without-the-clan",
@@ -8578,7 +8569,7 @@
           }
         ]
       },
-      "why": "Fleets p. 371: “If taken, every capital ship in the skwadron must separately take and pay for the clan upgrade, not just individual ships.” p. 383: Zukov’s Klaw “is of the Goff Clan” as part of its 210 points, and p. 374 lists it as “(0–1) Zukov's Klaw (Goff only)” in the Big ship skwadron (1-2 kroozers). The skwadron's clan is taken (Zukov's own Goffs), so the other kroozer of the skwadron takes and pays for it too, or goes in a skwadron of its own. 3 x Ravager attack ship 40 + Zukov's Klaw 210 + Lite kroozer 90 = 420."
+      "why": "Fleets p. 371: “If taken, every capital ship in the skwadron must separately take and pay for the clan upgrade, not just individual ships.” p. 383: Zukov’s Klaw “is of the Goff Clan” as part of its 210 points, and p. 374 lists it as “(0–1) Zukov's Klaw (Goff)” in the Big ship skwadron (1-2 kroozers). The skwadron's clan is taken (Zukov's own Goffs), so the other kroozer of the skwadron takes and pays for it too, or goes in a skwadron of its own. 3 x Ravager attack ship 40 + Zukov's Klaw 210 + Lite kroozer 90 = 420."
     },
     {
       "id": "clanz-two-short-tiddlas-are-not-two-tiddlas",

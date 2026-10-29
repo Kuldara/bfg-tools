@@ -1,11 +1,11 @@
-/* Fleets book scenarios — BFG Remastered Fleets v0.36: the six Rogue Trader scenarios
+/* Fleets book scenarios — BFG Remastered Fleets v0.40: the six Rogue Trader scenarios
    (FL p. 208–221) and Craftworld Assault (FL p. 336–339).
    Summarised in our own words; every scenario is hand-made (see docs/history/scenarios/LUEMINUT.md, in Finnish).
    The Fleets book still has unresolved cross-references ("[???]", old rulebook and
    Armada pages); the scenarios give their Remastered places and say so in a note. */
 (function () {
-  const FL_CREDIT = "BFG Remastered Fleets v0.36";
-  const RT_CREDIT = "Rogue Trader scenarios, Fleets v0.36 p. 198–211. The Fleets book does not name their author.";
+  const FL_CREDIT = "BFG Remastered Fleets v0.40";
+  const RT_CREDIT = "Rogue Trader scenarios, Fleets v0.40 p. 208–221. The Fleets book does not name their author.";
   const XREF = "The Fleets book’s cross-references in this scenario read “[???]” or point to page numbers in the old rulebook and Armada. They are given here as their Remastered places.";
 
   /* contact markers as in Convoy (RB p. 134–135) */
@@ -78,7 +78,7 @@
       "The scenario prices only heavy transports and says the transport variants are chosen before “any remaining available points” go on warships. We read that as: variants are paid from the escort allowance, regular transports are free as in Convoy. Agree before play.",
       "The discipline table runs from 2 to 11; a roll of 12 has no entry. Suggestion: treat 12 as “the convoy keeps formation”.",
       "How much an escaping ship counts comes from the ship profiles: a heavy transport is two transports (one if crippled), an armed freighter or a fast clipper half a transport, rounded down at the end; Q-ships and escort carriers count nothing (FL p. 192, 202, 522–523)."].concat(v === "stalk" ? ["Warp beasts and daemon mines carry victory points, but this scenario is decided by escaping transports; their points matter only for a campaign tally."] : []),
-    refs: v => [["Convoy set-up and contact markers", "RB p. 134–135"], ["Threat tables", "FL p. 198–199"], ["Heavy transport", "FL p. 192"], ["Armed cargo vessel / fast clipper", "FL p. 202"], ["Escort carrier, Q-ship, armed freighter", "FL p. 521–523"], ["Rogue Traders fleet list", "FL p. 184"]].concat(
+    refs: v => [["Convoy set-up and contact markers", "RB p. 134–135"], ["Threat tables", "FL p. 208–209"], ["Heavy transport", "FL p. 192"], ["Armed cargo vessel / fast clipper", "FL p. 202"], ["Escort carrier, Q-ship, armed freighter", "FL p. 521–523"], ["Rogue Traders fleet list", "FL p. 184"]].concat(
       v === "stalk" ? [["Orbital mines (daemon mines build on them)", "FL p. 23, 512"], ["Daemonships", "FL p. 236–237"], ["Tyranid escort drones and cruisers", "FL p. 432–"]] : v === "mine" ? [["Orbital mines", "FL p. 23, 512"]] : v === "wolf" ? [["Xenos vessels", "FL p. 194"]] : []),
     play: [
       { w: "Start of your turn, from turn 2", s: "a", t: "Roll 2D6 on the discipline table (tool below). Special orders it calls for pass automatically and must be taken that turn." },

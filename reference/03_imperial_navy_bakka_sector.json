@@ -100,7 +100,7 @@
     },
     {
       "key": "escorts in your fleet in squadrons of 2",
-      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2–6.",
       "page": 49,
       "status": "enforced",
       "kind": "squadron",
@@ -166,7 +166,7 @@
     },
     {
       "key": "Fleet Defence Turret",
-      "text": "Fleet Defence Turret ........................+5 points. Two turrets on a ship are exchanged for fleet defence turrets capable of protecting itself or any one other vessel within 15 cm each ordnance phase, adding +2 to the turret strength of the ship it is defending.",
+      "text": "Fleet Defence Turret ........................Two turrets on the ship are exchanged for fleet defence turrets capable of protecting itself or any one other vessel within 15 cm each ordnance phase.",
       "page": 50,
       "status": "out_of_scope",
       "why": "The refit concerns Adeptus Mechanicus ships, which the Bakka list does not contain as rows (they come from the AdMech list as reserves). Reserves between lists are v1.1.",

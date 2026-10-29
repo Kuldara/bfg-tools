@@ -111,7 +111,7 @@
     },
     {
       "key": "the fleet led by an Inquisitor must take a Secret Ploys sub-plot",
-      "text": "In addition to any sub-plots rolled normally, the fleet led by an Inquisitor must take a Secret Ploys sub-plot rolled randomly from ... p.84 of the Battlefleet Gothic Rulebook.",
+      "text": "In addition to any sub-plots rolled normally, the fleet led by an Inquisitor must take a Secret Ploys sub-plot rolled randomly from pg. 127 of the Remastered Rulebook.",
       "page": 149,
       "status": "manual",
       "why": "Skenaariosaanto."
@@ -137,7 +137,7 @@
     },
     {
       "key": "mounts hexagrammic wards throughout its hull",
-      "text": "The ship with the Ordo Malleus Inquisitor Lord aboard mounts hexagrammic wards throughout its hull and ignores any Chaos marks or Daemonship effects affecting leadership or boarding actions.",
+      "text": "This ship and every Grey Knights vessel in the fleet mounts hexagrammic wards throughout its hull and ignores any Chaos marks or Daemonship effects affecting leadership or boarding actions.",
       "page": 152,
       "status": "manual",
       "why": "Ordo Malleus -inkvisiittorin vaikutus."

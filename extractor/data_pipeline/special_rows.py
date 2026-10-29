@@ -12,7 +12,7 @@ from .inputs import re
 from .profile_types import e, r, s
 from .races import _L
 from .row_classes import L, _pe, i
-from .row_texts import _pir
+from .row_texts import _opt_id, _pir
 from .section_guard import lists_out
 from .ships import o, ships
 # ------------------------------- a share of one hull's option (p.437, J175 c)
@@ -126,6 +126,15 @@ for _k, _sh in ships.items():
             "Rogue Trader fleet list" in _o["t"], (_k, _o["t"])
         _ram_ships.add(_k)
         _o.pop("dep", None)
+        # The card prints the option's condition; what the ram does ("This does
+        # not count as a separate refit. Ships so equipped impart one automatic
+        # hit ...") is the power_ram card rule (special-rules.js), shown when
+        # taken. The option is new in v0.40, so no save holds its id: the id is
+        # made from the shortened text like every other (page:sha1).
+        _cut = _o["t"].find(" fleet list.")
+        assert _cut > 0 and "automatic hit" in _o["t"][_cut:], (_k, _o["t"])
+        _o["t"] = _o["t"][:_cut + len(" fleet list.")]
+        _o["id"] = _opt_id(_k, _o["t"])
         if _o["t"].startswith("If the prow torpedoes are not replaced"):
             _sw = [j for j, x in enumerate(_ol) if j != _i and re.search(r"replace its prow torpedoes", x["t"], re.I)
                    and re.search(r"nova cannon", x["t"], re.I)]

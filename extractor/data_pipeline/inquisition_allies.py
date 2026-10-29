@@ -242,22 +242,26 @@ print("Bastion's Chaos reserves added: %d hulls (p.39)"
 _OM_T = "ORDO MALLEUS INQUISITORS"
 _OM_RES_T = "ORDO MALLEUS RESERVES"
 _OM_ROUTE = ("An Imperial Navy or Adeptus Mechanicus fleet led by an Inquisitor "
-             "that does not include Space Marine vessels may has the following "
-             "addition to its reserves and/or allies rules: For no change in their "
+             "that does not include Space Marine vessels has the following "
+             "addition to its reserves and/or allies rules. For no change in their "
              "cost, a fleet led by an Ordo Malleus Inquisitor may take as reserves "
-             "any Chaos ship listed in the Bastion Fleet List on p.37 of the "
-             "Remastered Fleetbook.")
+             "any Chaos ship listed in the Bastion Fleet List on pg. 39.")
+# v0.40 adds what the fleet gives up: the Grey Knights contingent's bonuses
+# and the Chaos opponent's free extras (text on the card, not modelled).
 _OM_FREE = ("These vessels are free of the “Strange Happenings” special rule "
             "as long as the Inquisitor’s ship remains in play, but the fleet may "
-            "not take any Grey Knights vessels!")
+            "not take any Grey Knights vessels, and the Inquisitor’s ship loses its "
+            "Grey Knights contingent along with their leadership, boarding value and "
+            "other bonuses. Likewise, Chaos opponents gain no benefits, as the Grey "
+            "Knights are absent.")
 _OM_HNR = ("Hit and Run attacks from this ship add +1 to their roll, and such "
            "attacks against this ship subtract -1 from their roll.")
 # The Wards' limit (p.152). The extraction's sentence filter dropped this, so the card
 # ended in "etc." without the limit, and a CSM-crewed ship's +boarding could have
 # read as cancelled (review 16.9.).
 _OM_CSM = ("Rules for Chaos Space Marines still apply normally, and any other special "
-           "rules and effects such as the Forces of Chaos listed on pg.168 of the "
-           "Rulebook remain unaffected.")
+           "rules and effects such as the Forces of Chaos listed on pg. 239 "
+           "remain unaffected.")
 # p.150: the Ordo's price and benefits belong to the Inquisitor Lord's own ship.
 # On a host list's card the Ordo row is its own commander card, so the sentence
 # prints on it; on the Inquisition list it is already in section 13.
@@ -485,18 +489,24 @@ print("Bakka's Rogue Trader cruiser added (p.50)")
 # "they count as Chaos vessels in all respects" -> the rows are the Chaos list's
 # own, so they are not reserves and the race gate does not concern them, and they
 # count towards the list's own cruiser and escort limits (section_count.pick).
-# "may not take any upgrade listed in their profile" -> noopt.
+# "Weapon refits, Nova Cannon ... may not be taken" -> the profile options
+# that change a weapon are banned on the rows (optno, _REN_OPTNO). v0.36 said
+# "These vessels may not take any upgrade listed in their profile" (noopt);
+# v0.40 dropped that, so an option that changes no weapon (the light
+# cruisers' 6+ prow armour) is allowed. The power ram is not for a Chaos fleet
+# (its own condition) and the Cobra's detection gear is for Imperial escort
+# squadrons only (p.84).
 _REN_SRC = ("For every 1,500 points in a Chaos fleet, one cruiser from any "
             "Imperial Navy fleet list up to 185 points and/or up to six "
             "Imperial Navy escorts may be taken.")
-_REN_SRC2 = ("Special weapon rules, Nova Cannon, Chaos Lords, Chaos Space "
+_REN_SRC2 = ("Weapon refits, Nova Cannon, Chaos Lords, Chaos Space "
              "Marines, Chaos ordnance or Daemonship upgrades may not be taken "
              "for Imperial Navy vessels used in this manner, and cruisers "
-             "suffer -1Ld for going renegade. Imperial Navy escorts need not "
+             "suffer -1 Ld for going renegade. Imperial Navy escorts need not "
              "be in a single squadron and may be interspersed within other "
-             "Chaos escort squadrons if desired. These vessels may not take "
-             "any upgrade listed in their profile and do not count as "
+             "Chaos escort squadrons if desired. These vessels do not count as "
              "reserves; they count as Chaos vessels in all respects.")
+_REN_OPTNO = r"nova cannon|weapons batter|torpedo|lance|launch bay|power ram|long range detection"
 # The Imperium's hulls: cruisers at most 185 points and escorts. The prices
 # are the Imperial Navy lists' own; Space Marine hulls are not included,
 # because the book says "Imperial Navy fleet list" and "Imperial Navy escorts".
@@ -520,8 +530,8 @@ for _nm in ("Chaos \u2014 Incursion", "Chaos \u2014 Black Crusade", "Chaos \u201
     assert not any(e.get("r") == 69 for x in _L["secs"] for e in x["ents"]), \
         "%s: the renegades already exist" % _nm
     _i = len(_L["secs"])
-    _ents = ([_p18_unit(_l, _r, _p, 232, noopt=True) for _l, _r, _p in _REN_CRUISERS]
-             + [_p18_unit(_l, _r, _p, 232, noopt=True) for _l, _r, _p in _REN_ESCORTS])
+    _ents = ([dict(_p18_unit(_l, _r, _p, 232), optno=_REN_OPTNO) for _l, _r, _p in _REN_CRUISERS]
+             + [dict(_p18_unit(_l, _r, _p, 232), optno=_REN_OPTNO) for _l, _r, _p in _REN_ESCORTS])
     _L["secs"].append(dict(t="RENEGADE IMPERIAL VESSELS", text=[_REN_SRC, _REN_SRC2],
         ents=_ents, rules=[
             dict(kind="per_points", each=1, per=1500, full=True, ok=True, sec=[_i],

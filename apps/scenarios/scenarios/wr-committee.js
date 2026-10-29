@@ -85,7 +85,7 @@
       { t: "No first turn is given — roll off." }
     ],
     notes: v => ["The author calls these scenarios “very biased”: quick sketches for fun, not balanced battles. Fill the gaps (first turn, table edges, game length) by agreement."].concat(v === "prize" ? ["How long to hold the prize is given as “1–2 turns” — agree which before play."] : []).concat(v === "quick" ? ["The sketch gives no victory conditions beyond escaping off the chosen edge — agree how many ships must make it."] : []),
-    refs: v => [["Cruiser Clash", "RB p. 128"], ["The Bait", "RB p. 130"], ["The Hunter and the Prey", "FL p. 202"], ["Convoy", "RB p. 134"]].filter((r, i) => v === "show" ? i === 0 : v === "mark" ? i === 1 || i === 2 : v === "merch" ? i === 3 : false),
+    refs: v => [["Cruiser Clash", "RB p. 128"], ["The Bait", "RB p. 130"], ["The Hunter and the Prey", "FL p. 212"], ["Convoy", "RB p. 134"]].filter((r, i) => v === "show" ? i === 0 : v === "mark" ? i === 1 || i === 2 : v === "merch" ? i === 3 : false),
     play: [
       { w: "The prize", t: "The first fleet to touch the prize (or get within about 10 cm) and stay there for 1–2 turns takes it — and then has to get it out.", only: ["prize"] },
       { w: "The convoy", s: "a", t: "Get the convoy from one short edge to the other; at least half of it must survive.", only: ["merch"] },

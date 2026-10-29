@@ -152,7 +152,7 @@
     ],
     stools: [{ k: "secret", id: "goods", s: "a", l: "The stolen goods are on transport…", sub: "Rogue Trader: roll in secret. Show it when the Tau find it.", opts: ["1", "2", "3", "4", "5", "6"], rnd: true }],
     notes: ["The supplement places the phenomena “as shown on the map”, but its map shows only the ships; the default is our suggestion.", "The orbital city has its own profile in the supplement (130 pts, 12 hits, railguns 45 cm 12, missiles 6, 2 launch bays); the Fleets book’s Kor Caste Orbital City (FL p. 478) replaces it.", "Pinnace and brigantine are Warp Rift 17 designs; recommissioned escorts stand in."],
-    refs: [["Kor Caste orbital city", "FL p. 478"], ["Castellan class escort", "FL p. 474"], ["Warden class gunship", "FL p. 475"], ["Rogue Trader cruiser", "FL p. 190"], ["Armed cargo vessel", "FL p. 192"], ["Boarding actions", "RB p. 89–90"]],
+    refs: [["Kor Caste orbital city", "FL p. 478"], ["Castellan class escort", "FL p. 474"], ["Warden class gunship", "FL p. 475"], ["Rogue Trader cruiser", "FL p. 190"], ["Armed cargo vessel", "FL p. 202"], ["Boarding actions", "RB p. 89–90"]],
     play: [
       { w: "Searching", s: "b", t: "Board a transport successfully to search it. When you board the right one, the Tau win." },
       { w: "Escape", s: "a", t: "Get the transport with the goods off the top edge." }
@@ -223,7 +223,7 @@
     ],
     stools: [],
     notes: ["Played by three, or by two: then the Tas’ka player also runs the Tau ECF, which may only fight the Orks and detects her by dice alone (suggestion).", "The supplement does not say where the ECF starts or in what order three fleets take their turns; the defaults are our suggestion.", "It ends when Tas’ka escapes or is discovered, which may leave the Orks and the ECF mid-fight; see Agree for the result then."],
-    refs: [["Protector class cruiser", "FL p. 470"], ["Hero class starship", "FL p. 460"], ["Merchant class starship", "FL p. 462"], ["Kill Kroozer", "FL p. 382"], ["Leadership", "RB p. 45"]],
+    refs: [["Protector class cruiser", "FL p. 470"], ["Hero class starship", "FL p. 460"], ["Merchant class starship", "FL p. 462"], ["Kill Kroozer", "FL p. 384"], ["Leadership", "RB p. 45"]],
     play: [
       { w: "Escape", s: "a", t: "You may leave only through the Tau entry zone — not off any other edge, and not by disengaging." },
       { w: "Discovery", s: "c", t: "Whenever Tas’ka moves within 30 cm of one of your ships, it tests Leadership: pass and she is discovered. +1 to the test if she fired at an Ork ship that turn." },
@@ -519,7 +519,7 @@
     ],
     stools: [],
     notes: ["The supplement’s Tau transports are given for scenarios in the Fleets book (FL p. 463).", AOC_EMPIRE],
-    refs: [["Transports in a Tau fleet", "FL p. 463"], ["Defender class starship", "FL p. 464"], ["Protector class cruiser", "FL p. 470"], ["Dirge class raider", "FL p. 411"], ["Jackal class raider", "FL p. 408"], ["Asteroid fields", "RB p. 110"]],
+    refs: [["Transports in a Tau fleet", "FL p. 463"], ["Defender class starship", "FL p. 464"], ["Protector class cruiser", "FL p. 470"], ["Dirge class raider", "FL p. 411"], ["Jackal class raider", "FL p. 410"], ["Asteroid fields", "RB p. 110"]],
     play: [
       { w: "Turn 2", s: "a", t: "Ry’zon moves on from any table edge you choose." },
       { w: "Escape", s: "a", t: "Get transports off the table by any edge: two are enough." }
@@ -949,7 +949,7 @@
     ],
     stools: [{ k: "shiproll", id: "q", l: "Asteroid fields per quarter (D3+2)", cl: "Quarters", n0: 4, roll: () => dn(3) + 2, il: i => "Quarter " + (i + 1), out: d => d + " asteroid fields" }],
     notes: ["The supplement does not say what happens if Nua’ta disengages; the default follows Into the Claw, where the Tau disengaging is a draw."],
-    refs: [["Kill Kroozer", "FL p. 384"], ["Onslaught attack ship", "FL p. 384"], ["Asteroid fields", "RB p. 110"], ["Fighting in low orbit", "RB p. 116"]],
+    refs: [["Kill Kroozer", "FL p. 384"], ["Onslaught attack ship", "FL p. 386"], ["Asteroid fields", "RB p. 110"], ["Fighting in low orbit", "RB p. 116"]],
     play: [{ w: "The docked kroozer", s: "b", t: "It must pass a Leadership test to leave the station." }, { w: "Turns 1–3", s: "b", t: "−1 Leadership." }, { w: "No losses", s: "a", t: "If your ship is destroyed, you lose." }, DISENGAGE_DRAW],
     fx: T => T === 1 ? [["a", "Enter from any edge"], ["b", "−1 Leadership"]] : T <= 3 ? [["b", "−1 Leadership"]] : [],
     tools: [{ k: "html", html: CHARS_SUN }],
@@ -1045,7 +1045,7 @@
     ],
     stools: [],
     notes: ["The supplement asks for the Eldar MMS rules; the Fleets book’s Flame of Asuryan (FL p. 327) is the book equivalent.", "How the rescue teleport works is only partly given: whose shields count and who is rescued. The default is our reading."],
-    refs: [["All is Lost", "FL p. 418"], ["Teleport attacks", "RB p. 92"], ["Flame of Asuryan", "FL p. 329"], ["Hive ship", "FL p. 432"]],
+    refs: [["All is Lost", "FL p. 418"], ["Teleport attacks", "RB p. 92"], ["Flame of Asuryan", "FL p. 327"], ["Hive ship", "FL p. 432"]],
     play: [
       { w: "Every turn after the first", s: "b", t: "At the start of your turn, every ship destroyed so far comes back: a new one of the same profile at the centre of a random table edge. Escorts wait until three can form a squadron." },
       { w: "Sheva’s", s: "a", t: "Sheva’s may blow up his own ship using the Tyranid rules’ All is Lost option (FL p. 420)." },

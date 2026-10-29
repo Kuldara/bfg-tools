@@ -215,7 +215,7 @@
       { t: "Record each result in the tree: the ledger under it keeps track of points bonuses and penalties." }
     ],
     notes: ["Written for the original 1999 rules. Mark of Slaanesh: FL p. 242.", "Battle 4 is called Escalation but the magazine names Cruiser Clash as its scenario, at 1000 pts with battleships — so play Cruiser Clash with its alternatives. Escalating Engagement would fit the name and the historical account just as well; agree which.", "The Liberation lets the Imperials take up to 500 pts of Eldar “if the Imperials will accept their support”; the campaign does not tie this to the Eldar battle. Suggestion: only if the Eldar won it."],
-    refs: [["Blockade Run, The Bait, Cruiser Clash, Fleet Engagement", "RB p. 128–143"], ["Mark of Slaanesh", "FL p. 232"], ["Siluria class light cruiser", "FL p. 78"]],
+    refs: [["Blockade Run, The Bait, Cruiser Clash, Fleet Engagement", "RB p. 128–143"], ["Mark of Slaanesh", "FL p. 242"], ["Siluria class light cruiser", "FL p. 78"]],
     play: [
       { w: "Between battles", t: "Apply the bonuses and penalties in the ledger to the next battle’s points." },
       { w: "Leaders", t: "The named commanders must be included where a battle says so, at the cost given." }
@@ -366,7 +366,7 @@
       { s: "a", t: "The Imperium takes the first turn." }
     ],
     notes: ["Written for the original 1999 rules; the kill kroozer was on p. 136 of that rulebook, now FL p. 382.", "In the Fleets book a warlord may take only one of Maniac Gunners and Mad Meks; the campaign gives Gutztoof both as a special character.", "The campaign says a Gutztoof who disengages has lost and the Imperials draw the campaign."],
-    refs: [["Kill kroozer", "FL p. 384"], ["Ork warlord, Maniac Gunners, Mad Meks", "FL p. 365"], ["Asteroid fields", "RB p. 110"], ["Siluria class light cruiser", "FL p. 78"]],
+    refs: [["Kill kroozer", "FL p. 384"], ["Ork warlord, Maniac Gunners, Mad Meks", "FL p. 367"], ["Asteroid fields", "RB p. 110"], ["Siluria class light cruiser", "FL p. 78"]],
     play: [
       { w: "End of each Imperial turn", s: "b", t: "If any Imperial ship is within 15 cm of the asteroid field, you may place the Gork’s Pay anywhere in the field, facing any way, and take your turn at once." },
       { w: "Asteroids", s: "b", t: "Gutztoof knows this field like his own boot: the Gork’s Pay never tests for asteroid damage, except on All Ahead Full." },

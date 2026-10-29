@@ -56,14 +56,14 @@
     },
     {
       "key": "shield value is increased by",
-      "text": "Extra Power Fields: The ship's shield value is increased by +1. If this would take it to 3 or more shields, don't forget to mount it on a 60 mm base!",
+      "text": "The ship's shield value is increased by +1. If this would take it to 3 or more shields, don't forget to mount it on a 60 mm base!",
       "page": 368,
       "status": "manual",
       "why": "Nakyi 7.9.2026 asti tyhjana: lausesuodatin tunsi sanan 'reduced' muttei sanaa 'increased'."
     },
     {
       "key": "+1 modifier on boarding",
-      "text": "Mega-armoured Boarding Parties: +1 modifier on boarding.",
+      "text": "+1 modifier on boarding.",
       "page": 368,
       "status": "manual",
       "why": "The row's own description is kept visible (KEEP_TEXT) - it is the upgrade's effect, not narrative.",
@@ -111,7 +111,7 @@
     },
     {
       "key": "escorts in your fleet in squadrons of 2",
-      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2–6.",
       "page": 369,
       "status": "enforced",
       "kind": "squadron",

@@ -408,7 +408,9 @@ _PL_INQ = dict(cmd="^inquisitor lord", prefer=[
     dict(re="^inquisitorial cruiser", cite=_pl("They must be aboard an Inquisitorial Cruiser if one is included, "
                                              "otherwise they must be on an Inquisition Blackship if one is included.", 148)),
     dict(re="^inquisition blackship", cite=_pl("They must be aboard an Inquisitorial Cruiser if one is included, "
-                                             "otherwise they must be on an Inquisition Blackship if one is included.", 148))])
+                                             "otherwise they must be on an Inquisition Blackship if one is included.", 148))],
+    dearest=dict(cite=_pl("If none of these ships is present, they have to be placed on the most expensive ship in "
+                          "the fleet.", 148)))
 _PL_ORDO = dict(cmd=r"^ordo \w+ inquisitor lord( \(ld 10\))?$", skip=True)
 _PL_MOF = lambda re, s, pg: dict(cmd="^master of the fleet", prefer=[dict(re=re, cite=_pl(s, pg))])
 _CH_WM = _cite("Under no circumstance can a Chaos Lord be placed on the same ship as a Warmaster.", 232)
@@ -780,14 +782,9 @@ _RT_S1 = "If a second Rogue Trader cruiser is taken, it may be any Rogue Trader 
 assert _text_key(_RT_S1) in _all_text
 _RT0["rt_hulls"] = dict(hull="^rogue trader cruiser — ", all="^rogue trader cruiser", cite=_cite(_RT_S1, 184),
                         strict=1)
-# p.148 Accompanying a fleet: "This may include the specific ship so-called in
-# the Inquisition rules, but it can be any Imperial cruiser-class vessel."
-# T56: read as a placement (J215), not as a hull choice. The inquisitor's
-# cruiser is the Imperial cruiser he is aboard: without an Inquisitorial
-# Cruiser and a Blackship the Inquisitor Lord's place is free (p.148), so
-# the player puts him aboard any cruiser from the Aboard menu.
-# A hull choice (hc) was tried and rejected: it swaps the card's options to
-# the hull choice card's pattern and drops the Inquisitorial cruiser's own options.
+# T56 (v0.36 p.138: "it can be any Imperial cruiser-class vessel") is gone:
+# v0.40 removed the sentence, and p.148 places the Inquisitor Lord on the most
+# expensive ship when there is no Inquisitorial Cruiser or Blackship (_PL_INQ).
 _ninq = 0
 # p.149 RESERVES AND ALLIES (an IN/AdMech fleet led by an Inquisitor): "If taken, a
 # Rogue Trader escort squadron may accompany it, but Xenos vessels may not be
@@ -920,8 +917,8 @@ missing = sorted(r for r in refd if r not in ships)
 # number when one is added. data/schema.json describes it.
 SCHEMA_VERSION = "1.0"
 data = dict(schemaVersion=SCHEMA_VERSION,
-            src="Battlefleet Gothic: Remastered — Fleets Book WiP v0.36 (28 Aug 2025) "
-                "and Rulebook v1.10 (7 May 2024)",
+            src="Battlefleet Gothic: Remastered — Fleets Book WiP v0.40 (29 Oct 2026) "
+                "and Rulebook v1.11 (13 Aug 2026)",
             ships=ships, lists=lists_out)
 # The rule's reach depends on what `re` hits. If a row's name changes
 # in the book or in extraction, the ban stops working silently - so the hits

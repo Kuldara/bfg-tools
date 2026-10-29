@@ -116,7 +116,7 @@
     },
     {
       "key": "escorts in your fleet in squadrons of 2",
-      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2–6.",
       "page": 249,
       "status": "enforced",
       "kind": "squadron",
@@ -171,7 +171,7 @@
     },
     {
       "key": "one cruiser from any Imperial Navy fleet list up to 185 points",
-      "text": "For every 1,500 points in a Chaos fleet, one cruiser from any Imperial Navy fleet list up to 185 points and/or up to six Imperial Navy escorts may be taken. Special weapon rules, Nova Cannon, Chaos Lords, Chaos Space Marines, Chaos ordnance or Daemonship upgrades may not be taken for Imperial Navy vessels used in this manner, and cruisers suffer -1Ld for going renegade. Imperial Navy escorts need not be in a single squadron and may be interspersed within other Chaos escort squadrons if desired. These vessels may not take any upgrade listed in their profile and do not count as reserves; they count as Chaos vessels in all respects.",
+      "text": "For every 1,500 points in a Chaos fleet, one cruiser from any Imperial Navy fleet list up to 185 points and/or up to six Imperial Navy escorts may be taken. Weapon refits, Nova Cannon, Chaos Lords, Chaos Space Marines, Chaos ordnance or Daemonship upgrades may not be taken for Imperial Navy vessels used in this manner, and cruisers suffer -1 Ld for going renegade. Imperial Navy escorts need not be in a single squadron and may be interspersed within other Chaos escort squadrons if desired. These vessels do not count as reserves; they count as Chaos vessels in all respects.",
       "page": 232,
       "status": "enforced",
       "enforced_by": "fleet_golden",
@@ -190,7 +190,7 @@
       "status": "enforced",
       "kind": "allowed_at",
       "points": 1000,
-      "why": "The user's decision 13.10.2026 (BACKLOG J162): Abaddon's general rule p.241 concerns any Chaos fleet. The list's Fleet Commander section does not list him, but the list's own Planet Killer row (p.249: 'If Abaddon is present, he must be aboard the Planet Killer') and the god's barge profile allow for him. The same sentence carries the limit Warmaster or Abaddon (cap 1), and the required Warmaster is met by him. The row is a copy of the Black Crusade's row.",
+      "why": "The user's decision 13.10.2026 (BACKLOG J162): Abaddon's general rule p.241 concerns any Chaos fleet. The list's Fleet Commander section does not list him, but the list's own Planet Killer row (p.249: 'If the Planet Killer is present, Abaddon must be aboard it') and the god's barge profile allow for him. The same sentence carries the limit Warmaster or Abaddon (cap 1), and the required Warmaster is met by him. The row is a copy of the Black Crusade's row.",
       "classified_on": "2026-10-13"
     }
   ],

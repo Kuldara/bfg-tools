@@ -77,7 +77,7 @@
       "why": "p.120: 60 cm dorsal lance."
     },
     {
-      "match": "^Nova Cannon instead of prow torpedoes",
+      "match": "^Can replace its prow torpedoes with a nova cannon at a cost of +20 pts",
       "class": "weapon",
       "page": 121,
       "why": "p.121: keulatorpedot -> Nova Cannon."

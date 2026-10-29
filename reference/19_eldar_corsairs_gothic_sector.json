@@ -64,7 +64,7 @@
     },
     {
       "key": "escorts in your fleet in squadrons of 2",
-      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2–6.",
       "page": 314,
       "status": "enforced",
       "kind": "squadron",
@@ -121,7 +121,7 @@
     {
       "key": "Yriel may be taken instead of the Hero Fleet Commander",
       "text": "Yriel may be taken instead of the Hero Fleet Commander as listed in the Corsair and Craftworld Eldar fleet lists.",
-      "page": 317,
+      "page": 313,
       "status": "enforced",
       "kind": "cap",
       "max": 1,
@@ -130,8 +130,8 @@
     },
     {
       "key": "if the Flame of Asuryan with Yriel is added to the parent fleet it is exempt from the reserve rules",
-      "text": "Furthermore, if the Flame of Asuryan with Yriel is added to the parent fleet it is exempt from the reserve rules *eg you do not have to field three capital ships in a Corsair Eldar fleet list(.",
-      "page": 317,
+      "text": "Furthermore, if the Flame of Asuryan with Yriel is added to the parent fleet it is exempt from the reserve rules. (e.g. you do not need to field three capital ships in a Corsair Eldar fleet list).",
+      "page": 313,
       "status": "enforced",
       "enforced_by": "fleet_golden",
       "goldens": [
@@ -142,8 +142,8 @@
     },
     {
       "key": "He must be embarked aboard the Flame of Asuryan if it is present",
-      "text": "He must be embarked aboard the Flame of Asuryan if it is present, in which case his cost is 125 points.",
-      "page": 317,
+      "text": "He must be embarked aboard the Flame of Asuryan if it is present, in which case Yriel's cost is reduced to 125 points.",
+      "page": 313,
       "status": "enforced",
       "enforced_by": "fleet_golden",
       "goldens": [

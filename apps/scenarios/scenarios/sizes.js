@@ -12,7 +12,7 @@
      decides; a mere worked example ("660 against 2000") does not, then "any".
    - Mobile ships given on top of the budget count at list price (Blackstone, space hulk, a free flagship). Fixed
      defences, D6×10 defences, transports and objectives (a hulk being escorted) do not raise the class.
-   - Fixed forces: everything with a list price (ships and defences, Fleets v0.36 = data/bfg_data.json), no
+   - Fixed forces: everything with a list price (ships and defences, Fleets v0.40 = data/bfg_data.json), no
      transports. Commanders, Marks and upgrades are not in the sum; if they would take the bigger side over a
      threshold (or the sum is close to one), the scenario gets both classes and why says so.
    - Random attackers (D3+5 rolls on a table): the typical number, the extremes mentioned. */

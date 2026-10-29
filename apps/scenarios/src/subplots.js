@@ -151,7 +151,7 @@ export function renderSources() {
   h += "<p class='intro'>Battlefleet Gothic is no longer published, so its rules and scenarios now live in community documents. Every scenario here names its source and page, and this page explains what those sources are and how far to trust them.</p>";
   h += "<div class='srcgrid'>";
   h += sec("Battlefleet Gothic", "<p>Games Workshop’s game of fleet battles in the 41st millennium, first released in 1999. The rulebook credits the game to Andy Chambers, Gavin Thorpe, Jervis Johnson, Matt Keefe, Andy Hall, Pete Haines, Tim Adcock, Warwick Kinrade, Bob Henderson, Ray Bell and Nate Montes (RB p. 3). The supplement <i>Armada</i> followed in 2004 and a digital rulebook in 2007. Games Workshop no longer supports the game; the community keeps it alive.</p>");
-  h += sec("BFG Remastered — Rulebook v1.10 and Fleets v0.36 <span class='badge t-rulebook'>RB · FL</span>",
+  h += sec("BFG Remastered — Rulebook v1.11 and Fleets v0.40 <span class='badge t-rulebook'>RB · FL</span>",
     "<p>The current edition of the rules, used today as the official rules of the game. It combines the 2007 digital rulebook, the campaigns of <i>Armada</i> and the 2010 Compendium into two free PDFs, the <b>Rulebook</b> (RB) and the <b>Fleets</b> book (FL). Unclear rules are settled in FAQ runs (RB p. 4). The 2026 FAQ names v1.10 and v0.36 as the current versions, and every page number in this app refers to them.</p>" +
     "<p class='small muted'>From the rulebook: the " + cnt("core") + " core scenarios (RB p. 128–143), the three Third Armageddon War scenarios (RB p. 178–181), which first appeared in <i>Armada</i>, and the seven 13th Black Crusade scenarios (RB p. 191–199). From the Fleets book: the six Rogue Trader scenarios and their convoy threat tables (FL p. 208–221) and Craftworld Assault (FL p. 336–339). On the scenario list the campaigns and the Fleets book scenarios share the <b>Books</b> category.</p>");
   h += sec("Classic Games Workshop publications <span class='badge t-classic'>Classic GW</span>",
@@ -178,8 +178,8 @@ export function renderSources() {
     "<p>Many scenarios leave something out: who goes first, how long the game lasts, how deep the deployment zones are. Their Set-up tab lists these under <i>Agree before you start</i>, each with a default you can change. Where the books have a matching case, the default comes from it with its page (for example, the first turn is rolled off as in RB p. 143); otherwise it is marked <i>Our suggestion</i>. The agreed values show up in the steps, on the map and on the Play tab.</p>");
   h += sec("Badges in this app",
     "<table class='ltab'>" +
-    "<tr><td><span class='badge t-rulebook'>Rulebook</span></td><td>Printed in the BFG Remastered Rulebook v1.10 — as official as it gets.</td></tr>" +
-    "<tr><td><span class='badge t-fleets'>Fleets book</span></td><td>Printed in the BFG Remastered Fleets book v0.36, the rulebook’s companion.</td></tr>" +
+    "<tr><td><span class='badge t-rulebook'>Rulebook</span></td><td>Printed in the BFG Remastered Rulebook v1.11 — as official as it gets.</td></tr>" +
+    "<tr><td><span class='badge t-fleets'>Fleets book</span></td><td>Printed in the BFG Remastered Fleets book v0.40, the rulebook’s companion.</td></tr>" +
     "<tr><td><span class='badge t-classic'>Classic GW</span></td><td>Published by Games Workshop or its Fanatic imprint between 1999 and 2008, for the original rules.</td></tr>" +
     "<tr><td><span class='badge t-wr'>Warp Rift</span></td><td>From the Warp Rift fan magazine. Everything in it is fan work, whoever wrote it.</td></tr>" +
     "<tr><td><span class='badge t-fan'>Fan supplement</span></td><td>From a fan-made supplement or tournament pack outside Warp Rift. Fan work, like Warp Rift.</td></tr>" +
@@ -199,7 +199,7 @@ export function renderSources() {
     "<tr><td><span class='badge bk'>Needs Warhammer 40,000</span></td><td>A linked pair: part of the story is fought out as a game of Warhammer 40,000. The 40K half is summarised on the scenario page.</td></tr>" +
     "<tr><td><span class='chip any'>Any fleets</span></td><td>Written for any fleet list. Other scenarios name the fleets they were written for as a suggestion; any fleets can play them.</td></tr>" +
     "</table><p class='small muted'>Where a source is unclear or contradicts itself, the scenario page says so in a <b>Source notes</b> box instead of quietly picking one reading. Notes marked <b>Suggestion</b> are ours, not the source’s.</p>");
-  h += sec("Abbreviations", "<p>RB = Rulebook v1.10 · FL = Fleets v0.36 · WR = Warp Rift · VP = victory points · Ld = Leadership.</p>");
+  h += sec("Abbreviations", "<p>RB = Rulebook v1.11 · FL = Fleets v0.40 · WR = Warp Rift · VP = victory points · Ld = Leadership.</p>");
   h += "</div>";
   h += "<p class='small muted'>Credit for every scenario belongs to its authors, named on each scenario page. This app summarises them in its own words for play at the table.</p>";
   app.innerHTML = h;

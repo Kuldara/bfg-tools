@@ -258,10 +258,10 @@
       { s: "b", t: "No deployment: your ships move on from your edge on the turns listed." },
       { s: "b", t: "Chaos takes the first turn." }
     ],
-    notes: [OLD + "The Planet Killer and Abaddon: FL p. 230–231, 252. Exterminatus: RB p. 140–141. Low orbit: RB p. 116.",
+    notes: [OLD + "The Planet Killer and Abaddon: FL p. 240–241, 252. Exterminatus: RB p. 140–141. Low orbit: RB p. 116.",
       "The article does not say which edge the transports leave by. The natural reading is the Imperial table edge, away from the Planet Killer.",
       "The Chaos defence silos are the captured ground defences of Belatis; they may not be attacked until they have fired."],
-    refs: [["Planet Killer", "FL p. 254"], ["Abaddon", "FL p. 230–231"], ["Exterminatus (destroying the planet)", "RB p. 140–141"], ["Low orbit", "RB p. 116"], ["Space Marine strike cruiser", "FL p. 105"]],
+    refs: [["Planet Killer", "FL p. 254"], ["Abaddon", "FL p. 240–241"], ["Exterminatus (destroying the planet)", "RB p. 140–141"], ["Low orbit", "RB p. 116"], ["Space Marine strike cruiser", "FL p. 105"]],
     play: [
       { w: "Turns 1–3", s: "a", t: "Imperial ships are not affected by gravity. The transports cannot leave orbit before turn 3." },
       { w: "The Planet Killer", s: "b", t: "It must destroy Belatis (as in Exterminatus) before it moves past the planet. Then roll a D6: after that many turns, replace Belatis with an asteroid field. The Harbinger of Doom may not exterminate the planet and ignores “You have failed me”." },

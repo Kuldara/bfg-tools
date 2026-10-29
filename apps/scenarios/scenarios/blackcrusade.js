@@ -1,4 +1,4 @@
-/* 13th Black Crusade campaign scenarios — Rulebook v1.10 p. 191–199.
+/* 13th Black Crusade campaign scenarios — Rulebook v1.11 p. 191–199.
    First published in Battlefleet Gothic: Armada (Games Workshop, 2004).
    Summarised in our own words; every scenario is hand-made (see docs/history/scenarios/LUEMINUT.md, in Finnish). */
 (function () {
@@ -346,7 +346,7 @@
       { s: "b", t: "The Planet Killer moves on from your edge during your first turn." },
       { s: "a", t: "The defenders go first." }
     ],
-    refs: [["The Planet Killer", "FL p. 252"], ["Nova Cannon template", "RB p. 63"], ["Reload Ordnance", "RB p. 46"]],
+    refs: [["The Planet Killer", "FL p. 254"], ["Nova Cannon template", "RB p. 63"], ["Reload Ordnance", "RB p. 46"]],
     play: [
       { w: "Start of your turn", s: "b", t: "Decide whether to start charging the Armageddon gun. If you do, put a charge counter by the Planet Killer, and another at the start of each of your turns. At three counters it must fire in that shooting phase. Once started, charging cannot stop." },
       { w: "While charging", s: "b", t: "The Planet Killer cannot turn, take special orders or fire its lances, and gains +2 shields. (It may still use the gun normally without overcharging, but only the overcharged shot can destroy Macharia.)" },

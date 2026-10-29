@@ -5,6 +5,63 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 
 ## Unreleased
 
+### Changed: Fleets WiP v0.40 and Rulebook v1.11 (29.10.2026)
+- The data is read from **Fleets WiP v0.40**; the Rulebook is **v1.11** (the
+  same pages as v1.10). Every page on the cards, the checks and the hovers is
+  a v0.40 page.
+- **Ship ids stay the same** (the v0.36 profile pages, `extractor/ship_ids.json`):
+  links, saved fleets and readers of the data keep working. A ship's `pg` is now
+  its v0.40 page. The ten new Mechanicus profiles are `am128`-`am137`.
+- **Power ram:** an option of each ship that may take it (+5 pts, "if it is part
+  of an Imperial Navy, Adeptus Mechanicus, Inquisition, or Rogue Trader fleet
+  list"), with the ship's own condition: one or the other with the nova cannon
+  ("if the prow torpedoes are not replaced"), or after the nova cannon swap or
+  the 6+ prow armour. The list row "Imperial Power Ram" is gone; on other lists
+  (Chaos renegades, Space Marines, Tau, Demiurg) the option is not offered. A
+  saved fleet's ram becomes the ship's option.
+- **Adeptus Mechanicus:** the Explorator list uses the Mechanicus profiles
+  (p.126-137) with the +1 turret and the dorsal lance printed in them and their
+  own options (plasma-boosters, nova cannon, dorsal lance swap, prow armour).
+  The list's required rows and its nova, plasma and dorsal lance rows are gone.
+  A saved Mechanicus ship opens on its new profile.
+- **Grey Knights** (p.154): a 0-1 Inquisitor Lord section with the Ordo Malleus
+  Inquisitor Lord (Ld 10, 100 pts) as a row of its own; the Battle barge only
+  with him and 1,000 points besides; strike cruisers one per 500 points or part
+  thereof; a Firestorm row; the Chaos opponent's free Marks only with the Ordo
+  Malleus Lord (one, plus one per strike cruiser); attack rating 3 (2 with a
+  Blackship) whoever leads.
+- **Abaddon, Prince Yriel and Kor'O'Mesme** come from their own pages (p.241,
+  p.313, p.453). Yriel now has Leadership 10. The Chaos Warmaster is "0-1" on
+  Black Crusade and the god lists: no required commander.
+- **Tyranids:** at least six escort drones and up to 12 more escorts per hive
+  ship (18; was 12); a fire ship drone costs +5 pts; the hive ship's weapons are
+  "Bio-plasma discharge".
+- **Rogue Traders:** "any cruiser hull counts as a Rogue Trader cruiser" is gone,
+  so the Wolf Pack hulls left the Rogue Traders list and an Exploration variant
+  is the second Rogue Trader cruiser onwards (an error alone, was a warning);
+  the Pirates list no longer offers the Siluria. "Cargo Vessel" is "Armed Cargo
+  Vessel".
+- **Chaos renegades** may take profile options that change no weapon (the light
+  cruisers' 6+ prow armour); weapon refits, nova cannons and the rest stay out.
+  **Tzeentch** Warp Beasts no longer need the Mark of Tzeentch.
+- **Mines and minefields** follow v0.40 (p.512-513): mines ignore shields as
+  ordnance; an enemy crossing a minefield tests Leadership against 3D6 and takes
+  D6 damage that shields block.
+- **Inquisition:** with no Inquisitorial Cruiser or Blackship the Inquisitor
+  Lord goes on the most expensive ship (p.148; v0.36's "any Imperial cruiser" is
+  gone). An Ordo Malleus fleet taking Bastion's Chaos reserves loses the Grey
+  Knights contingent's bonuses (text).
+- Smaller: Tau Custodian limit leaves out only allied vessels; the Dark Eldar
+  and Eldar movement and celestial cards cite the book (v0.40 includes FAQ
+  2026); misprints of v0.36 that v0.40 fixed (Zukov's Klaw, Havoc) no longer
+  need corrections. Renamed rows: "Strike cruiser" (Space Marines), "Grey
+  Knights Battle barge", "Zukov's Klaw (Goff)", "Ordo Malleus Inquisitor Lord
+  (Ld 10)"; saves find them by their position.
+- Interpretations kept: the Grey Knights Honour Guard and Terminators for
+  capital ships (the book now says "vessel"); the power ram counts the host
+  list; the hulk's Evil Sunz and Soopa Boostas bans stand on p.374 (the
+  authors, 29.10.2026; the hulk rules are under their review).
+
 ### Removed (for developers)
 - The release images and their scripts (`marketing/`) and the archived 1.0 and
   1.1 pages under `docs/history/registry/versiot/` left the repository on

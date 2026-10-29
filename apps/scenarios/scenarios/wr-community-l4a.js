@@ -85,7 +85,7 @@
       { s: "a", t: "You take the first turn. Your ships may leave the formation as soon as play starts." }
     ],
     notes: ["The original points to the Merchantmen article’s Super Heavy Troop Transporter; the Remastered equivalent is the heavy transport’s Super-Heavy Transport option (FL p. 192).", "The source lets the desecration be a hit-and-run attack “within 15 cm”. Use that range for this attack only.", "If Chaos destroys the Black Ship after desecrating it, the source names no result — agree it."],
-    refs: [["Heavy transport (Super-Heavy option)", "FL p. 182"], ["Hit-and-run attacks", "RB p. 91"], ["Daemonships", "FL p. 226"]],
+    refs: [["Heavy transport (Super-Heavy option)", "FL p. 192"], ["Hit-and-run attacks", "RB p. 91"], ["Daemonships", "FL p. 236"]],
     play: [
       { w: "Hidden markers", s: "b", t: "In your turn, either reveal any markers as their ships (before acting, so they may move and use special orders at once), or move a marker up to 15 cm. A marker cannot shoot or launch." },
       { w: "Desecration", s: "b", t: "Only a hit-and-run attack within 15 cm of the Black Ship can do it — not boarding torpedoes or assault boats. Declare it before rolling. It causes no damage; if it succeeds, roll a D6: 4+ the Black Ship becomes a daemon vessel under your control and may act this turn; 1–3 nothing happens. One attempt per Chaos ship per turn." },

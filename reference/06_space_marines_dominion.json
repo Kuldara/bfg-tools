@@ -96,7 +96,7 @@
     },
     {
       "key": "escorts in your fleet in squadrons of 2",
-      "text": "You may include any number of escorts in your fleet in squadrons of 2-6 unless specified (see pg. 13).",
+      "text": "You may include any number of escorts in your fleet in squadrons of 2–6.",
       "page": 101,
       "status": "enforced",
       "kind": "squadron",
@@ -105,7 +105,7 @@
     },
     {
       "key": "cannot be given any form of Space Marine upgrade",
-      "text": "Imperial Navy, Adeptus Mechanicus and Rogue Trader vessels are equipped with their own standard ordnance (even if they have Space Marine Captains) and cannot be given any form of Space Marine upgrade.",
+      "text": "Imperial Navy vessels (including Adeptus Mechanicus and Rogue Traders) are equipped with their own standard ordnance (even if they have Space Marine Captains) and cannot be given any form of Space Marine upgrade.",
       "page": 101,
       "status": "manual",
       "why": "Koskee toisen listan aluksia."
@@ -127,7 +127,7 @@
     },
     {
       "key": "a Dominion Fleet cannot take reinforcements from the Space Marines table",
-      "text": "However, in the course of a campaign, a Dominion Fleet cannot take reinforcements from the Space Marines table listed on ... of the Battlefleet Gothic rulebook.",
+      "text": "However, in the course of a campaign, a Dominion Fleet cannot take reinforcements from the Space Marines table listed on pg. 33.",
       "page": 101,
       "status": "manual",
       "why": "Kampanjasaanto."

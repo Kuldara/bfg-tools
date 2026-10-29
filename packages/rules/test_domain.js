@@ -3264,7 +3264,7 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
         mf.ruleCard.steps.some(x => /D3 x 5 cm/.test(x.t) && /within 15 cm/.test(x.t)) &&
         mf.ruleCard.steps.some(x => /within 30 cm/.test(x.t) && /5\+/.test(x.t) && /\+1 if the ship is on All Ahead Full/.test(x.t) &&
                                     /-1 on Burn Retros/.test(x.t) && /-1 if it is an escort/.test(x.t)) &&
-        mf.ruleCard.steps.some(x => /armour 6/.test(x.t)));
+        mf.ruleCard.steps.some(x => /hit on a 6/.test(x.t)));
   check("PD Fire ship x3 (p. 516): 30 pts, a ship with a rule card, 3D6 cm and D3 Fire criticals",
         fs2.kind === "ship" && fs2.card === "rule" && fs2.points === 30 && fs2.weapons.length === 0 && fs2.ruleCard.limit === 6 &&
         fs2.ruleCard.steps.some(x => /3D6/.test(x.t) && /D3 Fire critical hits/.test(x.t)) && fs2.leadership.value === 7);

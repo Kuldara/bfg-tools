@@ -274,61 +274,40 @@ console.log("\n=== G  torpedo bombers cost by launch bay strength ===");
      "without launch bays torpedo bombers are not on offer");
 }
 
-console.log("\n=== G  Power Ram, Nova Cannon and plasma-boosted batteries ===");
+console.log("\n=== G  Power Ram, Nova Cannon and plasma-boosters (the Mechanicus profiles, Fleets v0.40) ===");
 {
+  /* v0.40: the Explorator's ships are the Mechanicus profiles (p.126-137),
+     whose own options are the plasma-boosters, the nova cannon and the power
+     ram; the list rows of v0.36 are gone */
   const L = useList("Explorator");
+  const findEntMaybe = (L0, frag) => { try { return findEnt(L0, frag); } catch (e) { return null; } };
   const lun = add(L, "Lunar class cruiser", "Cruisers");
-  const [psi, pei] = findEnt(L, "Imperial Power Ram", "FLEET UPGRADES");
-  const [nsi, nei] = findEnt(L, "Nova Cannon instead of prow torpedoes", "FLEET UPGRADES");
-  const [bsi, bei] = findEnt(L, "Plasma-boosted batteries", "FLEET UPGRADES");
-  let ups = api.upgradesFor(lun);
-  const hasUp = (a, b) => ups.other.concat(ups.own).some(x => x[0] === a && x[1] === b);
-  ok(hasUp(psi, pei), "the Power Ram is offered to a cruiser with a 6+ prow");
-  ok(!hasUp(nsi, nei), "no list Nova row for the Lunar: the same purchase is its own option (Fleets p. 71)");
-  ok(hasUp(bsi, bei), "plasma-boosted batteries are offered for 30 cm batteries");
-
-  api.setUpState(lun, bsi, bei, "take");
-  eq(api.unitPts(lun), 215 + 10, "Lunar 215 + plasma-boosted 10");
-  let h = api.cardHTML(lun, "top");
-  /* v1.2 (J183): the card prints the range as a number in a colour frame and the unit
-     in the column heading, so "45 cm" is no longer on the card as one string.
-     The claim is the same: the battery's range cell reads 45 - and before the upgrade
-     the Lunar has no range of 45 at all. */
+  const lsh = api.SHIPS[String(lun.ref)];
+  const oi = re_ => (lsh.ol || []).findIndex(o => re_.test(o.t));
+  const plas = oi(/plasma-boosters/i), nova = oi(/nova cannon/i), ram = oi(/take a power ram/i);
+  ok(String(lun.ref) === "am134" && plas >= 0 && nova >= 0 && ram >= 0, "the Explorator Lunar is the Mechanicus profile with its three options");
+  ok(!findEntMaybe(L, "Imperial Power Ram") && !findEntMaybe(L, "Nova Cannon instead of prow torpedoes") &&
+     !findEntMaybe(L, "Plasma-boosted batteries"), "no list-level ram, nova or plasma rows");
+  api.setOptState(lun, plas, "take");
+  eq(api.unitPts(lun), 215 + 10, "Lunar 215 + plasma-boosters 10");
   const rangeCells = html => (html.match(/<span class="rp[^"]*"[^>]*>([^<]*)<\/span>/g) || []).map(x => x.replace(/<[^>]+>/g, ""));
-  api.setUpState(lun, bsi, bei, "off");
-  ok(!rangeCells(api.cardHTML(lun, "top")).includes("45"), "without plasma-boosted (row hidden) the Lunar has no 45 cm range");
-  api.setUpState(lun, bsi, bei, "take");
-  ok(rangeCells(h).includes("45") && /Range cm/.test(h), "plasma-boosted raises the range to 45 cm on the card");
+  ok(rangeCells(api.cardHTML(lun, "top")).includes("45"), "plasma-boosters raise the range to 45 cm on the card");
+  api.setOptState(lun, plas, "off");
+  ok(!rangeCells(api.cardHTML(lun, "top")).includes("45"), "without plasma-boosters the Lunar has no 45 cm range");
 
-  /* the list nova for the Gothic, which has no option of its own (Fleets p. 121):
-     replaces the prow torpedoes and closes the Power Ram */
+  /* the nova cannon replaces the prow torpedoes; the ram is the other choice */
   const goth = add(L, "Gothic class cruiser", "Cruisers");
-  ups = api.upgradesFor(goth);
-  ok(hasUp(nsi, nei), "the Nova Cannon is offered to a cruiser with prow torpedoes (Gothic)");
-  const gbase = api.unitPts(goth);
-  api.setUpState(goth, nsi, nei, "take");
-  eq(api.unitPts(goth), gbase + 20, "Gothic + nova cannon 20");
-  h = api.cardHTML(goth, "top");
-  ok(/Prow nova cannon/.test(h), "the nova cannon shows in the armament table");
-  ok(!/Prow torpedoes/.test(h), "the prow torpedoes go when the nova cannon is taken");
-  ups = api.upgradesFor(goth);
-  ok(!hasUp(psi, pei), "the Power Ram is no longer offered with the nova cannon");
-  /* and the other way: a taken Power Ram closes the list nova (Fleets p. 118) */
-  const goth2 = add(L, "Gothic class cruiser", "Cruisers");
-  api.setUpState(goth2, psi, pei, "take");
-  ups = api.upgradesFor(goth2);
-  ok(!hasUp(nsi, nei), "a taken Power Ram closes the list Nova row");
-
-  /* a light cruiser does not get a nova cannon */
-  const end = add(L, "Endeavour class light cruiser", "Cruisers");
-  ups = api.upgradesFor(end);
-  ok(!hasUp(nsi, nei), "a light cruiser does not get a nova cannon");
-  const [dsi, dei] = findEnt(L, "Dorsal lance instead of prow torpedoes", "FLEET UPGRADES");
-  ok(hasUp(dsi, dei), "the Endeavour gets a free dorsal lance swap");
+  const gsh = api.SHIPS[String(goth.ref)];
+  const gn = gsh.ol.findIndex(o => /nova cannon/i.test(o.t));
+  api.setOptState(goth, gn, "take");
+  eq(api.unitPts(goth), 215 + 20, "Gothic + nova cannon 20");
+  const h = api.cardHTML(goth, "top");
+  ok(/Prow nova cannon/.test(h) && !/Prow torpedoes/.test(h), "the nova cannon replaces the prow torpedoes on the card");
 
   /* the escorts' +1 turret only for escorts, and per hull */
   const [tsi, tei] = findEnt(L, "+1 turret (escort squadron)", "FLEET UPGRADES");
-  ups = api.upgradesFor(lun);
+  let ups = api.upgradesFor(lun);
+  const hasUp = (a, b) => ups.other.concat(ups.own).some(x => x[0] === a && x[1] === b);
   ok(!hasUp(tsi, tei), "a capital ship does not get the escorts' +1 turret");
   const sq = add(L, "Cobra Class Destroyer", "ESCORTS");
   sq.n = 3;
@@ -337,6 +316,7 @@ console.log("\n=== G  Power Ram, Nova Cannon and plasma-boosted batteries ===");
   api.setUpState(sq, tsi, tei, "take");
   eq(api.unitPts(sq), 3 * 30 + 3 * 5, "a three-escort squadron pays for the turrets separately");
 }
+
 
 console.log("\n=== G  ork torpedo-bommas in all three lists ===");
 {
@@ -541,6 +521,8 @@ console.log("\n=== Overlapping swap options exclude each other ===");
   }));
   const sh = api.SHIPS[String(L.secs[si].ents[ei].r)];
   const novaOpt = (sh.ol || []).findIndex(o => /nova cannon/i.test(o.t));
+  /* v0.40: the power ram is the ship's own option, in one group with the nova (p.134) */
+  const ramOpt = (sh.ol || []).findIndex(o => /take a power ram/i.test(o.t));
   const base = L.secs[si].ents[ei].p;
   const mk = () => {
     const u = { s: si, e: ei, ref: L.secs[si].ents[ei].r, n: 1,
@@ -561,12 +543,8 @@ console.log("\n=== Overlapping swap options exclude each other ===");
     .filter(r => (!r.alt || r.box === "on") && /nova/i.test(r.a[0])).length;
 
   const orders = [
-    ["ram, then own Nova", u => { takeUp(u, /Power Ram/i);
+    ["ram, then own Nova", u => { api.setOptState(u, ramOpt, "take");
                                     api.setOptState(u, novaOpt, "take"); }],
-    ["own Nova, then ram", u => { api.setOptState(u, novaOpt, "take");
-                                    takeUp(u, /Power Ram/i); }],
-    ["own Nova, then the list's", u => { api.setOptState(u, novaOpt, "take");
-                                       takeUp(u, /Nova Cannon/i); }],
     ["only own Nova", u => { api.setOptState(u, novaOpt, "take"); }],
   ];
   /* 30.9.2026: the list's nova row is not offered beside the Lunar's own
@@ -585,7 +563,7 @@ console.log("\n=== Overlapping swap options exclude each other ===");
   });
   /* the ram alone must not change */
   {
-    const u = mk(); takeUp(u, /Power Ram/i);
+    const u = mk(); api.setOptState(u, ramOpt, "take");
     eq(api.unitPts(u), base + 5, "Power Ram alone: price");
     eq(novaRows(u), 0, "Power Ram alone: no Nova");
   }

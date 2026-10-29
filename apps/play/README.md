@@ -8,7 +8,7 @@ Live at [bfgtools.kuldare.com/play/](https://bfgtools.kuldare.com/play/), a
 prototype (version in `app.json`).
 
 **Record, do not adjudicate:** nothing here rolls a die or decides whether a shot
-hits. Every rule it applies carries its page in Rulebook v1.10. Where the books
+hits. Every rule it applies carries its page in Rulebook v1.11 (the same pages as v1.10). Where the books
 are unclear or silent the page makes a choice, and the choices are listed in
 [RULINGS.md](RULINGS.md) (the code cites them as T1-T43).
 

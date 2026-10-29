@@ -31,7 +31,7 @@
    "g": "checked",
    "f": "row_cond",
    "p": 32,
-   "text": "POWER RAM The Imperial Power Ram may be taken by any Imperial capital ship with a 6+ prow for +5 points unless it has a Nova Cannon."
+   "text": "POWER RAM If the prow armour is increased, the ship may also take a power ram for +5 points"
   },
   {
    "id": "S0004",
@@ -227,7 +227,7 @@
    "g": "play",
    "f": "commander_effect",
    "p": 142,
-   "text": "The ship with the Ordo Malleus Inquisitor Lord aboard mounts hexagrammic wards throughout its hull and ignores any Chaos marks or Daemonship effects affecting leadership or boarding actions."
+   "text": "The vessel embarking the Inquisitor Lord and every Grey Knights vessel in the fleet mounts hexagrammic wards throughout its hull and ignores any Chaos marks or Daemonship effects affecting leadership or boarding actions."
   },
   {
    "id": "S0032",
@@ -1154,7 +1154,7 @@
    "g": "checked",
    "f": "lend_upgrade_ban",
    "p": 101,
-   "text": "Imperial Navy, Adeptus Mechanicus and Rogue Trader vessels are equipped with their own standard ordnance (even if they have Space Marine Captains) and cannot be given any form of Space Marine upgrade."
+   "text": "Imperial Navy vessels (including Adeptus Mechanicus and Rogue Traders) are equipped with their own standard ordnance (even if they have Space Marine Captains) and cannot be given any form of Space Marine upgrade."
   },
   {
    "id": "S0164",
@@ -2298,7 +2298,7 @@
    "g": "checked",
    "f": "aboard",
    "p": 144,
-   "text": "Otherwise the Inquisitor must be placed on the most expensive ship."
+   "text": "If none of these ships is present, they have to be placed on the most expensive ship in the fleet."
   },
   {
    "id": "S0327",
@@ -2361,7 +2361,7 @@
    "g": "checked",
    "f": "row_cond",
    "p": 145,
-   "text": "Any Grey Knights capital ship in the fleet may embark an Honour Guard for +10 points."
+   "text": "Every Grey Knights vessel in the fleet may embark an Honour Guard."
   },
   {
    "id": "S0336",
@@ -2396,7 +2396,7 @@
    "g": "info",
    "f": "attack_rating",
    "p": 145,
-   "text": "A Grey Knights fleet led by an Inquisitor Lord has an attack rating of 3 unless a Blackship is accompanying the fleet, in which case its attack rating is 2."
+   "text": "A Grey Knights fleet has an attack rating of 3 unless a Blackship is accompanying the fleet, in which case its attack rating is 2."
   },
   {
    "id": "S0342",
@@ -2431,7 +2431,7 @@
    "g": "checked",
    "f": "row_cond",
    "p": 174,
-   "text": "The Imperial Power Ram may be taken by any Rogue Trader capital ship with a 6+ prow for +5 points unless it has a Nova Cannon."
+   "text": "The Imperial Power Ram if it is part of an Imperial Navy, Adeptus Mechanicus, Inquisition, or Rogue Trader fleet list for +5 points unless it has a Nova Cannon."
   },
   {
    "id": "S0348",
@@ -2483,7 +2483,7 @@
    "g": "checked",
    "f": "hull_choice",
    "p": 174,
-   "text": "Any cruiser hull allowed in the Rogue Trader, Exploration or Wolf Pack fleet list may be used and counts fully as a Rogue Trader cruiser."
+   "text": "Any cruiser hull allowed in the Rogue Trader, Exploration or Wolf Pack fleet list may be used and If a second Rogue Trader cruiser is taken, it may be any Rogue Trader cruiser variant listed on the Exploration Fleet List.."
   },
   {
    "id": "S0355",
@@ -3543,7 +3543,7 @@
    "g": "checked",
    "f": "renegades",
    "p": 222,
-   "text": "Special weapon rules, Nova Cannon, Chaos Lords, Chaos Space Marines, Chaos ordnance or Daemonship upgrades may not be taken for Imperial Navy vessels used in this manner, and cruisers suffer -1Ld for going renegade. Imperial Navy escorts need not be in a single squadron and may be interspersed within other Chaos escort squadrons if desired. These vessels may not take any upgrade listed in their profile and do not count as reserves; they count as Chaos vessels in all respects."
+   "text": "Weapon refits, Nova Cannon, Chaos Lords, Chaos Space Marines, Chaos ordnance or Daemonship upgrades may not be taken for Imperial Navy vessels used in this manner, and cruisers suffer -1 Ld for going renegade. Imperial Navy escorts need not be in a single squadron and may be interspersed within other Chaos escort squadrons if desired. These vessels do not count as reserves; they count as Chaos vessels in all respects."
   },
   {
    "id": "S0491",
@@ -3644,7 +3644,7 @@
    "g": "checked",
    "f": "aboard",
    "p": 235,
-   "text": "If Abaddon is present, he must be aboard the Planet Killer."
+   "text": "If the Planet Killer is present, Abaddon must be aboard it."
   },
   {
    "id": "S0505",
@@ -3756,7 +3756,7 @@
    "g": "checked",
    "f": "row_limit",
    "p": 236,
-   "text": "Up to two capital ships (including the flagship), that have the Mark of Tzeentch, can have daemonic entities and warp beasts swirl about its hull, including daemonships."
+   "text": "Up to two capital ships (including the flagship), including daemonships, can have daemonic entities and warp beasts swirl about its hull, including daemonships."
   },
   {
    "id": "S0522",
@@ -4519,14 +4519,14 @@
    "g": "row",
    "f": "reroll_price",
    "p": 319,
-   "text": "He has one re-roll as part of his point cost, but a second or third re-roll can be purchased at +25 points each."
+   "text": "A second and third re-roll can be purchased at +25 points each."
   },
   {
    "id": "S0631",
    "g": "checked",
    "f": "aboard",
    "p": 319,
-   "text": "When Yriel is taken he must be placed on a Craftworld Eldar Dragonship with launch bays, but you may instead pick the Flame of Asuryan as his command ship to be embarked on."
+   "text": "Prince Yriel must be embarked on a Dragonship equipped with launch bays, or the Flame of Asuryan, even if he is leading a Corsair fleet."
   },
   {
    "id": "S0632",
@@ -4540,14 +4540,14 @@
    "g": "info",
    "f": "attack_rating",
    "p": 319,
-   "text": "A fleet led by him has an attack rating of 4, even if it includes Craftworld vessels."
+   "text": "A fleet led by Yriel has an attack rating of 4, even if it includes Craftworld vessels."
   },
   {
    "id": "S0634",
    "g": "checked",
    "f": "aboard_row",
    "p": 319,
-   "text": "He must be embarked aboard the Flame of Asuryan if it is present, in which case his cost is 125 points."
+   "text": "He must be embarked aboard the Flame of Asuryan if it is present, in which case Yriel's cost is reduced to 125 points."
   },
   {
    "id": "S0635",
@@ -7767,7 +7767,7 @@
    "g": "checked",
    "f": "aboard",
    "p": 453,
-   "text": "KOR’O VASH’YA Y’ELDI MESME: 110 PTS Kor’O’Mesme is embarked aboard the Kor’or’vesh vessel Bor’kan Or’es El’Leath Se’arle O’Mesme (Custodian Class Battleship).",
+   "text": "KOR’O VASH’YA Y’ELDI MESME: 110 PTS Kor'O'Mesme is embarked aboard the Kor'or'vesh vessel Bor'kan Or'es El'Leath Se'arle O'Mesme.",
    "g_by_list": {
     "Tau — Merchant Fleet": "drop"
    }
@@ -9076,6 +9076,20 @@
    "f": "aboard",
    "p": 431,
    "text": "Kor’O’Mesmecan be taken instead of a normal commander and has to be placed on a Custodian Class Battleship."
+  },
+  {
+   "id": "S1281",
+   "g": "checked",
+   "f": "renegades",
+   "p": 222,
+   "text": "Weapon refits, Nova Cannon, Chaos Lords, Chaos Space Marines, Chaos ordnance or Daemonship upgrades may not be taken for Imperial Navy vessels used in this manner, and cruisers suffer -1 Ld for going renegade. Imperial Navy escorts need not be in a single squadron and may be interspersed within other Chaos escort squadrons if desired. These vessels do not count as reserves; they count as Chaos vessels in all respects."
+  },
+  {
+   "id": "S1282",
+   "g": "play",
+   "f": "commander_effect",
+   "p": 142,
+   "text": "Rules for Chaos Space Marines still apply normally, and any other special rules and effects such as the Forces of Chaos listed on pg. 239 remain unaffected."
   }
  ]
 }

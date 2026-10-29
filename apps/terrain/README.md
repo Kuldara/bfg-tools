@@ -1,6 +1,6 @@
 # Battlezone Generator
 
-Rolls the celestial phenomena of Battlefleet Gothic: Remastered (Rulebook v1.10,
+Rolls the celestial phenomena of Battlefleet Gothic: Remastered (Rulebook v1.11,
 pp. 104-116) from a seed and draws them on the table, with the rules of every
 piece. Live at [terrain-generator.kuldare.com](https://terrain-generator.kuldare.com/).
 

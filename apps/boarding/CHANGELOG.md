@@ -4,6 +4,9 @@ Releases are tags `boarding-v<yyyy.mm.dd>`.
 
 ## Unreleased
 
+### Changed
+- Fleets WiP v0.40 and Rulebook v1.11 (29.10.2026): the ships and citations follow v0.40 (pages; the Grey Knights and Mechanicus lists).
+
 ### Changed (for developers)
 - The interface is ES modules in `src/` (`index.js` and ten modules by task:
   the sides, the action bar, the sheets, rolling, the result sheet ...) that

@@ -4,12 +4,12 @@
  * Loaded both by the browser app and by test_engine.js under node.
  *
  * Sources (printed page == PDF page in both books):
- *   RB  = BFG Remastered Rulebook v1.10 .......... boarding p.89-91, crippled p.65,
+ *   RB  = BFG Remastered Rulebook v1.11 .......... boarding p.89-91, crippled p.65,
  *                                                  criticals p.66-67, catastrophic p.71,
  *                                                  defence criticals p.101, End Phase p.88,
  *                                                  hit-and-run / teleport p.92
  *   REF = "Battlefleet Gothic - Boarding Actions", the 2-page complete-rules sheet
- *   FL  = BFG Remastered Official Fleets (WIP v0.36)
+ *   FL  = BFG Remastered Official Fleets (WIP v0.40)
  */
 (function (root) {
   "use strict";

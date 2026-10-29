@@ -311,8 +311,8 @@ export const RULE_CARDS = {
     steps: [
       ["Deploy", "Set up as a high orbit defence, inside the gravity well of the planet or moon it guards (Fleets p. 498). From then on it is active until destroyed."],
       ["Ordnance phase", "Every Ordnance phase, move it 10 cm toward the nearest enemy ship."],
-      ["Contact", "When it touches an enemy ship's base it detonates: roll 8 dice to hit that ship. The ship fires its turrets first as normal - if they hit the mine, roll 4 dice instead. Shields do not protect against it (FAQ 2026; Fleets p. 512 said they did)."],
-      ["As ordnance", "It is an ordnance marker for movement, Blast Markers and being shot at. Only fighters interact with it: mine and fighters remove each other. Other ordnance ignores it, and friendly attack craft never attack it."],
+      ["Contact", "When it touches an enemy ship's base it detonates: roll 8 dice against the ship's armour. The ship fires its turrets as normal (against attack craft, or torpedoes and mines, in one Ordnance phase) - if they hit the mine, roll 4 dice instead. As with other ordnance, the attack ignores shields (Fleets p. 512)."],
+      ["As ordnance", "It is an ordnance marker for movement, Blast Markers and being shot at. Only fighters interact with it: mine and fighters remove each other. Other ordnance ignores it, and friendly attack craft never attack it. Once in play a mine is active until destroyed, whether bought alone, released by a minefield or launched from a carrier."],
       ["Victory points", "A mine bought on its own is worth its points to the enemy when destroyed, however it leaves play."]
     ],
     track: { kind: "each", label: "MINES - tick when gone" }
@@ -322,11 +322,11 @@ export const RULE_CARDS = {
     lead: "An area that releases orbital mines at enemy ships that come near.",
     steps: [
       ["Set up", "Roll D3 x 5 cm for each of its two sides. Place it with one edge within 15 cm of a tabletop feature such as a planet, moon or asteroid field."],
-      ["Terrain", "It blocks line of sight. To your ships it is an asteroid field in every way; an enemy ship may try to cross it on the same Leadership check. Torpedoes that touch it are destroyed. Attack craft do not set it off and may hide in it (destroyed on a 6)."],
+      ["Terrain", "It blocks line of sight. To your ships it is an asteroid field in every way. An enemy ship may try to cross it with a Leadership check against 3D6; if it fails it suffers D6 damage from the impacts, which its shields block as normal. Torpedoes that touch it are destroyed. Attack craft do not set it off and may hide in it (destroyed on a 6)."],
       ["Your Ordnance phase", "Roll a D6 for each enemy ship within 30 cm of its edge: 5+ detects the ship. +1 if the ship is on All Ahead Full, -1 on Burn Retros, -1 if it is an escort, -1 if a Blast Marker touches the minefield."],
       ["Mines", "For each ship detected you may place one orbital mine touching the edge. It then acts as an orbital mine: 10 cm toward the nearest enemy ship each Ordnance phase, 8 dice on contact, 4 if turrets hit it (Fleets p. 512)."],
       ["Ships inside", "Enemy ships inside the field set off mines just the same and are attacked first; with several inside, you choose the order."],
-      ["Suppression", "It is shot at like an ordnance marker, armour 6 (ordnance for target priority). Each hit puts a Blast Marker on it. Each End Phase it sheds D6 Blast Markers of its own."],
+      ["Suppression", "It is shot at like an ordnance marker and hit on a 6 (ordnance for target priority). Each hit puts a Blast Marker on it. Each End Phase it sheds D6 Blast Markers, which do not count towards the other Blast Markers removed that turn."],
       ["Victory points", "Mines it releases are not worth victory points."]
     ],
     track: { kind: "size", label: "SIZE - roll D3 x 5 cm twice" }

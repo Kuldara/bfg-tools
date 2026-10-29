@@ -11,9 +11,16 @@ import { esc } from "./helpers.js";
    are there, raise ORIG's limit 47 -> 49 (warpriftNN.pdf, check for 200). Page numbers are already PDF pages (Sources). */
 export const SA = "https://www.specialist-arms.com/bfg/";
 export const DRIVE = id => "https://drive.google.com/file/d/" + id + "/view";
+const FL_V36 = [[1, 0], [29, 1], [32, 0], [123, -1], [124, 0], [138, -10], [155, -9], [157, -10], [180, -11], [183, -12],
+  [184, -10], [248, -8], [250, -6], [252, -4], [254, -2], [313, 6], [314, 2], [336, -24], [340, -2], [423, -1], [425, -2],
+  [426, 0], [444, -1], [450, 0], [528, 8]];
+export const flV36 = p => { let d = 0; FL_V36.forEach(r => { if(p >= r[0]) d = r[1]; }); return p + d; };
 export const ORIG = [
   { rx: /^RB p\. (\d+)/, u: p => SA + "BFG-Remastered-Official-Rulebook-v1-10.pdf#page=" + p, n: "Rulebook v1.10", pdf: 1 },
-  { rx: /^FL p\. (\d+)/, u: p => SA + "BFG-Remastered-Official-Fleets_WIP.pdf#page=" + p, n: "Fleets v0.36", pdf: 1 },
+  /* specialist-arms.com hosts Fleets v0.36 (checked 29.10.2026), while the citations are v0.40 pages:
+     the link opens the v0.36 page with the same text ([from v0.40 page, add]; the Eldar scenario
+     p.336-339 was p.312-315, Yriel p.313 was p.319). Drop the mapping when v0.40 is hosted. */
+  { rx: /^FL p\. (\d+)/, u: p => SA + "BFG-Remastered-Official-Fleets_WIP.pdf#page=" + flV36(+p), n: "Fleets v0.36 (the same text)", pdf: 1 },
   { rx: /^Warp Rift (\d+), (?:printed pp?\. [\d–]+ \(PDF (\d+)|pp?\. (\d+))/, wr: 1, n: "Warp Rift", pdf: 1 },
   { rx: /^Project Distant Darkness p\. (\d+)/, u: () => DRIVE("0B-aXA8fc5AQ8aTlYYWtnNkpEazg") + "?resourcekey=0-VwmvzCfrBt72PszUTtBPOg", n: "Project Distant Darkness" },
   { rx: /^The Art of Command p\. (\d+)/, u: () => DRIVE("0B-aXA8fc5AQ8MTRlMzdjMjgtMDhiNy00YTg2LTk0ODctZTllZDgwNmZjN2Ix") + "?resourcekey=0-e1GpRD5XVXzowOpTLeo_4g", n: "The Art of Command" },

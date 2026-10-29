@@ -810,7 +810,7 @@ function unitIn(listRe, labelRe, hulls){
   const hive = unitIn(/^Tyranids/, /^Hive ship/i);
   if(hive){
     const t = PLAY.catastrophic(hive);
-    check("Hive ship: the Tyranid table, Fleets p. 425", t.page === 423 && t.rows.length === 4 && /2-7/.test(t.rows[0].roll) && /8-9/.test(t.rows[1].roll), JSON.stringify(t.rows.map(r => r.roll)));
+    check("Hive ship: the Tyranid table, Fleets p. 425", t.page === 425 && t.rows.length === 4 && /2-7/.test(t.rows[0].roll) && /8-9/.test(t.rows[1].roll), JSON.stringify(t.rows.map(r => r.roll)));
     check("... 10-11: 5 markers, pyro-acid FP 10 (10 hits)", /5 Blast/.test(t.rows[2].text) && /firepower 10/i.test(t.rows[2].text), t.rows[2].text);
     check("... 12: 10 markers, bio-plasma Strength 5", /10 Blast/.test(t.rows[3].text) && /Strength 5/.test(t.rows[3].text), t.rows[3].text);
     check("... death throes is the blazing kind (roll again)", t.rows[1].kind === "blazing");
@@ -939,7 +939,7 @@ function unitIn(listRe, labelRe, hulls){
   const cairn = unitIn(/^Necron/, /Cairn/i);
   if(cairn){
     const n = PLAY.catastrophic(cairn).hulk;
-    check("Necrons MAY fire on or board their own hulk (Fleets p. 404)", /MAY fire on or board/.test(n.list[4]) && /402/.test(n.list[4]), n.list[4]);
+    check("Necrons MAY fire on or board their own hulk (Fleets p. 404)", /MAY fire on or board/.test(n.list[4]) && /404/.test(n.list[4]), n.list[4]);
     check("... and a Necron drifting hulk is worth 300 %, other destruction 200 % (Fleets p. 404)", /300 %/.test(n.list[5]) && /200 %/.test(n.list[5]), n.list[5]);
   }
   /* Fleets p. 118: Mechanicus ships may pass a Leadership check to fire
@@ -1002,7 +1002,7 @@ function unitIn(listRe, labelRe, hulls){
   const hive = unitIn(/^Tyranids/, /^Hive ship/i);
   if(hive){
     const t = PLAY.catastrophic(hive);
-    check("Hive ship: the explosion footer does not claim shields save (Fleets p. 425)", !!t.explode && !/shields do\b/.test(t.explode) && /423/.test(t.explode), t.explode);
+    check("Hive ship: the explosion footer does not claim shields save (Fleets p. 425)", !!t.explode && !/shields do\b/.test(t.explode) && /425/.test(t.explode), t.explode);
   }
   /* the page the VP figure comes from */
   check("VP page: a ship cites p. 123, an escort p. 57 and 123", PLAY.concededPage(lunar) === "p. 123" && PLAY.concededPage(swords) === "p. 57, 123", JSON.stringify([PLAY.concededPage(lunar), PLAY.concededPage(swords)]));

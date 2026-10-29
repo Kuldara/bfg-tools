@@ -20,7 +20,9 @@ ROOT = os.path.dirname(HERE)
 TXT = os.path.join(os.environ.get("BFG_BOOKS") or os.path.join(ROOT, "..", "..", "books"), "text")
 
 BY_HAND = {  # (heading, reference) -> why it is right; checked against the text dumps 20.10.
-    ("Abaddon’s rules", "FL p. 240–241"): "ABADDON THE DESPOILER p. 230",
+    ("Abaddon’s rules", "FL p. 240–241"): "ABADDON THE DESPOILER p. 240",
+    ("Mark of Slaanesh", "FL p. 242"): "the Incursion list's Mark rows (v0.40 prints them without a space before the dots; checked 29.10.)",
+    ("Mark of Tzeentch", "FL p. 242"): "the Incursion list's Mark rows (checked 29.10.)",
     ("Advanced Shielding", "FL p. 185"): "row 3 of the refit table",
     ("All Ahead Full", "RB p. 46"): "the special orders described on p. 46",
     ("Battlezone generators", "RB p. 107"): "the generator tables p. 107–108",

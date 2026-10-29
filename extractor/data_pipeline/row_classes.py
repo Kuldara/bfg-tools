@@ -636,12 +636,14 @@ _bs["sr"] = (
     "ordnance and escorts touching the area between them are destroyed; a capital ship touching it takes 8 lance "
     "shots per charging Fortress (no shields, no Brace), and each Fortress then takes D6 hits, cannot move or "
     "shoot next turn and must recharge.")
-# J33 p.392: "Hulks cannot take any upgrade that improves Boarding Value,
-# Turning or Speed." Of the Da Ork Clanz clans, Evil Sunz ("+5 cm speed") does not suit
-# a hulk. Goffs ("+1 bonus to the dice roll during boarding actions") does:
-# a die modifier is not boarding value, and the same page allows the matching Warlord
-# upgrade ("Mega-armoured Boarding Parties is unchanged"). Spot check 19
-# round 3 (T15) corrected the earlier Goffs ban.
+# J33 p.374 (the Clanz list's Space Hulks): "Upgrades that increase its
+# boarding value or speed may not be taken." Of the Da Ork Clanz clans,
+# Evil Sunz ("+5 cm speed") does not suit a hulk. Goffs ("+1 bonus to the
+# dice roll during boarding actions") does: a die modifier is not boarding
+# value. Spot check 19 round 3 (T15) corrected the earlier Goffs ban. v0.40
+# removed the hulk profile's own Upgrades paragraph (p.392); the authors
+# (29.10.2026) keep these bans on the strength of p.374, and the hulk
+# differences are still under their review.
 _clh = 0
 for _L in lists_out:
     if _L["nm"] != "Orks \u2014 Da Ork Clanz":

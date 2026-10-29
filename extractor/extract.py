@@ -51,8 +51,10 @@ def section_name(ws):
 
     For example the Escort Drone's sentence "special rules detailed..." starts
     with the word special, but it is indented and is not a SPECIAL heading.
+    The heading is printed in capitals: v0.40 p.131 has a line of the
+    Dictator's narrative starting "upgrades to the Dictator's communications".
     """
-    first = ws[0][4].upper().strip(":")
+    first = ws[0][4].strip(":")
     return first if first in SECTIONS and ws[0][0] < 90 else None
 
 

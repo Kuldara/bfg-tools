@@ -5,6 +5,9 @@ a tag `play-v<version>` deploys the Registry's site.
 
 ## Unreleased
 
+### Changed
+- Fleets WiP v0.40 and Rulebook v1.11 (29.10.2026): the cards and rules cite v0.40 pages; the fleet data is the Registry's v0.40 data (the power ram as a ship option, the Mechanicus profiles, mines that ignore shields).
+
 ### Fixed
 - Da Ork Clanz: a clan or a Gubbin bought on one card of a mixed tiddla (one
   Squadron letter) is on every card of it and paid once, as the builder has it

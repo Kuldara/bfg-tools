@@ -93,7 +93,7 @@ export function renderPrep() {
     "<p class='small muted' style='margin:0 0 8px'>" + (mode === "pick" ? "The winner attacks and chooses the scenario (RB p. 120)." : "The scenario is already agreed or rolled; the roll only decides who attacks (RB p. 121).") + "</p>" +
     "<div class='minis'><div><label class='sa'>Player 1 attack rating</label>" + seg("prat", "r1", [1, 2, 3, 4], r1) + "</div><div><label class='sb'>Player 2 attack rating</label>" + seg("prat", "r2", [1, 2, 3, 4], r2) + "</div></div>" +
     "<div class='rollrow'><button class='btn primary' data-a='pratroll'>Roll attack dice</button></div>" + out +
-    "<p class='small muted' style='margin:10px 0 0'>Rulebook ratings: " + RATINGS.map(([n, r]) => esc(n) + " " + r).join(" · ") + ". Other fleet lists give their own rating in Fleets v0.36.</p></div>";
+    "<p class='small muted' style='margin:10px 0 0'>Rulebook ratings: " + RATINGS.map(([n, r]) => esc(n) + " " + r).join(" · ") + ". Other fleet lists give their own rating in Fleets v0.40.</p></div>";
 
   const spH = "<h2>Sub-plots</h2><p class='small muted'>Roll and browse them on the <a href='#/subplots'>Sub-plots</a> page, or in a scenario’s own Sub-plots tab, where their preparations, reminders, turn effects and result show up in the scenario (RB p. 124–127).</p>";
   /* the fleets' scenario rules at a glance (0.14): to support the choice and the attacker's decision */

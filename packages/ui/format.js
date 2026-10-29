@@ -135,7 +135,14 @@ export function upCostText(up){
    list price keeps the box empty. */
 export function fixedCardPoints(R){
   if(R.points == null || (R.entry && R.entry.openPrice)) return "";
-  const open = (R.options || []).some(o => o.state === "opt" || (o.state === "take" && o.variable)) ||
+  /* An option that cannot be taken as things stand is no open choice: its
+     choose-one group is full (the nova cannon or the power ram, Fleets v0.40
+     p.69), it needs an option not taken, a taken row rules it out, or the
+     list bans it. */
+  const opts = R.options || [];
+  const closed = o => o.forbidden || (o.blockedBy && o.blockedBy.length) || o.dependencyMet === false ||
+    (o.group && opts.filter(p => p.group === o.group && p.state === "take").length >= (o.groupMax || 1));
+  const open = opts.some(o => (o.state === "opt" && !closed(o)) || (o.state === "take" && o.variable)) ||
                (R.upgrades || []).some(u => u.state === "opt");
   return open ? "" : String(R.points);
 }

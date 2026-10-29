@@ -102,7 +102,7 @@
       { s: "a", t: "The Grots, as the attackers, take the first turn." }
     ],
     notes: ["The text only says the collectors go in the deployment zone “as shown”; the map puts them in a 10 cm strip at the edge and the Grots in a 20 cm zone opposite.", "The collector explosion counts “turns spent charging”, which these scenarios never define. We count the turns played (tool in Play); agree otherwise if you like."],
-    refs: [["Terror ship", "FL p. 382"], ["Savage gunship", "FL p. 387"], ["Onslaught attack ship", "FL p. 384"], ["Victory points", "RB p. 122"]],
+    refs: [["Terror ship", "FL p. 382"], ["Savage gunship", "FL p. 387"], ["Onslaught attack ship", "FL p. 386"], ["Victory points", "RB p. 122"]],
     play: [
       { w: "All game", s: "b", t: "You may not disengage: the solar fields matter too much." },
       { w: "Collectors", t: "Each one destroyed is worth 50 VP to the Grots; each one standing at the end is worth 25 VP to the Diasporex." },
@@ -369,7 +369,7 @@
       { s: "a", t: "Peregrine Squadron takes the first turn." }
     ],
     notes: ["“The battle takes place in low orbit” with the whole table as the surface: we read that the low orbit firing rules apply (RB p. 116) but there is no planet edge, so nothing is pulled down.", "The source refers to the old Armada rulebook (p. 82) for instinctive behaviour; it is in the Fleets book now (FL p. 418).", "The book does not say what happens if all three Cobras are destroyed; the Tyranids have won by then (the Imperials win only by escaping)."],
-    refs: [["Low orbit", "RB p. 116"], ["Instinctive Behaviour", "FL p. 416"], ["Cobra class destroyer", "FL p. 84"], ["Escort drone", "FL p. 437"]],
+    refs: [["Low orbit", "RB p. 116"], ["Instinctive Behaviour", "FL p. 418"], ["Cobra class destroyer", "FL p. 84"], ["Escort drone", "FL p. 437"]],
     play: [
       { w: "Mountains", t: "The mountain regions are impassable to both sides: the Cobras fly too low, and the drones will not cross them." },
       { w: "Start of your turn", s: "b", t: "No hive ship is in range: take one Leadership test, at an unmodifiable 6, to override Instinctive Behaviour. It is one test for all your squadrons." },

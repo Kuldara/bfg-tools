@@ -4,6 +4,9 @@ Releases are tags `scenarios-v<version>`; the version is in `app.json`.
 
 ## Unreleased
 
+### Changed
+- Fleets WiP v0.40 and Rulebook v1.11 (29.10.2026): "FL p." citations are v0.40 pages. The link to the Fleets PDF on specialist-arms.com still opens v0.36, the version hosted there, at the page with the same text.
+
 ### Removed (for developers)
 - The discovery lab (`lab/`, prototypes B-G, built only with `BFG_LAB=1`) and its
   test left the repository on 26.10.2026; the owner keeps a copy outside it.

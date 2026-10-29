@@ -78,7 +78,7 @@
     },
     {
       "key": "up to one Custodian per FULL 750 points of Tau vessels",
-      "text": "Your fleet may include up to one Custodian per FULL 750 points of Tau vessels. Allied, Subject, Mercenary and Reserve vessels don't count toward this total.",
+      "text": "Your fleet may include up to one Custodian per FULL 750 points of Tau vessels. Allied vessels don't count toward this total.",
       "page": 456,
       "status": "enforced",
       "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. of_pick: the denominator is the points of the Tau ships (commander, Battleships, Cruisers, ESCORTS), not the points limit; full=True. The earlier gap: the denominator is the TAU SHIPS' point total, not the fleet's points limit. The app's points limit rule always counts from the points limit, so it would wrongly give too much to a fleet al",

@@ -1557,7 +1557,7 @@ var __rules = (() => {
       color: "#6B6E1C",
       wep: /orbital mine/i,
       mentions: [/orbital mine/i],
-      text: "Orbital Mines: launched like attack craft, one per launch bay Strength; no waves, not subject to ordnance limits. Each moves 10 cm towards the nearest enemy ship in every Ordnance phase; on contact with its base it detonates with 8 dice against armour (4 if turrets hit the mine); shields do not protect (FAQ 2026). A critical to the launch bays causes an extra D3 damage. (Fleets pp. 23, 512)"
+      text: "Orbital Mines: launched like attack craft, one per launch bay Strength; no waves, not subject to ordnance limits. Each moves 10 cm towards the nearest enemy ship in every Ordnance phase; on contact with its base it detonates with 8 dice against armour (4 if turrets hit the mine); as with other ordnance, shields do not protect (Fleets p. 512). A critical to the launch bays causes an extra D3 damage. (Fleets pp. 23, 512)"
     },
     {
       id: "bombardment",
@@ -1856,13 +1856,15 @@ var __rules = (() => {
       mentions: [/\bklaws\b/i],
       text: "Klaws: once per turn, when the ship moves into base contact with an enemy ship, roll 2D6; each 4+ is one hit ignoring shields (not holofields). Brace works; unaffected by Special Orders; a crippled capital ship cannot use them. If both hit it latches on: neither ship moves if the target is the same class or smaller (a larger one moves at half rate), both shoot at half effect with no nova cannon or similar weapons, and it attacks again each End phase (both hitting again adds a third hit). Either may board; Klaw damage causes criticals as normal. (Fleets p. 373)"
     },
+    /* v0.40: an option of each ship that may take it (its profile), no longer a list row */
     {
       id: "power_ram",
       color: "#8A7340",
       wep: /^$/,
       up: /power ram/i,
+      opt: /take a power ram/i,
       mentions: [/power ram/i],
-      text: "Power Ram: one automatic hit on a successful ram, before rolling for hits. Not with a Nova Cannon. (Fleets p. 118)"
+      text: "Power Ram: one automatic hit during a successful ram on a target vessel, before rolling for hits inflicted. It does not count as a separate refit. (Fleets v0.40, the ship's profile)"
     },
     {
       id: "ork_gunz",
@@ -2219,7 +2221,7 @@ var __rules = (() => {
     {
       id: "dark_move",
       fleet: /DARK ELDAR/i,
-      text: "Dark Eldar movement: CTNH succeeds automatically; no minimum move, escorts included; cannot use Burn Retros. (Fleets p. 342; FAQ 2026)"
+      text: "Dark Eldar movement: CTNH succeeds automatically; no minimum move, escorts included; cannot use Burn Retros. (Fleets p. 344)"
     },
     {
       id: "dark_shadow",
@@ -2238,15 +2240,22 @@ var __rules = (() => {
       fleet: /SPACE HULK|ORK HULK/i,
       text: "Hulk movement: exactly 10 cm straight ahead each turn, never slowed by Blast Markers or damage; a 45\xB0 turn only in every second Movement phase, at the end of the move; no CTNH or Burn Retros. (Fleets pp. 289/392)"
     },
+    /* v0.40: only the Chaos hulk keeps its own gravity well (p.289); the Ork
+       hulk's was removed on purpose "for now", and the differences between the
+       two hulks are under the authors' review (Discord 29.10.2026). */
     {
       id: "hulk_gravity",
-      fleet: /SPACE HULK|ORK HULK/i,
-      text: "Hulk gravity well: 5 cm from the base edge, like a planet's; ships may orbit and move with it, and a ship breaking orbit decides so before the hulk moves. In a planet's or moon's well the hulk may turn 45\xB0 towards it at the end of its move, even if it turned last phase. (Fleets pp. 289/392)"
+      fleet: /CHAOS SPACE HULK/i,
+      text: "Hulk gravity well: 5 cm from the base edge, like a planet's; ships may orbit and move with it, and a ship breaking orbit decides so before the hulk moves. In a planet's or moon's well the hulk may turn 45\xB0 towards it at the end of its move, even if it turned last phase. (Fleets p. 289; the Ork hulk has none in v0.40, under the authors' review)"
     },
+    /* v0.40 removed the hulk profiles' Upgrades paragraph; the Clanz list's own
+       sentence stands (p.374), and the authors: "the upgrades will tell you if
+       they are not for the Hulk" (under review, 29.10.2026). */
     {
       id: "hulk_upgrades",
-      fleet: /SPACE HULK|ORK HULK/i,
-      text: "Hulk upgrades: none that improve Boarding Value, Turning or Speed. (Fleets pp. 290/392)"
+      fleet: /ORK HULK/i,
+      list: /Clanz/i,
+      text: "Space Hulk upgrades: Gubbins at double the listed cost; none that increase its boarding value or speed. (Fleets p. 374; the hulk rules are under the authors' review)"
     },
     {
       id: "chaos_hulk_ld",
@@ -2564,7 +2573,7 @@ var __rules = (() => {
     {
       id: "eldar_ld",
       fleet: /^ELDAR$/i,
-      text: "Eldar Leadership: add +1 to the rolled Leadership, for a value of 7-10. A Leadership check ignores gas clouds and solar flares (passing in a flare: no damage, turn away from the sun edge and move 2D6 cm); escorts re-roll it for free. Warp rift test on 2D6; asteroids, planets and radiation bursts as for any fleet. (Fleets pp. 302-303; FAQ 2026)"
+      text: "Eldar Leadership: add +1 to the rolled Leadership, for a value of 7-10. A Leadership check ignores gas clouds and solar flares (passing in a flare: no damage, turn away from the sun edge and move 2D6 cm); escorts re-roll it for free. Warp rift test on 2D6, and a warp rift always blocks the line of fire; asteroids, planets and radiation bursts as for any fleet. (Fleets pp. 304-305)"
     },
     {
       id: "dark_ld",
@@ -3847,8 +3856,8 @@ var __rules = (() => {
       steps: [
         ["Deploy", "Set up as a high orbit defence, inside the gravity well of the planet or moon it guards (Fleets p. 498). From then on it is active until destroyed."],
         ["Ordnance phase", "Every Ordnance phase, move it 10 cm toward the nearest enemy ship."],
-        ["Contact", "When it touches an enemy ship's base it detonates: roll 8 dice to hit that ship. The ship fires its turrets first as normal - if they hit the mine, roll 4 dice instead. Shields do not protect against it (FAQ 2026; Fleets p. 512 said they did)."],
-        ["As ordnance", "It is an ordnance marker for movement, Blast Markers and being shot at. Only fighters interact with it: mine and fighters remove each other. Other ordnance ignores it, and friendly attack craft never attack it."],
+        ["Contact", "When it touches an enemy ship's base it detonates: roll 8 dice against the ship's armour. The ship fires its turrets as normal (against attack craft, or torpedoes and mines, in one Ordnance phase) - if they hit the mine, roll 4 dice instead. As with other ordnance, the attack ignores shields (Fleets p. 512)."],
+        ["As ordnance", "It is an ordnance marker for movement, Blast Markers and being shot at. Only fighters interact with it: mine and fighters remove each other. Other ordnance ignores it, and friendly attack craft never attack it. Once in play a mine is active until destroyed, whether bought alone, released by a minefield or launched from a carrier."],
         ["Victory points", "A mine bought on its own is worth its points to the enemy when destroyed, however it leaves play."]
       ],
       track: { kind: "each", label: "MINES - tick when gone" }
@@ -3860,11 +3869,11 @@ var __rules = (() => {
       lead: "An area that releases orbital mines at enemy ships that come near.",
       steps: [
         ["Set up", "Roll D3 x 5 cm for each of its two sides. Place it with one edge within 15 cm of a tabletop feature such as a planet, moon or asteroid field."],
-        ["Terrain", "It blocks line of sight. To your ships it is an asteroid field in every way; an enemy ship may try to cross it on the same Leadership check. Torpedoes that touch it are destroyed. Attack craft do not set it off and may hide in it (destroyed on a 6)."],
+        ["Terrain", "It blocks line of sight. To your ships it is an asteroid field in every way. An enemy ship may try to cross it with a Leadership check against 3D6; if it fails it suffers D6 damage from the impacts, which its shields block as normal. Torpedoes that touch it are destroyed. Attack craft do not set it off and may hide in it (destroyed on a 6)."],
         ["Your Ordnance phase", "Roll a D6 for each enemy ship within 30 cm of its edge: 5+ detects the ship. +1 if the ship is on All Ahead Full, -1 on Burn Retros, -1 if it is an escort, -1 if a Blast Marker touches the minefield."],
         ["Mines", "For each ship detected you may place one orbital mine touching the edge. It then acts as an orbital mine: 10 cm toward the nearest enemy ship each Ordnance phase, 8 dice on contact, 4 if turrets hit it (Fleets p. 512)."],
         ["Ships inside", "Enemy ships inside the field set off mines just the same and are attacked first; with several inside, you choose the order."],
-        ["Suppression", "It is shot at like an ordnance marker, armour 6 (ordnance for target priority). Each hit puts a Blast Marker on it. Each End Phase it sheds D6 Blast Markers of its own."],
+        ["Suppression", "It is shot at like an ordnance marker and hit on a 6 (ordnance for target priority). Each hit puts a Blast Marker on it. Each End Phase it sheds D6 Blast Markers, which do not count towards the other Blast Markers removed that turn."],
         ["Victory points", "Mines it releases are not worth victory points."]
       ],
       track: { kind: "size", label: "SIZE - roll D3 x 5 cm twice" }

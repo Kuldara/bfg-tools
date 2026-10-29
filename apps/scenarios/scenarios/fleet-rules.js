@@ -1,4 +1,4 @@
-/* Fleet-specific scenario rules (0.14, 23.10.2026). Some fleet lists of Fleets v0.36 say how that fleet
+/* Fleet-specific scenario rules (0.14, 23.10.2026). Some fleet lists of Fleets v0.40 say how that fleet
    plays the book's scenarios (e.g. the Tyranids' Scenario Notes, FL p. 428). Every row was checked against
    the Fleets Book's text (extractor/lists_raw.json and data/bfg_data.json, pages from bfg_data.json's cpg
    fields), not from memory or another AI's summary. What was left out and why: the Finnish notes,

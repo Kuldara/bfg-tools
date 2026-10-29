@@ -44,7 +44,7 @@
     },
     {
       "key": "Each hive ship allows the Tyranid player to purchase",
-      "text": "Each hive ship allows the Tyranid player to purchase 6-12 escort ships and 0-2 capital ships.",
+      "text": "Each hive ship allows the Tyranid player to purchase 6-18 escort ships and 0-2 capital ships.",
       "page": 430,
       "status": "manual",
       "why": "Two rules in one sentence. The hull ships' side is enforced from the next page's sentence ('up to 2 capital ships for each hive ship'); the escorts' 6-12 is not."

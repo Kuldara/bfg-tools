@@ -136,7 +136,7 @@
     ],
     notes: [OLD + PRIV_NOTES, "This deep in the system the raiders cannot jump to warp: they may not disengage. They score the cost of every ship that leaves by the short edge opposite the sunward edge; the hunters score the cost of every raider destroyed. Nothing else counts.",
       "The magazine prints the contact-marker rules from The Wolf Packs again, word for word.", "The Commerce Protection fleet list is now FL p. 456."],
-    refs: [["Commerce Protection fleet list", "FL p. 456"], ["Pirates and Wolf Packs list", "FL p. 178–"], ["Battlezones", "RB p. 106–108"]],
+    refs: [["Commerce Protection fleet list", "FL p. 456"], ["Pirates and Wolf Packs list", "FL p. 188–"], ["Battlezones", "RB p. 106–108"]],
     play: REVEAL_PLAY.concat(PRIV_PLAY, [{ w: "All game", s: "a", t: "You may not disengage. Get your ships off the short edge opposite the sunward edge." }]),
     tools: REVEAL_TOOLS.concat(PRIV_TOOLS),
     rtools: [
@@ -181,7 +181,7 @@
     notes: [OLD + "Grey Knights had no fleet list then. The scenario says: use the Space Marine fleet rules (FL p. 94–96); Inquisitor Coldiron gives +1 in boarding actions; Grey Knight ships ignore the Mark of Slaanesh. As an option it allows the Daemonhunter rules from BFG Magazine 16 instead. Today the Fleets book’s Grey Knights list (FL p. 154–161, Daemonhunters p. 145) is their descendant — agree which rules you use.",
       "The Favoured Concubine may not disengage; the rest of the Chaos fleet may.", "“Boarded” is not defined. Suggestion: only a boarding action counts, not hit-and-run teleport attacks.",
       "The same author wrote the Favoured Concubine up as a character ship for Fanatic Online; this scenario uses a plain Despoiler."],
-    refs: [["Grey Knights fleet list", "FL p. 154–161"], ["Space Marine special rules", "FL p. 94–96"], ["Despoiler class battleship", "FL p. 268"], ["Repulsive grand cruiser", "FL p. 271"], ["Daemonships", "FL p. 236–239"], ["Mark of Slaanesh", "FL p. 232"], ["Boarding actions", "RB p. 89–90"]],
+    refs: [["Grey Knights fleet list", "FL p. 154–161"], ["Space Marine special rules", "FL p. 94–96"], ["Despoiler class battleship", "FL p. 268"], ["Repulsive grand cruiser", "FL p. 271"], ["Daemonships", "FL p. 236–239"], ["Mark of Slaanesh", "FL p. 242"], ["Boarding actions", "RB p. 89–90"]],
     play: [
       { w: "All game", s: "b", t: "The Favoured Concubine may not disengage. Get her off the Grey Knights’ short edge — without being boarded, if you can." },
       { w: "All game", s: "a", t: "Your ships ignore the Mark of Slaanesh. Inquisitor Coldiron aboard the Divine Blade gives +1 in boarding actions." },
@@ -322,7 +322,7 @@
     notes: [OLD + "Its minelayer rules became the Fleets book’s orbital mines refit (FL p. 23), which differs in two points: the refit costs +5 pts per launch bay there (free here), and only cruisers may take it (here: no battleships).",
       "Orbital mines: FL p. 512 says shields protect against mines normally; the Collected FAQ 2026 (question “Do orbital mines interact with shields when exploding?”) says a mine that attacks a ship ignores shields — 8 dice against armour, 4 if turrets hit it. The FAQ wins.",
       "Only mines launched inside the area to be mined count. The original pointed to orbital mines on old rulebook p. 142."],
-    refs: [["Orbital mines refit", "FL p. 23"], ["Orbital mine", "FL p. 512"], ["Planetary defences", "FL p. 496–515"], ["Styx, Devastation", "FL p. 272, 276"], ["Planets, moons", "RB p. 112–113"]],
+    refs: [["Orbital mines refit", "FL p. 23"], ["Orbital mine", "FL p. 512"], ["Planetary defences", "FL p. 496–515"], ["Styx, Devastation", "FL p. 274, 278"], ["Planets, moons", "RB p. 112–113"]],
     play: [
       { w: "Minelayers", s: "b", t: "Each launch bay launches one orbital mine instead of attack craft, at the end of the movement phase like a squadron. Mines cannot form waves and have no ordnance limit. Only mines launched inside the area to be mined count." },
       { w: "Minelayers", s: "b", t: "A critical hit on a minelayer’s launch bays does D3 extra damage as mines go off." },
@@ -384,7 +384,7 @@
       "Where the sides set up and which edge is “yours” is not given; the defaults above are our suggestion. Nor does the article say who moves the Abhorrence: suggestion — it does not move by itself, only when towed or pulled by the planet. It can be shot and boarded like any ship; if it is destroyed, nobody scores the 500 VP.",
       "Apart from the 500 VP for towing the Abhorrence away, victory points are counted as normal (RB p. 122).",
       "Low orbit (RB p. 116): ships nearer than 45 cm to the planet edge are pulled towards it at the start of each player’s turn — 5, 8 or 10 cm for a small, medium or large planet. Off the planet edge means destroyed."],
-    refs: [["Low orbit", "RB p. 116"], ["Desolator class battleship", "FL p. 267"], ["Critical hits", "RB p. 66–67"], ["Vengeance grand cruiser", "FL p. 58"], ["Eldar Corsair ships", "FL p. 316–328"], ["Victory points", "RB p. 122"]],
+    refs: [["Low orbit", "RB p. 116"], ["Desolator class battleship", "FL p. 269"], ["Critical hits", "RB p. 66–67"], ["Vengeance grand cruiser", "FL p. 58"], ["Eldar Corsair ships", "FL p. 316–328"], ["Victory points", "RB p. 122"]],
     play: [
       { w: "Towing", t: "Only ships in base contact can tow the Abhorrence. A battleship or grand cruiser tows at half speed, one cruiser at a quarter, two cruisers of the same speed at full. Two escorts of the same type tow at half speed; three or four at full. Towing never shortens the distance a ship must move before turning." },
       { w: "Low orbit", t: "All shooting is one column to the right; lances and nova cannon need a 4+ to fire; ships may not fire torpedoes. Ships nearer than 45 cm to the planet edge are pulled towards it at the start of each player’s turn." },
