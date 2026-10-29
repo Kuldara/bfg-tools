@@ -25,7 +25,7 @@ const { APPS, facts, key } = require("./og/facts.js");
 const { STYLES } = require("./og/styles.js");
 
 /* the layout the published images use */
-const STYLE = "classic";
+const STYLE = "bleed";
 
 const argv = process.argv.slice(2);
 const opt = name => { const a = argv.find(x => x.startsWith("--" + name + "=")); return a ? a.slice(name.length + 3) : null; };

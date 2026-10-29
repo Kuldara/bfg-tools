@@ -167,6 +167,60 @@ body{background:${f.accent};color:#111}
 <div class="lab">${esc(a.label)}</div><div class="rest">${rest.map(s => `<div><b>${esc(s.n)}</b> ${esc(s.label)}</div>`).join("")}</div></div>
 <div class="tag">${esc(f.tagline)}.<span class="mono">${esc(host(f))}</span></div>`);
   },
+
+  /* Made for the size a chat shows it at (about 400 px wide): one name, one
+     number, one picture, nothing under 22 px. The picture bleeds off the
+     right and bottom edges, behind a sheared panel of the app's colour. */
+  bleed(f, shot) {
+    const t = tall(shot), [a] = f.stats;
+    const z = t ? fit(shot, 420, 760) : fit(shot, 760, 760);
+    return page(`
+body{background:#0E0F13;color:#F4F2EC}
+.pic{position:absolute;right:${t ? 90 : -60}px;top:${t ? 60 : 50}px;width:${z.w}px;height:${z.h}px;
+  border-radius:${t ? 28 : 6}px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.7),0 0 0 1px #ffffff1a}
+.pic img{display:block;width:100%;height:100%}
+.pic:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#0E0F13 0,transparent 32%)}
+.wedge{position:absolute;left:-80px;top:0;bottom:0;width:${t ? 640 : 600}px;background:#0E0F13;transform:skewX(-8deg);
+  border-right:6px solid ${f.accent};box-shadow:30px 0 60px rgba(14,15,19,.85)}
+.l{position:absolute;left:56px;top:0;bottom:0;width:470px;display:flex;flex-direction:column;justify-content:center}
+.k{font-size:22px;letter-spacing:5px;text-transform:uppercase;color:${f.accent};font-weight:600}
+h1{font-size:${f.head.join(" ").length > 17 ? 92 : 104}px;line-height:.9;font-weight:700;text-transform:uppercase;margin-top:14px;letter-spacing:-1px}
+.n{margin-top:34px;display:flex;align-items:baseline;gap:14px}
+.n b{font-size:88px;line-height:1;font-weight:700;color:${f.accent}}.n span{font-size:30px;color:#C9C4B8}
+.tag{font-size:25px;line-height:1.3;color:#9A968E;margin-top:22px;max-width:440px}
+.u{font-size:22px;color:#6F6B64;margin-top:26px}`,
+      `<div class="pic"><img src="${shot.src}"></div><div class="wedge"></div>
+<div class="l"><div class="k mono">Battlefleet Gothic</div><h1 class="nar">${f.head.map(esc).join("<br>")}</h1>
+<div class="n"><b class="nar">${esc(a.n)}</b><span>${esc(a.label)}</span></div><div class="tag">${esc(f.tagline)}.</div>
+<div class="u mono">${esc(host(f))}</div></div>`);
+  },
+
+  /* An Imperial data-slate: a terminal readout in monospace, the picture as
+     the slate's screen, the facts as a transmission header. */
+  slate(f, shot) {
+    const t = tall(shot), z = fit(shot, t ? 330 : 560, 470);
+    return page(`
+body{background:#0B0D0C;color:#CFE3C8;font-family:'IBM Plex Mono',monospace}
+body:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent 0 3px,#00000055 3px 4px);pointer-events:none;z-index:3}
+.hdr{position:absolute;left:0;right:0;top:0;height:54px;background:${f.accent};color:#0B0D0C;display:flex;align-items:center;padding:0 44px;font-size:20px;letter-spacing:4px;font-weight:700;text-transform:uppercase}
+.hdr span{margin-left:auto;font-weight:400;letter-spacing:2px}
+.stripe{position:absolute;left:0;right:0;top:54px;height:10px;background:repeating-linear-gradient(135deg,${f.accent} 0 16px,#0B0D0C 16px 32px)}
+.l{position:absolute;left:44px;top:100px;width:${1200 - 44 - (z.w + 24) - (t ? 90 : 44) - 40 - 44}px}
+.k{font-size:17px;letter-spacing:3px;color:#6F8F6A}
+h1{font-family:'Archivo Narrow',sans-serif;font-size:74px;line-height:.95;text-transform:uppercase;color:#F0F5EA;margin:14px 0 24px;letter-spacing:1px}
+.r{display:flex;justify-content:space-between;border-top:1px solid #243126;padding:10px 0;font-size:22px}
+.r span{color:#8FAF88}.r b{color:#F0F5EA;font-weight:600}
+.r.hi b{color:${f.accent};font-size:30px}
+.scr{position:absolute;${t ? "right:90px;top:88px" : "right:44px;top:100px"};width:${z.w + 24}px;padding:12px;background:#121614;border:2px solid #2E3D30;border-radius:6px;box-shadow:inset 0 0 40px #000,0 0 30px ${f.accent}33}
+.scr img{display:block;width:${z.w}px;height:${z.h}px;filter:contrast(1.05)}
+.scr i{position:absolute;left:12px;top:-14px;background:#0B0D0C;padding:0 8px;font-size:14px;letter-spacing:3px;font-style:normal;color:${f.accent}}
+.ft{position:absolute;left:44px;right:44px;bottom:26px;font-size:16px;letter-spacing:2px;color:#4F6A4C;display:flex;justify-content:space-between}`,
+      `<div class="hdr">++ ${esc(f.head.join(" "))} ++<span>${esc(host(f))}</span></div><div class="stripe"></div>
+<div class="l"><div class="k">// TRANSMISSION: ${esc(f.tagline)}</div><h1>${f.head.map(esc).join("<br>")}</h1>
+${f.stats.map((s, i) => `<div class="r${i ? "" : " hi"}"><span>${esc(s.label)}</span><b>${esc(s.n)}</b></div>`).join("")}</div>
+<div class="scr"><i>PICT-FEED</i><img src="${shot.src}"></div>
+<div class="ft"><span>FREE // NO INSTALL // WORKS OFFLINE</span><span>SOURCE: ${esc(f.books).toUpperCase()}</span></div>`);
+  },
 };
 
 module.exports = { STYLES };
