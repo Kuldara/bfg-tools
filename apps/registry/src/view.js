@@ -10,6 +10,7 @@ import { appState } from "./state.js";
 import { mixActive, mixGroups, mixGroupHTML, mixHulls, mixMember, mixRowHTML, mixRule, mixSec, mixStart, mixStop, mixUnits, sqErrorsHTML } from "./mixed.js";
 import { aboardHTML, fleetResolved } from "./validation.js";
 import { infoBtnHTML, rowHasInfo } from "./info.js";
+import { refitInfoHTML } from "./refit-tables.js";
 import { SKW_MAX, activeWarlordIdx, clanzAfterMove, clanzDimUps, clanzHiddenUps, clanzIn, clanzMoveBlock, clanzPin, clanzSkwadronSec, factRowsHTML, fleetControlsHTML, freeSqTag, fxTagsHTML, isCommandeered, isOrkHulkUnit, optFxHTML, orkTiddlaHint, skwKind, upKind, orkPlain, orkSecGloss, sendSkwadron, setClan, setWarlordRerolls, upFx, warlordColor, warlordIdx, warlordNeeds, warlordSkwadrons } from "./warlords.js";
 import { DATA, LISTS, SHIPS } from "../../../packages/ui/catalog.js";
 import { arcGlyph, arcParts, esc, optCostLabel, shortRange, title, upCostText } from "../../../packages/ui/format.js";
@@ -667,7 +668,7 @@ export function unitRowHTML(u, ui, ab){
   /* Raw field values are viewer state, not domain: the inputs must show
      exactly what was typed, so they come from the unit, not from R. */
   return unitHTML(R, ui, { name: u.name, members: u.members, note: u.note,
-                           adj: u.adj, upsOpen: u.upsOpen,
+                           adj: u.adj, upsOpen: u.upsOpen, uid: u.uid,
                            /* Only the unit knows its role: the resolver
                               reports the donor list but not what the player
                               called the ship. */
@@ -745,6 +746,8 @@ export function unitHTML(R, ui, st){
     /* J229: game effects as tags in place of the source note; the book's
        text and the note go to the tooltip */
     const fx = upFx(up, R.entry && R.entry.label, st.ab && st.ab.hulk);
+    /* the Blood Axe refit: its tables in a box under it, shut until opened (29.10.2026) */
+    const rk = isRefitUp(up) ? st.uid + "|" + up.key : "";
     /* the kind the book names (Gubbin, More Gubbins, clan, bio-enhancement ...) */
     const kind = upKind(up);
     /* greyed: a Gubbin his re-rolls no longer cover (clanzDimUps) */
@@ -755,12 +758,14 @@ export function unitHTML(R, ui, st){
         : up.required ? " \u2014 automatic, required by the fleet list" : ""}
         ${!fx && up.note ? `<span class="src">${esc(up.note)}</span>` : ""}</span>
       <span class="c">${c}</span>${fx ? `
-      <span class="upfx"${fx.color ? ` style="--wl:${fx.color}"` : ""}>${fxTagsHTML(fx.tags, [up.description, up.note].filter(Boolean).join(" "))}</span>` : ""}</div>`;
+      <span class="upfx"${fx.color ? ` style="--wl:${fx.color}"` : ""}>${fxTagsHTML(fx.tags, [up.description, up.note].filter(Boolean).join(" "))}</span>` : ""}${
+      rk ? refitInfoHTML(rk, upInfo().has(rk)) : ""}</div>`;
   };
   /* Rows the fleet pane leaves out (Clanz, J226: clanzHiddenUps) */
   const hideKeys = (st.ab && st.ab.hide) || [];
   const hidden = up => hideKeys.indexOf(up.key) >= 0;
-  const own = R.upgrades.filter(x => x.owner === "own" && !hidden(x)), other = R.upgrades.filter(x => x.owner === "other" && !hidden(x));
+  const own = R.upgrades.filter(x => (x.owner === "own" || isRefitUp(x)) && !hidden(x)),
+        other = R.upgrades.filter(x => x.owner === "other" && !isRefitUp(x) && !hidden(x));
   const upOwn = own.map(upRow).join("");
   /* The whole fleet pane is re-rendered on every click, so a plain
      <details> snapped shut after each choice and the list could not be
@@ -1278,6 +1283,18 @@ export function renderFleet(){
     const u = appState.S.units[+d.dataset.u];
     if(u){ u.upsOpen = d.open ? 1 : 0; save(); }
   }));
+  /* the refit tables' box: open or shut as the player left it, this session */
+  box.querySelectorAll("details.upinfo").forEach(d => d.addEventListener("toggle", () => {
+    if(d.open) upInfo().add(d.dataset.upinfo); else upInfo().delete(d.dataset.upinfo);
+  }));
+}
+/* the refit boxes left open, this session (made on first use: the fleet pane
+   can be drawn before this module has run to its end) */
+const upInfo = () => appState.UPINFO || (appState.UPINFO = new Set());
+/* Da Ork Clanz: the Blood Axe Warlord's ship's Imperial Navy refit row (p. 369) */
+function isRefitUp(up){
+  const C = L().clanz;
+  return !!(C && C.refit_re && new RegExp(C.refit_re, "i").test(String(up.label || "")));
 }
 
 export function renderChecks(){

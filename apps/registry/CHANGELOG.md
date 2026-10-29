@@ -23,6 +23,12 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   the one-file engine, as do the golden cases, Play and the simulator.
 
 ### Changed
+- Da Ork Clanz: on a Rok, Evil Sunz and Soopa Boostas say "Rok: 10 cm as
+  written (RAW)" instead of "Rok: stays 10 cm (p. 393)" (user 29.10.2026: the
+  rule is not quite clear). The hover quotes p. 393, says the app counts it so
+  (ruling T57), that the intent (RAI) is not clear because the clan and the
+  Gubbin give +5 cm, and that the players may agree before the game whether
+  the Rok moves 15 cm.
 - **Save under a new name is a new save** (user 28.10.2026: "changing the name
   should always make a save, not over the old one"). In the Save drop-down,
   Save updates the saved fleet the open one came from only while the name is
@@ -177,6 +183,26 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
   (`clanz-bad-moonz-paid-per-rok`: three Bad Moonz Roks cost +90, not +30).
 
 ### Added
+- **Da Ork Clanz: the Blood Axe Warlord's Imperial Navy refit is a row of its
+  own** (user 29.10.2026, prototype A). Fleets p. 369: "The Warlord's ship may
+  take one refit from the Imperial Navy refit table (rolled randomly) for +20
+  points." It was only words in the clan's tag, so it could not be bought or
+  printed. Now the ship a Blood Axe Warlord is aboard has the row *Imperial
+  Navy refit, rolled randomly* (+20) at the top of its fleet-list upgrades;
+  under it a box, shut until opened, shows how it is rolled and the 18 results
+  with their effects (the full name and page on hover). The roll itself is not
+  recorded (user: "no roll function"); the printed card says how to roll it
+  and leaves "Rolled: ________" to write in. The legality panel checks it:
+  "Warlord 1: Imperial Navy refit: on Terror ship", red under another clan's
+  Warlord or on a ship he is not aboard. The refit is not a second clan.
+  **Ruling T61** (open interpretation, 29.10.2026): the book prints no table of
+  that name; it is read as the Rulebook's refits, "the standard Imperial Navy
+  refit table" the Mechanicus also earn refits from (Fleets p. 122): a D6 for
+  the kind (1-2 ship, 3-4 engine, 5-6 weapons refit, Rulebook p. 156), then a
+  D6 on that table (pp. 158-159). Golden cases
+  `clanz-blood-axe-warlord-ship-takes-the-in-refit`,
+  `clanz-in-refit-needs-a-blood-axe-warlord`,
+  `clanz-in-refit-on-the-warlords-own-ship-only`.
 - **Ship info** (user 28.10.2026, prototype C of three): an *i* beside the
   class name on every ship row of the catalogue, on every ship in Your fleet
   and on a mixed squadron's row opens everything about it. On a wide screen

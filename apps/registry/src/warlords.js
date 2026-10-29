@@ -363,6 +363,9 @@ export const UP_FX = [
     ["hit: D3+1 snotling hordes, +D6 to its Ld", "No damage: D3+1 snotling hordes are teleported aboard. Its next Leadership test or special order rolls an extra D6 (3D6, or one more when it already rolls 3D6). More hits only add hordes. Each special order, passed or failed, gets rid of one horde, and each can be repaired in the End phase like critical damage. (Fleets p. 371)"],
     ["!not while crippled or braced", "The ship firing the lance cannot use it while crippled or braced. (Fleets p. 371)"]]],
   [/^Assault Karrier/, null, ["free boarding torpedoes", "+1 assault boat per launch", "!assault boats only"]],
+  [/^Imperial Navy refit, rolled randomly/, null, [
+    ["!the Blood Axe Warlord's ship only", "Only the ship a Warlord of the Blood Axes is aboard may take it, one refit (Fleets p. 369)."],
+    ["D6: ship, engine or weapons refit", "Roll a D6: 1-2 ship, 3-4 engine, 5-6 weapons refit, then a D6 on that table; a result the ship already has is rolled again (Rulebook pp. 156, 158-159). The tables are under the row."]]],
   [/^Torpedo-bommas/i, null, ["20cm bombers, no fighter role", "later turns: S2 torpedo salvo each", "added to fighta-bommas"]],
   [/^Boarding torpedoes/, /^Orks/, ["torpedo hits are hit-and-run attacks"]],
   // every fleet's ordnance
@@ -421,10 +424,15 @@ export const UP_FX = [
   [/^Hive Mind Influence/, null, ["+1 fleet re-roll"]]
 ];
 /* Ruling T57 (Fleets p. 393): a Rok moves exactly 10 cm, so on a Rok a +5 cm
-   speed row says that instead of promising the speed. */
+   speed row says that instead of promising the speed. The tag says it is the
+   rule as written, and its hover that the intent is not clear and the players
+   may agree otherwise (user 29.10.2026). */
+const ROK_10 = ["!Rok: 10 cm as written (RAW)",
+  "Fleets p. 393: Roks “travel 10 cm forward in a straight line, no more, no less”. Read as written (RAW, ruling T57) the +5 cm leaves a Rok at 10 cm, and the app counts it so. " +
+  "The intent (RAI) is not clear: the clan and the Gubbin give their ships +5 cm, and a Rok may still buy them. Agree with your opponent before the game whether the Rok moves 15 cm."];
 export const ROK_FX = [
-  [/^Clan: Evil Sunz/, ["!Rok: stays 10 cm (p. 393)"]],
-  [/^Soopa Boostas/, ["!Rok: stays 10 cm (p. 393)", "4D6 on All Ahead Full"]]
+  [/^Clan: Evil Sunz/, [ROK_10]],
+  [/^Soopa Boostas/, [ROK_10, "4D6 on All Ahead Full"]]
 ];
 /* What kind of a list's own upgrade a row is, by the heading it is printed
    under, where the book names the kind (user 27.10.2026: "the Ork gubbins
@@ -437,7 +445,7 @@ export const ROK_FX = [
 const UP_KIND = [
   [/^gubbins$/i, up => /^(Klaws|Shokk-Attack Lance|Assault Karrier)\b/.test(up.label) ? "More Gubbins"
     : /Deathskullz: free/.test(up.label) ? "clan benefit" : "Gubbin"],
-  [/^clan upgrades$/i, up => up.included ? "" : "clan"],
+  [/^clan upgrades$/i, up => up.included ? "" : /^Imperial Navy refit/i.test(up.label) ? "Blood Axes" : "clan"],
   [/^dakka dakka$/i, () => "Dakka Dakka"],
   [/^bio-enhancements$/i, () => "bio-enhancement"],
   [/^chaos space marine crews$/i, () => "Chaos Space Marine crew"],
@@ -539,6 +547,9 @@ export function clanzHiddenUps(RF){
   const C = L().clanz, out = [];
   if(!C) return out;
   const wsI = warlordIdx(RF), ships = [].concat(...(RF.warlords || []).map(ownRows));
+  /* the Blood Axe refit (p. 369): on the ship a Blood Axe Warlord is aboard */
+  const axeShips = C.refit_re ? (RF.warlords || []).filter(W => W.ship != null &&
+    (W.clans || []).some(c => new RegExp(C.axe_clan, "i").test(c))).map(W => W.ship) : [];
   appState.S.units.forEach((u, i) => {
     const R = RF.units[i];
     if(!R || u.lst) return;
@@ -549,6 +560,7 @@ export function clanzHiddenUps(RF){
       if(wsI.indexOf(i) >= 0 && /re-roll/i.test(String(up.label))) keys.push(up.key);
       else if(new RegExp(C.gub_sec, "i").test(String(sc.t).trim()) && new RegExp(C.gub_re, "i").test(String(up.label)) &&
               ships.indexOf(i) < 0 && up.state !== "take") keys.push(up.key);
+      else if(C.refit_re && new RegExp(C.refit_re, "i").test(String(up.label)) && axeShips.indexOf(i) < 0 && up.state !== "take") keys.push(up.key);
     });
     out[i] = keys;
   });

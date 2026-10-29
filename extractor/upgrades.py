@@ -227,6 +227,9 @@ ROW_EFFECTS = [
      dict(desc="Deathskullz capital ships and/or tiddla skwadrons have 'looted' upgrades (torpedoes and/or lances) for no additional cost.")),
     (_CLANZ, _CLAN, re.compile(r"^Clan: Blood Axes", re.I),
      dict(desc="The Warlord's ship may take one refit from the Imperial Navy refit table (rolled randomly) for +20 points. A Blood Axe tiddla skwadron of at least six escorts may include up to three Imperial Navy and/or Chaos escorts at their listed cost.")),
+    (_CLANZ, _CLAN, re.compile(r"^Imperial Navy refit, rolled randomly", re.I),
+     dict(desc="Blood Axe Warlord's ship only (p. 369). Roll a D6: 1-2 ship, 3-4 engine, 5-6 weapons refit, "
+               "then a D6 on that table (Rulebook pp. 156, 158-159). Rolled: ________")),
     (_CLANZ, _CLAN, re.compile(r"^Clan: Snakebites", re.I),
      dict(cond=dict(ty=r"escort|defence"),
           desc="Snakebite capital ship skwadrons can only be space hulks or roks. Snakebite skwadrons gain a +1 bonus to Command checks when attempting to Brace for Impact.")),
@@ -1084,6 +1087,22 @@ def annotate(lists_out, raws, pages=None):
                    "the skwadron pays separately, and so does every Rok; for "
                    "tiddla skwadrons the cost is for the whole skwadron. The "
                    "skwadron must show clan colours."))
+        # The Blood Axe Warlord's ship's Imperial Navy refit (p.369: "The
+        # Warlord's ship may take one refit from the Imperial Navy refit table
+        # (rolled randomly) for +20 points."): a row of its own (user
+        # 29.10.2026), so that it can be bought and printed - it was only the
+        # clan's text. Priced from the sentence. The fleet check keeps it to a
+        # Blood Axe Warlord's own ship (fleet-specials.js, clanz.refit), the
+        # fleet pane shows it only there (warlords.js clanzHiddenUps); the
+        # table it is rolled on is ruling T61.
+        _rm = re.search(r"The Warlord.s ship may take one refit from the Imperial Navy refit table "
+                        r"\(rolled randomly\) for \+?(\d+)\s*points", clan_blob, re.I)
+        assert _rm, "Blood Axes: the Imperial Navy refit sentence (p.369) was not found"
+        rows.append(dict(
+            l="Imperial Navy refit, rolled randomly (Blood Axe Warlord's ship)", r=None,
+            p=int(_rm.group(1)), a=1, u=1, mx=None, prose=1, cond=dict(cap=1),
+            src_page=_page_at(clan_pm, _rm.start()),
+            nt="The book prints this only in the Blood Axes text: \u201c%s.\u201d" % _rm.group(0)))
         if rows:
             # The book's own clan descriptions ("All Evil Sunz ships gain +5 cm
             # speed") are on the Waaagh! list's pages. They tell what

@@ -6870,7 +6870,8 @@ var __rules = (() => {
       var inSec = function(m, re) {
         return m.own && L.secs[m.si] && new RegExp(re, "i").test(String(L.secs[m.si].t).trim());
       };
-      var clanRows = upRows(secIx(C.clan_sec)), gubRows = upRows(secIx(C.gub_sec), new RegExp(C.gub_re, "i"));
+      var clanRows = upRows(secIx(C.clan_sec), /^clan:/i), gubRows = upRows(secIx(C.gub_sec), new RegExp(C.gub_re, "i"));
+      var refitRows = C.refit_re ? upRows(secIx(C.clan_sec), new RegExp(C.refit_re, "i")) : [];
       var tids = clanzTiddlas(L, members);
       var clansOf = function(m) {
         return clanRows.filter(function(x) {
@@ -6998,6 +6999,27 @@ var __rules = (() => {
           v: g + " / " + rr + (off ? ", " + off + " not on his own ship" : ""),
           s: citeText(C.gub)
         });
+        var refitOn = refitRows.length ? mine.filter(function(m) {
+          return refitRows.some(function(x) {
+            return paidUp(m, x[0], x[1]);
+          });
+        }) : [];
+        if (refitOn.length) {
+          var axe = clans.some(function(c) {
+            return new RegExp(C.axe_clan, "i").test(c);
+          });
+          var astray = refitOn.filter(function(m) {
+            return m !== own;
+          });
+          out.push({
+            ok: axe && !astray.length,
+            t: tag + "Imperial Navy refit",
+            v: !axe ? "his clan is " + (clans.join(", ") || "none") + ": Blood Axes only" : astray.length ? astray.map(function(m) {
+              return m.en.l;
+            }).join(", ") + ": not his own ship" : "on " + own.en.l,
+            s: citeText(C.refit)
+          });
+        }
         S1.gub = g;
         S1.gubOff = off;
         S1.ship = own ? members.indexOf(own) : null;

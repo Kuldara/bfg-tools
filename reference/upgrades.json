@@ -233,6 +233,12 @@
       "why": "p.369: the clan's rule in the card's upgrade box."
     },
     {
+      "match": "^Imperial Navy refit, rolled randomly",
+      "class": "text",
+      "page": 369,
+      "why": "p.369 Blood Axes: one refit rolled on the Imperial Navy refit table (ruling T61: Rulebook pp. 156, 158-159); the card's upgrade box says how to roll it and leaves the result to write in."
+    },
+    {
       "match": "^Sepulchre$",
       "class": "text",
       "page": 404,

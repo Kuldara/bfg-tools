@@ -241,7 +241,9 @@ export function checkOrkClanz(F){
     var C = L.clanz;
     var secIx = function(re){ var x = new RegExp(re, "i"); return L.secs.findIndex(function(sc){ return x.test(String(sc.t).trim()); }); };
     var inSec = function(m, re){ return m.own && L.secs[m.si] && new RegExp(re, "i").test(String(L.secs[m.si].t).trim()); };
-    var clanRows = upRows(secIx(C.clan_sec)), gubRows = upRows(secIx(C.gub_sec), new RegExp(C.gub_re, "i"));
+    /* the clan section's clans: its Blood Axe refit row (29.10.2026) is not a clan */
+    var clanRows = upRows(secIx(C.clan_sec), /^clan:/i), gubRows = upRows(secIx(C.gub_sec), new RegExp(C.gub_re, "i"));
+    var refitRows = C.refit_re ? upRows(secIx(C.clan_sec), new RegExp(C.refit_re, "i")) : [];
     var tids = clanzTiddlas(L, members);
     var clansOf = function(m){ return clanRows.filter(function(x){ return tookUp(m, x[0], x[1]); })
       .map(function(x){ return String(x[2].l).replace(/^clan:\s*/i, "").replace(/\s*\(.*$/, ""); }); };
@@ -328,6 +330,19 @@ export function checkOrkClanz(F){
         if(paidUp(m, x[0], x[1])){ g++; if(ownIx.indexOf(members.indexOf(m)) < 0) off++; } }); });
       if(g) out.push({ ok: g <= rr && !off, t: tag + "Gubbins",
         v: g + " / " + rr + (off ? ", " + off + " not on his own ship" : ""), s: citeText(C.gub) });
+      /* "The Warlord's ship may take one refit from the Imperial Navy refit
+         table" (p. 369, Blood Axes): the ship he is aboard, and his clan is
+         Blood Axes (a row of its own since 29.10.2026) */
+      var refitOn = refitRows.length ? mine.filter(function(m){
+        return refitRows.some(function(x){ return paidUp(m, x[0], x[1]); }); }) : [];
+      if(refitOn.length){
+        var axe = clans.some(function(c){ return new RegExp(C.axe_clan, "i").test(c); });
+        var astray = refitOn.filter(function(m){ return m !== own; });
+        out.push({ ok: axe && !astray.length, t: tag + "Imperial Navy refit",
+          v: !axe ? "his clan is " + (clans.join(", ") || "none") + ": Blood Axes only"
+            : astray.length ? astray.map(function(m){ return m.en.l; }).join(", ") + ": not his own ship"
+            : "on " + own.en.l, s: citeText(C.refit) });
+      }
       S1.gub = g; S1.gubOff = off; S1.ship = own ? members.indexOf(own) : null; S1.skw = ownIx;
     });
     /* every capital ship of a skwadron takes the clan (Fleets p. 369), and so

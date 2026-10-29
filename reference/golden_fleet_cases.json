@@ -8891,6 +8891,128 @@
       "why": "Fleets p. 372: “He must be embarked on the most expensive ship under his own command (as opposed to the whole fleet), even if it is an escort - annotate which one it is.” Fleets p. 369: “A Blood Axe tiddla skwadron of at least six escorts may include up to three Imperial Navy and/or Chaos escorts from any fleet list at their listed cost.” The Idolators are in the Warlord's Blood Axe tiddla, so they are his and the dearest ship of his command (RAW-03). 3 x Brute ramship 25 + 3 x Idolator class raider 45 + 3 x Savage gunship 30 = 300."
     },
     {
+      "id": "clanz-blood-axe-warlord-ship-takes-the-in-refit",
+      "page": 369,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord",
+            "clan": "Blood Axes",
+            "aboard": "^Terror ship"
+          },
+          {
+            "entry": "^Terror ship",
+            "ups": [
+              {
+                "upgrade": "^Imperial Navy refit, rolled randomly"
+              }
+            ]
+          },
+          {
+            "entry": "^Brute ramship",
+            "n": 3
+          }
+        ]
+      },
+      "expect": {
+        "total": 280,
+        "checks": [
+          {
+            "label": "^Warlord 1: Imperial Navy refit$",
+            "ok": true,
+            "v": "on Terror ship"
+          },
+          {
+            "label": "^Warlord 1: one clan$",
+            "ok": true,
+            "v": "Blood Axes"
+          }
+        ]
+      },
+      "why": "Fleets p. 369: “The Warlord’s ship may take one refit from the Imperial Navy refit table (rolled randomly) for +20 points.” The Blood Axe Warlord is aboard the Terror ship, which takes the refit: a row of its own since 29.10.2026, not a second clan. Terror ship 185 + refit 20 + 3 x Brute ramship 25 = 280."
+    },
+    {
+      "id": "clanz-in-refit-needs-a-blood-axe-warlord",
+      "page": 369,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord",
+            "clan": "Goffs",
+            "aboard": "^Terror ship"
+          },
+          {
+            "entry": "^Terror ship",
+            "ups": [
+              {
+                "upgrade": "^Imperial Navy refit, rolled randomly"
+              }
+            ]
+          },
+          {
+            "entry": "^Brute ramship",
+            "n": 3
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Warlord 1: Imperial Navy refit$",
+            "ok": false,
+            "v": "his clan is Goffs: Blood Axes only"
+          }
+        ]
+      },
+      "why": "Fleets p. 369: “The Warlord’s ship may take one refit from the Imperial Navy refit table (rolled randomly) for +20 points.” It is the Blood Axes' benefit: a Goff Warlord's ship may not take it."
+    },
+    {
+      "id": "clanz-in-refit-on-the-warlords-own-ship-only",
+      "page": 369,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1500,
+        "units": [
+          {
+            "entry": "^Ork Warlord",
+            "clan": "Blood Axes",
+            "aboard": "^Terror ship"
+          },
+          {
+            "entry": "^Terror ship",
+            "sq": "A"
+          },
+          {
+            "entry": "^Kill kroozer",
+            "sq": "A",
+            "ups": [
+              {
+                "upgrade": "^Imperial Navy refit, rolled randomly"
+              }
+            ]
+          },
+          {
+            "entry": "^Brute ramship",
+            "n": 3
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Warlord 1: Imperial Navy refit$",
+            "ok": false,
+            "v": "Kill kroozer: not his own ship"
+          }
+        ]
+      },
+      "why": "Fleets p. 369: “The Warlord’s ship may take one refit from the Imperial Navy refit table (rolled randomly) for +20 points.” The Warlord's ship is the one he is aboard (the Terror ship); the other kroozer of his skwadron may not take it."
+    },
+    {
       "id": "clanz-snakebite-warlord-with-a-kroozer",
       "page": 369,
       "fleet": {

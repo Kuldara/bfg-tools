@@ -580,6 +580,10 @@ _CZL["clanz"] = dict(
                 "ship skwadrons are permitted to bear the clan colours.", 369),
     gub=_cite("A Warlord may choose for his own ship or escort skwadron one upgrade from the Gubbins list for every "
               "re-roll he has at its listed cost.", 372),
+    # the Blood Axe Warlord's ship's Imperial Navy refit (user 29.10.2026, a row of its own: upgrades.py EXTRA)
+    refit_re="^imperial navy refit, rolled randomly", axe_clan="^blood axes",
+    refit=_cite("The Warlord\u2019s ship may take one refit from the Imperial Navy refit table (rolled randomly) "
+                "for +20 points.", 369),
     # J232: a skwadron belongs to one Warlord and is not split (p.373)
     split=_cite("Each skwadron must be fielded with the number of ships chosen for it in this list; you can\u2019t "
                 "split up skwadrons or add more ships to them.", 373))
