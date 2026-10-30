@@ -150,7 +150,33 @@ function zip(entries) {
   return Buffer.concat([...locals, cd, end]);
 }
 
+/* ------------------------------------------------------------- _headers */
+/* A site's HTTP headers (Cloudflare Workers static assets read _headers):
+   the same safety headers on every file, the page's Content-Security-Policy,
+   a charset on the HTML (a page served without one once showed mojibake),
+   HTML always revalidated so a release shows at once, and the link preview
+   image cached for a week (its address carries a content hash). */
+function siteHeaders(csp, extra = "") {
+  const page = `  Content-Type: text/html; charset=utf-8
+  Cache-Control: public, max-age=0, must-revalidate
+`;
+  return `/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: no-referrer
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=()
+  Content-Security-Policy: ${csp}
+
+/
+${page}
+/index.html
+${page}
+/og.png
+  Cache-Control: public, max-age=604800
+` + extra;
+}
+
 const sha = s => crypto.createHash("sha256").update(s).digest("hex");
 const kB = n => (n / 1024).toFixed(0).padStart(6) + " kB";
 
-module.exports = { REPO, DIST, abs, read, readBytes, write, copy, expandIncludes, fill, bundle, badge, guards, zip, sha, kB };
+module.exports = { REPO, DIST, abs, read, readBytes, write, copy, expandIncludes, fill, bundle, badge, guards, zip, sha, kB, siteHeaders };

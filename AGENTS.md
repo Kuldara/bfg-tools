@@ -170,6 +170,16 @@ build time. `npm test` fails when the data no longer matches an image: run
 `npm run build`, `npm run og` and commit the images. The layouts are in
 `tools/og/styles.js` (`--try=<layouts> --out=<dir>` renders them for choosing).
 
+**HTTP headers**: every site's build writes `dist/<app>/_headers` (Cloudflare
+reads it): nosniff, no-referrer, SAMEORIGIN framing, a Permissions-Policy, the
+app's own Content-Security-Policy and a charset on the HTML (`kit.siteHeaders`;
+the Registry and the Meta Almanac write theirs themselves). A page that needs
+something new from outside (a font, a script) needs its CSP changed too:
+`node tools/check_headers.js` serves each site under its headers in Chrome and
+fails on anything the policy blocks (`npm test` runs it). HTTPS redirect, HSTS
+(6 months, subdomains), TLS 1.2+ and DNSSEC are zone settings in Cloudflare,
+not in this repository.
+
 Single checks, for the Registry:
 
 ```bash

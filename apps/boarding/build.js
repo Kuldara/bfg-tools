@@ -15,6 +15,9 @@ const HERE = "apps/boarding";
 const BADGE_HOSTS = ["bfgtools.kuldare.com", "bfgtools.boarding.kuldare.com", "terrain-generator.kuldare.com",
   "bfgtools.meta.kuldare.com", "scenario-library.kuldare.com", "github.com"];
 const ALLOWED = ["http://www.w3.org"];
+/* everything is inside the page; it fetches nothing */
+const CSP = "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; " +
+  "font-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'";
 
 /* Every fleet and hull type has an icon, and an icon is geometry only (it goes
    into the page as markup). Add a missing one to make_icons.py and run it. */
@@ -55,6 +58,7 @@ async function build() {
   const out = [];
   /* link preview tags (tools/og): the site only, after the guards (the page's own address is in them) */
   out.push(kit.write("dist/boarding/index.html", preview.addTo(page, "boarding")), preview.copyImage("boarding", "dist/boarding"));
+  out.push(kit.write("dist/boarding/_headers", kit.siteHeaders(CSP)));
   out.push(kit.write("dist/share/Boarding.zip", kit.zip([["Boarding.html", page], ["README.txt", kit.read(HERE + "/README.md")]])));
   return { out };
 }

@@ -24,6 +24,10 @@ const BADGE_HOSTS = ["bfgtools.kuldare.com", "bfgtools.boarding.kuldare.com", "t
 /* Links to where a scenario was published ("Open the original"); nothing is
    fetched from them. */
 const ALLOWED = ["http://www.w3.org", "https://drive.google.com", "https://specialist-arms.com", "https://www.specialist-arms.com"];
+/* its own script files and nothing else; the links to the originals are
+   navigation, which a CSP does not restrict */
+const CSP = "default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; " +
+  "font-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'";
 
 async function build() {
   const files = { "battlezone-core.js": battlezone.asNamespace() };
@@ -53,7 +57,8 @@ async function build() {
   }
 
   /* link preview tags (tools/og): after the guards, the page's own address is in them */
-  const out = [kit.write(OUT + "index.html", preview.addTo(page, "scenarios")), preview.copyImage("scenarios", OUT)];
+  const out = [kit.write(OUT + "index.html", preview.addTo(page, "scenarios")), preview.copyImage("scenarios", OUT),
+    kit.write(OUT + "_headers", kit.siteHeaders(CSP))];
   for (const [f, text] of Object.entries(files)) out.push(kit.write(OUT + f, text));
   for (const f of ["favicon.png", "apple-touch-icon.png"]) out.push(kit.copy(HERE + "/" + f, OUT + f));
   return { out };

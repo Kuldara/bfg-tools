@@ -66,6 +66,7 @@ const STEPS = [
   ["scenarios", "map measurements",        ["node", "apps/scenarios/tests/measurements.js"]],
   ["scenarios", "front page",              ["node", "apps/scenarios/tests/front.js"]],
   ["scenarios", "in-page tests (Chrome)",  ["node", "apps/scenarios/tests/in_page.js"], { slow: true }],
+  ["build",     "sites under their headers (Chrome)", ["node", "tools/check_headers.js"], { slow: true }],
   ["books",     "profiles vs Fleets PDF",  [PY, "extractor/check_profiles.py"], { books: true }],
   ["books",     "data vs Fleets PDF",      [PY, "extractor/audit.py"], { books: true }],
   ["books",     "quoted sentences",        [PY, "extractor/check_quotes.py"], { books: true }],

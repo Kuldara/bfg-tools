@@ -15,6 +15,9 @@ const BADGE_HOSTS = ["bfgtools.kuldare.com", "bfgtools.boarding.kuldare.com", "t
 /* The fonts still come from Google Fonts here, unlike the other tools, which
    embed theirs (docs: open findings). */
 const ALLOWED = ["http://www.w3.org", "https://fonts.googleapis.com", "https://fonts.gstatic.com"];
+const CSP = "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; " +
+  "img-src 'self' data:; font-src https://fonts.gstatic.com data:; connect-src 'none'; base-uri 'none'; " +
+  "form-action 'none'; frame-ancestors 'self'";
 
 async function build() {
   const script = await kit.bundle({ entry: HERE + "/src/index.js", globalName: "BZG" });
@@ -26,7 +29,8 @@ async function build() {
   const b = kit.guards.badge(page, "terrain", BADGE_HOSTS);
   kit.guards.externalUrls(page, "terrain", ALLOWED, b);
   /* link preview tags (tools/og): after the guards, the page's own address is in them */
-  const out = [kit.write(OUT + "index.html", preview.addTo(page, "terrain")), preview.copyImage("terrain", OUT)];
+  const out = [kit.write(OUT + "index.html", preview.addTo(page, "terrain")), preview.copyImage("terrain", OUT),
+    kit.write(OUT + "_headers", kit.siteHeaders(CSP))];
   for (const f of ["favicon.png", "apple-touch-icon.png"]) out.push(kit.copy(HERE + "/" + f, OUT + f));
   return { out };
 }
