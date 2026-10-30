@@ -12,6 +12,8 @@ a tag `play-v<version>` deploys the Registry's site.
 - Fleets WiP v0.40 and Rulebook v1.11 (29.10.2026): the cards and rules cite v0.40 pages; the fleet data is the Registry's v0.40 data (the power ram as a ship option, the Mechanicus profiles, mines that ignore shields).
 
 ### Fixed
+- The close button of the menu and of a card (30.10.2026): its cross is drawn, in the
+  middle of the square; the "×" letter sat at the left edge.
 - Da Ork Clanz: a clan or a Gubbin bought on one card of a mixed tiddla (one
   Squadron letter) is on every card of it and paid once, as the builder has it
   (Fleets pp. 369-370, ruling T60 in the Registry's changelog). An Onslaught in

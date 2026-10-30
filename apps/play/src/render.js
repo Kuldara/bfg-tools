@@ -549,6 +549,9 @@ export function rrWords(R){ return R.rerolls && R.rerolls.text ? " " + MID + " "
 /* A fleet without a commander: its own re-rolls (Necrons p. 406, Demiurg p. 486). */
 export function fleetRR(){ return appState.G.cmd == null && appState.L0 && appState.L0.frr ? DOMAIN.fleetRerolls(appState.L0, appState.U.map(x => x.R)) : null; }
 /* The wreck: what it is now and what it still does (p. 71 / Fleets p. 425). */
+/* The close button's cross: drawn, not the "\u00d7" letter, so it sits in the
+   middle of its square whatever the font's metrics. */
+const CLOSE_X = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
 export const ICON = {
   drifting: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 15l4-2 3 2 4-3 3 2 4-2v4H3z"/><path d="M8 13l1-6 3 1-1 5zM14 12l2-5 2 1-2 4z" opacity=".7"/></svg>',
   blazing: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22c-4 0-7-3-7-7 0-3 2-5 3-7 0 2 1 3 2 3 0-4 2-6 5-8 0 3 1 4 3 6 2 2 3 4 3 6 0 4-3 7-7 7zm0-2c2 0 3-1 3-3 0-1-1-2-2-3 0 1-1 2-2 2 0-2-1-3-1-4-1 1-2 2-2 4 0 2 1 4 4 4z"/></svg>',
@@ -617,7 +620,7 @@ export function renderRuleSheet(i){
   const R = appState.U[i].R, st = appState.G.st[i], rc = R.ruleCard;
   const [kd, km] = factionCols(appState.G.ln, "");
   return `<div class="sheet" style="--kd:${kd};--km:${km}">
-    <div class="sh-hd"><div class="t"><h2>${esc(unitName(i))}</h2><p>${esc(ruleCount(R))} | pg. ${rc.page} | ${R.points | 0} pts</p></div><button class="x" data-act="closesheet" aria-label="Close">&#215;</button></div>
+    <div class="sh-hd"><div class="t"><h2>${esc(unitName(i))}</h2><p>${esc(ruleCount(R))} | pg. ${rc.page} | ${R.points | 0} pts</p></div><button class="x" data-act="closesheet" aria-label="Close">${CLOSE_X}</button></div>
     <div class="sh-body"><p class="lead">${esc(rc.lead || "")}</p>
       <div class="sec">${ruleTrack(i)}</div>
       <div class="sec"><h3>${esc(rc.title)}<em>Fleets p. ${rc.page}</em></h3>${ruleSteps(R)}</div>
@@ -892,7 +895,7 @@ export function renderSheet(i){
      its armament, always on the card */
   const ruleSec = R.ruleCard ? `<div class="sec"><h3>${esc(R.ruleCard.title)}<em>Fleets p. ${R.ruleCard.page}</em></h3><p class="lead">${esc(R.ruleCard.lead || "")}</p>${ruleSteps(R)}</div>` : "";
   return `<div class="sheet" style="--kd:${kd};--km:${km}">
-    <div class="sh-hd"><div class="t"><h2>${esc(unitName(i))}</h2><p>${esc(sub)}</p></div>${ldTile(i)}<button class="x" data-act="closesheet" aria-label="Close">&#215;</button></div>
+    <div class="sh-hd"><div class="t"><h2>${esc(unitName(i))}</h2><p>${esc(sub)}</p></div>${ldTile(i)}<button class="x" data-act="closesheet" aria-label="Close">${CLOSE_X}</button></div>
     <div class="sh-body">${band}${cmdsAboard(i).map(cmdLine).join("")}${shipRRLine(i)}${v.fort && !v.destroyed ? quadSelector(i, v) : ""}${stats}
       ${appState.V.pop && appState.V.pop.i === i && /^(ld|blast)$/.test(appState.V.pop.kind) ? renderPop(i) : ""}
       <div class="sec"><h3>Armament<em>Str as printed ${MID} &frac12; when halved</em></h3>${weaponsTable(R, st, esq)}</div>
@@ -915,7 +918,7 @@ export function renderMenu(){
   const nec = appState.U.some(u => u.R && u.R.source && /NECRON/i.test(String(u.R.source.faction || ""))) ? "; Necrons Fleets p. 404" : "";
   const all = TRACK.every(t => OPT[t[0]]), some = TRACK.some(t => OPT[t[0]]);
   return `<div class="menu" data-act="menu"><div class="box">
-    <div class="mhd"><h2>Menu</h2><button class="x" data-act="menu" aria-label="Close the menu">&#215;</button></div>
+    <div class="mhd"><h2>Menu</h2><button class="x" data-act="menu" aria-label="Close the menu">${CLOSE_X}</button></div>
     <p class="foot">${esc(appState.G.ln)} ${MID} ${appState.G.limit} pts ${MID} turn ${appState.G.fleet.turn}</p>
     <details data-keep="vp"${mo.vp ? " open" : ""}><summary>Victory points conceded<b>${vp}</b></summary><table>${rows}</table><p class="foot" style="margin:0 12px 8px">Each ship with any commander aboard (p. 123${nec}).</p></details>
     ${OPT.fleet ? `<div class="steprow" style="margin:8px 0"><button data-act="rad" data-i="-1" data-arg="-1">&minus;</button><div class="val">${appState.G.fleet.radiation | 0}<small>radiation burst: -Ld this turn (p. 115)</small></div><button data-act="rad" data-i="-1" data-arg="1">+</button></div>` : ""}
