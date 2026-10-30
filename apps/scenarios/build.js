@@ -26,8 +26,8 @@ const BADGE_HOSTS = ["bfgtools.kuldare.com", "bfgtools.boarding.kuldare.com", "t
 const ALLOWED = ["http://www.w3.org", "https://drive.google.com", "https://specialist-arms.com", "https://www.specialist-arms.com"];
 /* its own script files and nothing else; the links to the originals are
    navigation, which a CSP does not restrict */
-const CSP = "default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; " +
-  "font-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'";
+const CSP = `default-src 'none'; script-src 'self' 'unsafe-inline' ${kit.BEACON.script}; style-src 'unsafe-inline'; img-src 'self' data:; ` +
+  `font-src 'self' data:; connect-src ${kit.BEACON.connect}; base-uri 'none'; form-action 'none'; frame-ancestors 'self'`;
 
 async function build() {
   const files = { "battlezone-core.js": battlezone.asNamespace() };

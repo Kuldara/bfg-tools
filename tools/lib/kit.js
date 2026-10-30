@@ -176,7 +176,13 @@ ${page}
 ` + extra;
 }
 
+/* Cloudflare Web Analytics: the zone injects its cookieless beacon into the
+   pages it serves, and the visitor counts of Boarding, Scenario Library and
+   the Battlezone Generator come from it. Their CSPs allow it (the Registry and
+   the Meta Almanac keep theirs closed: connect-src 'none'). */
+const BEACON = { script: "https://static.cloudflareinsights.com", connect: "https://cloudflareinsights.com" };
+
 const sha = s => crypto.createHash("sha256").update(s).digest("hex");
 const kB = n => (n / 1024).toFixed(0).padStart(6) + " kB";
 
-module.exports = { REPO, DIST, abs, read, readBytes, write, copy, expandIncludes, fill, bundle, badge, guards, zip, sha, kB, siteHeaders };
+module.exports = { REPO, DIST, abs, read, readBytes, write, copy, expandIncludes, fill, bundle, badge, guards, zip, sha, kB, siteHeaders, BEACON };

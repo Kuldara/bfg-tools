@@ -15,9 +15,9 @@ const BADGE_HOSTS = ["bfgtools.kuldare.com", "bfgtools.boarding.kuldare.com", "t
 /* The fonts still come from Google Fonts here, unlike the other tools, which
    embed theirs (docs: open findings). */
 const ALLOWED = ["http://www.w3.org", "https://fonts.googleapis.com", "https://fonts.gstatic.com"];
-const CSP = "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline' https://fonts.googleapis.com; " +
-  "img-src 'self' data:; font-src https://fonts.gstatic.com data:; connect-src 'none'; base-uri 'none'; " +
-  "form-action 'none'; frame-ancestors 'self'";
+const CSP = `default-src 'none'; script-src 'unsafe-inline' ${kit.BEACON.script}; style-src 'unsafe-inline' https://fonts.googleapis.com; ` +
+  `img-src 'self' data:; font-src https://fonts.gstatic.com data:; connect-src ${kit.BEACON.connect}; base-uri 'none'; ` +
+  `form-action 'none'; frame-ancestors 'self'`;
 
 async function build() {
   const script = await kit.bundle({ entry: HERE + "/src/index.js", globalName: "BZG" });

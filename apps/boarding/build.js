@@ -16,8 +16,8 @@ const BADGE_HOSTS = ["bfgtools.kuldare.com", "bfgtools.boarding.kuldare.com", "t
   "bfgtools.meta.kuldare.com", "scenario-library.kuldare.com", "github.com"];
 const ALLOWED = ["http://www.w3.org"];
 /* everything is inside the page; it fetches nothing */
-const CSP = "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; " +
-  "font-src 'self' data:; connect-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'";
+const CSP = `default-src 'none'; script-src 'unsafe-inline' ${kit.BEACON.script}; style-src 'unsafe-inline'; img-src 'self' data:; ` +
+  `font-src 'self' data:; connect-src ${kit.BEACON.connect}; base-uri 'none'; form-action 'none'; frame-ancestors 'self'`;
 
 /* Every fleet and hull type has an icon, and an icon is geometry only (it goes
    into the page as markup). Add a missing one to make_icons.py and run it. */
