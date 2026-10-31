@@ -73,5 +73,13 @@ document.addEventListener("change", ev => {
   if(!el) return;
   if(el.getAttribute("data-sel") === "flag") act("flag", null, parseInt(el.value, 10));
   if(el.getAttribute("data-sel") === "on") act("on", parseInt(el.getAttribute("data-i"), 10), parseInt(el.value, 10));
+  /* a pre-game upgrade chosen by hand (T44) */
+  if(el.getAttribute("data-sel") === "pre") act("pre", parseInt(el.getAttribute("data-i"), 10), { key: el.getAttribute("data-key"), v: el.value });
 });
 
+/* the set-up screen's Leadership guide stays as the player left it: the
+   screen is drawn anew on every tap (T44) */
+document.addEventListener("toggle", ev => {
+  const el = ev.target;
+  if(el && el.classList && el.classList.contains("ldguide")) appState.V.ldGuide = el.open;
+}, true);

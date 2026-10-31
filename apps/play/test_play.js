@@ -1537,6 +1537,52 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
         typeof PLAY.rerollsJoinFleet === "function" && PLAY.rerollsJoinFleet(scion, true) === false);
 }
 
+/* --- rolling the Leadership (user 31.10.2026, RULINGS.md T44) ---------- */
+{
+  /* A unit of any list, found by its row's label, resolved as the page does. */
+  const unitOf = (listRe, labelRe, ups) => {
+    const L = catalog.lists.find(x => listRe.test(x.nm));
+    for(const s of L.secs) for(const en of s.ents){
+      if(en.k !== "unit" || !labelRe.test(en.l)) continue;
+      const upgrades = {};
+      (ups || []).forEach(re => L.secs.forEach(s2 => s2.ents.forEach(e2 => { if(e2.k === "up" && re.test(e2.l)) upgrades[DOMAIN.upgradeId ? DOMAIN.upgradeId(L.nm, s2.t, e2.l) : e2.l] = "take"; })));
+      return DOMAIN.resolveUnit({ schemaVersion: DOMAIN.SCHEMA_VERSION, role: "core", entry: { list: L.nm, section: s.t, label: en.l },
+        ref: en.r == null ? null : String(en.r), hull: null, hulls: 1, name: "", note: "", adjust: 0, custom: null, members: [], options: {}, upgrades: upgrades }, { list: L }, catalog);
+    }
+    throw new Error("no row " + labelRe + " in " + listRe);
+  };
+  const plan = R => PLAY.ldPlan(R);
+  const emperor = unit("Battleships", "Emperor class battleship");
+  const vals = R => [1, 2, 3, 4, 5, 6].map(d => (PLAY.ldFromDie(plan(R), d) || {}).value).join(",");
+  /* Rulebook p. 45: "1 Untried 6, 2-3 Experienced 7, 4-5 Veteran 8, 6 Crack 9" */
+  check("Ld roll: a Lunar on the Rulebook table 6,7,7,8,8,9 (p. 45)", vals(lunar) === "6,7,7,8,8,9", vals(lunar));
+  /* Fleets p. 94: "D6 ROLL LEADERSHIP 1-2 Ld 8 3-4 Ld 9 5-6 Ld 10" */
+  const strike = unitOf(/^Space Marines . Codex Astartes$/, /^Strike cruiser/i);
+  check("... a Space Marine Strike Cruiser 8,8,9,9,10,10 (Fleets p. 94)", vals(strike) === "8,8,9,9,10,10", vals(strike));
+  /* Fleets p. 118: "roll a D6 against the following table: 1 Ld 7, 2-3 Ld 8, 4-6 Ld 9" */
+  const mech = unitOf(/Mechanicus . Explorator/, /^Dictator/i);
+  check("... an Explorator Dictator 7,8,8,9,9,9 (Fleets p. 118)", vals(mech) === "7,8,8,9,9,9", vals(mech));
+  /* Fleets p. 360: Ork Leadership "reduced by 1" - "a Leadership range of 5 to 8" */
+  const terror = unitOf(/^Orks . Waaagh!$/, /^Terror ship$/i);
+  check("... an Ork Terror Ship 5,6,6,7,7,8 (Fleets p. 360)", vals(terror) === "5,6,6,7,7,8", vals(terror));
+  /* Fleets p. 304: Eldar Leadership "between 7 and 10" */
+  const eclipse = unitOf(/^Eldar Corsairs . Gothic Sector$/, /^Eclipse/i);
+  check("... an Eldar Eclipse 7,8,8,9,9,10 (Fleets p. 304)", vals(eclipse) === "7,8,8,9,9,10", vals(eclipse));
+  /* Fleets p. 53: the Emperor "+1 to its Leadership rating"; nothing above 10 (Rulebook p. 48) */
+  check("... an Emperor 7,8,8,9,9,10 (Fleets p. 53, Rulebook p. 48)", vals(emperor) === "7,8,8,9,9,10", vals(emperor));
+  /* Fleets p. 85: transports "will have a Leadership value of between 5 and 8" */
+  const transport = unitOf(/^Rogue Traders . Exploration$/, /^Cargo Transport$/i);
+  check("... a Cargo Transport (the Imperial transport profile) 5-8 (Fleets p. 85)", vals(transport) === "5,6,6,7,7,8", vals(transport));
+  /* Fleets p. 392: the Ork Hulk "always Leadership 6"; not rolled */
+  const hulk = unitOf(/Da Ork Clanz/, /^Ork hulk$/i);
+  check("... an Ork Hulk is not rolled: Ld 6 (Fleets p. 392)", plan(hulk) && plan(hulk).roll === false && plan(hulk).value === 6, JSON.stringify(plan(hulk)));
+  check("... a Tyranid hive ship is left to the player (Fleets pp. 418-420)", plan(unitOf(/^Tyranids . Hive Fleet$/, /^Hive ship/i)).manual === true);
+  check("... the Fortress-Monastery keeps its 10 (Fleets p. 111)", plan(monastery).roll === false && plan(monastery).value === 10);
+  check("... a die outside 1-6 gives nothing", PLAY.ldFromDie(plan(lunar), 0) === null && PLAY.ldFromDie(plan(lunar), 7) === null);
+  const seq = [0, 0.17, 0.34, 0.5, 0.67, 0.99], rng = () => seq.shift();
+  check("d6: every face 1-6 from the generator", [1, 2, 3, 4, 5, 6].map(() => PLAY.d6(rng)).join("") === "123456");
+}
+
 /* --- the built page itself --------------------------------------------- */
 /* Everything above tests rules.js. The page's own code (set-up, rows,
    cards, panels, actions, VP sums) is in src/, and nothing above runs it:

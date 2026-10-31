@@ -1,5 +1,6 @@
 import { L } from "./model.js";
 import { esc } from "../../../packages/ui/format.js";
+import { ADMECH_GIFTS } from "../../../packages/ui/pregame-tables.js";
 import DOMAIN from "../../../packages/rules/domain.js";
 
 
@@ -34,17 +35,9 @@ export function critIcon(id){
 
 
 /* Critical tables and their footers live in domain.js (criticalModel). */
-/* Fleets WiP p. 119. "Mechanicus capital ships must also roll a D6 once
-   against the Mechanicus Gifts table." The text is condensed for the card;
-   the keyword at the start says what the gift affects. */
-export const ADMECH_GIFTS = [
-  ["Energy Reserves",      "CRIPPLED", "turrets/shields/weapons 75 %, not 50 %"],
-  ["Advanced Engines",     "SPEED",    "+5 cm; AAF +1D6"],
-  ["Repulsor Shielding",   "BLAST",    "ignore blast/gas; lost if Shields Collapse"],
-  ["Fleet Defence Turrets","TURRETS",  "2 turrets: +2 to self or 1 ship &lt;=15 cm"],
-  ["Targeting Matrix",     "ORDERS",   "AAF/CTNH/Burn: weapons 75 %; no nova"],
-  ["Weapon Relays",        "GUNNERY",  "batteries shift left; lance 6 = double"]
-];
+/* Fleets WiP p. 119: the Mechanicus Gifts table, shared with Play
+   (packages/ui/pregame-tables.js). */
+export { ADMECH_GIFTS };
 
 /* A Mechanicus vessel is a capital ship from the Explorator list. The list's
    escorts are taken from the Imperial Navy and Space Marines lists "otherwise

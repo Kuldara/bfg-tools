@@ -3,7 +3,8 @@ import { wepClass } from "./setup.js";
 import { OPT, PLAY_VERSION, TRACK, builderRaw, lsGet } from "./storage.js";
 import { $, MID, TIMES, fnv } from "./helpers.js";
 import { fleetFactsNow, fleetPoints, fleetsIn, parseDoc, resolveFleet } from "./fleet-document.js";
-import { KEY_WAKE, builderTool, carriersOf, cmdsAboard, coCmd, grpLabel, isEscGrp, loadPlay, sqnShip, toolBtn, wl2Box, wlExtra, wlTag } from "./game-state.js";
+import { KEY_WAKE, builderTool, carriersOf, cmdsAboard, coCmd, grpLabel, isEscGrp, ldPlanOf, ldRollers, loadPlay, preCounts, preRollsOf, sqnShip, toolBtn, wl2Box, wlExtra, wlTag } from "./game-state.js";
+import { IN_REFITS, inRefitKind, pregameRolls, pregameText } from "../../../packages/ui/pregame-tables.js";
 import { cataLabel, critLabel, groupUnits } from "./actions.js";
 import { baseName, classTag, crippledNow, critChips, ldTile, memberWord, ordChip, ordnancePills, renderFleetPop, statsLine, unitName, weaponsLine, weaponsTable } from "./derived.js";
 import { builderFleets, endPending, jumpStrip, linkedFleets, renderEndPhase } from "./share.js";
@@ -259,6 +260,91 @@ export function factsCard(){
   return fs.length ? `<div class="card"><h2>Fleet facts</h2>${fs.map(f =>
     `<div class="setrow"><div class="who"><b>${esc(f.t)}</b><small>${esc(f.s)}</small></div><span class="pill on"><b>${esc(f.v)}</b></span></div>`).join("")}</div>` : "";
 }
+/* ---- Rolling before the game (user 31.10.2026, RULINGS.md T44) -------- */
+const bookPg = (book, page) => (book === "Fleets" ? "Fleets p. " : "p. ") + page;
+/* the range a plan gives: its table's lowest and highest, the modifiers,
+   at most 10 (p. 48) */
+function ldRange(p){
+  const add = p.mods.reduce((a, m) => a + m.v, 0), vals = p.table.d.slice(1).map(v => Math.min(10, v + add));
+  return Math.min.apply(null, vals) + "-" + Math.max.apply(null, vals);
+}
+/* The fleet's own Leadership rules, shut until opened: which table each
+   ship rolls on with what it adds, who does not roll, and the other dice
+   of the set-up with their tables in full. */
+export function ldGuide(){
+  const groups = {}, order = [], fixed = [], manual = [];
+  appState.U.forEach((x, i) => {
+    if(x.R.kind !== "ship") return;
+    const p = ldPlanOf(i);
+    if(!p) return;
+    if(!p.roll){ (p.manual ? manual : fixed).push({ i, p }); return; }
+    const key = p.table.name + "|" + p.mods.map(m => m.t + m.v).join(",");
+    if(!groups[key]){ groups[key] = { p, ships: [] }; order.push(key); }
+    groups[key].ships.push(i);
+  });
+  const names = is => { const c = {}; is.forEach(i => { const n = title(appState.U[i].R.className); c[n] = (c[n] || 0) + 1; }); return Object.keys(c).map(n => esc(n) + (c[n] > 1 ? " " + TIMES + c[n] : "")).join(", "); };
+  const rows = order.map(k => { const g = groups[k], p = g.p;
+    return `<li><b>${esc(p.table.name)} table</b> (${bookPg(p.table.book, p.table.page)}): D6 ${esc(p.table.rows)}${p.mods.map(m => `; ${m.v > 0 ? "+" : ""}${m.v} ${esc(m.t)} (Fleets p. ${m.page})`).join("")} ${MID} <b>Ld ${ldRange(p)}</b><br><small>${names(g.ships)}</small></li>`; });
+  fixed.forEach(f => rows.push(`<li><b>${esc(unitName(f.i))}</b>: Ld ${f.p.value}, not rolled ${MID} ${esc(f.p.note)} (${bookPg(f.p.book, f.p.page)})</li>`));
+  if(manual.length) rows.push(`<li><b>${names(manual.map(f => f.i))}</b>: ${esc(manual[0].p.note)}. Tap the value yourself.</li>`);
+  const R0 = appState.U.map(x => x.R);
+  const txt = R0.map(R => (R.rules || []).map(r => String(r.t || "")).join(" ")).join(" ");
+  const extra = [
+    "One roll per capital ship and one per escort squadron (p. 45); a capital squadron tests on its highest Ld (p. 95). Nothing goes above 10 (p. 48).",
+    appState.G.cmd != null ? "The fleet commander's Leadership goes on his flagship after the roll: a fixed value replaces it, a bonus is added (max 10). Another commander's line is yours to add (T40)." : "",
+    R0.some(R => R.gifts) ? "Adeptus Mechanicus: a ship that rolls a natural 6 for its Leadership may choose its Mechanicus Gift instead of rolling it, unless it carries an Archmagos (Fleets p. 118)." : "",
+    /swap Leadership ratings with a Kill Kroozer or Terror Ship/i.test(txt) ? "Ork battleships: once the Leadership is rolled, the battleship may swap its value with a Kill Kroozer or Terror Ship (Fleets pp. 376-381) - tap the swapped values." : "",
+    appState.L0 && appState.L0.clanz ? "Da Ork Clanz: a Warlord may swap Leadership with any one ship or escort squadron under his command (Fleets p. 374)." : "",
+    R0.some(R => pregameRolls(R).some(r => r.key === "xeno")) ? "Xenotech Long Range Sensors: +1 to base Leadership, max 10 (Fleets p. 185) - add it to the ship's value." : ""
+  ].filter(Boolean);
+  /* the other dice: each table once, with the ships that roll on it */
+  const tabs = {}, tOrder = [];
+  appState.U.forEach((x, i) => pregameRolls(x.R).forEach(r => { if(!tabs[r.key]){ tabs[r.key] = { r, who: [] }; tOrder.push(r.key); } tabs[r.key].who.push(i); }));
+  const tabHTML = tOrder.map(k => { const t = tabs[k], r = t.r;
+    const body = r.two ? r.tables.map(T => `<div class="pg-t"><h6>${esc(T.roll)} ${esc(T.name)} <span>Rulebook p. ${T.page}</span></h6><ol>${T.rows.map(x => `<li><i>${esc(x[0])}</i> &ndash; ${x[1]}</li>`).join("")}</ol></div>`).join("")
+      : r.rows ? `<ol>${r.rows.map(x => `<li><i>${esc(x[0])}</i> &ndash; ${x[1]}</li>`).join("")}</ol>` : "";
+    return `<div class="pg-tab"><h5>${esc(r.title)} <span>Fleets p. ${r.page}</span></h5><p>${esc(r.note)}</p>${body}<small>${t.who.map(i => esc(unitName(i))).join(", ")}</small></div>`; }).join("");
+  return `<details class="ldguide"${appState.V.ldGuide ? " open" : ""}><summary>Leadership rules of this fleet${tOrder.length ? " and the other pre-game dice" : ""}</summary>
+    <ul>${rows.join("")}</ul>${extra.map(t => `<p>${esc(t)}</p>`).join("")}${tabHTML ? `<h4>Rolled before the game</h4>${tabHTML}` : ""}</details>`;
+}
+/* the roll buttons: the ships still without a value first; once every
+   one has its value, a re-roll of all of them */
+function rollBar(){
+  const rollers = ldRollers(), open = rollers.filter(i => appState.G.st[i].ld == null).length;
+  const pc = preCounts();
+  const ldBtn = rollers.length ? (open
+      ? `<button class="btn" data-act="rollld">Roll Ld<small>${open === rollers.length ? rollers.length + " to roll" : open + " still to roll"}</small></button>`
+      : `<button class="btn sec" data-act="rollld" data-arg="all">Re-roll all Ld</button>`) : "";
+  const preBtn = pc.n ? (pc.open
+      ? `<button class="btn" data-act="rollpre">Roll upgrades<small>${pc.open} to roll</small></button>`
+      : `<button class="btn sec" data-act="rollpre" data-arg="all">Re-roll upgrades</button>`) : "";
+  return ldBtn || preBtn ? `<div class="rollbar">${ldBtn}${preBtn}</div>` : "";
+}
+/* the row's dice: the Leadership's die and sum; one select per pre-game
+   roll, to pick by hand or change what was rolled */
+function rowDice(i){
+  const st = appState.G.st[i], p = ldPlanOf(i);
+  const ld = st.ldWhy && st.ld != null ? ` ${MID} <span class="dice">${st.ldDie == null ? "" : "rolled "}${esc(st.ldWhy)}</span>` : "";
+  const man = p && p.manual ? ` ${MID} ${esc(p.note)}` : "";
+  const pre = preRollsOf(i).map(r => {
+    const v = (st.pre || {})[r.key];
+    const cur = v ? (r.two ? v.k + "-" + v.d : String(v.d)) : "";
+    const opts = r.two
+      ? IN_REFITS.map((T, t) => `<optgroup label="${esc(T.roll + " " + T.name)}">${T.rows.map((x, d) => { const val = (2 * t + 1) + "-" + (d + 1); const sel = v && inRefitKind(v.k) === T && v.d === d + 1; return `<option value="${val}"${sel ? " selected" : ""}>${esc(T.name.replace(/ refit$/, ""))} ${d + 1}: ${esc(x[0])}</option>`; }).join("")}</optgroup>`).join("")
+      : [1, 2, 3, 4, 5, 6].map(d => `<option value="${d}"${cur === String(d) ? " selected" : ""}>${d}${r.rows ? " " + esc(r.rows[d - 1][0]) : ""}</option>`).join("");
+    const choose = r.key === "gift" && st.giftChoice ? ` <em class="dice">natural 6 on Ld: may choose (Fleets p. 118)</em>` : "";
+    const how = v ? (v.how === "roll" ? "rolled" : "chosen") : (r.pick ? "pick" : "to roll");
+    return `<label class="pre${v ? "" : " open"}"><span>${esc(r.title)} <i>${how}</i></span><select data-sel="pre" data-i="${i}" data-key="${r.key}" aria-label="${esc(r.title)}"><option value="">${r.pick ? "choose" : "roll or choose"}</option>${opts}</select>${choose}</label>`;
+  }).join("");
+  return { line: ld + man, pre: pre ? `<div class="pres">${pre}</div>` : "" };
+}
+/* on the card: what was rolled before the game, with its page */
+export function preLine(i){
+  const st = appState.G.st[i], rs = preRollsOf(i).filter(r => (st.pre || {})[r.key]);
+  if(!rs.length) return "";
+  return `<p class="preline">${rs.map(r => { const v = st.pre[r.key]; const row = r.two ? inRefitKind(v.k).rows[v.d - 1] : r.rows ? r.rows[v.d - 1] : null;
+    return `<b>${esc(r.title)}:</b> ${esc(pregameText(r, v))}${row ? " &ndash; " + row[1] : ""} (${r.two ? "Rulebook pp. 158-159" : (r.key === "crew" ? "Rulebook" : "Fleets") + " p. " + r.page})`; }).join("<br>")}</p>`;
+}
 export function renderSetup(){
   const rows = appState.U.map((x, i) => {
     const R = x.R, st = appState.G.st[i];
@@ -278,7 +364,7 @@ export function renderSetup(){
       const pick = !caps.length ? "" : caps.length === 1
         ? `<span class="pill on">aboard ${esc(unitName(caps[0]))}</span>`
         : `<select data-sel="${fc ? "flag" : "on"}" data-i="${i}" aria-label="Aboard">${caps.map(j => `<option value="${j}" ${cur === j ? "selected" : ""}>aboard ${esc(unitName(j))}</option>`).join("")}</select>`;
-      return `<div class="setrow"><div class="who"><b>${esc(unitName(i))}</b><small>${ldTxt}${rrWords(R)}</small></div>
+      return `<div class="setrow"><div class="who"><b>${esc(unitName(i))}</b><small>${ldTxt}${rrWords(R)}</small>${rowDice(i).pre}</div>
         ${pick}</div>`;
     }
     if(R.kind !== "ship") return "";
@@ -305,7 +391,7 @@ export function renderSetup(){
        away from the Ld tiles; a ship still without its Ld is marked */
     const need = st.ld == null;
     const sqBtn = sqn ? `<button class="sqb${appState.G.grp[i] ? " on" : ""}" data-act="grp" data-i="${i}"${appState.G.grp[i] ? ` style="--sqc:${sqColor(appState.G.grp[i])}"` : ""} title="Squadron: tap for A, B, C or none (p. 95, 99)">${appState.G.grp[i] ? "SQN " + appState.G.grp[i] : "+ SQN"}</button>` : "";
-    return `<div class="setrow${need ? " need" : ""}" data-u="${i}"><div class="who"><input class="nm" type="text" data-nm="${i}" value="${esc(unitName(i))}" placeholder="${esc(baseName(i))}" maxlength="40" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" aria-label="Name of this ship in the game"><small>${classTag(R)}${esq ? " " + TIMES + R.hulls + (fx ? "" : isEscGrp(appState.G.grp[i]) ? " " + MID + " one Ld for squadron " + grpLabel(appState.G.grp[i]) + " (" + groupUnits(appState.G.grp[i]).length + " cards)" : " " + MID + " one Ld for the squadron") : ""}${why}${youngGunzNote(i)}${need ? ` ${MID} <span class="needs">pick its Ld</span>` : ""}</small>${sqBtn}</div>
+    return `<div class="setrow${need ? " need" : ""}" data-u="${i}"><div class="who"><input class="nm" type="text" data-nm="${i}" value="${esc(unitName(i))}" placeholder="${esc(baseName(i))}" maxlength="40" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" aria-label="Name of this ship in the game"><small>${classTag(R)}${esq ? " " + TIMES + R.hulls + (fx ? "" : isEscGrp(appState.G.grp[i]) ? " " + MID + " one Ld for squadron " + grpLabel(appState.G.grp[i]) + " (" + groupUnits(appState.G.grp[i]).length + " cards)" : " " + MID + " one Ld for the squadron") : ""}${why}${youngGunzNote(i)}${rowDice(i).line}${need ? ` ${MID} <span class="needs">pick its Ld</span>` : ""}</small>${sqBtn}${rowDice(i).pre}</div>
       <div class="ctl">${fixed ? `<span class="pill on"><b>Ld ${st.ld}</b></span>` : `<div class="seg ld">${tiles}</div>`}</div></div>`;
   }).join("");
   /* a grey Start says why, and each name takes you to its row */
@@ -317,7 +403,8 @@ export function renderSetup(){
   return `<div class="top"><h1>Set up<small>${esc(appState.G.ln)} ${MID} ${fleetPoints(appState.U)} pts</small></h1>
       <div class="tools">${builderTool()}<button class="tool" data-act="newgame" title="Back to the fleets: this set-up is not kept">Exit</button></div></div>
     <div class="main">${factsCard()}<div class="card"><h2>Leadership</h2>
-      <p>Roll a D6 per capital ship and per escort squadron before the game (p. 45): 1 = Ld 6, 2&ndash;3 = Ld 7, 4&ndash;5 = Ld 8, 6 = Ld 9. Fleets with a table of their own run from Ld 5 (Orks, Fleets p. 360) to Ld 10 (Space Marines, Fleets p. 94). Tap the value the ship fights on: a bonus of its own (an Emperor's +1, Fleets p. 53) is yours to add. SQN groups capital ships into a squadron: one Ld, one order, combined fire (p. 95, 99). Tap a ship's name to give it another one for this game.${appState.L0.clanz ? " Da Ork Clanz: a Warlord may swap Leadership with any one ship or escort squadron under his command (Fleets p. 374) - tap the swapped values." : ""}${anyFixed ? " Planetary defences do not roll: their checks are made on Ld 7 (Rulebook p. 100)." : ""}</p>
+      ${ldGuide()}${rollBar()}
+      <p>Roll Ld rolls a D6 for every ship still without a value, on its fleet's own table with what the book adds (the guide above). Or roll your own dice and tap the value: a tap always wins over the roll. SQN groups capital ships into a squadron: one Ld, one order, combined fire (p. 95, 99). Tap a ship's name to give it another one for this game.${appState.L0.clanz ? " Da Ork Clanz: a Warlord may swap Leadership with any one ship or escort squadron under his command (Fleets p. 374) - tap the swapped values." : ""}${anyFixed ? " Planetary defences do not roll: their checks are made on Ld 7 (Rulebook p. 100)." : ""}</p>
       ${frrRow}${rows}
       <button class="btn" data-act="start" ${ready ? "" : "disabled"}>Start the game</button>
       ${ready ? "" : `<p class="why">To start, pick the Ld of ${missing.length === 1 ? "one more ship" : missing.length + " more ships"}: ${missing.map(i => `<button data-act="seek" data-i="${i}">${esc(unitName(i))}</button>`).join(", ")}</p>`}</div></div>`;
@@ -729,6 +816,7 @@ export function renderPop(i){
     return `<div class="pop"><h4>Leadership ${appState.G.grp[i] ? MID + " " + esc(unitName(i)) + " " : ""}${MID} rolled ${l.base == null ? "?" : l.base}${st.ldPerm ? " " + MID + " bridge smashed " + st.ldPerm : ""}</h4>
       ${others2}
       <p>${l.base == null ? "Roll a D6 (p. 45): 1 = 6, 2-3 = 7, 4-5 = 8, 6 = 9 - or on the fleet's own table: Ld 5 (Orks, Fleets p. 360) to Ld 10 (Space Marines, Fleets p. 94)." : "Command checks: 2D6 equal to or under Ld; -1 under fire, +1 enemy contacts, never above 10 (p. 48) - count those from the table."}</p>
+      ${(() => { const p = ldPlanOf(i); return p && p.roll ? `<p><button class="chip" data-act="rollone" data-i="${i}">Roll D6</button> on the ${esc(p.table.name)} table (${bookPg(p.table.book, p.table.page)})${p.mods.map(m => `, ${m.v > 0 ? "+" : ""}${m.v} ${esc(m.t)}`).join("")}${st.ldWhy ? ` ${MID} rolled ${esc(st.ldWhy)}` : ""}</p>` : ""; })()}
       <div class="tiles c6">${PLAY.LD_VALUES.map(n => `<button class="${st.ldRoll === n ? "on" : ""}" data-act="ld" data-i="${i}" data-arg="${n}"><b>${n}</b></button>`).join("")}</div>
       ${st.ldFrom === "commander" ? `<p>The commander's Leadership line applies to this flagship: a fixed value stands in for the roll, a bonus is added to it.</p>` : ""}
       <button class="close" data-act="closepop">close</button></div>`;
@@ -893,7 +981,7 @@ export function renderSheet(i){
   const ruleSec = R.ruleCard ? `<div class="sec"><h3>${esc(R.ruleCard.title)}<em>Fleets p. ${R.ruleCard.page}</em></h3><p class="lead">${esc(R.ruleCard.lead || "")}</p>${ruleSteps(R)}</div>` : "";
   return `<div class="sheet" style="--kd:${kd};--km:${km}">
     <div class="sh-hd"><div class="t"><h2>${esc(unitName(i))}</h2><p>${esc(sub)}</p></div>${ldTile(i)}<button class="x" data-act="closesheet" aria-label="Close">&#215;</button></div>
-    <div class="sh-body">${band}${cmdsAboard(i).map(cmdLine).join("")}${shipRRLine(i)}${v.fort && !v.destroyed ? quadSelector(i, v) : ""}${stats}
+    <div class="sh-body">${band}${cmdsAboard(i).map(cmdLine).join("")}${shipRRLine(i)}${v.fort && !v.destroyed ? quadSelector(i, v) : ""}${stats}${preLine(i)}
       ${appState.V.pop && appState.V.pop.i === i && /^(ld|blast)$/.test(appState.V.pop.kind) ? renderPop(i) : ""}
       <div class="sec"><h3>Armament<em>Str as printed ${MID} &frac12; when halved</em></h3>${weaponsTable(R, st, esq)}</div>
       ${ruleSec}${damage}${crits}${flags}${info}

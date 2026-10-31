@@ -2,7 +2,7 @@ import { appState } from "./state.js";
 import { KEY_INFO, KEY_PLAY, OPT, TRACK, lsDel, lsGet, lsSet, normaliseUntracked, saveOpts } from "./storage.js";
 import { $ } from "./helpers.js";
 import { resolveFleet } from "./fleet-document.js";
-import { KEY_VIEW, KEY_WAKE, applyCommanderLd, cmdsAboard, coCmd, save, setLd } from "./game-state.js";
+import { KEY_VIEW, KEY_WAKE, applyCommanderLd, cmdsAboard, coCmd, forgetLdDie, rollAllLd, rollAllPre, rollLd, save, setLd, setPre } from "./game-state.js";
 import { crippledNow, unitName } from "./derived.js";
 import { jumpTo, pageLabel, render, rrOpen, rrPool, showPop, topRow, wake } from "./render.js";
 import { repairable } from "./share.js";
@@ -127,8 +127,20 @@ export function act(name, i, arg){
      star fort's selected quadrant (Fleets p. 501) */
   const tk = R && st ? PLAY.track(R, st) : st;
   switch(name){
-    case "ld": setLd(i, arg); break;
-    case "ldclear": st.ld = null; st.ldRoll = null; st.ldFrom = null; break;
+    /* a tapped value is the player's: a rolled die that gave another one
+       is forgotten (T44) */
+    case "ld": if(arg !== st.ldRoll) forgetLdDie(i); setLd(i, arg); break;
+    case "ldclear": st.ld = null; st.ldRoll = null; st.ldFrom = null; forgetLdDie(i); break;
+    /* the set-up screen's dice (user 31.10.2026, RULINGS.md T44): the
+       ships still without a value, or with "all" every one again */
+    case "rollld":
+      if(arg === "all" && !confirm("Roll the Leadership of every ship again?")){ appState.UNDO.pop(); return; }
+      rollAllLd(arg === "all"); break;
+    case "rollpre":
+      if(arg === "all" && !confirm("Roll every pre-game upgrade again?")){ appState.UNDO.pop(); return; }
+      rollAllPre(arg === "all"); break;
+    case "rollone": rollLd(i); break;
+    case "pre": setPre(i, arg.key, arg.v); break;
     case "flag": appState.G.flag = arg; applyCommanderLd(); break;
     case "on": appState.G.on = appState.G.on || {}; appState.G.on[i] = arg; break;
     case "wl2": st.wl2 = !st.wl2; break;
