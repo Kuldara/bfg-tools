@@ -9,7 +9,7 @@
    instead of a new card of that class. Filling ends with Done, when the
    squadron is full, or when + is pressed in another section. In the fleet a
    squadron of two or more cards with one letter is drawn as one group row
-   with its members; the cards are still there (open the row), and the
+   header with its cards right under it (31.10.2026: no fold of its own), and the
    saved fleet, the rules and Play see only the letters, as before. The
    printed sheet gives the squadron one card (mixed-card.js). */
 import { resolveUnit } from "./cards.js";
@@ -112,15 +112,15 @@ export function mixRowHTML(si){
     <div class="p"></div><span class="acts"><button type="button" class="add mixstart" data-mixstart="${si}"
       title="Start a mixed squadron: each + below then adds one ship to it">+</button></span></div>`;
 }
-/* the fleet pane's group row; open shows the cards under it */
-export function mixGroupHTML(g, open){
-  const mem = g.idx.map(j => { const u = appState.S.units[j], R = resolveUnit(u);
-    return `<b>${R.hulls}&times;</b><span>${esc(title(R.className))}${isCommandeered(u) ? " <i>commandeered</i>" : ""}${u.name ? " <i>" + esc(u.name) + "</i>" : ""}</span><span>${R.points} pts</span>`; }).join("");
+/* the fleet pane's group row (user 31.10.2026: one fold less). It is the
+   squadron's header: its cards are always drawn right under it (view.js,
+   class mixkid), each with its own fold in Compact, so the row itself does
+   not open and does not list them again. */
+export function mixGroupHTML(g){
   const pts = g.idx.reduce((a, j) => a + (resolveUnit(appState.S.units[j]).points || 0), 0);
   const errs = g.idx.length ? sqErrorsHTML(g.tag) : "";
   return `<div class="unit mixg${g.filling ? " filling" : ""}${errs ? " bad" : ""}" data-mixui="${g.first}" data-mixtag="${esc(g.tag)}">
     <div class="uhead">
-      ${g.idx.length ? `<button type="button" class="ufold" data-mixfold="${esc(g.tag)}" aria-expanded="${!!open}" title="${open ? "Hide the cards" : "Show the cards"}">${open ? "▾" : "▸"}</button>` : `<span class="ufold"></span>`}
       <span class="cls">${kindWord(g)} ${esc(g.tag)}</span>${g.idx.length ? infoBtnHTML("m:" + g.tag, "Everything about this squadron") : ""}
       <span class="ty">${g.hulls} escort${g.hulls === 1 ? "" : "s"}${g.com ? " (" + (g.hulls - g.com) + " Ork + " + g.com + " commandeered)" : ""} &middot; mixed${g.filling ? " &middot; filling" : ""}</span>
       <span class="pts">${pts} pts</span>
@@ -128,7 +128,7 @@ export function mixGroupHTML(g, open){
                   : `<button type="button" class="del" data-mixmore="${esc(g.tag)}" title="The section's + adds to this squadron again">Add more</button>`}
       <button type="button" class="del" data-mixrm="${esc(g.tag)}" title="Remove the whole squadron">Remove</button>
     </div>
-    ${mem ? `<div class="mixmem">${mem}</div>` : `<div class="mixmem empty">nothing yet &mdash; press + on the escorts in the catalogue</div>`}
+    ${g.idx.length ? "" : `<div class="mixmem empty">nothing yet &mdash; press + on the escorts in the catalogue</div>`}
     ${errs}
     ${g.filling ? `<div class="mixfill">${meterHTML(g)}</div>` : ""}
     ${g.tiddla ? `<div class="mixfill">${orkTiddlaHint(g.hulls)}</div>` : ""}

@@ -149,7 +149,11 @@ details.rules.auto[open]>summary::after{content:" \2013"}
 .unit.mixg{border-left:3px solid var(--accent);background:linear-gradient(90deg,var(--accent-wash),transparent 60%)}
 .unit.mixg.filling{outline:1px dashed var(--accent);outline-offset:-3px}
 .unit.mixg .uhead .cls{color:var(--ink)}
-.unit.mixg span.ufold{display:inline-block;width:22px}
+/* the squadron's cards, always right under its header (one fold less, 31.10.2026) */
+.unit.mixg:has(+ .mixkid){border-bottom-color:transparent}
+.unit.mixkid{border-left:3px solid var(--accent);padding-left:30px;background:linear-gradient(90deg,var(--accent-wash),transparent 30%)}
+.unit.mixkid:not(.mixlast){border-bottom-style:dashed}
+.unit.mixkid.wlc{box-shadow:inset 5px 0 0 var(--wl)}
 .mixmem{margin:6px 0 0 32px;display:grid;grid-template-columns:auto 1fr auto;gap:3px 12px;font:400 12px/1.4 var(--sans);color:var(--ink-2)}
 .mixmem b{font:600 12px/1.4 var(--mono);color:var(--ink)} .mixmem span:last-child{font:400 12px/1.4 var(--mono);color:var(--ink-3)}
 .mixmem i{font-style:normal;color:var(--ink-3)}
