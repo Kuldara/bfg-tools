@@ -5,6 +5,7 @@ import { fleetsIn, parseDoc } from "./fleet-document.js";
 import { loadPlay, resumeGame } from "./game-state.js";
 import { render } from "./render.js";
 import { takeFleetText } from "./share.js";
+import { peerBoot, takePeerFromAddress } from "./peer.js";
 import { unpackFleet } from "../../../packages/ui/share-link.js";
 
 /* Opened from a link with a fleet in it (the "to phone" QR code of an older
@@ -36,7 +37,8 @@ export function takeLinkFromAddress(){
     appState.V.screen = same ? "roster" : "load";
   }
   takeLinkFromAddress();
+  peerBoot();
   if(typeof window !== "undefined" && window.addEventListener)
-    window.addEventListener("hashchange", () => { if(takeLinkFromAddress()) render(); });
+    window.addEventListener("hashchange", () => { if(takeLinkFromAddress() || takePeerFromAddress()) render(); });
   render();
 })();

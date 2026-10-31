@@ -6,6 +6,7 @@ a tag `play-v<version>` deploys the Registry's site.
 ## Unreleased
 
 ### Added
+- The opponent's fleet (prototype, 31.10.2026): two players link their phones with two QR codes, before the game or during it, and each sees the other's ships, hits, criticals and orders live. The roster gets two sides, *My fleet* and theirs: swipe sideways or tap a tab; a tab at the screen's edge and a short slide of the cards the first times show that the swipe is there. The phones talk directly (WebRTC); nothing is stored on a server. The last copy stays, marked not live, after a reload.
 - Roll Ld (prototype, 31.10.2026, RULINGS.md T44): the set-up screen rolls the Leadership of every ship on its fleet's own table with what the book adds (Orks -1, Eldar +1, Space Marines 8-10, Mechanicus 7-9 ...), and the pre-game upgrade dice (Mechanicus Gifts, special torpedoes, Xenotech, the Blood Axe refit, crew skills). Every value stays editable: an Ld tile or the upgrade's select. A collapsible guide shows the fleet's Leadership rules and the tables in full; the card shows what was rolled.
 - Link preview (29.10.2026): a link to the app in Discord and elsewhere shows its own image (the app itself, the numbers from the data) and text. `npm test` fails when the image is out of date (`npm run og`).
 

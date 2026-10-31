@@ -627,6 +627,31 @@ function run(check){
     check("smoke: a clan bought on one card of a mixed tiddla gives every card its speed, paid once (Fleets p. 371, T60)",
           !!got.sp && got.sp[1] === "30 cm" && got.sp[2] === "25 cm" && got.pts === 215, JSON.stringify(got));
   });
+
+  /* ------------- the opponent's fleet (peer.js, user 31.10.2026) --- */
+  guard("the opponent's fleet", () => {
+    const pg = open(), P = pg.P;
+    const ORK = pg.DATA.lists.find(x => /^Orks . Waaagh!$/.test(x.nm));
+    const TAU = pg.DATA.lists.find(x => /^Tau . Merchant Fleet$/.test(x.nm));
+    /* their game: an Ork cruiser with two hits, a name with markup in it */
+    pg.ctx.__their = { ln: ORK.nm, limit: 1000, units: [saved(ORK, /^KROOZERS$/, /./)] };
+    P(`newGame(resolveFleet(__their)); G.st[0].ld = 6; act("start", null); act("hit", 0); act("hit", 0); G.nm = ["Da <b>Kroozer</b>"];
+       var __snap = JSON.parse(JSON.stringify({ t: "g", n: "Mikko", G: G, opt: { orders: false, shields: true, ordnance: false, fleet: false }, scr: "roster" }));`);
+    /* mine: a Tau cruiser, nothing tracked */
+    pg.ctx.__mine = { ln: TAU.nm, limit: 1000, units: [saved(TAU, /^Cruisers$/, /./)] };
+    P(`newGame(resolveFleet(__mine)); setLd(0, 8); act("start", null); takeSnapshot(__snap); V.side = "peer";`);
+    const html = P(`renderPeerSide()`);
+    clean("the opponent's side", html);
+    check("smoke: their side shows their ship with their hits, read-only", /peerview/.test(html) && /Kroozer/.test(strip(html)) && (html.match(/<b class="on[^"]*" data-act="dmg"/g) || []).length === 2, strip(html).slice(0, 200));
+    check("smoke: markup in a name from the other phone is dropped", !/<b>Kroozer/.test(html));
+    check("smoke: their tracking switches draw their cards (shields), mine stay mine", /SH <b>/.test(html) && P(`OPT.shields`) === false);
+    check("smoke: after drawing their side my own game is back", P(`G.ln`) === TAU.nm && P(`U.length`) === 1 && /Tau/.test(P(`renderRoster()`)) && P(`V.side`) === "peer");
+    P(`V.side = "me"`);
+    check("smoke: the tabs and the edge tab appear once there is an opponent", /class="sides/.test(P(`renderRoster()`)) && /class="edge r/.test(P(`renderRoster()`)));
+    clean("the link panel", P(`renderPeerPanel()`));
+    check("smoke: a link code is read from a pasted link or a bare code", P(`JSON.stringify([parsePeerText("https://x/p.html#peer=zAbC_-1"), parsePeerText("peerok=jQQ"), parsePeerText("nothing")])`) === '[{"kind":"peer","code":"zAbC_-1"},{"kind":"peerok","code":"jQQ"},null]');
+    P(`V.side = "me";`);
+  });
 }
 
 module.exports = run;
