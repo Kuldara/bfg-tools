@@ -11,7 +11,7 @@ import { builderFleets, endPending, jumpStrip, linkedFleets, renderEndPhase } fr
 import PLAY from "../rules.js";
 import { arcGlyph, esc, factionCols, shortArmour, shortRange, starHTML, title } from "../../../packages/ui/format.js";
 import DOMAIN from "../../../packages/rules/domain.js";
-import { edgeHandle, peerAfterRender, peerLoadCard, peerMenuWord, peerSide, peerTool, renderPeerPanel, renderPeerSide, sidesStrip } from "./peer.js";
+import { edgeHandle, peerAfterRender, peerLoadCard, peerMenuWord, peerSetupCard, peerSide, renderPeerPanel, renderPeerSide, sidesStrip } from "./peer.js";
 
 /* ============================================================= RENDER ===== */
 /* Scroll the open popover's anchor (the button line above it) to just
@@ -405,9 +405,9 @@ export function renderSetup(){
   const frr = fleetRR();
   const frrRow = frr ? `<div class="setrow"><div class="who"><b>Fleet re-rolls</b><small>${esc(frr.text)} ${MID} the fleet's own, no commander (Fleets p. ${frr.page})</small></div><span class="pill on">RR <b>${appState.G.fleet.rerolls | 0}</b></span></div>` : "";
   return `<div class="top"><h1>Set up<small>${esc(appState.G.ln)} ${MID} ${fleetPoints(appState.U)} pts</small></h1>
-      <div class="tools">${builderTool()}${peerTool()}<button class="tool" data-act="newgame" title="Back to the fleets: this set-up is not kept">Exit</button></div></div>
+      <div class="tools">${builderTool()}<button class="tool" data-act="newgame" title="Back to the fleets: this set-up is not kept">Exit</button></div></div>
     ${sidesStrip()}
-    <div class="main">${factsCard()}<div class="card"><h2>Leadership</h2>
+    <div class="main">${peerSetupCard()}${factsCard()}<div class="card"><h2>Leadership</h2>
       ${ldGuide()}${rollBar()}
       <p>Tap the value each ship fights on, or let Roll Ld roll the ships still without one. SQN groups capital ships into a squadron: one Ld, one order, combined fire (p. 95, 99). Tap a ship's name to give it another one for this game.${appState.L0.clanz ? " Da Ork Clanz: a Warlord may swap Leadership with any one ship or escort squadron under his command (Fleets p. 374) - tap the swapped values." : ""}${anyFixed ? " Planetary defences do not roll: their checks are made on Ld 7 (Rulebook p. 100)." : ""}</p>
       ${frrRow}${rows}
