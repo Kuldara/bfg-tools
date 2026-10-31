@@ -29,4 +29,5 @@ export * from "./panels.js";
 export * from "./link-dialog.js";
 export * from "./info.js";
 export * from "./mixed.js";
+export * from "./aboard-ship.js";
 export * from "./main.js";
