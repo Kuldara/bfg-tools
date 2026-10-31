@@ -42,6 +42,14 @@
     -webkit-tap-highlight-color:transparent;touch-action:manipulation;
     transition:transform .09s ease-out,filter .12s ease-out,background-color .15s,border-color .15s,color .15s}
   .tb-lab::after{content:"\25BE";color:var(--ink-3)}
+  /* J243: Menu only where it does something - once the buttons have gone
+     under the strip. At the top of the page they are already there, and
+     a tap there only changed its own colour. Pinned it reads Hide. */
+  .tb-lab{opacity:0;visibility:hidden;transition:opacity .15s,visibility 0s .15s,transform .09s ease-out,filter .12s ease-out,background-color .15s,border-color .15s,color .15s}
+  .tb-strip.far .tb-lab{opacity:1;visibility:visible;transition:opacity .15s,visibility 0s,transform .09s ease-out,filter .12s ease-out,background-color .15s,border-color .15s,color .15s}
+  .tb-lab .on-pin{display:none}
+  .tb-tog:checked~.tb-strip .tb-lab .on-pin{display:inline}
+  .tb-tog:checked~.tb-strip .tb-lab .off-pin{display:none}
   .tb-lab:active{transform:scale(.96);filter:brightness(.82)}
   .tb-tog{display:block;position:fixed;left:0;top:0;width:1px;height:1px;margin:0;opacity:0;pointer-events:none}
   .tb-tog:focus-visible~.tb-strip .tb-lab{outline:2px solid var(--accent);outline-offset:2px}

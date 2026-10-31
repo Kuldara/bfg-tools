@@ -5,6 +5,12 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 
 ## Unreleased
 
+### Changed
+- Phone: the **Menu** button in the points strip shows only once the buttons
+  have scrolled under it, where pinning them does something; pinned, it reads
+  **Hide** (31.10.2026, J243). At the top of the page it used to sit there and
+  only change its own colour when tapped.
+
 ### Added
 - Link preview (29.10.2026): a link to the app in Discord and elsewhere shows its own image (the app itself, the numbers from the data) and text. `npm test` fails when the image is out of date (`npm run og`).
 
