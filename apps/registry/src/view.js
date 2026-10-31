@@ -847,10 +847,10 @@ export function unitHTML(R, ui, st){
       ${fold ? `<button type="button" class="ufold" data-unfold="${ui}" aria-expanded="${fold === "open"}" aria-label="${foldTip}" title="${foldTip}">${fold === "open" ? "▾" : "▸"}</button><button type="button" class="cls" data-unfold="${ui}" aria-expanded="${fold === "open"}" title="${foldTip}">${esc(title(R.className))}</button>`
              : `<span class="cls">${esc(title(R.className))}</span>`}${ship ? infoBtnHTML("u:" + ui, "Everything about this ship") : ""}${role}
       ${R.entry && R.entry.badRef ? '<span class="ty" style="color:var(--bad)">source page ref wrong</span>' : ""}
-      <span class="ty">${esc(ship ? R.stats.type
+      <span class="ty">${st.ab && st.ab.tag ? esc(st.ab.tag) + " " : ""}${esc(ship && st.ab && st.ab.tag ? String(R.stats.type).toLowerCase() : ship ? R.stats.type
         : R.kind === "commander" ? "commander"
         : R.defence ? (R.defence.ground ? "low orbit defence" : "high orbit defence")
-        : "fleet option")}${grouped ? " squadron" : ""}</span>
+        : "fleet option")}${grouped && !(st.ab && st.ab.tag) ? " squadron" : ""}</span>
       <span class="pts">${R.points} pts${each}${
         R.maxPoints > R.points ? `<span class="maxp">max ${R.maxPoints}</span>` : ""}</span>
       <button class="del" data-del="${ui}" title="Remove this unit">Remove</button>
@@ -1071,32 +1071,29 @@ export function renderFleet(){
   /* a Clanz tiddla card: Mob Rule and Young Gunz, as information (p. 372) */
   const tidHint = u => L().clanz && skwKind(u) === "tiddla" ? `<div class="uctl">${orkTiddlaHint(u.n || 1)}</div>` : "";
   const rowOf = (u, ui, more) => unitRowHTML(u, ui,
-    { a: abOf[ui] || null, RF: RF, extra: (extra[ui] || "") + tidHint(u) + (more || ""), hide: hideOf[ui] || [], dim: dimOf[ui] || [], send: sendOf[ui] || "", hulk: onHulk(ui),
+    { a: abOf[ui] || null, RF: RF, extra: (extra[ui] || "") + (memberOf[ui] ? "" : tidHint(u)) + (more || ""), hide: hideOf[ui] || [], dim: dimOf[ui] || [], send: sendOf[ui] || "", hulk: onHulk(ui),
+      /* a Blood Axe's commandeered escort in its mixed tiddla says so (p. 371) */
+      tag: memberOf[ui] && isCommandeered(u) ? "commandeered" : "",
       /* J234: "" without Compact, else this unit "shut" or "open" */
       fold: appState.FLEET_FOLD ? (UOPEN.has(u) ? "open" : "shut") : "" });
   /* Mixed squadron (prototype): two or more cards with one letter are one
-     group row, drawn where the first card is; its cards show under it when
-     the row is open. The squadron being filled is a row even while empty. */
+     group header, drawn where the first card is, with its cards always right
+     under it (user 31.10.2026: one fold less; each card keeps its own fold
+     in Compact). The squadron being filled is a row even while empty. */
   const groups = mixGroups(), memberOf = {};
   groups.forEach(g => g.idx.forEach(j => { memberOf[j] = g; }));
-  appState.MIXOPEN = appState.MIXOPEN || new Set();
+  const kid = (html, last) => html.replace(/^<div class="unit/, `<div class="unit mixkid${last ? " mixlast" : ""}`);
   box.innerHTML = appState.S.units.map((u, ui) => {
     const g = memberOf[ui];
     /* a card alone with its letter is a squadron too: its red rows on it */
     if(!g) return rowOf(u, ui, u.sq && !u.lst && mixSec(u.s) ? sqErrorsHTML(u.sq) : "");
     if(ui !== g.first) return "";
-    const open = appState.MIXOPEN.has(g.tag);
-    return mixGroupHTML(g, open) + (open ? g.idx.map(j => rowOf(appState.S.units[j], j)).join("") : "");
-  }).join("") + groups.filter(g => !g.idx.length).map(g => mixGroupHTML(g, false)).join("");
+    return mixGroupHTML(g) + g.idx.map((j, k) => kid(rowOf(appState.S.units[j], j), k === g.idx.length - 1)).join("");
+  }).join("") + groups.filter(g => !g.idx.length).map(g => mixGroupHTML(g)).join("");
   box.querySelectorAll("[data-unfold]").forEach(b => b.onclick = () => {
     const u = appState.S.units[+b.dataset.unfold];
     if(!u) return;
     if(UOPEN.has(u)) UOPEN.delete(u); else UOPEN.add(u);
-    render();
-  });
-  box.querySelectorAll("[data-mixfold]").forEach(b => b.onclick = () => {
-    const t = b.dataset.mixfold;
-    if(appState.MIXOPEN.has(t)) appState.MIXOPEN.delete(t); else appState.MIXOPEN.add(t);
     render();
   });
   box.querySelectorAll("[data-mixdone]").forEach(b => b.onclick = () => { mixStop(); render(); });
