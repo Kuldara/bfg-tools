@@ -321,7 +321,8 @@ export function rollLd(i, rng){
   });
   return r;
 }
-/* all = true rolls again for every unit; else only those still without one */
+/* only the units still without a value; all = true rolls every one again
+   (not offered on the page: user 31.10.2026, no re-roll buttons) */
 export function rollAllLd(all, rng){
   ldRollers().forEach(i => { if(all || appState.G.st[i].ld == null) rollLd(i, rng); });
 }
