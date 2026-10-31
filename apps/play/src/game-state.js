@@ -101,6 +101,9 @@ export let FR = null;
 export function fleetRes(){
   return FR || (FR = DOMAIN.resolveFleet({ list: appState.L0.nm, limit: appState.G.doc.limit | 0, units: appState.U.map(x => x.it) }, DATA));
 }
+/* peer.js draws the opponent's fleet with these same functions: it swaps
+   their game in for a moment, and the cached fleet resolution with it. */
+export function swapFleetRes(v){ const o = FR; FR = v; return o; }
 export function aboardOf(j){ return (fleetRes().aboard || []).filter(a => a.unit === j)[0] || null; }
 export const isWarlord = j => !!(appState.U[j] && appState.U[j].R.kind === "commander" && /^orks/i.test(String(appState.L0 && appState.L0.nm || "")) &&
   /warlord/i.test(String(appState.U[j].R.entry && appState.U[j].R.entry.label || "")));

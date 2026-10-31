@@ -24,6 +24,30 @@ are unclear or silent the page makes a choice, and the choices are listed in
 - The game state is kept in `gothic-fleet-play-v1`, bound to a fingerprint of the
   roster, so a changed fleet does not inherit another fleet's damage.
 
+## The opponent's fleet (optional)
+
+Two players can link their phones, before the game or during it, and each
+sees the other's ships and what has happened to them, live (Menu >
+**Opponent's fleet**, or **Opponent** on the set-up screen). The roster then
+has two sides, *My fleet* and the opponent's: swipe sideways, tap a tab, or
+tap the tab at the screen's edge. Their side is read-only.
+
+There is no server (the site is static, docs/adr/0006): the phones talk to
+each other directly over WebRTC, and the handshake goes by two QR codes.
+The first phone shows its code, the second scans it with its camera and
+shows a reply, the first scans that. The reply reaches the waiting page in
+the same tab (hashchange), from another tab of the same browser
+(BroadcastChannel) or pasted. A public STUN server (`stun.l.google.com`)
+learns the two phones' network addresses so that phones on different
+networks can find each other; the fleet itself never passes through it. On
+the same Wi-Fi it is not needed. Two mobile networks behind strict NATs may
+not connect at all without a TURN relay, which the page does not have.
+
+What travels is the game record (`G`, which carries the fleet document) and
+the tracking switches, whenever they change. The last copy is kept in
+`gothic-fleet-play-peer` and shown, marked not live, after a reload; a
+reload ends the link (link again with two new codes). Code: `src/peer.js`.
+
 On the site it is installable (a manifest and a service worker that fetches the
 page from the network first and falls back to the saved copy offline).
 
@@ -33,7 +57,8 @@ page from the network first and falls back to the saved copy offline).
 index.html        the page; @@include lines for the theme and styles/play.css
 styles/play.css
 src/              ES modules: storage, helpers, fleet-document, game-state, actions,
-                  derived (what the book derives), render, share, events, boot
+                  derived (what the book derives), render, share, peer (the
+                  opponent's fleet), events, boot
 rules.js          the rules layer: pure functions over the game state, every rule
                   with its page; UMD, tested by test_play.js
 build.js          -> dist/registry/play/ (with the manifest, service worker, icons)

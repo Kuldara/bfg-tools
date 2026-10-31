@@ -18,5 +18,6 @@ export * from "./actions.js";
 export * from "./derived.js";
 export * from "./render.js";
 export * from "./share.js";
+export * from "./peer.js";
 export * from "./events.js";
 export * from "./boot.js";

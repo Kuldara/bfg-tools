@@ -11,6 +11,7 @@ import { builderFleets, endPending, jumpStrip, linkedFleets, renderEndPhase } fr
 import PLAY from "../rules.js";
 import { arcGlyph, esc, factionCols, shortArmour, shortRange, starHTML, title } from "../../../packages/ui/format.js";
 import DOMAIN from "../../../packages/rules/domain.js";
+import { edgeHandle, peerAfterRender, peerLoadCard, peerMenuWord, peerSide, peerTool, renderPeerPanel, renderPeerSide, sidesStrip } from "./peer.js";
 
 /* ============================================================= RENDER ===== */
 /* Scroll the open popover's anchor (the button line above it) to just
@@ -64,12 +65,15 @@ export function render(){
   /* a panel's own scroll (the menu, the End Phase) survives its re-render */
   const bx0 = document.querySelector(".menu .box"), bxTop = bx0 ? bx0.scrollTop : 0;
   let html = "";
-  if(appState.V.screen === "load") html = renderLoad();
+  const peer = peerSide();
+  if(peer) html = renderPeerSide();
+  else if(appState.V.screen === "load") html = renderLoad();
   else if(appState.V.screen === "setup") html = renderSetup();
   else html = renderRoster();
-  if(appState.V.sheet != null && appState.G) html += renderSheet(appState.V.sheet);
-  if(appState.V.menu && appState.G) html += renderMenu();
-  else if(appState.V.endph && appState.G && appState.V.screen === "roster") html += renderEndPhase();
+  if(!peer && appState.V.sheet != null && appState.G) html += renderSheet(appState.V.sheet);
+  if(appState.V.peerPanel) html += renderPeerPanel();
+  else if(!peer && appState.V.menu && appState.G) html += renderMenu();
+  else if(!peer && appState.V.endph && appState.G && appState.V.screen === "roster") html += renderEndPhase();
   $("#app").innerHTML = html;
   /* A new screen starts at its top, not at the old one's scroll (user
      19.10.2026: the set-up opened half-way down, its first ship off the
@@ -94,8 +98,9 @@ export function render(){
       }
     }
   }
-  if(appState.V.screen === "roster") paginate();
+  if(appState.V.screen === "roster" || peer) paginate();
   wake();
+  peerAfterRender();
 }
 
 /* ------------------------------------------------- screen wake lock --- */
@@ -184,8 +189,8 @@ export function pageLabel(){
   if(prev) prev.disabled = cur <= 0;
   if(next) next.disabled = cur >= appState.V.pages - 1;
 }
-window.addEventListener("scroll", () => { if(appState.V.screen === "roster" && appState.V.sheet == null) pageLabel(); }, { passive: true });
-window.addEventListener("resize", () => { if(appState.V.screen === "roster" && appState.V.sheet == null) paginate(); });
+window.addEventListener("scroll", () => { if((appState.V.screen === "roster" || peerSide()) && appState.V.sheet == null) pageLabel(); }, { passive: true });
+window.addEventListener("resize", () => { if((appState.V.screen === "roster" || peerSide()) && appState.V.sheet == null) paginate(); });
 
 export function renderLoad(){
   const raw = builderRaw();
@@ -232,6 +237,7 @@ export function renderLoad(){
   }else if(!lk.length && !g && !bad){
     cards += `<div class="card"><h2>No fleet on this device</h2><p>Three ways to bring one: open this page from the builder (its Play button) and its fleets are here by themselves; in the builder's <b>Saved fleets</b>, tap <b>To phone</b> and scan the code; or open a fleet file below.</p></div>`;
   }
+  cards += peerLoadCard();
   cards += `<div class="card"><h2>Open a fleet file</h2>
     <p>The builder's <b>Saved fleets &rsaquo; Export</b> or <b>Export all as file</b>. On a phone it can come by mail or chat; its fleets go on this page's Saved fleets.</p>
     <label class="btn sec">Open a fleet file<input type="file" id="fleetfile" accept=".json,application/json,text/plain" style="display:none"></label>
@@ -399,19 +405,19 @@ export function renderSetup(){
   const frr = fleetRR();
   const frrRow = frr ? `<div class="setrow"><div class="who"><b>Fleet re-rolls</b><small>${esc(frr.text)} ${MID} the fleet's own, no commander (Fleets p. ${frr.page})</small></div><span class="pill on">RR <b>${appState.G.fleet.rerolls | 0}</b></span></div>` : "";
   return `<div class="top"><h1>Set up<small>${esc(appState.G.ln)} ${MID} ${fleetPoints(appState.U)} pts</small></h1>
-      <div class="tools">${builderTool()}<button class="tool" data-act="newgame" title="Back to the fleets: this set-up is not kept">Exit</button></div></div>
+      <div class="tools">${builderTool()}${peerTool()}<button class="tool" data-act="newgame" title="Back to the fleets: this set-up is not kept">Exit</button></div></div>
+    ${sidesStrip()}
     <div class="main">${factsCard()}<div class="card"><h2>Leadership</h2>
       ${ldGuide()}${rollBar()}
       <p>Tap the value each ship fights on, or let Roll Ld roll the ships still without one. SQN groups capital ships into a squadron: one Ld, one order, combined fire (p. 95, 99). Tap a ship's name to give it another one for this game.${appState.L0.clanz ? " Da Ork Clanz: a Warlord may swap Leadership with any one ship or escort squadron under his command (Fleets p. 374) - tap the swapped values." : ""}${anyFixed ? " Planetary defences do not roll: their checks are made on Ld 7 (Rulebook p. 100)." : ""}</p>
       ${frrRow}${rows}
       <button class="btn" data-act="start" ${ready ? "" : "disabled"}>Start the game</button>
-      ${ready ? "" : `<p class="why">To start, pick the Ld of ${missing.length === 1 ? "one more ship" : missing.length + " more ships"}: ${missing.map(i => `<button data-act="seek" data-i="${i}">${esc(unitName(i))}</button>`).join(", ")}</p>`}</div></div>`;
+      ${ready ? "" : `<p class="why">To start, pick the Ld of ${missing.length === 1 ? "one more ship" : missing.length + " more ships"}: ${missing.map(i => `<button data-act="seek" data-i="${i}">${esc(unitName(i))}</button>`).join(", ")}</p>`}</div></div>${edgeHandle()}`;
 }
 
-export function renderRoster(){
-  const fl = appState.G.fleet;
-  const toPlay = appState.U.filter((x, i) => x.R.kind === "ship" && !PLAY.destroyed(x.R, appState.G.st[i]) && appState.G.st[i].played < 2).length;
-  const vp = vpTotal();
+/* The roster's cards in their order, squadrons under their heads: the
+   player's own and, read-only, the opponent's (peer.js swaps the game in). */
+export function rosterRows(){
   const done = {}, out = [];
   appState.U.forEach((x, i) => {
     if(done[i]) return;
@@ -428,6 +434,13 @@ export function renderRoster(){
   const frr = fleetRR();
   if(frr) out.unshift(`<section class="row" style="--kd:${factionCols(appState.G.ln, "")[0]};--km:${factionCols(appState.G.ln, "")[1]};padding:6px 8px 6px 10px">
       <div class="r1"><span class="tag">RR</span><div class="name" style="min-height:32px"><b>Fleet re-rolls</b><small style="white-space:normal">${esc(frr.text)} ${MID} Fleets p. ${frr.page}</small></div></div>${rrBoxesHTML(-1)}</section>`);
+  return out;
+}
+export function renderRoster(){
+  const fl = appState.G.fleet;
+  const toPlay = appState.U.filter((x, i) => x.R.kind === "ship" && !PLAY.destroyed(x.R, appState.G.st[i]) && appState.G.st[i].played < 2).length;
+  const vp = vpTotal();
+  const out = rosterRows();
   /* launch bays for the attack craft limit (p. 73): every survivor of a
      one-hit squadron, all four quadrants of a star fort and a Ramilies
      doubled (Fleets p. 502) - PLAY.launchBays */
@@ -453,9 +466,10 @@ export function renderRoster(){
         ${toolBtn("menu", "menu", "Menu", { tip: "Victory points, rules text, tracking, fleets, new game" })}
       </div>
     </div>
+    ${sidesStrip()}
     ${appState.V.saveErr ? `<p class="note bad" style="margin:8px">This browser would not store the game record; it lives only in this tab.</p>` : ""}
     ${appState.V.pop && appState.V.pop.i === -1 ? renderFleetPop() : ""}
-    <div class="main${appState.V.compact ? " compact" : ""}">${out.join("")}</div>
+    <div class="main${appState.V.compact ? " compact" : ""}">${out.join("")}</div>${edgeHandle()}
     <div class="bottom">
       ${appState.V.compact ? "" : jumpStrip()}
       <div class="brow">
@@ -1013,6 +1027,7 @@ export function renderMenu(){
     <details data-keep="track"${mo.track ? " open" : ""}><summary>Choose what to track</summary><div class="togs">
       ${TRACK.map(t => `<button class="${OPT[t[0]] ? "on" : ""}" data-act="track" data-arg="${t[0]}">${esc(t[1])}<i>${OPT[t[0]] ? "on" : "off"}</i><small>${esc(t[2])}</small></button>`).join("")}
     </div></details>
+    <button class="btn sec" data-act="peerpanel">Opponent's fleet<small>${esc(peerMenuWord())}</small></button>
     <button class="btn sec" data-act="fleets">Fleets and phone link<small>the game stays: Resume on the list</small></button>
     <button class="btn warn" data-act="newgame">New game (forget this record)</button>
     <p class="foot">Saved in this browser only ${MID} ${PLAY_VERSION}</p>
