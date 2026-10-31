@@ -3,7 +3,7 @@ import { OPT, TRACK, lsDel, lsGet, lsSet } from "./storage.js";
 import { MID } from "./helpers.js";
 import { fleetPoints, resolveFleet } from "./fleet-document.js";
 import { swapFleetRes } from "./game-state.js";
-import { render, rosterRows, vpTotal } from "./render.js";
+import { CLOSE_X, render, rosterRows, vpTotal } from "./render.js";
 import { toast } from "./actions.js";
 import { copyText, shareText } from "./share.js";
 import { esc, factionCols } from "../../../packages/ui/format.js";
@@ -525,7 +525,7 @@ export function renderPeerPanel(){
       <p class="foot">The phones talk to each other directly; nothing is stored on a server. The same Wi-Fi works best. A reload ends the link: link again with the same two codes.</p>`;
   }
   return `<div class="menu" data-act="peerpanel"><div class="box">
-    <div class="mhd"><h2>Opponent's fleet</h2><button class="x" data-act="peerpanel" aria-label="Close">&#215;</button></div>
+    <div class="mhd"><h2>Opponent's fleet</h2><button class="x" data-act="peerpanel" aria-label="Close">${CLOSE_X}</button></div>
     ${P.err ? `<p class="note bad">${esc(P.err)}</p>` : ""}${body}
   </div></div>`;
 }
