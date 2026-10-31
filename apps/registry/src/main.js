@@ -93,6 +93,25 @@ if(document.addEventListener && typeof window !== "undefined" && window.matchMed
     mark();
   }
 }
+/* J243 (user 31.10.2026: "saisi olla selkeämpi jos on jo ylhäällä ja
+   räplää sitä"): on a phone Menu shows only once the buttons have gone
+   half under the points strip, where pinning them does something. */
+if(document.addEventListener && typeof window !== "undefined" && window.matchMedia){
+  const strip = $(".tb-strip"), head = document.querySelector && document.querySelector(".tb-head"),
+    acts = document.querySelector && document.querySelector(".tb-acts");
+  if(strip && head && acts && head.getBoundingClientRect && strip.classList){
+    let q = false;
+    const mark = () => {
+      q = false;
+      /* where the buttons would be if not pinned: right under the head */
+      const far = head.getBoundingClientRect().bottom + acts.offsetHeight / 2 < 0;
+      strip.classList.toggle("far", far);
+    };
+    window.addEventListener("scroll", () => { if(!q){ q = true; requestAnimationFrame(mark); } }, { passive: true });
+    window.addEventListener("resize", mark);
+    mark();
+  }
+}
 /* dragover anywhere on the page - over the legality panel or the sticky bar
    too, where no fleet row listens - drives the drag auto-scroll */
 if(document.addEventListener){
