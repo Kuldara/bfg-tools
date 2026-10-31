@@ -108,7 +108,7 @@ $("#saves").oninput = e => { savesInput(e, redrawSaves); };
 $("#saves").onchange = e => { savesChange(e, redrawSaves); };
 $("#saves").ondblclick = e => { const id = savesDblClick(e); if(id) openFromList(id); };
 $("#saves").onkeydown = e => {
-  const r = savesKey(e, libRead(), redrawSaves);
+  const r = savesKey(e, redrawSaves);
   if(typeof r === "string" && r.indexOf("open:") === 0) openFromList(r.slice(5));
   else if(r === "close"){ $("#saves").open = false; const sm = $("#saves").querySelector("summary"); if(sm) sm.focus(); }
 };

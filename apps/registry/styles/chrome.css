@@ -119,18 +119,13 @@ input[type=number]{width:104px;font-family:var(--mono);font-variant-numeric:tabu
 #printset input[type=number]{width:74px;padding:5px 7px;font-size:13px}
 
 
-/* The saved fleets browser (31.10.2026, saved-list.js): a search, a sort and
-   race chips over one-line rows. PROTOTYPE: rows, groups and two panes. */
-.saves .panel.sf-view-rows,.saves .panel.sf-view-groups{width:min(680px,96vw);max-width:96vw;padding-top:0}
-.saves .panel.sf-view-wide{width:min(1000px,96vw);max-width:96vw;padding-top:0}
+/* The saved fleets list (31.10.2026, saved-list.js): a search, a sort and
+   race chips over one-line rows. */
+.saves .panel.sf-panel{width:min(680px,96vw);max-width:96vw;padding-top:0}
 .sf-bar{position:sticky;top:0;z-index:2;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 2px 6px;background:var(--panel);border-bottom:1px solid var(--line-soft)}
 .sf-bar input[type=search]{flex:1 1 220px;min-width:0;height:32px;padding:0 10px;font:13px var(--sans);color:var(--ink);background:var(--sunk);border:1px solid var(--line);border-radius:var(--r)}
 .sf-bar input[type=search]:focus{outline:2px solid var(--accent);outline-offset:-1px}
 .sf-bar select{height:32px;font:12px var(--sans);color:var(--ink);background:var(--sunk);border:1px solid var(--line);border-radius:var(--r);padding:0 6px}
-.sf-views{display:inline-flex;border:1px dashed var(--warn);border-radius:var(--r);padding:2px;gap:2px}
-.sf-views::before{content:"proto";font:600 9px/1 var(--mono);color:var(--warn);align-self:center;padding:0 4px;text-transform:uppercase;letter-spacing:.08em}
-.sf-v{border:0;background:none;color:var(--ink-3);font:600 11px/1 var(--sans);padding:6px 8px;border-radius:calc(var(--r) - 2px);cursor:pointer}
-.sf-v.on{background:var(--accent-wash);color:var(--accent-ink)}
 .sf-chips{display:flex;flex-wrap:wrap;gap:4px;padding:6px 2px 4px}
 .sf-chip{border:1px solid var(--line);background:none;color:var(--ink-2);font:12px/1 var(--sans);padding:5px 8px;border-radius:999px;cursor:pointer}
 .sf-chip b{font:600 11px var(--mono);color:var(--ink-3);margin-left:2px}
@@ -157,35 +152,12 @@ input[type=number]{width:104px;font-family:var(--mono);font-variant-numeric:tabu
 .sf-row.open .sf-acts{background:linear-gradient(90deg,transparent,var(--accent-wash) 24px)}
 .sf-more{display:inline-flex;gap:4px}
 .sf-row:hover .sf-acts,.sf-row.sel .sf-acts,.sf-row:focus-within .sf-acts{display:inline-flex}
-.sf-row button,.sf-detail button{border:1px solid var(--line);background:var(--panel);border-radius:var(--r);cursor:pointer;
+.sf-row button{border:1px solid var(--line);background:var(--panel);border-radius:var(--r);cursor:pointer;
   font:600 11px/1 var(--sans);letter-spacing:.04em;text-transform:uppercase;color:var(--ink-2);padding:6px 8px}
-.sf-row button.pri,.sf-detail button.pri{background:var(--accent);border-color:var(--accent);color:#fff}
-.sf-row button.go:not(.pri):hover,.sf-detail button.go:not(.pri):not([disabled]):hover{background:var(--accent-wash);color:var(--accent-ink);border-color:var(--accent)}
-.sf-row button.del:hover,.sf-detail button.del:hover{background:var(--bad-wash);color:var(--bad);border-color:var(--bad)}
-.sf-row button.on,.sf-detail button.on{background:var(--accent-wash);color:var(--accent-ink);border-color:var(--accent)}
-.sf-detail button[disabled]{opacity:.5;cursor:default}
-/* groups: a race's fleets under one header that folds */
-.sf-group+.sf-group{margin-top:2px}
-.sf-gh{display:flex;align-items:baseline;gap:8px;width:100%;text-align:left;border:0;background:none;cursor:pointer;color:var(--ink);
-  font:600 11px/1.2 var(--sans);letter-spacing:.1em;text-transform:uppercase;padding:9px 6px 5px;border-bottom:1px solid var(--line-soft)}
-.sf-gh b{font:600 11px var(--mono);color:var(--accent-ink)}
-.sf-gh i{font:11px var(--mono);font-style:normal;letter-spacing:0;text-transform:none;color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
-.sf-car::before{content:"\25BE";color:var(--ink-3)}
-.sf-group.shut .sf-car::before{content:"\25B8"}
-.sf-group .sf-row{padding-left:18px}
-/* two panes: the list scrolls by itself, the chosen fleet beside it */
-.sf-split{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:10px;align-items:start}
-.sf-view-wide .sf-row{grid-template-columns:minmax(0,1fr) minmax(0,150px) 44px 52px}
-.sf-view-wide .sf-row{cursor:pointer}
-.sf-detail{position:sticky;top:54px;border:1px solid var(--line);border-radius:var(--r);background:var(--sunk);padding:12px;font:13px/1.35 var(--sans)}
-.sf-detail.empty{color:var(--ink-3);font-size:12px}
-.sf-detail h3{margin:0 0 4px;font:600 15px/1.25 var(--sans);color:var(--ink)}
-.sf-facts{margin:0 0 8px;font:11px/1.4 var(--mono);color:var(--ink-3)}
-.sf-ships{list-style:none;margin:0 0 10px;padding:8px 0 0;border-top:1px solid var(--line-soft);max-height:260px;overflow:auto}
-.sf-ships li{padding:2px 0;color:var(--ink-2)}
-.sf-dacts{display:flex;flex-wrap:wrap;gap:6px}
-.sf-dacts .pri{flex:1 1 100%;padding:9px}
-.sf-dacts .del{margin-left:auto}
+.sf-row button.pri{background:var(--accent);border-color:var(--accent);color:#fff}
+.sf-row button.go:not(.pri):hover{background:var(--accent-wash);color:var(--accent-ink);border-color:var(--accent)}
+.sf-row button.del:hover{background:var(--bad-wash);color:var(--bad);border-color:var(--bad)}
+.sf-row button.on{background:var(--accent-wash);color:var(--accent-ink);border-color:var(--accent)}
 /* a phone, or any screen without hover: two lines a row, Open always there,
    the rest under the row that is tapped */
 @media (max-width:640px),(hover:none){
@@ -199,8 +171,6 @@ input[type=number]{width:104px;font-family:var(--mono);font-variant-numeric:tabu
   .sf-row.sel .sf-more{display:flex}
   .sf-more .del{margin-left:auto}
   .sf-row:hover .sf-acts,.sf-row.sel .sf-acts,.sf-row:focus-within .sf-acts{display:contents}
-  .sf-split{grid-template-columns:1fr}
   .sf-chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin:0 -6px;padding-left:8px;padding-right:8px}
   .sf-chip{flex:none}
-  .sf-detail{position:static}
 }

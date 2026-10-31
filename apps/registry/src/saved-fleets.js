@@ -3,7 +3,7 @@ import { FILE_TAG, fileNote, fleetDocument } from "./fleet-files.js";
 import { L, fleetPoints, switchList, total } from "./model.js";
 import { placeSaves } from "./panels.js";
 import { copyBoxHTML, phonePanelHTML } from "./phone.js";
-import { savedListHTML, savesViewClass } from "./saved-list.js";
+import { savedListHTML } from "./saved-list.js";
 import { STASH_PTS, stashAll, stashUnits, unitDocs } from "./save.js";
 import { appState } from "./state.js";
 import { render } from "./view.js";
@@ -246,9 +246,9 @@ export function renderSaves(){
   if(!sb) return;
   const openId = appState.S.units.length ? lib.open[L().nm] : null;
   const changed = openUnsaved(lib);
-  const saved = lib.saves.length ? savedListHTML(lib, { openId: openId, changed: changed, curLn: L().nm,
+  const saved = lib.saves.length ? savedListHTML(lib, { openId: openId, changed: changed,
     fresh: id => LIB_NEW.indexOf(id) >= 0, copyBox: copyBoxHTML, phonePanel: phonePanelHTML }) : "";
-  const pn = $("#savesbody"); if(pn) pn.className = "panel " + savesViewClass();
+  sb.className = "panel" + (lib.saves.length ? " sf-panel" : "");
   const kept = Object.keys(stashAll()).filter(nm => stashUnits(nm).length).sort();
   const work = (appState.S.units.length ? [{ nm: L().nm, pts: total(), n: appState.S.units.length, open: true }] : [])
     .concat(kept.map(nm => ({ nm: nm, pts: STASH_PTS[nm] || 0, n: stashUnits(nm).length, open: false })));
