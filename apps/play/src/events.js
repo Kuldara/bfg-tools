@@ -32,7 +32,7 @@ document.addEventListener("click", ev => {
   const i = el.hasAttribute("data-i") ? parseInt(el.getAttribute("data-i"), 10) : null;
   let arg = el.hasAttribute("data-arg") ? el.getAttribute("data-arg") : undefined;
   if(arg != null && /^-?\d+$/.test(arg)) arg = parseInt(arg, 10);
-  if(name === "resume"){ const g = loadPlay(); if(g && resumeGame(g)){ appState.V.screen = "roster"; } else { appState.V.loadErr = "The saved game could not be resumed against this roster."; } render(); return; }
+  if(name === "resume"){ const g = loadPlay(); if(g && resumeGame(g)){ appState.G.started = true; appState.V.screen = "roster"; } else { appState.V.loadErr = "The saved game could not be resumed against this roster."; } render(); return; }
   if(name === "newfrom"){
     const f = builderFleets()[arg]; if(!f) return;
     const res = resolveFleet(f); if(res.error) return;

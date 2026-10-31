@@ -197,6 +197,17 @@ function run(check){
       clean("the card of " + nm + " with rules shown", P(`V.sheet = ${i}; V.info = true; __h = renderSheet(${i}); V.info = false; V.sheet = null; __h`));
     }
     clean("the menu", P(`renderMenu()`));
+    /* back to the set-up during a game (user 31.10.2026: "joku keino päästä
+       takaisin siihen setup ruutuun missä leadership ja room liittyminen") */
+    check("smoke: the menu has a way back to the set-up (Leadership, squadrons, the opponent's room)", /data-act="setupback"/.test(P(`renderMenu()`)));
+    P(`act("hit", ${I.lunar}); V.menu = true; act("setupback", null)`);
+    const back = P(`renderSetup()`);
+    check("smoke: ... it opens the set-up with the game kept: its hits, Back to the game, no Exit that forgets it",
+      P(`V.screen`) === "setup" && !P(`V.menu`) && P(`G.st[${I.lunar}].hits`) >= 1 && /Back to the game/.test(back) && !/data-act="newgame"/.test(back) && !/Start the game/.test(back),
+      JSON.stringify([P(`V.screen`), P(`G.st[${I.lunar}].hits`), /Back to the game/.test(back), /data-act="newgame"/.test(back)]));
+    P(`act("start", null)`);
+    check("smoke: ... and Back to the game returns to the roster", P(`V.screen`) === "roster" && P(`G.st[${I.lunar}].hits`) >= 1);
+    P(`act("undo", null); act("undo", null)`);
     const row = i => P(`renderRow(${i}, false)`), rowT = i => strip(row(i)), sheetT = i => strip(P(`V.sheet = ${i}; __h = renderSheet(${i}); V.sheet = null; __h`));
     const count = (h, re) => (h.match(re) || []).length;
     /* the card strikes a printed value through only when it has changed */

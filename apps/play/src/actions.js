@@ -82,6 +82,9 @@ export function act(name, i, arg){
      are there): the game record stays, the list offers Resume */
   /* a name under a grey Start: its row into view (the player's own tap) */
   if(name === "seek"){ const r = document.querySelector('.setrow[data-u="' + i + '"]'); if(r && r.scrollIntoView) r.scrollIntoView({ block: "center", behavior: "smooth" }); return; }
+  /* back to the set-up during a game (user 31.10.2026): Leadership, the
+     squadrons and the opponent's room; the game record stays */
+  if(name === "setupback"){ if(!appState.G) return; appState.V.menu = false; appState.V.sheet = null; appState.V.pop = null; appState.V.endph = false; appState.V.screen = "setup"; render(); window.scrollTo(0, 0); return; }
   if(name === "fleets"){ appState.V.menu = false; appState.V.sheet = null; appState.V.pop = null; appState.V.endph = false; appState.V.phone = null; appState.V.screen = "load"; render(); return; }
   if(name === "wake"){ lsSet(KEY_WAKE, lsGet(KEY_WAKE) === "0" ? "1" : "0"); wake(); render(); return; }
   if(name === "pop"){
@@ -142,7 +145,7 @@ export function act(name, i, arg){
     case "on": appState.G.on = appState.G.on || {}; appState.G.on[i] = arg; break;
     case "wl2": st.wl2 = !st.wl2; break;
     case "grp": { const seq = [null, "A", "B", "C"]; appState.G.grp[i] = seq[(seq.indexOf(appState.G.grp[i]) + 1) % seq.length]; break; }
-    case "start": appState.V.screen = "roster"; break;
+    case "start": appState.G.started = true; appState.V.screen = "roster"; break;
     /* which quadrant of a star fort the card shows and the next tap goes
        to: a choice of view, not an event - nothing for UNDO to take back,
        and an open table stays open and follows the quadrant */
