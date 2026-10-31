@@ -55,16 +55,20 @@ export function mixActive(si){
 export function mixStart(si){ appState.MIX = { tag: freeSqTag(), si, list: L().nm }; }
 export function mixStop(){ delete appState.MIX; }
 /* the cards of one letter in the sections the player's squadrons live in,
-   with a Blood Axe tiddla's commandeered escorts (Fleets p. 371, 28.10.2026) */
-const inMix = u => mixSec(u.s) || isCommandeered(u);
+   with a Blood Axe tiddla's commandeered escorts (Fleets p. 371, 28.10.2026).
+   Squadron merge (31.10.2026): outside Da Ork Clanz any escort card, a
+   borrowed one too (a reserve Falchion with three Cobras, Fleets p. 14) and
+   one of a section with a single class. */
+const escCard = u => { const R = resolveUnit(u); return !!(R && R.kind === "ship" && R.squadron && !R.defence); };
+const inMix = u => L().clanz ? !u.lst && (mixSec(u.s) || isCommandeered(u)) : escCard(u);
 export function mixUnits(tag){
-  return appState.S.units.filter(u => !u.lst && u.sq === tag && inMix(u));
+  return appState.S.units.filter(u => u.sq === tag && inMix(u));
 }
 export const mixHulls = tag => mixUnits(tag).reduce((a, u) => a + (u.n || 1), 0);
 /* a card that belongs to a mixed squadron: its letter is on another card
    too, or it is the squadron being filled */
 export function mixMember(u){
-  if(u.lst || !u.sq || !inMix(u)) return false;
+  if(!u.sq || !inMix(u)) return false;
   const M = mixActive();
   return (M && M.tag === u.sq) || mixUnits(u.sq).length >= 2;
 }
@@ -73,15 +77,20 @@ export function mixMember(u){
 export function mixGroups(){
   const out = [], seen = {}, M = mixActive();
   appState.S.units.forEach((u, i) => {
-    if(u.lst || !u.sq || !inMix(u) || seen[u.sq]) return;
-    const idx = appState.S.units.map((x, j) => !x.lst && x.sq === u.sq && inMix(x) ? j : -1).filter(j => j >= 0);
+    if(!u.sq || !inMix(u) || seen[u.sq]) return;
+    const idx = appState.S.units.map((x, j) => x.sq === u.sq && inMix(x) ? j : -1).filter(j => j >= 0);
     if(idx.length < 2 && !(M && M.tag === u.sq)) return;
-    /* the squadron's own cards decide its rule; commandeered ones alone are no squadron */
-    const own = idx.map(j => appState.S.units[j]).filter(x => mixSec(x.s))[0];
-    if(!own) return;
+    /* the squadron's own cards decide its rule; commandeered ones alone are
+       no squadron. Outside the Clanz a squadron with no card of a mixable
+       section (borrowed escorts, a one-class section) has its first card's
+       size (merge, 31.10.2026). */
+    const mem = idx.map(j => appState.S.units[j]);
+    const own = mem.filter(x => !x.lst && mixSec(x.s))[0];
+    if(!own && L().clanz) return;
     seen[u.sq] = 1;
-    const r = mixRule(own.s);
-    out.push({ tag: u.sq, si: own.s, idx, first: idx[0], hulls: idx.reduce((a, j) => a + (appState.S.units[j].n || 1), 0),
+    const sq0 = own ? null : resolveUnit(mem[0]).squadron || { min: 2, max: 6 };
+    const r = own ? mixRule(own.s) : { min: sq0.min, max: sq0.max, tiddla: false };
+    out.push({ tag: u.sq, si: own ? own.s : -1, idx, first: idx[0], hulls: idx.reduce((a, j) => a + (appState.S.units[j].n || 1), 0),
                com: idx.reduce((a, j) => a + (isCommandeered(appState.S.units[j]) ? appState.S.units[j].n || 1 : 0), 0),
                min: r.min, max: r.max, tiddla: r.tiddla, filling: !!(M && M.tag === u.sq) });
   });

@@ -6,6 +6,14 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 ## Unreleased
 
 ### Added
+- Squadron merge (31.10.2026): the open unit's **Squadron** menu names the
+  units and squadrons it can merge with, and a unit dragged onto the middle of
+  another row of its kind merges with it (a drop on the row's edge still
+  reorders; the target row is ringed and labelled, a reorder draws a line). A
+  reserve or an ally can now be in a squadron with the fleet's own ships. A mix
+  the book forbids is merged and shown red: an ally in a core squadron
+  (Fleets p. 16), Mechanicus vessels with Imperial Navy, Rogue Trader or
+  Astartes ones (Fleets p. 122), escorts with capital ships (Rulebook p. 95).
 - Link preview (29.10.2026): a link to the app in Discord and elsewhere shows its own image (the app itself, the numbers from the data) and text. `npm test` fails when the image is out of date (`npm run og`).
 
 ### Changed: Fleets WiP v0.40 and Rulebook v1.11 (29.10.2026)

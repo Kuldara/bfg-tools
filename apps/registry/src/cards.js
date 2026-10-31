@@ -321,13 +321,13 @@ export function unitCards(u, single){
   const grp = single ? null : mixedGroupOf(u, R);
   if(grp){
     if(grp[0] !== u) return [];
-    const Rs = grp.map(x => x === u ? R : resolveUnit(x)), mr = mixRule(u.s);
+    const Rs = grp.map(x => x === u ? R : resolveUnit(x)), mr = u.lst ? null : mixRule(u.s);
     return [{ id: "mixed", html: pos => mixedEscortCardHTML(Rs, u.sq, pos, !!(mr && mr.tiddla)) }];
   }
   /* a lettered escort card by itself: the card says its letter and the
      other cards of the squadron, so the table knows the three cards are one */
-  if(R.kind === "ship" && R.squadron && u.sq && !u.lst){
-    const mates = appState.S.units.filter(x => x !== u && !x.lst && x.sq === u.sq).map(x => resolveUnit(x)).filter(x => x && x.squadron);
+  if(R.kind === "ship" && R.squadron && u.sq){
+    const mates = appState.S.units.filter(x => x !== u && x.sq === u.sq).map(x => resolveUnit(x)).filter(x => x && x.squadron);
     R.sqTag = u.sq; R.sqMates = mates.map(x => x.hulls + " " + title(x.className)).join(" + ");
   }
   if(R.card === "fort" && R.kind === "ship")
@@ -339,12 +339,13 @@ export function unitCards(u, single){
   return one ? [{ id: "card", html: one }] : [];
 }
 /* The escort cards of u's mixed squadron in fleet order, or null: u is an
-   escort card of this fleet's own list with a letter that at least one other
-   such card has. */
+   escort card with a letter that at least one other such card has. A
+   borrowed escort is one too since the squadron merge (31.10.2026: a
+   reserve Falchion with three Cobras, Fleets p. 14). */
 const isEscortCard = R => !!(R && R.kind === "ship" && R.squadron && !R.defence);
 export function mixedGroupOf(u, R){
-  if(!u || !u.sq || u.lst || !isEscortCard(R || resolveUnit(u))) return null;
-  const g = appState.S.units.filter(x => x === u || (!x.lst && x.sq === u.sq && isEscortCard(resolveUnit(x))));
+  if(!u || !u.sq || !isEscortCard(R || resolveUnit(u))) return null;
+  const g = appState.S.units.filter(x => x === u || (x.sq === u.sq && isEscortCard(resolveUnit(x))));
   return g.length >= 2 ? g : null;
 }
 /* One card of a unit: the only card of most, and of a star fort the RULES

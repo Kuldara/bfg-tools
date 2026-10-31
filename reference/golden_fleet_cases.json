@@ -9782,6 +9782,244 @@
         "others_ok": true
       },
       "why": "p. 372: “For tiddla skwadrons, the point cost for Gubbins count for the whole skwadron (regardless of how large it is!), not individual escorts.” p. 372 Extra Turrets: “+20 pts The ship gains +2 Turrets (Escorts get +1 Turret)”; p. 374: “A Warlord may choose for his own ship or escort skwadron one upgrade from the Gubbins list for every re-roll he has”. p. 374: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”: Onslaught attack ship 35 pts, Savage gunship 30 pts, Brute ramship 25 pts. Extra Turrets on both cards of tiddla T is one Gubbin of his one re-roll and one price: each escort has 2 turrets (1 + 1, pp. 386-387). 3 x 30 + 3 x 35 + 3 x 25 + 20 = 290. Ruling T60 (28.10.2026): a mixed tiddla is the cards of one Squadron letter, so a clan or a Gubbin taken on any of them is the skwadron's: every card that is offered it has it and it is paid once."
+    },
+    {
+      "id": "squadron-merge-reserve-escort-joins-own",
+      "page": 14,
+      "fleet": {
+        "list": "Imperial Navy — Bastion Fleets",
+        "limit": 500,
+        "units": [
+          {
+            "entry": "^Cobra class destroyer$",
+            "n": 3,
+            "sq": "A"
+          },
+          {
+            "list": "Imperial Navy — Armageddon Sector",
+            "role": "reserve",
+            "entry": "^Falchion Class Frigate$",
+            "n": 1,
+            "sq": "A"
+          }
+        ]
+      },
+      "expect": {
+        "total": 125,
+        "checks": [
+          {
+            "label": "^Escort squadron A$",
+            "ok": true,
+            "v": "4 ships: 3 Cobra class destroyer + 1 Falchion Class Frigate"
+          },
+          {
+            "label": "^Falchion",
+            "absent": true
+          }
+        ],
+        "others_ok": true,
+        "failing": 0
+      },
+      "why": "p.13: 'The escorts in a squadron do not have to all be of the same class.' p.14: three escorts chosen from the list allow one escort of the same type from another list of the same race; nothing there keeps a reserve out of a squadron (only allies are, p.16). Armageddon's Falchion (p.41) is a regular Imperial Navy escort. 3 x 30 + 35 = 125. User example 31.10.2026."
+    },
+    {
+      "id": "squadron-merge-mechanicus-reserve-with-navy",
+      "page": 122,
+      "fleet": {
+        "list": "Imperial Navy — Bastion Fleets",
+        "limit": 500,
+        "units": [
+          {
+            "entry": "^Cobra class destroyer$",
+            "n": 3,
+            "sq": "A"
+          },
+          {
+            "list": "Adeptus Mechanicus — Explorator",
+            "role": "reserve",
+            "entry": "^Hunter Class Destroyer$",
+            "n": 1,
+            "sq": "A"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Escort squadron A$",
+            "ok": true,
+            "v": "4 ships: 3 Cobra class destroyer + 1 Hunter Class Destroyer"
+          },
+          {
+            "label": "^Mechanicus vessels in squadron A$",
+            "ok": false
+          }
+        ],
+        "failing": 1
+      },
+      "why": "p.122 (v0.40; p.121 in v0.36), Adeptus Mechanicus fleet rules, Reserves and allies: 'Mechanicus vessels cannot be placed in squadrons with Rogue Trader, regular Imperial Navy or Adeptus Astartes vessels.' A Hunter from the Explorator list is a Mechanicus vessel (the list's ships are Mechanicus; a Lunar there is one too, see the reserve goldens); the Cobras are regular Imperial Navy. The size is right, the mix is not. User example 31.10.2026."
+    },
+    {
+      "id": "squadron-merge-mechanicus-falchion-with-navy",
+      "page": 122,
+      "fleet": {
+        "list": "Imperial Navy — Bastion Fleets",
+        "limit": 500,
+        "units": [
+          {
+            "entry": "^Cobra class destroyer$",
+            "n": 3,
+            "sq": "A"
+          },
+          {
+            "list": "Adeptus Mechanicus — Explorator",
+            "role": "reserve",
+            "entry": "^Falchion Class Frigate$",
+            "n": 1,
+            "sq": "A"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Mechanicus vessels in squadron A$",
+            "ok": false
+          }
+        ],
+        "failing": 1
+      },
+      "why": "p.122 (v0.40; p.121 in v0.36), Adeptus Mechanicus fleet rules, Reserves and allies: 'Mechanicus vessels cannot be placed in squadrons with Rogue Trader, regular Imperial Navy or Adeptus Astartes vessels.' The same Falchion hull as in the Armageddon case, but from the Explorator list it is a Mechanicus vessel. User example 31.10.2026."
+    },
+    {
+      "id": "squadron-merge-mechanicus-own-with-navy-reserve",
+      "page": 122,
+      "fleet": {
+        "list": "Adeptus Mechanicus — Explorator",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Hunter Class Destroyer$",
+            "n": 3,
+            "sq": "A"
+          },
+          {
+            "list": "Imperial Navy — Bastion Fleets",
+            "role": "reserve",
+            "entry": "^Cobra class destroyer$",
+            "n": 1,
+            "sq": "A"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Mechanicus vessels in squadron A$",
+            "ok": false
+          }
+        ]
+      },
+      "why": "p.122 (v0.40; p.121 in v0.36), Adeptus Mechanicus fleet rules, Reserves and allies: 'Mechanicus vessels cannot be placed in squadrons with Rogue Trader, regular Imperial Navy or Adeptus Astartes vessels.' The other way round: a Navy reserve in a Mechanicus fleet ('Imperial Navy vessels from any fleet list can be used as reserves in a Mechanicus fleet', same page) still may not join a Mechanicus squadron."
+    },
+    {
+      "id": "squadron-merge-own-mixed-classes-bastion",
+      "page": 13,
+      "fleet": {
+        "list": "Imperial Navy — Bastion Fleets",
+        "limit": 500,
+        "units": [
+          {
+            "entry": "^Cobra class destroyer$",
+            "n": 2,
+            "sq": "A"
+          },
+          {
+            "entry": "^Sword class frigate$",
+            "n": 2,
+            "sq": "A"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Escort squadron A$",
+            "ok": true,
+            "v": "4 ships: 2 Cobra class destroyer + 2 Sword class frigate"
+          },
+          {
+            "label": "^Mechanicus vessels in squadron A$",
+            "absent": true
+          },
+          {
+            "label": "^Allied vessels in squadron A$",
+            "absent": true
+          }
+        ],
+        "others_ok": true,
+        "failing": 0
+      },
+      "why": "p.13: 'The escorts in a squadron do not have to all be of the same class.' Bastion Fleets escorts 'in squadrons of 2-6' (p.37). User example 31.10.2026."
+    },
+    {
+      "id": "squadron-merge-ally-into-core",
+      "page": 16,
+      "fleet": {
+        "list": "Imperial Navy — Bastion Fleets",
+        "limit": 500,
+        "units": [
+          {
+            "entry": "^Cobra class destroyer$",
+            "n": 3,
+            "sq": "A"
+          },
+          {
+            "list": "Imperial Navy — Armageddon Sector",
+            "role": "ally",
+            "entry": "^Falchion Class Frigate$",
+            "n": 1,
+            "sq": "A"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Allied vessels in squadron A$",
+            "ok": false
+          }
+        ]
+      },
+      "why": "p.16: 'Allied vessels taken in this way cannot be placed in squadrons with vessels in the core fleet unless specifically allowed to in the core fleet's list'. Bastion Fleets allows nothing of the kind. The same Falchion as a reserve is legal (squadron-merge-reserve-escort-joins-own): only the role differs."
+    },
+    {
+      "id": "squadron-merge-escort-with-capital",
+      "page": 13,
+      "fleet": {
+        "list": "Imperial Navy — Bastion Fleets",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Dictator class cruiser$",
+            "sq": "A"
+          },
+          {
+            "entry": "^Cobra class destroyer$",
+            "n": 3,
+            "sq": "A"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Escorts and capital ships in squadron A$",
+            "ok": false
+          }
+        ]
+      },
+      "why": "Rulebook p.95: 'The ships in a squadron can be of different classes as long as they are all of the same type'. p.13 sizes capital and escort squadrons apart; an escort and a cruiser never share one."
     }
   ]
 }

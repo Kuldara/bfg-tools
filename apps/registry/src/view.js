@@ -9,6 +9,7 @@ import { renderSaves } from "./saved-fleets.js";
 import { appState } from "./state.js";
 import { mixActive, mixGroups, mixGroupHTML, mixHulls, mixMember, mixRowHTML, mixRule, mixSec, mixStart, mixStop, mixUnits, sqErrorsHTML } from "./mixed.js";
 import { aboardHTML, fleetResolved } from "./validation.js";
+import { dropMergeTarget, mergeChoice, mergeInto } from "./merge.js";
 import { infoBtnHTML, rowHasInfo } from "./info.js";
 import { refitInfoHTML } from "./refit-tables.js";
 import { baAddOne, baHintHTML, baInTarget, baRowTag, baSec, baState, baSubOne, baTopHTML, isBaSec } from "./commandeered.js";
@@ -1127,6 +1128,13 @@ export function renderFleet(){
     if(sel.value) u.sq = sel.value; else delete u.sq;
     render();
   });
+  /* Squadron merge (31.10.2026): the open unit's Squadron menu */
+  box.querySelectorAll(".mergein").forEach(sel => sel.onchange = () => {
+    const u = appState.S.units[+sel.dataset.u];
+    if(!u || !sel.value) return;
+    mergeChoice(u, sel.value);
+    render();
+  });
   box.querySelectorAll(".wlin").forEach(sel => sel.onchange = () => {
     const u = appState.S.units[+sel.dataset.u];
     if(!u) return;
@@ -1189,9 +1197,12 @@ export function renderFleet(){
     const now = parseInt(el.textContent, 10), was = LAST_PTS.get(u);
     if(was != null && was !== now) el.classList.add("bump");
     LAST_PTS.set(u, now);
-    if(appState.JUST && appState.JUST.unit === u) row.classList.add("new");
+    if(appState.JUST && appState.JUST.unit === u) row.classList.add(appState.JUST.merged ? "merged" : "new");
     if(GOING.has(u)) row.classList.add("going");
   });
+  /* a merge pulls its squadron's group row together (merge.js) */
+  if(appState.JUST && appState.JUST.merged)
+    box.querySelectorAll(".unit.mixg").forEach(r => { if(r.dataset.mixtag === appState.JUST.merged) r.classList.add("merged"); });
 
   /* Remove answers first and acts after: the button and its row turn red
      for a moment, then the unit goes, and the next unit's Remove is brought
@@ -1212,10 +1223,18 @@ export function renderFleet(){
       appState.JUST = { pop: rowSelOf(u), keep: now && i < appState.S.units.length ? [{ sel: at, mid: midY(now) }] : null };
       render();
     }, GOING_MS); });
-  /* Reorder: drag a row's grip onto another row (above or below its
-     middle), or press an arrow key on the grip. */
+  /* Reorder: drag a row's grip onto another row (its top or bottom edge),
+     or press an arrow key on the grip. Merge (31.10.2026): drop it on the
+     middle of a row of its kind - a unit or a squadron - and the two are one
+     squadron. The two look apart all the way: a reorder draws a line
+     between the rows, a merge rings the row it would join and says
+     "Merge" on it (red-edged when the book forbids the mix, which is still
+     done), and after the drop a reorder washes the moved row while a merge
+     pulls the squadron together. */
   let dragFrom = null;
-  const clearMarks = () => box.querySelectorAll(".unit").forEach(u => u.classList.remove("dragging", "over-before", "over-after"));
+  const clearMarks = () => box.querySelectorAll(".unit").forEach(u => {
+    u.classList.remove("dragging", "over-before", "over-after", "over-merge", "over-merge-bad");
+    delete u.dataset.mergeLabel; });
   box.querySelectorAll(".grip").forEach(g => {
     g.ondragstart = e => {
       dragFrom = +g.dataset.grip;
@@ -1241,22 +1260,43 @@ export function renderFleet(){
       if(ng) ng.focus();
     };
   });
+  const RFm = fleetResolved();
   box.querySelectorAll(".unit").forEach(row => {
     const half = e => { const r = row.getBoundingClientRect(); return e.clientY < r.top + r.height / 2; };
+    /* the middle of the row merges: a quarter of the row at each edge, at
+       most 22 px, stays a reorder (a one-line row is half merge) */
+    const zone = e => {
+      const r = row.getBoundingClientRect(), edge = Math.min(22, r.height / 4), y = e.clientY - r.top;
+      return y < edge ? "before" : y > r.height - edge ? "after" : "mid"; };
+    const mergeAt = e => dragFrom != null && zone(e) === "mid" ? dropMergeTarget(dragFrom, row, RFm) : null;
     row.ondragover = e => {
       if(dragFrom == null) return;
       e.preventDefault();
-      try{ e.dataTransfer.dropEffect = "move"; }catch(x){}
+      const m = mergeAt(e);
+      try{ e.dataTransfer.dropEffect = m ? "link" : "move"; }catch(x){}
+      if(m){
+        row.classList.remove("over-before", "over-after");
+        row.classList.add("over-merge"); row.classList.toggle("over-merge-bad", !!m.warn);
+        row.dataset.mergeLabel = m.warn ? "Merge – " + m.warn : m.tag ? "Merge into squadron " + m.tag : "Merge into one squadron";
+        return;
+      }
+      row.classList.remove("over-merge", "over-merge-bad"); delete row.dataset.mergeLabel;
+      if(row.dataset.ui == null){ row.classList.remove("over-before", "over-after"); return; }
       const before = half(e);
       row.classList.toggle("over-before", before); row.classList.toggle("over-after", !before);
     };
-    row.ondragleave = () => row.classList.remove("over-before", "over-after");
+    row.ondragleave = () => { row.classList.remove("over-before", "over-after", "over-merge", "over-merge-bad"); delete row.dataset.mergeLabel; };
     row.ondrop = e => {
       if(dragFrom == null) return;
       e.preventDefault();
-      const idx = +row.dataset.ui, from = dragFrom;
+      const idx = +row.dataset.ui, from = dragFrom, m = mergeAt(e);
       dragFrom = null;
       dragScrollStop();
+      if(m){
+        const mu = appState.S.units[from];
+        if(mergeInto(mu, m.tag || m.unit)){ render(); return; }
+      }
+      if(!(idx >= 0)){ clearMarks(); return; }
       let to = half(e) ? idx : idx + 1;
       if(to > from) to--;                 /* the row leaves its old slot first */
       const mu = appState.S.units[from];

@@ -1,5 +1,5 @@
 import { resolveUnit } from "./cards.js";
-import { mixSec } from "./mixed.js";
+import { mergeKind, mergeMenuHTML } from "./merge.js";
 import { L, listOf, setUpState, upState, upgradesFor } from "./model.js";
 import { save } from "./save.js";
 import { appState } from "./state.js";
@@ -617,8 +617,6 @@ export function leadsText(RF, wi){
 export function fleetControlsHTML(RF){
   const out = [];
   const add = (i, h) => { out[i] = (out[i] || "") + h; };
-  const caps0 = appState.S.units.map((u, i) => { const R = RF.units[i];
-    return R && R.kind === "ship" && !R.squadron && !(R.defence && R.defence.stationary) ? i : -1; }).filter(i => i >= 0);
   /* A Blood Axe tiddla and the escorts it commandeers share a tag too
      (Fleets p. 371, J220) */
   const BA = L().bloodaxe, inSecU = (u, re) => { const sc = listOf(u).secs[u.s]; return !!sc && new RegExp(re, "i").test(String(sc.t).trim()); };
@@ -629,15 +627,13 @@ export function fleetControlsHTML(RF){
   const tid = L().clanz ? appState.S.units.map((u, i) => !u.lst && inSecU(u, L().clanz.tiddla) ? i : -1).filter(i => i >= 0) : [];
   /* Clanz (J226): kroozers pair with a button of their own (below), and
      an 'Uge ship, a Rok or a hulk is a skwadron by itself - no letters */
-  /* A list whose rules count escort squadrons (L.esq: Rogue Traders,
-     Exploration, Pirates and Wolf Packs, Tau Commerce Protection, Demiurg War
-     Host): its escort cards take a letter too, since there the letter, not a
-     short card by itself, makes a mixed squadron (27.10.2026). Since
-     28.10.2026 the escort cards of every list's mixable sections (mixSec) do
-     too: there a letter on two cards is a mixed squadron the rules check. */
-  const escs = appState.S.units.map((u, i) => { const R = RF.units[i];
-    return !u.lst && R && R.kind === "ship" && R.squadron && !R.defence && (L().esq || mixSec(u.s)) ? i : -1; }).filter(i => i >= 0);
-  const caps = L().clanz ? com.concat(tid) : caps0.length >= 2 || escs.length ? caps0.concat(com, tid, escs) : com.concat(tid);
+  /* Every other list (squadron merge, 31.10.2026): a Squadron menu that
+     names the units to merge with, on every ship that has one to merge
+     with or a squadron to leave - a reserve or an ally too (merge.js). It
+     takes over the letter menu that capital ships (J216) and the escort
+     cards of L.esq lists and mixable sections (27.-28.10.2026) had. */
+  if(!L().clanz) appState.S.units.forEach((u, i) => { if(mergeKind(i, RF)) add(i, mergeMenuHTML(i, RF)); });
+  const caps = L().clanz ? com.concat(tid) : [];
   if(caps.length >= 2){
     /* escorts and capital ships never share a squadron: each card is offered
        the letters of its own kind, and a new letter is free in both */

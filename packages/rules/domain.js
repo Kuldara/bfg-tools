@@ -6213,9 +6213,11 @@ var __rules = (() => {
       return;
     }
     var letterOf = function(m) {
-      return m.escort && !m.defence && m.unitRow && m.own && m.intent && m.intent.sq ? "sq:" + m.intent.sq : null;
+      return m.escort && !m.defence && m.unitRow && m.intent && m.intent.sq ? "sq:" + m.intent.sq : null;
     };
-    var lettered = inRule.filter(letterOf);
+    var lettered = inRule.filter(function(m) {
+      return m.own && letterOf(m);
+    });
     if (lettered.length) {
       var saidL = F.esqSaid || (F.esqSaid = {});
       var srcL = "Squadrons of " + r.min + "\u2013" + r.max + ". " + r.src;
@@ -6609,6 +6611,86 @@ var __rules = (() => {
       });
     });
     return { sqTags, sqOf };
+  }
+  var MECH_SQ = { s: "Mechanicus vessels cannot be placed in squadrons with Rogue Trader, regular Imperial Navy or Adeptus Astartes vessels.", pg: 122 };
+  var ALLY_SQ = { s: "Allied vessels taken in this way cannot be placed in squadrons with vessels in the core fleet unless specifically allowed to in the core fleet's list.", pg: 16 };
+  var TYPE_SQ = { s: "The ships in a squadron can be of different classes as long as they are all of the same type.", pg: 95, rb: true };
+  function checkSquadronMix(F) {
+    var L = F.L, members = F.members, out = F.out;
+    if (L.clanz) return;
+    var tags = [];
+    var inSq = function(m) {
+      return !!(m.intent && m.intent.sq) && m.unitRow && !m.defence && m.R && m.R.kind === "ship";
+    };
+    members.forEach(function(m) {
+      if (inSq(m) && tags.indexOf(m.intent.sq) < 0) tags.push(m.intent.sq);
+    });
+    tags.sort();
+    var listOf = function(m) {
+      return m.sel && m.sel.list || L;
+    };
+    var isMech = function(m) {
+      return /mechanicus/i.test(String(listOf(m).nm || ""));
+    };
+    var name = function(m) {
+      return m.hulls + " " + m.en.l;
+    };
+    tags.forEach(function(tag) {
+      var ms = members.filter(function(m) {
+        return inSq(m) && m.intent.sq === tag;
+      });
+      if (ms.length < 2 && !ms.some(function(m) {
+        return !m.own;
+      })) return;
+      var esc = ms.filter(function(m) {
+        return m.escort;
+      }), cap = ms.filter(function(m) {
+        return !m.escort;
+      });
+      if (esc.length && cap.length)
+        out.push({
+          ok: false,
+          t: "Escorts and capital ships in squadron " + tag,
+          v: esc.map(name).concat(cap.map(name)).join(" + "),
+          s: citeText(TYPE_SQ)
+        });
+      var ally = ms.filter(function(m) {
+        return m.role === "ally";
+      }), core = ms.filter(function(m) {
+        return m.role !== "ally";
+      });
+      if (ally.length && core.length && !L.aux)
+        out.push({
+          ok: false,
+          t: "Allied vessels in squadron " + tag,
+          v: ally.map(name).join(" + ") + " (ally) with " + core.map(name).join(" + "),
+          s: citeText(ALLY_SQ)
+        });
+      var me = ms.filter(isMech), other = ms.filter(function(m) {
+        return !isMech(m);
+      });
+      if (me.length && other.length)
+        out.push({
+          ok: false,
+          t: "Mechanicus vessels in squadron " + tag,
+          v: me.map(name).join(" + ") + " (Mechanicus) with " + other.map(name).join(" + "),
+          s: citeText(MECH_SQ)
+        });
+      if (esc.length && !esc.some(function(m) {
+        return m.own;
+      })) {
+        var q = esc[0].R && esc[0].R.squadron || { min: 2, max: 6 };
+        var n = esc.reduce(function(a, m) {
+          return a + Math.max(1, m.hulls);
+        }, 0);
+        out.push({
+          ok: n >= q.min && n <= q.max,
+          t: "Escort squadron " + tag,
+          v: n + " ship" + (n === 1 ? "" : "s") + ": " + esc.map(name).join(" + ") + (n < q.min ? " - too few, at least " + q.min : n > q.max ? " - too many, at most " + q.max : ""),
+          s: "Squadrons of " + q.min + "\u2013" + q.max + ". The escorts in a squadron do not have to all be of the same class. (Fleets p. 13)"
+        });
+      }
+    });
   }
   function checkBorrowedShips(F) {
     var L = F.L, members = F.members, worth = F.worth, out = F.out, sqTags = F.sqTags, sqOf = F.sqOf;
@@ -7336,6 +7418,7 @@ var __rules = (() => {
     F.sqTags = SQ.sqTags;
     F.sqOf = SQ.sqOf;
     checkBorrowedShips(F);
+    checkSquadronMix(F);
     checkListSpecials(F);
     var wsum = checkOrkClanz(F);
     checkHulkPowerfields(F);

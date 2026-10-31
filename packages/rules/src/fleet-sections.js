@@ -375,10 +375,13 @@ function ruleSquadron(F, r, sec, si, lab){
      vessels apart (Armageddon, Fleets p. 41). A lettered card is the
      player's squadron, so it does not join others by itself; the cards
      without a letter keep the implicit joining below, as before, so no saved
-     fleet changes. Said once per letter (a Messenger beside Defenders). */
+     fleet changes. Said once per letter (a Messenger beside Defenders).
+     A borrowed escort with the letter is in the squadron too (squadron
+     merge, 31.10.2026: a reserve Falchion with three Cobras, Fleets p. 14);
+     who may not share one is checkSquadronMix's. */
   var letterOf = function(m){
-    return m.escort && !m.defence && m.unitRow && m.own && m.intent && m.intent.sq ? "sq:" + m.intent.sq : null; };
-  var lettered = inRule.filter(letterOf);
+    return m.escort && !m.defence && m.unitRow && m.intent && m.intent.sq ? "sq:" + m.intent.sq : null; };
+  var lettered = inRule.filter(function(m){ return m.own && letterOf(m); });
   if(lettered.length){
     var saidL = F.esqSaid || (F.esqSaid = {});
     var srcL = "Squadrons of " + r.min + "–" + r.max + ". " + r.src;
