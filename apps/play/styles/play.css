@@ -712,27 +712,32 @@ details.ldguide h4{margin:12px 12px 4px;font:700 12px var(--mono);text-transform
 .peerbar .psum b{display:block;font:700 15px/1.2 var(--disp);letter-spacing:.04em;text-transform:uppercase;color:var(--ink)}
 .peerbar .psum small{display:block;color:var(--ink-3)}
 /* the link panel */
-.pstat{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:14px}
 .peercode .step{margin:4px 0 0;font:700 12px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
 .peercode .lead{margin:2px 0 8px;font-size:14px;color:var(--ink-2)}
 .nmrow{display:flex;flex-direction:column;gap:4px;margin:10px 0 2px;font:600 12px var(--mono);color:var(--ink-3)}
 .nmrow input{min-height:var(--tap);border-radius:8px;border:1px solid var(--line);background:var(--sunk);padding:0 10px;color:var(--ink);font:15px var(--sans)}
 /* the room: create one, or join with the other's code */
-.roomjoin{display:flex;flex-direction:column;gap:8px;margin-top:8px}
+.roomjoin{display:flex;flex-direction:column;gap:10px;margin-top:8px}
 .roomjoin .btn{margin-top:0}
-.roomjoin .jn{display:flex;gap:8px}
-.roomjoin .jn input{flex:1 1 auto;min-width:0;min-height:var(--big);border-radius:10px;border:1px solid var(--line);background:var(--sunk);
-  color:var(--ink);font:700 24px/1 var(--mono);letter-spacing:.35em;text-align:center;text-transform:uppercase;padding:0 0 0 .35em}
-.roomjoin .jn input::placeholder{color:var(--ink-3);letter-spacing:.2em;font-size:16px}
-.roomjoin .jn .btn{width:auto;flex:0 0 auto;padding:0 22px}
-.roomcode{display:flex;align-items:baseline;justify-content:center;gap:12px;margin:10px 0;padding:12px;border-radius:12px;
+.roomjoin .btn small{display:block;font:12px/1.2 var(--mono);text-transform:none;letter-spacing:0;color:rgba(255,255,255,.85);margin-top:2px}
+.jn{display:grid;grid-template-columns:1fr auto;gap:6px 8px;align-items:center}
+.jn > span{grid-column:1 / -1;font:600 12px/1.3 var(--sans);color:var(--ink-3)}
+.jn > span:empty{display:none}
+.jn input{min-width:0;min-height:var(--big);border-radius:10px;border:1px solid var(--line);background:var(--sunk);
+  color:var(--ink);font:700 26px/1 var(--mono);letter-spacing:.4em;text-align:center;text-transform:uppercase;padding:0 0 0 .4em}
+.jn input::placeholder{color:var(--ink-3);opacity:.5}
+.jn .btn{width:auto;margin:0;padding:0 22px;min-height:var(--big)}
+.roomcode{display:flex;align-items:baseline;justify-content:center;gap:12px;margin:8px 0 10px;padding:12px;border-radius:12px;
   background:var(--accent-wash);border:1px solid var(--accent);color:var(--accent-ink)}
 .roomcode span{font:700 12px var(--mono);letter-spacing:.1em;text-transform:uppercase}
-.roomcode b{font:700 44px/1 var(--mono);letter-spacing:.25em}
+.roomcode b{font:700 48px/1 var(--mono);letter-spacing:.25em;margin-right:-.25em}
+.peercard .lead{margin:0 0 6px;font-size:15px;color:var(--ink)}
+.menu .lead{margin:0 0 6px;font-size:15px;color:var(--ink)}
 .card h2 em{font:600 11px var(--mono);font-style:normal;color:var(--ink-3);letter-spacing:.06em;margin-left:6px;text-transform:uppercase}
 .peercard.in{border-color:var(--accent)}
-.peercard .code{font-family:var(--mono);letter-spacing:.15em;color:var(--accent-ink)}
+.peercard.in h2 em{color:var(--accent-ink)}
 .linkbtn{border:0;background:none;padding:0;color:var(--accent-ink);font:inherit;font-weight:700;text-decoration:underline;cursor:pointer}
 .pdot.wait{background:var(--warn);animation:blink 1.4s ease-out infinite}
-ol.steps{margin:6px 0 4px;padding-left:20px;font-size:14px;color:var(--ink-2)}
-ol.steps li{margin:2px 0}
+.pstat{display:flex;align-items:center;gap:8px;margin:6px 0;font-size:14px}
+.pstat.on{color:var(--ink);font-weight:600}
+details.paste .roomjoin{margin-top:6px}

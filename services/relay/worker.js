@@ -1,7 +1,10 @@
 /* Gothic Fleet Play's relay: two players' pages in one room (apps/play/src/peer.js).
 
    GET /room/<CODE> with an Upgrade: websocket header joins the room CODE
-   (four letters). Whatever a page sends goes to the other pages in the room,
+   (four letters). With ?join=1 (a code the player typed) the room must be
+   open already - someone created it - or the page is told {"t":"noroom"}
+   and closed with code 4404, so a mistyped code is seen at once instead of
+   waiting for a player who never comes. Whatever a page sends goes to the other pages in the room,
    as it is; the relay itself only adds who is there ({"t":"peers","n":N}).
    Nothing is stored: a room lives in one Durable Object's memory while
    someone is in it and is gone when the last page leaves. A page that comes
@@ -35,7 +38,7 @@ export default {
        distribution must work there too */
     const local = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
     if (origin && origin !== "null" && !local && !allowed.includes(origin)) return new Response("origin not allowed\n", { status: 403 });
-    return env.ROOMS.get(env.ROOMS.idFromName(code)).fetch(req);
+    return env.ROOMS.get(env.ROOMS.idFromName(code)).fetch(new Request(url.origin + "/room/" + code + (url.searchParams.get("join") ? "?join=1" : ""), req));
   }
 };
 
@@ -45,6 +48,13 @@ export class Room {
     const pages = this.state.getWebSockets();
     if (pages.length >= MAX_PAGES) return new Response("the room is full\n", { status: 409 });
     const pair = new WebSocketPair();
+    if (new URL(req.url).searchParams.get("join") && !pages.length) {
+      /* a typed code and nobody here: say so and hang up (a browser sees
+         the close code, not an HTTP status, once the socket is open) */
+      pair[1].accept();
+      try { pair[1].send(JSON.stringify({ t: "noroom" })); pair[1].close(4404, "no such room"); } catch (e) { /* gone */ }
+      return new Response(null, { status: 101, webSocket: pair[0] });
+    }
     this.state.acceptWebSocket(pair[1]);
     this.peers();
     return new Response(null, { status: 101, webSocket: pair[0] });

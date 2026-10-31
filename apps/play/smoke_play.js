@@ -653,10 +653,17 @@ function run(check){
     check("smoke: a new room code is four room letters", /^[A-HJ-NP-Z]{4}$/.test(P(`newRoomCode()`)));
     clean("the set-up step without a room", P(`peerSetupCard()`));
     check("smoke: the set-up step offers both ways in: create a room, join with a code", /data-act="peercreate"/.test(P(`peerSetupCard()`)) && /id="peerjoin"/.test(P(`peerSetupCard()`)));
-    P(`P.room = "KRAK"; P.st = "wait";`);
-    clean("the room panel while waiting", P(`renderPeerPanel()`));
-    check("smoke: the room panel shows its code and a way for the other phone to scan it", /<b>KRAK<\/b>/.test(P(`renderPeerPanel()`)) && /class="qrsvg"/.test(P(`renderPeerPanel()`)) && /data-act="peerleave"/.test(P(`renderPeerPanel()`)));
-    P(`P.room = ""; P.st = "off";`);
+    P(`P.room = "KRAK"; P.st = "wait"; P.host = true;`);
+    clean("the set-up step while waiting (host)", P(`peerSetupCard()`));
+    clean("the room panel while waiting (host)", P(`renderPeerPanel()`));
+    check("smoke: the host's step says the code and what to tell the other player; the panel adds the QR code", /<b>KRAK<\/b>/.test(P(`peerSetupCard()`)) && /tap Join, type KRAK/.test(strip(P(`peerSetupCard()`))) && !/qrsvg/.test(P(`peerSetupCard()`)) && /class="qrsvg"/.test(P(`renderPeerPanel()`)) && /data-act="peerleave"/.test(P(`renderPeerPanel()`)));
+    check("smoke: a host who finds the other player also tapped Create can type their letters instead", /id="peerjoin"/.test(P(`peerSetupCard()`)));
+    P(`P.host = false;`);
+    clean("the set-up step while waiting (joiner)", P(`peerSetupCard()`));
+    check("smoke: a joiner alone in the room is told so, not left waiting", /other player is not here/.test(strip(P(`peerSetupCard()`))));
+    P(`var __g = P.G; P.G = null; P.st = "live"; P.who = "Mikko";`);
+    check("smoke: the tabs appear as soon as the link is live, before their fleet comes", /class="sides/.test(P(`sidesStrip()`)) && /no fleet open yet/.test(strip(P(`sidesStrip()`))));
+    P(`P.G = __g; P.room = ""; P.st = "off"; P.host = false; P.who = "";`);
     P(`V.side = "me";`);
   });
 }
