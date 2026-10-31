@@ -10,6 +10,7 @@ import { appState } from "./state.js";
 import { mixActive, mixGroups, mixGroupHTML, mixHulls, mixMember, mixRowHTML, mixRule, mixSec, mixStart, mixStop, mixUnits, sqErrorsHTML } from "./mixed.js";
 import { aboardHTML, fleetResolved } from "./validation.js";
 import { dropMergeTarget, mergeChoice, mergeInto } from "./merge.js";
+import { cmdOnShipHTML, cmdPointerHTML, cmdStripes } from "./aboard-ship.js";
 import { infoBtnHTML, rowHasInfo } from "./info.js";
 import { refitInfoHTML } from "./refit-tables.js";
 import { baAddOne, baHintHTML, baInTarget, baRowTag, baSec, baState, baSubOne, baTopHTML, isBaSec } from "./commandeered.js";
@@ -1070,8 +1071,11 @@ export function renderFleet(){
   const onHulk = ui => { const a = abOf[ui]; return !!(a && a.ship != null && isOrkHulkUnit(RF.units[a.ship])); };
   /* a Clanz tiddla card: Mob Rule and Young Gunz, as information (p. 372) */
   const tidHint = u => L().clanz && skwKind(u) === "tiddla" ? `<div class="uctl">${orkTiddlaHint(u.n || 1)}</div>` : "";
+  /* the commander seen from his ship, and the ship from his row (user
+     31.10.2026, aboard-ship.js) */
+  const cmdOf = ui => { const R = RF.units[ui]; return !R ? "" : R.kind === "ship" ? cmdOnShipHTML(RF, ui) : R.kind === "commander" ? cmdPointerHTML(RF, ui) : ""; };
   const rowOf = (u, ui, more) => unitRowHTML(u, ui,
-    { a: abOf[ui] || null, RF: RF, extra: (extra[ui] || "") + (memberOf[ui] ? "" : tidHint(u)) + (more || ""), hide: hideOf[ui] || [], dim: dimOf[ui] || [], send: sendOf[ui] || "", hulk: onHulk(ui),
+    { a: abOf[ui] || null, RF: RF, extra: cmdOf(ui) + (extra[ui] || "") + (memberOf[ui] ? "" : tidHint(u)) + (more || ""), hide: hideOf[ui] || [], dim: dimOf[ui] || [], send: sendOf[ui] || "", hulk: onHulk(ui),
       /* a Blood Axe's commandeered escort in its mixed tiddla says so (p. 371) */
       tag: memberOf[ui] && isCommandeered(u) ? "commandeered" : "",
       /* J234: "" without Compact, else this unit "shut" or "open" */
@@ -1110,6 +1114,13 @@ export function renderFleet(){
     if(appState.MIX && appState.MIX.tag === g.tag) mixStop();
     render();
   });
+  { const stripe = cmdStripes(RF, !!L().clanz);
+    box.querySelectorAll(".unit[data-ui]").forEach(row => {
+      const c = stripe[+row.dataset.ui];
+      if(c == null) return;
+      row.classList.add("cmdc");
+      row.style.setProperty("--wl", c);
+    }); }
   if(wsC.length) box.querySelectorAll(".unit").forEach(row => {
     const i = row.dataset.ui != null ? +row.dataset.ui : +row.dataset.mixui, w = i >= 0 ? wlOf(i) : -1;
     if(w < 0) return;
