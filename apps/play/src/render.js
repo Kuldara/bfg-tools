@@ -290,6 +290,7 @@ export function ldGuide(){
   const R0 = appState.U.map(x => x.R);
   const txt = R0.map(R => (R.rules || []).map(r => String(r.t || "")).join(" ")).join(" ");
   const extra = [
+    "Roll Ld rolls a D6 for every ship still without a value, on its own table with what the book adds; Roll upgrades does the same for the dice below. Nothing is rolled twice: change a value as you would set it by hand, with an Ld tile or the upgrade's list.",
     "One roll per capital ship and one per escort squadron (p. 45); a capital squadron tests on its highest Ld (p. 95). Nothing goes above 10 (p. 48).",
     appState.G.cmd != null ? "The fleet commander's Leadership goes on his flagship after the roll: a fixed value replaces it, a bonus is added (max 10). Another commander's line is yours to add (T40)." : "",
     R0.some(R => R.gifts) ? "Adeptus Mechanicus: a ship that rolls a natural 6 for its Leadership may choose its Mechanicus Gift instead of rolling it, unless it carries an Archmagos (Fleets p. 118)." : "",
@@ -307,17 +308,14 @@ export function ldGuide(){
   return `<details class="ldguide"${appState.V.ldGuide ? " open" : ""}><summary>Leadership rules of this fleet${tOrder.length ? " and the other pre-game dice" : ""}</summary>
     <ul>${rows.join("")}</ul>${extra.map(t => `<p>${esc(t)}</p>`).join("")}${tabHTML ? `<h4>Rolled before the game</h4>${tabHTML}` : ""}</details>`;
 }
-/* the roll buttons: the ships still without a value first; once every
-   one has its value, a re-roll of all of them */
+/* the roll buttons, an option beside the taps: only while something is
+   still without a value. No re-roll (user 31.10.2026): once rolled, a change
+   is made as a manual input - an Ld tile or the upgrade's select. */
 function rollBar(){
   const rollers = ldRollers(), open = rollers.filter(i => appState.G.st[i].ld == null).length;
   const pc = preCounts();
-  const ldBtn = rollers.length ? (open
-      ? `<button class="btn" data-act="rollld">Roll Ld<small>${open === rollers.length ? rollers.length + " to roll" : open + " still to roll"}</small></button>`
-      : `<button class="btn sec" data-act="rollld" data-arg="all">Re-roll all Ld</button>`) : "";
-  const preBtn = pc.n ? (pc.open
-      ? `<button class="btn" data-act="rollpre">Roll upgrades<small>${pc.open} to roll</small></button>`
-      : `<button class="btn sec" data-act="rollpre" data-arg="all">Re-roll upgrades</button>`) : "";
+  const ldBtn = open ? `<button class="btn sec" data-act="rollld">Roll Ld<small>${open === rollers.length ? open + " to roll" : open + " still to roll"}</small></button>` : "";
+  const preBtn = pc.open ? `<button class="btn sec" data-act="rollpre">Roll upgrades<small>${pc.open} to roll</small></button>` : "";
   return ldBtn || preBtn ? `<div class="rollbar">${ldBtn}${preBtn}</div>` : "";
 }
 /* the row's dice: the Leadership's die and sum; one select per pre-game
@@ -404,7 +402,7 @@ export function renderSetup(){
       <div class="tools">${builderTool()}<button class="tool" data-act="newgame" title="Back to the fleets: this set-up is not kept">Exit</button></div></div>
     <div class="main">${factsCard()}<div class="card"><h2>Leadership</h2>
       ${ldGuide()}${rollBar()}
-      <p>Roll Ld rolls a D6 for every ship still without a value, on its fleet's own table with what the book adds (the guide above). Or roll your own dice and tap the value: a tap always wins over the roll. SQN groups capital ships into a squadron: one Ld, one order, combined fire (p. 95, 99). Tap a ship's name to give it another one for this game.${appState.L0.clanz ? " Da Ork Clanz: a Warlord may swap Leadership with any one ship or escort squadron under his command (Fleets p. 374) - tap the swapped values." : ""}${anyFixed ? " Planetary defences do not roll: their checks are made on Ld 7 (Rulebook p. 100)." : ""}</p>
+      <p>Tap the value each ship fights on, or let Roll Ld roll the ships still without one. SQN groups capital ships into a squadron: one Ld, one order, combined fire (p. 95, 99). Tap a ship's name to give it another one for this game.${appState.L0.clanz ? " Da Ork Clanz: a Warlord may swap Leadership with any one ship or escort squadron under his command (Fleets p. 374) - tap the swapped values." : ""}${anyFixed ? " Planetary defences do not roll: their checks are made on Ld 7 (Rulebook p. 100)." : ""}</p>
       ${frrRow}${rows}
       <button class="btn" data-act="start" ${ready ? "" : "disabled"}>Start the game</button>
       ${ready ? "" : `<p class="why">To start, pick the Ld of ${missing.length === 1 ? "one more ship" : missing.length + " more ships"}: ${missing.map(i => `<button data-act="seek" data-i="${i}">${esc(unitName(i))}</button>`).join(", ")}</p>`}</div></div>`;
@@ -816,7 +814,7 @@ export function renderPop(i){
     return `<div class="pop"><h4>Leadership ${appState.G.grp[i] ? MID + " " + esc(unitName(i)) + " " : ""}${MID} rolled ${l.base == null ? "?" : l.base}${st.ldPerm ? " " + MID + " bridge smashed " + st.ldPerm : ""}</h4>
       ${others2}
       <p>${l.base == null ? "Roll a D6 (p. 45): 1 = 6, 2-3 = 7, 4-5 = 8, 6 = 9 - or on the fleet's own table: Ld 5 (Orks, Fleets p. 360) to Ld 10 (Space Marines, Fleets p. 94)." : "Command checks: 2D6 equal to or under Ld; -1 under fire, +1 enemy contacts, never above 10 (p. 48) - count those from the table."}</p>
-      ${(() => { const p = ldPlanOf(i); return p && p.roll ? `<p><button class="chip" data-act="rollone" data-i="${i}">Roll D6</button> on the ${esc(p.table.name)} table (${bookPg(p.table.book, p.table.page)})${p.mods.map(m => `, ${m.v > 0 ? "+" : ""}${m.v} ${esc(m.t)}`).join("")}${st.ldWhy ? ` ${MID} rolled ${esc(st.ldWhy)}` : ""}</p>` : ""; })()}
+      ${(() => { const p = ldPlanOf(i); return p && p.roll && st.ld == null ? `<p><button class="chip" data-act="rollone" data-i="${i}">Roll D6</button> on the ${esc(p.table.name)} table (${bookPg(p.table.book, p.table.page)})${p.mods.map(m => `, ${m.v > 0 ? "+" : ""}${m.v} ${esc(m.t)}`).join("")}${st.ldWhy ? ` ${MID} rolled ${esc(st.ldWhy)}` : ""}</p>` : ""; })()}
       <div class="tiles c6">${PLAY.LD_VALUES.map(n => `<button class="${st.ldRoll === n ? "on" : ""}" data-act="ld" data-i="${i}" data-arg="${n}"><b>${n}</b></button>`).join("")}</div>
       ${st.ldFrom === "commander" ? `<p>The commander's Leadership line applies to this flagship: a fixed value stands in for the roll, a bonus is added to it.</p>` : ""}
       <button class="close" data-act="closepop">close</button></div>`;

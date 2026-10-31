@@ -525,7 +525,10 @@ on the Mechanicus table marks the ship's Gift as one it may choose (p. 118).
 special torpedoes (pp. 19-21), a Xenotech system (pp. 151, 185; a chosen one is
 picked, not rolled), the Blood Axes' Imperial Navy refit (p. 371, T61's tables), a
 Rogue Trader crew skill (the die only: the Rulebook's table, p. 159, is not in this
-project). Each has a select to pick or change it; the result is printed on the card
+project). Each has a select to pick or change it. **No re-roll** (the user, 31.10.2026: *"no
+re-roll all buttons; an edit is like a manual input"*): the buttons roll only what
+is still without a value and are gone once everything has one, and the rolling is
+an option beside the taps; the result is printed on the card
 with its page, and its effect is not applied to the stats. **Not covered yet:** the
 Bakka Fleet-Admiral's rolled refits (p. 48) and the Mechanicus experimental
 cruiser (p. 124).
