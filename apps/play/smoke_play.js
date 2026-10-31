@@ -649,7 +649,14 @@ function run(check){
     P(`V.side = "me"`);
     check("smoke: the tabs and the edge tab appear once there is an opponent", /class="sides/.test(P(`renderRoster()`)) && /class="edge r/.test(P(`renderRoster()`)));
     clean("the link panel", P(`renderPeerPanel()`));
-    check("smoke: a link code is read from a pasted link or a bare code", P(`JSON.stringify([parsePeerText("https://x/p.html#peer=zAbC_-1"), parsePeerText("peerok=jQQ"), parsePeerText("nothing")])`) === '[{"kind":"peer","code":"zAbC_-1"},{"kind":"peerok","code":"jQQ"},null]');
+    check("smoke: a room code is read typed, with spaces, lower case or from a link; I and O are not room letters", P(`JSON.stringify([parseRoom("krak"), parseRoom(" K R A K "), parseRoom("https://x/p.html#room=WAAG"), parseRoom("KIOK"), parseRoom("KRAKEN"), parseRoom("")])`) === '["KRAK","KRAK","WAAG",null,null,null]');
+    check("smoke: a new room code is four room letters", /^[A-HJ-NP-Z]{4}$/.test(P(`newRoomCode()`)));
+    clean("the set-up step without a room", P(`peerSetupCard()`));
+    check("smoke: the set-up step offers both ways in: create a room, join with a code", /data-act="peercreate"/.test(P(`peerSetupCard()`)) && /id="peerjoin"/.test(P(`peerSetupCard()`)));
+    P(`P.room = "KRAK"; P.st = "wait";`);
+    clean("the room panel while waiting", P(`renderPeerPanel()`));
+    check("smoke: the room panel shows its code and a way for the other phone to scan it", /<b>KRAK<\/b>/.test(P(`renderPeerPanel()`)) && /class="qrsvg"/.test(P(`renderPeerPanel()`)) && /data-act="peerleave"/.test(P(`renderPeerPanel()`)));
+    P(`P.room = ""; P.st = "off";`);
     P(`V.side = "me";`);
   });
 }

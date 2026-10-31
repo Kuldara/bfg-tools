@@ -14,6 +14,8 @@
     "serve": "node tools/serve.js",
     "og": "node tools/og.js",
     "publish": "node tools/publish.js",
+    "publish:relay": "npx --yes wrangler@4 deploy --config services/relay/wrangler.json",
+    "relay:dev": "npx --yes wrangler@4 dev --config services/relay/wrangler.json --port 8787",
     "backup": "node tools/backup.js"
   },
   "devDependencies": {
