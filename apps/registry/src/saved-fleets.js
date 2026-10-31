@@ -3,6 +3,7 @@ import { FILE_TAG, fileNote, fleetDocument } from "./fleet-files.js";
 import { L, fleetPoints, switchList, total } from "./model.js";
 import { placeSaves } from "./panels.js";
 import { copyBoxHTML, phonePanelHTML } from "./phone.js";
+import { savedListHTML } from "./saved-list.js";
 import { STASH_PTS, stashAll, stashUnits, unitDocs } from "./save.js";
 import { appState } from "./state.js";
 import { render } from "./view.js";
@@ -245,15 +246,9 @@ export function renderSaves(){
   if(!sb) return;
   const openId = appState.S.units.length ? lib.open[L().nm] : null;
   const changed = openUnsaved(lib);
-  const saved = lib.saves.map(s => {
-    const isOpen = s.id === openId && s.ln === L().nm;
-    const meta = [esc(s.ln), (s.pts | 0) + " pts", esc(s.saved || ""), s.from === "link" ? "from a link" : s.from === "file" ? "from a file" : s.from === "paste" ? "pasted" : s.from === "kept" ? "kept when a link opened" : "",
-                  isOpen ? (changed ? "open, changed" : "open") : ""].filter(Boolean).join(" &middot; ");
-    return `<div class="rowf${isOpen ? " open" : ""}${LIB_NEW.indexOf(s.id) >= 0 ? " fresh" : ""}"><span class="nm"><b>${esc(s.name)}</b><i>${meta}</i></span>${
-      isOpen ? "" : `<button class="go" data-libopen="${esc(s.id)}" title="${esc("Open " + s.name + " on the " + s.ln + " list")}">Open</button>`
-    }<button class="go" data-libexport="${esc(s.id)}" title="${esc("Save " + s.name + " as a file")}">Export</button><button class="go" data-copytext="${esc(s.id)}" title="${esc("Copy " + s.name + " as text: paste it into Gothic Fleet Play, a message, or Paste text here")}">Copy</button><button class="go${appState.PHONE.key === s.id ? " on" : ""}" data-phone="${esc(s.id)}" title="${esc("A QR code of " + s.name + " for Gothic Fleet Play on a phone")}">To phone</button><button class="del" data-libdel="${esc(s.id)}" title="${esc("Delete the saved fleet " + s.name)}">Delete</button></div>${
-      appState.COPYBOX && appState.COPYBOX.key === s.id ? copyBoxHTML() : ""}${appState.PHONE.key === s.id ? phonePanelHTML() : ""}`;
-  }).join("");
+  const saved = lib.saves.length ? savedListHTML(lib, { openId: openId, changed: changed,
+    fresh: id => LIB_NEW.indexOf(id) >= 0, copyBox: copyBoxHTML, phonePanel: phonePanelHTML }) : "";
+  sb.className = "panel" + (lib.saves.length ? " sf-panel" : "");
   const kept = Object.keys(stashAll()).filter(nm => stashUnits(nm).length).sort();
   const work = (appState.S.units.length ? [{ nm: L().nm, pts: total(), n: appState.S.units.length, open: true }] : [])
     .concat(kept.map(nm => ({ nm: nm, pts: STASH_PTS[nm] || 0, n: stashUnits(nm).length, open: false })));
@@ -265,7 +260,7 @@ export function renderSaves(){
       r.open ? "" : `<button class="go" data-open="${esc(r.nm)}" title="${esc("Go to the " + r.nm + " list")}">Open</button>`
     }<button class="del" data-drop="${esc(r.nm)}" title="${esc(r.open ? "Clear the open fleet (its saved copy stays)" : "Discard the " + r.nm + " fleet being edited")}">${r.open ? "Clear" : "Discard"}</button></div>`;
   }).join("");
-  sb.innerHTML = `<div class="sh">Saved</div>` +
+  sb.innerHTML = (lib.saves.length ? "" : `<div class="sh">Saved</div>`) +
     (saved || `<div class="empty">No saved fleets yet. Save keeps the open fleet here under a name; a file or a QR code adds fleets here too.</div>`) +
     (editing ? `<div class="sh">Being edited, one per list</div>` + editing : "") +
     `<div class="rowf tools"><span class="nm"><i>Export makes a file and Copy the same as text; To phone is a QR code of it for Gothic Fleet Play. Import file and Paste text add them back here.</i></span>${
