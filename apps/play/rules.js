@@ -7,8 +7,10 @@
    here; everything the rulebook derives from it (crippled, halved shields,
    the Leadership actually rolled against) is computed, never stored.
 
-   Record, do not adjudicate: nothing here rolls a die or decides whether a
-   shot hits. Every rule carries its page in Battlefleet Gothic: Remastered
+   Record, do not adjudicate: nothing here decides whether a shot hits. The
+   one die it rolls is asked for - the Leadership and the upgrades rolled
+   before the game (d6, ldPlan; user 31.10.2026, RULINGS.md T44) - and its
+   result stays the player's to change. Every rule carries its page in Battlefleet Gothic: Remastered
    Rulebook v1.10 (7 May 2024), the project's only authority (AGENTS.md 1).
 
    No DOM, no storage, no global state; require()d by test_play.js and
@@ -1114,6 +1116,82 @@ function fixedLd(R){
   if(!l || l.kind !== "fixed" || l.value == null) return null;
   return { value: l.value, note: String(l.note || ""), page: l.page || null };
 }
+/* ---- Rolling the Leadership (user 31.10.2026, RULINGS.md T44) ----------
+   The page rolls the D6 when asked to; the value stays the player's to
+   change. ldPlan(R, list) says which table a unit rolls on and what the
+   book adds to the roll; ldFromDie(plan, d) is the value.
+
+   Tables (D6 -> Ld):
+     Rulebook p. 45:            1 = 6, 2-3 = 7, 4-5 = 8, 6 = 9
+     Space Marines, p. 94:      1-2 = 8, 3-4 = 9, 5-6 = 10 ("Grey Knights
+                                count as Space Marines in all respects",
+                                p. 154)
+     Adeptus Mechanicus, p. 118: 1 = 7, 2-3 = 8, 4-6 = 9 ("To determine base
+                                leadership for a given vessel")
+   Modifiers on the rolled value, from the rule lines the card carries
+   (hull ids of packages/rules SPECIAL_HULL_RULES and the profile's text):
+     Orks -1 (p. 360), pirates -1 (p. 188), Eldar and Dark Eldar +1
+     (pp. 304, 344), Chaos Space Marine crew +1 (p. 234), a transport -1
+     (pp. 85, 291, 331, 476), the ship's own +1 (Emperor p. 53, Oberon p. 56
+     and their Mechanicus copies pp. 128, 130; Nicassar Caravan p. 492).
+     Nothing over 10 (p. 48).
+   Not rolled: a Leadership the book fixes (fixedLd), an Ork Hulk's
+   "always Leadership 6" (p. 392), a Necron Sepulchre's 10 (p. 406), a
+   Demiurg's starting value (pp. 488-490); the Tyranids (pp. 418-420, 429)
+   are left to the player. A commander's line is applied after the roll as
+   before (applyCommanderLd, T8). */
+var LD_TABLES = {
+  rulebook:  { name: "Rulebook", page: 45, book: "Rulebook", d: [null, 6, 7, 7, 8, 8, 9], rows: "1 = 6, 2-3 = 7, 4-5 = 8, 6 = 9" },
+  marines:   { name: "Space Marines", page: 94, book: "Fleets", d: [null, 8, 8, 9, 9, 10, 10], rows: "1-2 = 8, 3-4 = 9, 5-6 = 10" },
+  mechanicus:{ name: "Adeptus Mechanicus", page: 118, book: "Fleets", d: [null, 7, 8, 8, 9, 9, 9], rows: "1 = 7, 2-3 = 8, 4-6 = 9" }
+};
+function ruleIds(R){
+  var out = {};
+  (R && R.rules || []).forEach(function(r){
+    if(r.hull) out[r.hull] = 1;
+    (r.refs || []).forEach(function(x){ if(x && x.id) out[x.id] = 1; });
+  });
+  return out;
+}
+function ruleText(R){ return (R && R.rules || []).map(function(r){ return String(r.t || ""); }).join(" | "); }
+function ldPlan(R, list){
+  if(!R || R.kind !== "ship") return null;
+  var fx = fixedLd(R);
+  if(fx) return { roll: false, value: fx.value, note: fx.note || "fixed", page: fx.page, book: "Fleets" };
+  var ids = ruleIds(R), txt = ruleText(R), fl = String(R.source && R.source.faction || ""), ln = String((R.entry && R.entry.list) || list || "");
+  if(ids.ork_hulk_ld) return { roll: false, value: 6, note: "Ork Hulk: always Ld 6", page: 392, book: "Fleets" };
+  if(ids.sepulchre) return { roll: false, value: 10, note: "carries the Sepulchre: Ld 10", page: 406, book: "Fleets" };
+  var dm = txt.match(/count their Ld value as (\d+) at the start of the battle/i);
+  if(dm) return { roll: false, value: parseInt(dm[1], 10), note: "Demiurg: Ld " + dm[1] + " at the start, -1 per damage point, not below 5", page: R.source.page || 488, book: "Fleets" };
+  if(/TYRANID/i.test(fl)) return { roll: false, value: null, note: "Tyranids: not rolled here - Hive Mind, synapse and instinct (Fleets pp. 418-420; Vanguard p. 429)", page: 418, book: "Fleets", manual: true };
+  var t = /Mechanicus/i.test(ln) ? LD_TABLES.mechanicus
+        : (/SPACE MARINES|GREY KNIGHTS/i.test(fl) && !/FORTRESS-MONASTERY/i.test(String(R.className || ""))) ? LD_TABLES.marines
+        : LD_TABLES.rulebook;
+  var mods = [];
+  if(ids.ork_core || ids.rok_orks) mods.push({ t: "Orks", v: -1, page: 360 });
+  if(ids.pirate_ld) mods.push({ t: "pirate vessel", v: -1, page: 188 });
+  if(ids.eldar_ld) mods.push({ t: "Eldar", v: 1, page: 304 });
+  if(ids.dark_ld) mods.push({ t: "Dark Eldar", v: 1, page: 344 });
+  if(ids.csm_crew || ids.wage_of_sin_crew || ids.slaverer_crew) mods.push({ t: "Chaos Space Marine crew", v: 1, page: 234 });
+  if(/reduce (?:their|its) randomly rolled Leadership by one|-1 modifier (?:against the Eldar leadership table|when determining base leadership)/i.test(txt))
+    mods.push({ t: "transport", v: -1, page: R.source.page || 85 });
+  if(/(?:giving it|adds) \+1 to (?:its|their) Leadership rating|have \+1 Leadership/i.test(txt))
+    mods.push({ t: "the ship's own", v: 1, page: R.source.page || 53 });
+  return { roll: true, table: t, mods: mods, max: 10 };
+}
+/* The value a die gives on the plan: the table, the modifiers, at most 10
+   (p. 48). why: the sum in words, for the set-up row. */
+function ldFromDie(plan, d){
+  if(!plan || !plan.roll || !(d >= 1 && d <= 6)) return null;
+  var base = plan.table.d[d], v = base;
+  plan.mods.forEach(function(m){ v += m.v; });
+  v = Math.min(plan.max || 10, v);
+  var why = "D6 " + d + " = Ld " + base + plan.mods.map(function(m){ return (m.v > 0 ? " +" : " ") + m.v + " " + m.t; }).join("") + (plan.mods.length ? " = " + v : "");
+  return { value: v, die: d, why: why };
+}
+/* One D6, 1-6. rng: a function returning [0, 1), Math.random by default
+   (the tests pass their own). */
+function d6(rng){ return 1 + Math.floor((rng || Math.random)() * 6); }
 /* May a fleet commander be aboard? Any capital ship; of the planetary
    defences only those the book gives a commander to: the star forts -
    "Fleet Commanders may be placed aboard a Ramilies" (Fleets p. 503),
@@ -1275,7 +1353,7 @@ return {
   /* planetary defences (8.10.2026) */
   QUADS: QUADS, track: track, selectQuad: selectQuad, quadGone: quadGone, quadViews: quadViews, adoptUnit: adoptUnit, tapHit: tapHit,
   tickUnit: tickUnit, isInstallation: isInstallation, isStill: isStill, launchBays: launchBays,
-  fixedLd: fixedLd, mayOrder: mayOrder, ordersFor: ordersFor, mayCarryCommander: mayCarryCommander, defaultFlagship: defaultFlagship,
+  fixedLd: fixedLd, LD_TABLES: LD_TABLES, ldPlan: ldPlan, ldFromDie: ldFromDie, d6: d6, mayOrder: mayOrder, ordersFor: ordersFor, mayCarryCommander: mayCarryCommander, defaultFlagship: defaultFlagship,
   view: view, half: half, num: num
 };
 })();

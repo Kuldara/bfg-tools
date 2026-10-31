@@ -12,29 +12,9 @@
 
    Each result's effect in short; its name and page on hover. */
 import { esc } from "../../../packages/ui/format.js";
+import { IN_REFITS } from "../../../packages/ui/pregame-tables.js";
 
-export const IN_REFITS = [
-  { roll: "1–2", name: "Ship refit", page: 168, rows: [
-    ["Improved Sensor Array", "+2 Ld, not +1, for enemies on special orders"],
-    ["Additional Shield Generator", "+1 shield"],
-    ["Superior Damage Control", "one more repair die in the End phase"],
-    ["Reinforced Hull", "+25 % hits (rounded up), −5 cm speed"],
-    ["Improved Logic Engines", "no −1 Ld from blast markers in contact"],
-    ["Overload Shield Capacitors", "each hit on the shields: 6 = ignored, no blast marker"]] },
-  { roll: "3–4", name: "Engine refit", page: 168, rows: [
-    ["Secondary Reactors", "an extra 2D6 on All Ahead Full"],
-    ["Evasive Jets", "Ld test at the start of the enemy's shooting: turn 45°; no special orders next turn"],
-    ["Manoeuvring Thrusters", "turns after 5 cm less"],
-    ["Arrester Engines", "+1 Ld for Burn Retros and Come to New Heading"],
-    ["Auxiliary Power Relays", "+5 cm speed"],
-    ["Navigational Shields", "no speed lost for blast markers, gas or dust"]] },
-  { roll: "5–6", name: "Weapons refit", page: 169, rows: [
-    ["Extra Turrets", "+1 turret"],
-    ["Turbo-weapons", "no right column shift beyond 30 cm"],
-    ["Targeting Matrix", "weapons batteries: one column left on the Gunnery table"],
-    ["Auto-loaders", "+1 Ld for Reload Ordnance (re-roll if it has no ordnance)"],
-    ["Superior Fire Control", "+1 Ld for Lock On"],
-    ["Motion-Tracking Targeters", "on AAF, Burn Retros or CTNH: firepower and lances −25 %, not halved"]] }];
+export { IN_REFITS };   /* shared with Play: packages/ui/pregame-tables.js */
 
 /* The box under the row: shut until opened, and it stays as the player left
    it (open, a Set of keys, lives in appState: the fleet pane is drawn anew on

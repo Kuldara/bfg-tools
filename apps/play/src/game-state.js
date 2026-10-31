@@ -8,6 +8,7 @@ import { esc } from "../../../packages/ui/format.js";
 import PLAY from "../rules.js";
 import DOMAIN from "../../../packages/rules/domain.js";
 import { DATA } from "../../../packages/ui/catalog.js";
+import { pregameRolls } from "../../../packages/ui/pregame-tables.js";
 
 /* ============================================================== STATE ===== */
 appState.G = null;      /* the game: persisted */
@@ -282,3 +283,78 @@ export function resumeGame(g){
   return true;
 }
 
+
+/* ---- Rolling before the game (user 31.10.2026, RULINGS.md T44) --------
+   The page rolls when the player asks it to; every value stays the
+   player's to change (the Ld tiles, the selects). */
+/* a unit's Leadership plan on its fleet's table (PLAY.ldPlan) */
+export const ldPlanOf = i => PLAY.ldPlan(appState.U[i].R, appState.L0 && appState.L0.nm);
+/* the units that roll: a ship whose plan rolls, one card per escort
+   squadron (p. 45: "per escort squadron") */
+export function ldRollers(){
+  const seen = {};
+  return appState.U.map((x, i) => {
+    if(x.R.kind !== "ship") return -1;
+    const p = ldPlanOf(i);
+    /* a value the book sets (an Ork Hulk's 6, a Sepulchre's 10, a Demiurg's
+       start) is put in by the same button; fixedLd's units have theirs */
+    if(!p || (!p.roll && (p.value == null || PLAY.fixedLd(x.R)))) return -1;
+    const g = appState.G.grp[i];
+    if(isEscGrp(g)){ if(seen[g]) return -1; seen[g] = 1; }
+    return i;
+  }).filter(i => i >= 0);
+}
+/* Roll unit i's Leadership: the value goes in as if tapped (setLd), with
+   the die and the sum kept for the row. A natural 6 on the Mechanicus
+   table lets a ship choose its Gift (Fleets p. 118). */
+export function rollLd(i, rng){
+  const p = ldPlanOf(i);
+  const r = p && !p.roll && p.value != null ? { value: p.value, die: null, why: "not rolled: " + p.note + " (Fleets p. " + p.page + ")" }
+    : PLAY.ldFromDie(p, PLAY.d6(rng));
+  if(!r) return null;
+  setLd(i, r.value);
+  const g = appState.G.grp[i];
+  const ms = isEscGrp(g) ? appState.G.grp.map((x, j) => x === g ? j : -1).filter(j => j >= 0) : [i];
+  ms.forEach(j => {
+    const st = appState.G.st[j]; st.ldDie = r.die; st.ldWhy = r.why;
+    if(p.table === PLAY.LD_TABLES.mechanicus && r.die === 6) st.giftChoice = true; else delete st.giftChoice;
+  });
+  return r;
+}
+/* all = true rolls again for every unit; else only those still without one */
+export function rollAllLd(all, rng){
+  ldRollers().forEach(i => { if(all || appState.G.st[i].ld == null) rollLd(i, rng); });
+}
+/* A tap on an Ld tile after a roll: the player's value, the die forgotten */
+export function forgetLdDie(i){
+  const g = appState.G.grp[i];
+  const ms = isEscGrp(g) ? appState.G.grp.map((x, j) => x === g ? j : -1).filter(j => j >= 0) : [i];
+  ms.forEach(j => { const st = appState.G.st[j]; delete st.ldDie; delete st.ldWhy; });
+}
+/* The other pre-game rolls (packages/ui/pregame-tables.js): stored as
+   st.pre[key] = { d } or { k, d } (the two-dice refit), how "roll" or "pick" */
+export const preRollsOf = i => pregameRolls(appState.U[i].R);
+export function rollPre(i, roll, rng){
+  const st = appState.G.st[i]; st.pre = st.pre || {};
+  st.pre[roll.key] = roll.two ? { k: PLAY.d6(rng), d: PLAY.d6(rng), how: "roll" } : { d: PLAY.d6(rng), how: "roll" };
+}
+export function rollAllPre(all, rng){
+  appState.U.forEach((x, i) => preRollsOf(i).forEach(roll => {
+    if(roll.pick) return;                    /* bought as a choice: the player picks */
+    const cur = (appState.G.st[i].pre || {})[roll.key];
+    if(all || !cur) rollPre(i, roll, rng);
+  }));
+}
+/* the player's own choice from the select: "" clears, "3" or "5-2" (kind-die) */
+export function setPre(i, key, val){
+  const st = appState.G.st[i]; st.pre = st.pre || {};
+  const m = String(val || "").match(/^(?:(\d)-)?(\d)$/);
+  if(!m){ delete st.pre[key]; return; }
+  st.pre[key] = m[1] ? { k: parseInt(m[1], 10), d: parseInt(m[2], 10), how: "pick" } : { d: parseInt(m[2], 10), how: "pick" };
+}
+/* how many pre-game rolls are still open / exist in the fleet */
+export function preCounts(){
+  let n = 0, open = 0;
+  appState.U.forEach((x, i) => preRollsOf(i).forEach(roll => { n++; if(!(appState.G.st[i].pre || {})[roll.key]) open++; }));
+  return { n, open };
+}

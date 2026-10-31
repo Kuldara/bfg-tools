@@ -135,6 +135,13 @@ function run(check){
     /* --- set-up: who rolls, who does not, who may carry the commander --- */
     const setup = P(`renderSetup()`);
     clean("the set-up screen", setup);
+    /* T44 (user 31.10.2026): Roll Ld fills every rolling ship on its table
+       and leaves the value to change; the guide is on the screen */
+    check("smoke: the set-up screen has the fleet's Leadership guide and a Roll Ld button (T44)", /class="ldguide"/.test(setup) && /data-act="rollld"/.test(setup));
+    const rolled = JSON.parse(P(`(() => { const keep = JSON.stringify(G.st); act("rollld"); const out = U.map((x, i) => ({ k: x.R.kind, ld: G.st[i].ld, die: G.st[i].ldDie, fx: !!PLAY.fixedLd(x.R) || G.st[i].ldFrom === "commander" })); const html = renderSetup(); const sw = IX("^SWORD"); act("ld", sw, 10); const after = { ld: G.st[sw].ld, die: G.st[sw].ldDie }; G.st = JSON.parse(keep); return JSON.stringify({ out, html, after }); })()`));
+    clean("the set-up screen after Roll Ld", rolled.html);
+    check("smoke: Roll Ld gives every rolling ship a value 6-9 with its die (Rulebook p. 45); a fixed commander's flagship keeps his value", rolled.out.filter(u => u.k === "ship" && !u.fx).every(u => u.ld >= 6 && u.ld <= 9 && u.die >= 1 && u.die <= 6), JSON.stringify(rolled.out));
+    check("smoke: a tapped value after the roll is the player's and forgets the die", rolled.after.ld === 10 && rolled.after.die == null, JSON.stringify(rolled.after));
     /* J214: the fleet's attack rating before the game, from the book's own
        sentence: "The Imperial Navy have a starting attack or initiative
        rating of 2." (Fleets p. 32) */

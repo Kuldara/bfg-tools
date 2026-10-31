@@ -498,6 +498,38 @@ three Clanz Warlords, the third one's ship is an escort squadron. The test check
 the placement, that there are no floating rows, the boxes on the card, the W tags,
 Bridge Smashed only for W2 and its undoing, and continuing an old save.
 
+**T44. Roll Ld and the pre-game upgrade dice (prototype).** **The user's decision
+31.10.2026** (Joona, project thread): *"Roll Ld button: roll the Ld for every ship
+by its fleet's rules, but leave a way to change it; a short collapsible guide to
+the fleet's Ld rules; the same for the upgrades that are rolled (AdMech, Ork
+clans etc.), with a manual option and changes after the roll"*. This lifts T40's
+"no automation" for the roll itself; T40's menu (5-10) and its taps stay, and a
+tapped value always wins. **The roll.** `PLAY.ldPlan(R)` picks the table from the
+card's own rule lines: the Rulebook's (p. 45), the Space Marines' (Fleets p. 94,
+Grey Knights p. 154), the Adeptus Mechanicus' (p. 118) for every vessel of the
+Explorator list - its Navy and Astartes escorts too, since the Astartes crew rule
+is not on them there (`astartes_core` notList Mechanicus) and the table is "for a
+given vessel". Added to the die: Orks -1 (p. 360), pirates -1 (p. 188), Eldar and
+Dark Eldar +1 (pp. 304, 344), a Chaos Space Marine crew +1 (p. 234), a transport
+-1 (pp. 85, 291, 331, 476), the ship's own +1 (Emperor p. 53, Oberon p. 56, their
+Mechanicus copies pp. 128, 130, Nicassar Caravan p. 492); at most 10 (p. 48). Not
+rolled but put in by the same button: an Ork Hulk 6 (p. 392), a Sepulchre ship 10
+(p. 406), a Demiurg's starting value (pp. 488-490; its fall with damage is not
+tracked). Left to the player: the Tyranids (pp. 418-420, 429), the Ork
+battleships' and the Clanz Warlord's Ld swaps (pp. 374, 376-381), a Space Marine
+Captain on a Navy ship (p. 109), the Inquisitor's +1 (pp. 140-142), Long Range
+Sensors (p. 185) - the guide names them. One roll per escort squadron (p. 45); a
+fleet commander's fixed value on his flagship is not rolled over (T8). A natural 6
+on the Mechanicus table marks the ship's Gift as one it may choose (p. 118).
+**The other dice** (`packages/ui/pregame-tables.js`): the Mechanicus Gift (p. 119),
+special torpedoes (pp. 19-21), a Xenotech system (pp. 151, 185; a chosen one is
+picked, not rolled), the Blood Axes' Imperial Navy refit (p. 371, T61's tables), a
+Rogue Trader crew skill (the die only: the Rulebook's table, p. 159, is not in this
+project). Each has a select to pick or change it; the result is printed on the card
+with its page, and its effect is not applied to the stats. **Not covered yet:** the
+Bakka Fleet-Admiral's rolled refits (p. 48) and the Mechanicus experimental
+cruiser (p. 124).
+
 ## What is not tracked, and why
 
 - The strength of torpedo salvoes and attack craft markers on the table
