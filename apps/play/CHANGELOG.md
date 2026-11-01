@@ -7,6 +7,7 @@ a tag `play-v<version>` deploys the Registry's site.
 
 ### Added
 - Repair with one tap (1.11.2026, RULINGS.md T45): beside a ship's criticals, Repair rolls its damage-control dice (p. 88), repairs, and adds the hit of a fire left burning (p. 67). The player picks only when the dice cannot repair everything and there is more than one kind. What happened stays on a line until the next tap elsewhere; UNDO takes it back. The End Phase panel has Repair all.
+- A ship's Actions (1.11.2026, RULINGS.md T46): a button in the card's top corner opens Board, Ram, Disengage and Teleport attack. Ram and Disengage say the rule, work out the dice with the target and the modifiers, roll if asked (Passed and Failed for own dice, Re-roll on a failure) and mark the result on the ship; what the enemy must mark is said to you. Board moved here from the row of big buttons.
 
 ### Changed
 - To phone: a link too long for a QR code a camera can read (over 1 000 characters, usually several fleets) shows no code; the panel offers Save file, Copy link and Share instead.

@@ -1600,6 +1600,30 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
   check("repair: a Mechanicus vessel adds +1D6 (Fleets p. 120)", plan(mech, PLAY.freshUnit(lunar)).dice === 9);
   const faces = PLAY.repairRoll({ dice: 4, target: 6 }, (seq => () => seq.shift())([0.99, 0, 0.5, 0.99]));
   check("repair: the roll is one die per dice, a success per target", faces.faces.join("") === "6146" && faces.hits === 2, JSON.stringify(faces));
+/* --- Ramming and disengaging, read from the book's own examples --------- */
+{
+  /* "the Imperial Lunar class cruiser Agrippa would take a Leadership test on
+     2D6 to ram another cruiser, on 3D6 to ram an escort or 1D6 to ram a
+     battleship" (p. 55); Defence > Battleship > Cruiser > Escort */
+  const me = PLAY.ramSize(lunar);
+  check("ram: Lunar vs cruiser 2D6, escort 3D6, battleship 1D6, defence 1D6 (p. 55)",
+    PLAY.ramTestDice(me, PLAY.RAM_SIZES.indexOf("cruiser")) === 2 && PLAY.ramTestDice(me, PLAY.RAM_SIZES.indexOf("escort")) === 3 &&
+    PLAY.ramTestDice(me, PLAY.RAM_SIZES.indexOf("battleship")) === 1 && PLAY.ramTestDice(me, PLAY.RAM_SIZES.indexOf("defence")) === 1);
+  check("ram: an escort ramming a battleship rolls fewest (p. 55)", PLAY.ramTestDice(PLAY.ramSize(swords), PLAY.RAM_SIZES.indexOf("battleship")) === 1);
+  /* the example, p. 56: 8D6 against Armour 5: 1,2,3,3,4,5,5,6 = 3; the Unclean
+     returns 4D6 against the armoured prow 6: 3,3,5,6 = 1 */
+  check("ram: the Agrippa rolls its starting 8D6 (p. 56), hits or none", PLAY.ramDice(lunar) === 8);
+  check("ram: 1,2,3,3,4,5,5,6 against Armour 5 is 3 (p. 56)", PLAY.ramHits([1, 2, 3, 3, 4, 5, 5, 6], 5) === 3);
+  check("ram: the rammed ship rolls half its starting damage, 8 -> 4 (p. 56)", PLAY.rammedDice(8, false, false) === 4);
+  check("ram: 3,3,5,6 against the prow 6 is 1 (p. 56)", PLAY.ramHits([3, 3, 5, 6], 6) === 1);
+  check("ram: head on, or a defence, rolls in full (p. 55, 56)", PLAY.rammedDice(8, true, false) === 8 && PLAY.rammedDice(8, false, true) === 8);
+  check("ram: a Lunar's front armour is its prow 6+", PLAY.frontArmour(lunar) === 6, PLAY.frontArmour(lunar));
+  /* the table, p. 56: +1 per marker, +3 for celestial phenomena. The example on
+     p. 57 calls three markers and an asteroid field +4: recorded in T46 */
+  check("disengage: Ld 9, 3 markers +3, celestial +3 (table, p. 56)", PLAY.disengageLd(9, 3, false, 0) === 12 && PLAY.disengageLd(9, 3, true, 0) === 15);
+  check("disengage: each enemy within 15 cm -1 (p. 56)", PLAY.disengageLd(8, 0, false, 2) === 6);
+  check("disengage: Ld 13 passes a 10, fails an 11 and a 12 (p. 56-57)", PLAY.disengagePasses(13, 10) && !PLAY.disengagePasses(13, 11) && !PLAY.disengagePasses(13, 12));
+  check("disengage: Ld 6 fails a 7", !PLAY.disengagePasses(6, 7) && PLAY.disengagePasses(6, 6));
 }
 
 /* --- the built page itself --------------------------------------------- */

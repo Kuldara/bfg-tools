@@ -785,6 +785,31 @@ function repairRoll(plan, rng){
   return { faces: faces, hits: faces.filter(function(f){ return f >= plan.target; }).length };
 }
 
+/* Ramming (p. 55-56). "Defence > Battleship > Cruiser > Escort": a smaller
+   target is 3D6 on the Leadership test, the same size 2D6, a larger one 1D6.
+   The dice are the STARTING damage, the rammer's in full, the rammed ship's in
+   half (rounding up, p. 64) unless head on or a defence. RULINGS.md T46. */
+var RAM_SIZES = ["escort", "cruiser", "battleship", "defence"];
+function ramSize(R){
+  var t = String(R.stats && R.stats.type || "");
+  return /defen[cs]e/i.test(t) ? 3 : /battleship/i.test(t) ? 2 : /escort/i.test(t) ? 0 : 1;
+}
+function ramTestDice(mine, target){ return target < mine ? 3 : target === mine ? 2 : 1; }
+function ramDice(R){ return (R.stats && R.stats.hits) | 0; }
+function rammedDice(hits, headOn, defence){ return headOn || defence ? hits : half(hits); }
+function ramHits(faces, armour){ return faces.filter(function(f){ return f >= armour; }).length; }
+function frontArmour(R){ var m = String(R.stats && R.stats.armour || "").match(/\d+/); return m ? parseInt(m[0], 10) : null; }
+/* "impart one automatic hit during a successful ram" (the Fleets' power ram row) */
+function powerRam(R){
+  return (R.options || []).some(function(o){ return o.state === "take" && /power ram/i.test(String(o.text)); }) ||
+    (R.upgrades || []).some(function(u){ return u.state === "take" && /power ram/i.test(String(u.label)); });
+}
+/* Disengaging (p. 56-57): +1 per Blast Marker within 5 cm, +3 with celestial
+   phenomena within 15 cm, -1 per enemy ship or ordnance marker within 15 cm, all
+   added before the roll; 11 and 12 still fail. */
+function disengageLd(ld, blast, celestial, enemies){ return ld + (blast | 0) + (celestial ? 3 : 0) - (enemies | 0); }
+function disengagePasses(ld, sum){ return sum <= ld && sum <= 10; }
+
 /* Boarding value (p. 89): damage points remaining; the defender adds its
    turrets. +2 against a crippled ship for the attacker (p. 90). */
 /* A star fort (Fleets p. 502): "the remaining hit points of all four
@@ -1357,7 +1382,7 @@ return {
   freshUnit: freshUnit, freshFleet: freshFleet, isEscort: isEscort, isCapital: isCapital,
   crippled: crippled, destroyed: destroyed, remaining: remaining,
   shields: shields, turrets: turrets, speed: speed, turns: turns, leadership: leadership,
-  armament: armament, braced: braced, repairDice: repairDice, repairPlan: repairPlan, repairRoll: repairRoll, boardingValue: boardingValue,
+  armament: armament, braced: braced, repairDice: repairDice, repairPlan: repairPlan, repairRoll: repairRoll, RAM_SIZES: RAM_SIZES, ramSize: ramSize, ramTestDice: ramTestDice, ramDice: ramDice, rammedDice: rammedDice, ramHits: ramHits, frontArmour: frontArmour, powerRam: powerRam, disengageLd: disengageLd, disengagePasses: disengagePasses, boardingValue: boardingValue,
   conceded: conceded, squadronConceded: squadronConceded, addCrit: addCrit, repairCrit: repairCrit, removeCrit: removeCrit, activeCrits: activeCrits,
   standardCrits: standardCrits, critTarget: critTarget, hasLocation: hasLocation,
   catastrophic: catastrophic, hulkRules: hulkRules, isFort: isFort, staysInPlace: staysInPlace, concededPage: concededPage, fireDamage: fireDamage,

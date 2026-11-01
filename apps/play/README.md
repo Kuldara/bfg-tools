@@ -9,7 +9,7 @@ prototype (version in `app.json`).
 
 **Record, do not adjudicate:** nothing here decides whether a shot hits;
 it rolls only when asked: the Leadership and the upgrades rolled before the game
-(RULINGS.md T44) and a ship's Repair (T45). Every result stays the player's to change. Every rule it applies carries its page in Rulebook v1.11 (the same pages as v1.10). Where the books
+(RULINGS.md T44), a ship's Repair (T45) and its Actions (T46). Every result stays the player's to change. Every rule it applies carries its page in Rulebook v1.11 (the same pages as v1.10). Where the books
 are unclear or silent the page makes a choice, and the choices are listed in
 [RULINGS.md](RULINGS.md) (the code cites them as T1-T43).
 

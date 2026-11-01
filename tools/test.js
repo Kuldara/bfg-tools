@@ -60,6 +60,7 @@ const STEPS = [
   ["play",      "fleets into boarding",    ["node", "apps/play/test_board_link.js"]],
   ["play",      "Board button (Chrome)",   ["node", "apps/play/check_board.js"], { slow: true }],
   ["play",      "Repair button (Chrome)",  ["node", "apps/play/check_repair.js"], { slow: true }],
+  ["play",      "ship Actions (Chrome)",   ["node", "apps/play/check_actions.js"], { slow: true }],
   ["boarding",  "engine",                  ["node", "apps/boarding/test_engine.js"]],
   ["boarding",  "fuzz",                    ["node", "apps/boarding/test_fuzz.js"]],
   ["boarding",  "page walks (Chrome)",     ["node", "apps/boarding/test_page.js"], { slow: true }],
