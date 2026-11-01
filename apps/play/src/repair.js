@@ -9,7 +9,7 @@ import PLAY from "../rules.js";
 /* ==================================================== REPAIR WITH ONE TAP == */
 /* Damage control (p. 88), in the critical table: the page rolls the ship's dice
    and each success is a wrench, spent by tapping what to repair; the book leaves
-   the choice to the ship. When the wrenches are spent the fires left burn (p. 67).
+   the choice to the ship. A fire left stays for the player to burn on its chip (p. 67).
    With Auto repair on (the menu) the button is on the card as well, and the page
    repairs at once whenever there is nothing to choose. What happened stays on
    one line until the next tap elsewhere. UNDO takes it back. RULINGS.md T45. */
@@ -25,14 +25,11 @@ export function canRepair(i){
 }
 const rolledAlready = st => OPT.orders && st.repPhase === phaseKey();
 
-/* what is left after the repairs: a fire not put out costs its hit (p. 67) */
+/* A fire left is the player's to burn, on its own chip (p. 67): Repair only says so
+   (user 1.11.2026). */
 function burn(i, note){
-  const R = appState.U[i].R, st = appState.G.st[i], fleet = appState.G.fleet;
-  if(!PLAY.standardCrits(R) || !PLAY.activeCrits(st, R).some(c => c.key === "7")) return;
-  const n = Math.max(1, PLAY.fireDamage(R, st));
-  PLAY.addHits(R, st, n);
-  st.fireN = st.fireTurn === fleet.turn ? (st.fireN | 0) + 1 : 1; st.fireTurn = fleet.turn;
-  note.push("Fire: +" + n + " hit" + (n > 1 ? "s" : "") + " (p. 67)");
+  const R = appState.U[i].R, st = appState.G.st[i];
+  if(PLAY.standardCrits(R) && PLAY.activeCrits(st, R).some(c => c.key === "7")) note.push("Fire still burning: tap it for its hit (p. 67)");
 }
 /* a result's name without its number and "+1", as on the chips */
 const critWord = (R, key) => critLabel(R, key).replace(/^\S+\s+/, "").replace(/\s*\*\s*$/, "").split(/\s+\+/)[0];
@@ -98,7 +95,7 @@ export function repairBtn(i, inTable){
   /* the page does not count Blast Markers: the player says when one touches */
   const h = PLAY.repairPlan(R, st, true);
   const halfBtn = done || OPT.blast || h.dice === p.dice ? "" : `<button class="repb bm" data-act="repairroll" data-i="${i}" data-arg="half" aria-label="Repair with Blast Markers in contact: ${h.dice}D6" title="With Blast Markers in contact: half the dice, rounding up (p. 88)">${BURST}<b>${h.dice}D6</b></button>`;
-  return `<button class="repb" data-act="repairroll" data-i="${i}"${done ? " disabled" : ""} title="End Phase damage control: roll, repair, and a fire left costs its hit (p. 88, 67). UNDO takes it back.">${WRENCH}${done ? "Repair rolled" : `Repair ${again}<b>${p.dice}D6</b>${p.target !== 6 ? " " + p.target + "+" : ""}`}</button>${halfBtn}`;
+  return `<button class="repb" data-act="repairroll" data-i="${i}"${done ? " disabled" : ""} title="End Phase damage control: roll and repair (p. 88). UNDO takes it back.">${WRENCH}${done ? "Repair rolled" : `Repair ${again}<b>${p.dice}D6</b>${p.target !== 6 ? " " + p.target + "+" : ""}`}</button>${halfBtn}`;
 }
 /* The critical table's own: the two rolls and why there are two, or the wrenches
    to spend. With Blast Markers tracked the ship's own state is marked as the
