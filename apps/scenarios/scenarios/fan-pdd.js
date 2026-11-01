@@ -696,9 +696,9 @@
     bring: ["A Space Marine flagship for the Horizon’s Edge (see Agree)", "4 strike cruisers; 4 Nova, 3 Gladius and 3 Hunter class escorts", "A Tau Explorer, 2 Heroes, 2 Emissaries, 2 Merchants, 3 Castellans, 3 Defenders and 2 Messengers"],
     forces: { a: ["Explorer class starship (FL p. 458) with launch bays — the Vash’ya configuration — under Kor’el Or’nri: Ld 8, 1 re-roll.", "2 Hero class starships (FL p. 460) with ion cannons — the Vash’ya configuration.", "2 Emissary class envoy ships (FL p. 472) — configuration: see Agree.", "2 Merchant class starships (FL p. 462) with ion cannons — the Dal’yth configuration.", "3 Castellan class escorts (FL p. 474), 3 Defenders (FL p. 464) and 2 Messengers (FL p. 465).", "All other Leadership rolled (RB p. 45)."], b: ["The Horizon’s Edge (see Agree), flagship of Master of the Fleet Lonan Dunhir: Ld 10, 2 re-rolls.", "4 strike cruisers (FL p. 105).", "2 squadrons of 2 Nova class frigates (FL p. 107).", "3 Gladius class frigates (FL p. 108) and 3 Hunter class destroyers (FL p. 109).", "All other Leadership rolled (RB p. 45)."] },
     variants: [["A", "Set-up A"], ["B", "Set-up B"], ["C", "Set-up C"], ["D", "Set-up D"]],
-    draw: (v, W, H) => MAPS["fleet-engagement"](v, W, H), legend: [["a", "Dark zone"], ["b", "Light zone"]],
+    draw: (v, W, H) => MAPS["fleet-engagement"](v, W, H), legend: [["a", "Blue zone"], ["b", "Red zone"]],
     fit: v => ({ A: [140, 100], B: [70, 80], C: [140, 60], D: [110, 100] }[v] || [140, 100]), srcTable: [180, 120],
-    mapNote: "The Fleet Engagement set-up maps (RB p. 142). Blue is the dark zone, red the light one — the formations decide which fleet takes which, so here the colours are zones, not fleets. The Horizon’s Edge: {a:he}.",
+    mapNote: "The Fleet Engagement set-up maps (RB p. 142). The formations decide which fleet takes which zone, so here the colours are zones, not fleets. The Horizon’s Edge: {a:he}.",
     steps: [
       { t: "Mark one long edge as sunward and set up phenomena as you like." },
       { t: "Each player secretly chooses a formation — Sphere, Wedge or Cross — and both reveal. Enter them in the tool below, the Tau as Player 1." },

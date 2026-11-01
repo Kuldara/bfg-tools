@@ -127,8 +127,8 @@ export function widget(sc, st, v, t) {
     if (f1 >= 0 && f2 >= 0) {
       const c = FORM_T[f1][f2];
       if (c.length === 1) out = "<p class='calc'>Set-up <b>" + c[0] + "</b>. The book does not say who takes which zone here — roll off or agree.</p>";
-      else if (c[2] === "x") out = "<p class='calc'>Set-up <b>D</b>, either zone. Roll off with the modifiers in step 3; the winner picks dark or light.</p>";
-      else out = "<p class='calc'>Set-up <b>" + c[0] + "</b> or <b>" + c[1] + "</b>. Player 1 takes the <b>" + (c[2] === "d" ? "dark" : "light") + "</b> zone, Player 2 the " + (c[2] === "d" ? "light" : "dark") + ". Roll off with the modifiers in step 3; the winner picks the set-up.</p>";
+      else if (c[2] === "x") out = "<p class='calc'>Set-up <b>D</b>, either zone. Roll off with the modifiers in step 3; the winner picks blue or red.</p>";
+      else out = "<p class='calc'>Set-up <b>" + c[0] + "</b> or <b>" + c[1] + "</b>. Player 1 takes the <b>" + (c[2] === "d" ? "blue" : "red") + "</b> zone, Player 2 the " + (c[2] === "d" ? "red" : "blue") + ". Roll off with the modifiers in step 3; the winner picks the set-up.</p>";
       const opts = [...new Set(c.slice(0, c.length === 1 ? 1 : 2))];
       out += "<div class='rollrow'>" + opts.map(x => "<button class='btn" + (v === x ? " primary" : "") + "' data-a='var' data-v='" + x + "'>Show set-up " + x + "</button>").join("") + "</div>";
     }

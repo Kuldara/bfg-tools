@@ -462,11 +462,11 @@ export const SC = [
   id: "fleet-engagement", grp: "core", name: "Fleet Engagement", series: "Scenario Ten · battle", trust: "rulebook",
   why: "Rulebook scenario. Both fleets pick a formation in secret; the pair decides the set-up map.",
   src: "RB p. 142–143", book: "K", suggest: null, others: "Written for any fleet list.",
-  sides: { a: { n: "Dark zone" }, b: { n: "Light zone" } },
+  sides: { a: { n: "Blue zone" }, b: { n: "Red zone" } },
   pitch: "Two full fleets meet in battle order. Sphere, wedge or cross — your formation against theirs decides how the battle opens.",
   glance: [["Points", "Equal"], ["Table", "Not given — use your table"], ["Battlezone", "Any, agreed (usually primary or inner biosphere)"], ["First turn", "Roll-off after deployment"], ["Game ends", "A fleet disengages or is destroyed"]],
   bring: ["Equal fleets"],
-  forces: { a: ["Equal points.", "Deploys in the dark zone of the set-up map."], b: ["Equal points.", "Deploys in the light zone of the set-up map."] },
+  forces: { a: ["Equal points.", "Deploys in the blue zone of the set-up map."], b: ["Equal points.", "Deploys in the red zone of the set-up map."] },
   variants: [["A", "Set-up A"], ["B", "Set-up B"], ["C", "Set-up C"], ["D", "Set-up D"]],
   mapNote: "The rulebook’s set-up maps are schematic; the zones here are drawn to their printed measurements. Arrows show the approach angle. A zone split into divisions needs at least one ship or squadron in each.",
   steps: [
@@ -478,7 +478,7 @@ export const SC = [
     { t: "Both roll a D6. The higher roll chooses to go first or second." }
   ],
   stools: [{ k: "formation", id: "form" }], stoolsFirst: 1,
-  notes: ["In set-up B the middle division is labelled 45 cm wide; the book does not say which player takes which zone there, so roll off or agree.", "The formations: Sphere spreads wide to envelop the enemy but a wedge breaks through it; Wedge keeps the fleet packed for mutual support but can be surrounded; Cross runs parallel to the enemy for a long broadside fight."],
+  notes: ["The book’s maps shade the zones dark grey and white: dark grey is blue here, white is red.", "In set-up B the middle division is labelled 45 cm wide; the book does not say which player takes which zone there, so roll off or agree.", "The formations: Sphere spreads wide to envelop the enemy but a wedge breaks through it; Wedge keeps the fleet packed for mutual support but can be surrounded; Cross runs parallel to the enemy for a long broadside fight."],
   refs: [["Victory points", "RB p. 122"]],
   play: [{ w: "All game", t: "No special rules: fight it out. Standard victory points decide." }],
   tools: [],
