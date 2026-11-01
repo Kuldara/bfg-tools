@@ -769,7 +769,7 @@ function repairDice(R, st){
 
 /* What to call a ship nobody named: short enough for the strip and the lists,
    and telling two of a class apart (user 1.11.2026). "Lunar 1, Lunar 2" in the
-   fleet's order; the class in full stays on the card's second line. */
+   fleet's order; the class in full stays on the ship's card. */
 function autoNames(Rs){
   var word = function(R){ return String(R.className || "").replace(/\s+class\b.*$/i, "").toLowerCase().replace(/(^|[\s\-'])([a-z])/g, function(m, a, b){ return a + b.toUpperCase(); }); };
   var seen = {}, total = {};

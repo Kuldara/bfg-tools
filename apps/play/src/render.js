@@ -757,10 +757,7 @@ export function renderRow(i, inGroup){
   const esq = v.escort;
   const sqc = inGroup ? sqColor(appState.G.grp[i]) : esq ? escColor(i) : null;
   const cls = ["row", esq ? "esc" : "cap", v.crippled ? "crippled" : "", v.destroyed ? "dead" : "", v.destroyed && !esq && !st.hulk && st.hulkName ? "gone" : "", "pl" + st.played, inGroup ? "ingrp" : "", sqc ? "sqd" : ""].join(" ");
-  /* the name is short now (PLAY.autoNames): the class in full is said here,
-     and its type only when the class does not say it */
-  const klass = title(R.className);
-  const sub = [klass, new RegExp(String(R.stats.type).split("/")[0], "i").test(klass) ? "" : R.stats.type, esq ? R.hulls + " " + memberWord(R, R.hulls) : (R.points | 0) + " pts"].filter(Boolean).join(" " + MID + " ");
+  const sub = [R.name ? title(R.className) : "", R.stats.type, esq ? R.hulls + " " + memberWord(R, R.hulls) : (R.points | 0) + " pts"].filter(Boolean).join(" " + MID + " ");
   /* a star fort's chips are the selected quadrant's, and say which */
   const qn = v.fort ? PLAY.QUADS[v.quad] + " " : "";
   const chips = (OPT.orders && !inGroup ? ordChip(st) : "") + (v.crippled ? `<span class="chip crip">${qn}CRIPPLED</span>` : "") +
