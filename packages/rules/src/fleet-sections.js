@@ -40,23 +40,42 @@ export function fleetCounters(L, catalog, members){
     var sh2 = en2 && en2.r != null ? catalog.ships[String(en2.r)] : null;
     return sh2 ? sh2.rt : null;
   };
+  /* The class a row's name gives, within a p. 14 category. Limits name classes
+     ("one battleship for every three cruisers or battlecruisers"), and lists
+     print one class under different headings: a Mars is under "Battlecruisers"
+     in the Gothic Sector and under "Battleships" in Bastion Fleets, and Bakka
+     prints Mechanicus cruisers under "Battlecruisers". */
+  var classOf = function(en2){
+    var l = String(en2.l);
+    return /grand/i.test(l) ? "grand" : /battle ?(cruiser|kroozer)/i.test(l) ? "battle"
+      : /heavy/i.test(l) ? "heavy" : /light/i.test(l) ? "light" : "plain";
+  };
+  /* Where a borrowed ship counts on this list: the sections holding a row of
+     its category and class. Of those, the one with its own heading if there is
+     one; a heading that holds other classes as well (Bakka's battlecruisers)
+     does not move the ship away from the section of its class. Otherwise the
+     ship is counted nowhere and the fleet says so (the "no counterpart" row
+     below): Bastion's "Battleships" holds grand cruisers too, and a borrowed
+     Avenger must not eat a host's only battleship slot. Ruling T62. */
+  var homeSec = function(m){
+    if(m.home !== undefined) return m.home;
+    var ds = m.sel.list && m.sel.list.secs[m.si];
+    var mine = rtOf(m.en), cls = classOf(m.en), homes = [];
+    if(ds && ds.ct === "type") L.secs.forEach(function(sec, si){
+      if(sec.ct === "type" && sec.ents.some(function(e2){
+          return e2.k === "unit" && rtOf(e2) === mine && classOf(e2) === cls; })) homes.push(si); });
+    var same = homes.filter(function(si){ return secKey(L.secs[si]) === secKey(ds); });
+    /* Under another heading only if that heading names a kind of warship: a
+       Corsair cruiser is no Dragonship of Iyanden's (Fleets p. 317 has its
+       own sentence for it). */
+    var other = homes.filter(function(si){ return /cruiser|kroozer|big ship|battleship/i.test(L.secs[si].t); });
+    m.home = same.length ? same[0] : other.length ? other[0] : -1;
+    return m.home;
+  };
   var matches = function(m, si, re){
     if(!m.unitRow) return false;
     if(m.own) return m.si === si && (!re || re.test(m.en.l));
-    var sec = L.secs[si];
-    if(!sec || sec.ct !== "type") return false;
-    var ds = m.sel.list && m.sel.list.secs[m.si];
-    if(!ds || ds.ct !== "type" || secKey(ds) !== secKey(sec)) return false;
-    /* The heading alone is not enough. Bastion Fleets prints battleships,
-       grand cruisers AND battlecruisers under one "Battleships" heading, so
-       heading identity alone made a borrowed Avenger (a grand cruiser, and
-       p. 14 says grand cruisers count as cruisers) eat the host's single
-       battleship slot. The host section must also hold a row of the same
-       p. 14 category; otherwise the ship is counted nowhere and the fleet
-       says so (the "no counterpart" row below). */
-    var mine = rtOf(m.en);
-    if(mine && !sec.ents.some(function(e2){
-        return e2.k === "unit" && rtOf(e2) === mine; })) return false;
+    if(homeSec(m) !== si) return false;
     return !re || re.test(m.en.l);
   };
   var secShips = function(si, re){ return members.filter(function(m){ return matches(m, si, re); })

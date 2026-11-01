@@ -291,7 +291,7 @@ export function checkReserveRaces(F){
 
 /* Reserves and allies: a reserve of a reserve, Xenos allies, headings with no counterpart, own-list ships from elsewhere. */
 export function checkReserveSources(F){
-  var L = F.L, members = F.members, out = F.out, secKey = F.secKey, matches = F.matches;
+  var L = F.L, members = F.members, out = F.out, matches = F.matches;
   /* Fleets p. 15 twice over: "a given fleet list cannot take as reserves
      ships listed as reserves or allies to another fleet list ... In short,
      you cannot use a reserve of a reserve", and "Some fleet lists explicitly
@@ -366,12 +366,9 @@ export function checkReserveSources(F){
     if(m.own || !m.unitRow) return false;
     var ds = m.sel.list && m.sel.list.secs[m.si];
     if(!ds || ds.ct !== "type") return false;
-    /* The same question matches() asks: is there a host section with this
-       heading that also holds a ship of this p. 14 category? A heading that
-       matches but holds only another category (Bastion's "Battleships" holds
-       grand cruisers too, Gothic's does not) is not a counterpart either. */
-    return !L.secs.some(function(sec, si){
-      return sec.ct === "type" && secKey(sec) === secKey(ds) && matches(m, si, null); });
+    /* The same question matches() asks: is there a host section holding a
+       ship of this p. 14 category and class? */
+    return !L.secs.some(function(sec, si){ return matches(m, si, null); });
   }).forEach(function(m){
     out.push({ ok: true, warn: true,
       t: "Not counted in this list's limits: " + (m.en ? m.en.l : "?"),

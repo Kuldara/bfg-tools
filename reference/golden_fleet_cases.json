@@ -1712,14 +1712,13 @@
           },
           {
             "label": "^Not counted in this list's limits",
-            "ok": true,
-            "warn": true
+            "absent": true
           }
         ],
         "others_ok": true,
         "failing": 0
       },
-      "why": "p.101 allows 'non-xenos Rogue Trader vessels'. The Rogue Traders list has no race (p.14's race list does not name it), so the permission is list-specific. The Rogue Trader Cruiser is on its own list under the heading CAPITAL SHIPS, which the Dominion does not have, so it is not counted in any of the Dominion's quotas - the fleet says so on its row (T34). Master 50 + 435 + 185 = 670."
+      "why": "p.101 allows 'non-xenos Rogue Trader vessels'. The Rogue Traders list has no race (p.14's race list does not name it), so the permission is list-specific. Printed under CAPITAL SHIPS, a heading the Dominion does not have, it is still a cruiser here: 'Rogue Trader cruisers always count against cruiser restrictions in any fleet list that has such restrictions' (p.184), ruling T62. It used to count nowhere (T34). Master 50 + 435 + 185 = 670."
     },
     {
       "id": "dominion-cannot-take-xenos-rogue-trader-vessels",
@@ -9782,6 +9781,146 @@
         "others_ok": true
       },
       "why": "p. 372: “For tiddla skwadrons, the point cost for Gubbins count for the whole skwadron (regardless of how large it is!), not individual escorts.” p. 372 Extra Turrets: “+20 pts The ship gains +2 Turrets (Escorts get +1 Turret)”; p. 374: “A Warlord may choose for his own ship or escort skwadron one upgrade from the Gubbins list for every re-roll he has”. p. 374: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”: Onslaught attack ship 35 pts, Savage gunship 30 pts, Brute ramship 25 pts. Extra Turrets on both cards of tiddla T is one Gubbin of his one re-roll and one price: each escort has 2 turrets (1 + 1, pp. 386-387). 3 x 30 + 3 x 35 + 3 x 25 + 20 = 290. Ruling T60 (28.10.2026): a mixed tiddla is the cards of one Squadron letter, so a clan or a Gubbin taken on any of them is the skwadron's: every card that is offered it has it and it is paid once."
+    },
+    {
+      "id": "reserve-cruiser-counts-in-the-whole-fleets-ratio",
+      "page": 14,
+      "fleet": {
+        "list": "Imperial Navy — Gothic Sector",
+        "limit": 1500,
+        "units": [
+          {
+            "entry": "^Lunar class cruiser$",
+            "repeat": 5
+          },
+          {
+            "list": "Imperial Navy — Armageddon Sector",
+            "role": "reserve",
+            "entry": "^Gothic class cruiser$"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "src": "you may also pick one ship of the same type from another fleet list",
+            "ok": true,
+            "v": "1 / 1"
+          },
+          {
+            "label": "^Battleships$",
+            "ok": true,
+            "v": "0 / 2"
+          }
+        ]
+      },
+      "why": "p.14: 'the restrictions on maximum and minimum numbers of ships are determined for the fleet as a whole, regardless of whether they were purchased from the list or as reserves.' Five own cruisers and a reserve are six cruisers: two battleships. The entitlement to reserves is the other count."
+    },
+    {
+      "id": "reserve-cruiser-does-not-earn-reserves",
+      "page": 14,
+      "fleet": {
+        "list": "Imperial Navy — Gothic Sector",
+        "limit": 1500,
+        "units": [
+          {
+            "entry": "^Lunar class cruiser$",
+            "repeat": 3
+          },
+          {
+            "list": "Imperial Navy — Armageddon Sector",
+            "role": "reserve",
+            "entry": "^Gothic class cruiser$"
+          },
+          {
+            "list": "Imperial Navy — Armageddon Sector",
+            "role": "reserve",
+            "entry": "^Tyrant class cruiser$"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "src": "you may also pick one ship of the same type from another fleet list",
+            "ok": false,
+            "v": "2 / 1"
+          },
+          {
+            "label": "^Battleships$",
+            "ok": true,
+            "v": "0 / 1"
+          }
+        ]
+      },
+      "why": "p.14: 'For every three battleships, cruisers or escorts chosen from the fleet list': the entitlement counts the fleet's own ships only, so the five cruisers here give one reserve, not one per three in the fleet."
+    },
+    {
+      "id": "reserve-battlecruiser-printed-under-battleships-counts-as-a-battlecruiser",
+      "page": 14,
+      "fleet": {
+        "list": "Imperial Navy — Gothic Sector",
+        "limit": 1500,
+        "units": [
+          {
+            "entry": "^Lunar class cruiser$",
+            "repeat": 2
+          },
+          {
+            "list": "Imperial Navy — Bastion Fleets",
+            "role": "reserve",
+            "entry": "^Mars class battlecruiser$"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Battleships$",
+            "ok": true,
+            "v": "0 / 1"
+          },
+          {
+            "label": "^Battlecruisers$",
+            "ok": true,
+            "v": "1 / 1"
+          },
+          {
+            "label": "^Not counted in this list's limits",
+            "absent": true
+          }
+        ]
+      },
+      "why": "Ruling T62. Bastion Fleets prints the Mars under 'Battleships' and the Gothic Sector under 'Battlecruisers'. The limits name the class, so it is a battlecruiser here: it counts towards 'one battleship for every three cruisers or battlecruisers' and uses a battlecruiser slot. It used to count nowhere, because the headings differ."
+    },
+    {
+      "id": "bakka-mechanicus-cruiser-as-a-reserve-is-a-cruiser",
+      "page": 49,
+      "fleet": {
+        "list": "Imperial Navy — Gothic Sector",
+        "limit": 1500,
+        "units": [
+          {
+            "entry": "^Lunar class cruiser$",
+            "repeat": 1
+          },
+          {
+            "list": "Imperial Navy — Bakka Sector",
+            "role": "reserve",
+            "entry": "^Lunar class cruiser \\(Adeptus Mechanicus\\)$"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Battlecruisers$",
+            "ok": true,
+            "v": "0 / 1"
+          }
+        ]
+      },
+      "why": "Ruling T62 (open interpretation). Bakka p.49 takes Mechanicus cruisers 'instead of and in the same manner as Imperial Navy battlecruisers', a rule of the Bakka list, which prints them under 'Battlecruisers'. In another list the ship is what its class says, a cruiser: it counts towards 'one battlecruiser for every two cruisers' and uses no battlecruiser slot."
     }
   ]
 }

@@ -5,6 +5,11 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 
 ## Unreleased
 
+### Fixed: a reserve counts by its class, not by the heading it was printed under (1.11.2026)
+- Fleets p. 14: limits are "determined for the fleet as a whole, regardless of whether they were purchased from the list or as reserves". A borrowed ship was matched to the host list by section heading, so a class printed under another heading went wrong: a Mars from Bastion Fleets ("Battleships") counted nowhere in the Gothic Sector; a Mechanicus cruiser from Bakka ("Battlecruisers") took a battlecruiser slot elsewhere and did not count as a cruiser; a Clanz kill kroozer did not count as a kroozer in Waaagh!. 55 of 1,544 host, rule and ship combinations were wrong.
+- **Ruling T62** (open interpretation, 1.11.2026): a borrowed ship counts in the host section that holds its category and class (battlecruiser, grand, heavy, light, plain cruiser), its own heading first. Bakka's "in the same manner as battlecruisers" (p. 49) is a rule of the Bakka list; as a reserve elsewhere the ship is a cruiser. A class the host list does not have (a grand cruiser in the Gothic Sector) still counts nowhere, and the fleet says so.
+- The entitlement to reserves is unchanged and separate: one per three of the same type chosen from the fleet's own list (p. 14).
+
 ### Added
 - Link preview (29.10.2026): a link to the app in Discord and elsewhere shows its own image (the app itself, the numbers from the data) and text. `npm test` fails when the image is out of date (`npm run og`).
 

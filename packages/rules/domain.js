@@ -5821,7 +5821,7 @@ var __rules = (() => {
     });
   }
   function checkReserveSources(F) {
-    var L = F.L, members = F.members, out = F.out, secKey = F.secKey, matches = F.matches;
+    var L = F.L, members = F.members, out = F.out, matches = F.matches;
     members.filter(function(m) {
       if (m.own || !m.unitRow || !m.sel.list) return false;
       var ds = m.sel.list.secs[m.si];
@@ -5867,7 +5867,7 @@ var __rules = (() => {
       var ds = m.sel.list && m.sel.list.secs[m.si];
       if (!ds || ds.ct !== "type") return false;
       return !L.secs.some(function(sec, si) {
-        return sec.ct === "type" && secKey(sec) === secKey(ds) && matches(m, si, null);
+        return matches(m, si, null);
       });
     }).forEach(function(m) {
       out.push({
@@ -5899,17 +5899,32 @@ var __rules = (() => {
       var sh2 = en2 && en2.r != null ? catalog.ships[String(en2.r)] : null;
       return sh2 ? sh2.rt : null;
     };
+    var classOf = function(en2) {
+      var l = String(en2.l);
+      return /grand/i.test(l) ? "grand" : /battle ?(cruiser|kroozer)/i.test(l) ? "battle" : /heavy/i.test(l) ? "heavy" : /light/i.test(l) ? "light" : "plain";
+    };
+    var homeSec = function(m) {
+      if (m.home !== void 0) return m.home;
+      var ds = m.sel.list && m.sel.list.secs[m.si];
+      var mine = rtOf(m.en), cls = classOf(m.en), homes = [];
+      if (ds && ds.ct === "type") L.secs.forEach(function(sec, si) {
+        if (sec.ct === "type" && sec.ents.some(function(e2) {
+          return e2.k === "unit" && rtOf(e2) === mine && classOf(e2) === cls;
+        })) homes.push(si);
+      });
+      var same = homes.filter(function(si) {
+        return secKey(L.secs[si]) === secKey(ds);
+      });
+      var other = homes.filter(function(si) {
+        return /cruiser|kroozer|big ship|battleship/i.test(L.secs[si].t);
+      });
+      m.home = same.length ? same[0] : other.length ? other[0] : -1;
+      return m.home;
+    };
     var matches = function(m, si, re) {
       if (!m.unitRow) return false;
       if (m.own) return m.si === si && (!re || re.test(m.en.l));
-      var sec = L.secs[si];
-      if (!sec || sec.ct !== "type") return false;
-      var ds = m.sel.list && m.sel.list.secs[m.si];
-      if (!ds || ds.ct !== "type" || secKey(ds) !== secKey(sec)) return false;
-      var mine = rtOf(m.en);
-      if (mine && !sec.ents.some(function(e2) {
-        return e2.k === "unit" && rtOf(e2) === mine;
-      })) return false;
+      if (homeSec(m) !== si) return false;
       return !re || re.test(m.en.l);
     };
     var secShips = function(si, re) {
