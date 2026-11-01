@@ -323,10 +323,11 @@ export function act(name, i, arg){
     case "enemy": fleet.enemyOrders = !fleet.enemyOrders; break;
     case "rad": fleet.radiation = Math.max(0, (fleet.radiation | 0) + arg); break;
     case "ac": appState.G.ac = Math.max(0, (appState.G.ac | 0) + arg); break;
-    case "endturn": PLAY.endTurn(appState.G.st, fleet); appState.V.pop = null; appState.V.endph = false; break;
+    case "endturn": PLAY.endTurn(appState.G.st, fleet); appState.V.pop = null; appState.V.endph = false; appState.V.fireWarn = true; break;
     /* the turn button: played marks off, turn counter up (orders, braces
        and blast markers live on the table as tokens - not here) */
-    case "newturn": PLAY.newTurn(appState.G.st, fleet); appState.V.pop = null; appState.V.endph = false; break;
+    case "newturn": PLAY.newTurn(appState.G.st, fleet); appState.V.pop = null; appState.V.endph = false; appState.V.fireWarn = true; break;
+    case "firewarn": appState.UNDO.pop(); appState.V.fireWarn = false; save(); render(); return;
     default: appState.UNDO.pop(); return;
   }
   dropStalePop();

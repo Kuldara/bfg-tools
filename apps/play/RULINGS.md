@@ -585,7 +585,7 @@ button: a marker in contact or not. On, it is Under Fire -1 (p. 48) and half the
 damage-control dice (p. 88), since both only ask whether there is any. Off, Repair
 has a second button for the half dice. A gas cloud (p. 110) is text only.
 
-**T45, fire, changed by the user 1.11.2026.** Repair never adds a fire's hit: the note says one still burns, and the fire chip or the End Phase button adds it.
+**T45, fire, changed by the user 1.11.2026.** Repair never adds a fire's hit: the note says one still burns, and the fire chip or the End Phase button adds it. Nothing adds it by itself: the change of turn lists the ships still burning in the bottom bar.
 
 **T45, changed by the user 1.11.2026.** Repair sits in the critical table, and every
 success is a wrench the player spends by tapping what to repair, even with only one

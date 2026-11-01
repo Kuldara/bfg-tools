@@ -43,7 +43,7 @@ const six = n => Array.from({ length: 6 }, (x, k) => k < n ? 0.99 : 0);
     await cd.evaluate(SETUP);
     await sleep(800);
     await cd.evaluate(`GFP.OPT.autorepair = true; GFP.render(); 1`);
-    const tap = async sel => { await cd.evaluate(`document.querySelector(${JSON.stringify(sel)}).click()`); await sleep(120); };
+    const tap = async sel => { await cd.evaluate(`document.querySelector(${JSON.stringify(sel)}).click()`); await sleep(450); };
     const has = sel => cd.evaluate(`!!document.querySelector(${JSON.stringify(sel)})`);
     const txt = sel => cd.evaluate(`(document.querySelector(${JSON.stringify(sel)}) || {}).innerText || ""`);
     const REP = '[data-act="repairroll"][data-i="0"]';
@@ -134,6 +134,37 @@ const six = n => Array.from({ length: 6 }, (x, k) => k < n ? 0.99 : 0);
     check("one kind: still a wrench to spend", st.repPick === 1 && st.crits["6"] === 1, st);
     await tap('[data-act="repairpick"][data-arg="6"]');
     await tap('[data-act="closepop"]');
+
+    /* Tapping Repair again where the finger already is must never land on the
+       table: real clicks at one spot, as the user did (1.11.2026: Engine damage) */
+    /* phone width: the old layout put a table row under this spot there */
+    await cd.send("Emulation.setDeviceMetricsOverride", { width: 375, height: 812, deviceScaleFactor: 2, mobile: false });
+    await cd.evaluate(crits(0, { "7": 1 }));
+    await tap('[data-act="pop"][data-i="0"][data-arg="crit"]');
+    const spot = JSON.parse(await cd.evaluate(`(() => { const b = document.querySelector('.repopt[data-arg="full"]'); b.scrollIntoView({ block: "center" }); const r = b.getBoundingClientRect(); return JSON.stringify({ x: r.left + r.width / 2, y: r.top + r.height / 2 }); })()`));
+    await cd.evaluate(dice(six(1).concat(six(1), six(1), six(1))));
+    for(let n = 0; n < 5; n++){
+      await cd.send("Input.dispatchMouseEvent", { type: "mousePressed", x: spot.x, y: spot.y, button: "left", clickCount: 1 });
+      await cd.send("Input.dispatchMouseEvent", { type: "mouseReleased", x: spot.x, y: spot.y, button: "left", clickCount: 1 });
+      await sleep(650);
+    }
+    st = JSON.parse(await cd.evaluate(stOf(0)));
+    check("tapping on at one spot adds no critical and no hit", !st.crits["6"] && !st.crits["8"] && !st.crits["5"] && !st.crits["9"] && st.hits === 2, st);
+    await cd.evaluate(`GFP.appState.V.pop = null; GFP.render(); 1`);
+
+    /* the change of turn reminds of a fire, and adds nothing (user 1.11.2026) */
+    await cd.evaluate(crits(0, { "7": 1 }));
+    await tap('[data-act="newturn"]');
+    st = JSON.parse(await cd.evaluate(stOf(0)));
+    check("a new turn adds no hit from a fire", st.hits === 2 && st.crits["7"] === 1, st);
+    check("the bottom bar says which ship burns", /Lunar 1/.test(await txt(".firewarn")), await txt(".firewarn"));
+    await shot("9-reminder");
+    await tap('[data-act="fire"][data-i="0"]');
+    check("its hit tapped on: off the reminder", !(await has(".firewarn")) && JSON.parse(await cd.evaluate(stOf(0))).hits === 3);
+    await cd.evaluate(crits(0, { "7": 1 }));
+    await tap('[data-act="newturn"]');
+    await tap('[data-act="firewarn"]');
+    check("and it can be dismissed", !(await has(".firewarn")));
 
     /* Track Blast Markers: on or off per card (p. 48, 88) */
     check("the setting off: no button", !(await has('[data-act="blastflag"]')));

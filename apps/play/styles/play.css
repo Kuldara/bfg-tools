@@ -799,3 +799,6 @@ details.paste .roomjoin{margin-top:6px}
 .repopt b{display:block;font:700 13px/1.15 var(--mono)}
 .repopt small{display:block;font:11.5px/1.2 var(--sans);color:var(--ink-3)}
 .repopt.rec{border-color:var(--accent);background:var(--accent-wash);color:var(--accent-ink)}
+.firewarn{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font:600 12.5px/1.25 var(--sans);color:var(--bad)}
+.firewarn button{min-height:32px;padding:0 9px;border-radius:8px;border:1px solid var(--bad);background:var(--bad-wash);color:var(--bad);font:600 12.5px/1 var(--sans)}
+.firewarn .x{margin-left:auto;border-color:var(--line);background:none;color:var(--ink-3)}

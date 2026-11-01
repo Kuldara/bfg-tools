@@ -19,6 +19,8 @@ document.addEventListener("click", ev => {
      taps in the first moments after a screen change are not taken */
   if(Date.now() < appState.V.guardUntil){ ev.preventDefault(); return; }
   const name = el.getAttribute("data-act");
+  /* a repair changes what is under the finger: the next tap waits a moment */
+  if(/^repair/.test(name)) appState.V.guardUntil = Date.now() + 400;
   /* The tapped control stays where the finger is (user 30.9.2026: the screen
      must not move). render() finds the same control again and shifts the
      scroll by however far it moved - a chip line or a band appearing above

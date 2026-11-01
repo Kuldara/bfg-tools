@@ -7,7 +7,7 @@ import { KEY_WAKE, builderTool, carriersOf, cmdsAboard, coCmd, grpLabel, isEscGr
 import { IN_REFITS, inRefitKind, pregameRolls, pregameText } from "../../../packages/ui/pregame-tables.js";
 import { cataLabel, critLabel, groupUnits } from "./actions.js";
 import { upgradeLine, baseName, classTag, crippledNow, critChips, ldTile, memberWord, ordChip, ordnancePills, renderFleetPop, statsLine, unitName, weaponsLine, weaponsTable } from "./derived.js";
-import { builderFleets, endPending, jumpStrip, linkedFleets, renderEndPhase } from "./share.js";
+import { builderFleets, endPending, fireReminder, jumpStrip, linkedFleets, renderEndPhase } from "./share.js";
 import PLAY from "../rules.js";
 import { arcGlyph, esc, factionCols, shortArmour, shortRange, starHTML, title } from "../../../packages/ui/format.js";
 import DOMAIN from "../../../packages/rules/domain.js";
@@ -463,6 +463,7 @@ export function renderRoster(){
     ${appState.V.pop && appState.V.pop.i === -1 ? renderFleetPop() : ""}
     <div class="main${appState.V.compact ? " compact" : ""}">${out.join("")}</div>${edgeHandle()}
     <div class="bottom">
+      ${fireReminder()}
       ${appState.V.compact ? "" : jumpStrip()}
       <div class="brow">
         <button class="endbtn" data-act="endph" ${pend.n ? "" : "disabled"}>End phase<small>${pend.n ? pend.crits + " to repair" + (pend.fires ? " " + MID + " " + pend.fires + " fire" + (pend.fires > 1 ? "s" : "") : "") : "nothing to repair"}</small></button>
@@ -788,8 +789,8 @@ export function renderRow(i, inGroup){
     ${v.destroyed && !esq ? "" : compact ? weaponsLine(R, st, esq) : weaponsTable(R, st, esq)}
     ${R.ruleCard && !v.destroyed && !compact ? ruleSteps(R) : ""}
     <div class="r3">${r3}${chips}${repairBtn(i)}</div>
-    ${repairLines(i)}
     ${r4}
+    ${repairLines(i)}
     ${appState.V.pop && appState.V.pop.i === i && appState.V.sheet == null && !(inGroup && /^(ld|order)$/.test(appState.V.pop.kind)) ? renderPop(i) : ""}
   </section>`;
 }
@@ -891,9 +892,9 @@ export function renderPop(i){
        summary list and its REPAIR buttons went). */
     return `<div class="pop"><h4>${esc(cm.title)}${v.fort ? " " + MID + " " + PLAY.QUADS[v.quad] + " quadrant" : ""} ${MID} ${R.damage.triggerHint}</h4>
       <p class="last ${fl ? "fresh" : ""}">${fl ? esc(fl.msg) : (appState.V.flash && appState.V.flash.i === i ? esc(appState.V.flash.msg) : "Tap a result to add it; the table stays open until you close it.")}</p>
-      ${repairPanel(i)}
       <div class="tiles">${tiles}${wide}</div>
       ${xrow}
+      ${repairPanel(i)}
       <p>Damage control: <b>${v.repairDice}D6</b> (half with blast markers in contact), each 6 repairs one system or puts out one fire (p. 88).${R.damage.repair ? " " + esc(R.damage.repair) : ""}</p>
       ${appState.V.info && cm.foot ? `<p class="foot">${esc(cm.foot)}</p>` : ""}
       <button class="close" data-act="closepop">close</button></div>`;

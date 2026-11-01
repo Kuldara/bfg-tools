@@ -170,6 +170,21 @@ export function renderEndPhase(){
   </div></div>`;
 }
 
+/* A reminder at the change of turn, never damage (user 1.11.2026): the fires still
+   burning whose hit has not gone on this turn. It sits in the bottom bar, above its
+   buttons, so nothing moves under a finger; a name goes to that ship. */
+export function fireReminder(){
+  if(!appState.V.fireWarn) return "";
+  const G = appState.G, ships = [];
+  appState.U.forEach((x, i) => {
+    const R = x.R, st = G.st[i];
+    if(R.kind !== "ship" || PLAY.destroyed(R, st) || !PLAY.standardCrits(R) || st.fireTurn === G.fleet.turn) return;
+    const n = PLAY.fireDamage(R, st);
+    if(n) ships.push(`<button data-act="jump" data-i="${i}">${esc(unitName(i))}${n > 1 ? " " + TIMES + n : ""}</button>`);
+  });
+  return ships.length ? `<div class="firewarn"><span>Fires burning, tap each for its hit (p. 67):</span>${ships.join("")}<button class="x" data-act="firewarn" aria-label="Dismiss">&#10005;</button></div>` : "";
+}
+
 /* ------------------------------------------------- the strip of ships --- */
 /* The bottom strip (full view): one chip per unit in the roster's order,
    its state in its colour - crippled, out of action, played. A tap moves
