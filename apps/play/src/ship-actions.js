@@ -163,7 +163,7 @@ function renderRam(i){
   const n = PLAY.ramTestDice(PLAY.ramSize(R), A.size), def = A.size === 3;
   const foes = peerHas() ? withPeer(() => appState.U.map((x, j) => x.R.kind === "ship" && !PLAY.destroyed(x.R, appState.G.st[j]) ? chip("acfoe", j, esc(unitName(j)), A.foe === j) : "").join("")) : "";
   const back = PLAY.rammedDice(A.hits, A.headOn, def), mine = PLAY.ramDice(R), auto = PLAY.powerRam(R), front = PLAY.frontArmour(R);
-  const own = (R.rules || []).filter(x => /\bram(s|ming)?\b/i.test(String(x.t))).map(x => `<p class="foot">${esc(String(x.t).replace(/^\*\s*/, ""))}</p>`).join("");
+  const own = (R.rules || []).filter(x => /\bram(s|ming)?\b/i.test(String(x.t)) && !/power ram/i.test(String(x.t))).map(x => `<p class="foot">${esc(String(x.t).replace(/^\*\s*/, ""))}</p>`).join("");
   const rr = r && r.test === false && r.dice && freeRR(i);
   let step;
   if(!r) step = `<div class="r4"><button data-act="acramtest" data-arg="roll">Roll ${n}D6</button><button data-act="acramtest" data-arg="pass">Passed</button><button data-act="acramtest" data-arg="fail">Failed</button></div>`;
