@@ -6,6 +6,7 @@ import { KEY_VIEW, KEY_WAKE, applyCommanderLd, cmdsAboard, coCmd, forgetLdDie, r
 import { crippledNow, unitName } from "./derived.js";
 import { jumpTo, pageLabel, render, rrOpen, rrPool, showPop, topRow, wake } from "./render.js";
 import { repairable } from "./share.js";
+import { clearRepairNotes, pickRepair, rollAllRepairs, rollRepair } from "./repair.js";
 import PLAY from "../rules.js";
 import { esc } from "../../../packages/ui/format.js";
 
@@ -59,6 +60,9 @@ export function act(name, i, arg){
   if(name === "undo"){
     if(!appState.UNDO.length) return;
     appState.G = JSON.parse(appState.UNDO.pop());
+    clearRepairNotes();
+    /* a helper's shown result went with what it marked */
+    if(appState.V.actions) appState.V.actions.res = null;
     const res = resolveFleet(appState.G.doc); appState.U = res.units; appState.L0 = res.L0;
     dropStalePop();
     save(); render(); return;
@@ -123,6 +127,13 @@ export function act(name, i, arg){
     render(); return;
   }
   if(!appState.G) return;
+  /* the line a repair roll left goes with the next thing done */
+  if(!/^repair/.test(name) && appState.V.repNote) clearRepairNotes();
+  if(name === "repairall"){
+    snapshot();
+    if(!rollAllRepairs()) appState.UNDO.pop();
+    save(); render(); return;
+  }
   snapshot();
   const st = appState.G.st[i], R = appState.U[i] && appState.U[i].R, fleet = appState.G.fleet;
   const before = R && R.kind === "ship" ? PLAY.view(R, st, fleet) : null;
@@ -164,6 +175,8 @@ export function act(name, i, arg){
       appState.V.flash = { i: i, key: null, t: Date.now(), msg: "+" + n + " hit" + (n > 1 ? "s" : "") + " from " + (n > 1 ? n + " fires" : "the fire") + " (p. 67)" }; break; }
     /* damage control in the End Phase (p. 88): one system repaired or one
        fire out per 6; a result that may not be repaired (p. 67) stays */
+    case "repairroll": if(!rollRepair(i)){ appState.UNDO.pop(); return; } break;
+    case "repairpick": if(!pickRepair(i, String(arg))){ appState.UNDO.pop(); return; } break;
     case "repair": {
       const key = String(arg);
       if(!tk.crits || !(tk.crits[key] > 0) || !repairable(R, key)){ appState.UNDO.pop(); return; }
@@ -282,6 +295,17 @@ export function act(name, i, arg){
     case "clearorder": members(i).forEach(j => { appState.G.st[j].order = null; appState.G.st[j].braceTurn = 0; appState.G.st[j].braceCarry = null; }); appState.V.pop = null; break;
     case "boarding": st.boarding = !st.boarding; break;
     case "nofire": st.noOrdersTurn = !st.noOrdersTurn; break;
+    /* the helpers of a ship's Actions (ship-actions.js, p. 55-57, 92) */
+    case "disengage":
+      arg.ms.forEach(j => { const s = appState.G.st[j]; if(arg.ok) s.disengaged = true; else s.noOrdersTurn = true; });
+      /* "falls out of the squadron and may not attempt to re-join it" (p. 57) */
+      if(!arg.ok && appState.G.grp[i] && !isEscGrp(appState.G.grp[i])) appState.G.grp[i] = null;
+      break;
+    case "ramhits":
+      if(PLAY.isEscort(R)){ for(let n = 0; n < arg; n++){ const k = st.members.findIndex(m => !m.dead); if(k >= 0) PLAY.killMember(st, k); } }
+      else PLAY.addHits(R, st, arg);
+      break;
+    case "teleported": st.teleported = true; break;
     case "torps": st.torps = !st.torps; break;
     case "craft": st.craft = !st.craft; break;
     case "blast": if(arg === 0) PLAY.clearBlast(st); else st.blast = Math.max(0, (st.blast | 0) + arg); break;

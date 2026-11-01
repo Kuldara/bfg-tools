@@ -20,5 +20,7 @@ export * from "./render.js";
 export * from "./share.js";
 export * from "./peer.js";
 export * from "./board.js";
+export * from "./repair.js";
+export * from "./ship-actions.js";
 export * from "./events.js";
 export * from "./boot.js";

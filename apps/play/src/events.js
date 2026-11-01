@@ -8,6 +8,7 @@ import { builderFleets, copyText, forgetLinked, linkedFleets, phoneLink, saveFle
 import { qrFull } from "../../../packages/ui/qr.js";
 import { peerAct } from "./peer.js";
 import { boardAct } from "./board.js";
+import { shipAct } from "./ship-actions.js";
 
 /* ============================================================== EVENTS ===== */
 document.addEventListener("touchstart", () => {}, { passive: true });   /* :active on iOS */
@@ -26,11 +27,12 @@ document.addEventListener("click", ev => {
   const tr = el.getBoundingClientRect();
   appState.TAP = { sel: tapSel(el), top: tr.top + tr.height / 2 };
   /* a tap inside the menu box is not a tap on the backdrop */
-  if((name === "menu" || name === "endph" || name === "peerpanel" || name === "boardclose") && el.classList.contains("menu") && ev.target.closest(".box")) return;
+  if((name === "menu" || name === "endph" || name === "peerpanel" || name === "boardclose" || name === "acclose") && el.classList.contains("menu") && ev.target.closest(".box")) return;
   /* the opponent's fleet is to look at: its cards take no taps */
   if(el.closest(".peerview")) return;
   if(peerAct(name, el)) return;
   if(boardAct(name, el)) return;
+  if(shipAct(name, el)) return;
   const i = el.hasAttribute("data-i") ? parseInt(el.getAttribute("data-i"), 10) : null;
   let arg = el.hasAttribute("data-arg") ? el.getAttribute("data-arg") : undefined;
   if(arg != null && /^-?\d+$/.test(arg)) arg = parseInt(arg, 10);

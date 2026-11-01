@@ -119,8 +119,9 @@ export function boardAct(name, el){
   if(name === "board"){
     const i = parseInt(el.getAttribute("data-i"), 10);
     const others = appState.U.some((x, j) => j !== i && alive(j));
+    V.actions = null;
     /* nothing to choose: straight to the action */
-    if(!others && !peerHas()){ go([i], -1); return true; }
+    if(!others && !peerHas()){ render(); go([i], -1); return true; }
     V.board = { i: i, join: [] }; render(); return true;
   }
   if(name === "boardclose"){ V.board = null; render(); return true; }
