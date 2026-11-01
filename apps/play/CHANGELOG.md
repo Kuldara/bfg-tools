@@ -5,6 +5,9 @@ a tag `play-v<version>` deploys the Registry's site.
 
 ## Unreleased
 
+### Changed
+- To phone: a link too long for a QR code a camera can read (over 1 000 characters, usually several fleets) shows no code; the panel offers Save file, Copy link and Share instead.
+
 ### Added
 - Back to the set-up during a game (31.10.2026): the menu's **Set-up** opens the Leadership, the squadrons and the opponent's room again, with the game record kept. There the start button and a top-bar **Game** button read *Back to the game*, and the *Exit* that forgets the record is not offered.
 - The opponent's fleet (31.10.2026): two players link their pages, before the game or during it, and each sees the other's ships, hits, criticals and orders live; the roster gets two sides, *My fleet* and theirs (swipe sideways or tap a tab; an edge tab and a short slide of the cards show the swipe). Linking: one player taps *Create a room* on the set-up screen (or in the menu) and gets a four-letter code, the other types it and taps *Join* or scans its QR code. The pages talk through bfgtools' own relay (`services/relay`, ADR 0007), which works on every network and stores nothing; a reload or a phone that slept goes back into the room by itself. (The first version's two QR codes and direct WebRTC link never connected on real phones.)

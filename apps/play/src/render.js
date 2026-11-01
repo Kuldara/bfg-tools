@@ -252,12 +252,21 @@ export function renderLoad(){
 /* The phone panel under a builder fleet: the QR code, the link, copy and
    share. The fleet travels inside the link; nothing is uploaded. */
 export function phonePanel(){
-  const canShare = typeof navigator !== "undefined" && !!navigator.share;
+  const V = appState.V, canShare = typeof navigator !== "undefined" && !!navigator.share;
+  const link = `<input class="link" readonly value="${esc(V.phoneUrl || "")}" aria-label="The link">`;
+  const send = `<button data-act="copylink" ${V.phoneUrl ? "" : "disabled"}>${V.copied === "link" ? "Copied" : "Copy link"}</button>${canShare ? `<button data-act="sharelink" ${V.phoneUrl ? "" : "disabled"}>Share</button>` : ""}`;
+  const opens = `the fleet builder opens there${V.phoneRemote ? " (the published page, bfgtools.kuldare.com)" : ""} ${V.phoneN > 1 ? "with all " + V.phoneN + " fleets in its Saved fleets" : "with the fleet on screen"}`;
+  /* too long for a code a camera can read: the file first, the link as it is */
+  if(V.phoneUrl && !V.phoneSvg && !V.phoneErr) return `<div class="phone">
+    <p class="foot">${V.phoneN > 1 ? "These " + V.phoneN + " fleets are" : "This fleet is"} too much for a QR code a camera can read. Save a file and send it to the other phone, where Open a fleet file reads it. Or send the link: ${opens}. Some chat apps cut a link this long (${V.phoneUrl.length} characters).</p>
+    ${link}
+    <div class="r4"><button data-act="savefile" data-arg="${esc(String(V.phone))}">Save file</button>${send}</div>
+  </div>`;
   return `<div class="phone">
-    ${appState.V.phoneErr ? `<p class="note bad">${esc(appState.V.phoneErr)}</p>` : appState.V.phoneSvg ? `<div class="qr" data-act="qrfull" title="Full screen">${appState.V.phoneSvg}</div>` : `<p class="foot">Making the code&hellip;</p>`}
-    <p class="foot">Hold this screen up to the other phone's camera (brightness up helps), or ${canShare ? "Share the link to it" : "send it the link"}: the fleet builder opens there${appState.V.phoneRemote ? " (the published page, bfgtools.kuldare.com)" : ""} ${appState.V.phoneN > 1 ? "with all " + appState.V.phoneN + " fleets in its Saved fleets" : "with the fleet on screen"}: Save keeps it, Play plays it. The fleet is inside the link itself; nothing is uploaded.</p>
-    <input class="link" readonly value="${esc(appState.V.phoneUrl || "")}" aria-label="The link">
-    <div class="r4"><button data-act="qrfull" ${appState.V.phoneSvg ? "" : "disabled"}>Full screen</button><button data-act="copylink" ${appState.V.phoneUrl ? "" : "disabled"}>${appState.V.copied === "link" ? "Copied" : "Copy link"}</button>${canShare ? `<button data-act="sharelink" ${appState.V.phoneUrl ? "" : "disabled"}>Share</button>` : ""}</div>
+    ${V.phoneErr ? `<p class="note bad">${esc(V.phoneErr)}</p>` : V.phoneSvg ? `<div class="qr" data-act="qrfull" title="Full screen">${V.phoneSvg}</div>` : `<p class="foot">Making the code&hellip;</p>`}
+    <p class="foot">Hold this screen up to the other phone's camera (brightness up helps), or ${canShare ? "Share the link to it" : "send it the link"}: ${opens}: Save keeps it, Play plays it. The fleet is inside the link itself; nothing is uploaded.</p>
+    ${link}
+    <div class="r4"><button data-act="qrfull" ${V.phoneSvg ? "" : "disabled"}>Full screen</button>${send}</div>
   </div>`;
 }
 

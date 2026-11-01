@@ -6,6 +6,9 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 ## Unreleased
 
 ### Changed
+- To phone: a link too long for a QR code a camera can read (over 1 000 characters, usually several fleets) shows no code; the panel offers Export file, Copy link and Share instead.
+
+### Changed
 - Phone: the **Menu** button in the points strip shows only once the buttons
   have scrolled under it, where pinning them does something; pinned, it reads
   **Hide** (31.10.2026, J243). At the top of the page it used to sit there and

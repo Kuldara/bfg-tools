@@ -458,7 +458,9 @@ function run(check){
     /* a bigger QR (user 19.10.2026): the Full screen button and a tap on the code */
     const pp = P(`V.phoneSvg = "<svg></svg>"; V.phoneUrl = "https://bfgtools.kuldare.com/play/x#fleet=abc"; phonePanel()`);
     check("smoke: the phone panel has Full screen, on the button and on the code itself", (pp.match(/data-act="qrfull"/g) || []).length === 2 && /Full screen/.test(strip(pp)) && P(`typeof qrFull`) === "function" && P(`qrFull("<svg></svg>")`) === null, strip(pp).slice(0, 120));
-    P(`V.phoneSvg = ""; V.phoneUrl = ""`);
+    const pl = P(`V.phoneSvg = ""; V.phone = "all"; V.phoneN = 6; V.phoneUrl = "https://bfgtools.kuldare.com/#fleet=" + "x".repeat(2000); phonePanel()`);
+    check("smoke: a link too long to scan has no code, and Save file and Copy link instead (user 1.11.2026)", !/data-act="qrfull"/.test(pl) && /data-act="savefile" data-arg="all"/.test(pl) && /data-act="copylink"/.test(pl) && !/Making the code/.test(pl), strip(pl).slice(0, 160));
+    P(`V.phoneSvg = ""; V.phoneUrl = ""; V.phone = null; V.phoneN = 0`);
     P(`forgetLinked(1); forgetLinked(0)`);
     /* the builder's named library on the same device (gothic-fleet-registry-saves-v1) */
     pg.store["gothic-fleet-registry-saves-v1"] = JSON.stringify({ v: 1, saves: [{ id: "x1", name: "Club night", ln: L.nm, limit: 1500, units: pg.ctx.__doc.units, pts: 0, saved: "2026-10-19" }], open: {} });
