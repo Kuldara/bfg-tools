@@ -148,6 +148,17 @@ export function qrSvg(text){
   q.rows.forEach((row, y) => row.forEach((on, x) => { if(on) d += "M" + (x + 4) + " " + (y + 4) + "h1v1h-1z"; }));
   return `<svg class="qrsvg" viewBox="0 0 ${n} ${n}" shape-rendering="crispEdges" role="img" aria-label="QR code of the link (version ${q.version}, ${q.ecc})"><rect width="${n}" height="${n}" fill="#fff"/><path d="${d}" fill="#000"/></svg>`;
 }
+/* The longest link shown as a code (user 1.11.2026: "the QR and the link get
+   far too long and the QR may not even work"). A QR code holds about 2 950
+   bytes, but a phone's camera gives up long before that: at this length the
+   code is version 22 (105 modules), about half a millimetre per module when
+   it fills a phone's screen. One fleet nearly always fits. Longer, the panels
+   offer a file instead of a code that may not scan. */
+export const QR_MAX_CHARS = 1000;
+/* the code of a link, or "" when it is too long to scan reliably */
+export function readableQr(text){
+  return String(text).length <= QR_MAX_CHARS ? qrSvg(text) : "";
+}
 /* The code as big as the screen (user 19.10.2026: "make the QR codes a bit
    bigger, and at least a clear button to make them exactly as big as you
    want"): Full screen lays the code on a white layer over the page at the
