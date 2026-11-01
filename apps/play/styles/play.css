@@ -748,4 +748,20 @@ details.paste .roomjoin{margin-top:6px}
 .bchips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
 .bchip{min-height:40px;padding:0 12px;border-radius:9px;border:1px solid var(--line);background:var(--sunk);color:var(--ink)}
 .bchip.on{background:var(--accent-wash);border-color:var(--accent);color:var(--accent-ink)}
-.peerview .board{display:none}
+.peerview .actb{display:none}
+
+/* A ship's Actions (ship-actions.js) */
+.actb{flex:0 0 auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-width:50px;min-height:var(--tap);padding:0 2px;border-radius:8px;border:1px solid var(--card-rule);background:var(--panel);color:var(--card-ink)}
+.actb svg{width:18px;height:18px;fill:currentColor}
+.actb small{font:600 10px/1 var(--mono);color:var(--card-mute)}
+.main.compact .actb{min-width:36px}
+.main.compact .actb small{display:none}
+.acts .btn{margin-bottom:8px}
+.acts .aclab{margin:10px 0 4px;font:600 13px/1.25 var(--sans);color:var(--ink-2)}
+.acts .acgap{margin-top:10px}
+.acts .actotal{margin:12px 0 8px;font:14px/1.35 var(--mono)}
+.acts .acres{margin:10px 0;padding:8px 10px;border-radius:8px;background:var(--sunk);font:14px/1.4 var(--sans)}
+.acts .acres.ok{border-left:4px solid var(--ok)}
+.acts .acres.bad{border-left:4px solid var(--bad)}
+.acts .acchk{margin:8px 0;padding-left:18px;font:14px/1.5 var(--sans)}
+.acts .r4{margin-bottom:8px}

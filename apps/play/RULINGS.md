@@ -533,6 +533,24 @@ with its page, and its effect is not applied to the stats. **Not covered yet:** 
 Bakka Fleet-Admiral's rolled refits (p. 48) and the Mechanicus experimental
 cruiser (p. 124).
 
+**T46. A ship's Actions: ram, disengage, teleport.** **The user's request
+1.11.2026.** The top corner of a card opens Board, Ram, Disengage and Teleport
+attack. Each says the rule, works out the dice and rolls if asked; Passed and
+Failed are for own dice. **Leadership.** The ship's own value with a smashed
+bridge. p. 48's Under Fire and enemy contacts are headed "Command check modifiers",
+and neither the ram test (p. 55, "a Leadership test") nor disengaging (p. 56, its
+own list) is a Command check, so they do not apply: an open reading. **A contradiction, recorded.** The table on p. 56 gives
+celestial phenomena +3, while the example on p. 57 counts three Blast Markers and an
+asteroid field as +4 (Ld 9 to 13), which would make the field +1. The page uses
+the table. The example's point stands either way: 11 and 12 fail. **Half.**
+The rammed ship's "half its starting damage" rounds up as p. 64 does; the book's
+example is even. **What it marks.** Ram: hits on this ship through the track, the
+target's hits are said to its player, as Board does. Disengage: passed sets
+`disengaged` on the card or the whole escort squadron (p. 57); failed sets
+no-fire and takes a capital ship out of its squadron (p. 57). Teleport: the
+once-a-turn flag; the result is on the enemy. **Not done:** criticals from a ram's
+hits and a ship's own ram rules are the player's (its rule lines are shown).
+
 ## What is not tracked, and why
 
 - The strength of torpedo salvoes and attack craft markers on the table

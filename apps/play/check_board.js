@@ -46,8 +46,8 @@ const IN = expr => `(() => { const f = document.querySelector(".boardframe"); co
     check("the Grunts have their clan", /Goff/.test(JSON.stringify(units[1])), units);
     await sleep(800);
     await shot("1-roster");
-    check("every living ship has a Board button", await cd.evaluate(`document.querySelectorAll('[data-act="board"]').length`) >= 2);
-    await cd.evaluate(`document.querySelector('[data-act="board"][data-i="1"]').click()`);
+    check("every living ship has its Actions", await cd.evaluate(`document.querySelectorAll('[data-act="actions"]').length`) >= 2);
+    await cd.evaluate(`document.querySelector('[data-act="actions"][data-i="1"]').click(); document.querySelector('[data-act="board"]').click()`);
     await sleep(500);
     await shot("2-sheet");
     check("with another ship in the fleet the sheet asks", await cd.evaluate(`!!document.querySelector('[data-act="boardgo"]')`));
@@ -88,7 +88,7 @@ const IN = expr => `(() => { const f = document.querySelector(".boardframe"); co
     await cd.evaluate(`(() => { const G = GFP.appState.G; G.st[0].hits = 2; GFP.takeSnapshot({ t: "g", n: "Mikko", G: JSON.parse(JSON.stringify(G)), opt: {}, scr: "roster" }); G.st[0].hits = 1; GFP.appState.V.boardNote = null; GFP.render(); return 1; })()`);
     await sleep(300);
     if(await cd.evaluate(`!document.querySelector(".boardframe")`)){
-      await cd.evaluate(`document.querySelector('[data-act="board"][data-i="0"]').click()`);
+      await cd.evaluate(`document.querySelector('[data-act="actions"][data-i="0"]').click(); document.querySelector('[data-act="board"]').click()`);
       await sleep(400);
       const foe = await cd.evaluate(`document.querySelector('[data-act="boardgo"][data-arg="0"]') ? document.querySelector('[data-act="boardgo"][data-arg="0"]').innerText : ""`);
       check("their ship is on the sheet with its hits left", /8 hits left/.test(foe), foe);
@@ -100,7 +100,7 @@ const IN = expr => `(() => { const f = document.querySelector(".boardframe"); co
     /* a new tab: a real tap may open one, and its result comes back the same way */
     await cd.evaluate(`(() => { GFP.boardOpen() && GFP.boardOpen().close(); localStorage.setItem("gothic-fleet-play-board-where", "tab"); GFP.appState.V.board = null; GFP.render(); return 1; })()`);
     await sleep(300);
-    await cd.evaluate(`document.querySelector('[data-act="board"][data-i="0"]').click()`);
+    await cd.evaluate(`document.querySelector('[data-act="actions"][data-i="0"]').click(); document.querySelector('[data-act="board"]').click()`);
     await sleep(300);
     check("the sheet says where it opens", /A new tab/.test(await cd.evaluate(`document.querySelector(".menu .box").innerText`)));
     await cd.send("Runtime.evaluate", { expression: `document.querySelector('[data-act="boardgo"][data-arg="-1"]').click()`, userGesture: true });

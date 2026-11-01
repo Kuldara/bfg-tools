@@ -1,0 +1,203 @@
+import { appState } from "./state.js";
+import { MID } from "./helpers.js";
+import { OPT } from "./storage.js";
+import { isEscGrp } from "./game-state.js";
+import { act, groupUnits } from "./actions.js";
+import { unitName } from "./derived.js";
+import { render } from "./render.js";
+import { peerHas, withPeer } from "./peer.js";
+import { esc } from "../../../packages/ui/format.js";
+import PLAY from "../rules.js";
+
+/* ======================================================= A SHIP'S ACTIONS == */
+/* The Actions button on a ship's card: what a ship may try beside moving and
+   shooting. Each helper says the rule with its page, works out the dice, and
+   rolls if asked; own dice are as good (Passed, Failed). A result goes on the
+   ship through act(), so UNDO takes it back. RULINGS.md T46. */
+
+const rollN = n => Array.from({ length: n }, () => PLAY.d6());
+const sum = a => a.reduce((x, y) => x + y, 0);
+const CLOSE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+/* the ships a test covers: an escort squadron goes together, a capital ship
+   alone (p. 57) */
+function covers(i){
+  const g = appState.G.grp[i];
+  return isEscGrp(g) ? groupUnits(g) : [i];
+}
+/* Leadership for these tests: the ship's own, with a smashed bridge. p. 48's
+   Under Fire and enemy contacts are "Command check modifiers"; disengaging has
+   its own list (p. 56). A squadron of escorts tests on its highest. */
+function testLd(i){
+  const ms = covers(i), lds = ms.map(j => { const st = appState.G.st[j]; return st.ld == null ? null : st.ld + (st.ldPerm | 0); }).filter(v => v != null);
+  return lds.length ? Math.max.apply(null, lds) : null;
+}
+/* the first free re-roll, the fleet's or the ship's own */
+function freeRR(i){
+  const G = appState.G;
+  for(const [pool, who] of [[G.fleet, -1], [G.st[i], i]]){
+    const k = PLAY.rerollBoxes(pool).findIndex(b => !b.used && !b.lost);
+    if(k >= 0) return { who, k };
+  }
+  return null;
+}
+
+export function shipAct(name, el){
+  const V = appState.V;
+  const argS = () => el.getAttribute("data-arg");
+  if(name === "actions"){ V.actions = { i: parseInt(el.getAttribute("data-i"), 10), tab: "", size: 1, armour: 5, hits: 8, headOn: false, blast: 0, enemies: 0, celestial: false, res: null }; render(); return true; }
+  const A = V.actions;
+  if(!A) return false;
+  const st = appState.G.st[A.i];
+  if(name === "acclose"){ V.actions = null; render(); return true; }
+  if(name === "actab"){
+    A.tab = argS(); A.res = null;
+    if(A.tab === "dis") A.blast = st.blast | 0;
+    render(); return true;
+  }
+  /* a value of the helper: "field:value", or "field:+1" */
+  if(name === "acset"){
+    const [f, v] = argS().split(":");
+    if(/^[+-]/.test(v)) A[f] = Math.max(f === "hits" ? 1 : 0, (A[f] | 0) + parseInt(v, 10));
+    else A[f] = v === "true" ? true : v === "false" ? false : parseInt(v, 10);
+    A.res = null; render(); return true;
+  }
+  /* an enemy ship from the linked fleet fills the target in */
+  if(name === "acfoe"){
+    const j = parseInt(argS(), 10);
+    withPeer(() => { const R = appState.U[j].R; A.size = PLAY.ramSize(R); A.hits = PLAY.ramDice(R); A.armour = PLAY.frontArmour(R) || A.armour; A.foe = j; });
+    A.res = null; render(); return true;
+  }
+  if(name === "acdis"){
+    const ld = PLAY.disengageLd(testLd(A.i), A.blast, A.celestial, A.enemies);
+    const how = argS(), dice = how === "roll" ? rollN(2) : null;
+    const ok = dice ? PLAY.disengagePasses(ld, sum(dice)) : how === "pass";
+    act("disengage", A.i, { ok: ok, ms: covers(A.i) });
+    A.res = { ok: ok, dice: dice, ld: ld }; render(); return true;
+  }
+  if(name === "acramtest"){
+    const n = PLAY.ramTestDice(PLAY.ramSize(appState.U[A.i].R), A.size), ld = testLd(A.i);
+    const how = argS(), dice = how === "roll" ? rollN(n) : null;
+    const ok = dice ? sum(dice) <= ld : how === "pass";
+    A.res = { test: ok, dice: dice, ld: ld, n: n }; render(); return true;
+  }
+  if(name === "acramroll"){
+    const R = appState.U[A.i].R, mine = rollN(PLAY.ramDice(R)), def = A.size === 3;
+    const theirs = rollN(PLAY.rammedDice(A.hits, A.headOn, def));
+    const auto = PLAY.powerRam(R) ? 1 : 0;
+    /* a defence always rolls "as if prow-on" (p. 56): against the front */
+    const front = PLAY.frontArmour(R);
+    const dealt = PLAY.ramHits(mine, A.armour) + auto, taken = PLAY.ramHits(theirs, front);
+    A.res = Object.assign({}, A.res, { mine, theirs, dealt, taken, auto, front });
+    if(taken) act("ramhits", A.i, taken); else render();
+    if(!appState.G.st[A.i] || PLAY.destroyed(R, appState.G.st[A.i])) V.actions = null;
+    render(); return true;
+  }
+  if(name === "actele"){
+    const how = argS(), d = how === "roll" ? PLAY.d6() : parseInt(how, 10);
+    act("teleported", A.i);
+    A.res = { d: d, how: how };
+    render(); return true;
+  }
+  /* the failed roll taken back and made again with one re-roll (p. 48) */
+  if(name === "acreroll"){
+    const free = freeRR(A.i), kind = argS(), prev = A.res;
+    if(!free) return true;
+    if(kind === "dis") act("undo");
+    act("rrbox", free.who, free.k);
+    const dice = rollN(kind === "dis" ? 2 : prev.n);
+    if(kind === "dis"){
+      const ok = PLAY.disengagePasses(prev.ld, sum(dice));
+      act("disengage", A.i, { ok: ok, ms: covers(A.i) });
+      A.res = { ok: ok, dice: dice, ld: prev.ld };
+    }else A.res = Object.assign({}, prev, { test: sum(dice) <= prev.ld, dice: dice });
+    render(); return true;
+  }
+  return false;
+}
+
+/* ------------------------------------------------------------- the sheet --- */
+const chip = (act2, arg, label, on, extra) => `<button class="bchip${on ? " on" : ""}" data-act="${act2}" data-arg="${esc(String(arg))}"${extra || ""}>${label}</button>`;
+const stepper = (f, val, sub) => `<div class="steprow"><button data-act="acset" data-arg="${f}:-1" aria-label="Less">&minus;</button><div class="val">${val}<small>${sub}</small></div><button data-act="acset" data-arg="${f}:+1" aria-label="More">+</button></div>`;
+const diceLine = d => d ? `<b>${d.join(" ")}</b>${d.length > 1 ? " = " + sum(d) : ""}` : "";
+const backBtn = `<button class="btn sec" data-act="actab" data-arg="">All actions</button>`;
+
+function teleportBar(i){
+  const R = appState.U[i].R, st = appState.G.st[i];
+  if(PLAY.isEscort(R)) return "escort";
+  if(PLAY.crippled(R, st)) return "crippled ships may not (p. 92)";
+  if(st.teleported) return "already this turn (p. 92)";
+  if(OPT.orders && st.order !== "LO" && st.order !== "RO") return "needs Lock On or Reload Ordnance (p. 92)";
+  return "";
+}
+function renderMain(i){
+  const R = appState.U[i].R, st = appState.G.st[i];
+  const still = PLAY.isStill(R), bar = teleportBar(i);
+  const row = (tab, name, sub, off) => `<button class="btn sec" data-act="${tab === "board" ? "board" : "actab"}"${tab === "board" ? ` data-i="${i}"` : ` data-arg="${tab}"`}${off ? " disabled" : ""}>${name}<small>${sub}</small></button>`;
+  return [
+    row("board", "Board", "base contact, End Phase (Rulebook p. 89)"),
+    still ? "" : row("ram", "Ram", "All Ahead Full, the dice and the damage (p. 55)"),
+    still ? "" : row("dis", "Disengage", st.noOrdersTurn ? "failed this turn: no fire, no orders but Brace (p. 57)" : "end of the Movement Phase, Leadership test (p. 56)"),
+    bar === "escort" ? "" : row("tele", "Teleport attack", bar || "End Phase, shields down, within 10 cm (p. 92)", !!bar)
+  ].join("");
+}
+function renderDis(i){
+  const A = appState.V.actions, ld = testLd(i), r = A.res;
+  if(ld == null) return `<p class="foot">Set this ship's Leadership first.</p>${backBtn}`;
+  const total = PLAY.disengageLd(ld, A.blast, A.celestial, A.enemies);
+  const R = appState.U[i].R, esq = PLAY.isEscort(R);
+  const rr = r && !r.ok && r.dice && freeRR(i);
+  const after = !r ? "" : r.ok
+    ? `<p class="acres ok">${r.dice ? diceLine(r.dice) + " against Ld " + r.ld + ": " : ""}<b>Disengaged.</b> ${esq ? "The squadron leaves" : "It leaves"} the table and may not return. For the enemy it counts 10% of its points, 25% if crippled first (p. 57).</p>`
+    : `<p class="acres bad">${r.dice ? diceLine(r.dice) + " against Ld " + r.ld + ": " : ""}<b>Failed.</b> It stays, and may not fire, launch ordnance or use special orders except Brace this turn (p. 57).</p>${rr ? `<button class="btn sec" data-act="acreroll" data-arg="dis">Re-roll<small>uses one re-roll</small></button>` : ""}`;
+  return `<p class="foot">At the end of its Movement Phase. ${esq ? "The squadron goes together: if one ship disengages, all must (p. 57)." : appState.G.grp[i] ? "A capital ship in a squadron tests alone, and a failure takes it out of the squadron (p. 57)." : ""}</p>
+    <p class="aclab">Blast Markers within 5 cm: +1 each</p>${stepper("blast", A.blast, "+" + A.blast)}
+    <p class="aclab">Enemy ships and ordnance markers within 15 cm: &minus;1 each</p>${stepper("enemies", A.enemies, "&minus;" + A.enemies)}
+    <div class="bchips acgap">${chip("acset", "celestial:" + !A.celestial, "Celestial phenomena within 15 cm: +3", A.celestial)}</div>
+    <p class="actotal">Ld ${ld} ${MID} roll 2D6, <b>${Math.min(total, 10)} or under</b>${total > 10 ? ` (Ld ${total}, but 11 and 12 fail)` : ""}</p>
+    ${r ? after : `<div class="r4"><button data-act="acdis" data-arg="roll">Roll 2D6</button><button data-act="acdis" data-arg="pass">Passed</button><button data-act="acdis" data-arg="fail">Failed</button></div>`}
+    ${backBtn}`;
+}
+function renderRam(i){
+  const A = appState.V.actions, R = appState.U[i].R, r = A.res, ld = testLd(i);
+  if(ld == null) return `<p class="foot">Set this ship's Leadership first.</p>${backBtn}`;
+  const n = PLAY.ramTestDice(PLAY.ramSize(R), A.size), def = A.size === 3;
+  const foes = peerHas() ? withPeer(() => appState.U.map((x, j) => x.R.kind === "ship" && !PLAY.destroyed(x.R, appState.G.st[j]) ? chip("acfoe", j, esc(unitName(j)), A.foe === j) : "").join("")) : "";
+  const back = PLAY.rammedDice(A.hits, A.headOn, def), mine = PLAY.ramDice(R), auto = PLAY.powerRam(R), front = PLAY.frontArmour(R);
+  const own = (R.rules || []).filter(x => /\bram(s|ming)?\b/i.test(String(x.t))).map(x => `<p class="foot">${esc(String(x.t).replace(/^\*\s*/, ""))}</p>`).join("");
+  const rr = r && r.test === false && r.dice && freeRR(i);
+  let step;
+  if(!r) step = `<div class="r4"><button data-act="acramtest" data-arg="roll">Roll ${n}D6</button><button data-act="acramtest" data-arg="pass">Passed</button><button data-act="acramtest" data-arg="fail">Failed</button></div>`;
+  else if(!r.test) step = `<p class="acres bad">${r.dice ? diceLine(r.dice) + " against Ld " + r.ld + ": " : ""}<b>Missed.</b> It moves normally under All Ahead Full (p. 55).</p>${rr ? `<button class="btn sec" data-act="acreroll" data-arg="ram">Re-roll<small>uses one re-roll</small></button>` : ""}`;
+  else if(r.mine == null) step = `<p class="acres ok">${r.dice ? diceLine(r.dice) + " against Ld " + r.ld + ": " : ""}<b>In position.</b> Move the full distance; on base contact, stop and resolve (p. 55).</p>
+      <p class="actotal"><b>${mine}D6</b> against Armour ${A.armour}+${auto ? " + 1 automatic (power ram)" : ""}; they roll <b>${back}D6</b> against your ${front}+</p>
+      <button class="btn" data-act="acramroll">Base contact: roll both</button>`;
+  else step = `<p class="acres ok">You rolled ${r.mine.join(" ")}${r.auto ? " + power ram" : ""}: <b>${r.dealt} hit${r.dealt === 1 ? "" : "s"} on them</b>, no shields (p. 55). Tell them.</p>
+      <p class="acres ${r.taken ? "bad" : "ok"}">They rolled ${r.theirs.join(" ")} against ${r.front}+: <b>${r.taken} hit${r.taken === 1 ? "" : "s"} on this ship</b>${r.taken ? ", marked" : ""}.</p>
+      <p class="foot">An explosion is resolved now and catches both ships. Then finish the move; it may board only a ship it touches at the end of it (p. 56).</p>`;
+  return `<p class="foot">Pass All Ahead Full, name the target, test Leadership, and only then roll the extra distance. One ram per Movement Phase; the choice cannot change (p. 55).</p>${own}
+    ${foes ? `<p class="aclab">Their ship</p><div class="bchips">${foes}</div>` : ""}
+    <p class="aclab">Target</p><div class="bchips">${PLAY.RAM_SIZES.map((s, k) => chip("acset", "size:" + k, s[0].toUpperCase() + s.slice(1), A.size === k)).join("")}</div>
+    <p class="aclab">Its armour where you hit it</p><div class="bchips">${[3, 4, 5, 6].map(v => chip("acset", "armour:" + v, v + "+", A.armour === v)).join("")}</div>
+    <p class="aclab">Its starting hits</p>${stepper("hits", A.hits, "not what it has left")}
+    ${def ? `<p class="foot">A defence rolls its full starting hits, as if prow-on (p. 56).</p>` : `<div class="bchips acgap">${chip("acset", "headOn:false", "Side or rear", !A.headOn)}${chip("acset", "headOn:true", "Head on", A.headOn)}</div>`}
+    <p class="actotal">Ld ${ld} ${MID} <b>${n}D6, ${ld} or under</b>${n === 3 ? " (smaller target)" : n === 1 ? " (larger target)" : " (same size)"}</p>
+    ${step}${backBtn}`;
+}
+function renderTele(i){
+  const r = appState.V.actions.res;
+  const out = !r ? `<div class="r4"><button data-act="actele" data-arg="roll">Roll D6</button></div>`
+    : r.d <= 1 ? `<p class="acres bad"><b>${r.d}: failed.</b></p>`
+    : `<p class="acres ok"><b>${r.d}.</b> Tell them: critical ${r.d} on their table, repaired as normal (p. 92); an escort is destroyed on 4+.</p>`;
+  return `<ul class="acchk"><li>End Phase, on Lock On or Reload Ordnance</li><li>The target has no shields and is within 10 cm</li><li>The target has no more hits left than this ship</li><li>Not crippled; one a turn</li></ul>
+    <p class="foot">One Hit-and-Run attack: a 1 fails, 2 or more is that result on the Critical Hits table. A fleet's bonus to Hit-and-Run is yours to add (p. 92).</p>
+    ${out}${backBtn}`;
+}
+export function renderActions(){
+  const A = appState.V.actions, i = A.i;
+  const title = { ram: "Ram", dis: "Disengage", tele: "Teleport attack" }[A.tab] || "Actions";
+  const body = A.tab === "ram" ? renderRam(i) : A.tab === "dis" ? renderDis(i) : A.tab === "tele" ? renderTele(i) : renderMain(i);
+  return `<div class="menu acts" data-act="acclose"><div class="box">
+    <div class="mhd"><h2>${title}: ${esc(unitName(i))}</h2><button class="x" data-act="acclose" aria-label="Close">${CLOSE}</button></div>
+    ${body}
+  </div></div>`;
+}
