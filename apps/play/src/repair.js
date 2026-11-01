@@ -84,6 +84,9 @@ export function anyRepairRoll(){
 function setNote(i, text){ appState.V.repNote = appState.V.repNote || {}; appState.V.repNote[i] = text; }
 export function clearRepairNotes(){ appState.V.repNote = null; }
 
+/* a wrench for the roll, a burst for a Blast Marker in contact */
+const WRENCH = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 7a5.5 5.5 0 0 1-7.4 5.2L6.8 19a2.3 2.3 0 0 1-3.3-3.3l6.8-6.8A5.5 5.5 0 0 1 17 1.5l-3.3 3.3 1 3.5 3.5 1L21.5 6z"/></svg>';
+const BURST = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1l2.3 6.2L19.8 4l-2.6 5.8L23 12l-5.8 2.2 2.6 5.8-5.5-3.2L12 23l-2.3-6.2L4.2 20l2.6-5.8L1 12l5.8-2.2L4.2 4l5.5 3.2z"/></svg>';
 /* the button: beside the chips, so the row of big buttons never moves */
 export function repairBtn(i){
   if(!canRepair(i)) return "";
@@ -94,8 +97,8 @@ export function repairBtn(i){
   const again = !OPT.orders && st.repPhase === phaseKey() ? "again " : "";
   /* the page does not count Blast Markers: the player says when one touches */
   const h = PLAY.repairPlan(R, st, true);
-  const halfBtn = done || h.dice === p.dice ? "" : `<button class="repb" data-act="repairroll" data-i="${i}" data-arg="half" title="With Blast Markers in contact: half the dice, rounding up (p. 88)">Blast Marker <b>${h.dice}D6</b></button>`;
-  return `<button class="repb" data-act="repairroll" data-i="${i}"${done ? " disabled" : ""} title="End Phase damage control: roll, repair, and a fire left costs its hit (p. 88, 67). UNDO takes it back.">${done ? "Repair rolled" : `Repair ${again}<b>${p.dice}D6</b>${p.target !== 6 ? " " + p.target + "+" : ""}`}</button>${halfBtn}`;
+  const halfBtn = done || h.dice === p.dice ? "" : `<button class="repb bm" data-act="repairroll" data-i="${i}" data-arg="half" aria-label="Repair with Blast Markers in contact: ${h.dice}D6" title="With Blast Markers in contact: half the dice, rounding up (p. 88)">${BURST}<b>${h.dice}D6</b></button>`;
+  return `<button class="repb" data-act="repairroll" data-i="${i}"${done ? " disabled" : ""} title="End Phase damage control: roll, repair, and a fire left costs its hit (p. 88, 67). UNDO takes it back.">${WRENCH}${done ? "Repair rolled" : `Repair ${again}<b>${p.dice}D6</b>${p.target !== 6 ? " " + p.target + "+" : ""}`}</button>${halfBtn}`;
 }
 /* the line under the chips: what the roll did, and the choice if there is one */
 export function repairLines(i){

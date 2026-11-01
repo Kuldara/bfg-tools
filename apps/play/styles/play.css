@@ -752,7 +752,10 @@ details.paste .roomjoin{margin-top:6px}
 
 /* Repair with one tap (repair.js) */
 .repb{min-height:32px;padding:0 10px;border-radius:8px;border:1px solid var(--accent);background:var(--accent-wash);color:var(--accent-ink);font:600 12.5px/1 var(--mono)}
+.repb{display:inline-flex;align-items:center;gap:5px}
+.repb svg{width:14px;height:14px;flex:none;fill:currentColor}
 .repb b{font-weight:700}
+.repb.bm{border-color:var(--warn);background:none;color:var(--warn)}
 .repb[disabled]{opacity:.55;border-color:var(--line);background:none;color:var(--ink-3)}
 .repnote{margin:6px 0 0;font:12.5px/1.35 var(--mono);color:var(--ink-2)}
 .reppick{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0 0;font:600 12.5px/1.2 var(--mono)}
