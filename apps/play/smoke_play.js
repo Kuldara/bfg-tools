@@ -452,20 +452,14 @@ function run(check){
     /* phone to phone (user 19.10.2026): this page's own saved fleets go on
        by QR code or a shared link, one by one or all in one */
     const lp = P(`renderLoad()`);
-    check("smoke: every saved fleet on this phone has its own 'to phone', and two or more have 'All to phone'", /data-act="phone" data-arg="s:0"/.test(lp) && /data-act="phone" data-arg="s:1"/.test(lp) && /data-act="phone" data-arg="all"/.test(lp));
+    check("smoke: every saved fleet on this phone has its own Send, and two or more have Send all", /data-act="send" data-arg="s:0"/.test(lp) && /data-act="send" data-arg="s:1"/.test(lp) && /data-act="send" data-arg="all"/.test(lp));
     const all2 = JSON.parse(P(`JSON.stringify(phoneDoc("all"))`));
-    check("smoke: ... All to phone carries every saved fleet with its name", all2.name === "Lunar pair" && (all2.fleets || []).length === 1 && all2.fleets[0].name === "Swords" && P(`phoneDoc("s:1").name`) === "Swords", JSON.stringify([all2.name, (all2.fleets || []).map(f => f.name)]));
-    /* a bigger QR (user 19.10.2026): the Full screen button and a tap on the code */
-    const pp = P(`V.phoneSvg = "<svg></svg>"; V.phoneUrl = "https://bfgtools.kuldare.com/play/x#fleet=abc"; phonePanel()`);
-    check("smoke: the phone panel has Full screen, on the button and on the code itself", (pp.match(/data-act="qrfull"/g) || []).length === 2 && /Full screen/.test(strip(pp)) && P(`typeof qrFull`) === "function" && P(`qrFull("<svg></svg>")`) === null, strip(pp).slice(0, 120));
-    const pl = P(`V.phoneSvg = ""; V.phone = "all"; V.phoneN = 6; V.phoneUrl = "https://bfgtools.kuldare.com/#fleet=" + "x".repeat(2000); phonePanel()`);
-    check("smoke: a link too long to scan has no code, and Save file and Copy link instead (user 1.11.2026)", !/data-act="qrfull"/.test(pl) && /data-act="savefile" data-arg="all"/.test(pl) && /data-act="copylink"/.test(pl) && !/Making the code/.test(pl), strip(pl).slice(0, 160));
-    P(`V.phoneSvg = ""; V.phoneUrl = ""; V.phone = null; V.phoneN = 0`);
+    check("smoke: ... Send all carries every saved fleet with its name", all2.name === "Lunar pair" && (all2.fleets || []).length === 1 && all2.fleets[0].name === "Swords" && P(`phoneDoc("s:1").name`) === "Swords", JSON.stringify([all2.name, (all2.fleets || []).map(f => f.name)]));
     P(`forgetLinked(1); forgetLinked(0)`);
     /* the builder's named library on the same device (gothic-fleet-registry-saves-v1) */
     pg.store["gothic-fleet-registry-saves-v1"] = JSON.stringify({ v: 1, saves: [{ id: "x1", name: "Club night", ln: L.nm, limit: 1500, units: pg.ctx.__doc.units, pts: 0, saved: "2026-10-19" }], open: {} });
     const lib = P(`renderLoad()`);
-    check("smoke: the builder's saved fleets are on the load screen by name, ready to play or send to a phone", /Fleets from the builder/.test(strip(lib)) && /Club night/.test(strip(lib)) && /saved/.test(strip(lib)) && /data-act="newfrom" data-arg="0"/.test(lib) && /data-act="phone" data-arg="b:0"/.test(lib) && P(`builderFleets()[0].name`) === "Club night" && P(`phoneDoc("b:0").name`) === "Club night", strip(lib).slice(0, 300));
+    check("smoke: the builder's saved fleets are on the load screen by name, ready to play or send to a phone", /Fleets from the builder/.test(strip(lib)) && /Club night/.test(strip(lib)) && /saved/.test(strip(lib)) && /data-act="newfrom" data-arg="0"/.test(lib) && /data-act="send" data-arg="b:0"/.test(lib) && P(`builderFleets()[0].name`) === "Club night" && P(`phoneDoc("b:0").name`) === "Club night", strip(lib).slice(0, 300));
     delete pg.store["gothic-fleet-registry-saves-v1"];
   });
 

@@ -1,11 +1,10 @@
 import { appState } from "./state.js";
 import { $ } from "./helpers.js";
-import { fleetsIn, parseDoc, resolveFleet } from "./fleet-document.js";
+import { resolveFleet } from "./fleet-document.js";
 import { loadPlay, newGame, resumeGame, save } from "./game-state.js";
 import { act } from "./actions.js";
 import { render, tapSel } from "./render.js";
-import { builderFleets, copyText, forgetLinked, linkedFleets, phoneLink, saveFleetFile, shareText, takeFleetText } from "./share.js";
-import { qrFull } from "../../../packages/ui/qr.js";
+import { builderFleets, copyText, forgetLinked, linkedFleets, openSend, takeFleetText } from "./share.js";
 import { peerAct } from "./peer.js";
 import { boardAct } from "./board.js";
 import { shipAct } from "./ship-actions.js";
@@ -51,20 +50,9 @@ document.addEventListener("click", ev => {
     res.src = "link"; newGame(res); appState.V.screen = "setup"; save(); render(); return;
   }
   if(name === "unlink"){ forgetLinked(arg); render(); return; }
-  /* the QR code and the link for a builder fleet: open under its button */
-  if(name === "phone"){ appState.V.phone = appState.V.phone === arg ? null : arg; appState.V.copied = ""; render(); if(appState.V.phone != null) phoneLink(arg); return; }
-  if(name === "savefile"){ saveFleetFile(arg); return; }
-  if(name === "qrfull"){ if(appState.V.phoneSvg) qrFull(appState.V.phoneSvg); return; }
-  if(name === "copylink"){ copyText(appState.V.phoneUrl || "", "link"); return; }
-  if(name === "sharelink"){ shareText("Gothic Fleet Play", appState.V.phoneUrl || ""); return; }
+  if(name === "send"){ openSend(arg); return; }
+  if(name === "receive"){ location.href = "../send/index.html"; return; }
   if(name === "pickfile"){ const f = $("#fleetfile"); if(f){ f.value = ""; f.click(); } return; }
-  if(name === "paste"){
-    const p = parseDoc(($("#paste") && $("#paste").value) || "");
-    if(p.error){ appState.V.loadErr = p.error; render(); return; }
-    const fs = fleetsIn(p.o); if(!fs.length){ appState.V.loadErr = "The document has no ships in it."; render(); return; }
-    const res = resolveFleet(fs[0]); if(res.error){ appState.V.loadErr = res.error; render(); return; }
-    appState.V.loadErr = ""; res.src = "paste"; newGame(res); appState.V.screen = "setup"; save(); render(); return;
-  }
   act(name, i, arg);
 });
 /* A fleet file (the builder's Export file, or any fleet document): it goes
