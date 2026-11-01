@@ -1,6 +1,6 @@
 {
  "style": "bleed",
- "sha": "c27cfcf579dd581e5fed27aa6033f8eb3ede3a296801cc11c5f945ffc703372f",
+ "sha": "193a35f2bb949d7453db2bdc5c7fadd6cf6d96226b090633d3aa37bfd727bcb7",
  "shows": {
   "head": [
    "SCENARIO",
@@ -9,7 +9,7 @@
   "tagline": "Every Battlefleet Gothic scenario, laid out for the table",
   "stats": [
    {
-    "n": 216,
+    "n": 220,
     "label": "scenarios"
    },
    {

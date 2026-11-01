@@ -169,6 +169,12 @@ const OPEN = {
   "fan-s-tears": { t: ["Fixed forces"], a: [{ id: "len", l: "Game length", d: "Until all four grand cruisers are destroyed, or the Eldar are destroyed or disengage", o: 1 }] },
   "fan-s-starblade": { t: ["Fixed forces"], a: [{ id: "defeat", l: "What “defeat Barha’desh” means", d: "destroy Mortharion’s Blight", o: 1, v: 1 }, { id: "len", l: "Game length", d: "Until Mortharion’s Blight or the Spirit of Arina is destroyed, or the Eldar disengage", o: 1 }] },
   /* --- Book of the Void (25.10.2026) --- */
+  "fan-b-poi": { a: [{ id: "pass", l: "Results 2 and 4 on the table: what passing the test gives", d: "a passed test completes the point of interest, a failed one does not", o: 1, v: 1 },
+    { id: "beast", l: "Who moves the Warp Beast", d: "the player who did not reveal the marker moves the beast, toward the nearest ship", o: 1 },
+    { id: "raider", l: "The Alien Raider leaves at 2 hits or less", d: "that counts as destroyed by whoever did the last damage", o: 1, v: 1 }] },
+  "fan-b-chance": { a: [{ id: "sp", l: "Which sub-plot tables", d: "the Rulebook’s (RB p. 124–127)", s: "the source uses its own, BBGM p. 81–96", o: 1 }] },
+  "fan-b-starfort": { a: [{ id: "vp", l: "A quadrant crippled and then destroyed", d: "200 VP in all, not 300", o: 1, v: 1 }, { id: "ld", l: "The star fort’s Leadership", d: "each player rolls once for their two quadrants, as for a capital ship", s: "the source gives none; BBGM p. 351 rolls it as for a capital ship", o: 1 }] },
+  "fan-b-patrol": { a: [{ id: "edge", l: "How the reserves’ edge is rolled", d: "each player rolls once for their own division, and it moves on in that player’s first movement of the turn", o: 1 }] },
   "fan-v-first-contact": { t: ["Fixed forces"], a: [{ id: "corner", l: "Which corners the fleets set up in", d: "opposite corners: roll off, the winner picks a corner and deploys first", o: 1 }] },
   "fan-v-smash": { t: ["Fixed forces"], a: [{ id: "charge", l: "“Turns spent charging” in a collector’s explosion", d: "the turns played so far", o: 1 }] },
   "fan-v-eres": { t: ["Fixed forces"], a: [{ id: "left", l: "Uncaptured hulks when both players still have ships on the table", d: "nobody scores them (the game ends only when one fleet has gone, so normally one player is left)", o: 1, v: 1 }] },

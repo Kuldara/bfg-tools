@@ -5,6 +5,7 @@ Releases are tags `scenarios-v<version>`; the version is in `app.json`.
 ## Unreleased
 
 ### Added
+- Four scenarios from BBGM, a fan house-rules compilation by Bear, BinExis, DarthGoogle and Mazilka (May 2026): Points of Interest, Chance Encounter, Star Fort Assault and Patrol War. 220 scenarios. Its other scenarios are versions of ones already here and were left out.
 - Link preview (29.10.2026): a link to the app in Discord and elsewhere shows its own image (the app itself, the numbers from the data) and text. `npm test` fails when the image is out of date (`npm run og`).
 
 ### Changed
