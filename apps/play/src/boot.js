@@ -35,6 +35,9 @@ export function takeLinkFromAddress(){
     const p = raw ? parseDoc(raw) : null;
     const same = (g.src && g.src !== "builder") || !p || !p.o || fleetsIn(p.o).some(f => fnv(JSON.stringify([f.ln, f.units])) === g.fp);
     appState.V.screen = same ? "roster" : "load";
+    /* a record that opens on the roster is a game under way (its set-up,
+       from the menu, says Back to the game) */
+    if(same) appState.G.started = true;
   }
   takeLinkFromAddress();
   peerBoot();

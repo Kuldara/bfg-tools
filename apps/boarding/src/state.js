@@ -1,11 +1,40 @@
 /* The battle being set up, saved in localStorage, and the ship lookups on it. */
 
-import { FLEETS, KEY, OPT_EXPAND, SHIPS } from "./catalogue.js";
+import { FLEETS, KEY, OPT_EXPAND, SHIPBASE, SHIPS } from "./catalogue.js";
+import { crewOf } from "./play-link.js";
 import { RENEGADE_NEVER } from "./render.js";
 
 /* ------------------------------------------------------------------- state -- */
 export var S;
-export function blankSide(){ return {f:-1, ships:[], blast:0, orders:0, other:0}; }
+export function blankSide(){ return {f:-1, ships:[], blast:0, orders:0, other:0, otherValue:0}; }
+/* Opened inside Gothic Fleet Play: the battle comes with the page, and the result
+   goes back to it. */
+export var EMBED = false;
+function embedSide(p){
+  var s = blankSide();
+  (p && p.ships || []).forEach(function(x){
+    var row = crewOf(SHIPBASE, x);
+    if(!row) return;
+    if(s.f < 0) s.f = row.f;
+    var u = unitFromShip(row);
+    u.dp = x.dp; u.opts = (u.opts||[]).concat(x.opts||[]).filter(function(o,i,a){ return a.indexOf(o)===i; });
+    if(x.noField) u.opts = u.opts.filter(function(o){ return o!=="holofields"; });
+    if(x.tu != null) u.tu = x.tu;
+    if(x.q) u.q = x.q;
+    if(x.pj != null){ u.pj = x.pj; u.m = x.m; }
+    if(x.hints && x.hints.length) u.hints = x.hints;
+    s.ships.push(u);
+  });
+  s.blast = p && p.blast ? 1 : 0; s.orders = p && p.orders ? 1 : 0;
+  return s;
+}
+export function loadEmbed(p){
+  EMBED = true;
+  load();                                /* the dice preference stays */
+  var dice = S.dice;
+  S = {v:1, dice:dice, round:p.round||1, att:embedSide(p.att), def:embedSide(p.def)};
+  migrate();
+}
 export function blankState(){ return {v:1, dice:null, round:1, att:blankSide(), def:blankSide()}; }
 export function load(){
   try{
@@ -20,6 +49,7 @@ function migrate(){
   ["att","def"].forEach(function(k){
     var s = S[k]; s.ships = s.ships || []; s.blast = s.blast||0; s.orders = s.orders||0;
     s.other = +s.other || 0;
+    s.otherValue = +s.otherValue || 0;
     if(["one","high","low"].indexOf(s.dice6) < 0) s.dice6 = null;
     /* the fleet is stored as an index; a rebuilt data file must not crash it */
     if(typeof s.f !== "number" || s.f < 0 || s.f >= FLEETS.length){
@@ -117,7 +147,7 @@ export function eSide(k){
   var s = S[k];
   s.ships.forEach(function(u,i){ u._i = i; });
   return {race:s.f>=0?FLEETS[s.f].race:"none", ships:s.ships.map(eShip),
-          blast:!!s.blast, orders:!!s.orders, other:s.other||0,
+          blast:!!s.blast, orders:!!s.orders, other:s.other||0, otherValue:s.otherValue||0,
           diceOverride:s.dice6 || null};
 }
 /* Both sides have to have a ship chosen; whether those ships can still fight

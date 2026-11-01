@@ -82,6 +82,9 @@ export function act(name, i, arg){
      are there): the game record stays, the list offers Resume */
   /* a name under a grey Start: its row into view (the player's own tap) */
   if(name === "seek"){ const r = document.querySelector('.setrow[data-u="' + i + '"]'); if(r && r.scrollIntoView) r.scrollIntoView({ block: "center", behavior: "smooth" }); return; }
+  /* back to the set-up during a game (user 31.10.2026): Leadership, the
+     squadrons and the opponent's room; the game record stays */
+  if(name === "setupback"){ if(!appState.G) return; appState.V.menu = false; appState.V.sheet = null; appState.V.pop = null; appState.V.endph = false; appState.V.screen = "setup"; render(); window.scrollTo(0, 0); return; }
   if(name === "fleets"){ appState.V.menu = false; appState.V.sheet = null; appState.V.pop = null; appState.V.endph = false; appState.V.phone = null; appState.V.screen = "load"; render(); return; }
   if(name === "wake"){ lsSet(KEY_WAKE, lsGet(KEY_WAKE) === "0" ? "1" : "0"); wake(); render(); return; }
   if(name === "pop"){
@@ -142,7 +145,7 @@ export function act(name, i, arg){
     case "on": appState.G.on = appState.G.on || {}; appState.G.on[i] = arg; break;
     case "wl2": st.wl2 = !st.wl2; break;
     case "grp": { const seq = [null, "A", "B", "C"]; appState.G.grp[i] = seq[(seq.indexOf(appState.G.grp[i]) + 1) % seq.length]; break; }
-    case "start": appState.V.screen = "roster"; break;
+    case "start": appState.G.started = true; appState.V.screen = "roster"; break;
     /* which quadrant of a star fort the card shows and the next tap goes
        to: a choice of view, not an event - nothing for UNDO to take back,
        and an open table stays open and follows the quadrant */
@@ -244,6 +247,29 @@ export function act(name, i, arg){
       st.hulkName = row.name; st.hulkText = row.text;
       appState.V.pop = null; break;
     }
+    /* a boarding action's result (board.js): the hits are the action's total,
+       a critical's extra damage already in it; a ship boarded to 0 is a drifting
+       hulk without a roll (p. 90) */
+    case "boardres": arg.forEach(x => {
+      if(PLAY.isEscort(R)){ if(x.fin <= 0) PLAY.killMember(st, x.m); return; }
+      PLAY.addHits(R, st, x.before - x.fin);
+      x.crits.forEach(c => {
+        const keys = R.damage && R.damage.critical && R.damage.critical.rows ? R.damage.critical.rows.map(r => String(r[0])) : [];
+        if(!PLAY.standardCrits(R) && keys.indexOf(String(c.n)) < 0) return;
+        const k = PLAY.addCrit(st, String(c.n), R);
+        if(k === "9" && PLAY.standardCrits(R)){
+          if(i === appState.G.flag && !fleet.rerollsLost) PLAY.flagshipBridgeSmashed(fleet);
+          cmdsAboard(i).filter(coCmd).forEach(j => { if(!appState.G.st[j].rerollsLost) PLAY.flagshipBridgeSmashed(appState.G.st[j]); });
+        }
+      });
+      const c = PLAY.catastrophic(R);
+      const row = x.state === "hulk" && c.boarded ? { kind: "drifting", name: c.rows[0].name, text: c.rows[0].text + " (boarded to 0: no roll, p. 90)" }
+        : x.cata ? (c.rows || []).find(r => r.name === x.cata.name) : null;
+      if(row && PLAY.destroyed(R, st)){
+        if(row.kind === "gone"){ st.destroyed = true; st.hulk = null; } else st.hulk = row.kind;
+        st.hulkName = row.name; st.hulkText = row.text;
+      }
+    }); break;
     case "diseng": st.disengaged = !st.disengaged; break;
     /* --- opt-in tracking (menu > Tracking); no button emits these when off --- */
     case "brace": members(i).forEach(j => PLAY.setOrder(appState.G.st[j], fleet, "BFI", true)); appState.V.pop = null; break;
@@ -294,6 +320,7 @@ export function act(name, i, arg){
          Blast Marker (p. 71), a one-hit defence nothing the book names
          (p. 101) - no table opens */
       if(after.escort) toast(unitName(i) + ": " + (R.hulls > 1 ? "all " + R.hulls + " destroyed" : "destroyed") + ". " + c.rows[0].text, "crip");
+      else if(st.hulkName) toast(unitName(i) + ": " + st.hulkName, "crip");
       else {
         toast(unitName(i) + " is out of action: " + (c.dice ? "roll " + c.dice + " on the " + c.title + " table (" + (c.fleets ? "Fleets " : "") + "p. " + c.page + ")" : c.rows[0].text), "crip");
         /* the table opens on the card by itself, with this ship's numbers */

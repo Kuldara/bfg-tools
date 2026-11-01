@@ -253,8 +253,13 @@
       "key": "Allied vessels taken in this way cannot be placed in squadrons with vessels in the core fleet",
       "text": "Allied vessels taken in this way cannot be placed in squadrons with vessels in the core fleet unless specifically allowed to in the core fleet's list, nor can they use the core fleet's re-rolls unless specifically allowed to.",
       "page": 16,
-      "status": "out_of_scope",
-      "why": "Two sides, both outside the app. Squadron composition: in the app one unit IS one squadron, so an ally and a core ship cannot be put in the same squadron - the structure prevents it. Re-rolls: they are an in-game resource that the app does not distribute to ships; it shows only the number. Neither is a fleet composition rule. The squadron pool (J42) already exists; it must know the role, so it does not mix an ally into a host squadron."
+      "status": "enforced",
+      "enforced_by": "fleet_golden",
+      "goldens": [
+        "squadron-merge-ally-into-core",
+        "squadron-merge-reserve-escort-joins-own"
+      ],
+      "why": "Squadron composition (31.10.2026, squadron merge): a squadron letter can now put a borrowed ship into a core squadron, so an ally there is a red row 'Allied vessels in squadron X' (checkSquadronMix); a reserve is not an ally and may join. Exploration (p.187) allows auxiliaries in its escort squadrons. Re-rolls stay outside the app: they are an in-game resource the app does not distribute to ships."
     },
     {
       "key": "the number of allied vessels the fleet takes is only limited by the rules applied to the allied fleet",

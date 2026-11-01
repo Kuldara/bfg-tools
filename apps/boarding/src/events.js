@@ -1,7 +1,7 @@
 /* The clicks on the board and on the result sheet, and what they change. */
 
 import { B } from "./catalogue.js";
-import { S, cloneUnit, eShip, eSide, profile } from "./state.js";
+import { EMBED, S, cloneUnit, eShip, eSide, profile } from "./state.js";
 import { esc, prep, render } from "./render.js";
 import { diceReady, pending, resetRound } from "./action.js";
 import { openSheet, pickDp, pickFleet, pickShip, showMods, showValue } from "./sheets.js";
@@ -94,8 +94,26 @@ function allocStep(key, d){
 /* Damage lands: the boarding damage as allocated, plus each critical's extra
    damage on the ship that suffered that critical. Extra damage from a critical
    never causes further critical hits (p.66). */
+/* Inside Gothic Fleet Play: what happened to each hull goes back to the page. */
+function resultForPlay(){
+  var out = [];
+  ["att","def"].forEach(function(k){
+    livingIdx(k).forEach(function(i){
+      var u = S[k].ships[i], o = outcome(k,i), r = o.state==="cata" ? R.cata[k+":"+i] : null;
+      var crits = R.crits.filter(function(c){ return c.to===k && c.i===i && c.hit && c.table; });
+      out.push({pj:u.pj==null?null:u.pj, m:u.m, name:shipName(k,i), before:u.dp, fin:(o.state==="destroyed")?0:o.fin, state:o.state,
+        crits:crits.map(function(c){ return {n:c.tableN, name:c.table.name||""}; }), cata:r?{name:r.name, text:r.text||""}:null});
+    });
+  });
+  return out;
+}
+export function tellPlay(m){
+  var to = window.opener || (window.parent !== window ? window.parent : null);   /* a new tab, or over the page */
+  if(EMBED && to) to.postMessage(Object.assign({bfgBoarding:1}, m), "*");
+}
 function applyResult(){
   var notes = [];
+  var forPlay = EMBED ? resultForPlay() : null;
   ["att","def"].forEach(function(k){
     livingIdx(k).forEach(function(i){
       var o = outcome(k,i);
@@ -111,9 +129,12 @@ function applyResult(){
       }
     });
   });
-  spendOncePerGame(notes);
+  var spent = [];
+  spendOncePerGame(spent);
+  notes = notes.concat(spent);
   S.round = 1;
   closeResult();
+  if(EMBED){ tellPlay({t:"result", ships:forPlay, spent:spent.length>0}); return; }
   if(notes.length) flash(notes.join(" · "));
 }
 /* "+2 to one boarding dice roll per game" (FL p.374): once it has been used in
@@ -201,6 +222,7 @@ export function wireEvents(){
         spendOncePerGame(spent);
         S.round++;
         closeResult();
+        tellPlay({t:"round", round:S.round, spent:spent.length>0});
         if(spent.length) flash(spent.join(" · "));
         break;
       }

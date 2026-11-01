@@ -15,11 +15,11 @@
    boot(), which adds the listeners, loads the saved battle and draws it. */
 
 import { B } from "./catalogue.js";
-import { S, load } from "./state.js";
+import { EMBED, S, load, loadEmbed } from "./state.js";
 import { render } from "./render.js";
 import { clearPending, resetRound } from "./action.js";
 import { wireSheets } from "./sheets.js";
-import { wireEvents } from "./events.js";
+import { tellPlay, wireEvents } from "./events.js";
 import { askReset, showRef } from "./reference.js";
 
 /* ------------------------------------------------------------------- wiring */
@@ -43,7 +43,23 @@ export function boot(){
     resetRound();                         /* this is a new action with a new boarder */
     render();
   });
-  load();
+  var inPlay = /^#play=(.+)$/.exec(location.hash);
+  var given = null;
+  if(inPlay){ try{ given = JSON.parse(decodeURIComponent(inPlay[1])); }catch(e){} }
+  if(given){
+    loadEmbed(given);
+    var top = document.getElementById("top");
+    var back = document.createElement("button");
+    back.className = "ghost"; back.id = "backToPlay"; back.textContent = "\u2039 Play";
+    back.setAttribute("aria-label", "Back to Gothic Fleet Play");
+    back.addEventListener("click", function(){
+      /* a tab whose Play page is gone has nobody to answer: it closes itself */
+      tellPlay({t:"close"});
+      if(window.opener) window.close();
+    });
+    top.insertBefore(back, top.firstChild);
+    document.getElementById("resetAllBtn").style.display = "none";
+  } else load();
   render();
   window.S = S; window.render = render; window.BOARDING = B;
 }

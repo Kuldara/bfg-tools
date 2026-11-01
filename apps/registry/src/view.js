@@ -9,6 +9,8 @@ import { renderSaves } from "./saved-fleets.js";
 import { appState } from "./state.js";
 import { mixActive, mixGroups, mixGroupHTML, mixHulls, mixMember, mixRowHTML, mixRule, mixSec, mixStart, mixStop, mixUnits, sqErrorsHTML } from "./mixed.js";
 import { aboardHTML, fleetResolved } from "./validation.js";
+import { dropMergeTarget, mergeChoice, mergeInto } from "./merge.js";
+import { cmdOnShipHTML, cmdPointerHTML, cmdStripes } from "./aboard-ship.js";
 import { infoBtnHTML, rowHasInfo } from "./info.js";
 import { refitInfoHTML } from "./refit-tables.js";
 import { baAddOne, baHintHTML, baInTarget, baRowTag, baSec, baState, baSubOne, baTopHTML, isBaSec } from "./commandeered.js";
@@ -846,10 +848,10 @@ export function unitHTML(R, ui, st){
       ${fold ? `<button type="button" class="ufold" data-unfold="${ui}" aria-expanded="${fold === "open"}" aria-label="${foldTip}" title="${foldTip}">${fold === "open" ? "▾" : "▸"}</button><button type="button" class="cls" data-unfold="${ui}" aria-expanded="${fold === "open"}" title="${foldTip}">${esc(title(R.className))}</button>`
              : `<span class="cls">${esc(title(R.className))}</span>`}${ship ? infoBtnHTML("u:" + ui, "Everything about this ship") : ""}${role}
       ${R.entry && R.entry.badRef ? '<span class="ty" style="color:var(--bad)">source page ref wrong</span>' : ""}
-      <span class="ty">${esc(ship ? R.stats.type
+      <span class="ty">${st.ab && st.ab.tag ? esc(st.ab.tag) + " " : ""}${esc(ship && st.ab && st.ab.tag ? String(R.stats.type).toLowerCase() : ship ? R.stats.type
         : R.kind === "commander" ? "commander"
         : R.defence ? (R.defence.ground ? "low orbit defence" : "high orbit defence")
-        : "fleet option")}${grouped ? " squadron" : ""}</span>
+        : "fleet option")}${grouped && !(st.ab && st.ab.tag) ? " squadron" : ""}</span>
       <span class="pts">${R.points} pts${each}${
         R.maxPoints > R.points ? `<span class="maxp">max ${R.maxPoints}</span>` : ""}</span>
       <button class="del" data-del="${ui}" title="Remove this unit">Remove</button>
@@ -1069,33 +1071,33 @@ export function renderFleet(){
   const onHulk = ui => { const a = abOf[ui]; return !!(a && a.ship != null && isOrkHulkUnit(RF.units[a.ship])); };
   /* a Clanz tiddla card: Mob Rule and Young Gunz, as information (p. 372) */
   const tidHint = u => L().clanz && skwKind(u) === "tiddla" ? `<div class="uctl">${orkTiddlaHint(u.n || 1)}</div>` : "";
+  /* the commander seen from his ship, and the ship from his row (user
+     31.10.2026, aboard-ship.js) */
+  const cmdOf = ui => { const R = RF.units[ui]; return !R ? "" : R.kind === "ship" ? cmdOnShipHTML(RF, ui) : R.kind === "commander" ? cmdPointerHTML(RF, ui) : ""; };
   const rowOf = (u, ui, more) => unitRowHTML(u, ui,
-    { a: abOf[ui] || null, RF: RF, extra: (extra[ui] || "") + tidHint(u) + (more || ""), hide: hideOf[ui] || [], dim: dimOf[ui] || [], send: sendOf[ui] || "", hulk: onHulk(ui),
+    { a: abOf[ui] || null, RF: RF, extra: cmdOf(ui) + (extra[ui] || "") + (memberOf[ui] ? "" : tidHint(u)) + (more || ""), hide: hideOf[ui] || [], dim: dimOf[ui] || [], send: sendOf[ui] || "", hulk: onHulk(ui),
+      /* a Blood Axe's commandeered escort in its mixed tiddla says so (p. 371) */
+      tag: memberOf[ui] && isCommandeered(u) ? "commandeered" : "",
       /* J234: "" without Compact, else this unit "shut" or "open" */
       fold: appState.FLEET_FOLD ? (UOPEN.has(u) ? "open" : "shut") : "" });
   /* Mixed squadron (prototype): two or more cards with one letter are one
-     group row, drawn where the first card is; its cards show under it when
-     the row is open. The squadron being filled is a row even while empty. */
+     group header, drawn where the first card is, with its cards always right
+     under it (user 31.10.2026: one fold less; each card keeps its own fold
+     in Compact). The squadron being filled is a row even while empty. */
   const groups = mixGroups(), memberOf = {};
   groups.forEach(g => g.idx.forEach(j => { memberOf[j] = g; }));
-  appState.MIXOPEN = appState.MIXOPEN || new Set();
+  const kid = (html, last) => html.replace(/^<div class="unit/, `<div class="unit mixkid${last ? " mixlast" : ""}`);
   box.innerHTML = appState.S.units.map((u, ui) => {
     const g = memberOf[ui];
     /* a card alone with its letter is a squadron too: its red rows on it */
     if(!g) return rowOf(u, ui, u.sq && !u.lst && mixSec(u.s) ? sqErrorsHTML(u.sq) : "");
     if(ui !== g.first) return "";
-    const open = appState.MIXOPEN.has(g.tag);
-    return mixGroupHTML(g, open) + (open ? g.idx.map(j => rowOf(appState.S.units[j], j)).join("") : "");
-  }).join("") + groups.filter(g => !g.idx.length).map(g => mixGroupHTML(g, false)).join("");
+    return mixGroupHTML(g) + g.idx.map((j, k) => kid(rowOf(appState.S.units[j], j), k === g.idx.length - 1)).join("");
+  }).join("") + groups.filter(g => !g.idx.length).map(g => mixGroupHTML(g)).join("");
   box.querySelectorAll("[data-unfold]").forEach(b => b.onclick = () => {
     const u = appState.S.units[+b.dataset.unfold];
     if(!u) return;
     if(UOPEN.has(u)) UOPEN.delete(u); else UOPEN.add(u);
-    render();
-  });
-  box.querySelectorAll("[data-mixfold]").forEach(b => b.onclick = () => {
-    const t = b.dataset.mixfold;
-    if(appState.MIXOPEN.has(t)) appState.MIXOPEN.delete(t); else appState.MIXOPEN.add(t);
     render();
   });
   box.querySelectorAll("[data-mixdone]").forEach(b => b.onclick = () => { mixStop(); render(); });
@@ -1112,6 +1114,13 @@ export function renderFleet(){
     if(appState.MIX && appState.MIX.tag === g.tag) mixStop();
     render();
   });
+  { const stripe = cmdStripes(RF, !!L().clanz);
+    box.querySelectorAll(".unit[data-ui]").forEach(row => {
+      const c = stripe[+row.dataset.ui];
+      if(c == null) return;
+      row.classList.add("cmdc");
+      row.style.setProperty("--wl", c);
+    }); }
   if(wsC.length) box.querySelectorAll(".unit").forEach(row => {
     const i = row.dataset.ui != null ? +row.dataset.ui : +row.dataset.mixui, w = i >= 0 ? wlOf(i) : -1;
     if(w < 0) return;
@@ -1125,6 +1134,13 @@ export function renderFleet(){
     const u = appState.S.units[+sel.dataset.u];
     if(!u) return;
     if(sel.value) u.sq = sel.value; else delete u.sq;
+    render();
+  });
+  /* Squadron merge (31.10.2026): the open unit's Squadron menu */
+  box.querySelectorAll(".mergein").forEach(sel => sel.onchange = () => {
+    const u = appState.S.units[+sel.dataset.u];
+    if(!u || !sel.value) return;
+    mergeChoice(u, sel.value);
     render();
   });
   box.querySelectorAll(".wlin").forEach(sel => sel.onchange = () => {
@@ -1189,9 +1205,12 @@ export function renderFleet(){
     const now = parseInt(el.textContent, 10), was = LAST_PTS.get(u);
     if(was != null && was !== now) el.classList.add("bump");
     LAST_PTS.set(u, now);
-    if(appState.JUST && appState.JUST.unit === u) row.classList.add("new");
+    if(appState.JUST && appState.JUST.unit === u) row.classList.add(appState.JUST.merged ? "merged" : "new");
     if(GOING.has(u)) row.classList.add("going");
   });
+  /* a merge pulls its squadron's group row together (merge.js) */
+  if(appState.JUST && appState.JUST.merged)
+    box.querySelectorAll(".unit.mixg").forEach(r => { if(r.dataset.mixtag === appState.JUST.merged) r.classList.add("merged"); });
 
   /* Remove answers first and acts after: the button and its row turn red
      for a moment, then the unit goes, and the next unit's Remove is brought
@@ -1212,10 +1231,18 @@ export function renderFleet(){
       appState.JUST = { pop: rowSelOf(u), keep: now && i < appState.S.units.length ? [{ sel: at, mid: midY(now) }] : null };
       render();
     }, GOING_MS); });
-  /* Reorder: drag a row's grip onto another row (above or below its
-     middle), or press an arrow key on the grip. */
+  /* Reorder: drag a row's grip onto another row (its top or bottom edge),
+     or press an arrow key on the grip. Merge (31.10.2026): drop it on the
+     middle of a row of its kind - a unit or a squadron - and the two are one
+     squadron. The two look apart all the way: a reorder draws a line
+     between the rows, a merge rings the row it would join and says
+     "Merge" on it (red-edged when the book forbids the mix, which is still
+     done), and after the drop a reorder washes the moved row while a merge
+     pulls the squadron together. */
   let dragFrom = null;
-  const clearMarks = () => box.querySelectorAll(".unit").forEach(u => u.classList.remove("dragging", "over-before", "over-after"));
+  const clearMarks = () => box.querySelectorAll(".unit").forEach(u => {
+    u.classList.remove("dragging", "over-before", "over-after", "over-merge", "over-merge-bad");
+    delete u.dataset.mergeLabel; });
   box.querySelectorAll(".grip").forEach(g => {
     g.ondragstart = e => {
       dragFrom = +g.dataset.grip;
@@ -1241,22 +1268,43 @@ export function renderFleet(){
       if(ng) ng.focus();
     };
   });
+  const RFm = fleetResolved();
   box.querySelectorAll(".unit").forEach(row => {
     const half = e => { const r = row.getBoundingClientRect(); return e.clientY < r.top + r.height / 2; };
+    /* the middle of the row merges: a quarter of the row at each edge, at
+       most 22 px, stays a reorder (a one-line row is half merge) */
+    const zone = e => {
+      const r = row.getBoundingClientRect(), edge = Math.min(22, r.height / 4), y = e.clientY - r.top;
+      return y < edge ? "before" : y > r.height - edge ? "after" : "mid"; };
+    const mergeAt = e => dragFrom != null && zone(e) === "mid" ? dropMergeTarget(dragFrom, row, RFm) : null;
     row.ondragover = e => {
       if(dragFrom == null) return;
       e.preventDefault();
-      try{ e.dataTransfer.dropEffect = "move"; }catch(x){}
+      const m = mergeAt(e);
+      try{ e.dataTransfer.dropEffect = m ? "link" : "move"; }catch(x){}
+      if(m){
+        row.classList.remove("over-before", "over-after");
+        row.classList.add("over-merge"); row.classList.toggle("over-merge-bad", !!m.warn);
+        row.dataset.mergeLabel = m.warn ? "Merge – " + m.warn : m.tag ? "Merge into squadron " + m.tag : "Merge into one squadron";
+        return;
+      }
+      row.classList.remove("over-merge", "over-merge-bad"); delete row.dataset.mergeLabel;
+      if(row.dataset.ui == null){ row.classList.remove("over-before", "over-after"); return; }
       const before = half(e);
       row.classList.toggle("over-before", before); row.classList.toggle("over-after", !before);
     };
-    row.ondragleave = () => row.classList.remove("over-before", "over-after");
+    row.ondragleave = () => { row.classList.remove("over-before", "over-after", "over-merge", "over-merge-bad"); delete row.dataset.mergeLabel; };
     row.ondrop = e => {
       if(dragFrom == null) return;
       e.preventDefault();
-      const idx = +row.dataset.ui, from = dragFrom;
+      const idx = +row.dataset.ui, from = dragFrom, m = mergeAt(e);
       dragFrom = null;
       dragScrollStop();
+      if(m){
+        const mu = appState.S.units[from];
+        if(mergeInto(mu, m.tag || m.unit)){ render(); return; }
+      }
+      if(!(idx >= 0)){ clearMarks(); return; }
       let to = half(e) ? idx : idx + 1;
       if(to > from) to--;                 /* the row leaves its old slot first */
       const mu = appState.S.units[from];

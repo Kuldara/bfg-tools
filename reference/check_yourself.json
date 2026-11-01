@@ -1767,7 +1767,7 @@
   },
   {
    "id": "S0251",
-   "g": "play",
+   "g": "checked",
    "f": "card_rule",
    "p": 121,
    "text": "Mechanicus vessels cannot be placed in squadrons with Rogue Trader, regular Imperial Navy or Adeptus Astartes vessels."

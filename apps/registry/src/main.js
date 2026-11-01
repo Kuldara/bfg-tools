@@ -6,7 +6,8 @@ import { placeSaves } from "./panels.js";
 import { copyInPlace, openPhone } from "./phone.js";
 import { PRINT, auditAllCardLayouts, auditOneCard, listText, printCards, printFitPct, printRoster, setPage, setPrint } from "./print.js";
 import { STASH_PTS, load, save, stashAll, stashUnits } from "./save.js";
-import { KEY_LIB, afterAdd, doSave, exportSaved, libAddText, libDelete, libDocument, libOpen, libRead, renderSaveNow } from "./saved-fleets.js";
+import { KEY_LIB, afterAdd, doSave, exportSaved, libAddText, libDelete, libDocument, libOpen, libRead, renderSaveNow, renderSaves } from "./saved-fleets.js";
+import { savesChange, savesClick, savesDblClick, savesInput, savesKey } from "./saved-list.js";
 import { showLinkDialog } from "./link-dialog.js";
 import { appState } from "./state.js";
 import { DRAGS, dragScrollAt, dragScrollStop, dragTopEdge, render, renderChecks, renderTop } from "./view.js";
@@ -93,6 +94,25 @@ if(document.addEventListener && typeof window !== "undefined" && window.matchMed
     mark();
   }
 }
+/* J243 (user 31.10.2026: "saisi olla selkeämpi jos on jo ylhäällä ja
+   räplää sitä"): on a phone Menu shows only once the buttons have gone
+   half under the points strip, where pinning them does something. */
+if(document.addEventListener && typeof window !== "undefined" && window.matchMedia){
+  const strip = $(".tb-strip"), head = document.querySelector && document.querySelector(".tb-head"),
+    acts = document.querySelector && document.querySelector(".tb-acts");
+  if(strip && head && acts && head.getBoundingClientRect && strip.classList){
+    let q = false;
+    const mark = () => {
+      q = false;
+      /* where the buttons would be if not pinned: right under the head */
+      const far = head.getBoundingClientRect().bottom + acts.offsetHeight / 2 < 0;
+      strip.classList.toggle("far", far);
+    };
+    window.addEventListener("scroll", () => { if(!q){ q = true; requestAnimationFrame(mark); } }, { passive: true });
+    window.addEventListener("resize", mark);
+    mark();
+  }
+}
 /* dragover anywhere on the page - over the legality panel or the sticky bar
    too, where no fleet row listens - drives the drag auto-scroll */
 if(document.addEventListener){
@@ -100,7 +120,19 @@ if(document.addEventListener){
   document.addEventListener("dragend", dragScrollStop);
   document.addEventListener("drop", dragScrollStop);
 }
+/* the saved fleets browser: search, sort, chips, rows (saved-list.js) */
+const redrawSaves = () => { renderSaves(); placeSaves(); };
+const openFromList = id => { $("#saves").open = false; libOpen(id); };
+$("#saves").oninput = e => { savesInput(e, redrawSaves); };
+$("#saves").onchange = e => { savesChange(e, redrawSaves); };
+$("#saves").ondblclick = e => { const id = savesDblClick(e); if(id) openFromList(id); };
+$("#saves").onkeydown = e => {
+  const r = savesKey(e, redrawSaves);
+  if(typeof r === "string" && r.indexOf("open:") === 0) openFromList(r.slice(5));
+  else if(r === "close"){ $("#saves").open = false; const sm = $("#saves").querySelector("summary"); if(sm) sm.focus(); }
+};
 $("#saves").onclick = e => {
+  if(e.target.closest && savesClick(e, redrawSaves)) return;
   const cpt = e.target.closest ? e.target.closest("button[data-copytext]") : null;
   if(cpt){ const d = libDocument(cpt.dataset.copytext); if(d) copyInPlace(cpt, JSON.stringify(d, null, 1), cpt.dataset.copytext); return; }
   const lo = e.target.closest ? e.target.closest("button[data-libopen]") : null;
@@ -151,7 +183,12 @@ $("#saves").onclick = e => {
   if(!b) return;
   if(b.dataset.drop === L().nm) clearOpen(); else dropKept(b.dataset.drop);
 };
-$("#saves").ontoggle = placeSaves;
+$("#saves").ontoggle = () => {
+  placeSaves();
+  /* a pointer with hover (a PC): the search box takes the typing at once */
+  const q = $("#savesq");
+  if($("#saves").open && q && window.matchMedia && window.matchMedia("(hover:hover) and (pointer:fine)").matches) q.focus({ preventScroll: true });
+};
 $("#printset").ontoggle = placeSaves;
 window.onresize = placeSaves;
 $("#ppaper").onchange = e => setPrint(e.target.value, null);

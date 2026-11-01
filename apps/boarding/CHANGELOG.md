@@ -5,6 +5,13 @@ Releases are tags `boarding-v<yyyy.mm.dd>`.
 ## Unreleased
 
 ### Added
+- Boarding value by hand: the boarding value's sheet has its own "Anything else" beside the roll's, for campaign rewards and house rules.
+- Opens inside Gothic Fleet Play (`boarding.html#play=...`), with the battle from the fleet and the result sent back.
+
+### Fixed
+- Mega-armoured boarding parties are not offered to escorts (Fleets p. 372).
+
+### Added
 - Link preview (29.10.2026): a link to the app in Discord and elsewhere shows its own image (the app itself, the numbers from the data) and text. `npm test` fails when the image is out of date (`npm run og`).
 
 ### Changed

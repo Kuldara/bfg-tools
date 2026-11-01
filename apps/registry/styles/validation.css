@@ -90,3 +90,17 @@
 .uctl.aboard select{max-width:100%}
 .empty{padding:22px 14px;color:var(--ink-3);font-size:13px;text-align:center}
 
+/* The commander seen from his ship (31.10.2026, aboard-ship.js): one
+   stripe colour for a commander's row and his ship's, and on the ship's row
+   what he brings aboard */
+.unit.cmdc{box-shadow:inset 5px 0 0 var(--wl)}
+.cmdon{margin:8px 0 2px;padding:7px 10px;border:1px solid var(--line);border-left:4px solid var(--wl);border-radius:var(--r);
+  background:var(--ground);display:flex;flex-direction:column;gap:5px}
+.cmdhd{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 8px;font-size:13px}
+.cmdhd .abl{font:500 11px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3)}
+.cmdbits{display:flex;flex-wrap:wrap;gap:4px}
+.cmdbits .fx{padding:0 6px;border:1px solid var(--wl);border-radius:3px;background:var(--sunk);color:var(--ink);font-size:11.5px;font-weight:600;line-height:1.6}
+.cmdup{display:flex;flex-wrap:wrap;align-items:center;gap:3px 8px;font-size:12.5px}
+.cmdup .cul{font-weight:600}
+.cmdup .upfx{--wl:var(--line);grid-column:auto;margin-top:0}
+.cmdptr{margin-top:-2px}

@@ -4,9 +4,10 @@ import { fleetsIn, parseDoc, resolveFleet } from "./fleet-document.js";
 import { loadPlay, newGame, resumeGame, save } from "./game-state.js";
 import { act } from "./actions.js";
 import { render, tapSel } from "./render.js";
-import { builderFleets, copyText, forgetLinked, linkedFleets, phoneLink, shareText, takeFleetText } from "./share.js";
+import { builderFleets, copyText, forgetLinked, linkedFleets, phoneLink, saveFleetFile, shareText, takeFleetText } from "./share.js";
 import { qrFull } from "../../../packages/ui/qr.js";
 import { peerAct } from "./peer.js";
+import { boardAct } from "./board.js";
 
 /* ============================================================== EVENTS ===== */
 document.addEventListener("touchstart", () => {}, { passive: true });   /* :active on iOS */
@@ -25,14 +26,15 @@ document.addEventListener("click", ev => {
   const tr = el.getBoundingClientRect();
   appState.TAP = { sel: tapSel(el), top: tr.top + tr.height / 2 };
   /* a tap inside the menu box is not a tap on the backdrop */
-  if((name === "menu" || name === "endph" || name === "peerpanel") && el.classList.contains("menu") && ev.target.closest(".box")) return;
+  if((name === "menu" || name === "endph" || name === "peerpanel" || name === "boardclose") && el.classList.contains("menu") && ev.target.closest(".box")) return;
   /* the opponent's fleet is to look at: its cards take no taps */
   if(el.closest(".peerview")) return;
   if(peerAct(name, el)) return;
+  if(boardAct(name, el)) return;
   const i = el.hasAttribute("data-i") ? parseInt(el.getAttribute("data-i"), 10) : null;
   let arg = el.hasAttribute("data-arg") ? el.getAttribute("data-arg") : undefined;
   if(arg != null && /^-?\d+$/.test(arg)) arg = parseInt(arg, 10);
-  if(name === "resume"){ const g = loadPlay(); if(g && resumeGame(g)){ appState.V.screen = "roster"; } else { appState.V.loadErr = "The saved game could not be resumed against this roster."; } render(); return; }
+  if(name === "resume"){ const g = loadPlay(); if(g && resumeGame(g)){ appState.G.started = true; appState.V.screen = "roster"; } else { appState.V.loadErr = "The saved game could not be resumed against this roster."; } render(); return; }
   if(name === "newfrom"){
     const f = builderFleets()[arg]; if(!f) return;
     const res = resolveFleet(f); if(res.error) return;
@@ -49,6 +51,7 @@ document.addEventListener("click", ev => {
   if(name === "unlink"){ forgetLinked(arg); render(); return; }
   /* the QR code and the link for a builder fleet: open under its button */
   if(name === "phone"){ appState.V.phone = appState.V.phone === arg ? null : arg; appState.V.copied = ""; render(); if(appState.V.phone != null) phoneLink(arg); return; }
+  if(name === "savefile"){ saveFleetFile(arg); return; }
   if(name === "qrfull"){ if(appState.V.phoneSvg) qrFull(appState.V.phoneSvg); return; }
   if(name === "copylink"){ copyText(appState.V.phoneUrl || "", "link"); return; }
   if(name === "sharelink"){ shareText("Gothic Fleet Play", appState.V.phoneUrl || ""); return; }

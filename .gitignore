@@ -32,3 +32,6 @@ apps/registry/_sheet_check/
 # The Meta Almanac data downloads: generated, 5.8 MB, from the almanac project
 # or the live site at build time (apps/almanac/build.js)
 apps/almanac/site/data/
+
+# Wrangler local state (npm run relay:dev)
+.wrangler/

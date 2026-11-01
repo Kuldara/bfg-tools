@@ -57,6 +57,8 @@ const STEPS = [
   ["registry",  "Blood Axe escorts (Chrome)", ["node", "apps/registry/check_bloodaxe.js"], { slow: true }],
   ["registry",  "Ork Clanz UI (Chrome)",   ["node", "apps/registry/metrics/clanz.js", "--mode=browse"], { slow: true }],
   ["play",      "rules and smoke",         ["node", "apps/play/test_play.js"]],
+  ["play",      "fleets into boarding",    ["node", "apps/play/test_board_link.js"]],
+  ["play",      "Board button (Chrome)",   ["node", "apps/play/check_board.js"], { slow: true }],
   ["boarding",  "engine",                  ["node", "apps/boarding/test_engine.js"]],
   ["boarding",  "fuzz",                    ["node", "apps/boarding/test_fuzz.js"]],
   ["boarding",  "page walks (Chrome)",     ["node", "apps/boarding/test_page.js"], { slow: true }],

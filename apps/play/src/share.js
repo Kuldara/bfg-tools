@@ -7,7 +7,7 @@ import { baseName, unitName } from "./derived.js";
 import { render } from "./render.js";
 import { PHONE_LINK, packFleet } from "../../../packages/ui/share-link.js";
 import DOMAIN from "../../../packages/rules/domain.js";
-import { qrSvg } from "../../../packages/ui/qr.js";
+import { readableQr } from "../../../packages/ui/qr.js";
 import PLAY from "../rules.js";
 import { esc, factionCols } from "../../../packages/ui/format.js";
 
@@ -98,8 +98,7 @@ export async function phoneLink(key){
     const base = playBase();
     appState.V.phoneUrl = base.url + "#" + await packFleet(d); appState.V.phoneRemote = base.remote;
     appState.V.phoneN = 1 + (d.fleets || []).length;
-    try{ appState.V.phoneSvg = qrSvg(appState.V.phoneUrl); }
-    catch(e){ appState.V.phoneErr = appState.V.phoneN + " fleets are too long a link for one QR code (" + appState.V.phoneUrl.length + " characters). Share or copy the link instead - a phone opens it all the same - or send the fleets one by one."; }
+    appState.V.phoneSvg = readableQr(appState.V.phoneUrl);
   }catch(e){ appState.V.phoneErr = String(e && e.message || e); }
   if(appState.V.phone === key) render();
 }
@@ -110,6 +109,17 @@ export function copyText(text, what){
     if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text) && done()); return; }
   }catch(e){}
   if(fallbackCopy(text)) done();
+}
+/* The fleets of a "to phone" as a file: the way when the link is too long for
+   a code. The builder's Import file and this page's Open a fleet file read it. */
+export function saveFleetFile(key){
+  const d = phoneDoc(key);
+  if(!d) return;
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([JSON.stringify(d, null, 1)], { type: "application/json" }));
+  a.download = (d.fleets ? (1 + d.fleets.length) + " fleets" : String(d.name || d.ln).replace(/[^\w .()-]+/g, "_")) + ".json";
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
 }
 export function fallbackCopy(text){
   const t = document.createElement("textarea"); t.value = text; t.setAttribute("readonly", ""); t.style.position = "fixed"; t.style.opacity = "0";

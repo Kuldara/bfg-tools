@@ -108,3 +108,11 @@ hit-and-run and teleports p. 92.
     bars them from Chaos Lords, Chaos Space Marines and Chaos ordnance, and p. 225
     says a Mark always needs a Lord or CSM crew. They get only the +1 for Chaos,
     and the app hides Marks and crew upgrades from them.
+23. **A hand-entered boarding value counts for the whole side, once.** Campaign
+    rewards and house rules that change the value have no rule to follow; it is
+    added after turrets, and the total does not go below 0.
+24. **Opened from Gothic Fleet Play, a Chaos Lord's Mark works on his ship.** The
+    Mark is bought on the Lord (FL p. 242: "the Chaos Lord's ship doubles its value
+    in boarding actions"), so a ship with him aboard gets it. A Clanz Warlord's +2
+    is offered and not spent by itself: it is "one boarding dice roll per game"
+    (FL p. 374), the player's to pick.

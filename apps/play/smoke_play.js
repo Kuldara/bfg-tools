@@ -197,6 +197,17 @@ function run(check){
       clean("the card of " + nm + " with rules shown", P(`V.sheet = ${i}; V.info = true; __h = renderSheet(${i}); V.info = false; V.sheet = null; __h`));
     }
     clean("the menu", P(`renderMenu()`));
+    /* back to the set-up during a game (user 31.10.2026: "joku keino päästä
+       takaisin siihen setup ruutuun missä leadership ja room liittyminen") */
+    check("smoke: the menu has a way back to the set-up (Leadership, squadrons, the opponent's room)", /data-act="setupback"/.test(P(`renderMenu()`)));
+    P(`act("hit", ${I.lunar}); V.menu = true; act("setupback", null)`);
+    const back = P(`renderSetup()`);
+    check("smoke: ... it opens the set-up with the game kept: its hits, Back to the game, no Exit that forgets it",
+      P(`V.screen`) === "setup" && !P(`V.menu`) && P(`G.st[${I.lunar}].hits`) >= 1 && /Back to the game/.test(back) && !/data-act="newgame"/.test(back) && !/Start the game/.test(back),
+      JSON.stringify([P(`V.screen`), P(`G.st[${I.lunar}].hits`), /Back to the game/.test(back), /data-act="newgame"/.test(back)]));
+    P(`act("start", null)`);
+    check("smoke: ... and Back to the game returns to the roster", P(`V.screen`) === "roster" && P(`G.st[${I.lunar}].hits`) >= 1);
+    P(`act("undo", null); act("undo", null)`);
     const row = i => P(`renderRow(${i}, false)`), rowT = i => strip(row(i)), sheetT = i => strip(P(`V.sheet = ${i}; __h = renderSheet(${i}); V.sheet = null; __h`));
     const count = (h, re) => (h.match(re) || []).length;
     /* the card strikes a printed value through only when it has changed */
@@ -447,7 +458,9 @@ function run(check){
     /* a bigger QR (user 19.10.2026): the Full screen button and a tap on the code */
     const pp = P(`V.phoneSvg = "<svg></svg>"; V.phoneUrl = "https://bfgtools.kuldare.com/play/x#fleet=abc"; phonePanel()`);
     check("smoke: the phone panel has Full screen, on the button and on the code itself", (pp.match(/data-act="qrfull"/g) || []).length === 2 && /Full screen/.test(strip(pp)) && P(`typeof qrFull`) === "function" && P(`qrFull("<svg></svg>")`) === null, strip(pp).slice(0, 120));
-    P(`V.phoneSvg = ""; V.phoneUrl = ""`);
+    const pl = P(`V.phoneSvg = ""; V.phone = "all"; V.phoneN = 6; V.phoneUrl = "https://bfgtools.kuldare.com/#fleet=" + "x".repeat(2000); phonePanel()`);
+    check("smoke: a link too long to scan has no code, and Save file and Copy link instead (user 1.11.2026)", !/data-act="qrfull"/.test(pl) && /data-act="savefile" data-arg="all"/.test(pl) && /data-act="copylink"/.test(pl) && !/Making the code/.test(pl), strip(pl).slice(0, 160));
+    P(`V.phoneSvg = ""; V.phoneUrl = ""; V.phone = null; V.phoneN = 0`);
     P(`forgetLinked(1); forgetLinked(0)`);
     /* the builder's named library on the same device (gothic-fleet-registry-saves-v1) */
     pg.store["gothic-fleet-registry-saves-v1"] = JSON.stringify({ v: 1, saves: [{ id: "x1", name: "Club night", ln: L.nm, limit: 1500, units: pg.ctx.__doc.units, pts: 0, saved: "2026-10-19" }], open: {} });
@@ -649,7 +662,21 @@ function run(check){
     P(`V.side = "me"`);
     check("smoke: the tabs and the edge tab appear once there is an opponent", /class="sides/.test(P(`renderRoster()`)) && /class="edge r/.test(P(`renderRoster()`)));
     clean("the link panel", P(`renderPeerPanel()`));
-    check("smoke: a link code is read from a pasted link or a bare code", P(`JSON.stringify([parsePeerText("https://x/p.html#peer=zAbC_-1"), parsePeerText("peerok=jQQ"), parsePeerText("nothing")])`) === '[{"kind":"peer","code":"zAbC_-1"},{"kind":"peerok","code":"jQQ"},null]');
+    check("smoke: a room code is read typed, with spaces, lower case or from a link; I and O are not room letters", P(`JSON.stringify([parseRoom("krak"), parseRoom(" K R A K "), parseRoom("https://x/p.html#room=WAAG"), parseRoom("KIOK"), parseRoom("KRAKEN"), parseRoom("")])`) === '["KRAK","KRAK","WAAG",null,null,null]');
+    check("smoke: a new room code is four room letters", /^[A-HJ-NP-Z]{4}$/.test(P(`newRoomCode()`)));
+    clean("the set-up step without a room", P(`peerSetupCard()`));
+    check("smoke: the set-up step offers both ways in: create a room, join with a code", /data-act="peercreate"/.test(P(`peerSetupCard()`)) && /id="peerjoin"/.test(P(`peerSetupCard()`)));
+    P(`P.room = "KRAK"; P.st = "wait"; P.host = true;`);
+    clean("the set-up step while waiting (host)", P(`peerSetupCard()`));
+    clean("the room panel while waiting (host)", P(`renderPeerPanel()`));
+    check("smoke: the host's step says the code and what to tell the other player; the panel adds the QR code", /<b>KRAK<\/b>/.test(P(`peerSetupCard()`)) && /tap Join, type KRAK/.test(strip(P(`peerSetupCard()`))) && !/qrsvg/.test(P(`peerSetupCard()`)) && /class="qrsvg"/.test(P(`renderPeerPanel()`)) && /data-act="peerleave"/.test(P(`renderPeerPanel()`)));
+    check("smoke: a host who finds the other player also tapped Create can type their letters instead", /id="peerjoin"/.test(P(`peerSetupCard()`)));
+    P(`P.host = false;`);
+    clean("the set-up step while waiting (joiner)", P(`peerSetupCard()`));
+    check("smoke: a joiner alone in the room is told so, not left waiting", /other player is not here/.test(strip(P(`peerSetupCard()`))));
+    P(`var __g = P.G; P.G = null; P.st = "live"; P.who = "Mikko";`);
+    check("smoke: the tabs appear as soon as the link is live, before their fleet comes", /class="sides/.test(P(`sidesStrip()`)) && /no fleet open yet/.test(strip(P(`sidesStrip()`))));
+    P(`P.G = __g; P.room = ""; P.st = "off"; P.host = false; P.who = "";`);
     P(`V.side = "me";`);
   });
 }

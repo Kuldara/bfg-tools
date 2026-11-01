@@ -10,6 +10,7 @@
 const path = require("path");
 const kit = require("../../tools/lib/kit.js");
 const preview = require("../../tools/og/meta.js");
+const boarding = require("../boarding/build.js");
 const APP = require("./app.json");
 
 const HERE = "apps/play";
@@ -44,7 +45,7 @@ const serviceWorker = cache => `/* Gothic Fleet Play: offline at the table (apps
    is fetched from the network first - a fix shows at once - and the saved
    copy is used only when there is no network. */
 const CACHE = "${cache}";
-const FILES = ["./${PAGE.replace(/ /g, "%20")}", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
+const FILES = ["./${PAGE.replace(/ /g, "%20")}", "./boarding.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png"];
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
 });
@@ -87,6 +88,7 @@ async function build() {
 
   const out = [];
   out.push(kit.write(OUT + PAGE, site));
+  out.push(kit.write(OUT + "boarding.html", await boarding.embedPage()));
   out.push(kit.write(OUT + "manifest.webmanifest", JSON.stringify(MANIFEST, null, 1)));
   out.push(kit.write(OUT + "sw.js", serviceWorker(cache)));
   out.push(kit.copy(HERE + "/assets/icon-192.png", OUT + "icon-192.png"));

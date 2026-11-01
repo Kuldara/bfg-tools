@@ -8,7 +8,7 @@ import { toast } from "./actions.js";
 import { copyText, shareText } from "./share.js";
 import { esc, factionCols } from "../../../packages/ui/format.js";
 import { qrFull, qrSvg } from "../../../packages/ui/qr.js";
-import { PHONE_LINK, b64url, unb64url } from "../../../packages/ui/share-link.js";
+import { PHONE_LINK } from "../../../packages/ui/share-link.js";
 import PLAY from "../rules.js";
 
 /* ===================================================== OPPONENT'S FLEET ===== */
@@ -17,15 +17,14 @@ import PLAY from "../rules.js";
    the other's ships and their state live"). Optional: nothing changes for a
    player who never links.
 
-   No server. The site is static (docs/adr/0006), so the two phones talk to
-   each other directly over WebRTC, and the handshake goes by QR code: the
-   first phone shows a code (its offer, deflated into a link), the second
-   scans it with its camera and shows a reply code, the first scans that.
-   The reply reaches the waiting page three ways: the same tab (the address
-   changes, hashchange), another tab of the same browser (BroadcastChannel),
-   or pasted. Only the STUN server below learns the phones' addresses, so
-   two phones on different networks can find each other; on the same Wi-Fi
-   they connect without it.
+   A room with a four-letter code (user 31.10.2026, after the first version -
+   two QR codes and a direct WebRTC link - never connected once on two phones
+   and a PC: "linking should happen at a set step, and more clearly"). One
+   player taps Create a room and gets a code; the other taps Join and types
+   it, or scans its QR code. The pages talk through bfgtools' own relay
+   (services/relay: a Cloudflare Worker that passes messages between the
+   pages of a room and stores nothing), so it works on any network. The room
+   is remembered: a reload or a phone that slept goes back in by itself.
 
    What travels: this page's game record (appState.G, which carries the
    fleet document) and its tracking switches, whenever they change. The
@@ -34,21 +33,27 @@ import PLAY from "../rules.js";
 export const KEY_PEER = "gothic-fleet-play-peer";
 export const KEY_PEER_NAME = "gothic-fleet-play-name";
 export const KEY_PEER_HINT = "gothic-fleet-play-swipe-hint";
-const ICE = [{ urls: "stun:stun.l.google.com:19302" }];
-const GATHER_MS = 2500;
-const PROTO = 1;
+export const KEY_ROOM = "gothic-fleet-play-room";
+/* a relay of one's own for testing: localStorage[KEY_RELAY] = "ws://..." */
+export const KEY_RELAY = "gothic-fleet-play-relay";
+export const RELAY = "wss://play-relay.kuldare.com";
+/* no I or O: they read as 1 and 0 */
+const LETTERS = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+const PROTO = 2;
 
-/* P.st: "off" | "offer" (making / showing my code) | "answer" (making /
-   showing my reply) | "live" | "weak" (connection hiccup) | "lost" */
-appState.P = { st: "off", err: "", url: "", svg: "", id: "", who: "", name: "", G: null, opt: null, at: 0, fp: "", U: [], L0: null, rerr: "", handoff: false };
+/* P.st: "off" (in no room) | "joining" (reaching the relay) | "wait" (in the
+   room, the other player is not) | "live" | "retry" (the line dropped; the
+   page tries again by itself) */
+appState.P = { st: "off", err: "", room: "", host: false, who: "", name: "", G: null, opt: null, at: 0, fp: "", U: [], L0: null, rerr: "", n: 0 };
 /* appState.V.side ("me" | "peer"), V.peerPanel and V.sideTop are set as they are used:
    this module is read before game-state.js makes V. */
-let PC = null, DC = null, LAST_SENT = "", PUSH_T = 0, BC = null, WEAK_T = 0, HINTED = false, MSG_N = 0;
+let WS = null, LAST_SENT = "", PUSH_T = 0, RETRY_T = 0, RETRY_N = 0, PING_T = 0, HINTED = false, MSG_N = 0;
 
-const rtcCan = () => typeof RTCPeerConnection === "function";
+const wsCan = () => typeof WebSocket === "function";
 export const myName = () => String(lsGet(KEY_PEER_NAME) || "").slice(0, 24);
-const peerHas = () => !!appState.P.G;
-const live = () => appState.P.st === "live" || appState.P.st === "weak";
+export const peerHas = () => !!appState.P.G;
+const live = () => appState.P.st === "live";
+const inRoom = () => !!appState.P.room;
 /* the opponent as the page names them: their name, else their fleet list */
 export function peerLabel(){
   const P = appState.P;
@@ -57,102 +62,124 @@ export function peerLabel(){
 /* The opponent's side is shown when there is something to show. */
 export function peerSide(){ return appState.V.side === "peer" && peerHas(); }
 
-/* ------------------------------------------------------- the link codes --- */
-async function deflate(obj){
-  const bytes = new TextEncoder().encode(JSON.stringify(obj));
-  if(typeof CompressionStream !== "function") return "j" + b64url(bytes);
-  const st = new Blob([bytes]).stream().pipeThrough(new CompressionStream("deflate-raw"));
-  return "z" + b64url(new Uint8Array(await new Response(st).arrayBuffer()));
+/* ---------------------------------------------------------- the room --- */
+export function relayUrl(){
+  const own = lsGet(KEY_RELAY);
+  if(own && /^wss?:\/\/[A-Za-z0-9.:\-]+$/.test(own)) return own;
+  const loc = typeof location !== "undefined" ? location : null;
+  return loc && /^(localhost|127\.0\.0\.1)$/.test(loc.hostname) ? "ws://" + loc.hostname + ":8787" : RELAY;
 }
-async function inflate(t){
-  let bytes = unb64url(t.slice(1));
-  if(t[0] === "z"){
-    if(typeof DecompressionStream !== "function") throw new Error("this browser cannot read the code - update it");
-    const st = new Blob([bytes]).stream().pipeThrough(new DecompressionStream("deflate-raw"));
-    bytes = new Uint8Array(await new Response(st).arrayBuffer());
-  }
-  return JSON.parse(new TextDecoder().decode(bytes));
+export function newRoomCode(){
+  const a = new Uint8Array(4);
+  try{ crypto.getRandomValues(a); }catch(e){ for(let k = 0; k < 4; k++) a[k] = Math.floor(Math.random() * 256); }
+  return [...a].map(b => LETTERS[b % LETTERS.length]).join("");
 }
-/* Where the other phone opens the code: this page when it is on the web, the
-   published one when it runs from a disk or localhost (a phone reaches
-   neither). */
+/* A code as typed, or a link with one (#room=KRAK); O and I are read as 0
+   and 1 would be: as the letters the code cannot have, so they fail. */
+export function parseRoom(text){
+  const t = String(text || "").trim();
+  const m = /[#&?]room=([A-Za-z]{4})(?![A-Za-z])/.exec(t) || /^([A-Za-z]{4})$/.exec(t.replace(/[\s-]/g, ""));
+  if(!m) return null;
+  const c = m[1].toUpperCase();
+  return [...c].every(ch => LETTERS.indexOf(ch) >= 0) ? c : null;
+}
+/* Where the other phone opens the room's QR code: this page on the web, the
+   published one from a disk or localhost (a phone reaches neither). */
 export function peerBase(){
   const loc = typeof location !== "undefined" ? location : null;
   const local = !loc || loc.protocol !== "https:" || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(loc.hostname);
   return local ? PHONE_LINK.play : loc.origin + loc.pathname;
 }
-/* "#peer=<code>" is an invitation, "#peerok=<code>" its reply; a pasted
-   link or a bare code is read the same way. */
-export function parsePeerText(text){
-  const m = /(?:^|[#&?])(peer|peerok)=([jz][A-Za-z0-9_-]+)/.exec(String(text || "").trim());
-  return m ? { kind: m[1], code: m[2] } : null;
+export const roomLink = code => peerBase() + "#room=" + code;
+
+function send(msg){
+  if(!WS || WS.readyState !== 1) return false;
+  try{ WS.send(typeof msg === "string" ? msg : JSON.stringify(msg)); return true; }catch(e){ return false; }
+}
+function hangUp(){
+  clearTimeout(RETRY_T); clearInterval(PING_T);
+  if(WS){ const w = WS; WS = null; w.onclose = null; w.onmessage = null; w.onerror = null; try{ w.close(1000); }catch(e){} }
+}
+function connect(){
+  hangUp();
+  const P = appState.P;
+  if(!P.room) return;
+  if(!wsCan()){ P.err = "This browser cannot link (no WebSocket)."; P.st = "off"; refresh(); return; }
+  if(P.st !== "retry") P.st = "joining";
+  let ws;
+  /* a code the player typed must find an open room (the relay says
+     "noroom" and hangs up with 4404 if not); one this page created, or
+     remembers, may open it */
+  try{ ws = new WebSocket(relayUrl() + "/room/" + P.room + (P.host ? "" : "?join=1")); }catch(e){ retry(); return; }
+  WS = ws;
+  ws.onopen = () => {
+    if(ws !== WS) return;
+    RETRY_N = 0; P.err = ""; P.host = true;
+    if(P.st !== "live") P.st = "wait";
+    send({ t: "hi", v: PROTO, n: myName() });
+    clearInterval(PING_T); PING_T = setInterval(() => send("ping"), 25000);
+    refresh();
+  };
+  ws.onmessage = e => { if(ws === WS) take(e.data); };
+  ws.onclose = ev => {
+    if(ws !== WS) return;
+    WS = null;
+    if(ev && ev.code === 4404){ noRoom(); return; }
+    retry();
+  };
+  ws.onerror = () => {};
+}
+/* The line dropped: back in by itself, sooner at first, and at once when the
+   page is looked at again or the network comes back. */
+function retry(){
+  const P = appState.P;
+  clearInterval(PING_T);
+  if(!P.room) return;
+  P.st = "retry"; P.n = 0;
+  refresh();
+  clearTimeout(RETRY_T);
+  RETRY_T = setTimeout(connect, Math.min(15000, 1000 * Math.pow(2, RETRY_N++)));
+}
+/* No room of that code is open: the code was mistyped, or the other
+   player has not created theirs yet. Said at once, not after a wait. */
+function noRoom(){
+  const P = appState.P;
+  const code = P.room;
+  hangUp();
+  P.room = ""; P.st = "off"; P.n = 0; lsDel(KEY_ROOM);
+  P.err = "No room " + code + " is open. Check the code with the other player: it is the four letters their phone shows after Create a room.";
+  appState.V.peerJoin = code;
+  render();
+}
+/* host: this page made the room (or remembers it); else the code was typed */
+export function openRoom(code, host){
+  const P = appState.P;
+  if(P.room && P.room !== code) leaveRoom(false, true);
+  P.room = code; P.host = !!host; P.err = ""; P.st = "joining"; P.n = 0; RETRY_N = 0;
+  lsSet(KEY_ROOM, code);
+  connect();
+  render();
+}
+export function leaveRoom(forget, quiet){
+  send({ t: "bye" });
+  hangUp();
+  const P = appState.P;
+  P.room = ""; P.st = "off"; P.n = 0; P.err = "";
+  lsDel(KEY_ROOM);
+  if(forget){ lsDel(KEY_PEER); Object.assign(P, { G: null, opt: null, at: 0, fp: "", U: [], L0: null, rerr: "", name: "", who: "" }); appState.V.side = "me"; }
+  if(!quiet) render();
 }
 
-/* --------------------------------------------------------- connection --- */
-function closePC(){
-  if(DC){ try{ DC.onclose = null; DC.close(); }catch(e){} }
-  if(PC){ try{ PC.onconnectionstatechange = null; PC.close(); }catch(e){} }
-  DC = null; PC = null; clearTimeout(WEAK_T);
-}
-function gathered(pc){
-  return new Promise(ok => {
-    if(pc.iceGatheringState === "complete") return ok();
-    const t = setTimeout(ok, GATHER_MS);
-    pc.addEventListener("icegatheringstatechange", () => { if(pc.iceGatheringState === "complete"){ clearTimeout(t); ok(); } });
-  });
-}
-function newPC(){
-  closePC();
-  const pc = new RTCPeerConnection({ iceServers: ICE });
-  pc.onconnectionstatechange = () => {
-    if(pc !== PC) return;
-    const s = pc.connectionState;
-    if(s === "disconnected" && live()){
-      appState.P.st = "weak"; refresh();
-      clearTimeout(WEAK_T); WEAK_T = setTimeout(() => { if(pc === PC && pc.connectionState !== "connected") lost(); }, 10000);
-    }
-    if(s === "connected" && appState.P.st === "weak"){ appState.P.st = "live"; refresh(); }
-    if(s === "failed" || s === "closed") lost();
-  };
-  pc.ondatachannel = e => wire(e.channel);
-  PC = pc;
-  return pc;
-}
-function wire(dc){
-  DC = dc;
-  dc.onopen = () => {
-    if(dc !== DC) return;
-    const was = appState.P.st;
-    appState.P.st = "live"; appState.P.err = ""; appState.P.url = ""; appState.P.svg = "";
-    appState.V.peerPanel = false;
-    LAST_SENT = ""; send({ t: "hi", v: PROTO, n: myName() }); push(true);
-    if(was !== "live") toast("Linked" + (appState.P.who ? " with " + appState.P.who : "") + ": swipe the roster sideways, or tap their tab, to see their fleet.");
-    render(); hint(true);
-  };
-  dc.onmessage = e => take(e.data);
-  dc.onclose = () => { if(dc === DC) lost(); };
-  if(dc.readyState === "open") dc.onopen();
-}
-function lost(){
-  if(!PC && !DC) return;
-  closePC();
-  appState.P.st = peerHas() ? "lost" : "off";
-  refresh();
-}
-function send(msg){
-  if(!DC || DC.readyState !== "open") return false;
-  try{ DC.send(JSON.stringify(msg)); return true; }catch(e){ return false; }
-}
 /* This page's state goes to the other one whenever it changes (render()
    calls this after every draw; unchanged state is not sent again). */
 export function push(now){
-  if(!DC || DC.readyState !== "open") return;
+  if(!WS || WS.readyState !== 1 || !live()) return;
   clearTimeout(PUSH_T);
   const go = () => {
     const opt = {}; TRACK.forEach(t => { opt[t[0]] = !!OPT[t[0]]; });
     const body = JSON.stringify({ t: "g", n: myName(), G: appState.G || null, opt: opt, scr: appState.V.screen });
-    if(body === LAST_SENT) return;
-    try{ DC.send(body); LAST_SENT = body; }catch(e){}
+    if(body === LAST_SENT || body.length > 60000) return;
+    if(send(body)) LAST_SENT = body;
   };
   if(now) go(); else PUSH_T = setTimeout(go, 120);
 }
@@ -184,15 +211,32 @@ export function takeSnapshot(m){
   if(!G){ P.U = []; P.L0 = null; P.fp = ""; }
 }
 function take(raw){
+  if(raw === "pong") return;
   let m = null; try{ m = JSON.parse(raw); }catch(e){ return; }
   if(!m || typeof m !== "object") return;
-  if(m.t === "hi"){ appState.P.who = typeof m.n === "string" ? scrub(m.n, 0).slice(0, 24) : ""; return; }
-  if(m.t === "bye"){ closePC(); appState.P.st = peerHas() ? "lost" : "off"; toast(peerLabel() + " ended the link."); refresh(); return; }
+  const P = appState.P;
+  /* who is in the room (the relay's own word) */
+  if(m.t === "peers"){
+    P.n = m.n | 0;
+    const was = P.st;
+    P.st = P.n >= 2 ? "live" : "wait";
+    if(P.st === "live" && was !== "live"){
+      LAST_SENT = ""; push(true);
+      appState.V.peerPanel = false;
+      toast("Linked" + (P.who || P.name ? " with " + (P.who || P.name) : "") + ".");
+      render(); hint(true);
+    }else refresh();
+    return;
+  }
+  /* someone (re)joined: they get this page's state again */
+  if(m.t === "hi"){ P.who = typeof m.n === "string" ? scrub(m.n, 0).slice(0, 24) : ""; LAST_SENT = ""; push(true); return; }
+  if(m.t === "noroom"){ return; }   /* the close that follows says it (4404) */
+  if(m.t === "bye"){ toast(peerLabel() + " left the room."); return; }
   if(m.t !== "g") return;
   const had = peerHas();
   takeSnapshot(m);
   MSG_N++;
-  lsSet(KEY_PEER, JSON.stringify({ n: appState.P.name, G: appState.P.G, opt: appState.P.opt, scr: appState.P.scr, at: appState.P.at }));
+  lsSet(KEY_PEER, JSON.stringify({ n: P.name, G: P.G, opt: P.opt, scr: P.scr, at: P.at }));
   if(peerSide() || !had || appState.V.peerPanel) render(); else freshStrip();
 }
 /* A change on the other phone while this one shows its own fleet: only the
@@ -200,118 +244,37 @@ function take(raw){
 function freshStrip(){
   if(typeof document === "undefined" || !document.querySelector) return;
   const el = document.querySelector(".sides");
-  if(!el) return;
-  el.outerHTML = sidesStrip(true);
+  if(el) el.outerHTML = sidesStrip(true);
+  const c = document.querySelector(".peercard");
+  if(c) c.outerHTML = peerSetupCard();
 }
-function refresh(){ if(appState.V.peerPanel || peerSide()) render(); else freshStrip(); }
+function refresh(){ if(appState.V.peerPanel || peerSide() || appState.V.screen === "load") render(); else freshStrip(); }
 
-/* I show the first code. */
-export async function startOffer(){
-  if(!rtcCan()){ appState.P.err = "This browser cannot link phones (no WebRTC)."; render(); return; }
-  const P = appState.P;
-  P.st = "offer"; P.err = ""; P.url = ""; P.svg = ""; P.handoff = false; P.id = Math.random().toString(36).slice(2, 8);
-  render();
-  try{
-    const pc = newPC();
-    wire(pc.createDataChannel("gfp", { ordered: true }));
-    await pc.setLocalDescription(await pc.createOffer());
-    await gathered(pc);
-    if(pc !== PC) return;
-    P.url = peerBase() + "#peer=" + await deflate({ v: PROTO, id: P.id, n: myName(), l: appState.G ? appState.G.ln : "", s: pc.localDescription.sdp });
-    P.svg = qrSvg(P.url);
-  }catch(e){ P.err = "The code could not be made: " + (e && e.message || e); P.st = peerHas() ? "lost" : "off"; }
-  render();
-}
-/* The other phone's code reached me: I answer with a reply code. */
-export async function acceptOffer(code){
-  const P = appState.P;
-  appState.V.peerPanel = true;
-  if(!rtcCan()){ P.err = "This browser cannot link phones (no WebRTC)."; render(); return; }
-  P.st = "answer"; P.err = ""; P.url = ""; P.svg = ""; P.handoff = false;
-  render();
-  try{
-    const o = await inflate(code);
-    if(!o || o.v !== PROTO || typeof o.s !== "string") throw new Error("the code is from another version of the page");
-    P.who = String(o.n || "").replace(/[<>"`]/g, "").slice(0, 24); P.whoList = String(o.l || "").replace(/[<>"`]/g, "").slice(0, 60);
-    P.id = String(o.id || "").replace(/[^a-z0-9]/g, "");
-    const pc = newPC();
-    await pc.setRemoteDescription({ type: "offer", sdp: o.s });
-    await pc.setLocalDescription(await pc.createAnswer());
-    await gathered(pc);
-    if(pc !== PC) return;
-    P.url = peerBase() + "#peerok=" + await deflate({ v: PROTO, id: P.id, n: myName(), s: pc.localDescription.sdp });
-    P.svg = qrSvg(P.url);
-  }catch(e){ P.err = "The code could not be read: " + (e && e.message || e) + "."; P.st = peerHas() ? "lost" : "off"; }
-  render();
-}
-/* The reply reached me: in this tab, or handed on to the tab that waits. */
-export async function takeReply(code){
-  const P = appState.P;
-  let o = null;
-  try{ o = await inflate(code); }catch(e){ P.err = "The reply code could not be read."; appState.V.peerPanel = true; render(); return; }
-  if(!o || o.v !== PROTO || typeof o.s !== "string"){ P.err = "The reply is from another version of the page."; appState.V.peerPanel = true; render(); return; }
-  if(PC && P.st === "offer" && o.id === P.id && PC.signalingState === "have-local-offer"){
-    try{
-      P.who = String(o.n || "").replace(/[<>"`]/g, "").slice(0, 24);
-      await PC.setRemoteDescription({ type: "answer", sdp: o.s });
-      P.connecting = true; render();
-    }catch(e){ P.err = "The reply did not fit this code: " + (e && e.message || e); render(); }
-    return;
-  }
-  /* another tab of this browser has the code open (the camera opened the
-     reply in a new tab) */
-  if(BC){
-    let acked = false;
-    const onAck = e => { if(e.data && e.data.t === "ack" && e.data.id === o.id) acked = true; };
-    BC.addEventListener("message", onAck);
-    BC.postMessage({ t: "reply", id: o.id, code: code });
-    await new Promise(ok => setTimeout(ok, 1200));
-    BC.removeEventListener("message", onAck);
-    if(acked){ P.handoff = true; appState.V.peerPanel = true; render(); return; }
-  }
-  P.err = "No code of this page is waiting for that reply. Tap Show my code again and scan its new reply.";
-  appState.V.peerPanel = true; render();
-}
-export function dropLink(forget){
-  send({ t: "bye" });
-  closePC();
-  const P = appState.P;
-  P.url = ""; P.svg = ""; P.err = ""; P.connecting = false;
-  if(forget){ lsDel(KEY_PEER); Object.assign(P, { G: null, opt: null, at: 0, fp: "", U: [], L0: null, rerr: "", name: "", who: "" }); appState.V.side = "me"; }
-  P.st = peerHas() ? "lost" : "off";
-  render();
-}
-
-/* An address with a code in it (the camera opened the page, or a second
-   code in the same tab: hashchange). Returns whether there was one. */
+/* An address with a room in it (the camera opened the room's QR code, or a
+   second one in the same tab: hashchange). Returns whether there was one. */
 export function takePeerFromAddress(){
   const loc = typeof location !== "undefined" ? location : null;
-  const p = loc && /^#peer(ok)?=/.test(loc.hash || "") ? parsePeerText(loc.hash) : null;
-  if(!p) return false;
+  const code = loc && /^#room=/.test(loc.hash || "") ? parseRoom(loc.hash) : null;
+  if(!code) return false;
   try{ history.replaceState(null, "", loc.pathname + loc.search); }catch(e){}
   appState.V.peerPanel = true;
-  if(p.kind === "peer") acceptOffer(p.code); else takeReply(p.code);
+  openRoom(code);
   return true;
 }
 export function peerBoot(){
   /* the last copy of their fleet: shown, marked as not live */
   try{
     const s = JSON.parse(lsGet(KEY_PEER) || "null");
-    if(s && s.G){ takeSnapshot(s); appState.P.st = "lost"; }
+    if(s && s.G) takeSnapshot(s);
   }catch(e){}
-  try{
-    if(typeof BroadcastChannel === "function"){
-      BC = new BroadcastChannel("gothic-fleet-play-peer");
-      BC.onmessage = e => {
-        const m = e.data;
-        if(m && m.t === "reply" && PC && appState.P.st === "offer" && m.id === appState.P.id){
-          BC.postMessage({ t: "ack", id: m.id });
-          takeReply(m.code);
-        }
-      };
-    }
-  }catch(e){ BC = null; }
-  takePeerFromAddress();
+  if(typeof document !== "undefined" && document.addEventListener){
+    document.addEventListener("visibilitychange", () => { if(document.visibilityState === "visible" && appState.P.room && !WS) connect(); });
+    if(typeof window !== "undefined" && window.addEventListener) window.addEventListener("online", () => { if(appState.P.room && !WS) connect(); });
+  }
+  if(takePeerFromAddress()) return;
+  /* back into the room this page was in (a reload, a phone that slept) */
+  const r = parseRoom(lsGet(KEY_ROOM) || "");
+  if(r){ appState.P.room = r; appState.P.host = true; appState.P.st = "joining"; connect(); }
 }
 
 /* ------------------------------------------------------ their roster --- */
@@ -333,7 +296,7 @@ export function withPeer(fn){
 const clock = t => { const d = new Date(t); return ("0" + d.getHours()).slice(-2) + ":" + ("0" + d.getMinutes()).slice(-2); };
 function statusWord(){
   const P = appState.P;
-  return P.st === "live" ? "live" : P.st === "weak" ? "connection weak" : P.at ? "not live " + MID + " last seen " + clock(P.at) : "not linked";
+  return P.st === "live" ? "live" : P.at ? "not live " + MID + " last seen " + clock(P.at) : "not linked";
 }
 export function renderPeerSide(){
   const P = appState.P, G = P.G;
@@ -357,7 +320,7 @@ export function renderPeerSide(){
       </div></div>`;
   const pts = P.U.length ? fleetPoints(P.U) : 0;
   return top + sidesStrip() +
-    (!live() ? `<p class="note stale">Not live: their fleet as it was at ${clock(P.at)}. <button class="mini" data-act="peerpanel">Link again</button></p>` : "") +
+    (!live() ? `<p class="note stale">Not live: their fleet as it was at ${clock(P.at)}. <button class="mini" data-act="peerpanel">${inRoom() ? "Room " + esc(P.room) : "Link"}</button></p>` : "") +
     `<div class="main peerview${appState.V.compact ? " compact" : ""}">${body}</div>${edgeHandle()}
     <div class="bottom"><div class="brow peerbar">
       <div class="psum"><b>${esc(peerLabel())}</b>${ships} ship${ships === 1 ? "" : "s"} ${MID} ${pts} pts ${MID} ${toPlay} to play<small>read-only ${MID} ${esc(statusWord())}</small></div>
@@ -369,12 +332,12 @@ export function renderPeerSide(){
 /* The tabs under the top bar once there is an opponent: my fleet, theirs.
    The bar under them slides with the finger (the swipe's own cue). */
 export function sidesStrip(fresh){
-  if(!peerHas()) return "";
+  if(!peerHas() && !live()) return "";
   const peer = peerSide(), P = appState.P;
-  const shy = hintCount() < 3;
+  const shy = hintCount() < 3 && peerHas();
   return `<div class="sides${peer ? " at-peer" : ""}${fresh ? " fresh" : ""}" role="tablist">
     <button class="${peer ? "" : "on"}" role="tab" aria-selected="${!peer}" data-act="side" data-arg="me">My fleet${shy && peer ? `<small class="swipe-cue" aria-hidden="true">&rsaquo;&rsaquo; swipe</small>` : ""}</button>
-    <button class="${peer ? "on" : ""}" role="tab" aria-selected="${peer}" data-act="side" data-arg="peer"><span class="pdot ${live() ? "on" : ""}"></span>${esc(peerLabel())}${shy && !peer ? `<small class="swipe-cue" aria-hidden="true">swipe &lsaquo;&lsaquo;</small>` : P.G && P.G.ln && P.name ? `<small>${esc(P.G.ln)}</small>` : ""}</button>
+    <button class="${peer ? "on" : ""}" role="tab" aria-selected="${peer}" data-act="side" data-arg="peer"><span class="pdot ${live() ? "on" : ""}"></span>${esc(peerLabel())}${shy && !peer ? `<small class="swipe-cue" aria-hidden="true">swipe &lsaquo;&lsaquo;</small>` : !peerHas() ? `<small>no fleet open yet</small>` : P.G && P.G.ln && P.name ? `<small>${esc(P.G.ln)}</small>` : ""}</button>
     <i class="ind" aria-hidden="true"></i>
   </div>`;
 }
@@ -463,7 +426,16 @@ if(typeof document !== "undefined" && document.addEventListener){
   document.addEventListener("input", ev => {
     const t = ev.target;
     if(t && t.id === "peername") lsSet(KEY_PEER_NAME, String(t.value || "").replace(/[<>"`]/g, "").slice(0, 24));
-    if(t && t.id === "peerpaste") appState.V.peerPaste = t.value;
+    if(t && t.id === "peerjoin"){
+      const v = String(t.value || "").toUpperCase().replace(/[^A-Z]/g, "").slice(0, 4);
+      if(t.value !== v) t.value = v;
+      appState.V.peerJoin = v;
+      /* the fourth letter joins by itself: nothing more to find */
+      if(v.length === 4 && parseRoom(v)){ try{ t.blur(); }catch(e){} joinTyped(v); }
+    }
+  });
+  document.addEventListener("keydown", ev => {
+    if(ev.key === "Enter" && ev.target && ev.target.id === "peerjoin"){ ev.preventDefault(); joinTyped(ev.target.value); }
   });
 }
 export function peerAfterRender(){
@@ -471,63 +443,90 @@ export function peerAfterRender(){
   if(!HINTED && live()) hint(false);
 }
 
-/* --------------------------------------------------------- the panel --- */
+/* --------------------------------------------------- the step, the panel --- */
+/* One body for both places it shows: the set-up screen's card (the step,
+   user 31.10.2026: "at a set stage, and more clearly") and the panel from
+   the menu during the game. The words are for someone who has never seen
+   it: one of you creates, reads the four letters aloud, the other types
+   them. The panel adds what is rarer: the QR code, the name, forgetting. */
 export function peerMenuWord(){
   const P = appState.P;
-  return P.st === "live" || P.st === "weak" ? "linked with " + peerLabel() + " " + MID + " " + statusWord()
-    : peerHas() ? peerLabel() + " " + MID + " " + statusWord() : "link two phones: see the other's ships live";
+  return live() ? "room " + P.room + " " + MID + " linked with " + peerLabel()
+    : inRoom() ? "room " + P.room + " " + MID + " " + statusWord()
+    : peerHas() ? peerLabel() + " " + MID + " " + statusWord() : "see the other player's ships live: one creates a room, the other types its code";
 }
 export function peerTool(){
   return `<button class="tool${live() ? " on" : ""}" data-act="peerpanel" title="Link with the opponent's phone"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></svg><span>Opponent</span></button>`;
 }
-export function peerLoadCard(){
-  const P = appState.P;
-  return `<div class="card"><h2>Opponent's fleet</h2>
-    <p>${live() ? "Linked with <b>" + esc(peerLabel()) + "</b>: their ships and their damage, live." : peerHas() ? esc(peerLabel()) + ": " + esc(statusWord()) + "." : "Link with the other player's phone and see their ships and what has happened to them, live, beside your own. Before the game or in the middle of it."}</p>
-    ${peerHas() ? `<button class="btn" data-act="side" data-arg="peer">See their fleet</button>` : ""}
-    <button class="btn ${peerHas() ? "sec" : ""}" data-act="peerpanel">${live() ? "Link status" : "Link with the opponent"}</button></div>`;
+/* The code field: four letters; the fourth one joins by itself. */
+function joinField(lead){
+  return `<div class="jn"><span>${lead}</span><input id="peerjoin" type="text" inputmode="text" maxlength="4" autocapitalize="characters" autocomplete="off" spellcheck="false" enterkeyhint="go" placeholder="ABCD" value="${esc(appState.V.peerJoin || "")}" aria-label="The other player's room code">
+      <button class="btn sec" data-act="peerjoin" ${wsCan() ? "" : "disabled"}>Join</button></div>`;
 }
+function bigCode(){
+  return `<div class="roomcode" aria-label="Room code"><span>Room</span><b>${esc(appState.P.room)}</b></div>`;
+}
+/* What the step says in each state. */
+function peerBody(inPanel){
+  const P = appState.P, canShare = typeof navigator !== "undefined" && !!navigator.share;
+  if(!inRoom()) return `
+    <p>See the other player's ships and their damage live, beside your own. Before the game or in the middle of it; nothing changes in either game.</p>
+    <div class="roomjoin">
+      <button class="btn" data-act="peercreate" ${wsCan() ? "" : "disabled"}>Create a room<small>you get four letters: read them to the other player</small></button>
+      ${joinField("or, if they created one, type their letters:")}
+    </div>`;
+  if(P.st === "joining") return `<p class="pstat"><span class="pdot"></span>Connecting to room <b>${esc(P.room)}</b>&hellip;</p>
+    <button class="btn sec" data-act="peerleave">Cancel</button>`;
+  if(P.st === "retry") return `<p class="pstat"><span class="pdot"></span>${RETRY_N > 3 ? "The link service cannot be reached. Is there a network connection? Still trying" : "Connection lost, trying again"}&hellip;</p>
+    <button class="btn sec" data-act="peerleave">Leave room ${esc(P.room)}</button>`;
+  if(P.st === "wait"){
+    let svg = ""; if(inPanel){ try{ svg = qrSvg(roomLink(P.room)); }catch(e){} }
+    return P.host ? `
+      ${bigCode()}
+      <p class="lead">Tell the other player: <b>open Play, tap Join, type ${esc(P.room)}</b>. The link is made when they do.</p>
+      <p class="pstat"><span class="pdot wait"></span>Waiting for them&hellip;</p>
+      ${inPanel ? (svg ? `<div class="phone peercode"><p class="foot" style="margin:0 0 6px">Or they scan this with their phone's camera:</p><div class="qr" data-act="peerqr" title="Full screen">${svg}</div>
+        <div class="r4"><button data-act="peerqr">Full screen</button><button data-act="peercopy">${appState.V.copied === "peer" ? "Copied" : "Copy link"}</button>${canShare ? `<button data-act="peershare">Share</button>` : ""}</div></div>` : "")
+        : `<button class="btn sec" data-act="peerpanel">Show a QR code instead<small>for a camera, or a link to send</small></button>`}
+      <details class="paste"><summary>Did they tap Create too? Type their letters instead</summary><div class="roomjoin">${joinField("")}</div></details>
+      <button class="btn sec" data-act="peerleave">Leave room ${esc(P.room)}</button>` : `
+      ${bigCode()}
+      <p class="pstat"><span class="pdot wait"></span>You are in, the other player is not here right now&hellip;</p>
+      <p class="foot">They may be loading their fleet; if this goes on, check the letters with them.</p>
+      <details class="paste"><summary>Try another code</summary><div class="roomjoin">${joinField("")}</div></details>
+      <button class="btn sec" data-act="peerleave">Leave room ${esc(P.room)}</button>`;
+  }
+  /* live */
+  return `<p class="pstat on"><span class="pdot on"></span>Linked with <b>${esc(peerLabel())}</b>${P.G && P.G.ln && P.name ? " " + MID + " " + esc(P.G.ln) : ""}</p>
+    ${peerHas() ? `<p class="foot">Their ships and their damage come as they tap. ${appState.V.screen === "roster" || inPanel ? "Swipe the roster sideways, or tap their tab at the top, to see them." : "Their tab is at the top of the screen; the roster swipes sideways too."} Yours go to them the same way.</p>
+      <button class="btn${inPanel ? "" : " sec"}" data-act="side" data-arg="peer">See their fleet</button>` : `<p class="foot">They have no fleet open yet: it shows here as soon as they load one.</p>`}
+    ${inPanel ? `<button class="btn sec" data-act="peerleave">Leave room ${esc(P.room)}<small>${peerHas() ? "their last copy stays, marked not live" : ""}</small></button>` : `<p class="foot">Room ${esc(P.room)}. <button class="linkbtn" data-act="peerpanel">Leave</button></p>`}`;
+}
+/* The set-up screen's step: before the Leadership, the opponent's phone,
+   optional. */
+export function peerSetupCard(){
+  const P = appState.P;
+  const tag = live() ? "linked" : inRoom() ? "room " + P.room : "optional";
+  return `<div class="card peercard${live() ? " in" : ""}"><h2>Opponent <em>${esc(tag)}</em></h2>${peerBody(false)}</div>`;
+}
+export function peerLoadCard(){ return peerSetupCard(); }
 export function renderPeerPanel(){
   const P = appState.P;
-  const canShare = typeof navigator !== "undefined" && !!navigator.share;
-  const codeBox = (step, lead, after) => `<div class="phone peercode">
-      <p class="step">${step}</p><p class="lead">${lead}</p>
-      ${P.svg ? `<div class="qr" data-act="peerqr" title="Full screen">${P.svg}</div>` : `<p class="foot">Making the code&hellip;</p>`}
-      <div class="r4"><button data-act="peerqr" ${P.svg ? "" : "disabled"}>Full screen</button><button data-act="peercopy" ${P.url ? "" : "disabled"}>${appState.V.copied === "peer" ? "Copied" : "Copy link"}</button>${canShare ? `<button data-act="peershare" ${P.url ? "" : "disabled"}>Share</button>` : ""}</div>
-      ${after || ""}</div>`;
-  let body = "";
-  if(P.handoff){
-    body = `<p class="note ok">The reply went to the Play tab that showed the code: the link is made there. You can close this tab.</p>`;
-  }else if(live()){
-    body = `<p class="pstat on"><span class="pdot on"></span>Linked with <b>${esc(peerLabel())}</b>${P.G && P.G.ln ? " " + MID + " " + esc(P.G.ln) : ""}${P.st === "weak" ? " " + MID + " connection weak, trying&hellip;" : ""}</p>
-      <p class="foot">Their ships and their damage come as they tap. Swipe the roster sideways or tap their tab to see them; yours go to them the same way.</p>
-      ${peerHas() ? `<button class="btn" data-act="side" data-arg="peer">See their fleet</button>` : `<p class="foot">They have no game open yet.</p>`}
-      <button class="btn sec" data-act="peerdrop">Disconnect<small>both keep the last copy, marked not live</small></button>`;
-  }else if(P.st === "offer"){
-    body = codeBox("Step 1 of 2", "On the other phone, scan this with the camera (or open the link there). Play opens there and shows a reply code.",
-      `<p class="step">Step 2 of 2</p><p class="lead">${P.connecting ? "Connecting&hellip;" : "Scan their reply code with this phone's camera: it opens here and the link is made."}</p>
-      <details class="paste"${appState.V.peerPaste ? " open" : ""}><summary>or paste the reply link</summary>
-        <textarea id="peerpaste" placeholder="the reply link (...#peerok=...)">${esc(appState.V.peerPaste || "")}</textarea>
-        <button class="btn sec" data-act="peerpaste">Use the pasted reply</button></details>`) +
-      `<button class="btn sec" data-act="peercancel">Cancel</button>`;
-  }else if(P.st === "answer"){
-    body = codeBox("Step 2 of 2", `Show this to ${P.who ? "<b>" + esc(P.who) + "</b>'s" : "the other"} phone: they scan it with their camera${P.whoList ? " (" + esc(P.whoList) + ")" : ""}. The link is made when it opens there.`,
-      `<p class="foot">Waiting for the connection&hellip;</p>`) + `<button class="btn sec" data-act="peercancel">Cancel</button>`;
-  }else{
-    body = `${peerHas() ? `<p class="pstat"><span class="pdot"></span>${esc(peerLabel())} ${MID} ${esc(statusWord())}</p>` : ""}
-      <p>Link with the other player's phone to see their ships and their damage live, beside your own. You can link before the game or in the middle of it; nothing changes in either game.</p>
-      <label class="nmrow">Your name for them<input id="peername" type="text" maxlength="24" value="${esc(myName())}" placeholder="${esc(appState.G ? appState.G.ln : "e.g. Joona")}" autocomplete="off" spellcheck="false" enterkeyhint="done"></label>
-      <button class="btn" data-act="peeroffer" ${rtcCan() ? "" : "disabled"}>${peerHas() ? "Link again: show my code" : "Show my code"}<small>the other player scans it</small></button>
-      <details class="paste"${appState.V.peerPaste ? " open" : ""}><summary>I have their link: paste it</summary>
-        <textarea id="peerpaste" placeholder="their link (...#peer=...)">${esc(appState.V.peerPaste || "")}</textarea>
-        <button class="btn sec" data-act="peerpaste">Use the pasted link</button></details>
-      ${peerHas() ? `<button class="btn sec" data-act="side" data-arg="peer">See their last copy</button><button class="btn warn" data-act="peerforget">Forget their fleet</button>` : ""}
-      <p class="foot">The phones talk to each other directly; nothing is stored on a server. The same Wi-Fi works best. A reload ends the link: link again with the same two codes.</p>`;
-  }
+  const extra = inRoom() ? "" : `
+    <label class="nmrow">Your name, as they will see it (optional)<input id="peername" type="text" maxlength="24" value="${esc(myName())}" placeholder="${esc(appState.G ? appState.G.ln : "e.g. Joona")}" autocomplete="off" spellcheck="false" enterkeyhint="done"></label>
+    ${peerHas() ? `<p class="pstat"><span class="pdot"></span>${esc(peerLabel())} ${MID} ${esc(statusWord())}</p><button class="btn sec" data-act="side" data-arg="peer">See their last copy</button><button class="btn warn" data-act="peerforget">Forget their fleet</button>` : ""}`;
   return `<div class="menu" data-act="peerpanel"><div class="box">
-    <div class="mhd"><h2>Opponent's fleet</h2><button class="x" data-act="peerpanel" aria-label="Close">${CLOSE_X}</button></div>
-    ${P.err ? `<p class="note bad">${esc(P.err)}</p>` : ""}${body}
+    <div class="mhd"><h2>Opponent's fleet</h2><button class="x" data-act="peerpanel" aria-label="Close">&#215;</button></div>
+    ${P.err ? `<p class="note bad">${esc(P.err)}</p>` : ""}${peerBody(true)}${extra}
+    <p class="foot">The two pages talk through bfgtools' own relay, which passes the messages on and stores nothing.</p>
   </div></div>`;
+}
+function joinTyped(text){
+  const code = parseRoom(text != null ? text : appState.V.peerJoin || "");
+  if(!code){ appState.P.err = "A room code is four letters, for example KRAK: the letters the other player's phone shows after Create a room."; render(); return; }
+  appState.V.peerJoin = "";
+  appState.P.err = "";
+  openRoom(code, false);
 }
 /* The panel's and the sides' taps (events.js asks first). */
 export function peerAct(name, el){
@@ -538,22 +537,19 @@ export function peerAct(name, el){
     if((to === "peer" && !peerHas()) || (appState.V.side === "peer" ? "peer" : "me") === to) render(); else turnTo(to, "tap");
     return true;
   }
-  if(name === "peerpanel"){ appState.V.peerPanel = !appState.V.peerPanel; appState.V.menu = false; appState.P.err = appState.V.peerPanel ? appState.P.err : ""; if(!appState.V.peerPanel) appState.P.handoff = false; render(); return true; }
-  if(name === "peeroffer"){ startOffer(); return true; }
-  if(name === "peercancel"){ closePC(); appState.P.st = peerHas() ? "lost" : "off"; appState.P.url = ""; appState.P.svg = ""; appState.P.connecting = false; render(); return true; }
-  if(name === "peerqr"){ if(appState.P.svg) qrFull(appState.P.svg); return true; }
-  if(name === "peercopy"){ copyText(appState.P.url, "peer"); return true; }
-  if(name === "peershare"){ shareText("Gothic Fleet Play: link", appState.P.url); return true; }
-  if(name === "peerdrop"){ dropLink(false); return true; }
-  if(name === "peerforget"){ if(confirm("Forget the opponent's fleet on this device?")) dropLink(true); return true; }
-  if(name === "peerpaste"){
-    const t = typeof document !== "undefined" && document.getElementById ? (document.getElementById("peerpaste") || {}).value : appState.V.peerPaste;
-    const p = parsePeerText(t || appState.V.peerPaste);
-    appState.V.peerPaste = "";
-    if(!p){ appState.P.err = "That is not a link or code from Play's Opponent's fleet."; render(); return true; }
-    if(p.kind === "peer") acceptOffer(p.code); else takeReply(p.code);
+  if(name === "peerpanel"){ appState.V.peerPanel = !appState.V.peerPanel; appState.V.menu = false; if(!appState.V.peerPanel) appState.P.err = ""; render(); return true; }
+  if(name === "peercreate"){ appState.P.err = ""; openRoom(newRoomCode(), true); return true; }
+  if(name === "peerjoin"){
+    /* the field beside the button (the card and the panel each have one) */
+    const f = el && el.parentNode && el.parentNode.querySelector ? el.parentNode.querySelector("#peerjoin") : null;
+    joinTyped(f ? f.value : null);
     return true;
   }
+  if(name === "peerqr"){ if(inRoom()){ try{ qrFull(qrSvg(roomLink(appState.P.room))); }catch(e){} } return true; }
+  if(name === "peercopy"){ copyText(roomLink(appState.P.room), "peer"); return true; }
+  if(name === "peershare"){ shareText("Gothic Fleet Play: room " + appState.P.room, roomLink(appState.P.room)); return true; }
+  if(name === "peerleave"){ leaveRoom(false); return true; }
+  if(name === "peerforget"){ if(confirm("Forget the opponent's fleet on this device?")) leaveRoom(true); return true; }
   return false;
 }
 export function peerMessages(){ return MSG_N; }

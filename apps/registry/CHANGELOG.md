@@ -10,7 +10,29 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 - **Ruling T62** (open interpretation, 1.11.2026): a borrowed ship counts in the host section that holds its category and class (battlecruiser, grand, heavy, light, plain cruiser), its own heading first. Bakka's "in the same manner as battlecruisers" (p. 49) is a rule of the Bakka list; as a reserve elsewhere the ship is a cruiser. A class the host list does not have (a grand cruiser in the Gothic Sector) still counts nowhere, and the fleet says so.
 - The entitlement to reserves is unchanged and separate: one per three of the same type chosen from the fleet's own list (p. 14).
 
+### Changed
+- To phone: a link too long for a QR code a camera can read (over 1 000 characters, usually several fleets) shows no code; the panel offers Export file, Copy link and Share instead.
+
+### Changed
+- Phone: the **Menu** button in the points strip shows only once the buttons
+  have scrolled under it, where pinning them does something; pinned, it reads
+  **Hide** (31.10.2026, J243). At the top of the page it used to sit there and
+  only change its own colour when tapped.
+
 ### Added
+- Squadron merge (31.10.2026): the open unit's **Squadron** menu names the
+  units and squadrons it can merge with, and a unit dragged onto the middle of
+  another row of its kind merges with it (a drop on the row's edge still
+  reorders; the target row is ringed and labelled, a reorder draws a line). A
+  reserve or an ally can now be in a squadron with the fleet's own ships. A mix
+  the book forbids is merged and shown red: an ally in a core squadron
+  (Fleets p. 16), Mechanicus vessels with Imperial Navy, Rogue Trader or
+  Astartes ones (Fleets p. 122), escorts with capital ships (Rulebook p. 95).
+- Saved fleets for many fleets (31.10.2026): one line per fleet, the buttons on
+  the row under the pointer or the chosen one (a phone: Open, the rest when the
+  row is tapped); a search over name, list, points and date, a sort (newest,
+  oldest, name, points, list, remembered) and race chips. Up/Down choose,
+  Enter opens, Esc clears the search and then closes; a double click opens.
 - Link preview (29.10.2026): a link to the app in Discord and elsewhere shows its own image (the app itself, the numbers from the data) and text. `npm test` fails when the image is out of date (`npm run og`).
 
 ### Changed: Fleets WiP v0.40 and Rulebook v1.11 (29.10.2026)

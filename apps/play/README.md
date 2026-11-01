@@ -26,30 +26,49 @@ are unclear or silent the page makes a choice, and the choices are listed in
 
 ## The opponent's fleet (optional)
 
-Two players can link their phones, before the game or during it, and each
-sees the other's ships and what has happened to them, live (Menu >
-**Opponent's fleet**, or **Opponent** on the set-up screen). The roster then
-has two sides, *My fleet* and the opponent's: swipe sideways, tap a tab, or
-tap the tab at the screen's edge. Their side is read-only.
+Two players link their pages, before the game or during it, and each sees
+the other's ships and what has happened to them, live. The step is on the
+set-up screen (and in Menu > **Opponent's fleet** during the game): one
+player taps **Create a room** and gets a four-letter code, the other types
+it and taps **Join**, or scans the room's QR code. The roster then has two
+sides, *My fleet* and the opponent's: swipe sideways, tap a tab, or tap the
+tab at the screen's edge. Their side is read-only.
 
-There is no server (the site is static, docs/adr/0006): the phones talk to
-each other directly over WebRTC, and the handshake goes by two QR codes.
-The first phone shows its code, the second scans it with its camera and
-shows a reply, the first scans that. The reply reaches the waiting page in
-the same tab (hashchange), from another tab of the same browser
-(BroadcastChannel) or pasted. A public STUN server (`stun.l.google.com`)
-learns the two phones' network addresses so that phones on different
-networks can find each other; the fleet itself never passes through it. On
-the same Wi-Fi it is not needed. Two mobile networks behind strict NATs may
-not connect at all without a TURN relay, which the page does not have.
+The pages talk through the relay in `services/relay` (docs/adr/0007): a
+Cloudflare Worker at `play-relay.kuldare.com` that passes the messages of
+a room between its pages and stores nothing. The page remembers its room
+(`gothic-fleet-play-room`), so a reload or a phone that slept goes back in
+by itself. The first version (31.10.2026) linked the phones directly over
+WebRTC with two QR codes; it did not connect once on real phones (routers
+without hairpinning, mobile NATs without TURN, an iPhone freezing the tab
+that waited for the reply).
 
 What travels is the game record (`G`, which carries the fleet document) and
 the tracking switches, whenever they change. The last copy is kept in
-`gothic-fleet-play-peer` and shown, marked not live, after a reload; a
-reload ends the link (link again with two new codes). Code: `src/peer.js`.
+`gothic-fleet-play-peer` and shown, marked not live, when the other player
+is not in the room. Code: `src/peer.js`. For local testing `npm run
+relay:dev` runs the relay on port 8787, and a page on localhost uses it.
 
 On the site it is installable (a manifest and a service worker that fetches the
 page from the network first and falls back to the saved copy offline).
+
+## Boarding from a ship's card
+
+Board on a card opens Boarding Actions in a new tab or over the page, the player's
+choice on the sheet, kept on the device (`boarding.html`, the same app, built by
+`apps/boarding/build.js`), with the ship on it. An installed app defaults to the
+page: its tab may open in the browser, which cannot send the result back. `src/board.js` sends
+what the fleet decides, through `apps/boarding/src/play-link.js`: the crew's fleet,
+clan, crew, marks, commanders aboard, remaining hits, turrets, orders and Blast
+Markers. Boarding sends back what happened to each ship; hits, criticals, a
+squadron's losses and a drifting hulk go on the card. Two choices stay the
+player's and are asked on the page: when to spend a Clanz Warlord's once-a-game
++2 (Fleets p. 374), and which Ordo an Inquisitor Lord of no named Ordo is.
+
+The enemy ship's result is not written to the other phone: the link only reads
+their fleet, and each player keeps their own record (see above). What they must
+mark stays on a line on top of the roster until tapped away. Campaign rewards are
+not in the fleet: they go in Boarding's "Anything else" (roll or boarding value).
 
 ## Code
 

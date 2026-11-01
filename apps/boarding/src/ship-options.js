@@ -25,6 +25,7 @@ export function shipOpts(k,i){
       OPTS.filter(function(o){
         if(o.r.indexOf(race)<0 || auto.indexOf(o.id)>=0) return false;
         if(o.only && (!p || o.only.indexOf(p.full)<0)) return false;
+        if(o.notype && p && p.t===o.notype) return false;
         if(auto.indexOf("blackship")>=0 && (o.id==="marines" || o.id==="greyknights")) return false;
         if(o.noflag && auto.indexOf(o.noflag)>=0) return false;
         if(hulk && BV_UP.indexOf(o.id)>=0) return false;

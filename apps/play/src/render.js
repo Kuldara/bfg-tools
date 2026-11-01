@@ -11,7 +11,8 @@ import { builderFleets, endPending, jumpStrip, linkedFleets, renderEndPhase } fr
 import PLAY from "../rules.js";
 import { arcGlyph, esc, factionCols, shortArmour, shortRange, starHTML, title } from "../../../packages/ui/format.js";
 import DOMAIN from "../../../packages/rules/domain.js";
-import { edgeHandle, peerAfterRender, peerLoadCard, peerMenuWord, peerSide, peerTool, renderPeerPanel, renderPeerSide, sidesStrip } from "./peer.js";
+import { boardNoteLine, renderBoardSheet } from "./board.js";
+import { edgeHandle, peerAfterRender, peerLoadCard, peerMenuWord, peerSetupCard, peerSide, renderPeerPanel, renderPeerSide, sidesStrip } from "./peer.js";
 
 /* ============================================================= RENDER ===== */
 /* Scroll the open popover's anchor (the button line above it) to just
@@ -71,6 +72,8 @@ export function render(){
   else if(appState.V.screen === "setup") html = renderSetup();
   else html = renderRoster();
   if(!peer && appState.V.sheet != null && appState.G) html += renderSheet(appState.V.sheet);
+  if(!peer && appState.G && appState.V.screen === "roster") html = boardNoteLine() + html;
+  if(!peer && appState.V.board && appState.G) html += renderBoardSheet();
   if(appState.V.peerPanel) html += renderPeerPanel();
   else if(!peer && appState.V.menu && appState.G) html += renderMenu();
   else if(!peer && appState.V.endph && appState.G && appState.V.screen === "roster") html += renderEndPhase();
@@ -252,12 +255,21 @@ export function renderLoad(){
 /* The phone panel under a builder fleet: the QR code, the link, copy and
    share. The fleet travels inside the link; nothing is uploaded. */
 export function phonePanel(){
-  const canShare = typeof navigator !== "undefined" && !!navigator.share;
+  const V = appState.V, canShare = typeof navigator !== "undefined" && !!navigator.share;
+  const link = `<input class="link" readonly value="${esc(V.phoneUrl || "")}" aria-label="The link">`;
+  const send = `<button data-act="copylink" ${V.phoneUrl ? "" : "disabled"}>${V.copied === "link" ? "Copied" : "Copy link"}</button>${canShare ? `<button data-act="sharelink" ${V.phoneUrl ? "" : "disabled"}>Share</button>` : ""}`;
+  const opens = `the fleet builder opens there${V.phoneRemote ? " (the published page, bfgtools.kuldare.com)" : ""} ${V.phoneN > 1 ? "with all " + V.phoneN + " fleets in its Saved fleets" : "with the fleet on screen"}`;
+  /* too long for a code a camera can read: the file first, the link as it is */
+  if(V.phoneUrl && !V.phoneSvg && !V.phoneErr) return `<div class="phone">
+    <p class="foot">${V.phoneN > 1 ? "These " + V.phoneN + " fleets are" : "This fleet is"} too much for a QR code a camera can read. Save a file and send it to the other phone, where Open a fleet file reads it. Or send the link: ${opens}. Some chat apps cut a link this long (${V.phoneUrl.length} characters).</p>
+    ${link}
+    <div class="r4"><button data-act="savefile" data-arg="${esc(String(V.phone))}">Save file</button>${send}</div>
+  </div>`;
   return `<div class="phone">
-    ${appState.V.phoneErr ? `<p class="note bad">${esc(appState.V.phoneErr)}</p>` : appState.V.phoneSvg ? `<div class="qr" data-act="qrfull" title="Full screen">${appState.V.phoneSvg}</div>` : `<p class="foot">Making the code&hellip;</p>`}
-    <p class="foot">Hold this screen up to the other phone's camera (brightness up helps), or ${canShare ? "Share the link to it" : "send it the link"}: the fleet builder opens there${appState.V.phoneRemote ? " (the published page, bfgtools.kuldare.com)" : ""} ${appState.V.phoneN > 1 ? "with all " + appState.V.phoneN + " fleets in its Saved fleets" : "with the fleet on screen"}: Save keeps it, Play plays it. The fleet is inside the link itself; nothing is uploaded.</p>
-    <input class="link" readonly value="${esc(appState.V.phoneUrl || "")}" aria-label="The link">
-    <div class="r4"><button data-act="qrfull" ${appState.V.phoneSvg ? "" : "disabled"}>Full screen</button><button data-act="copylink" ${appState.V.phoneUrl ? "" : "disabled"}>${appState.V.copied === "link" ? "Copied" : "Copy link"}</button>${canShare ? `<button data-act="sharelink" ${appState.V.phoneUrl ? "" : "disabled"}>Share</button>` : ""}</div>
+    ${V.phoneErr ? `<p class="note bad">${esc(V.phoneErr)}</p>` : V.phoneSvg ? `<div class="qr" data-act="qrfull" title="Full screen">${V.phoneSvg}</div>` : `<p class="foot">Making the code&hellip;</p>`}
+    <p class="foot">Hold this screen up to the other phone's camera (brightness up helps), or ${canShare ? "Share the link to it" : "send it the link"}: ${opens}: Save keeps it, Play plays it. The fleet is inside the link itself; nothing is uploaded.</p>
+    ${link}
+    <div class="r4"><button data-act="qrfull" ${V.phoneSvg ? "" : "disabled"}>Full screen</button>${send}</div>
   </div>`;
 }
 
@@ -401,17 +413,21 @@ export function renderSetup(){
   /* a grey Start says why, and each name takes you to its row */
   const missing = appState.U.map((x, i) => x.R.kind === "ship" && appState.G.st[i].ld == null ? i : -1).filter(i => i >= 0);
   const ready = !missing.length;
+  /* a game under way, come back from the menu: back to it, and no Exit
+     that would forget its record (user 31.10.2026). A record from before
+     G.started is under way once its roster has been seen (resume sets it). */
+  const started = !!appState.G.started;
   const anyFixed = appState.U.some(x => PLAY.fixedLd(x.R) && PLAY.fixedLd(x.R).value === 7);
   const frr = fleetRR();
   const frrRow = frr ? `<div class="setrow"><div class="who"><b>Fleet re-rolls</b><small>${esc(frr.text)} ${MID} the fleet's own, no commander (Fleets p. ${frr.page})</small></div><span class="pill on">RR <b>${appState.G.fleet.rerolls | 0}</b></span></div>` : "";
   return `<div class="top"><h1>Set up<small>${esc(appState.G.ln)} ${MID} ${fleetPoints(appState.U)} pts</small></h1>
-      <div class="tools">${builderTool()}${peerTool()}<button class="tool" data-act="newgame" title="Back to the fleets: this set-up is not kept">Exit</button></div></div>
+      <div class="tools">${builderTool()}${started ? toolBtn("start", "undo", "Game", { off: !ready, tip: "Back to the game" }) : `<button class="tool" data-act="newgame" title="Back to the fleets: this set-up is not kept">Exit</button>`}</div></div>
     ${sidesStrip()}
-    <div class="main">${factsCard()}<div class="card"><h2>Leadership</h2>
+    <div class="main">${peerSetupCard()}${factsCard()}<div class="card"><h2>Leadership</h2>
       ${ldGuide()}${rollBar()}
       <p>Tap the value each ship fights on, or let Roll Ld roll the ships still without one. SQN groups capital ships into a squadron: one Ld, one order, combined fire (p. 95, 99). Tap a ship's name to give it another one for this game.${appState.L0.clanz ? " Da Ork Clanz: a Warlord may swap Leadership with any one ship or escort squadron under his command (Fleets p. 374) - tap the swapped values." : ""}${anyFixed ? " Planetary defences do not roll: their checks are made on Ld 7 (Rulebook p. 100)." : ""}</p>
       ${frrRow}${rows}
-      <button class="btn" data-act="start" ${ready ? "" : "disabled"}>Start the game</button>
+      <button class="btn" data-act="start" ${ready ? "" : "disabled"}>${started ? "Back to the game" : "Start the game"}</button>
       ${ready ? "" : `<p class="why">To start, pick the Ld of ${missing.length === 1 ? "one more ship" : missing.length + " more ships"}: ${missing.map(i => `<button data-act="seek" data-i="${i}">${esc(unitName(i))}</button>`).join(", ")}</p>`}</div></div>${edgeHandle()}`;
 }
 
@@ -774,11 +790,13 @@ export function renderRow(i, inGroup){
      name). Brace and orders stay when they are tracked: they are the enemy
      turn's own taps. */
   const compact = appState.V.compact;
+  const boardBtn = R.kind === "ship" ? `<button class="board" data-act="board" data-i="${i}">Board</button>` : "";
   const r4 = v.destroyed ? (esq ? "" : `<div class="r4"><button data-act="pop" data-i="${i}" data-arg="hulk">Catastrophic<small>${cataLabel(R, st)}</small></button></div>`)
-    : esq || compact ? (orderBtns ? `<div class="r4">${orderBtns}</div>` : "") : `<div class="r4">
+    : esq || compact ? (orderBtns || boardBtn ? `<div class="r4">${orderBtns}${boardBtn}</div>` : "") : `<div class="r4">
       <button class="hit" data-act="hit" data-i="${i}" ${v.quadGone ? "disabled" : ""}>Hit<small>${v.quadGone ? qn + "at 0" : "+1" + (qn ? " " + qn.trim() : "")}</small></button>
       ${orderBtns}
       <button class="crit" data-act="pop" data-i="${i}" data-arg="crit" ${v.quadGone ? "disabled" : ""}>Crit<small>${critLine}</small></button>
+      ${boardBtn}
     </div>`;
   const r1tail = compact
     ? (v.destroyed ? "" : (inGroup ? "" : ldTile(i, "", true)) + (esq ? "" : `<button class="crit cmini" data-act="pop" data-i="${i}" data-arg="crit" ${v.quadGone ? "disabled" : ""}>Crit<small>${critLine}</small></button>`) + (inGroup ? "" : playedBtn(i, v)))
@@ -1030,6 +1048,7 @@ export function renderMenu(){
     <details data-keep="track"${mo.track ? " open" : ""}><summary>Choose what to track</summary><div class="togs">
       ${TRACK.map(t => `<button class="${OPT[t[0]] ? "on" : ""}" data-act="track" data-arg="${t[0]}">${esc(t[1])}<i>${OPT[t[0]] ? "on" : "off"}</i><small>${esc(t[2])}</small></button>`).join("")}
     </div></details>
+    <button class="btn sec" data-act="setupback">Set-up<small>Leadership, squadrons, the opponent's room ${MID} the game stays</small></button>
     <button class="btn sec" data-act="peerpanel">Opponent's fleet<small>${esc(peerMenuWord())}</small></button>
     <button class="btn sec" data-act="fleets">Fleets and phone link<small>the game stays: Resume on the list</small></button>
     <button class="btn warn" data-act="newgame">New game (forget this record)</button>

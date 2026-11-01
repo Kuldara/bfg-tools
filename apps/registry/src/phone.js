@@ -3,7 +3,7 @@ import { libDocument } from "./saved-fleets.js";
 import { appState } from "./state.js";
 import { renderTop } from "./view.js";
 import { esc } from "../../../packages/ui/format.js";
-import { qrSvg } from "../../../packages/ui/qr.js";
+import { readableQr } from "../../../packages/ui/qr.js";
 import { PHONE_LINK, packFleet } from "../../../packages/ui/share-link.js";
 
 /* Where the phone opens the link: this builder (J236, user 25.10.2026: "to
@@ -32,21 +32,28 @@ export async function openPhone(key){
     mine.url = base.url + "#" + await packFleet(doc);
     mine.remote = base.remote;
     mine.n = 1 + ((doc.fleets || []).length);
-    try{ mine.svg = qrSvg(mine.url); }
-    catch(e){ mine.err = mine.n + " fleets are too long a link for one QR code (" + mine.url.length + " characters). Copy or share the link instead - a phone opens it all the same - or send the fleets one by one."; }
+    mine.svg = readableQr(mine.url);
   }catch(e){ mine.err = String(e && e.message || e); }
   if(appState.PHONE === mine) renderTop();
 }
 export function phonePanelHTML(){
   const p = appState.PHONE, all = p.key === "all";
   const share = typeof navigator !== "undefined" && !!navigator.share;
+  const opens = "the fleet builder opens " + (all && p.n > 1 ? "with all " + p.n + " fleets in its Saved fleets" : "with the fleet on screen") +
+    (p.remote ? " - on the published page, bfgtools.kuldare.com" : "");
+  const links = `<input class="plink" readonly value="${esc(p.url || "")}" aria-label="The link" onfocus="this.select()">`;
+  const send = `<button class="go" data-copylink${p.url ? "" : " disabled"}>Copy link</button>${
+    share ? `<button class="go" data-sharelink${p.url ? "" : " disabled"}>Share</button>` : ""}`;
+  /* too long for a code a camera can read: the file first, the link as it is */
+  if(p.url && !p.svg && !p.err) return `<div class="phonebox">
+    <p>${all && p.n > 1 ? "These " + p.n + " fleets are" : "This fleet is"} too much for a QR code a camera can read. Export a file and send it to the phone; Import file opens it there. Or send the link: ${opens}. Some chat apps cut a link this long (${p.url.length} characters).</p>
+    ${links}
+    <div class="pbtns"><button class="go" data-libexport="${esc(p.key)}">Export file</button>${send}</div></div>`;
   return `<div class="phonebox">${p.err ? `<p class="perr">${esc(p.err)}</p>` : ""}${
     p.svg ? `<div class="qr${all && p.n > 1 ? " big" : ""}" data-qrfull title="Full screen">${p.svg}</div>` : p.err ? "" : `<p>Making the code&hellip;</p>`}
-    <p>Scan it with the phone's camera - this screen can be a phone's too: the fleet builder opens ${all && p.n > 1 ? "with all " + p.n + " fleets in its Saved fleets" : "with the fleet on screen"}${
-      p.remote ? " - on the published page, bfgtools.kuldare.com" : ""}. Save keeps it there, Play plays it. The fleet is inside the link; nothing is uploaded anywhere.</p>
-    <input class="plink" readonly value="${esc(p.url || "")}" aria-label="The link" onfocus="this.select()">
-    <div class="pbtns"><button class="go" data-qrfull${p.svg ? "" : " disabled"}>Full screen</button><button class="go" data-copylink${p.url ? "" : " disabled"}>Copy link</button>${
-      share ? `<button class="go" data-sharelink${p.url ? "" : " disabled"}>Share</button>` : ""}</div></div>`;
+    <p>Scan it with the phone's camera - this screen can be a phone's too: ${opens}. Save keeps it there, Play plays it. The fleet is inside the link; nothing is uploaded anywhere.</p>
+    ${links}
+    <div class="pbtns"><button class="go" data-qrfull${p.svg ? "" : " disabled"}>Full screen</button>${send}</div></div>`;
 }
 /* Copy answers on the button itself, as Copy list does (no toast). When
    the browser will not write to the clipboard (no permission, an old

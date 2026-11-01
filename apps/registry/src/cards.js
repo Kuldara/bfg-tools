@@ -8,6 +8,7 @@ import { ldLabel } from "./view.js";
 import { leadsText, warlordIdx } from "./warlords.js";
 import { mixedEscortCardHTML } from "./mixed-card.js";
 import { mixRule } from "./mixed.js";
+import { cmdCardFacts } from "./aboard-ship.js";
 import { DATA } from "../../../packages/ui/catalog.js";
 import { arcGlyph, esc, factionCols, fixedCardPoints, optCostLabel, shortArmour, shortRange, shortShield, starHTML, title, upCostText } from "../../../packages/ui/format.js";
 import DOMAIN from "../../../packages/rules/domain.js";
@@ -159,6 +160,10 @@ export function optRowsHTML(R){
       <span class="tx"><b>${star}${esc(head)}</b>${rest ? `<span>${esc(rest)}</span>` : ""}</span>
       <span class="c">${esc(cost)}</span></div>`);
   });
+  /* the commander aboard and what he brings onto the ship (aboard-ship.js) */
+  (R.aboardCmd || []).forEach(c => rows.push(`<div class="k-opt"><span class="cb on"></span>
+      <span class="tx"><b>Commander aboard: ${esc(c.name)}</b><span>${esc(c.text)}</span></span>
+      <span class="c">cmdr</span></div>`));
   /* The list's own upgrades (re-roll, Mark, gubbins, Dakka Dakka) go in the
      same block as the ship's options: to the player they are the same thing. */
   const openUps = [];
@@ -321,15 +326,17 @@ export function unitCards(u, single){
   const grp = single ? null : mixedGroupOf(u, R);
   if(grp){
     if(grp[0] !== u) return [];
-    const Rs = grp.map(x => x === u ? R : resolveUnit(x)), mr = mixRule(u.s);
+    const Rs = grp.map(x => x === u ? R : resolveUnit(x)), mr = u.lst ? null : mixRule(u.s);
     return [{ id: "mixed", html: pos => mixedEscortCardHTML(Rs, u.sq, pos, !!(mr && mr.tiddla)) }];
   }
   /* a lettered escort card by itself: the card says its letter and the
      other cards of the squadron, so the table knows the three cards are one */
-  if(R.kind === "ship" && R.squadron && u.sq && !u.lst){
-    const mates = appState.S.units.filter(x => x !== u && !x.lst && x.sq === u.sq).map(x => resolveUnit(x)).filter(x => x && x.squadron);
+  if(R.kind === "ship" && R.squadron && u.sq){
+    const mates = appState.S.units.filter(x => x !== u && x.sq === u.sq).map(x => resolveUnit(x)).filter(x => x && x.squadron);
     R.sqTag = u.sq; R.sqMates = mates.map(x => x.hulls + " " + title(x.className)).join(" + ");
   }
+  /* the commander aboard this ship, for its card (aboard-ship.js) */
+  if(R.kind === "ship"){ const f = cmdCardFacts(fleetResolved(), appState.S.units.indexOf(u)); if(f) R.aboardCmd = f; }
   if(R.card === "fort" && R.kind === "ship")
     return [{ id: "plan", html: pos => fortPlanCardHTML(R, pos) },
             { id: "rules", html: pos => fortRulesCardHTML(R, pos) }];
@@ -339,12 +346,13 @@ export function unitCards(u, single){
   return one ? [{ id: "card", html: one }] : [];
 }
 /* The escort cards of u's mixed squadron in fleet order, or null: u is an
-   escort card of this fleet's own list with a letter that at least one other
-   such card has. */
+   escort card with a letter that at least one other such card has. A
+   borrowed escort is one too since the squadron merge (31.10.2026: a
+   reserve Falchion with three Cobras, Fleets p. 14). */
 const isEscortCard = R => !!(R && R.kind === "ship" && R.squadron && !R.defence);
 export function mixedGroupOf(u, R){
-  if(!u || !u.sq || u.lst || !isEscortCard(R || resolveUnit(u))) return null;
-  const g = appState.S.units.filter(x => x === u || (!x.lst && x.sq === u.sq && isEscortCard(resolveUnit(x))));
+  if(!u || !u.sq || !isEscortCard(R || resolveUnit(u))) return null;
+  const g = appState.S.units.filter(x => x === u || (x.sq === u.sq && isEscortCard(resolveUnit(x))));
   return g.length >= 2 ? g : null;
 }
 /* One card of a unit: the only card of most, and of a star fort the RULES
@@ -381,6 +389,16 @@ export function stCell(label, value){
    the resolver gives the value and a short caption, and the card prints
    them without a box. */
 export function ldCellHTML(R, extra){
+  /* a commander aboard (aboard-ship.js): his fixed Leadership is the ship's,
+     his modifier is written under the box the ship's roll goes in */
+  const cl = R.aboardCmd && R.aboardCmd[0] && R.aboardCmd[0].ld;
+  if(cl && cl.value != null){
+    const who = R.aboardCmd[0].name;
+    if(cl.kind === "modifier")
+      return `<div class="wide"><span>LEADERSHIP</span><div class="v"><i></i><small class="ldn">${
+        esc((cl.value >= 0 ? "+" : "") + cl.value + (cl.max != null ? ", max " + cl.max : "") + " " + who)}</small>${extra || ""}</div></div>`;
+    return `<div class="wide ldfix"><span>LEADERSHIP</span><div class="v"><b>${esc(cl.value)}</b><small class="ldn">${esc(who)}</small>${extra || ""}</div></div>`;
+  }
   const ld = R.leadership;
   if(!ld || ld.kind !== "fixed" || ld.value == null)
     return `<div class="wide"><span>LEADERSHIP</span><div class="v"><i></i>${extra || ""}</div></div>`;
@@ -428,7 +446,7 @@ export function shipCardParts(R){
   const upShown = R.upgrades.filter(x => x.state === "take" || (x.state === "opt" && x.required)).length +
     Math.ceil(R.upgrades.filter(x => x.state === "opt" && !x.required).length / 5);
   const optionCount = R.options.filter(o => o.state !== "off").length +
-    upShown + ((R.note || "").trim() ? 1 : 0);
+    upShown + ((R.note || "").trim() ? 1 : 0) + (R.aboardCmd ? R.aboardCmd.length : 0);
   const optMode = optionCount >= 9 ? " opt-overflow" :
                   optionCount >= 7 ? " opt-dense" :
                   optionCount >= 5 ? " opt-compact" : "";

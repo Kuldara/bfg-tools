@@ -575,6 +575,30 @@ def borrowed_rows(data, ships_in, base_rows, fleet_keys):
     return rows, problems
 
 
+def crew_table(data, ships_in, fleet_keys):
+    """Which fleet crews each list row, for a fleet that comes from the Registry
+    (Gothic Fleet Play): ref -> [book fleet, name], and the rows crewed by another
+    fleet than the one whose book prints the profile."""
+    refs, exceptions = {}, {}
+    for lst in data.get("lists", []):
+        lname = lst.get("nm", "")
+        own = LIST_FLEET.get(lname)
+        for sec in lst.get("secs", []):
+            stitle = sec.get("t", "")
+            rule = LIST_CREW.get((lname, stitle))
+            for e in sec.get("ents", []):
+                if e.get("k") != "unit" or e.get("r") is None:
+                    continue
+                prof = ships_in.get(str(e["r"]))
+                if prof is None:
+                    continue
+                refs[str(e["r"])] = [fleet_keys.index(prof["fl"]), prof["nm"]]
+                crew = crew_for(e.get("l") or "", rule, own, prof["fl"]) if rule else prof["fl"]
+                if crew != prof["fl"]:
+                    exceptions["%s|%s|%s" % (lname, stitle, e.get("l") or "")] = fleet_keys.index(crew)
+    return {"ref": refs, "ex": exceptions}
+
+
 def main():
     if not os.path.exists(SRC):
         print("NOT FOUND:", SRC)
@@ -656,6 +680,7 @@ def main():
         "src": "bfg_data.json / " + str(data.get("src", ""))[:120],
         "fleets": out_fleets,
         "ships": out_ships,
+        "crew": crew_table(data, ships_in, fleet_keys),
     }
     # An incomplete or uncertain ship base does not reach the disk: the old file stays
     # in force, so that the next build does not bake an error into the finished app.

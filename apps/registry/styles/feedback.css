@@ -46,6 +46,13 @@ button.sub.did::before{content:"\2212";position:absolute;inset:-1px;display:grid
 .uhead .pts{transform-origin:right center}
 .tally b.bump,.uhead .pts.bump{animation:fb-bump .45s ease-out}
 .unit.new,.chk.chg{animation:fb-wash 1.6s ease-out}
+/* A merge is not a move (31.10.2026): the squadron's row draws in - a ring
+   that closes on it - and the card that joined slides in under it, where a
+   reorder only washes the row that moved. */
+.unit.merged{animation:fb-join .7s cubic-bezier(.2,.8,.3,1),fb-wash 1.6s ease-out}
+.unit.mixg.merged{animation:fb-ring .9s ease-out,fb-wash 1.6s ease-out}
+@keyframes fb-join{0%{transform:translateY(-14px) scale(.97);opacity:.2}100%{transform:none;opacity:1}}
+@keyframes fb-ring{0%{box-shadow:inset 0 0 0 10px var(--accent)}100%{box-shadow:inset 0 0 0 0 var(--accent)}}
 @keyframes fb-tick{0%,65%{opacity:1}100%{opacity:0}}
 @keyframes fb-pop{0%{transform:scale(1)}40%{transform:scale(1.3)}100%{transform:scale(1)}}
 @keyframes fb-bump{0%{transform:scale(1)}40%{transform:scale(1.14)}100%{transform:scale(1)}}
@@ -56,6 +63,7 @@ button.sub.did::before{content:"\2212";position:absolute;inset:-1px;display:grid
    and whatever grows or slides is dropped. */
 @media (prefers-reduced-motion:reduce){
   .unit.new,.chk.chg{animation:fb-wash 1.6s ease-out!important}
+  .unit.merged,.unit.mixg.merged{animation:fb-wash 1.6s ease-out!important}
   .tally .dl{animation:fb-fade 1.9s ease-out!important}
   .add.did::after,.add.pop::after{animation:none}
 }
