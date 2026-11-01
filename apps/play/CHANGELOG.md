@@ -12,6 +12,8 @@ a tag `play-v<version>` deploys the Registry's site.
 
 ### Changed
 - The Blast Marker and shield tracking is gone (1.11.2026, RULINGS.md T48): the switch, the SH and Under Fire buttons and the markers' panel. Shields show as printed. Repair has a second button, a burst icon, for half the dice with Blast Markers in contact (p. 88).
+- Blast Markers are on or off (1.11.2026, T48): the menu's switch gives each card a burst button, -1 Ld and half the repair dice while on.
+- Repair moved into the critical table (1.11.2026, T45): each success is a wrench to spend on what you choose. The menu's Auto repair puts it back on the card, repairing at once when there is nothing to choose.
 - A ship lost in a warp rift counts as destroyed, for its full points (T47). A radiation burst lowers the Leadership of Actions' tests (p. 115).
 - Fleets: Send and Send all replace To phone and All to phone, with the same sheet as the builder, and Receive takes fleets by code. The paste box is gone. The opponent's room is unchanged.
 - Ships nobody named (1.11.2026): a short name, numbered when a class appears more than once: Lunar 1, Lunar 2, Dictator. The class in full is on the ship's card, and a name from the builder or the set-up stays as it is.

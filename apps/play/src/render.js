@@ -12,7 +12,7 @@ import PLAY from "../rules.js";
 import { arcGlyph, esc, factionCols, shortArmour, shortRange, starHTML, title } from "../../../packages/ui/format.js";
 import DOMAIN from "../../../packages/rules/domain.js";
 import { boardNoteLine, renderBoardSheet } from "./board.js";
-import { repairBtn, repairLines } from "./repair.js";
+import { BURST, repairBtn, repairLines, repairPanel } from "./repair.js";
 import { renderActions } from "./ship-actions.js";
 import { edgeHandle, peerAfterRender, peerLoadCard, peerMenuWord, peerSetupCard, peerSide, renderPeerPanel, renderPeerSide, sidesStrip } from "./peer.js";
 
@@ -756,7 +756,9 @@ export function renderRow(i, inGroup){
       <button class="order ${st.order && st.order !== "BFI" ? "on" : ""}" data-act="pop" data-i="${i}" data-arg="order">${st.order && st.order !== "BFI" ? esc(PLAY.ORDER_BY[st.order].name) : "Order"}</button>`;
   /* a star fort's HIT and CRIT go to the selected quadrant; one at 0
      takes no further damage (Fleets p. 501) */
-  const critLine = (v.quadGone ? qn + "at 0" : (v.crits.length ? v.crits.length + " active" : "2D6") + (qn && v.crits.length ? " " + qn.trim() : ""));
+  const critLine = st.repPick ? st.repPick + " to repair" : (v.quadGone ? qn + "at 0" : (v.crits.length ? v.crits.length + " active" : "2D6") + (qn && v.crits.length ? " " + qn.trim() : ""));
+  /* on or off (T48): a Blast Marker in contact */
+  const blastBtn = OPT.blast && !v.destroyed && !st.disengaged ? `<button class="blastb${st.blast ? " on" : ""}" data-act="blastflag" data-i="${i}" aria-pressed="${!!st.blast}" aria-label="Blast Marker in contact" title="Blast Marker in contact: -1 Ld (p. 48), half the damage-control dice (p. 88)">${BURST}</button>` : "";
   /* The compact row (user 19.10.2026): what a hit or a critical needs and
      nothing else - the name, Ld, CRIT, the spec line the enemy asks about
      (armour, shields), the track and the chips. The track takes a hit in
@@ -778,7 +780,7 @@ export function renderRow(i, inGroup){
   return `<section class="${cls}" data-u="${i}" style="--kd:${kd};--km:${km}${sqc ? ";--sq:" + sqc : ""}">
     <div class="r1"><span class="tag">${classTag(R)}${esq ? TIMES + v.alive : ""}</span>${inGroup ? `<span class="tag sq" title="Squadron ${grpLabel(appState.G.grp[i])}">SQN ${grpLabel(appState.G.grp[i])}</span>` : ""}${wlTag(i)}
       <button class="name" data-act="sheet" data-i="${i}"><b>${esc(unitName(i))}</b><small>${esc(sub)}</small></button>
-      ${r1tail}${actBtn}</div>
+      ${blastBtn}${r1tail}${actBtn}</div>
     ${upgradeLine(i)}
     ${cmdsAboard(i).map(cmdLine).join("")}${shipRRLine(i)}
     ${v.fort && !v.destroyed ? quadSelector(i, v) : ""}
@@ -889,6 +891,7 @@ export function renderPop(i){
        summary list and its REPAIR buttons went). */
     return `<div class="pop"><h4>${esc(cm.title)}${v.fort ? " " + MID + " " + PLAY.QUADS[v.quad] + " quadrant" : ""} ${MID} ${R.damage.triggerHint}</h4>
       <p class="last ${fl ? "fresh" : ""}">${fl ? esc(fl.msg) : (appState.V.flash && appState.V.flash.i === i ? esc(appState.V.flash.msg) : "Tap a result to add it; the table stays open until you close it.")}</p>
+      ${repairPanel(i)}
       <div class="tiles">${tiles}${wide}</div>
       ${xrow}
       <p>Damage control: <b>${v.repairDice}D6</b> (half with blast markers in contact), each 6 repairs one system or puts out one fire (p. 88).${R.damage.repair ? " " + esc(R.damage.repair) : ""}</p>

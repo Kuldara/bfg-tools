@@ -8,6 +8,8 @@ export const KEY_INFO = "gothic-fleet-play-info";
    spec + HP + crits row is the product; these are opt-in. */
 export const KEY_TRACK = "gothic-fleet-play-track";
 export const TRACK = [
+  ["autorepair", "Auto repair",            "Repair on the card too: it repairs at once when there is nothing to choose, and the End Phase has Repair all (p. 88)"],
+  ["blast",    "Blast Markers",              "an on/off button on each card: a marker in contact, -1 Ld (p. 48) and half the damage-control dice (p. 88)"],
   ["orders",   "Special orders and Brace",   "order per ship, fleet lock after a failed check, brace timing (p. 46-48)"],
   ["ordnance", "Ordnance loaded",            "torpedoes and attack craft ready / launched (p. 73-74)"],
   ["fleet",    "Fleet counters",             "the RR counter in the top bar (the re-roll boxes on the commander's card are always there), attack craft in play vs bays, enemy contacts +1, radiation (p. 48, 73, 115)"],
@@ -25,7 +27,8 @@ export function saveOpts(){ lsSet(KEY_TRACK, JSON.stringify(OPT)); }
 export function normaliseUntracked(g){
   (g.st || []).forEach(st => {
     if(!OPT.orders){ st.order = null; st.braceTurn = 0; st.braceCarry = null; st.braceLock = false; st.boarding = false; st.noOrdersTurn = false; st.teleported = false; }
-    st.blast = 0;   /* a game saved when the page still counted Blast Markers */
+    if(!OPT.blast) st.blast = 0;
+    else if(st.blast > 1) st.blast = 1;   /* a game saved when the page counted them */
   });
   if(g.fleet){ if(!OPT.orders) g.fleet.orderLock = false; if(!OPT.fleet){ g.fleet.enemyOrders = false; g.fleet.radiation = 0; } }
 }

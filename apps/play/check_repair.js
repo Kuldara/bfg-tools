@@ -42,6 +42,7 @@ const six = n => Array.from({ length: 6 }, (x, k) => k < n ? 0.99 : 0);
     await loaded;
     await cd.evaluate(SETUP);
     await sleep(800);
+    await cd.evaluate(`GFP.OPT.autorepair = true; GFP.render(); 1`);
     const tap = async sel => { await cd.evaluate(`document.querySelector(${JSON.stringify(sel)}).click()`); await sleep(120); };
     const has = sel => cd.evaluate(`!!document.querySelector(${JSON.stringify(sel)})`);
     const txt = sel => cd.evaluate(`(document.querySelector(${JSON.stringify(sel)}) || {}).innerText || ""`);
@@ -108,6 +109,42 @@ const six = n => Array.from({ length: 6 }, (x, k) => k < n ? 0.99 : 0);
     const a = JSON.parse(await cd.evaluate(stOf(0))), b = JSON.parse(await cd.evaluate(stOf(1)));
     check("Repair all rolls for every ship", !a.crits["7"] && !b.crits["6"], [a, b]);
     await shot("5-endphase-done");
+
+    /* the default: in the critical table, wrenches spent by choice */
+    await cd.evaluate(`GFP.OPT.autorepair = false; GFP.appState.V.endph = false; GFP.render(); 1`); await sleep(120);
+    await cd.evaluate(crits(0, { "7": 1, "6": 1 }));
+    check("without Auto repair no button on the card", !(await has(REP)));
+    await tap('[data-act="pop"][data-i="0"][data-arg="crit"]');
+    await shot("6-table");
+    await cd.evaluate(dice(six(1)));
+    await tap(REP);
+    st = JSON.parse(await cd.evaluate(stOf(0)));
+    check("one six: one wrench to spend, nothing repaired yet", st.repPick === 1 && st.crits["6"] === 1 && st.crits["7"] === 1, st);
+    check("the wrench is shown", await cd.evaluate(`document.querySelectorAll(".wrenches i").length === 1`));
+    await shot("7-wrench");
+    await tap('[data-act="repairpick"][data-arg="7"]');
+    st = JSON.parse(await cd.evaluate(stOf(0)));
+    check("spent on the fire: it is out, no hit", !st.crits["7"] && st.crits["6"] === 1 && st.hits === 2 && !st.repPick, st);
+    /* one kind is still the player's tap */
+    await cd.evaluate(crits(0, { "6": 1 }));
+    await cd.evaluate(dice(six(1)));
+    await tap(REP);
+    st = JSON.parse(await cd.evaluate(stOf(0)));
+    check("one kind: still a wrench to spend", st.repPick === 1 && st.crits["6"] === 1, st);
+    await tap('[data-act="repairpick"][data-arg="6"]');
+    await tap('[data-act="closepop"]');
+
+    /* Track Blast Markers: on or off per card (p. 48, 88) */
+    check("the setting off: no button", !(await has('[data-act="blastflag"]')));
+    await cd.evaluate(`GFP.OPT.blast = true; GFP.render(); 1`); await sleep(120);
+    await tap('[data-act="blastflag"][data-i="0"]');
+    st = JSON.parse(await cd.evaluate(`JSON.stringify({ b: GFP.appState.G.st[0].blast, ld: GFP.PLAY.leadership(GFP.appState.U[0].R, GFP.appState.G.st[0], GFP.appState.G.fleet).now })`));
+    check("on: Ld 8 is 7 under fire (p. 48)", st.b === 1 && st.ld === 7, st);
+    await cd.evaluate(crits(0, { "6": 1 }));
+    await cd.evaluate(`GFP.appState.G.st[0].blast = 1; GFP.render(); 1`);
+    await tap('[data-act="pop"][data-i="0"][data-arg="crit"]');
+    check("and the dice are halved by themselves: 6 hits left, 3D6 (p. 88)", /3D6/.test(await txt(REP)) && !(await has('[data-arg="half"]')), await txt(REP));
+    await shot("8-blast");
   }finally{ await cd.close(); }
   console.log((fail ? "FAIL " : "ok ") + pass + " passed, " + fail + " failed");
   process.exit(fail ? 1 : 0);

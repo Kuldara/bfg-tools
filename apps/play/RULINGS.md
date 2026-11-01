@@ -578,12 +578,16 @@ Sunward, solar flares and radiation bursts are text; flares and bursts belong to
 the whole table, not to one ship, and the burst's Leadership is the menu's existing
 counter, which the helpers of T46 and T47 also subtract (p. 115). Leadership as in T46.
 
-**T48. No Blast Marker or shield counter.** **The user's decision 1.11.2026.** The
-page no longer counts Blast Markers, so it shows a ship's shields as printed, and
-T1 and the Under Fire -1 on the card are no longer tracked: both are read from the
-table. `PLAY` keeps the rule for a value it is given. Damage control needs to
-know (p. 88), so Repair has a second button for a ship with markers in contact.
-A gas cloud (p. 110) is text only.
+**T48. Blast Markers on or off, no counter.** **The user's decisions 1.11.2026.**
+The page does not count Blast Markers, and shields show as printed; T1 no longer
+applies on the card. The menu's Blast Markers switch gives each card an on/off
+button: a marker in contact or not. On, it is Under Fire -1 (p. 48) and half the
+damage-control dice (p. 88), since both only ask whether there is any. Off, Repair
+has a second button for the half dice. A gas cloud (p. 110) is text only.
+
+**T45, changed by the user 1.11.2026.** Repair sits in the critical table, and every
+success is a wrench the player spends by tapping what to repair, even with only one
+kind on the ship. The menu's Auto repair brings back the first form described above.
 
 ## What is not tracked, and why
 

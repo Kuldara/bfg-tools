@@ -247,7 +247,7 @@ function run(check){
     const ldPop = P(`renderPop(${I.station})`);
     clean("the station's Leadership panel", ldPop);
     check("smoke: the station's Leadership panel has no dice tiles and says why (Rulebook p. 100)", !/data-act="ld"/.test(ldPop) && /Ld 7/.test(strip(ldPop)), strip(ldPop).slice(0, 200));
-    P(`V.pop = null; OPT.orders = true; OPT.ordnance = true; OPT.fleet = true; act("pop", ${I.station}, "order")`);
+    P(`V.pop = null; OPT.orders = true; OPT.blast = true; OPT.autorepair = true; OPT.ordnance = true; OPT.fleet = true; act("pop", ${I.station}, "order")`);
     const ordPop = strip(P(`renderPop(${I.station})`));
     check("smoke: with orders tracked a station is offered Reload Ordnance only, and Brace (Rulebook p. 100)", /Reload Ordnance/.test(ordPop) && !/Lock On|All Ahead Full|Burn Retros|Come to New Heading|left the table/.test(ordPop), ordPop.slice(0, 260));
     P(`act("pop", ${I.fort}, "order")`);
@@ -262,7 +262,7 @@ function run(check){
     check("smoke: the INFO order table of a station lists its own two orders only (Rulebook p. 100)", (() => { const t = strip(P(`V.sheet = ${I.station}; V.info = true; __h = renderSheet(${I.station}); V.info = false; V.sheet = null; __h`)); return /Reload Ordnance/.test(t) && /Brace For Impact/.test(t) && !/All Ahead Full|Burn Retros/.test(t); })());
     /* Fleets p. 502: a Ramilies may have twice its launch bays in play */
     check("smoke: the attack craft counter counts the Ramilies' 32, two air bases... and the station's 4", /AC 0 \/ ?\d+/.test(strip(P(`renderRoster()`))) && P(`PLAY.launchBays(U[${I.fort}].R, G.st[${I.fort}]).n`) === 32, strip(P(`renderRoster()`)).slice(0, 120));
-    P(`OPT.orders = false; OPT.ordnance = false; OPT.fleet = false; normaliseUntracked(G)`);
+    P(`OPT.orders = false; OPT.blast = false; OPT.autorepair = false; OPT.ordnance = false; OPT.fleet = false; normaliseUntracked(G)`);
     /* a stationary unit's played mark has no "moved" */
     P(`act("played", ${I.station})`);
     check("smoke: one tap on a station's played mark = shot (Rulebook p. 100: it cannot move)", P(`G.st[${I.station}].played`) === 2 && /SHOT/.test(rowT(I.station)));

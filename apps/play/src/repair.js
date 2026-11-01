@@ -7,12 +7,12 @@ import { esc } from "../../../packages/ui/format.js";
 import PLAY from "../rules.js";
 
 /* ==================================================== REPAIR WITH ONE TAP == */
-/* Damage control (p. 88) as one tap beside the criticals: the page rolls the
-   ship's dice, repairs what they allow and burns the fires left (p. 67). The
-   player picks only when the sixes cannot repair everything and there is more
-   than one kind to choose from: the book leaves the choice to the ship. What
-   happened stays on one line under the chips until the next tap elsewhere; no
-   toast and no window to close. UNDO takes the whole roll back. RULINGS.md T45. */
+/* Damage control (p. 88), in the critical table: the page rolls the ship's dice
+   and each success is a wrench, spent by tapping what to repair; the book leaves
+   the choice to the ship. When the wrenches are spent the fires left burn (p. 67).
+   With Auto repair on (the menu) the button is on the card as well, and the page
+   repairs at once whenever there is nothing to choose. What happened stays on
+   one line until the next tap elsewhere. UNDO takes it back. RULINGS.md T45. */
 
 /* which End Phase this is: both players repair in every End Phase (p. 88). The
    orders track knows whose turn it is; without it the page cannot tell, so a
@@ -46,7 +46,7 @@ export function rollRepair(i, rng, half){
   const note = [];
   let left = r.hits;
   /* nothing to choose: every result goes, or there is only one kind */
-  while(left > 0 && repairOpen(R, st).length){
+  while(OPT.autorepair && left > 0 && repairOpen(R, st).length){
     const open = repairOpen(R, st);
     if(open.length > 1 && left < open.reduce((a, c) => a + c.count, 0)) break;
     const key = open[0].key;
@@ -79,17 +79,17 @@ export function rollAllRepairs(rng){
   return any;
 }
 export function anyRepairRoll(){
-  return appState.U.some((x, i) => canRepair(i) && !appState.G.st[i].repPick && !rolledAlready(appState.G.st[i]));
+  return OPT.autorepair && appState.U.some((x, i) => canRepair(i) && !appState.G.st[i].repPick && !rolledAlready(appState.G.st[i]));
 }
 function setNote(i, text){ appState.V.repNote = appState.V.repNote || {}; appState.V.repNote[i] = text; }
 export function clearRepairNotes(){ appState.V.repNote = null; }
 
 /* a wrench for the roll, a burst for a Blast Marker in contact */
 const WRENCH = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 7a5.5 5.5 0 0 1-7.4 5.2L6.8 19a2.3 2.3 0 0 1-3.3-3.3l6.8-6.8A5.5 5.5 0 0 1 17 1.5l-3.3 3.3 1 3.5 3.5 1L21.5 6z"/></svg>';
-const BURST = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1l2.3 6.2L19.8 4l-2.6 5.8L23 12l-5.8 2.2 2.6 5.8-5.5-3.2L12 23l-2.3-6.2L4.2 20l2.6-5.8L1 12l5.8-2.2L4.2 4l5.5 3.2z"/></svg>';
+export const BURST = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1l2.3 6.2L19.8 4l-2.6 5.8L23 12l-5.8 2.2 2.6 5.8-5.5-3.2L12 23l-2.3-6.2L4.2 20l2.6-5.8L1 12l5.8-2.2L4.2 4l5.5 3.2z"/></svg>';
 /* the button: beside the chips, so the row of big buttons never moves */
-export function repairBtn(i){
-  if(!canRepair(i)) return "";
+export function repairBtn(i, inTable){
+  if(!canRepair(i) || (!inTable && !OPT.autorepair)) return "";
   const R = appState.U[i].R, st = appState.G.st[i];
   if(st.repPick) return "";
   const p = PLAY.repairPlan(R, st), done = rolledAlready(st);
@@ -97,13 +97,19 @@ export function repairBtn(i){
   const again = !OPT.orders && st.repPhase === phaseKey() ? "again " : "";
   /* the page does not count Blast Markers: the player says when one touches */
   const h = PLAY.repairPlan(R, st, true);
-  const halfBtn = done || h.dice === p.dice ? "" : `<button class="repb bm" data-act="repairroll" data-i="${i}" data-arg="half" aria-label="Repair with Blast Markers in contact: ${h.dice}D6" title="With Blast Markers in contact: half the dice, rounding up (p. 88)">${BURST}<b>${h.dice}D6</b></button>`;
+  const halfBtn = done || OPT.blast || h.dice === p.dice ? "" : `<button class="repb bm" data-act="repairroll" data-i="${i}" data-arg="half" aria-label="Repair with Blast Markers in contact: ${h.dice}D6" title="With Blast Markers in contact: half the dice, rounding up (p. 88)">${BURST}<b>${h.dice}D6</b></button>`;
   return `<button class="repb" data-act="repairroll" data-i="${i}"${done ? " disabled" : ""} title="End Phase damage control: roll, repair, and a fire left costs its hit (p. 88, 67). UNDO takes it back.">${WRENCH}${done ? "Repair rolled" : `Repair ${again}<b>${p.dice}D6</b>${p.target !== 6 ? " " + p.target + "+" : ""}`}</button>${halfBtn}`;
 }
+/* the critical table's own: the buttons, or the wrenches to spend */
+export function repairPanel(i){
+  if(!canRepair(i) && !(appState.V.repNote || {})[i]) return "";
+  return `<div class="reppanel"><div class="r3">${repairBtn(i, true)}</div>${repairLines(i, true)}</div>`;
+}
 /* the line under the chips: what the roll did, and the choice if there is one */
-export function repairLines(i){
+export function repairLines(i, inTable){
+  if(!inTable && !OPT.autorepair) return "";
   const note = (appState.V.repNote || {})[i], st = appState.G.st[i], R = appState.U[i].R;
-  const pick = st.repPick && R.kind === "ship" && repairOpen(R, st).length ? `<div class="reppick"><span>${st.repPick} to repair:</span>${repairOpen(R, st).map(c =>
+  const pick = st.repPick && R.kind === "ship" && repairOpen(R, st).length ? `<div class="reppick"><span class="wrenches" aria-label="${st.repPick} to spend">${`<i>${WRENCH}</i>`.repeat(st.repPick)}</span><span>Repair:</span>${repairOpen(R, st).map(c =>
     `<button data-act="repairpick" data-i="${i}" data-arg="${esc(c.key)}">${esc(critWord(R, c.key))}${c.count > 1 ? " " + TIMES + c.count : ""}</button>`).join("")}</div>` : "";
   return (note ? `<p class="repnote">Repair ${esc(note)}</p>` : "") + pick;
 }

@@ -163,7 +163,7 @@ export function renderEndPhase(){
   }).join("");
   return `<div class="menu endp" data-act="endph"><div class="box">
     <h2>End phase</h2>
-    <p class="foot">Both players repair in every End Phase (p. 88). Repair rolls the dice shown, repairs and adds the hit of a fire left burning (p. 67); with your own dice, tap what was repaired, then the fire. A ship with Blast Markers in contact rolls half: its burst button; Repair all rolls full dice.</p>
+    <p class="foot">Both players repair in every End Phase (p. 88). Roll the dice shown, tap what was repaired, then a fire left burning costs a hit (p. 67); a ship's Crit table can roll for you. Blast Markers in contact halve the dice.</p>
     ${anyRepairRoll() ? `<button class="btn" data-act="repairall">Repair all<small>roll for every ship below</small></button>` : ""}
     ${rows || `<p class="foot">Nothing to repair.</p>`}
     <button class="btn sec" data-act="endph">Done</button>
