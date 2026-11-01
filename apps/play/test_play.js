@@ -1600,6 +1600,8 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
   check("repair: a Mechanicus vessel adds +1D6 (Fleets p. 120)", plan(mech, PLAY.freshUnit(lunar)).dice === 9);
   const faces = PLAY.repairRoll({ dice: 4, target: 6 }, (seq => () => seq.shift())([0.99, 0, 0.5, 0.99]));
   check("repair: the roll is one die per dice, a success per target", faces.faces.join("") === "6146" && faces.hits === 2, JSON.stringify(faces));
+}
+
 /* --- Ramming and disengaging, read from the book's own examples --------- */
 {
   /* "the Imperial Lunar class cruiser Agrippa would take a Leadership test on
@@ -1624,6 +1626,8 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
   check("disengage: each enemy within 15 cm -1 (p. 56)", PLAY.disengageLd(8, 0, false, 2) === 6);
   check("disengage: Ld 13 passes a 10, fails an 11 and a 12 (p. 56-57)", PLAY.disengagePasses(13, 10) && !PLAY.disengagePasses(13, 11) && !PLAY.disengagePasses(13, 12));
   check("disengage: Ld 6 fails a 7", !PLAY.disengagePasses(6, 7) && PLAY.disengagePasses(6, 6));
+}
+
 /* --- Names and upgrades on the card ------------------------------------ */
 {
   const names = rs => PLAY.autoNames(rs);
