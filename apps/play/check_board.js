@@ -69,7 +69,7 @@ const IN = expr => `(() => { const f = document.querySelector(".boardframe"); co
     await sleep(500);
     await shot("4-result");
     for(let n = 0; n < 12; n++){
-      const done = await cd.evaluate(IN(`(() => { if(!f) return "gone"; const s = d.getElementById("resultSheet"); const a = s.querySelector('[data-r="apply"]:not([disabled]),[data-r="next"],[data-r="noreroll"],[data-r="alloc+"]'); if(!a) return "wait"; a.click(); return a.dataset.r; })()`));
+      const done = await cd.evaluate(IN(`(() => { if(!f) return "gone"; const s = d.getElementById("resultSheet"); const a = ['[data-r="apply"]:not([disabled])', '[data-r="next"]', '[data-r="noreroll"]', '[data-r="alloc+"]'].map(q => s.querySelector(q)).find(Boolean); if(!a) return "wait"; a.click(); return a.dataset.r; })()`));
       if(done === "gone" || done === "next") break;
       await sleep(250);
     }
