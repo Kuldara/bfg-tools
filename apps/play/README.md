@@ -8,9 +8,8 @@ Live at [bfgtools.kuldare.com/play/](https://bfgtools.kuldare.com/play/Gothic%20
 prototype (version in `app.json`).
 
 **Record, do not adjudicate:** nothing here decides whether a shot hits;
-the only dice it rolls are asked for on the set-up screen (the Leadership and the
-upgrades rolled before the game, RULINGS.md T44), and every result stays the
-player's to change. Every rule it applies carries its page in Rulebook v1.11 (the same pages as v1.10). Where the books
+it rolls only when asked: the Leadership and the upgrades rolled before the game
+(RULINGS.md T44) and a ship's Repair (T45). Every result stays the player's to change. Every rule it applies carries its page in Rulebook v1.11 (the same pages as v1.10). Where the books
 are unclear or silent the page makes a choice, and the choices are listed in
 [RULINGS.md](RULINGS.md) (the code cites them as T1-T43).
 

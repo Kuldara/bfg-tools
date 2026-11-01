@@ -12,6 +12,7 @@ import PLAY from "../rules.js";
 import { arcGlyph, esc, factionCols, shortArmour, shortRange, starHTML, title } from "../../../packages/ui/format.js";
 import DOMAIN from "../../../packages/rules/domain.js";
 import { boardNoteLine, renderBoardSheet } from "./board.js";
+import { repairBtn, repairLines } from "./repair.js";
 import { edgeHandle, peerAfterRender, peerLoadCard, peerMenuWord, peerSetupCard, peerSide, renderPeerPanel, renderPeerSide, sidesStrip } from "./peer.js";
 
 /* ============================================================= RENDER ===== */
@@ -810,7 +811,8 @@ export function renderRow(i, inGroup){
     ${v.destroyed && !esq ? hulkLine(R, st) : statsLine(v, R, esq)}
     ${v.destroyed && !esq ? "" : compact ? weaponsLine(R, st, esq) : weaponsTable(R, st, esq)}
     ${R.ruleCard && !v.destroyed && !compact ? ruleSteps(R) : ""}
-    <div class="r3">${r3}${chips}</div>
+    <div class="r3">${r3}${chips}${repairBtn(i)}</div>
+    ${repairLines(i)}
     ${r4}
     ${appState.V.pop && appState.V.pop.i === i && appState.V.sheet == null && !(inGroup && /^(ld|order)$/.test(appState.V.pop.kind)) ? renderPop(i) : ""}
   </section>`;
@@ -968,7 +970,7 @@ export function renderSheet(i){
   </div>`;
   const cm = R.damage.critical;
   const crits = esq ? "" : `<div class="sec"><h3>Criticals<em>${qn ? qn + " " + MID + " " : ""}${v.crits.length ? v.crits.length + " active" : "none"} ${MID} damage control ${v.repairDice}D6 (p. 88)</em></h3>
-    ${v.crits.length ? `<div class="r3">${critChips(R, st, i)}</div>` : ""}
+    ${v.crits.length ? `<div class="r3">${critChips(R, st, i)}${repairBtn(i)}</div>${repairLines(i)}` : ""}
     <div class="r4"><button class="crit" data-act="pop" data-i="${i}" data-arg="crit">Criticals<small>${R.damage.triggerHint}</small></button></div>
     ${appState.V.pop && appState.V.pop.i === i && /^crit/.test(appState.V.pop.kind) ? renderPop(i) : ""}
   </div>`;

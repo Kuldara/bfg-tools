@@ -1583,6 +1583,25 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
   check("d6: every face 1-6 from the generator", [1, 2, 3, 4, 5, 6].map(() => PLAY.d6(rng)).join("") === "123456");
 }
 
+/* --- Repair with one tap: the dice the book gives ---------------------- */
+{
+
+  const st = PLAY.freshUnit(lunar);
+  const plan = (R, s2) => PLAY.repairPlan(R, s2);
+  /* "capital ships roll 1D6 per Damage point remaining ... Each roll of a 6" (p. 88) */
+  check("repair: a Lunar at 8 hits left rolls 8D6, 6 repairs (p. 88)", plan(lunar, st).dice === 8 && plan(lunar, st).target === 6, JSON.stringify(plan(lunar, st)));
+  st.hits = 1;
+  check("repair: one hit taken, 7D6 (p. 88: per Damage point remaining)", plan(lunar, st).dice === 7);
+  st.blast = 1;
+  check("repair: Blast Markers in contact, half rounding up: 4D6 (p. 88)", plan(lunar, st).dice === 4);
+  const necron = { damage: { repair: "REPAIR: End Phase, D6 / remaining Hit; 4+ = 1 crit; blast contact 1/2 dice." }, stats: lunar.stats, rules: [] };
+  check("repair: Necrons succeed on 4+ (Fleets p. 404)", plan(necron, PLAY.freshUnit(lunar)).target === 4);
+  const mech = { damage: { repair: "ALL ADMECH: REPAIR +1D6." }, stats: lunar.stats, rules: [] };
+  check("repair: a Mechanicus vessel adds +1D6 (Fleets p. 120)", plan(mech, PLAY.freshUnit(lunar)).dice === 9);
+  const faces = PLAY.repairRoll({ dice: 4, target: 6 }, (seq => () => seq.shift())([0.99, 0, 0.5, 0.99]));
+  check("repair: the roll is one die per dice, a success per target", faces.faces.join("") === "6146" && faces.hits === 2, JSON.stringify(faces));
+}
+
 /* --- the built page itself --------------------------------------------- */
 /* Everything above tests rules.js. The page's own code (set-up, rows,
    cards, panels, actions, VP sums) is in src/, and nothing above runs it:

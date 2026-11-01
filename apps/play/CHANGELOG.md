@@ -5,6 +5,9 @@ a tag `play-v<version>` deploys the Registry's site.
 
 ## Unreleased
 
+### Added
+- Repair with one tap (1.11.2026, RULINGS.md T45): beside a ship's criticals, Repair rolls its damage-control dice (p. 88), repairs, and adds the hit of a fire left burning (p. 67). The player picks only when the dice cannot repair everything and there is more than one kind. What happened stays on a line until the next tap elsewhere; UNDO takes it back. The End Phase panel has Repair all.
+
 ### Changed
 - To phone: a link too long for a QR code a camera can read (over 1 000 characters, usually several fleets) shows no code; the panel offers Save file, Copy link and Share instead.
 

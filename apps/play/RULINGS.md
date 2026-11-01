@@ -533,6 +533,21 @@ with its page, and its effect is not applied to the stats. **Not covered yet:** 
 Bakka Fleet-Admiral's rolled refits (p. 48) and the Mechanicus experimental
 cruiser (p. 124).
 
+**T45. Repair with one tap.** **The user's request 1.11.2026.** Repair on a
+ship rolls its damage-control dice (p. 88), repairs, and adds the hit of a fire
+left burning (p. 67). The book says each 6 "enables the ship to repair one
+critically damaged system or put out one fire" and does not rank them, so the
+page does not either: when the sixes cannot repair everything and more than one
+kind is on the ship, the player picks; otherwise there is nothing to choose and
+it goes at once. Dice: `PLAY.repairPlan`, from the card's own repair line. Necrons
+4+ (Fleets p. 404). Mechanicus +1D6 (Fleets p. 120) is added **after** Blast
+Markers halve the dice: "always add +1D6". Repulsor Shielding ignores the halving
+until Shields Collapsed. With the orders track on, each End Phase rolls once (a
+turn's mine/enemy half); without it the page cannot tell the two End Phases apart
+and a second roll stays open. Own dice still work: the End Phase panel's taps are
+unchanged. Docking's 2 extra dice (Fleets) and a re-roll of damage control are not
+applied by the button; the ship's rule lines say so and UNDO plus the taps do it.
+
 ## What is not tracked, and why
 
 - The strength of torpedo salvoes and attack craft markers on the table

@@ -767,6 +767,24 @@ function repairDice(R, st){
   return n;
 }
 
+/* The dice to roll and the score that repairs, for the Repair button. Necrons
+   succeed on 4+ (Fleets p. 404), a Mechanicus vessel adds +1D6 (Fleets p. 120),
+   Repulsor Shielding ignores Blast Markers on repairs until Shields Collapsed;
+   the card's own repair line says which. RULINGS.md T45. */
+function repairPlan(R, st){
+  var line = String(R.damage && R.damage.repair || "");
+  var repulsor = (R.rules || []).some(function(r){ return /ignore Blast Marker[^.]*repairs/i.test(String(r.t)); }) &&
+    !activeCrits(st, R).some(function(c){ return c.def && /shields? collapse/i.test(c.def.name); });
+  var n = remaining(R, st);
+  if(st.blast > 0 && !repulsor) n = half(n);
+  return { dice: n + (/REPAIR \+1D6/i.test(line) ? 1 : 0), target: /4\+ = 1 crit/i.test(line) ? 4 : 6 };
+}
+function repairRoll(plan, rng){
+  var faces = [];
+  for(var k = 0; k < plan.dice; k++) faces.push(d6(rng));
+  return { faces: faces, hits: faces.filter(function(f){ return f >= plan.target; }).length };
+}
+
 /* Boarding value (p. 89): damage points remaining; the defender adds its
    turrets. +2 against a crippled ship for the attacker (p. 90). */
 /* A star fort (Fleets p. 502): "the remaining hit points of all four
@@ -1339,7 +1357,7 @@ return {
   freshUnit: freshUnit, freshFleet: freshFleet, isEscort: isEscort, isCapital: isCapital,
   crippled: crippled, destroyed: destroyed, remaining: remaining,
   shields: shields, turrets: turrets, speed: speed, turns: turns, leadership: leadership,
-  armament: armament, braced: braced, repairDice: repairDice, boardingValue: boardingValue,
+  armament: armament, braced: braced, repairDice: repairDice, repairPlan: repairPlan, repairRoll: repairRoll, boardingValue: boardingValue,
   conceded: conceded, squadronConceded: squadronConceded, addCrit: addCrit, repairCrit: repairCrit, removeCrit: removeCrit, activeCrits: activeCrits,
   standardCrits: standardCrits, critTarget: critTarget, hasLocation: hasLocation,
   catastrophic: catastrophic, hulkRules: hulkRules, isFort: isFort, staysInPlace: staysInPlace, concededPage: concededPage, fireDamage: fireDamage,
