@@ -245,7 +245,7 @@ export function mapOf(sc, v, playT) {
   const ti = typeof TERR_INFO !== "undefined" && TERR_INFO[sc.id];
   if (ti) for (const it of items) { const e = ti.find(x => x.m && x.m(it, v)); if (e) it.ti = e; }
   const ps = get(st, "psize", 0);
-  return { w: W, h: H, items, bz, sel: st.bz && st.bz.sel, sc, v, lo: LOW_ORBIT.has(sc.id) ? { size: ps ? (ps === 1 ? "small" : ps === 6 ? "large" : "medium") : null } : null };
+  return { w: W, h: H, items, bz, sel: st.bz && st.bz.sel, sc, v, lo: LOW_ORBIT.has(sc.id) && !(sc.noLowTable || []).includes(v) ? { size: ps ? (ps === 1 ? "small" : ps === 6 ? "large" : "medium") : null } : null };
 }
 /* owner 21.10.: a map always on the Play tab, in every scenario (campaigns too). Without a fixed map the rolled
    terrain is shown if there is one (e.g. Battles in the Warp's warp phenomena); otherwise there is nothing to show. */

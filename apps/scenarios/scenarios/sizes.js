@@ -250,5 +250,8 @@ Z("fan-b-poi", "S", "750 each", "Both fleets up to 750 pts (BBGM p. 64).");
 Z("fan-b-chance", "S", "750 each", "Both fleets up to 750 pts (BBGM p. 68).");
 Z("fan-b-starfort", "S", "1000 each", "Both fleets up to 1000 pts; the star fort is on the table for free (BBGM p. 73).");
 Z("fan-b-patrol", "any", "Equal", EQUAL);
+Z("fan-b-raiders", "S", "Defender 1000 + transports · Raiders 750", "The defender up to 1000 pts plus rolled transports, the raiders up to 750 pts (BBGM p. 63).");
+Z("fan-b-ring", "S", "Attacker 600 · Defender 300 + defences", "600 pts against 300 pts plus a rolled base (BBGM p. 65).");
+Z("fan-b-assault", "any", "Equal + defences + transports", EQUAL);
 Z("fan-v-last-wave", "L", "2000 each", "Both lists up to 2000 pts; the rearguard is part of the Imperial total.");
 })();
