@@ -6,7 +6,7 @@ import { fleetFactsNow, fleetPoints, fleetsIn, parseDoc, resolveFleet } from "./
 import { KEY_WAKE, builderTool, carriersOf, cmdsAboard, coCmd, grpLabel, isEscGrp, ldPlanOf, ldRollers, loadPlay, preCounts, preRollsOf, sqnShip, toolBtn, wl2Box, wlExtra, wlTag } from "./game-state.js";
 import { IN_REFITS, inRefitKind, pregameRolls, pregameText } from "../../../packages/ui/pregame-tables.js";
 import { cataLabel, critLabel, groupUnits } from "./actions.js";
-import { baseName, classTag, crippledNow, critChips, ldTile, memberWord, ordChip, ordnancePills, renderFleetPop, statsLine, unitName, weaponsLine, weaponsTable } from "./derived.js";
+import { upgradeLine, baseName, classTag, crippledNow, critChips, ldTile, memberWord, ordChip, ordnancePills, renderFleetPop, statsLine, unitName, weaponsLine, weaponsTable } from "./derived.js";
 import { builderFleets, endPending, jumpStrip, linkedFleets, renderEndPhase } from "./share.js";
 import PLAY from "../rules.js";
 import { arcGlyph, esc, factionCols, shortArmour, shortRange, starHTML, title } from "../../../packages/ui/format.js";
@@ -757,7 +757,10 @@ export function renderRow(i, inGroup){
   const esq = v.escort;
   const sqc = inGroup ? sqColor(appState.G.grp[i]) : esq ? escColor(i) : null;
   const cls = ["row", esq ? "esc" : "cap", v.crippled ? "crippled" : "", v.destroyed ? "dead" : "", v.destroyed && !esq && !st.hulk && st.hulkName ? "gone" : "", "pl" + st.played, inGroup ? "ingrp" : "", sqc ? "sqd" : ""].join(" ");
-  const sub = [R.name ? title(R.className) : "", R.stats.type, esq ? R.hulls + " " + memberWord(R, R.hulls) : (R.points | 0) + " pts"].filter(Boolean).join(" " + MID + " ");
+  /* the name is short now (PLAY.autoNames): the class in full is said here,
+     and its type only when the class does not say it */
+  const klass = title(R.className);
+  const sub = [klass, new RegExp(String(R.stats.type).split("/")[0], "i").test(klass) ? "" : R.stats.type, esq ? R.hulls + " " + memberWord(R, R.hulls) : (R.points | 0) + " pts"].filter(Boolean).join(" " + MID + " ");
   /* a star fort's chips are the selected quadrant's, and say which */
   const qn = v.fort ? PLAY.QUADS[v.quad] + " " : "";
   const chips = (OPT.orders && !inGroup ? ordChip(st) : "") + (v.crippled ? `<span class="chip crip">${qn}CRIPPLED</span>` : "") +
@@ -805,6 +808,7 @@ export function renderRow(i, inGroup){
     <div class="r1"><span class="tag">${classTag(R)}${esq ? TIMES + v.alive : ""}</span>${inGroup ? `<span class="tag sq" title="Squadron ${grpLabel(appState.G.grp[i])}">SQN ${grpLabel(appState.G.grp[i])}</span>` : ""}${wlTag(i)}
       <button class="name" data-act="sheet" data-i="${i}"><b>${esc(unitName(i))}</b><small>${esc(sub)}</small></button>
       ${r1tail}</div>
+    ${upgradeLine(i)}
     ${cmdsAboard(i).map(cmdLine).join("")}${shipRRLine(i)}
     ${v.fort && !v.destroyed ? quadSelector(i, v) : ""}
     ${v.destroyed && !esq ? hulkLine(R, st) : statsLine(v, R, esq)}
@@ -1014,7 +1018,7 @@ export function renderSheet(i){
   const ruleSec = R.ruleCard ? `<div class="sec"><h3>${esc(R.ruleCard.title)}<em>Fleets p. ${R.ruleCard.page}</em></h3><p class="lead">${esc(R.ruleCard.lead || "")}</p>${ruleSteps(R)}</div>` : "";
   return `<div class="sheet" style="--kd:${kd};--km:${km}">
     <div class="sh-hd"><div class="t"><h2>${esc(unitName(i))}</h2><p>${esc(sub)}</p></div>${ldTile(i)}<button class="x" data-act="closesheet" aria-label="Close">${CLOSE_X}</button></div>
-    <div class="sh-body">${band}${cmdsAboard(i).map(cmdLine).join("")}${shipRRLine(i)}${v.fort && !v.destroyed ? quadSelector(i, v) : ""}${stats}${preLine(i)}
+    <div class="sh-body">${band}${upgradeLine(i)}${cmdsAboard(i).map(cmdLine).join("")}${shipRRLine(i)}${v.fort && !v.destroyed ? quadSelector(i, v) : ""}${stats}${preLine(i)}
       ${appState.V.pop && appState.V.pop.i === i && /^(ld|blast)$/.test(appState.V.pop.kind) ? renderPop(i) : ""}
       <div class="sec"><h3>Armament<em>Str as printed ${MID} &frac12; when halved</em></h3>${weaponsTable(R, st, esq)}</div>
       ${ruleSec}${damage}${crits}${flags}${info}

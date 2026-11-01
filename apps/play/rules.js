@@ -767,6 +767,36 @@ function repairDice(R, st){
   return n;
 }
 
+/* What to call a ship nobody named: short enough for the strip and the lists,
+   and telling two of a class apart (user 1.11.2026). "Lunar 1, Lunar 2" in the
+   fleet's order; the class in full stays on the card's second line. */
+function autoNames(Rs){
+  var word = function(R){ return String(R.className || "").replace(/\s+class\b.*$/i, "").toLowerCase().replace(/(^|[\s\-'])([a-z])/g, function(m, a, b){ return a + b.toUpperCase(); }); };
+  var seen = {}, total = {};
+  Rs.forEach(function(R){ if(R.kind === "ship" && !R.name){ var w = word(R); total[w] = (total[w] | 0) + 1; } });
+  return Rs.map(function(R){
+    if(R.kind !== "ship" || R.name || !R.className) return null;
+    var w = word(R); seen[w] = (seen[w] | 0) + 1;
+    return total[w] > 1 ? w + " " + seen[w] : w;
+  });
+}
+/* A taken option in a couple of words: the rows are sentences from the book. */
+function featureWord(text){
+  var t = String(text), m =
+    t.match(/\u2014\s*([^:(]+?)(?:\s+instead\b|\s*:|\s*\(|$)/) ||
+    t.match(/\b(?:replaced?|exchanged?|swapped?)\b[^.]*?\bwith (?:an? |the )?([^.,(]+?)(?:\s+at\b|\s+for\b|\s*\(|[.,]|$)/i) ||
+    t.match(/\b(?:take|carry|have|add|fit|mount|purchase|buy)s?\s+(?:an? |the |squadrons of )?([^.,(]+?)(?:\s+at\b|\s+for\b|\s+if\b|\s*\(|[.,]|$)/i);
+  var w = (m ? m[1] : t.split(/\s+/).slice(0, 3).join(" ")).trim();
+  return w.charAt(0).toUpperCase() + w.slice(1);
+}
+function takenFeatures(R){
+  var out = (R.options || []).filter(function(o){ return o.state === "take"; }).map(function(o){ return featureWord(o.text); });
+  (R.upgrades || []).forEach(function(u){
+    if(u.state === "take") out.push(String(u.label).replace(/\s*\([^)]*\)/g, "").replace(/^Clan:\s*/i, "").trim());
+  });
+  return out;
+}
+
 /* Boarding value (p. 89): damage points remaining; the defender adds its
    turrets. +2 against a crippled ship for the attacker (p. 90). */
 /* A star fort (Fleets p. 502): "the remaining hit points of all four
@@ -1339,7 +1369,7 @@ return {
   freshUnit: freshUnit, freshFleet: freshFleet, isEscort: isEscort, isCapital: isCapital,
   crippled: crippled, destroyed: destroyed, remaining: remaining,
   shields: shields, turrets: turrets, speed: speed, turns: turns, leadership: leadership,
-  armament: armament, braced: braced, repairDice: repairDice, boardingValue: boardingValue,
+  armament: armament, braced: braced, repairDice: repairDice, autoNames: autoNames, featureWord: featureWord, takenFeatures: takenFeatures, boardingValue: boardingValue,
   conceded: conceded, squadronConceded: squadronConceded, addCrit: addCrit, repairCrit: repairCrit, removeCrit: removeCrit, activeCrits: activeCrits,
   standardCrits: standardCrits, critTarget: critTarget, hasLocation: hasLocation,
   catastrophic: catastrophic, hulkRules: hulkRules, isFort: isFort, staysInPlace: staysInPlace, concededPage: concededPage, fireDamage: fireDamage,

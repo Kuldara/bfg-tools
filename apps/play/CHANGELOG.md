@@ -6,6 +6,8 @@ a tag `play-v<version>` deploys the Registry's site.
 ## Unreleased
 
 ### Changed
+- Ships nobody named (1.11.2026): a short name, numbered when a class appears more than once: Lunar 1, Lunar 2, Dictator. The class in full is on the card's second line, and a name from the builder or the set-up stays as it is.
+- What a ship bought and rolled before the game is on one quiet line under its name.
 - To phone: a link too long for a QR code a camera can read (over 1 000 characters, usually several fleets) shows no code; the panel offers Save file, Copy link and Share instead.
 
 ### Added

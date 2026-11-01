@@ -1583,6 +1583,24 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
   check("d6: every face 1-6 from the generator", [1, 2, 3, 4, 5, 6].map(() => PLAY.d6(rng)).join("") === "123456");
 }
 
+/* --- Names and upgrades on the card ------------------------------------ */
+{
+  const names = rs => PLAY.autoNames(rs);
+  const lun = { kind: "ship", className: "LUNAR CLASS CRUISER" }, dic = { kind: "ship", className: "DICTATOR CLASS CRUISER" };
+  check("names: one of a class needs no number, and no class words", names([dic])[0] === "Dictator", names([dic])[0]);
+  check("names: several of a class are numbered in fleet order", names([lun, dic, lun]).join() === "Lunar 1,Dictator,Lunar 2", names([lun, dic, lun]).join());
+  check("names: a name from the builder stays and takes no number", names([Object.assign({ name: "Agrippa" }, lun), lun]).join() === ",Lunar", names([Object.assign({ name: "Agrippa" }, lun), lun]).join());
+  check("names: a class without the word stays whole", names([{ kind: "ship", className: "BATTLE BARGE" }])[0] === "Battle Barge");
+  const short = PLAY.featureWord;
+  check("features: a replaced weapon", short("Can replace its prow torpedoes with a nova cannon at an additional cost of +20 pts (like the Minotaur and the Lord Daros).") === "Nova cannon", short("Can replace its prow torpedoes with a nova cannon at an additional cost of +20 pts (like the Minotaur and the Lord Daros)."));
+  check("features: a bought thing", short("The ship may take a power ram for +5 points, if it is part of an Imperial Navy fleet") === "Power ram", short("The ship may take a power ram for +5 points, if it is part of an Imperial Navy fleet"));
+  check("features: a dash names it", short("Xenotech system (free, choose one) \u2014 Long Range Sensors: The vessel adds +1") === "Long Range Sensors", short("Xenotech system (free, choose one) \u2014 Long Range Sensors: The vessel adds +1"));
+  check("features: an Ork row", short("Prow \u2014 torpedo launcha instead of heavy gunz (Speed 30 cm, Strength D6)") === "Torpedo launcha", short("Prow \u2014 torpedo launcha instead of heavy gunz (Speed 30 cm, Strength D6)"));
+  const taken = PLAY.takenFeatures({ options: [{ state: "opt", text: "The ship may take a power ram for +5" }, { state: "take", text: "Can replace its prow torpedoes with a nova cannon at +20" }],
+    upgrades: [{ state: "take", label: "Clan: Goffs (Black)" }, { state: "opt", label: "Maniac Gunners" }, { state: "take", label: "Reinforced Carapace \u00d72 (+2 Hits)" }] });
+  check("features: only what was taken, without its fine print", taken.join() === "Nova cannon,Goffs,Reinforced Carapace \u00d72", taken.join());
+}
+
 /* --- the built page itself --------------------------------------------- */
 /* Everything above tests rules.js. The page's own code (set-up, rows,
    cards, panels, actions, VP sums) is in src/, and nothing above runs it:
