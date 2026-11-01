@@ -792,3 +792,10 @@ details.paste .roomjoin{margin-top:6px}
 .blastb svg{width:18px;height:18px;fill:currentColor}
 .blastb.on{border-color:var(--warn);background:var(--warn);color:#111}
 .peerview .reppanel{display:none}
+.repwhy{margin:0 0 6px;font:12.5px/1.35 var(--sans);color:var(--ink-2)}
+.repopts{display:flex;gap:6px}
+.repopt{flex:1 1 0;display:flex;align-items:center;gap:8px;min-height:52px;padding:6px 10px;border-radius:9px;border:1px solid var(--line);background:var(--sunk);color:var(--ink);text-align:left}
+.repopt svg{width:18px;height:18px;flex:none;fill:currentColor}
+.repopt b{display:block;font:700 13px/1.15 var(--mono)}
+.repopt small{display:block;font:11.5px/1.2 var(--sans);color:var(--ink-3)}
+.repopt.rec{border-color:var(--accent);background:var(--accent-wash);color:var(--accent-ink)}

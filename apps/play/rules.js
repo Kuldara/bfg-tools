@@ -776,7 +776,8 @@ function repairPlan(R, st, blast){
   var repulsor = (R.rules || []).some(function(r){ return /ignore Blast Marker[^.]*repairs/i.test(String(r.t)); }) &&
     !activeCrits(st, R).some(function(c){ return c.def && /shields? collapse/i.test(c.def.name); });
   var n = remaining(R, st);
-  if((st.blast > 0 || blast) && !repulsor) n = half(n);
+  /* blast: true or false is the player's word, otherwise the ship's own state */
+  if((blast == null ? st.blast > 0 : blast) && !repulsor) n = half(n);
   return { dice: n + (/REPAIR \+1D6/i.test(line) ? 1 : 0), target: /4\+ = 1 crit/i.test(line) ? 4 : 6 };
 }
 function repairRoll(plan, rng){

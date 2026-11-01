@@ -116,6 +116,7 @@ const six = n => Array.from({ length: 6 }, (x, k) => k < n ? 0.99 : 0);
     check("without Auto repair no button on the card", !(await has(REP)));
     await tap('[data-act="pop"][data-i="0"][data-arg="crit"]');
     await shot("6-table");
+    check("the two rolls with their reason: 6D6 and 3D6 (p. 88)", /6D6/.test(await txt('.repopt[data-arg="full"]')) && /3D6/.test(await txt('.repopt[data-arg="half"]')) && /halves the dice/.test(await txt(".repwhy")));
     await cd.evaluate(dice(six(1)));
     await tap(REP);
     st = JSON.parse(await cd.evaluate(stOf(0)));
@@ -143,7 +144,9 @@ const six = n => Array.from({ length: 6 }, (x, k) => k < n ? 0.99 : 0);
     await cd.evaluate(crits(0, { "6": 1 }));
     await cd.evaluate(`GFP.appState.G.st[0].blast = 1; GFP.render(); 1`);
     await tap('[data-act="pop"][data-i="0"][data-arg="crit"]');
-    check("and the dice are halved by themselves: 6 hits left, 3D6 (p. 88)", /3D6/.test(await txt(REP)) && !(await has('[data-arg="half"]')), await txt(REP));
+    check("the marked ship's roll is marked: half, 3D6 (p. 88)", /3D6/.test(await txt('.repopt.rec[data-arg="half"]')), await txt('.repopt.rec'));
+    check("and full stays on offer: 6D6", /6D6/.test(await txt('.repopt[data-arg="full"]')));
+    check("the table says why there are two", /halves the dice/.test(await txt(".repwhy")));
     await shot("8-blast");
   }finally{ await cd.close(); }
   console.log((fail ? "FAIL " : "ok ") + pass + " passed, " + fail + " failed");

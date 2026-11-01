@@ -176,7 +176,7 @@ export function act(name, i, arg){
     /* damage control in the End Phase (p. 88): one system repaired or one
        fire out per 6; a result that may not be repaired (p. 67) stays */
     case "blastflag": st.blast = st.blast ? 0 : 1; break;
-    case "repairroll": if(!rollRepair(i, undefined, arg === "half")){ appState.UNDO.pop(); return; } break;
+    case "repairroll": if(!rollRepair(i, undefined, arg === "half" ? true : arg === "full" ? false : undefined)){ appState.UNDO.pop(); return; } break;
     case "repairpick": if(!pickRepair(i, String(arg))){ appState.UNDO.pop(); return; } break;
     case "repair": {
       const key = String(arg);

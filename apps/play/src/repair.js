@@ -100,10 +100,23 @@ export function repairBtn(i, inTable){
   const halfBtn = done || OPT.blast || h.dice === p.dice ? "" : `<button class="repb bm" data-act="repairroll" data-i="${i}" data-arg="half" aria-label="Repair with Blast Markers in contact: ${h.dice}D6" title="With Blast Markers in contact: half the dice, rounding up (p. 88)">${BURST}<b>${h.dice}D6</b></button>`;
   return `<button class="repb" data-act="repairroll" data-i="${i}"${done ? " disabled" : ""} title="End Phase damage control: roll, repair, and a fire left costs its hit (p. 88, 67). UNDO takes it back.">${WRENCH}${done ? "Repair rolled" : `Repair ${again}<b>${p.dice}D6</b>${p.target !== 6 ? " " + p.target + "+" : ""}`}</button>${halfBtn}`;
 }
-/* the critical table's own: the buttons, or the wrenches to spend */
+/* The critical table's own: the two rolls and why there are two, or the wrenches
+   to spend. With Blast Markers tracked the ship's own state is marked as the
+   likely one; the other stays, for a marker the switch has not caught up with. */
+function repairChoice(i){
+  const R = appState.U[i].R, st = appState.G.st[i];
+  if(!canRepair(i) || st.repPick) return "";
+  if(rolledAlready(st)) return repairBtn(i, true);
+  const full = PLAY.repairPlan(R, st, false), part = PLAY.repairPlan(R, st, true), to = full.target !== 6 ? full.target + "+" : "6";
+  const opt = (arg, icon, name, p, when, rec) => `<button class="repopt${rec ? " rec" : ""}" data-act="repairroll" data-i="${i}" data-arg="${arg}">${icon}<span><b>${name} ${p.dice}D6</b><small>${when}</small></span></button>`;
+  /* one hit left, or Repulsor Shielding: the two are the same roll */
+  if(full.dice === part.dice) return `<div class="repopts">${opt("full", WRENCH, "Repair", full, "each " + to + " repairs one", true)}</div>`;
+  return `<p class="repwhy">One die per hit left, each ${to} repairs one. A Blast Marker touching the ship halves the dice (p. 88).</p>
+    <div class="repopts">${opt("full", WRENCH, "Full repair", full, "no Blast Marker touching", !st.blast)}${opt("half", BURST, "Half repair", part, "a Blast Marker touching", OPT.blast && !!st.blast)}</div>`;
+}
 export function repairPanel(i){
   if(!canRepair(i) && !(appState.V.repNote || {})[i]) return "";
-  return `<div class="reppanel"><div class="r3">${repairBtn(i, true)}</div>${repairLines(i, true)}</div>`;
+  return `<div class="reppanel">${repairChoice(i)}${repairLines(i, true)}</div>`;
 }
 /* the line under the chips: what the roll did, and the choice if there is one */
 export function repairLines(i, inTable){
