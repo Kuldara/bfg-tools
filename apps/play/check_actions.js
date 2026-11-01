@@ -120,12 +120,19 @@ const dice = a => `(() => { const q = ${JSON.stringify(a.map(f => (f - 0.5) / 6)
     check("a cloud marks one Blast Marker (p. 110)", s.blast === 1, s);
     await tap('[data-act="undo"]');
     await tap('[data-act="accelback"]');
+    /* radiation lowers every ship's Leadership for the turn (p. 115) */
+    await cd.evaluate(`(() => { GFP.appState.G.fleet.radiation = 2; GFP.render(); return 1; })()`);
+    await tap('[data-act="accel"][data-arg="asteroid"]');
+    check("a radiation burst of 2: 6 or under (p. 115)", /6 or under/.test(await box()), await box());
+    await tap('[data-act="accelback"]');
+    await cd.evaluate(`(() => { GFP.appState.G.fleet.radiation = 0; GFP.render(); return 1; })()`);
     /* a rift: 3D6, a failure is gone from the table (pp. 111-112) */
     await tap('[data-act="accel"][data-arg="rift"]');
     check("warp rift: 3D6 (p. 111)", /3d6, 8 or under/.test(await box()), await box());
     await tap('[data-act="acrift"][data-arg="fail"]');
     s = await ST(1);
-    check("lost in the warp: off the table (p. 112)", s.disengaged, s);
+    check("lost in the warp: destroyed, not disengaged (user 1.11.2026, T47)", s.destroyed && !s.disengaged, s);
+    check("... and it gives its full points", await cd.evaluate(`GFP.vpOf(1) === (GFP.appState.U[1].R.points | 0)`), await cd.evaluate(`GFP.vpOf(1)`));
     await tap('[data-act="undo"]');
     await tap('[data-act="accelback"]');
     for(const k of ["planet", "sun", "flare", "radiation"]){

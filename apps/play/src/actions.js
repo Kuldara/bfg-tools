@@ -306,6 +306,12 @@ export function act(name, i, arg){
       else PLAY.addHits(R, st, arg);
       break;
     case "teleported": st.teleported = true; break;
+    /* lost in a warp rift (p. 112): destroyed, for its full points (T47); one
+       ship of an escort card */
+    case "warplost":
+      if(PLAY.isEscort(R)){ const k = st.members.findIndex(m => !m.dead); if(k >= 0) PLAY.killMember(st, k); }
+      else { st.destroyed = true; st.hulk = null; st.hulkName = "Lost in the warp"; st.hulkText = "Gone from the battle (p. 112)."; }
+      break;
     case "torps": st.torps = !st.torps; break;
     case "craft": st.craft = !st.craft; break;
     case "blast": if(arg === 0) PLAY.clearBlast(st); else st.blast = Math.max(0, (st.blast | 0) + arg); break;

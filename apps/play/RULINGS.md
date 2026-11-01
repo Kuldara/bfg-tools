@@ -571,12 +571,12 @@ Rulebook's phenomena (pp. 109-115) in short. Three have helpers. **Asteroids**
 ship's track, an escort squadron's are tapped by the player, because the book shares
 them among the ships that touched. **Gas and dust** (p. 110): one Blast Marker on the
 ship. **Warp rift** (pp. 111-112): 3D6, Eldar 2D6 (FAQ 2026, *Warp Rift*). A ship
-lost in the warp "disappears from the battle"; the page marks it as `disengaged`,
-the state for a ship off the table, so its VP are then those of a disengaged ship.
-The book does not give a VP rule for it here: an open reading. Planets, moons,
+lost in the warp "disappears from the battle". **The user's decision 1.11.2026:**
+it is destroyed and gives its full points, the same as exploding in an asteroid
+field, not a disengaged ship's. An escort card loses one ship. Planets, moons,
 Sunward, solar flares and radiation bursts are text; flares and bursts belong to
 the whole table, not to one ship, and the burst's Leadership is the menu's existing
-counter. Leadership as in T46.
+counter, which the helpers of T46 and T47 also subtract (p. 115). Leadership as in T46.
 
 ## What is not tracked, and why
 

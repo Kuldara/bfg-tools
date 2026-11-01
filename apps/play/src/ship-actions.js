@@ -25,12 +25,14 @@ function covers(i){
   const g = appState.G.grp[i];
   return isEscGrp(g) ? groupUnits(g) : [i];
 }
-/* Leadership for these tests: the ship's own, with a smashed bridge. p. 48's
+/* Leadership for these tests: the ship's own, with a smashed bridge and any
+   radiation burst. p. 48's
    Under Fire and enemy contacts are "Command check modifiers"; disengaging has
    its own list (p. 56). A squadron of escorts tests on its highest. */
 function testLd(i){
   const ms = covers(i), lds = ms.map(j => { const st = appState.G.st[j]; return st.ld == null ? null : st.ld + (st.ldPerm | 0); }).filter(v => v != null);
-  return lds.length ? Math.max.apply(null, lds) : null;
+  /* a radiation burst lowers every ship's Leadership for the turn (p. 115) */
+  return lds.length ? Math.max.apply(null, lds) - (appState.G.fleet.radiation | 0) : null;
 }
 /* the first free re-roll, the fleet's or the ship's own */
 function freeRR(i){
@@ -128,7 +130,7 @@ export function shipAct(name, el){
     const how = argS(), ld = testLd(A.i), n = PLAY.riftTestDice(appState.U[A.i].R);
     const dice = how === "roll" ? rollN(n) : null, ok = dice ? sum(dice) <= ld : how === "pass";
     const far = ok ? rollN(2) : null;
-    if(!ok) act("disengage", A.i, { ok: true, ms: [A.i] });
+    if(!ok) act("warplost", A.i);
     A.res = { test: ok, dice: dice, ld: ld, far: far };
     render(); return true;
   }
@@ -266,7 +268,7 @@ function renderRift(i){
   if(ld == null) return `<p class="foot">Set this ship's Leadership first.</p>${celBack}`;
   const step = !r ? `<div class="r4"><button data-act="acrift" data-arg="roll">Roll ${n}D6</button><button data-act="acrift" data-arg="pass">Passed</button><button data-act="acrift" data-arg="fail">Failed</button></div>`
     : r.test ? `<p class="acres ok">${r.dice ? diceLine(r.dice) + " against Ld " + r.ld + ": " : ""}<b>Through.</b> Place it up to ${sum(r.far) * 10} cm from the rift (${r.far.join(" + ")}, ×10), facing any way (p. 111).</p>`
-    : `<p class="acres bad">${r.dice ? diceLine(r.dice) + " against Ld " + r.ld + ": " : ""}<b>Lost in the warp.</b> Marked as gone from the table. After the game a D6: on a 1 lost forever, on 2-6 it finds its way back (p. 112).</p>`;
+    : `<p class="acres bad">${r.dice ? diceLine(r.dice) + " against Ld " + r.ld + ": " : ""}<b>Lost in the warp.</b> It counts as destroyed, for its full points. After the game a D6: on a 1 lost forever, on 2-6 it finds its way back (p. 112).</p>`;
   return `${list(TERR_SHORT.rift)}
     <p class="actotal">Ld ${ld} ${MID} <b>${n}D6, ${ld} or under</b></p>
     ${step}${celBack}`;
