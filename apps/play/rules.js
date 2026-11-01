@@ -771,12 +771,12 @@ function repairDice(R, st){
    succeed on 4+ (Fleets p. 404), a Mechanicus vessel adds +1D6 (Fleets p. 120),
    Repulsor Shielding ignores Blast Markers on repairs until Shields Collapsed;
    the card's own repair line says which. RULINGS.md T45. */
-function repairPlan(R, st){
+function repairPlan(R, st, blast){
   var line = String(R.damage && R.damage.repair || "");
   var repulsor = (R.rules || []).some(function(r){ return /ignore Blast Marker[^.]*repairs/i.test(String(r.t)); }) &&
     !activeCrits(st, R).some(function(c){ return c.def && /shields? collapse/i.test(c.def.name); });
   var n = remaining(R, st);
-  if(st.blast > 0 && !repulsor) n = half(n);
+  if((st.blast > 0 || blast) && !repulsor) n = half(n);
   return { dice: n + (/REPAIR \+1D6/i.test(line) ? 1 : 0), target: /4\+ = 1 crit/i.test(line) ? 4 : 6 };
 }
 function repairRoll(plan, rng){

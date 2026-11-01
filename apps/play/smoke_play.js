@@ -247,14 +247,12 @@ function run(check){
     const ldPop = P(`renderPop(${I.station})`);
     clean("the station's Leadership panel", ldPop);
     check("smoke: the station's Leadership panel has no dice tiles and says why (Rulebook p. 100)", !/data-act="ld"/.test(ldPop) && /Ld 7/.test(strip(ldPop)), strip(ldPop).slice(0, 200));
-    P(`V.pop = null; OPT.orders = true; OPT.shields = true; OPT.ordnance = true; OPT.fleet = true; act("pop", ${I.station}, "order")`);
+    P(`V.pop = null; OPT.orders = true; OPT.ordnance = true; OPT.fleet = true; act("pop", ${I.station}, "order")`);
     const ordPop = strip(P(`renderPop(${I.station})`));
     check("smoke: with orders tracked a station is offered Reload Ordnance only, and Brace (Rulebook p. 100)", /Reload Ordnance/.test(ordPop) && !/Lock On|All Ahead Full|Burn Retros|Come to New Heading|left the table/.test(ordPop), ordPop.slice(0, 260));
     P(`act("pop", ${I.fort}, "order")`);
     const ordFort = strip(P(`renderPop(${I.fort})`));
     check("smoke: ... a Ramilies Lock On and Reload Ordnance (Fleets p. 503)", /Reload Ordnance/.test(ordFort) && /Lock On/.test(ordFort) && !/All Ahead Full|Burn Retros|Come to New Heading/.test(ordFort), ordFort.slice(0, 260));
-    P(`act("pop", ${I.station}, "blast")`);
-    clean("the station's blast marker panel", P(`renderPop(${I.station})`));
     /* every row and card again with all tracking on */
     clean("the roster with all tracking on", P(`V.pop = null; renderRoster()`));
     for(let i = 0; i < n; i++){
@@ -264,7 +262,7 @@ function run(check){
     check("smoke: the INFO order table of a station lists its own two orders only (Rulebook p. 100)", (() => { const t = strip(P(`V.sheet = ${I.station}; V.info = true; __h = renderSheet(${I.station}); V.info = false; V.sheet = null; __h`)); return /Reload Ordnance/.test(t) && /Brace For Impact/.test(t) && !/All Ahead Full|Burn Retros/.test(t); })());
     /* Fleets p. 502: a Ramilies may have twice its launch bays in play */
     check("smoke: the attack craft counter counts the Ramilies' 32, two air bases... and the station's 4", /AC 0 \/ ?\d+/.test(strip(P(`renderRoster()`))) && P(`PLAY.launchBays(U[${I.fort}].R, G.st[${I.fort}]).n`) === 32, strip(P(`renderRoster()`)).slice(0, 120));
-    P(`OPT.orders = false; OPT.shields = false; OPT.ordnance = false; OPT.fleet = false; normaliseUntracked(G)`);
+    P(`OPT.orders = false; OPT.ordnance = false; OPT.fleet = false; normaliseUntracked(G)`);
     /* a stationary unit's played mark has no "moved" */
     P(`act("played", ${I.station})`);
     check("smoke: one tap on a station's played mark = shot (Rulebook p. 100: it cannot move)", P(`G.st[${I.station}].played`) === 2 && /SHOT/.test(rowT(I.station)));
@@ -643,7 +641,7 @@ function run(check){
     /* their game: an Ork cruiser with two hits, a name with markup in it */
     pg.ctx.__their = { ln: ORK.nm, limit: 1000, units: [saved(ORK, /^KROOZERS$/, /./)] };
     P(`newGame(resolveFleet(__their)); G.st[0].ld = 6; act("start", null); act("hit", 0); act("hit", 0); G.nm = ["Da <b>Kroozer</b>"];
-       var __snap = JSON.parse(JSON.stringify({ t: "g", n: "Mikko", G: G, opt: { orders: false, shields: true, ordnance: false, fleet: false }, scr: "roster" }));`);
+       var __snap = JSON.parse(JSON.stringify({ t: "g", n: "Mikko", G: G, opt: { orders: true, ordnance: false, fleet: false }, scr: "roster" }));`);
     /* mine: a Tau cruiser, nothing tracked */
     pg.ctx.__mine = { ln: TAU.nm, limit: 1000, units: [saved(TAU, /^Cruisers$/, /./)] };
     P(`newGame(resolveFleet(__mine)); setLd(0, 8); act("start", null); takeSnapshot(__snap); V.side = "peer";`);
@@ -651,7 +649,7 @@ function run(check){
     clean("the opponent's side", html);
     check("smoke: their side shows their ship with their hits, read-only", /peerview/.test(html) && /Kroozer/.test(strip(html)) && (html.match(/<b class="on[^"]*" data-act="dmg"/g) || []).length === 2, strip(html).slice(0, 200));
     check("smoke: markup in a name from the other phone is dropped", !/<b>Kroozer/.test(html));
-    check("smoke: their tracking switches draw their cards (shields), mine stay mine", /SH <b>/.test(html) && P(`OPT.shields`) === false);
+    check("smoke: their tracking switches draw their cards (orders), mine stay mine", /data-act="brace"/.test(html) && P(`OPT.orders`) === false);
     check("smoke: after drawing their side my own game is back", P(`G.ln`) === TAU.nm && P(`U.length`) === 1 && /Tau/.test(P(`renderRoster()`)) && P(`V.side`) === "peer");
     P(`V.side = "me"`);
     check("smoke: the tabs and the edge tab appear once there is an opponent", /class="sides/.test(P(`renderRoster()`)) && /class="edge r/.test(P(`renderRoster()`)));

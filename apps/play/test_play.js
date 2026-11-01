@@ -1594,6 +1594,7 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
   check("repair: one hit taken, 7D6 (p. 88: per Damage point remaining)", plan(lunar, st).dice === 7);
   st.blast = 1;
   check("repair: Blast Markers in contact, half rounding up: 4D6 (p. 88)", plan(lunar, st).dice === 4);
+  check("repair: the player can say a marker touches: 8 hits left 4D6 (p. 88)", PLAY.repairPlan(lunar, PLAY.freshUnit(lunar), true).dice === 4);
   const necron = { damage: { repair: "REPAIR: End Phase, D6 / remaining Hit; 4+ = 1 crit; blast contact 1/2 dice." }, stats: lunar.stats, rules: [] };
   check("repair: Necrons succeed on 4+ (Fleets p. 404)", plan(necron, PLAY.freshUnit(lunar)).target === 4);
   const mech = { damage: { repair: "ALL ADMECH: REPAIR +1D6." }, stats: lunar.stats, rules: [] };

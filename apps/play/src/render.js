@@ -747,11 +747,9 @@ export function renderRow(i, inGroup){
     /* one box per ship, filled when it is gone (p. 66: one hit or any
        critical destroys an escort) */
     r3 = `<div class="hits mem">${st.members.map((m, k) => `<b class="${m.dead ? "on" : ""}" data-act="kill" data-i="${i}" data-arg="${k}" role="button" aria-label="${memberWord(R, 1)} ${k + 1}">${k + 1}</b>`).join("")}</div>
-      <span class="stat">${v.alive} of ${R.hulls}</span>` +
-      (OPT.shields ? `<button class="stat ${st.blast ? "off" : ""}" data-act="blast" data-i="${i}" data-arg="${st.blast ? 0 : 1}">UNDER FIRE <b>${st.blast ? "-1 Ld" : "no"}</b></button>` : "");
+      <span class="stat">${v.alive} of ${R.hulls}</span>`;
   }else{
     r3 = hitsTrack(i, v, false) +
-      (OPT.shields ? `<button class="stat ${v.shields.now != null && v.shields.up < v.shields.now ? "off" : ""}" data-act="pop" data-i="${i}" data-arg="blast">SH <b>${v.shields.now == null ? esc(v.shields.text) : v.shields.up + "/" + v.shields.now}</b>${st.blast ? "<small>BM " + st.blast + "</small>" : ""}</button>` : "") +
       (OPT.ordnance ? ordnancePills(i, v) : "");
   }
   const orderBtns = !OPT.orders || inGroup ? "" : `<button class="brace ${v.braced ? "on" : ""}" data-act="brace" data-i="${i}" ${PLAY.canOrder(st, appState.G.fleet, "BFI", R) ? "" : "disabled"}>Brace</button>
@@ -830,14 +828,6 @@ export function renderPop(i){
       ${(() => { const p = ldPlanOf(i); return p && p.roll && st.ld == null ? `<p><button class="chip" data-act="rollone" data-i="${i}">Roll D6</button> on the ${esc(p.table.name)} table (${bookPg(p.table.book, p.table.page)})${p.mods.map(m => `, ${m.v > 0 ? "+" : ""}${m.v} ${esc(m.t)}`).join("")}${st.ldWhy ? ` ${MID} rolled ${esc(st.ldWhy)}` : ""}</p>` : ""; })()}
       <div class="tiles c6">${PLAY.LD_VALUES.map(n => `<button class="${st.ldRoll === n ? "on" : ""}" data-act="ld" data-i="${i}" data-arg="${n}"><b>${n}</b></button>`).join("")}</div>
       ${st.ldFrom === "commander" ? `<p>The commander's Leadership line applies to this flagship: a fixed value stands in for the roll, a bonus is added to it.</p>` : ""}
-      <button class="close" data-act="closepop">close</button></div>`;
-  }
-  if(kind === "blast"){
-    return `<div class="pop"><h4>Blast markers touching the base</h4>
-      <p>One is placed per hit the shields block (p. 70); each one in contact takes a shield off when fired upon (p. 69), -1 Ld (p. 48) and halves damage-control dice (p. 88). Shields come back when the ship moves clear (p. 70).</p>
-      ${slotRule("blast") ? `<p>${esc(slotRule("blast"))}</p>` : ""}
-      <div class="steprow"><button data-act="blast" data-i="${i}" data-arg="-1">&minus;</button><div class="val">${st.blast | 0}<small>shields up ${v.shields.up == null ? "-" : v.shields.up + " of " + v.shields.now}</small></div><button data-act="blast" data-i="${i}" data-arg="1">+</button></div>
-      <button class="btn sec" data-act="blast" data-i="${i}" data-arg="0">${v.still ? "All removed" : "Moved clear"} ${MID} shields up</button>
       <button class="close" data-act="closepop">close</button></div>`;
   }
   if(kind === "order"){
@@ -938,8 +928,7 @@ export function renderSheet(i){
   const stats = `<div class="stats">
     ${stat("SPEED", v.speed.now != null ? v.speed.now + " cm" : esc(v.speed.text), v.speed.now != null ? v.speed.base + " cm" : null, v.speed.mods.map(m => m.t).join(", "))}
     ${stat("TURNS", esc(v.turns.text), null, v.turns.none ? "NONE (crit 6)" : "")}
-    ${esq || !OPT.shields ? stat("SHIELDS", v.shields.now == null ? esc(v.shields.text) : v.shields.now, v.shields.now == null ? null : v.shields.base, esq ? "per ship" : "")
-      : stat("SHIELDS", v.shields.now == null ? esc(v.shields.text) : v.shields.up + "/" + v.shields.now, v.shields.now == null ? null : v.shields.base, st.blast ? "BM " + st.blast + (v.shields.up < v.shields.now ? ": tap when moved clear" : "") : "up", "blast")}
+    ${stat("SHIELDS", v.shields.now == null ? esc(v.shields.text) : v.shields.now, v.shields.now == null ? null : v.shields.base, esq ? "per ship" : "")}
     ${stat("ARMOUR", esc(shortArmour(R.stats.armour)), null, "")}
     ${stat(esc(R.stats.turretLabel || "TURRETS"), v.turrets.now == null ? esc(v.turrets.text) : v.turrets.now, v.turrets.now == null ? null : v.turrets.text, "")}
     ${stat("LEADERSHIP", v.ld.now == null ? "?" : v.ld.now, v.ld.base, v.ld.mods.map(m => (m.v > 0 ? "+" : "") + m.v + " " + m.t).join(", "), "ld")}
@@ -971,7 +960,6 @@ export function renderSheet(i){
      "always remain in place"): no disengage switches for it */
   const flagBtns = [
       OPT.ordnance && !esq ? ordnancePills(i, v) : "",
-      OPT.shields && esq ? `<button class="${st.blast ? "on bad" : ""}" data-act="blast" data-i="${i}" data-arg="${st.blast ? 0 : 1}">under fire: -1 Ld (p. 48, 95)</button>` : "",
       OPT.orders ? `<button class="${st.boarding ? "on" : ""}" data-act="boarding" data-i="${i}">boarding declared</button>` : "",
       OPT.orders && !v.still ? `<button class="${st.noOrdersTurn ? "on bad" : ""}" data-act="nofire" data-i="${i}">disengage failed</button>` : "",
       OPT.orders && st.braceLock ? `<button class="on bad" data-act="bracelock" data-i="${i}">brace locked: attacker done</button>` : "",
@@ -993,7 +981,7 @@ export function renderSheet(i){
   return `<div class="sheet" style="--kd:${kd};--km:${km}">
     <div class="sh-hd"><div class="t"><h2>${esc(unitName(i))}</h2><p>${esc(sub)}</p></div>${ldTile(i)}<button class="x" data-act="closesheet" aria-label="Close">${CLOSE_X}</button></div>
     <div class="sh-body">${band}${upgradeLine(i)}${cmdsAboard(i).map(cmdLine).join("")}${shipRRLine(i)}${v.fort && !v.destroyed ? quadSelector(i, v) : ""}${stats}${preLine(i)}
-      ${appState.V.pop && appState.V.pop.i === i && /^(ld|blast)$/.test(appState.V.pop.kind) ? renderPop(i) : ""}
+      ${appState.V.pop && appState.V.pop.i === i && /^ld$/.test(appState.V.pop.kind) ? renderPop(i) : ""}
       <div class="sec"><h3>Armament<em>Str as printed ${MID} &frac12; when halved</em></h3>${weaponsTable(R, st, esq)}</div>
       ${ruleSec}${damage}${crits}${flags}${info}
       <button class="btn sec" data-act="closesheet">Back to the fleet</button>

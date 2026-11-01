@@ -113,12 +113,9 @@ const dice = a => `(() => { const q = ${JSON.stringify(a.map(f => (f - 0.5) / 6)
     check("D6 = 5 against 2 shields: 3 hits (p. 110)", s.hits === 3 && /3 hits/.test(await box()), s);
     await tap('[data-act="undo"]');
     await tap('[data-act="accelback"]');
-    /* a cloud is one Blast Marker (p. 110) */
+    /* a cloud is text now: the page does not count Blast Markers */
     await tap('[data-act="accel"][data-arg="gas"]');
-    await tap('[data-act="acgas"]');
-    s = await ST(1);
-    check("a cloud marks one Blast Marker (p. 110)", s.blast === 1, s);
-    await tap('[data-act="undo"]');
+    check("a cloud says it works as a Blast Marker (p. 110)", /blast marker/.test(await box()), await box());
     await tap('[data-act="accelback"]');
     /* radiation lowers every ship's Leadership for the turn (p. 115) */
     await cd.evaluate(`(() => { GFP.appState.G.fleet.radiation = 2; GFP.render(); return 1; })()`);

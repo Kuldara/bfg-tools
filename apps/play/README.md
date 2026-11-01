@@ -1,7 +1,7 @@
 # Gothic Fleet Play
 
 The fleet built in the Registry, on a phone, during the game: hits taken,
-criticals, special orders and braces, ordnance, blast markers and the fleet's
+criticals, special orders and braces, ordnance and the fleet's
 re-rolls, with everything the rulebook derives from them (crippled, halved
 shields, the Leadership actually rolled against) computed, never typed in.
 Live at [bfgtools.kuldare.com/play/](https://bfgtools.kuldare.com/play/Gothic%20Fleet%20Play.html), a

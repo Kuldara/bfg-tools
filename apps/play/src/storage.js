@@ -9,7 +9,6 @@ export const KEY_INFO = "gothic-fleet-play-info";
 export const KEY_TRACK = "gothic-fleet-play-track";
 export const TRACK = [
   ["orders",   "Special orders and Brace",   "order per ship, fleet lock after a failed check, brace timing (p. 46-48)"],
-  ["shields",  "Shields and blast markers",  "markers touching the base: shields up, -1 Ld, damage-control dice (p. 69-70, 48, 88)"],
   ["ordnance", "Ordnance loaded",            "torpedoes and attack craft ready / launched (p. 73-74)"],
   ["fleet",    "Fleet counters",             "the RR counter in the top bar (the re-roll boxes on the commander's card are always there), attack craft in play vs bays, enemy contacts +1, radiation (p. 48, 73, 115)"],
 ];
@@ -26,7 +25,7 @@ export function saveOpts(){ lsSet(KEY_TRACK, JSON.stringify(OPT)); }
 export function normaliseUntracked(g){
   (g.st || []).forEach(st => {
     if(!OPT.orders){ st.order = null; st.braceTurn = 0; st.braceCarry = null; st.braceLock = false; st.boarding = false; st.noOrdersTurn = false; st.teleported = false; }
-    if(!OPT.shields) st.blast = 0;
+    st.blast = 0;   /* a game saved when the page still counted Blast Markers */
   });
   if(g.fleet){ if(!OPT.orders) g.fleet.orderLock = false; if(!OPT.fleet){ g.fleet.enemyOrders = false; g.fleet.radiation = 0; } }
 }

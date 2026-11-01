@@ -37,10 +37,10 @@ function burn(i, note){
 /* a result's name without its number and "+1", as on the chips */
 const critWord = (R, key) => critLabel(R, key).replace(/^\S+\s+/, "").replace(/\s*\*\s*$/, "").split(/\s+\+/)[0];
 const fixedWord = (R, key) => critWord(R, key) + " repaired";
-export function rollRepair(i, rng){
+export function rollRepair(i, rng, half){
   const R = appState.U[i].R, st = appState.G.st[i];
   if(!canRepair(i) || st.repPick || rolledAlready(st)) return false;
-  const plan = PLAY.repairPlan(R, st), r = PLAY.repairRoll(plan, rng);
+  const plan = PLAY.repairPlan(R, st, half), r = PLAY.repairRoll(plan, rng);
   st.repPhase = phaseKey();
   const head = plan.dice + "D6: " + r.faces.join(" ") + " " + MID + " ";
   const note = [];
@@ -92,7 +92,10 @@ export function repairBtn(i){
   const p = PLAY.repairPlan(R, st), done = rolledAlready(st);
   /* without the orders track the second roll is seen, not blocked */
   const again = !OPT.orders && st.repPhase === phaseKey() ? "again " : "";
-  return `<button class="repb" data-act="repairroll" data-i="${i}"${done ? " disabled" : ""} title="End Phase damage control: roll, repair, and a fire left costs its hit (p. 88, 67). UNDO takes it back.">${done ? "Repair rolled" : `Repair ${again}<b>${p.dice}D6</b>${p.target !== 6 ? " " + p.target + "+" : ""}`}</button>`;
+  /* the page does not count Blast Markers: the player says when one touches */
+  const h = PLAY.repairPlan(R, st, true);
+  const halfBtn = done || h.dice === p.dice ? "" : `<button class="repb" data-act="repairroll" data-i="${i}" data-arg="half" title="With Blast Markers in contact: half the dice, rounding up (p. 88)">Blast Marker <b>${h.dice}D6</b></button>`;
+  return `<button class="repb" data-act="repairroll" data-i="${i}"${done ? " disabled" : ""} title="End Phase damage control: roll, repair, and a fire left costs its hit (p. 88, 67). UNDO takes it back.">${done ? "Repair rolled" : `Repair ${again}<b>${p.dice}D6</b>${p.target !== 6 ? " " + p.target + "+" : ""}`}</button>${halfBtn}`;
 }
 /* the line under the chips: what the roll did, and the choice if there is one */
 export function repairLines(i){

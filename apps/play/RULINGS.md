@@ -578,6 +578,13 @@ Sunward, solar flares and radiation bursts are text; flares and bursts belong to
 the whole table, not to one ship, and the burst's Leadership is the menu's existing
 counter, which the helpers of T46 and T47 also subtract (p. 115). Leadership as in T46.
 
+**T48. No Blast Marker or shield counter.** **The user's decision 1.11.2026.** The
+page no longer counts Blast Markers, so it shows a ship's shields as printed, and
+T1 and the Under Fire -1 on the card are no longer tracked: both are read from the
+table. `PLAY` keeps the rule for a value it is given. Damage control needs to
+know (p. 88), so Repair has a second button for a ship with markers in contact.
+A gas cloud (p. 110) is text only.
+
 ## What is not tracked, and why
 
 - The strength of torpedo salvoes and attack craft markers on the table

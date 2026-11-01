@@ -54,7 +54,6 @@ export function shipAct(name, el){
   if(name === "acclose"){ V.actions = null; render(); return true; }
   if(name === "actab"){
     A.tab = argS(); A.res = null; A.cel = "";
-    if(A.tab === "dis") A.blast = st.blast | 0;
     render(); return true;
   }
   /* a value of the helper: "field:value", or "field:+1" */
@@ -134,8 +133,6 @@ export function shipAct(name, el){
     A.res = { test: ok, dice: dice, ld: ld, far: far };
     render(); return true;
   }
-  /* the cloud works as one Blast Marker (p. 110) */
-  if(name === "acgas"){ act("blast", A.i, 1); A.res = { marked: true }; render(); return true; }
   /* the failed roll taken back and made again with one re-roll (p. 48) */
   if(name === "acreroll"){
     const free = freeRR(A.i), kind = argS(), prev = A.res;
@@ -274,15 +271,12 @@ function renderRift(i){
     ${step}${celBack}`;
 }
 function renderCel(i){
-  const A = appState.V.actions, r = A.res;
+  const A = appState.V.actions;
   if(!A.cel) return CEL.map(c => `<button class="btn sec" data-act="accel" data-arg="${c[0]}">${c[1]}<small>${c[2]}</small></button>`).join("") + backBtn;
   if(A.cel === "asteroid") return renderAsteroid(i);
   if(A.cel === "rift") return renderRift(i);
-  if(A.cel === "gas") return `${list(TERR_SHORT.gas)}
-    ${r && r.marked ? `<p class="acres ok"><b>One Blast Marker</b> on this ship. UNDO takes it back.</p>` : `<button class="btn" data-act="acgas">Touching it: mark one Blast Marker</button>`}
-    ${celBack}`;
   if(A.cel === "planet") return list(TERR_SHORT.planet.concat(TERR_SHORT.moon)) + celBack;
-  return list(TEXT[A.cel]) + celBack;
+  return list(A.cel === "gas" ? TERR_SHORT.gas : TEXT[A.cel]) + celBack;
 }
 export function renderActions(){
   const A = appState.V.actions, i = A.i;

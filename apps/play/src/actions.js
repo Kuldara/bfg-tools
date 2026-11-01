@@ -175,7 +175,7 @@ export function act(name, i, arg){
       appState.V.flash = { i: i, key: null, t: Date.now(), msg: "+" + n + " hit" + (n > 1 ? "s" : "") + " from " + (n > 1 ? n + " fires" : "the fire") + " (p. 67)" }; break; }
     /* damage control in the End Phase (p. 88): one system repaired or one
        fire out per 6; a result that may not be repaired (p. 67) stays */
-    case "repairroll": if(!rollRepair(i)){ appState.UNDO.pop(); return; } break;
+    case "repairroll": if(!rollRepair(i, undefined, arg === "half")){ appState.UNDO.pop(); return; } break;
     case "repairpick": if(!pickRepair(i, String(arg))){ appState.UNDO.pop(); return; } break;
     case "repair": {
       const key = String(arg);
@@ -314,7 +314,6 @@ export function act(name, i, arg){
       break;
     case "torps": st.torps = !st.torps; break;
     case "craft": st.craft = !st.craft; break;
-    case "blast": if(arg === 0) PLAY.clearBlast(st); else st.blast = Math.max(0, (st.blast | 0) + arg); break;
     case "rr": PLAY.adjustRerolls(fleet, arg); break;
     /* one box: that re-roll is used, or back if the tap was a slip */
     case "rrbox": PLAY.toggleReroll(rrPool(i), arg); break;

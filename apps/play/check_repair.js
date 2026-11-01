@@ -52,6 +52,7 @@ const six = n => Array.from({ length: 6 }, (x, k) => k < n ? 0.99 : 0);
     await cd.evaluate(crits(0, { "7": 1, "6": 1 }));
     check("the button says the dice (6 hits left: 6D6, p. 88)", /6D6/.test(await txt(REP)), await txt(REP));
     await shot("1-button");
+    check("Blast Markers in contact: half the dice, 3D6 (p. 88)", /3D6/.test(await txt('[data-act="repairroll"][data-arg="half"]')));
 
     /* one six, two kinds: the book leaves the choice to the player */
     await cd.evaluate(dice(six(1)));
