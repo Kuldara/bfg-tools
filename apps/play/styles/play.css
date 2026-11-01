@@ -776,3 +776,6 @@ details.paste .roomjoin{margin-top:6px}
 .acts .acres.bad{border-left:4px solid var(--bad)}
 .acts .acchk{margin:8px 0;padding-left:18px;font:14px/1.5 var(--sans)}
 .acts .r4{margin-bottom:8px}
+/* What a ship carries, under its name */
+.upl{margin:3px 0 0;font:12.5px/1.3 var(--sans);color:var(--card-mute)}
+.main.compact .upl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
