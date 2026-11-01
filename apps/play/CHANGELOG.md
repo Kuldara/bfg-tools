@@ -7,6 +7,7 @@ a tag `play-v<version>` deploys the Registry's site.
 
 ### Added
 - A ship's Actions (1.11.2026, RULINGS.md T46): a button in the card's top corner opens Board, Ram, Disengage and Teleport attack. Ram and Disengage say the rule, work out the dice with the target and the modifiers, roll if asked (Passed and Failed for own dice, Re-roll on a failure) and mark the result on the ship; what the enemy must mark is said to you. Board moved here from the row of big buttons.
+- Celestial phenomena in Actions (1.11.2026, RULINGS.md T47): the Rulebook's phenomena in short with pages; asteroids, gas clouds and warp rifts have helpers that roll and mark.
 
 ### Changed
 - To phone: a link too long for a QR code a camera can read (over 1 000 characters, usually several fleets) shows no code; the panel offers Save file, Copy link and Share instead.

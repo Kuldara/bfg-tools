@@ -1609,6 +1609,14 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
   check("disengage: Ld 6 fails a 7", !PLAY.disengagePasses(6, 7) && PLAY.disengagePasses(6, 6));
 }
 
+/* --- Celestial phenomena: the dice of a ship's helper ------------------- */
+{
+  check("asteroids: 2D6, 3D6 on All Ahead Full (p. 110)", PLAY.asteroidTestDice({ order: null }) === 2 && PLAY.asteroidTestDice({ order: "AAF" }) === 3);
+  check("asteroids: shields block the D6 damage as normal (p. 110)", PLAY.asteroidHits(5, 2) === 3 && PLAY.asteroidHits(1, 2) === 0);
+  const eldar = { source: { faction: "ELDAR" } };
+  check("warp rift: 3D6 (p. 111), Eldar 2D6 (FAQ 2026, Warp Rift)", PLAY.riftTestDice(lunar) === 3 && PLAY.riftTestDice(eldar) === 2);
+}
+
 /* --- the built page itself --------------------------------------------- */
 /* Everything above tests rules.js. The page's own code (set-up, rows,
    cards, panels, actions, VP sums) is in src/, and nothing above runs it:
