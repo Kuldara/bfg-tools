@@ -100,6 +100,41 @@ const dice = a => `(() => { const q = ${JSON.stringify(a.map(f => (f - 0.5) / 6)
     await shot("6-ram-done");
     await tap('[data-act="acclose"]');
 
+    /* celestial phenomena: asteroids, shields against the D6 (p. 110) */
+    await open(1);
+    await tap('[data-act="actab"][data-arg="cel"]');
+    await shot("7-celestial");
+    await tap('[data-act="accel"][data-arg="asteroid"]');
+    check("asteroids: 2D6 against Ld (p. 110)", /2d6, 8 or under/.test(await box()), await box());
+    await shot("8-asteroid");
+    await tap('[data-act="acast"][data-arg="fail"]');
+    await tap('[data-act="acastdmg"][data-arg="5"]');
+    s = await ST(1);
+    check("D6 = 5 against 2 shields: 3 hits (p. 110)", s.hits === 3 && /3 hits/.test(await box()), s);
+    await tap('[data-act="undo"]');
+    await tap('[data-act="accelback"]');
+    /* a cloud is one Blast Marker (p. 110) */
+    await tap('[data-act="accel"][data-arg="gas"]');
+    await tap('[data-act="acgas"]');
+    s = await ST(1);
+    check("a cloud marks one Blast Marker (p. 110)", s.blast === 1, s);
+    await tap('[data-act="undo"]');
+    await tap('[data-act="accelback"]');
+    /* a rift: 3D6, a failure is gone from the table (pp. 111-112) */
+    await tap('[data-act="accel"][data-arg="rift"]');
+    check("warp rift: 3D6 (p. 111)", /3d6, 8 or under/.test(await box()), await box());
+    await tap('[data-act="acrift"][data-arg="fail"]');
+    s = await ST(1);
+    check("lost in the warp: off the table (p. 112)", s.disengaged, s);
+    await tap('[data-act="undo"]');
+    await tap('[data-act="accelback"]');
+    for(const k of ["planet", "sun", "flare", "radiation"]){
+      await tap(`[data-act="accel"][data-arg="${k}"]`);
+      check(k + " has its text with a page", /p\. 11\d|well/.test(await box()), await box());
+      await tap('[data-act="accelback"]');
+    }
+    await tap('[data-act="acclose"]');
+
     /* teleport is shut for a crippled ship (p. 92) */
     await cd.evaluate(`(() => { GFP.appState.G.st[1].hits = 5; GFP.render(); return 1; })()`);
     await open(1);

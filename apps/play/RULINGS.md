@@ -565,6 +565,19 @@ no-fire and takes a capital ship out of its squadron (p. 57). Teleport: the
 once-a-turn flag; the result is on the enemy. **Not done:** criticals from a ram's
 hits and a ship's own ram rules are the player's (its rule lines are shown).
 
+**T47. Celestial phenomena in Actions.** **The user's request 1.11.2026.** The
+Rulebook's phenomena (pp. 109-115) in short. Three have helpers. **Asteroids**
+(p. 110): the Leadership test, then D6 less the shields up; hits go on a capital
+ship's track, an escort squadron's are tapped by the player, because the book shares
+them among the ships that touched. **Gas and dust** (p. 110): one Blast Marker on the
+ship. **Warp rift** (pp. 111-112): 3D6, Eldar 2D6 (FAQ 2026, *Warp Rift*). A ship
+lost in the warp "disappears from the battle"; the page marks it as `disengaged`,
+the state for a ship off the table, so its VP are then those of a disengaged ship.
+The book does not give a VP rule for it here: an open reading. Planets, moons,
+Sunward, solar flares and radiation bursts are text; flares and bursts belong to
+the whole table, not to one ship, and the burst's Leadership is the menu's existing
+counter. Leadership as in T46.
+
 ## What is not tracked, and why
 
 - The strength of torpedo salvoes and attack craft markers on the table

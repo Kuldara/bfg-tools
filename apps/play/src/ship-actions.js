@@ -7,6 +7,7 @@ import { unitName } from "./derived.js";
 import { render } from "./render.js";
 import { peerHas, withPeer } from "./peer.js";
 import { esc } from "../../../packages/ui/format.js";
+import { TERR_SHORT } from "../../../packages/ui/celestial.js";
 import PLAY from "../rules.js";
 
 /* ======================================================= A SHIP'S ACTIONS == */
@@ -50,7 +51,7 @@ export function shipAct(name, el){
   const st = appState.G.st[A.i];
   if(name === "acclose"){ V.actions = null; render(); return true; }
   if(name === "actab"){
-    A.tab = argS(); A.res = null;
+    A.tab = argS(); A.res = null; A.cel = "";
     if(A.tab === "dis") A.blast = st.blast | 0;
     render(); return true;
   }
@@ -98,6 +99,41 @@ export function shipAct(name, el){
     A.res = { d: d, how: how };
     render(); return true;
   }
+  if(name === "accel"){ A.cel = argS(); A.res = null; render(); return true; }
+  if(name === "accelback"){ A.cel = ""; A.res = null; render(); return true; }
+  /* asteroids (p. 110): the test, then D6 damage against the shields */
+  if(name === "acast"){
+    const how = argS(), ld = testLd(A.i), n = PLAY.asteroidTestDice(st);
+    const dice = how === "roll" ? rollN(n) : null;
+    A.res = { test: dice ? sum(dice) <= ld : how === "pass", dice: dice, ld: ld, n: n, again: !!(A.res && A.res.again) };
+    render(); return true;
+  }
+  if(name === "acastagain"){
+    const ld = A.res.ld, dice = rollN(A.res.n);
+    A.res = Object.assign({}, A.res, { test: sum(dice) <= ld, dice: dice, again: true });
+    render(); return true;
+  }
+  if(name === "acastdmg"){
+    const R = appState.U[A.i].R, how = argS(), d = how === "roll" ? PLAY.d6() : parseInt(how, 10);
+    const up = PLAY.view(R, st, appState.G.fleet).shields.up;
+    const hits = PLAY.asteroidHits(d, up);
+    A.res = Object.assign({}, A.res, { d: d, up: up | 0, hits: hits });
+    /* an escort squadron shares it among the ships that touched (p. 110): theirs to tap */
+    if(hits && !PLAY.isEscort(R)) act("ramhits", A.i, hits);
+    if(PLAY.destroyed(R, appState.G.st[A.i])) V.actions = null;
+    render(); return true;
+  }
+  /* a warp rift (pp. 111-112): through it, or lost in the warp */
+  if(name === "acrift"){
+    const how = argS(), ld = testLd(A.i), n = PLAY.riftTestDice(appState.U[A.i].R);
+    const dice = how === "roll" ? rollN(n) : null, ok = dice ? sum(dice) <= ld : how === "pass";
+    const far = ok ? rollN(2) : null;
+    if(!ok) act("disengage", A.i, { ok: true, ms: [A.i] });
+    A.res = { test: ok, dice: dice, ld: ld, far: far };
+    render(); return true;
+  }
+  /* the cloud works as one Blast Marker (p. 110) */
+  if(name === "acgas"){ act("blast", A.i, 1); A.res = { marked: true }; render(); return true; }
   /* the failed roll taken back and made again with one re-roll (p. 48) */
   if(name === "acreroll"){
     const free = freeRR(A.i), kind = argS(), prev = A.res;
@@ -137,7 +173,8 @@ function renderMain(i){
     row("board", "Board", "base contact, End Phase (Rulebook p. 89)"),
     still ? "" : row("ram", "Ram", "All Ahead Full, the dice and the damage (p. 55)"),
     still ? "" : row("dis", "Disengage", st.noOrdersTurn ? "failed this turn: no fire, no orders but Brace (p. 57)" : "end of the Movement Phase, Leadership test (p. 56)"),
-    bar === "escort" ? "" : row("tele", "Teleport attack", bar || "End Phase, shields down, within 10 cm (p. 92)", !!bar)
+    bar === "escort" ? "" : row("tele", "Teleport attack", bar || "End Phase, shields down, within 10 cm (p. 92)", !!bar),
+    row("cel", "Celestial phenomena", "asteroids, clouds, warp rifts, planets, flares (pp. 109-115)")
   ].join("");
 }
 function renderDis(i){
@@ -192,10 +229,64 @@ function renderTele(i){
     <p class="foot">One Hit-and-Run attack: a 1 fails, 2 or more is that result on the Critical Hits table. A fleet's bonus to Hit-and-Run is yours to add (p. 92).</p>
     ${out}${backBtn}`;
 }
+/* ------------------------------------------------- celestial phenomena --- */
+const CEL = [
+  ["asteroid", "Asteroid field", "Ld test on contact, D6 damage (p. 110)"],
+  ["gas", "Gas or dust cloud", "one Blast Marker that stays (p. 110)"],
+  ["rift", "Warp rift", "Ld test, or lost in the warp (p. 111)"],
+  ["planet", "Planet or moon", "gravity well, free turns, high orbit (p. 113)"],
+  ["sun", "Sunward", "double column shifts toward the sun (p. 114)"],
+  ["flare", "Solar flare", "start of each turn, on a 6 (p. 115)"],
+  ["radiation", "Radiation burst", "start of each turn, on 5 or 6 (p. 115)"]
+];
+const list = a => `<ul class="acchk">${a.map(t => `<li>${esc(t)}</li>`).join("")}</ul>`;
+const celBack = `<button class="btn sec" data-act="accelback">All phenomena</button>`;
+const TEXT = {
+  sun: ["Only in the Flare Region, Mercurial Zone and Inner Biosphere.", "Firing toward the sunward edge: over 30 cm two column shifts right; 15 cm or under two left (p. 114)."],
+  flare: ["D6 at the start of each turn, one per flare; on a 6 it happens, once a game.", "Every ship: one Blast Marker placed sunward of it. A ship without shields takes one hit, and a critical on 4+.", "Each Ordnance marker is removed on 4+.", "Eldar may pass a Leadership check to ignore it, then turn directly away and move 2D6 cm; their escorts re-roll free (p. 115)."],
+  radiation: ["D6 at the start of each turn, one per burst; on 5 or 6 one burst happens this turn.", "D6 for the interference: every ship has that much less Leadership for the turn. It goes on the Radiation counter in the menu.", "Fleet Commanders may use re-rolls for Command checks only on their own ship or squadron (p. 115)."]
+};
+function renderAsteroid(i){
+  const A = appState.V.actions, R = appState.U[i].R, st = appState.G.st[i], r = A.res, ld = testLd(i), n = PLAY.asteroidTestDice(st), esq = PLAY.isEscort(R);
+  if(ld == null) return `<p class="foot">Set this ship's Leadership first.</p>${celBack}`;
+  let step;
+  if(!r) step = `<div class="r4"><button data-act="acast" data-arg="roll">Roll ${n}D6</button><button data-act="acast" data-arg="pass">Passed</button><button data-act="acast" data-arg="fail">Failed</button></div>`;
+  else if(r.test) step = `<p class="acres ok">${r.dice ? diceLine(r.dice) + " against Ld " + r.ld + ": " : ""}<b>Through safely.</b></p>`;
+  else if(r.d == null) step = `<p class="acres bad">${r.dice ? diceLine(r.dice) + " against Ld " + r.ld + ": " : ""}<b>Failed:</b> D6 damage.</p>
+      ${esq && r.dice && !r.again ? `<button class="btn sec" data-act="acastagain">Re-roll<small>an escort's is free; the second roll stands</small></button>` : ""}
+      <div class="bchips">${chip("acastdmg", "roll", "Roll D6", false)}${[1, 2, 3, 4, 5, 6].map(d => chip("acastdmg", d, d, false)).join("")}</div>`;
+  else step = `<p class="acres ${r.hits ? "bad" : "ok"}">D6 = <b>${r.d}</b> against ${r.up} shield${r.up === 1 ? "" : "s"} up: <b>${r.hits} hit${r.hits === 1 ? "" : "s"}</b>${r.hits ? (esq ? ": tap them on the ships that touched the field, in the order they moved" : ", marked") : ""}. No Blast Markers, but it is slowed 5 cm this turn (p. 110).</p>`;
+  return `${list(TERR_SHORT.asteroid)}
+    ${appState.G.grp[i] && !esq ? `<p class="foot">A squadron tests once; on a failure each ship that touched takes D6 (p. 110). Roll it on each ship.</p>` : ""}
+    <p class="actotal">Ld ${ld} ${MID} <b>${n}D6, ${ld} or under</b>${n === 3 ? " (All Ahead Full)" : ""}</p>
+    ${step}${celBack}`;
+}
+function renderRift(i){
+  const A = appState.V.actions, R = appState.U[i].R, r = A.res, ld = testLd(i), n = PLAY.riftTestDice(R);
+  if(ld == null) return `<p class="foot">Set this ship's Leadership first.</p>${celBack}`;
+  const step = !r ? `<div class="r4"><button data-act="acrift" data-arg="roll">Roll ${n}D6</button><button data-act="acrift" data-arg="pass">Passed</button><button data-act="acrift" data-arg="fail">Failed</button></div>`
+    : r.test ? `<p class="acres ok">${r.dice ? diceLine(r.dice) + " against Ld " + r.ld + ": " : ""}<b>Through.</b> Place it up to ${sum(r.far) * 10} cm from the rift (${r.far.join(" + ")}, ×10), facing any way (p. 111).</p>`
+    : `<p class="acres bad">${r.dice ? diceLine(r.dice) + " against Ld " + r.ld + ": " : ""}<b>Lost in the warp.</b> Marked as gone from the table. After the game a D6: on a 1 lost forever, on 2-6 it finds its way back (p. 112).</p>`;
+  return `${list(TERR_SHORT.rift)}
+    <p class="actotal">Ld ${ld} ${MID} <b>${n}D6, ${ld} or under</b></p>
+    ${step}${celBack}`;
+}
+function renderCel(i){
+  const A = appState.V.actions, r = A.res;
+  if(!A.cel) return CEL.map(c => `<button class="btn sec" data-act="accel" data-arg="${c[0]}">${c[1]}<small>${c[2]}</small></button>`).join("") + backBtn;
+  if(A.cel === "asteroid") return renderAsteroid(i);
+  if(A.cel === "rift") return renderRift(i);
+  if(A.cel === "gas") return `${list(TERR_SHORT.gas)}
+    ${r && r.marked ? `<p class="acres ok"><b>One Blast Marker</b> on this ship. UNDO takes it back.</p>` : `<button class="btn" data-act="acgas">Touching it: mark one Blast Marker</button>`}
+    ${celBack}`;
+  if(A.cel === "planet") return list(TERR_SHORT.planet.concat(TERR_SHORT.moon)) + celBack;
+  return list(TEXT[A.cel]) + celBack;
+}
 export function renderActions(){
   const A = appState.V.actions, i = A.i;
-  const title = { ram: "Ram", dis: "Disengage", tele: "Teleport attack" }[A.tab] || "Actions";
-  const body = A.tab === "ram" ? renderRam(i) : A.tab === "dis" ? renderDis(i) : A.tab === "tele" ? renderTele(i) : renderMain(i);
+  const celName = A.tab === "cel" && A.cel ? CEL.find(c => c[0] === A.cel)[1] : "Celestial phenomena";
+  const title = { ram: "Ram", dis: "Disengage", tele: "Teleport attack", cel: celName }[A.tab] || "Actions";
+  const body = A.tab === "ram" ? renderRam(i) : A.tab === "dis" ? renderDis(i) : A.tab === "tele" ? renderTele(i) : A.tab === "cel" ? renderCel(i) : renderMain(i);
   return `<div class="menu acts" data-act="acclose"><div class="box">
     <div class="mhd"><h2>${title}: ${esc(unitName(i))}</h2><button class="x" data-act="acclose" aria-label="Close">${CLOSE}</button></div>
     ${body}

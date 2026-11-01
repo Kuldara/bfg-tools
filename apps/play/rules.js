@@ -841,6 +841,12 @@ function takenFeatures(R){
   return out;
 }
 
+/* Celestial phenomena a ship meets (Rulebook pp. 110-111, FAQ 2026, Warp Rift).
+   RULINGS.md T47. */
+function asteroidTestDice(st){ return st.order === "AAF" ? 3 : 2; }
+function asteroidHits(d, shieldsUp){ return Math.max(0, d - (shieldsUp | 0)); }
+function riftTestDice(R){ return /ELDAR/i.test(String(R.source && R.source.faction)) ? 2 : 3; }
+
 /* Boarding value (p. 89): damage points remaining; the defender adds its
    turrets. +2 against a crippled ship for the attacker (p. 90). */
 /* A star fort (Fleets p. 502): "the remaining hit points of all four
@@ -1413,7 +1419,7 @@ return {
   freshUnit: freshUnit, freshFleet: freshFleet, isEscort: isEscort, isCapital: isCapital,
   crippled: crippled, destroyed: destroyed, remaining: remaining,
   shields: shields, turrets: turrets, speed: speed, turns: turns, leadership: leadership,
-  armament: armament, braced: braced, repairDice: repairDice, repairPlan: repairPlan, repairRoll: repairRoll, RAM_SIZES: RAM_SIZES, ramSize: ramSize, ramTestDice: ramTestDice, ramDice: ramDice, rammedDice: rammedDice, ramHits: ramHits, frontArmour: frontArmour, powerRam: powerRam, disengageLd: disengageLd, disengagePasses: disengagePasses, autoNames: autoNames, featureWord: featureWord, takenFeatures: takenFeatures, boardingValue: boardingValue,
+  armament: armament, braced: braced, repairDice: repairDice, repairPlan: repairPlan, repairRoll: repairRoll, RAM_SIZES: RAM_SIZES, ramSize: ramSize, ramTestDice: ramTestDice, ramDice: ramDice, rammedDice: rammedDice, ramHits: ramHits, frontArmour: frontArmour, powerRam: powerRam, disengageLd: disengageLd, disengagePasses: disengagePasses, autoNames: autoNames, featureWord: featureWord, takenFeatures: takenFeatures, asteroidTestDice: asteroidTestDice, asteroidHits: asteroidHits, riftTestDice: riftTestDice, RAM_SIZES: RAM_SIZES, ramSize: ramSize, ramTestDice: ramTestDice, ramDice: ramDice, rammedDice: rammedDice, ramHits: ramHits, frontArmour: frontArmour, powerRam: powerRam, disengageLd: disengageLd, disengagePasses: disengagePasses, boardingValue: boardingValue,
   conceded: conceded, squadronConceded: squadronConceded, addCrit: addCrit, repairCrit: repairCrit, removeCrit: removeCrit, activeCrits: activeCrits,
   standardCrits: standardCrits, critTarget: critTarget, hasLocation: hasLocation,
   catastrophic: catastrophic, hulkRules: hulkRules, isFort: isFort, staysInPlace: staysInPlace, concededPage: concededPage, fireDamage: fireDamage,
