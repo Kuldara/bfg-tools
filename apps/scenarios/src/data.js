@@ -47,7 +47,7 @@ export const GROUPS = [
   ["fan-pdd",   "Fan · Project Distant Darkness", "Tau narrative scenarios with fixed forces · any fleets can play"],
   ["fan-sb",    "Fan · Starblade", "Craftworld Eldar narrative series with fixed forces · any fleets can play"],
   ["fan-botv",  "Fan · Book of the Void", "The Discordia sector books of the Battlefleet Gothic Discord, I and II · historical fleets, bonus missions"],
-  ["fan-bbgm",  "Fan · BBGM", "The new scenarios of a fan house-rules compilation by Bear, BinExis, DarthGoogle and Mazilka, May 2026 · any fleets"]
+  ["fan-bbgm",  "Fan · BBGM", "Scenarios from a fan house-rules compilation by Bear, BinExis, DarthGoogle and Mazilka, May 2026 · any fleets"]
 ];
 /* scenario files in scenarios/ add themselves here */
 export function addScenarios(list) {
@@ -56,6 +56,28 @@ export function addScenarios(list) {
 /* a field may be a plain value or a function of the variant */
 export function val(x, v) { return typeof x === "function" ? x(v) : x; }
 export function v0(sc) { return sc.variants ? sc.variants[0][0] : "std"; }
+/* a second version of a scenario from another source, added by that source's file: the card's first version stays as it is.
+   o.source = what the card's header shows for this version (trust, book, src, why, info). Lists are hidden for this version
+   unless o.keep names them ("all", or a list of tool ids); o's own items are added at the end, so saved step ticks still match. */
+export const BBGM_V = "bbgm";
+export function addVariant(id, first, o) {
+  const sc = SC.find(s => s.id === id), V = BBGM_V;
+  sc.variants = [["std", first], [V, "BBGM (fan)"]];
+  sc.vsrc = { [V]: o.source };
+  if (o.noLowTable) sc.noLowTable = [V];
+  ["pitch", "glance", "bring", "forces", "others", "mapNote", "notes", "refs"].forEach(k => { if (k in o) { const old = sc[k]; sc[k] = v => v === V ? o[k] : val(old, v); } });
+  ["steps", "play", "tools", "stools", "rtools"].forEach(k => {
+    const keep = (o.keep || {})[k];
+    (sc[k] || []).forEach(x => { if (!(keep === "all" || (keep && keep.includes(x.id)))) x.not = (x.not || []).concat(V); });
+    if (o[k]) sc[k] = (sc[k] || []).concat(o[k].map(x => Object.assign({ only: [V] }, x)));
+  });
+  ["end", "win"].forEach(k => { if (o[k]) sc[k] = { std: sc[k], [V]: o[k] }; });
+  if ("turnMax" in o) { const old = sc.turnMax; sc.turnMax = v => v === V ? o.turnMax : old ? old(v) : 0; }
+  if (o.result) { const old = sc.result; sc.result = function (st, v, S) { return v === V ? o.result(st, v, S) : old.call(this, st, v, S); }; }
+  if (o.draw) { const old = sc.draw || MAPS[id]; sc.draw = (v, W, H, st) => v === V ? o.draw(W, H, st) : old(v, W, H, st); }
+  if (o.fx) sc.vfx = { [V]: o.fx };
+}
+export function addNote(id, t) { const sc = SC.find(s => s.id === id), old = sc.notes; sc.notes = typeof old === "function" ? v => old(v).concat([t]) : (old || []).concat([t]); }
 export const ANY = "Any fleets";
 export const CORE_OTHERS = "Written for any fleet list. Choose who attacks with the attack ratings (Before the battle) or agree it.";
 

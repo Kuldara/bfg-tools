@@ -25,7 +25,7 @@ export function renderSc() {
   const sc = SC.find(s => s.id === route.id), st = stOf(sc);
   if (sc.variants && !sc.variants.some(x => x[0] === st.v)) st.v = sc.variants[0][0];
   if (!sc.variants) st.v = "std";
-  const v = st.v, tab = route.tab;
+  const v = st.v, tab = route.tab, vs = sc.vsrc && sc.vsrc[v], hd = vs || sc;
   document.title = sc.name + " · Scenario Library";
   const steps = allSteps(sc, st, v), nd = steps.filter(x => st.done[stepKey(sc, x)]).length, nsp = spSides(sc).filter(x => spOf(st, x)).length;
   const tabsIn = "<div class='tabs-in'>" + tabLink(sc, "setup", "Set-up", tab, "<span class='n'>" + nd + "/" + steps.length + "</span>") + tabLink(sc, "subplots", "Sub-plots", tab, nsp ? "<span class='n'>" + nsp + "</span>" : "", nsp ? "" : "opt", "Optional: a secret second goal for each player (RB p. 124)") + tabLink(sc, "play", "Play", tab, "<span class='n'>T" + st.turn + "</span>") + tabLink(sc, "result", "Result", tab) + "</div>";
@@ -34,10 +34,10 @@ export function renderSc() {
   nav.innerHTML = "<a class='back' href='#/'>‹ Scenarios</a>" + (topTabs ? "<nav class='tabs toptabs' aria-label='Scenario tabs'>" + tabsIn + "</nav>" : "") +
     "<button class='navclr' data-a='reset' title='New game: clear this scenario’s progress (your record mark stays)'>Clear progress</button>";
   let h = "<div class='shead'><div class='series'>" + esc(sc.series) + "</div><h1>" + esc(sc.name) + "</h1>" +
-    "<div class='chips'><span class='badge t-" + sc.trust + "'>" + TRUST[sc.trust].l + "</span><span class='badge bk'>" + esc(BOOK[sc.book]) + "</span><span class='chip" + (sc.suggest ? "" : " any") + "'>" + esc(sugText(sc)) + "</span>" + tagChips(sc) + recCtl(sc.id, true) + "</div>" +
-    "<div class='src'>Source: " + esc(sc.src) + origHtml(sc) + " · <a href='#/sources'>about the sources</a></div><div class='why'>" + esc(sc.why) +
+    "<div class='chips'><span class='badge t-" + hd.trust + "'>" + TRUST[hd.trust].l + "</span><span class='badge bk'>" + esc(BOOK[hd.book]) + "</span><span class='chip" + (sc.suggest ? "" : " any") + "'>" + esc(sugText(sc)) + "</span>" + tagChips(sc) + recCtl(sc.id, true) + "</div>" +
+    "<div class='src'>Source: " + esc(hd.src) + (vs ? "" : origHtml(sc)) + " · <a href='#/sources'>about the sources</a></div><div class='why'>" + esc(hd.why) +
     (sc.rate ? "<span class='rate'><b>Our note:</b> " + esc(sc.rate) + "</span>" : "") + "</div>" +
-    "<button class='btn infobtn' data-a='info' aria-expanded='" + !!(DB.info && DB.info[sc.id]) + "'>ⓘ Background & credits</button>" + (DB.info && DB.info[sc.id] ? infoPanel(sc) : "") + "</div>";
+    "<button class='btn infobtn' data-a='info' aria-expanded='" + !!(DB.info && DB.info[sc.id]) + "'>ⓘ Background & credits</button>" + (DB.info && DB.info[sc.id] ? infoPanel(hd.info ? hd : sc) : "") + "</div>";
   if (!topTabs) h += "<nav class='tabs'>" + tabsIn + "</nav>";
   const vp = varPending(sc, st);
   if (sc.variants) h += "<div class='varrow'><span>" + (vp ? "Set-up: to be decided" : "Version") + "</span><div class='seg' role='group'>" + sc.variants.map(([id, l]) => "<button data-a='var' data-v='" + id + "' aria-pressed='" + (!vp && v === id) + "'>" + esc(l) + "</button>").join("") + "</div></div>";

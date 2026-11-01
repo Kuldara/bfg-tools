@@ -4,6 +4,8 @@ import { OPT } from "./storage.js";
 import { MID, TIMES } from "./helpers.js";
 import { groupUnits } from "./actions.js";
 import { fleetRR } from "./render.js";
+import { preRollsOf } from "./game-state.js";
+import { pregameText } from "../../../packages/ui/pregame-tables.js";
 import { arcGlyph, esc, shortArmour, shortRange, title } from "../../../packages/ui/format.js";
 import PLAY from "../rules.js";
 
@@ -11,6 +13,8 @@ import PLAY from "../rules.js";
 export function baseName(i){
   const R = appState.U[i].R;
   if(R.name) return R.name;
+  const auto = PLAY.autoNames(appState.U.map(x => x.R))[i];
+  if(auto) return auto;
   const t = title(R.className || (R.entry && R.entry.label) || "");
   /* unnamed commanders of one kind are numbered as in the builder:
      Ork Warlord 1, 2 and 3 (J233) */
@@ -23,6 +27,14 @@ export function baseName(i){
 }
 /* a name the player gave the ship at the set-up (user 19.10.2026: "you can
    also still write new names for the ships") is this game's: G.nm, by row */
+/* What was bought for the ship and rolled for it before the game, on one quiet
+   line under its name (user 1.11.2026: a little clearer, only a little). */
+export function upgradeLine(i){
+  const st = appState.G.st[i];
+  const rolled = preRollsOf(i).filter(r => (st.pre || {})[r.key]).map(r => pregameText(r, st.pre[r.key]));
+  const all = PLAY.takenFeatures(appState.U[i].R).concat(rolled);
+  return all.length ? `<p class="upl">${all.map(esc).join(" " + MID + " ")}</p>` : "";
+}
 export function unitName(i){ const n = appState.G && appState.G.nm && appState.G.nm[i]; return n || baseName(i); }
 export function classTag(R){
   const t = String(R.stats ? R.stats.type : "");

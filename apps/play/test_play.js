@@ -1583,6 +1583,77 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
   check("d6: every face 1-6 from the generator", [1, 2, 3, 4, 5, 6].map(() => PLAY.d6(rng)).join("") === "123456");
 }
 
+/* --- Repair with one tap: the dice the book gives ---------------------- */
+{
+
+  const st = PLAY.freshUnit(lunar);
+  const plan = (R, s2) => PLAY.repairPlan(R, s2);
+  /* "capital ships roll 1D6 per Damage point remaining ... Each roll of a 6" (p. 88) */
+  check("repair: a Lunar at 8 hits left rolls 8D6, 6 repairs (p. 88)", plan(lunar, st).dice === 8 && plan(lunar, st).target === 6, JSON.stringify(plan(lunar, st)));
+  st.hits = 1;
+  check("repair: one hit taken, 7D6 (p. 88: per Damage point remaining)", plan(lunar, st).dice === 7);
+  st.blast = 1;
+  check("repair: Blast Markers in contact, half rounding up: 4D6 (p. 88)", plan(lunar, st).dice === 4);
+  const necron = { damage: { repair: "REPAIR: End Phase, D6 / remaining Hit; 4+ = 1 crit; blast contact 1/2 dice." }, stats: lunar.stats, rules: [] };
+  check("repair: Necrons succeed on 4+ (Fleets p. 404)", plan(necron, PLAY.freshUnit(lunar)).target === 4);
+  const mech = { damage: { repair: "ALL ADMECH: REPAIR +1D6." }, stats: lunar.stats, rules: [] };
+  check("repair: a Mechanicus vessel adds +1D6 (Fleets p. 120)", plan(mech, PLAY.freshUnit(lunar)).dice === 9);
+  const faces = PLAY.repairRoll({ dice: 4, target: 6 }, (seq => () => seq.shift())([0.99, 0, 0.5, 0.99]));
+  check("repair: the roll is one die per dice, a success per target", faces.faces.join("") === "6146" && faces.hits === 2, JSON.stringify(faces));
+}
+
+/* --- Ramming and disengaging, read from the book's own examples --------- */
+{
+  /* "the Imperial Lunar class cruiser Agrippa would take a Leadership test on
+     2D6 to ram another cruiser, on 3D6 to ram an escort or 1D6 to ram a
+     battleship" (p. 55); Defence > Battleship > Cruiser > Escort */
+  const me = PLAY.ramSize(lunar);
+  check("ram: Lunar vs cruiser 2D6, escort 3D6, battleship 1D6, defence 1D6 (p. 55)",
+    PLAY.ramTestDice(me, PLAY.RAM_SIZES.indexOf("cruiser")) === 2 && PLAY.ramTestDice(me, PLAY.RAM_SIZES.indexOf("escort")) === 3 &&
+    PLAY.ramTestDice(me, PLAY.RAM_SIZES.indexOf("battleship")) === 1 && PLAY.ramTestDice(me, PLAY.RAM_SIZES.indexOf("defence")) === 1);
+  check("ram: an escort ramming a battleship rolls fewest (p. 55)", PLAY.ramTestDice(PLAY.ramSize(swords), PLAY.RAM_SIZES.indexOf("battleship")) === 1);
+  /* the example, p. 56: 8D6 against Armour 5: 1,2,3,3,4,5,5,6 = 3; the Unclean
+     returns 4D6 against the armoured prow 6: 3,3,5,6 = 1 */
+  check("ram: the Agrippa rolls its starting 8D6 (p. 56), hits or none", PLAY.ramDice(lunar) === 8);
+  check("ram: 1,2,3,3,4,5,5,6 against Armour 5 is 3 (p. 56)", PLAY.ramHits([1, 2, 3, 3, 4, 5, 5, 6], 5) === 3);
+  check("ram: the rammed ship rolls half its starting damage, 8 -> 4 (p. 56)", PLAY.rammedDice(8, false, false) === 4);
+  check("ram: 3,3,5,6 against the prow 6 is 1 (p. 56)", PLAY.ramHits([3, 3, 5, 6], 6) === 1);
+  check("ram: head on, or a defence, rolls in full (p. 55, 56)", PLAY.rammedDice(8, true, false) === 8 && PLAY.rammedDice(8, false, true) === 8);
+  check("ram: a Lunar's front armour is its prow 6+", PLAY.frontArmour(lunar) === 6, PLAY.frontArmour(lunar));
+  /* the table, p. 56: +1 per marker, +3 for celestial phenomena. The example on
+     p. 57 calls three markers and an asteroid field +4: recorded in T46 */
+  check("disengage: Ld 9, 3 markers +3, celestial +3 (table, p. 56)", PLAY.disengageLd(9, 3, false, 0) === 12 && PLAY.disengageLd(9, 3, true, 0) === 15);
+  check("disengage: each enemy within 15 cm -1 (p. 56)", PLAY.disengageLd(8, 0, false, 2) === 6);
+  check("disengage: Ld 13 passes a 10, fails an 11 and a 12 (p. 56-57)", PLAY.disengagePasses(13, 10) && !PLAY.disengagePasses(13, 11) && !PLAY.disengagePasses(13, 12));
+  check("disengage: Ld 6 fails a 7", !PLAY.disengagePasses(6, 7) && PLAY.disengagePasses(6, 6));
+}
+
+/* --- Names and upgrades on the card ------------------------------------ */
+{
+  const names = rs => PLAY.autoNames(rs);
+  const lun = { kind: "ship", className: "LUNAR CLASS CRUISER" }, dic = { kind: "ship", className: "DICTATOR CLASS CRUISER" };
+  check("names: one of a class needs no number, and no class words", names([dic])[0] === "Dictator", names([dic])[0]);
+  check("names: several of a class are numbered in fleet order", names([lun, dic, lun]).join() === "Lunar 1,Dictator,Lunar 2", names([lun, dic, lun]).join());
+  check("names: a name from the builder stays and takes no number", names([Object.assign({ name: "Agrippa" }, lun), lun]).join() === ",Lunar", names([Object.assign({ name: "Agrippa" }, lun), lun]).join());
+  check("names: a class without the word stays whole", names([{ kind: "ship", className: "BATTLE BARGE" }])[0] === "Battle Barge");
+  const short = PLAY.featureWord;
+  check("features: a replaced weapon", short("Can replace its prow torpedoes with a nova cannon at an additional cost of +20 pts (like the Minotaur and the Lord Daros).") === "Nova cannon", short("Can replace its prow torpedoes with a nova cannon at an additional cost of +20 pts (like the Minotaur and the Lord Daros)."));
+  check("features: a bought thing", short("The ship may take a power ram for +5 points, if it is part of an Imperial Navy fleet") === "Power ram", short("The ship may take a power ram for +5 points, if it is part of an Imperial Navy fleet"));
+  check("features: a dash names it", short("Xenotech system (free, choose one) \u2014 Long Range Sensors: The vessel adds +1") === "Long Range Sensors", short("Xenotech system (free, choose one) \u2014 Long Range Sensors: The vessel adds +1"));
+  check("features: an Ork row", short("Prow \u2014 torpedo launcha instead of heavy gunz (Speed 30 cm, Strength D6)") === "Torpedo launcha", short("Prow \u2014 torpedo launcha instead of heavy gunz (Speed 30 cm, Strength D6)"));
+  const taken = PLAY.takenFeatures({ options: [{ state: "opt", text: "The ship may take a power ram for +5" }, { state: "take", text: "Can replace its prow torpedoes with a nova cannon at +20" }],
+    upgrades: [{ state: "take", label: "Clan: Goffs (Black)" }, { state: "opt", label: "Maniac Gunners" }, { state: "take", label: "Reinforced Carapace \u00d72 (+2 Hits)" }] });
+  check("features: only what was taken, without its fine print", taken.join() === "Nova cannon,Goffs,Reinforced Carapace \u00d72", taken.join());
+}
+
+/* --- Celestial phenomena: the dice of a ship's helper ------------------- */
+{
+  check("asteroids: 2D6, 3D6 on All Ahead Full (p. 110)", PLAY.asteroidTestDice({ order: null }) === 2 && PLAY.asteroidTestDice({ order: "AAF" }) === 3);
+  check("asteroids: shields block the D6 damage as normal (p. 110)", PLAY.asteroidHits(5, 2) === 3 && PLAY.asteroidHits(1, 2) === 0);
+  const eldar = { source: { faction: "ELDAR" } };
+  check("warp rift: 3D6 (p. 111), Eldar 2D6 (FAQ 2026, Warp Rift)", PLAY.riftTestDice(lunar) === 3 && PLAY.riftTestDice(eldar) === 2);
+}
+
 /* --- the built page itself --------------------------------------------- */
 /* Everything above tests rules.js. The page's own code (set-up, rows,
    cards, panels, actions, VP sums) is in src/, and nothing above runs it:

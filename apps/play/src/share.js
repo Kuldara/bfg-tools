@@ -1,3 +1,4 @@
+import { anyRepairRoll, repairBtn, repairLines } from "./repair.js";
 import { appState } from "./state.js";
 import { builderRaw, lsGet, lsSet } from "./storage.js";
 import { MID, TIMES, fnv } from "./helpers.js";
@@ -158,11 +159,12 @@ export function renderEndPhase(){
     const times = st.fireTurn === fl.turn ? st.fireN | 0 : 0;
     const fireBtn = fire ? `<button class="fireb${times ? " done" : ""}" data-act="fire" data-i="${i}">Fire not put out: +${n} hit${n > 1 ? "s" : ""}<small>${times ? "added " + times + TIMES + " this turn" : "after the repair rolls (p. 67)"}</small></button>` : "";
     return `<div class="eprow" style="--kd:${factionCols(R.entry ? R.entry.list : appState.G.ln, R.source.faction || "")[0]}"><div class="ephd"><b>${esc(unitName(i))}</b><small>damage control ${v.repairDice}D6${R.damage.repair && R.damage.repair !== DOMAIN.REPAIR_LINE ? " " + MID + " " + esc(R.damage.repair) : ", a 6 repairs one (p. 88)"}</small></div>
-      <div class="eprep">${reps}</div>${fireBtn}</div>`;
+      ${repairBtn(i)}${repairLines(i)}<div class="eprep">${reps}</div>${fireBtn}</div>`;
   }).join("");
   return `<div class="menu endp" data-act="endph"><div class="box">
     <h2>End phase</h2>
-    <p class="foot">Both players repair in every End Phase (p. 88): roll the dice shown, tap what was repaired; then a fire still burning costs a hit (p. 67). Halve the dice with blast markers in contact.</p>
+    <p class="foot">Both players repair in every End Phase (p. 88). Repair rolls the dice shown, repairs and adds the hit of a fire left burning (p. 67); with your own dice, tap what was repaired, then the fire. Blast markers in contact halve the dice.</p>
+    ${anyRepairRoll() ? `<button class="btn" data-act="repairall">Repair all<small>roll for every ship below</small></button>` : ""}
     ${rows || `<p class="foot">Nothing to repair.</p>`}
     <button class="btn sec" data-act="endph">Done</button>
   </div></div>`;

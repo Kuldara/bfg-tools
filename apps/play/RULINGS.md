@@ -533,6 +533,51 @@ with its page, and its effect is not applied to the stats. **Not covered yet:** 
 Bakka Fleet-Admiral's rolled refits (p. 48) and the Mechanicus experimental
 cruiser (p. 124).
 
+**T45. Repair with one tap.** **The user's request 1.11.2026.** Repair on a
+ship rolls its damage-control dice (p. 88), repairs, and adds the hit of a fire
+left burning (p. 67). The book says each 6 "enables the ship to repair one
+critically damaged system or put out one fire" and does not rank them, so the
+page does not either: when the sixes cannot repair everything and more than one
+kind is on the ship, the player picks; otherwise there is nothing to choose and
+it goes at once. Dice: `PLAY.repairPlan`, from the card's own repair line. Necrons
+4+ (Fleets p. 404). Mechanicus +1D6 (Fleets p. 120) is added **after** Blast
+Markers halve the dice: "always add +1D6". Repulsor Shielding ignores the halving
+until Shields Collapsed. With the orders track on, each End Phase rolls once (a
+turn's mine/enemy half); without it the page cannot tell the two End Phases apart
+and a second roll stays open. Own dice still work: the End Phase panel's taps are
+unchanged. Docking's 2 extra dice (Fleets) and a re-roll of damage control are not
+applied by the button; the ship's rule lines say so and UNDO plus the taps do it.
+**T46. A ship's Actions: ram, disengage, teleport.** **The user's request
+1.11.2026.** The top corner of a card opens Board, Ram, Disengage and Teleport
+attack. Each says the rule, works out the dice and rolls if asked; Passed and
+Failed are for own dice. **Leadership.** The ship's own value with a smashed
+bridge. p. 48's Under Fire and enemy contacts are headed "Command check modifiers",
+and neither the ram test (p. 55, "a Leadership test") nor disengaging (p. 56, its
+own list) is a Command check, so they do not apply: an open reading. **A contradiction, recorded.** The table on p. 56 gives
+celestial phenomena +3, while the example on p. 57 counts three Blast Markers and an
+asteroid field as +4 (Ld 9 to 13), which would make the field +1. The page uses
+the table. The example's point stands either way: 11 and 12 fail. **Half.**
+The rammed ship's "half its starting damage" rounds up as p. 64 does; the book's
+example is even. **What it marks.** Ram: hits on this ship through the track, the
+target's hits are said to its player, as Board does. Disengage: passed sets
+`disengaged` on the card or the whole escort squadron (p. 57); failed sets
+no-fire and takes a capital ship out of its squadron (p. 57). Teleport: the
+once-a-turn flag; the result is on the enemy. **Not done:** criticals from a ram's
+hits and a ship's own ram rules are the player's (its rule lines are shown).
+
+**T47. Celestial phenomena in Actions.** **The user's request 1.11.2026.** The
+Rulebook's phenomena (pp. 109-115) in short. Three have helpers. **Asteroids**
+(p. 110): the Leadership test, then D6 less the shields up; hits go on a capital
+ship's track, an escort squadron's are tapped by the player, because the book shares
+them among the ships that touched. **Gas and dust** (p. 110): one Blast Marker on the
+ship. **Warp rift** (pp. 111-112): 3D6, Eldar 2D6 (FAQ 2026, *Warp Rift*). A ship
+lost in the warp "disappears from the battle"; the page marks it as `disengaged`,
+the state for a ship off the table, so its VP are then those of a disengaged ship.
+The book does not give a VP rule for it here: an open reading. Planets, moons,
+Sunward, solar flares and radiation bursts are text; flares and bursts belong to
+the whole table, not to one ship, and the burst's Leadership is the menu's existing
+counter. Leadership as in T46.
+
 ## What is not tracked, and why
 
 - The strength of torpedo salvoes and attack craft markers on the table

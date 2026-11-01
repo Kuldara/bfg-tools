@@ -395,6 +395,9 @@ TM("fan-v-sirvos", { z: [4, 3], by: "src", warn: "The source allows at most one 
 TM("fan-b-poi", { z: "any", by: "src", why: "The source: phenomena in any agreed way (BBGM p. 64). Roll the battlezone, or pick one." });
 TM("fan-b-chance", { z: "any", by: "src", why: "The source: phenomena in any agreed way (BBGM p. 68). Roll the battlezone, or pick one." });
 TM("fan-b-starfort", { z: "any", by: "src", why: "The source: phenomena in any agreed way (BBGM p. 73). Roll the battlezone, or pick one." });
+TM("fan-b-raiders", { z: "any", by: "src", why: "The source: phenomena in any agreed way (BBGM p. 63). Roll the battlezone, or pick one." });
+TM("fan-b-ring", { z: "any", by: "src", why: "The source: phenomena in any agreed way (BBGM p. 65). Roll the battlezone, or pick one." });
+TM("fan-b-assault", { z: "any", by: "src", why: "The source rolls its own phenomena, one per high orbit zone (tool in Set-up). Use this instead only if you both agree." });
 TM("fan-b-patrol", { z: "any", by: "src", why: "The source: any agreed method (BBGM p. 80). Roll the battlezone, or pick one." });
 TM("fan-v-last-wave", { z: 6, by: "src", sun: { rows: [[1, 3, "left"], [4, 6, "right"]], text: "a short edge; rolled here: 1–3 left, 4–6 right" } });
 })();

@@ -130,7 +130,7 @@ export function lfActive(f) {
 export function hay(sc) {
   const i = sc.info || INFO[sc.id];
   const tags = (sc.tags || []).map(t => t + " " + (TAG_ALIAS[t] || "")).join(" ");
-  return [sc.name, sc.series, val(sc.pitch, v0(sc)), sc.src, sc.why || "", (sc.suggest || []).join(" "), Object.values(sc.sides).map(x => x.n + " " + (x.f || "")).join(" "), i ? i.cr.join(" ") : "", sc.type || "",
+  return [sc.name, sc.series, val(sc.pitch, v0(sc)), sc.src, sc.why || "", (sc.suggest || []).join(" "), Object.values(sc.sides).map(x => x.n + " " + (x.f || "")).join(" "), i ? i.cr.join(" ") : "", sc.type || "", Object.values(sc.vsrc || {}).map(x => x.src + " " + x.why).join(" "),
     TRUST[sc.trust].l, tags].join(" ").toLowerCase();
 }
 export function listMatches(cat) {

@@ -26,7 +26,7 @@ export * from "./widgets.js";
 export * from "./events.js";
 import { bzIsPlanet } from "./battlezone.js";
 import { GW_CREDIT, RB_CREDIT } from "./credits.js";
-import { ARRIVAL, ARRIVE_SUB, ARRIVE_TXT, EDGE_ROWS, PA_PROV, SC, THREATS, THREAT_PLAY, addScenarios, v0, val } from "./data.js";
+import { ARRIVAL, ARRIVE_SUB, ARRIVE_TXT, EDGE_ROWS, PA_PROV, SC, THREATS, THREAT_PLAY, addNote, addScenarios, addVariant, v0, val } from "./data.js";
 import { wireEvents } from "./events.js";
 import { esc, fmt } from "./helpers.js";
 import { layout, mapFont, textLen } from "./layout.js";
@@ -42,7 +42,7 @@ import { gridOf } from "./widgets.js";
    and play builders are these page names. The list is the whole contract: a
    name missing here fails tests/_load.js and the page alike. A let (the
    route) is read through a getter, so the files see its current value. */
-Object.assign(globalThis, { addScenarios, ARRIVAL, ARRIVE_SUB, ARRIVE_TXT, EDGES4, EDGE_ROWS, GW_CREDIT, MAPS, PA_PROV, R, RB_CREDIT, THREATS, THREAT_PLAY, TICKS, addScenarios, agN, agV, app, bzIsPlanet, d6, dn, endingResult, entryFx, entryInfo, esc, fmt, get, gridOf, layout, mapFont, num, save, sideName, tableWH, textLen, treeAt, v0, val, wins });
+Object.assign(globalThis, { addScenarios, addVariant, addNote, ARRIVAL, ARRIVE_SUB, ARRIVE_TXT, EDGES4, EDGE_ROWS, GW_CREDIT, MAPS, PA_PROV, R, RB_CREDIT, THREATS, THREAT_PLAY, TICKS, addScenarios, agN, agV, app, bzIsPlanet, d6, dn, endingResult, entryFx, entryInfo, esc, fmt, get, gridOf, layout, mapFont, num, save, sideName, tableWH, textLen, treeAt, v0, val, wins });
 Object.defineProperty(globalThis, "route", { get: () => route, configurable: true });
 
 /* After the scenario files: the Warp Rift data onto the scenarios, the count

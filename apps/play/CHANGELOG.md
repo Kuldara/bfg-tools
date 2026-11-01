@@ -5,11 +5,15 @@ a tag `play-v<version>` deploys the Registry's site.
 
 ## Unreleased
 
-### Changed
-- Fleets: Send and Send all replace To phone and All to phone, with the same sheet as the builder, and Receive takes fleets by code. The paste box is gone. The opponent's room is unchanged.
+### Added
+- Repair with one tap (1.11.2026, RULINGS.md T45): beside a ship's criticals, Repair rolls its damage-control dice (p. 88), repairs, and adds the hit of a fire left burning (p. 67). The player picks only when the dice cannot repair everything and there is more than one kind. What happened stays on a line until the next tap elsewhere; UNDO takes it back. The End Phase panel has Repair all.
+- A ship's Actions (1.11.2026, RULINGS.md T46): a button in the card's top corner opens Board, Ram, Disengage and Teleport attack. Ram and Disengage say the rule, work out the dice with the target and the modifiers, roll if asked (Passed and Failed for own dice, Re-roll on a failure) and mark the result on the ship; what the enemy must mark is said to you. Board moved here from the row of big buttons.
+- Celestial phenomena in Actions (1.11.2026, RULINGS.md T47): the Rulebook's phenomena in short with pages; asteroids, gas clouds and warp rifts have helpers that roll and mark.
 
 ### Changed
-- To phone: a link too long for a QR code a camera can read (over 1 000 characters, usually several fleets) shows no code; the panel offers Save file, Copy link and Share instead.
+- Fleets: Send and Send all replace To phone and All to phone, with the same sheet as the builder, and Receive takes fleets by code. The paste box is gone. The opponent's room is unchanged.
+- Ships nobody named (1.11.2026): a short name, numbered when a class appears more than once: Lunar 1, Lunar 2, Dictator. The class in full is on the ship's card, and a name from the builder or the set-up stays as it is.
+- What a ship bought and rolled before the game is on one quiet line under its name.
 
 ### Added
 - Back to the set-up during a game (31.10.2026): the menu's **Set-up** opens the Leadership, the squadrons and the opponent's room again, with the game record kept. There the start button and a top-bar **Game** button read *Back to the game*, and the *Exit* that forgets the record is not offered.
