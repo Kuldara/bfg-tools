@@ -153,7 +153,7 @@ export function pickFleet(k){
       var i = +v, changed = (S[k].f !== i);
       if(changed){
         S[k].f = i; S[k].ships = [];
-        S[k].blast = 0; S[k].orders = 0; S[k].other = 0;
+        S[k].blast = 0; S[k].orders = 0; S[k].other = 0; S[k].otherValue = 0;
         resetRound();
       }
       closeSheet(); render();
@@ -245,9 +245,22 @@ export function showValue(k){
     h.push('<div class="mline"><span class="v num">+'+bv.turrets+'</span><span class="t">remaining '+
       (anySpore?"spore cysts":"turrets")+' (the ship being boarded adds them)</span><span class="p">p.89</span></div>');
   }
+  if(bv.byHand) h.push('<div class="mline"><span class="v num">'+fmt(bv.byHand)+'</span><span class="t">entered by hand</span></div>');
   h.push('<div class="mline tot"><span class="v num">'+bv.value+'</span><span class="t"><b>Boarding value</b></span></div>');
+  h.push('<div class="dieRow" style="margin-top:4px"><div class="lab" style="width:104px;text-align:left;color:var(--dim)">'+
+    'Anything else</div>'+
+    '<button class="die" style="flex:0 0 46px;height:40px" data-pick="minus">−</button>'+
+    '<div class="die" style="flex:0 0 52px;height:40px;background:transparent;border-color:transparent">'+
+    fmt(S[k].otherValue||0)+'</div>'+
+    '<button class="die" style="flex:0 0 46px;height:40px" data-pick="plus">+</button><div style="flex:1"></div></div>');
+  h.push('<div class="mline sub"><span class="v"></span><span class="t">Added to the boarding value: campaign bonuses, house rules and anything the app does not know.</span></div>');
   openSheet({title:"Boarding value", sub:k==="att"?"Boarder":"Defender", mode:"list",
-    items:function(){ return h; }, onPick:function(){}});
+    items:function(){ return h; }, onPick:function(v){
+      if(v!=="plus" && v!=="minus") return;
+      var n = (S[k].otherValue||0) + (v==="plus"?1:-1);
+      S[k].otherValue = Math.max(-99, Math.min(99, n));
+      render(); showValue(k);
+    }});
 }
 var PAGE = {ratio1:"RB p.90",ratio2:"RB p.90",ratio3:"RB p.90",ratio4:"RB p.90",blast:"RB p.90",orders:"RB p.90",orders2:"FL p.63",
   crippled:"RB p.90",chaos:"RB p.90",ork:"RB p.90",marines:"RB p.90",csm:"REF p.1",abaddon:"REF p.1",berzerkers:"FL p.266",

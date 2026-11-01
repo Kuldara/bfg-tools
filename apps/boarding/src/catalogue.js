@@ -5,7 +5,7 @@ import BOARDING from "./engine.js";
 import SHIPDATA from "./ships.json";
 
 export var B = BOARDING;
-export var SHIPS = SHIPDATA.ships, FLEETS = SHIPDATA.fleets;
+export var SHIPS = SHIPDATA.ships, FLEETS = SHIPDATA.fleets, SHIPBASE = SHIPDATA;
 export var KEY = "bfg-boarding-v1";
 
 /* ---------------------------------------------------------- option catalogue */
@@ -21,7 +21,7 @@ export var OPTS = [
   {id:"warlord",    t:"Ork Warlord aboard",             d:"Boarding value x2. Ork Pirates and Waaagh! lists only, and never aboard a space hulk.", r:["ork"]},
   {id:"clanzwarlord", t:"Ork Clanz Warlord",            d:"+2 to one boarding dice roll per game. Da Ork Clanz list — that Warlord does not double the boarding value.", r:["ork"]},
   {id:"goff",       t:"Goff clan",                      d:"+1 to the boarding roll.", r:["ork"]},
-  {id:"megaarmour", t:"Mega-armoured boarding parties", d:"+1 to the boarding roll.", r:["ork"]},
+  {id:"megaarmour", t:"Mega-armoured boarding parties", d:"+1 to the boarding roll. Not for escorts (FL p.372).", r:["ork"], notype:"Escort"},
   {id:"holofields", t:"Holofields / shadowfields",      d:"One save against the whole boarding attempt: on a D6 roll of 2+ the attempt is ignored and a Blast Marker is placed in contact (3+ against an Ordo Xenos Inquisitor Lord).", r:["eldar","darkeldar"]},
   {id:"aspect",     t:"Aspect Warrior Host",             d:"+2 to the boarding roll. Prince Yriel’s ship always counts as carrying one.", r:["eldar"]},
   {id:"talons",     t:"Talons refit",                    d:"Enemies boarding this vessel suffer −2.", r:["eldar","darkeldar"]},

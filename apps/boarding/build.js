@@ -37,6 +37,20 @@ function iconProblems(data, icons) {
   return bad;
 }
 
+/* The same app for Gothic Fleet Play (apps/play/build.js): opened over its page
+   with the ship on it, no links to the sister tools. */
+async function embedPage() {
+  const ships = JSON.parse(kit.read(HERE + "/src/ships.json"));
+  const stamp = new Date().toISOString().slice(0, 10) + " · " + ships.ships.length + " ships";
+  const script = await kit.bundle({ entry: HERE + "/src/index.js", globalName: "BoardingApp", define: { __BUILD__: JSON.stringify(stamp) } });
+  let page = kit.expandIncludes(kit.read(HERE + "/index.html"), HERE);
+  page = kit.fill(page, "script", "\n" + script);
+  kit.guards.controlChars(page, "boarding in Play");
+  kit.guards.cssVars(page, "boarding in Play");
+  kit.guards.externalUrls(page, "boarding in Play", ALLOWED);
+  return page;
+}
+
 async function build() {
   const ships = JSON.parse(kit.read(HERE + "/src/ships.json"));
   if ((ships.ships || []).length < 100) throw new Error("src/ships.json has only " + (ships.ships || []).length + " ships");
@@ -63,7 +77,7 @@ async function build() {
   return { out };
 }
 
-module.exports = { build };
+module.exports = { build, embedPage };
 
 if (require.main === module) build().then(r => {
   for (const f of r.out) console.log(path.relative(kit.REPO, f).padEnd(44), kit.kB(require("fs").statSync(f).size));

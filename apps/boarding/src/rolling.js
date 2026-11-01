@@ -182,7 +182,7 @@ function autoCrits(){
 export function setTableFor(c, n, tid){
   tid = tid || critTableIdFor(c.to, c.i);
   var t = criticalResultFor(c.to, c.i, n);
-  c.table = t;
+  c.table = t; c.tableN = n;
   var variable = (t.extra==="D3" || t.extra==="D6");
   if(!variable) c.extra = t.extra || 0;
   else {

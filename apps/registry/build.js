@@ -47,7 +47,7 @@ const ALLOWED = ["http://www.w3.org", "https://bfgtools.kuldare.com"];
 const CSP_APP = "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; " +
   "font-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'";
 const CSP_PLAY = "default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; " +
-  "font-src data:; connect-src 'self' wss://play-relay.kuldare.com; worker-src 'self'; manifest-src 'self'; base-uri 'none'; " +
+  "font-src data:; connect-src 'self' wss://play-relay.kuldare.com; frame-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; " +
   "form-action 'none'; frame-ancestors 'self'";
 const HEADERS = `/*
   X-Content-Type-Options: nosniff

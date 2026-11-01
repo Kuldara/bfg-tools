@@ -11,6 +11,7 @@ import { builderFleets, endPending, jumpStrip, linkedFleets, renderEndPhase } fr
 import PLAY from "../rules.js";
 import { arcGlyph, esc, factionCols, shortArmour, shortRange, starHTML, title } from "../../../packages/ui/format.js";
 import DOMAIN from "../../../packages/rules/domain.js";
+import { boardNoteLine, renderBoardSheet } from "./board.js";
 import { edgeHandle, peerAfterRender, peerLoadCard, peerMenuWord, peerSetupCard, peerSide, renderPeerPanel, renderPeerSide, sidesStrip } from "./peer.js";
 
 /* ============================================================= RENDER ===== */
@@ -71,6 +72,8 @@ export function render(){
   else if(appState.V.screen === "setup") html = renderSetup();
   else html = renderRoster();
   if(!peer && appState.V.sheet != null && appState.G) html += renderSheet(appState.V.sheet);
+  if(!peer && appState.G && appState.V.screen === "roster") html = boardNoteLine() + html;
+  if(!peer && appState.V.board && appState.G) html += renderBoardSheet();
   if(appState.V.peerPanel) html += renderPeerPanel();
   else if(!peer && appState.V.menu && appState.G) html += renderMenu();
   else if(!peer && appState.V.endph && appState.G && appState.V.screen === "roster") html += renderEndPhase();
@@ -778,11 +781,13 @@ export function renderRow(i, inGroup){
      name). Brace and orders stay when they are tracked: they are the enemy
      turn's own taps. */
   const compact = appState.V.compact;
+  const boardBtn = R.kind === "ship" ? `<button class="board" data-act="board" data-i="${i}">Board</button>` : "";
   const r4 = v.destroyed ? (esq ? "" : `<div class="r4"><button data-act="pop" data-i="${i}" data-arg="hulk">Catastrophic<small>${cataLabel(R, st)}</small></button></div>`)
-    : esq || compact ? (orderBtns ? `<div class="r4">${orderBtns}</div>` : "") : `<div class="r4">
+    : esq || compact ? (orderBtns || boardBtn ? `<div class="r4">${orderBtns}${boardBtn}</div>` : "") : `<div class="r4">
       <button class="hit" data-act="hit" data-i="${i}" ${v.quadGone ? "disabled" : ""}>Hit<small>${v.quadGone ? qn + "at 0" : "+1" + (qn ? " " + qn.trim() : "")}</small></button>
       ${orderBtns}
       <button class="crit" data-act="pop" data-i="${i}" data-arg="crit" ${v.quadGone ? "disabled" : ""}>Crit<small>${critLine}</small></button>
+      ${boardBtn}
     </div>`;
   const r1tail = compact
     ? (v.destroyed ? "" : (inGroup ? "" : ldTile(i, "", true)) + (esq ? "" : `<button class="crit cmini" data-act="pop" data-i="${i}" data-arg="crit" ${v.quadGone ? "disabled" : ""}>Crit<small>${critLine}</small></button>`) + (inGroup ? "" : playedBtn(i, v)))

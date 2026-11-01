@@ -51,7 +51,7 @@ let WS = null, LAST_SENT = "", PUSH_T = 0, RETRY_T = 0, RETRY_N = 0, PING_T = 0,
 
 const wsCan = () => typeof WebSocket === "function";
 export const myName = () => String(lsGet(KEY_PEER_NAME) || "").slice(0, 24);
-const peerHas = () => !!appState.P.G;
+export const peerHas = () => !!appState.P.G;
 const live = () => appState.P.st === "live";
 const inRoom = () => !!appState.P.room;
 /* the opponent as the page names them: their name, else their fleet list */

@@ -52,6 +52,24 @@ relay:dev` runs the relay on port 8787, and a page on localhost uses it.
 On the site it is installable (a manifest and a service worker that fetches the
 page from the network first and falls back to the saved copy offline).
 
+## Boarding from a ship's card
+
+Board on a card opens Boarding Actions in a new tab or over the page, the player's
+choice on the sheet, kept on the device (`boarding.html`, the same app, built by
+`apps/boarding/build.js`), with the ship on it. An installed app defaults to the
+page: its tab may open in the browser, which cannot send the result back. `src/board.js` sends
+what the fleet decides, through `apps/boarding/src/play-link.js`: the crew's fleet,
+clan, crew, marks, commanders aboard, remaining hits, turrets, orders and Blast
+Markers. Boarding sends back what happened to each ship; hits, criticals, a
+squadron's losses and a drifting hulk go on the card. Two choices stay the
+player's and are asked on the page: when to spend a Clanz Warlord's once-a-game
++2 (Fleets p. 374), and which Ordo an Inquisitor Lord of no named Ordo is.
+
+The enemy ship's result is not written to the other phone: the link only reads
+their fleet, and each player keeps their own record (see above). What they must
+mark stays on a line on top of the roster until tapped away. Campaign rewards are
+not in the fleet: they go in Boarding's "Anything else" (roll or boarding value).
+
 ## Code
 
 ```

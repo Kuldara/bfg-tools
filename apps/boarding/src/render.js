@@ -54,7 +54,7 @@ function renderSide(k){
   var el = document.getElementById(k==="att"?"sideAtt":"sideDef");
   var s = S[k], p = prep ? prep[k] : null;
   var h = [];
-  var sideBlank = s.f<0 && !s.ships.length && !s.blast && !s.orders && !s.other;
+  var sideBlank = s.f<0 && !s.ships.length && !s.blast && !s.orders && !s.other && !s.otherValue;
   h.push('<div class="sideHead"><span class="role">'+(k==="att"?"Boarder":"Defender")+'</span>');
   h.push('<button class="sideReset" data-a="resetSide" data-k="'+k+'" title="Reset this side"'+
     (sideBlank?' disabled':'')+'>&#8634; Reset</button>');
@@ -101,6 +101,18 @@ function renderSide(k){
   });
   h.push('</div>');
 
+  /* what Play could not decide from the fleet: the player's choice, one tap */
+  var asked = {};
+  s.ships.forEach(function(u,i){
+    (u.hints||[]).forEach(function(w){
+      if(asked[w]) return;
+      if(w==="clanzwarlord" && s.ships.some(function(x){ return (x.opts||[]).indexOf(w)>=0; })) return;
+      if(w==="ordo" && s.ships.some(function(x){ return (x.opts||[]).some(function(o){ return /^inq_/.test(o); }); })) return;
+      asked[w] = 1;
+      h.push('<button class="up add" style="display:block;width:100%;margin:4px 0" data-a="opts" data-k="'+k+'" data-i="'+i+'">'+
+        (w==="ordo" ? "Inquisitor Lord aboard: which Ordo?" : "Warlord aboard: use his +2 once per game?")+'</button>');
+    });
+  });
   h.push(upRow(k));
 
   h.push('<div class="tgRow">');
@@ -239,10 +251,15 @@ function upRow(k){
     h.push('<button class="up" data-a="mods" data-k="'+k+'">'+fmt(S[k].other)+' by hand</button>');
     any = true; n++;
   }
+  if(S[k].otherValue){
+    h.push('<button class="up" data-a="val" data-k="'+k+'">value '+fmt(S[k].otherValue)+' by hand</button>');
+    any = true; n++;
+  }
   if(S[k].dice6){
     h.push('<button class="up" data-a="mods" data-k="'+k+'">dice set by hand</button>');
     any = true; n++;
   }
+
   if(!any){
     h.push('<button class="up add" data-a="opts" data-k="'+k+'" data-i="0">+ marks, crew, characters</button>');
   } else {

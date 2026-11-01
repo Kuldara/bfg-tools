@@ -117,7 +117,10 @@
       ships.forEach(function (sh) { turrets += effTurrets(sh); });
       total += turrets;
     }
-    return { value: total, parts: parts, turrets: turrets, ships: ships };
+    // Anything the book has and this app does not, entered by hand.
+    var byHand = (ships.length && side.otherValue) || 0;
+    total = Math.max(0, total + byHand);
+    return { value: total, parts: parts, turrets: turrets, ships: ships, byHand: byHand };
   }
 
   // ------------------------------------------------ 2. attack modifiers -----
