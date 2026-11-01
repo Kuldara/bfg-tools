@@ -3,6 +3,7 @@
    dist/registry/index.html        the site (Cloudflare Worker and GitHub Pages)
    dist/registry/bfg_data.json     the ship data on its own (data/README.md)
    dist/registry/og.png, _headers  link preview image, HTTP headers
+   dist/registry/send/index.html   sending fleets by a code (packages/ui/send.js)
    dist/share/Gothic Fleet Registry.zip
                                    the one-file version to hand around: the same
                                    page without the site's link-preview tags and
@@ -40,12 +41,15 @@ const ALLOWED = ["http://www.w3.org", "https://bfgtools.kuldare.com"];
 
 /* The site's Content-Security-Policy. The app needs nothing from anywhere:
    connect-src 'none' means it cannot send a fleet anywhere even by mistake.
+   Send frames the send page (frame-src), and that page alone may reach the relay.
    Play has its own policy (service worker, manifest, its own fetches, and the
    room relay of its Opponent's fleet, services/relay); the
    policies are written per path because Cloudflare merges same-named headers
    of several rules, and two CSPs mean the stricter wins. */
 const CSP_APP = "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; " +
-  "font-src data:; connect-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'";
+  "font-src data:; connect-src 'none'; frame-src 'self'; base-uri 'none'; form-action 'none'; frame-ancestors 'self'";
+const CSP_SEND = "default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data:; " +
+  "connect-src wss://play-relay.kuldare.com; base-uri 'none'; form-action 'none'; frame-ancestors 'self'";
 const CSP_PLAY = "default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'unsafe-inline'; img-src 'self' data:; " +
   "font-src data:; connect-src 'self' wss://play-relay.kuldare.com; frame-src 'self'; worker-src 'self'; manifest-src 'self'; base-uri 'none'; " +
   "form-action 'none'; frame-ancestors 'self'";
@@ -69,6 +73,10 @@ const HEADERS = `/*
 
 /og.png
   Cache-Control: public, max-age=604800
+
+/send/*
+  Content-Security-Policy: ${CSP_SEND}
+  Cache-Control: public, max-age=0, must-revalidate
 
 /play/*
   Content-Security-Policy: ${CSP_PLAY}
@@ -114,7 +122,18 @@ async function build() {
     kit.guards.externalUrls(html, name, ALLOWED, b);
   }
 
+  const sendScript = await kit.bundle({ entry: HERE + "/send/main.js", globalName: "GFS" });
+  const sendPage = `<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex"><title>Send fleets</title><style>html,body{margin:0}@media (prefers-color-scheme:dark){html{background:#1b1d20}}</style></head>
+<body><div id="send"></div><script>${sendScript}</script></body></html>
+`;
+  kit.guards.ascii(sendPage, "send/index.html");
+  kit.guards.controlChars(sendPage, "send/index.html");
+  kit.guards.externalUrls(sendPage, "send/index.html", ["http://www.w3.org", "https://bfgtools.kuldare.com", "wss://play-relay.kuldare.com"]);
+
   const out = [];
+  out.push(kit.write("dist/registry/send/index.html", sendPage));
   out.push(kit.write("dist/registry/index.html", site));
   out.push(kit.write("dist/registry/bfg_data.json", data));
   out.push(preview.copyImage("registry", "dist/registry"));

@@ -218,14 +218,12 @@ export function renderLoad(){
       const res = resolveFleet(f.doc);
       return `<div class="fl${isNew(f.fp) ? " fresh" : ""}">${res.error ? `<p class="note bad">${esc(f.doc.name || f.doc.ln || "")}: ${esc(res.error)}</p>` :
         `<button class="btn ${isNew(f.fp) || (!appState.V.linkNew && k === 0) ? "" : "sec"}" data-act="linked" data-arg="${k}">${esc(f.doc.name || f.doc.ln)}<small>${f.doc.name ? esc(f.doc.ln) + " " + MID + " " : ""}${res.units.length} units ${MID} ${fleetPoints(res.units)} pts ${MID} ${f.how === "file" ? "file" : "link"} ${esc(f.date || "")}${isNew(f.fp) ? " " + MID + " new" : ""}</small></button>`}
-        <span class="side"><button class="mini${appState.V.phone === "s:" + k ? " on" : ""}" data-act="phone" data-arg="s:${k}" aria-label="Send this fleet to another phone">to phone</button>
-        <button class="mini" data-act="unlink" data-arg="${k}" aria-label="Forget this fleet on this device">forget</button></span></div>
-        ${appState.V.phone === "s:" + k ? phonePanel() : ""}`;
-    }).join("") + (lk.length > 1 ? `<button class="btn sec${appState.V.phone === "all" ? " on" : ""}" data-act="phone" data-arg="all">All to phone<small>every saved fleet in one QR code</small></button>${appState.V.phone === "all" ? phonePanel() : ""}` : "") + `</div>`;
+        <span class="side"><button class="mini" data-act="send" data-arg="s:${k}" aria-label="Send this fleet to another device">send</button>
+        <button class="mini" data-act="unlink" data-arg="${k}" aria-label="Forget this fleet on this device">forget</button></span></div>`;
+    }).join("") + (lk.length > 1 ? `<button class="btn sec" data-act="send" data-arg="all">Send all<small>every saved fleet to another device</small></button>` : "") + `</div>`;
   }
   /* the builder's own fleets on this device: its saved fleets by name, then
-     the fleet each list is editing; play one here, or send it to a phone (a
-     QR code of the link, under the tapped button) */
+     the fleet each list is editing; play one here, or send it to another device */
   const bad = raw ? parseDoc(raw).error : "";
   if(bad) cards += `<div class="card"><h2>Fleet in this browser</h2><p class="note bad">${esc(bad)}</p></div>`;
   const bf = builderFleets();
@@ -234,45 +232,20 @@ export function renderLoad(){
       const res = resolveFleet(f);
       return res.error ? `<p class="note bad">${esc(f.name || f.ln)}: ${esc(res.error)}</p>` :
         `<div class="fl"><button class="btn ${k ? "sec" : ""}" data-act="newfrom" data-arg="${k}">${esc(f.name || f.ln)}<small>${f.name ? esc(f.ln) + " " + MID + " " : ""}${res.units.length} units ${MID} ${fleetPoints(res.units)} pts${res.lost.length ? " " + MID + " " + res.lost.length + " could not be matched" : ""} ${MID} ${f.saved ? "saved" : f.open ? "being edited" : "being edited, kept"}</small></button>
-          <button class="mini${appState.V.phone === "b:" + k ? " on" : ""}" data-act="phone" data-arg="b:${k}" aria-label="Send this fleet to a phone">to phone</button></div>
-        ${appState.V.phone === "b:" + k ? phonePanel() : ""}`;
+          <button class="mini" data-act="send" data-arg="b:${k}" aria-label="Send this fleet to another device">send</button></div>`;
     }).join("") + `</div>`;
   }else if(!lk.length && !g && !bad){
-    cards += `<div class="card"><h2>No fleet on this device</h2><p>Three ways to bring one: open this page from the builder (its Play button) and its fleets are here by themselves; in the builder's <b>Saved fleets</b>, tap <b>To phone</b> and scan the code; or open a fleet file below.</p></div>`;
+    cards += `<div class="card"><h2>No fleet on this device</h2><p>Three ways to bring one: open this page from the builder (its Play button) and its fleets are here by themselves; on the other device tap <b>Send</b> and scan its code; or use Receive or a fleet file below.</p></div>`;
   }
   cards += peerLoadCard();
-  cards += `<div class="card"><h2>Open a fleet file</h2>
-    <p>The builder's <b>Saved fleets &rsaquo; Export</b> or <b>Export all as file</b>. On a phone it can come by mail or chat; its fleets go on this page's Saved fleets.</p>
+  cards += `<div class="card"><h2>Bring fleets here</h2>
+    <button class="btn sec" data-act="receive">Receive<small>type the code another device shows</small></button>
     <label class="btn sec">Open a fleet file<input type="file" id="fleetfile" accept=".json,application/json,text/plain" style="display:none"></label>
-    ${appState.V.loadErr ? `<p class="note bad">${esc(appState.V.loadErr)}</p>` : ""}
-    <details class="paste"><summary>or paste the file's text</summary>
-      <textarea id="paste" placeholder="Paste the fleet document (JSON) here"></textarea>
-      <button class="btn sec" data-act="paste">Load pasted fleet</button></details></div>`;
+    ${appState.V.loadErr ? `<p class="note bad">${esc(appState.V.loadErr)}</p>` : ""}</div>`;
   return `<div class="top"><h1 style="flex:1 1 auto">Gothic Fleet Play<small>prototype ${PLAY_VERSION}</small></h1><div class="tools">${builderTool()}</div></div>
     <div class="main">${cards}
     <p class="foot" style="padding:0 6px">Record, do not adjudicate: the page keeps what happened to each ship and shows what the rulebook makes of it. It never changes the fleet you built.</p></div>`;
 }
-/* The phone panel under a builder fleet: the QR code, the link, copy and
-   share. The fleet travels inside the link; nothing is uploaded. */
-export function phonePanel(){
-  const V = appState.V, canShare = typeof navigator !== "undefined" && !!navigator.share;
-  const link = `<input class="link" readonly value="${esc(V.phoneUrl || "")}" aria-label="The link">`;
-  const send = `<button data-act="copylink" ${V.phoneUrl ? "" : "disabled"}>${V.copied === "link" ? "Copied" : "Copy link"}</button>${canShare ? `<button data-act="sharelink" ${V.phoneUrl ? "" : "disabled"}>Share</button>` : ""}`;
-  const opens = `the fleet builder opens there${V.phoneRemote ? " (the published page, bfgtools.kuldare.com)" : ""} ${V.phoneN > 1 ? "with all " + V.phoneN + " fleets in its Saved fleets" : "with the fleet on screen"}`;
-  /* too long for a code a camera can read: the file first, the link as it is */
-  if(V.phoneUrl && !V.phoneSvg && !V.phoneErr) return `<div class="phone">
-    <p class="foot">${V.phoneN > 1 ? "These " + V.phoneN + " fleets are" : "This fleet is"} too much for a QR code a camera can read. Save a file and send it to the other phone, where Open a fleet file reads it. Or send the link: ${opens}. Some chat apps cut a link this long (${V.phoneUrl.length} characters).</p>
-    ${link}
-    <div class="r4"><button data-act="savefile" data-arg="${esc(String(V.phone))}">Save file</button>${send}</div>
-  </div>`;
-  return `<div class="phone">
-    ${V.phoneErr ? `<p class="note bad">${esc(V.phoneErr)}</p>` : V.phoneSvg ? `<div class="qr" data-act="qrfull" title="Full screen">${V.phoneSvg}</div>` : `<p class="foot">Making the code&hellip;</p>`}
-    <p class="foot">Hold this screen up to the other phone's camera (brightness up helps), or ${canShare ? "Share the link to it" : "send it the link"}: ${opens}: Save keeps it, Play plays it. The fleet is inside the link itself; nothing is uploaded.</p>
-    ${link}
-    <div class="r4"><button data-act="qrfull" ${V.phoneSvg ? "" : "disabled"}>Full screen</button>${send}</div>
-  </div>`;
-}
-
 export function factsCard(){
   const fs = fleetFactsNow();
   return fs.length ? `<div class="card"><h2>Fleet facts</h2>${fs.map(f =>

@@ -5,6 +5,9 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 
 ## Unreleased
 
+### Changed
+- Saved fleets: one Send on each fleet and Send all replace Export, Copy, To phone, Export all, Copy all and All to phone. Send shows a four-letter code and its QR code (the other device scans it or types it at Receive), Send link for one fleet, and Save file. Without a connection it shows the fleet's own QR code or the file. Paste text is gone. Old links, codes and files still open.
+
 ### Fixed: a reserve counts by its class, not by the heading it was printed under (1.11.2026)
 - Fleets p. 14: limits are "determined for the fleet as a whole, regardless of whether they were purchased from the list or as reserves". A borrowed ship was matched to the host list by section heading, so a class printed under another heading went wrong: a Mars from Bastion Fleets ("Battleships") counted nowhere in the Gothic Sector; a Mechanicus cruiser from Bakka ("Battlecruisers") took a battlecruiser slot elsewhere and did not count as a cruiser; a Clanz kill kroozer did not count as a kroozer in Waaagh!. 55 of 1,544 host, rule and ship combinations were wrong.
 - **Ruling T62** (open interpretation, 1.11.2026): a borrowed ship counts in the host section that holds its category and class (battlecruiser, grand, heavy, light, plain cruiser), its own heading first. Bakka's "in the same manner as battlecruisers" (p. 49) is a rule of the Bakka list; as a reserve elsewhere the ship is a cruiser. A class the host list does not have (a grand cruiser in the Gothic Sector) still counts nowhere, and the fleet says so.

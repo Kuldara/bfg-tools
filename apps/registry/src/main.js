@@ -3,16 +3,15 @@ import { downloadEditable } from "./download-editable.js";
 import { fileNote } from "./fleet-files.js";
 import { L, defaultRole, switchList } from "./model.js";
 import { placeSaves } from "./panels.js";
-import { copyInPlace, openPhone } from "./phone.js";
+import { copyInPlace, openSend } from "./phone.js";
 import { PRINT, auditAllCardLayouts, auditOneCard, listText, printCards, printFitPct, printRoster, setPage, setPrint } from "./print.js";
 import { STASH_PTS, load, save, stashAll, stashUnits } from "./save.js";
-import { KEY_LIB, afterAdd, doSave, exportSaved, libAddText, libDelete, libDocument, libOpen, libRead, renderSaveNow, renderSaves } from "./saved-fleets.js";
+import { KEY_LIB, afterAdd, doSave, libAddText, libDelete, libOpen, libRead, renderSaveNow, renderSaves } from "./saved-fleets.js";
 import { savesChange, savesClick, savesDblClick, savesInput, savesKey } from "./saved-list.js";
 import { showLinkDialog } from "./link-dialog.js";
 import { appState } from "./state.js";
 import { DRAGS, dragScrollAt, dragScrollStop, dragTopEdge, render, renderChecks, renderTop } from "./view.js";
 import { LISTS } from "../../../packages/ui/catalog.js";
-import { qrFull } from "../../../packages/ui/qr.js";
 import { unpackFleet } from "../../../packages/ui/share-link.js";
 
 export const dropKept = nm => {
@@ -133,46 +132,22 @@ $("#saves").onkeydown = e => {
 };
 $("#saves").onclick = e => {
   if(e.target.closest && savesClick(e, redrawSaves)) return;
-  const cpt = e.target.closest ? e.target.closest("button[data-copytext]") : null;
-  if(cpt){ const d = libDocument(cpt.dataset.copytext); if(d) copyInPlace(cpt, JSON.stringify(d, null, 1), cpt.dataset.copytext); return; }
   const lo = e.target.closest ? e.target.closest("button[data-libopen]") : null;
   if(lo){ $("#saves").open = false; libOpen(lo.dataset.libopen); return; }
-  const lx = e.target.closest ? e.target.closest("button[data-libexport]") : null;
-  if(lx){ exportSaved(lx.dataset.libexport); return; }
+  const sn = e.target.closest ? e.target.closest("button[data-send]") : null;
+  if(sn){ openSend(sn.dataset.send); return; }
+  const rc = e.target.closest ? e.target.closest("button[data-receive]") : null;
+  if(rc){ location.href = "send/index.html"; return; }
   const ld = e.target.closest ? e.target.closest("button[data-libdel]") : null;
   if(ld){
     const s = libRead().saves.filter(x => x.id === ld.dataset.libdel)[0];
     if(s && confirm("Delete the saved fleet " + s.name + "? The fleets being edited are not touched.")){
-      libDelete(s.id); if(appState.PHONE.key === s.id) appState.PHONE = { key: null }; if(appState.COPYBOX && appState.COPYBOX.key === s.id) appState.COPYBOX = null; render();
+      libDelete(s.id); render();
     }
     return;
   }
-  const cc = e.target.closest ? e.target.closest("button[data-copyclose]") : null;
-  if(cc){ appState.COPYBOX = null; renderTop(); return; }
-  const ph = e.target.closest ? e.target.closest("button[data-phone]") : null;
-  if(ph){ openPhone(ph.dataset.phone); return; }
-  const qf = e.target.closest ? e.target.closest("[data-qrfull]") : null;
-  if(qf){ if(appState.PHONE.svg) qrFull(appState.PHONE.svg); return; }
-  const cl = e.target.closest ? e.target.closest("button[data-copylink]") : null;
-  if(cl){ if(appState.PHONE.url) copyInPlace(cl, appState.PHONE.url, null).then(() => { const i = document.querySelector(".phonebox .plink"); if(cl.textContent !== "Copied" && i && i.select){ i.focus(); i.select(); } }); return; }
-  const sl = e.target.closest ? e.target.closest("button[data-sharelink]") : null;
-  if(sl){ if(appState.PHONE.url && navigator.share) navigator.share({ title: "Gothic Fleet Play", url: appState.PHONE.url }).catch(() => {}); return; }
   const im = e.target.closest ? e.target.closest("button[data-import]") : null;
   if(im){ const inp = $("#importfile"); if(inp) inp.click(); return; }
-  const po = e.target.closest ? e.target.closest("button[data-pasteopen]") : null;
-  if(po){ appState.PASTEBOX = !appState.PASTEBOX; renderTop(); const t = $("#pastebox"); if(t) t.focus(); return; }
-  const pc = e.target.closest ? e.target.closest("button[data-pasteclose]") : null;
-  if(pc){ appState.PASTEBOX = false; appState.PASTE_TEXT = ""; renderTop(); return; }
-  const pa = e.target.closest ? e.target.closest("button[data-pasteadd]") : null;
-  if(pa){
-    const t = $("#pastebox"), text = t ? String(t.value || "").trim() : "";
-    if(!text){ if(t) t.focus(); return; }
-    const r = libAddText(text, "paste");
-    /* a text that adds nothing stays in the box, to fix or replace */
-    if(r.ids.length){ appState.PASTEBOX = false; appState.PASTE_TEXT = ""; } else appState.PASTE_TEXT = text;
-    afterAdd(r, "the pasted text");
-    return;
-  }
   const go = e.target.closest ? e.target.closest("button[data-open]") : null;
   if(go){
     const li = LISTS.findIndex(l => l.nm === go.dataset.open);
@@ -211,7 +186,7 @@ export function clearOpen(){
         (kept > 1 ? "are" : "is") + " not touched." : "")))
     { appState.S.units = []; render(); }
 }
-$("#copy").onclick = () => copyInPlace($("#copy"), listText(), null);
+$("#copy").onclick = () => copyInPlace($("#copy"), listText());
 /* The Save button: the panel names the open fleet; Save, Save as new, and
    Enter in the name do the same as the buttons. */
 $("#savenow").onclick = e => {

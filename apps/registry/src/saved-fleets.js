@@ -2,7 +2,7 @@ import { $, APP_VERSION } from "./boot.js";
 import { FILE_TAG, fileNote, fleetDocument } from "./fleet-files.js";
 import { L, fleetPoints, switchList, total } from "./model.js";
 import { placeSaves } from "./panels.js";
-import { copyBoxHTML, phonePanelHTML } from "./phone.js";
+import { hasSendPage } from "./phone.js";
 import { savedListHTML } from "./saved-list.js";
 import { STASH_PTS, stashAll, stashUnits, unitDocs } from "./save.js";
 import { appState } from "./state.js";
@@ -186,20 +186,14 @@ export function libDocument(which){
   if(list.length > 1) doc.fleets = list.slice(1).map(libOne);
   return doc;
 }
-/* Export: one saved fleet as a file, or all of them as one. */
-export function exportSaved(which){
+/* What Send carries: the document, and the same as a file with its name. */
+export function libFile(which){
   const doc = libDocument(which);
-  if(!doc) return;
+  if(!doc) return null;
   const n = 1 + (doc.fleets || []).length;
   const clean = t => String(t).replace(/ [^\w\s] /g, " - ").replace(/[^\w .()-]+/g, "_").replace(/\s+/g, " ").trim();
-  const fname = which === "all" ? "Gothic Fleet Registry - " + n + " saved fleet" + (n > 1 ? "s" : "") + ".json"
-                                : clean(doc.name + " - " + doc.ln) + ".json";
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(Object.assign({ app: FILE_TAG, page: APP_VERSION }, doc), null, 1)], { type: "application/json" }));
-  a.download = fname;
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
-  fileNote("Exported " + (which === "all" ? n + " saved fleet" + (n > 1 ? "s" : "") : doc.name) + " as " + fname + ".");
+  return { doc: doc, file: Object.assign({ app: FILE_TAG, page: APP_VERSION }, doc),
+           name: which === "all" ? "Gothic Fleet Registry - " + n + " saved fleet" + (n > 1 ? "s" : "") + ".json" : clean(doc.name + " - " + doc.ln) + ".json" };
 }
 /* Fleets just added by a file or a link are marked in the panel. */
 export let LIB_NEW = [];
@@ -235,9 +229,9 @@ export function doSave(asNew){
   appState.SAVE_NAME = null; appState.SAVE_MSG = "Saved as " + s.name;
   render();
 }
-/* The Saved fleets panel: the saved fleets with Open, Export, Copy, To
-   phone and Delete; the fleets being edited, one per list, as before; and
-   Export all as file, Copy all, All to phone and Import file. */
+/* The Saved fleets panel: the saved fleets with Open, Send and Delete; the
+   fleets being edited, one per list, as before; and Send all, Receive and
+   Import file. */
 export function renderSaves(){
   const lib = libRead();
   renderSaveNow(lib);
@@ -247,7 +241,7 @@ export function renderSaves(){
   const openId = appState.S.units.length ? lib.open[L().nm] : null;
   const changed = openUnsaved(lib);
   const saved = lib.saves.length ? savedListHTML(lib, { openId: openId, changed: changed,
-    fresh: id => LIB_NEW.indexOf(id) >= 0, copyBox: copyBoxHTML, phonePanel: phonePanelHTML }) : "";
+    fresh: id => LIB_NEW.indexOf(id) >= 0 }) : "";
   sb.className = "panel" + (lib.saves.length ? " sf-panel" : "");
   const kept = Object.keys(stashAll()).filter(nm => stashUnits(nm).length).sort();
   const work = (appState.S.units.length ? [{ nm: L().nm, pts: total(), n: appState.S.units.length, open: true }] : [])
@@ -261,20 +255,9 @@ export function renderSaves(){
     }<button class="del" data-drop="${esc(r.nm)}" title="${esc(r.open ? "Clear the open fleet (its saved copy stays)" : "Discard the " + r.nm + " fleet being edited")}">${r.open ? "Clear" : "Discard"}</button></div>`;
   }).join("");
   sb.innerHTML = (lib.saves.length ? "" : `<div class="sh">Saved</div>`) +
-    (saved || `<div class="empty">No saved fleets yet. Save keeps the open fleet here under a name; a file or a QR code adds fleets here too.</div>`) +
+    (saved || `<div class="empty">No saved fleets yet. Save keeps the open fleet here under a name; fleets sent from another device come here too.</div>`) +
     (editing ? `<div class="sh">Being edited, one per list</div>` + editing : "") +
-    `<div class="rowf tools"><span class="nm"><i>Export makes a file and Copy the same as text; To phone is a QR code of it for Gothic Fleet Play. Import file and Paste text add them back here.</i></span>${
-      lib.saves.length ? `<button class="go" data-libexport="all" title="Every saved fleet in one file">Export all as file</button><button class="go" data-copytext="all" title="Every saved fleet as one text">Copy all</button><button class="go${appState.PHONE.key === "all" ? " on" : ""}" data-phone="all" title="Every saved fleet in one QR code for Gothic Fleet Play on a phone">All to phone</button>` : ""
-    }<button class="go" data-import title="Add the fleets in a file saved with Export">Import file</button><button class="go${appState.PASTEBOX ? " on" : ""}" data-pasteopen title="Add fleets from text made with Copy">Paste text</button></div>${
-      appState.COPYBOX && appState.COPYBOX.key === "all" ? copyBoxHTML() : ""}${appState.PHONE.key === "all" ? phonePanelHTML() : ""}${appState.PASTEBOX ? pasteBoxHTML() : ""}`;
+    `<div class="rowf tools">${
+      lib.saves.length ? `<button class="go" data-send="all" title="Every saved fleet to another device, or as a file for safekeeping">Send all</button>` : ""
+    }${hasSendPage() ? `<button class="go" data-receive title="Take fleets another device is sending">Receive</button>` : ""}<button class="go" data-import title="Add the fleets in a saved file">Import file</button></div>`;
 }
-/* Paste text: Copy's text back into Saved fleets (user 23.10.2026: "how do
-   I paste that copied text back into a fleet?"). The same reader as
-   Import file and a link, so a pasted text adds what the file would. */
-appState.PASTEBOX = false; appState.PASTE_TEXT = "";
-export function pasteBoxHTML(){
-  return `<div class="phonebox"><p>Paste the text from Copy or Copy all (the same as an exported file) and add it to Saved fleets.</p>
-    <textarea id="pastebox" class="plink" rows="5" aria-label="Fleet text to add" placeholder="Paste the copied fleet here">${esc(appState.PASTE_TEXT)}</textarea>
-    <div class="pbtns"><button class="go" data-pasteadd>Add to Saved fleets</button><button class="go" data-pasteclose>Cancel</button></div></div>`;
-}
-

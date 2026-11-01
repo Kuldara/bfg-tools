@@ -6,6 +6,9 @@ a tag `play-v<version>` deploys the Registry's site.
 ## Unreleased
 
 ### Changed
+- Fleets: Send and Send all replace To phone and All to phone, with the same sheet as the builder, and Receive takes fleets by code. The paste box is gone. The opponent's room is unchanged.
+
+### Changed
 - To phone: a link too long for a QR code a camera can read (over 1 000 characters, usually several fleets) shows no code; the panel offers Save file, Copy link and Share instead.
 
 ### Added

@@ -21,7 +21,7 @@ const TYPES = { ".html": "text/html", ".js": "text/javascript", ".json": "applic
 
 /* the sites, and what to do on each page once it has loaded */
 const SITES = {
-  registry: { pages: ["/", "/play/Gothic%20Fleet%20Play.html"] },
+  registry: { pages: ["/", "/play/Gothic%20Fleet%20Play.html", "/send/index.html"] },
   scenarios: { pages: ["/"], walk: `(async () => { location.hash = "#/s/" + SL.SC[0].id; await new Promise(r => setTimeout(r, 400));
     for (const t of ["setup", "play", "result"]) { const a = document.querySelector('[href$="/' + t + '"]'); if (a) { a.click(); await new Promise(r => setTimeout(r, 200)); } } return true; })()` },
   boarding: { pages: ["/"], walk: `(async () => { const b = document.querySelector("[data-dice]") || document.querySelector("button"); if (b) b.click(); await new Promise(r => setTimeout(r, 300)); return true; })()` },

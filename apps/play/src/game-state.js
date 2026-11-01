@@ -24,7 +24,7 @@ export const KEY_WAKE = "gothic-fleet-play-awake";
    (the builder's key is never written). */
 export const KEY_LINKED = "gothic-fleet-play-linked";
 appState.V = { screen: "load", sheet: null, pop: null, menu: false, info: lsGet(KEY_INFO) === "1", note: "", loadErr: "", saveErr: false,
-          compact: lsGet(KEY_VIEW) === "compact", endph: false, phone: null, guardUntil: 0, lastScreen: null, linkNew: null, copied: "" };
+          compact: lsGet(KEY_VIEW) === "compact", endph: false, guardUntil: 0, lastScreen: null, linkNew: null, copied: "" };
 /* The way back: the builder sits beside play/ (dev and the shared ZIP);
    make_site.py rewrites this to the site root. */
 /* The builder is the page one level up: the site serves Play at /play/. */

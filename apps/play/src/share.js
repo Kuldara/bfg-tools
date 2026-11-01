@@ -7,7 +7,7 @@ import { baseName, unitName } from "./derived.js";
 import { render } from "./render.js";
 import { PHONE_LINK, packFleet } from "../../../packages/ui/share-link.js";
 import DOMAIN from "../../../packages/rules/domain.js";
-import { readableQr } from "../../../packages/ui/qr.js";
+import { openSendSheet } from "../../../packages/ui/send.js";
 import PLAY from "../rules.js";
 import { esc, factionCols } from "../../../packages/ui/format.js";
 
@@ -90,17 +90,12 @@ export function phoneDoc(key){
   const f = !m ? null : m[1] === "b" ? builderFleets()[+m[2]] : (linkedFleets()[+m[2]] || {}).doc;
   return f ? Object.assign({ schemaVersion: DOMAIN.SCHEMA_VERSION }, one(f)) : null;
 }
-export async function phoneLink(key){
-  appState.V.phoneUrl = ""; appState.V.phoneSvg = ""; appState.V.phoneErr = ""; appState.V.phoneN = 0;
-  try{
-    const d = phoneDoc(key);
-    if(!d) throw new Error("the fleet is no longer here");
-    const base = playBase();
-    appState.V.phoneUrl = base.url + "#" + await packFleet(d); appState.V.phoneRemote = base.remote;
-    appState.V.phoneN = 1 + (d.fleets || []).length;
-    appState.V.phoneSvg = readableQr(appState.V.phoneUrl);
-  }catch(e){ appState.V.phoneErr = String(e && e.message || e); }
-  if(appState.V.phone === key) render();
+/* Send (packages/ui/send.js): the sheet, with the send page beside this site's Play. */
+export function openSend(key){
+  const d = phoneDoc(key);
+  if(!d) return;
+  const name = (d.fleets ? (1 + d.fleets.length) + " fleets" : String(d.name || d.ln).replace(/[^\w .()-]+/g, "_")) + ".json";
+  openSendSheet({ doc: d, file: d, fileName: name, linkBase: playBase().url, page: "../send/index.html" });
 }
 /* Copy and share answer in place: the button says "Copied" (no toast). */
 export function copyText(text, what){
@@ -109,17 +104,6 @@ export function copyText(text, what){
     if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text) && done()); return; }
   }catch(e){}
   if(fallbackCopy(text)) done();
-}
-/* The fleets of a "to phone" as a file: the way when the link is too long for
-   a code. The builder's Import file and this page's Open a fleet file read it. */
-export function saveFleetFile(key){
-  const d = phoneDoc(key);
-  if(!d) return;
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(d, null, 1)], { type: "application/json" }));
-  a.download = (d.fleets ? (1 + d.fleets.length) + " fleets" : String(d.name || d.ln).replace(/[^\w .()-]+/g, "_")) + ".json";
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
 }
 export function fallbackCopy(text){
   const t = document.createElement("textarea"); t.value = text; t.setAttribute("readonly", ""); t.style.position = "fixed"; t.style.opacity = "0";

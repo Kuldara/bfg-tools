@@ -8,7 +8,7 @@
    api has every export of src/index.js (read live, so a value a module
    reassigns is current), DOMAIN, and accessors for the shared state that the
    tests set from outside: S / getS / setS (the open fleet), getNote / setNote
-   (the restore note) and setPhone (the phone panel). */
+   (the restore note). */
 "use strict";
 const path = require("path");
 const fs = require("fs");
@@ -23,7 +23,6 @@ function loadApp() {
     DOMAIN,
     getS: () => App.appState.S, setS: v => { App.appState.S = v; },
     getNote: () => App.appState.LOAD_NOTE, setNote: v => { App.appState.LOAD_NOTE = v; },
-    setPhone: v => { App.appState.PHONE = v; },
   });
   return api;
 }
