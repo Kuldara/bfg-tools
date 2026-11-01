@@ -58,6 +58,7 @@ const STEPS = [
   ["registry",  "Ork Clanz UI (Chrome)",   ["node", "apps/registry/metrics/clanz.js", "--mode=browse"], { slow: true }],
   ["play",      "rules and smoke",         ["node", "apps/play/test_play.js"]],
   ["play",      "fleets into boarding",    ["node", "apps/play/test_board_link.js"]],
+  ["play",      "card order and names (Chrome)", ["node", "apps/play/check_order.js"], { slow: true }],
   ["play",      "Board button (Chrome)",   ["node", "apps/play/check_board.js"], { slow: true }],
   ["play",      "Repair button (Chrome)",  ["node", "apps/play/check_repair.js"], { slow: true }],
   ["play",      "ship Actions (Chrome)",   ["node", "apps/play/check_actions.js"], { slow: true }],

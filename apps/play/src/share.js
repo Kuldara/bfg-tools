@@ -1,3 +1,4 @@
+import { rosterOrder } from "./reorder.js";
 import { anyRepairRoll, repairBtn, repairLines } from "./repair.js";
 import { appState } from "./state.js";
 import { builderRaw, lsGet, lsSet } from "./storage.js";
@@ -195,8 +196,8 @@ export function shortName(i){
   return w.join(" ").length <= 10 ? w.join(" ") : w[0].slice(0, 9);
 }
 export function jumpStrip(){
-  const chips = appState.U.map((x, i) => {
-    const R = x.R, st = appState.G.st[i];
+  const chips = rosterOrder().map(i => {
+    const R = appState.U[i].R, st = appState.G.st[i];
     if(R.kind !== "ship" && !R.ruleCard) return "";
     const v = R.kind === "ship" ? PLAY.view(R, st, appState.G.fleet) : null;
     const cls = v ? (v.destroyed ? "dead" : v.crippled ? "cr" : "") + (st.played >= 2 ? " done" : "") : "";

@@ -758,7 +758,10 @@ details.paste .roomjoin{margin-top:6px}
 .repb.bm{border-color:var(--warn);background:none;color:var(--warn)}
 .repb[disabled]{opacity:.55;border-color:var(--line);background:none;color:var(--ink-3)}
 .repnote{margin:6px 0 0;font:12.5px/1.35 var(--mono);color:var(--ink-2)}
-.reppick{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:6px 0 0;font:600 12.5px/1.2 var(--mono)}
+.reppick{margin:6px 0 0}
+.repcount{margin:0 0 6px;font:14px/1.3 var(--sans);color:var(--ink-2)}
+.repcount b{color:var(--ink);font-weight:700}
+.repchoices{display:flex;flex-wrap:wrap;gap:6px}
 .reppick button{min-height:var(--tap);padding:0 10px;border-radius:8px;border:1px solid var(--accent);background:var(--panel);color:var(--ink);font:600 13px/1.1 var(--sans)}
 .peerview .repb,.peerview .reppick{display:none}
 .endp .repb{margin-top:6px}
@@ -785,9 +788,6 @@ details.paste .roomjoin{margin-top:6px}
 .main.compact .upl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .reppanel{margin:8px 0}
 .reppanel .r3{margin:0}
-.wrenches{display:inline-flex;gap:4px}
-.wrenches i{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:50%;background:var(--accent-wash);border:1px solid var(--accent);color:var(--accent-ink)}
-.wrenches svg{width:14px;height:14px;fill:currentColor}
 .blastb{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-width:36px;min-height:var(--tap);border-radius:8px;border:1px solid var(--card-rule);background:var(--panel);color:var(--card-mute)}
 .blastb svg{width:18px;height:18px;fill:currentColor}
 .blastb.on{border-color:var(--warn);background:var(--warn);color:#111}
@@ -802,3 +802,13 @@ details.paste .roomjoin{margin-top:6px}
 .firewarn{display:flex;flex-wrap:wrap;align-items:center;gap:6px;font:600 12.5px/1.25 var(--sans);color:var(--bad)}
 .firewarn button{min-height:32px;padding:0 9px;border-radius:8px;border:1px solid var(--bad);background:var(--bad-wash);color:var(--bad);font:600 12.5px/1 var(--sans)}
 .firewarn .x{margin-left:auto;border-color:var(--line);background:none;color:var(--ink-3)}
+
+/* The cards in the player's order (reorder.js); the name on a ship's card */
+.main .r1 > .tag:first-child{touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+.main section.row[data-u] .r1 > .tag:first-child::before,.main section.row[data-g] .r1 > .tag:first-child::before{content:"\22EE\22EE";margin-right:3px;letter-spacing:-2px;opacity:.65}
+.row.dragging{opacity:.45}
+.dropline{position:fixed;height:4px;border-radius:2px;background:var(--accent);z-index:80;pointer-events:none}
+.peerview .r1 > .tag::before{display:none}
+.shnm{display:block;width:100%;box-sizing:border-box;padding:2px 0;border:0;border-bottom:1px dashed rgba(255,255,255,.5);background:none;color:inherit;font:700 20px/1.1 var(--disp);text-transform:uppercase}
+.shnm:focus{outline:none;border-bottom:2px solid #fff}
+.reppick .repdone{border-color:var(--line);background:none;color:var(--ink-2)}

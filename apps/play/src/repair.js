@@ -8,8 +8,8 @@ import PLAY from "../rules.js";
 
 /* ==================================================== REPAIR WITH ONE TAP == */
 /* Damage control (p. 88), in the critical table: the page rolls the ship's dice
-   and each success is a wrench, spent by tapping what to repair; the book leaves
-   the choice to the ship. A fire left stays for the player to burn on its chip (p. 67).
+   and each success is one repair, spent by tapping what to fix; the book leaves
+   the choice to the ship. A counter says how many are left of how many. A fire left stays for the player to burn on its chip (p. 67).
    With Auto repair on (the menu) the button is on the card as well, and the page
    repairs at once whenever there is nothing to choose. What happened stays on
    one line until the next tap elsewhere. UNDO takes it back. RULINGS.md T45. */
@@ -52,7 +52,7 @@ export function rollRepair(i, rng, half){
   const word = plan.target === 6 ? "six" : "success";
   const count = (r.hits || "no") + " " + word + (r.hits === 1 ? "" : "es");
   if(left > 0 && repairOpen(R, st).length){
-    st.repPick = left;
+    st.repPick = left; st.repTotal = left;
   }else burn(i, note);
   setNote(i, head + count + (note.length ? ": " + note.join(", ") : r.hits ? "" : ", nothing repaired"));
   return true;
@@ -64,9 +64,19 @@ export function pickRepair(i, key){
   const note = [fixedWord(R, key)];
   st.repPick--;
   if(!repairOpen(R, st).length) st.repPick = 0;
-  if(!st.repPick){ delete st.repPick; burn(i, note); }
+  if(!st.repPick){ delete st.repPick; delete st.repTotal; burn(i, note); }
   const had = (appState.V.repNote || {})[i] || "";
   setNote(i, had + (had ? ", " : "") + note.join(", "));
+  return true;
+}
+/* the rest of the repairs left unused: the player's to decide */
+export function endRepairs(i){
+  const st = appState.G.st[i];
+  if(!st.repPick) return false;
+  delete st.repPick; delete st.repTotal;
+  const note = []; burn(i, note);
+  const had = (appState.V.repNote || {})[i] || "";
+  if(note.length) setNote(i, had + (had ? ", " : "") + note.join(", "));
   return true;
 }
 /* every ship with something to repair, from the End Phase panel */
@@ -125,7 +135,7 @@ export function repairPanel(i){
 export function repairLines(i, inTable){
   if(!inTable && !OPT.autorepair) return "";
   const note = (appState.V.repNote || {})[i], st = appState.G.st[i], R = appState.U[i].R;
-  const pick = st.repPick && R.kind === "ship" && repairOpen(R, st).length ? `<div class="reppick"><span class="wrenches" aria-label="${st.repPick} to spend">${`<i>${WRENCH}</i>`.repeat(st.repPick)}</span><span>Repair:</span>${repairOpen(R, st).map(c =>
-    `<button data-act="repairpick" data-i="${i}" data-arg="${esc(c.key)}">${esc(critWord(R, c.key))}${c.count > 1 ? " " + TIMES + c.count : ""}</button>`).join("")}</div>` : "";
+  const pick = st.repPick && R.kind === "ship" && repairOpen(R, st).length ? `<div class="reppick"><p class="repcount" aria-live="polite"><b>${st.repPick} ${st.repPick === 1 ? "repair" : "repairs"} left</b> of ${st.repTotal || st.repPick}: tap what to fix</p><div class="repchoices">${repairOpen(R, st).map(c =>
+    `<button data-act="repairpick" data-i="${i}" data-arg="${esc(c.key)}">${esc(critWord(R, c.key))}${c.count > 1 ? " " + TIMES + c.count : ""}</button>`).join("")}<button class="repdone" data-act="repairdone" data-i="${i}">Done</button></div></div>` : "";
   return (note ? `<p class="repnote">Repair ${esc(note)}</p>` : "") + pick;
 }

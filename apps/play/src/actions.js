@@ -6,7 +6,7 @@ import { KEY_VIEW, KEY_WAKE, applyCommanderLd, cmdsAboard, coCmd, forgetLdDie, r
 import { crippledNow, unitName } from "./derived.js";
 import { jumpTo, pageLabel, render, rrOpen, rrPool, showPop, topRow, wake } from "./render.js";
 import { repairable } from "./share.js";
-import { clearRepairNotes, pickRepair, rollAllRepairs, rollRepair } from "./repair.js";
+import { clearRepairNotes, endRepairs, pickRepair, rollAllRepairs, rollRepair } from "./repair.js";
 import PLAY from "../rules.js";
 import { esc } from "../../../packages/ui/format.js";
 
@@ -177,6 +177,7 @@ export function act(name, i, arg){
        fire out per 6; a result that may not be repaired (p. 67) stays */
     case "blastflag": st.blast = st.blast ? 0 : 1; break;
     case "repairroll": if(!rollRepair(i, undefined, arg === "half" ? true : arg === "full" ? false : undefined)){ appState.UNDO.pop(); return; } break;
+    case "repairdone": if(!endRepairs(i)){ appState.UNDO.pop(); return; } break;
     case "repairpick": if(!pickRepair(i, String(arg))){ appState.UNDO.pop(); return; } break;
     case "repair": {
       const key = String(arg);
@@ -307,6 +308,7 @@ export function act(name, i, arg){
       else PLAY.addHits(R, st, arg);
       break;
     case "teleported": st.teleported = true; break;
+    case "reorder": appState.G.order = arg; break;
     /* lost in a warp rift (p. 112): destroyed, for its full points (T47); one
        ship of an escort card */
     case "warplost":

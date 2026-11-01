@@ -12,6 +12,7 @@ import PLAY from "../rules.js";
 import { arcGlyph, esc, factionCols, shortArmour, shortRange, starHTML, title } from "../../../packages/ui/format.js";
 import DOMAIN from "../../../packages/rules/domain.js";
 import { boardNoteLine, renderBoardSheet } from "./board.js";
+import { rosterOrder } from "./reorder.js";
 import { BURST, repairBtn, repairLines, repairPanel } from "./repair.js";
 import { renderActions } from "./ship-actions.js";
 import { edgeHandle, peerAfterRender, peerLoadCard, peerMenuWord, peerSetupCard, peerSide, renderPeerPanel, renderPeerSide, sidesStrip } from "./peer.js";
@@ -411,7 +412,8 @@ export function renderSetup(){
    player's own and, read-only, the opponent's (peer.js swaps the game in). */
 export function rosterRows(){
   const done = {}, out = [];
-  appState.U.forEach((x, i) => {
+  rosterOrder().forEach(i => {
+    const x = appState.U[i];
     if(done[i]) return;
     const g = appState.G.grp[i];
     /* a capital squadron, or a mixed escort squadron (builderGroups "e:") */
@@ -983,7 +985,7 @@ export function renderSheet(i){
      its armament, always on the card */
   const ruleSec = R.ruleCard ? `<div class="sec"><h3>${esc(R.ruleCard.title)}<em>Fleets p. ${R.ruleCard.page}</em></h3><p class="lead">${esc(R.ruleCard.lead || "")}</p>${ruleSteps(R)}</div>` : "";
   return `<div class="sheet" style="--kd:${kd};--km:${km}">
-    <div class="sh-hd"><div class="t"><h2>${esc(unitName(i))}</h2><p>${esc(sub)}</p></div>${ldTile(i)}<button class="x" data-act="closesheet" aria-label="Close">${CLOSE_X}</button></div>
+    <div class="sh-hd"><div class="t"><input class="shnm" type="text" data-nm="${i}" value="${esc(unitName(i))}" placeholder="${esc(baseName(i))}" maxlength="40" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" aria-label="Name of this ship in the game"><p>${esc(sub)}</p></div>${ldTile(i)}<button class="x" data-act="closesheet" aria-label="Close">${CLOSE_X}</button></div>
     <div class="sh-body">${band}${upgradeLine(i)}${cmdsAboard(i).map(cmdLine).join("")}${shipRRLine(i)}${v.fort && !v.destroyed ? quadSelector(i, v) : ""}${stats}${preLine(i)}
       ${appState.V.pop && appState.V.pop.i === i && /^ld$/.test(appState.V.pop.kind) ? renderPop(i) : ""}
       <div class="sec"><h3>Armament<em>Str as printed ${MID} &frac12; when halved</em></h3>${weaponsTable(R, st, esq)}</div>

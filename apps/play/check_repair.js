@@ -128,11 +128,23 @@ const six = n => Array.from({ length: 6 }, (x, k) => k < n ? 0.99 : 0);
     await tap(REP);
     st = JSON.parse(await cd.evaluate(stOf(0)));
     check("one six: one wrench to spend, nothing repaired yet", st.repPick === 1 && st.crits["6"] === 1 && st.crits["7"] === 1, st);
-    check("the wrench is shown", await cd.evaluate(`document.querySelectorAll(".wrenches i").length === 1`));
+    check("the counter says it", /1 repair left/i.test(await txt(".repcount")) && /of 1/.test(await txt(".repcount")), await txt(".repcount"));
+    await cd.evaluate(`document.querySelector(".reppick").scrollIntoView({ block: "center" }); 1`); await sleep(100);
     await shot("7-wrench");
     await tap('[data-act="repairpick"][data-arg="7"]');
     st = JSON.parse(await cd.evaluate(stOf(0)));
     check("spent on the fire: it is out, no hit", !st.crits["7"] && st.crits["6"] === 1 && st.hits === 2 && !st.repPick, st);
+    /* two of two, one spent: the counter follows; Done leaves the rest */
+    await cd.evaluate(crits(0, { "7": 1, "6": 1, "5": 1 }));
+    await cd.evaluate(dice(six(2)));
+    await tap(REP);
+    check("two sixes: 2 left of 2", /2 repairs left/i.test(await txt(".repcount")) && /of 2/.test(await txt(".repcount")), await txt(".repcount"));
+    await tap('[data-act="repairpick"][data-arg="5"]');
+    check("one spent: 1 left of 2", /1 repair left/i.test(await txt(".repcount")) && /of 2/.test(await txt(".repcount")), await txt(".repcount"));
+    await tap('[data-act="repairdone"]');
+    st = JSON.parse(await cd.evaluate(stOf(0)));
+    check("Done keeps what is left unrepaired", !st.repPick && st.crits["7"] === 1 && st.crits["6"] === 1 && !st.crits["5"], st);
+
     /* one kind is still the player's tap */
     await cd.evaluate(crits(0, { "6": 1 }));
     await cd.evaluate(dice(six(1)));

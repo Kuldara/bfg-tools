@@ -588,8 +588,8 @@ has a second button for the half dice. A gas cloud (p. 110) is text only.
 **T45, fire, changed by the user 1.11.2026.** Repair never adds a fire's hit: the note says one still burns, and the fire chip or the End Phase button adds it. Nothing adds it by itself: the change of turn lists the ships still burning in the bottom bar.
 
 **T45, changed by the user 1.11.2026.** Repair sits in the critical table, and every
-success is a wrench the player spends by tapping what to repair, even with only one
-kind on the ship. The menu's Auto repair brings back the first form described above.
+success is a repair the player spends by tapping what to fix, even with only one
+kind on the ship; a counter says how many are left of how many, and Done leaves the rest. The menu's Auto repair brings back the first form described above.
 The table offers Full repair and Half repair side by side, with the reason (p. 88); with Blast Markers tracked the ship's state marks one, and the other stays on offer.
 
 ## What is not tracked, and why
