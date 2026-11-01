@@ -8,7 +8,7 @@ export const LOW_ORBIT = new Set(["planetary-assault", "exterminatus", "fall-of-
   "cl-belis-2", "cl-belis-3", "cl-belis-4", "cl-damocles-2", "cl-damocles-4", "wr-planet-killer-defence", "wr-planetary-disease", "wr-sw-rebel-world",
   "wr-sw-take-the-stations", "fan-n-governor", "fan-n-line", "fan-p-barrage", "fan-p-into-darkness", "fan-p-scheming", "fan-v-sirvos"]);
 export function lowOrbitBlock(sc, st) {
-  if (!LOW_ORBIT.has(sc.id)) return "";
+  if (!LOW_ORBIT.has(sc.id) || (sc.noLowTable || []).includes(st.v)) return "";
   return "<div class='lowo'><p class='small muted' style='margin:0'>Drawn under the map to the same scale, 60 × 120 cm (the book: 45–60 cm wide, 90–135 cm long, one long edge is the planet). It does not join any edge of the main table: a ship goes in from the gravity well (the dashed line) and comes back touching the planet. The numbers match the map.</p><ol class='lorules'>" +
     "<li><b>Entering:</b> a ship within the planet’s gravity well may enter low orbit at the start of any of its turns. Place it touching the low orbit table’s edge furthest from the planet.</li>" +
     "<li><b>The pull:</b> at the start of each player’s turn, every ship within 45 cm of the planet edge moves straight toward it, without turning: small planet 5 cm, medium 8 cm, large 10 cm.</li>" +

@@ -75,7 +75,7 @@ export const TURNFX = {
   "unknown-weapons": T => T === 10 ? [["a", "Last turn for your objective"]] : T > 10 ? [[null, "The ambushers’ deadline has passed"]] : []
 };
 export function turnTrack(sc, st, v) {
-  const base = sc.fx || TURNFX[sc.id] || (() => []), max = sc.turnMax ? sc.turnMax(v) : 0;
+  const base = (sc.vfx && sc.vfx[v]) || sc.fx || TURNFX[sc.id] || (() => []), max = sc.turnMax ? sc.turnMax(v) : 0;
   const fx = (T, st2, v2) => base(T, st2, v2).concat(spTurn(sc, st2, T));
   const N = Math.max(max || 8, st.turn + 1), cur = fx(st.turn, st, v);
   const sig = T => fx(T, st, v).map(x => x[0] + x[1]).join("|");
