@@ -246,5 +246,9 @@ Z("fan-v-avaheim", "S", "Fixed: 90 vs about 160", "Three Cobras against eight dr
 Z("fan-v-gambit", "S", "Seiche 1000 · Tyranids 500", "Up to 1000 including the bait.");
 Z("fan-v-eulogy", "S", "1000 each + 75 defences", "Planetary defences do not raise the class.");
 Z("fan-v-sirvos", "L", "1500 each", "Both lists up to 1500 pts, including the Immortal Flame and the Omega.");
+Z("fan-b-poi", "S", "750 each", "Both fleets up to 750 pts (BBGM p. 64).");
+Z("fan-b-chance", "S", "750 each", "Both fleets up to 750 pts (BBGM p. 68).");
+Z("fan-b-starfort", "S", "1000 each", "Both fleets up to 1000 pts; the star fort is on the table for free (BBGM p. 73).");
+Z("fan-b-patrol", "any", "Equal", EQUAL);
 Z("fan-v-last-wave", "L", "2000 each", "Both lists up to 2000 pts; the rearguard is part of the Imperial total.");
 })();

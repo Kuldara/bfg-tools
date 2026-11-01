@@ -3,11 +3,11 @@
 Every Battlefleet Gothic scenario we could find, in a form you play rather than
 read: set-up steps you tick off, a map drawn to the table you use, forces by
 role, a turn track with what happens when, dice tables one tap away, and the
-end conditions with a verdict. 216 scenarios: the Rulebook's ten and its
+end conditions with a verdict. 220 scenarios: the Rulebook's ten and its
 campaigns, the Fleets Book, the classic Games Workshop and Fanatic publications
 (BFG Magazine, Warp Storm, Invasion, Fanatic Magazine and Online), every scenario
 of the Warp Rift fan magazine, and fan supplements (tournament packs, Book of
-Nemesis, Project Distant Darkness, Starblade, Book of the Void).
+Nemesis, Project Distant Darkness, Starblade, Book of the Void, BBGM).
 Live at [scenario-library.kuldare.com](https://scenario-library.kuldare.com/).
 
 ## The front page

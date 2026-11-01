@@ -392,5 +392,9 @@ TM("fan-v-avaheim", { z: "none", by: "src", zoneText: "low orbit over Avaheim: t
 TM("fan-v-gambit", { z: "any", by: "src", why: "The source: any battlezone, generated as per the rulebook (Book of the Void II p. 54). Roll the battlezone, or pick one." });
 TM("fan-v-eulogy", { z: 4, by: "src", note: "Vallar has no rings; its small moon is on the map." });
 TM("fan-v-sirvos", { z: [4, 3], by: "src", warn: "The source allows at most one asteroid field and one dust cloud besides the planet’s rings: leave out any extra." });
+TM("fan-b-poi", { z: "any", by: "src", why: "The source: phenomena in any agreed way (BBGM p. 64). Roll the battlezone, or pick one." });
+TM("fan-b-chance", { z: "any", by: "src", why: "The source: phenomena in any agreed way (BBGM p. 68). Roll the battlezone, or pick one." });
+TM("fan-b-starfort", { z: "any", by: "src", why: "The source: phenomena in any agreed way (BBGM p. 73). Roll the battlezone, or pick one." });
+TM("fan-b-patrol", { z: "any", by: "src", why: "The source: any agreed method (BBGM p. 80). Roll the battlezone, or pick one." });
 TM("fan-v-last-wave", { z: 6, by: "src", sun: { rows: [[1, 3, "left"], [4, 6, "right"]], text: "a short edge; rolled here: 1–3 left, 4–6 right" } });
 })();

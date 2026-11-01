@@ -49,7 +49,7 @@ export const CATS = [["core", "Core 10"], ["campaign", "Books"], ["classic", "Cl
 export const CL_GRPS = ["cl-ws", "cl-mag", "cl-inv", "cl-fan"];
 export const WR_GRPS = ["committee", "lore", "community", "untested"];
 /* fan supplements (21.10.): Tournament Mission Pack + Advanced Scenarios, Book of Nemesis, Project Distant Darkness, Starblade */
-export const FAN_GRPS = ["fan-tour", "fan-nem", "fan-pdd", "fan-sb", "fan-botv"];
+export const FAN_GRPS = ["fan-tour", "fan-nem", "fan-pdd", "fan-sb", "fan-botv", "fan-bbgm"];
 /* Warp Rift is one category, in issue order (secOf, wrIssue). wro/comm = saves from 0.7 */
 export const CAT_GRPS = { campaign: ["campaign", "fleets"], classic: CL_GRPS, wr: WR_GRPS, fan: FAN_GRPS };
 export const CAT_OLD = { wro: "wr", comm: "wr" };

@@ -46,7 +46,8 @@ export const GROUPS = [
   ["fan-nem",   "Fan · Book of Nemesis", "Cypra Probatii, Poland, 2007 · campaign, historical, tournament and special scenarios"],
   ["fan-pdd",   "Fan · Project Distant Darkness", "Tau narrative scenarios with fixed forces · any fleets can play"],
   ["fan-sb",    "Fan · Starblade", "Craftworld Eldar narrative series with fixed forces · any fleets can play"],
-  ["fan-botv",  "Fan · Book of the Void", "The Discordia sector books of the Battlefleet Gothic Discord, I and II · historical fleets, bonus missions"]
+  ["fan-botv",  "Fan · Book of the Void", "The Discordia sector books of the Battlefleet Gothic Discord, I and II · historical fleets, bonus missions"],
+  ["fan-bbgm",  "Fan · BBGM", "The new scenarios of a fan house-rules compilation by Bear, BinExis, DarthGoogle and Mazilka, May 2026 · any fleets"]
 ];
 /* scenario files in scenarios/ add themselves here */
 export function addScenarios(list) {

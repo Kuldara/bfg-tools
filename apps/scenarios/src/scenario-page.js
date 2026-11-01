@@ -70,7 +70,8 @@ export function bzLegend(m) {
 /* a set-up decided only at the table (formations and a roll): before the choice the map is empty (owner 21.10.) */
 export const PENDING_VAR = {
   "fleet-engagement": "Enter both formations in the\nFormations tool and roll off (step 3)",
-  "fan-p-art-command-1": "Enter both formations in the\nFormations tool and roll off (step 3)"
+  "fan-p-art-command-1": "Enter both formations in the\nFormations tool and roll off (step 3)",
+  "fan-b-chance": "Enter both formations in the\nFormations tool and roll off (step 4)"
 };
 /* decided only when the set-up is chosen in this game (st.vSet; New game resets it). An earlier saved st.v is not enough:
    the owner saw last time's Set-up B although this game's formations had not been chosen (21.10.) */
