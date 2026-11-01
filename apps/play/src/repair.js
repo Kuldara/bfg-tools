@@ -86,8 +86,14 @@ const WRENCH = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 7a5.5 5
 export const BURST = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1l2.3 6.2L19.8 4l-2.6 5.8L23 12l-5.8 2.2 2.6 5.8-5.5-3.2L12 23l-2.3-6.2L4.2 20l2.6-5.8L1 12l5.8-2.2L4.2 4l5.5 3.2z"/></svg>';
 /* the button: beside the chips, so the row of big buttons never moves */
 export function repairBtn(i, inTable){
-  if(!canRepair(i) || (!inTable && !OPT.autorepair)) return "";
+  if(!inTable && !OPT.autorepair) return "";
   const R = appState.U[i].R, st = appState.G.st[i];
+  /* The button stays where the finger is, dimmed, until the next tap elsewhere: if
+     it went, the big buttons would rise under that finger and a second tap would
+     add a hit (user 1.11.2026). render() keeps a control that stays in its place. */
+  const held = t => `<button class="repb" data-act="repairroll" data-i="${i}" disabled>${WRENCH}${t}</button>`;
+  if(!inTable && st.repPick) return held("Repair: choose below");
+  if(!canRepair(i)) return !inTable && (appState.V.repNote || {})[i] ? held("Repair done") : "";
   if(st.repPick) return "";
   const p = PLAY.repairPlan(R, st), done = rolledAlready(st);
   /* without the orders track the second roll is seen, not blocked */

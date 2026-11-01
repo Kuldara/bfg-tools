@@ -83,7 +83,14 @@ const six = n => Array.from({ length: 6 }, (x, k) => k < n ? 0.99 : 0);
     await tap(REP);
     st = JSON.parse(await cd.evaluate(stOf(0)));
     check("enough sixes: everything repaired, no choice, no fire", !st.crits["7"] && !st.crits["6"] && st.hits === 2 && !st.repPick, st);
-    check("nothing left, no button", !(await has(REP)));
+    /* the button stays under the finger, dimmed; the big Hit button must not rise there */
+    check("nothing left: the button stays, dimmed", await cd.evaluate(`document.querySelector(${JSON.stringify(REP)}).disabled`));
+    const heldAt = JSON.parse(await cd.evaluate(`(() => { const r = document.querySelector(${JSON.stringify(REP)}).getBoundingClientRect(); return JSON.stringify({ x: r.left + r.width / 2, y: r.top + r.height / 2 }); })()`));
+    const hitsBefore = JSON.parse(await cd.evaluate(stOf(0))).hits;
+    await cd.send("Input.dispatchMouseEvent", { type: "mousePressed", x: heldAt.x, y: heldAt.y, button: "left", clickCount: 1 });
+    await cd.send("Input.dispatchMouseEvent", { type: "mouseReleased", x: heldAt.x, y: heldAt.y, button: "left", clickCount: 1 });
+    await sleep(450);
+    check("a second tap there adds no hit", JSON.parse(await cd.evaluate(stOf(0))).hits === hitsBefore);
 
     /* no six: the fire burns; UNDO takes the whole roll back */
     await cd.evaluate(crits(0, { "7": 1 }));
