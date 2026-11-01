@@ -134,7 +134,7 @@ export function endPending(){
   let fires = 0, crits = 0;
   appState.U.forEach((x, i) => {
     const R = x.R, st = appState.G.st[i];
-    if(R.kind !== "ship" || PLAY.isEscort(R) || PLAY.isFort(R) || PLAY.destroyed(R, st)) return;
+    if(R.kind !== "ship" || st.disengaged || PLAY.isEscort(R) || PLAY.isFort(R) || PLAY.destroyed(R, st)) return;
     PLAY.activeCrits(st, R).forEach(c => {
       if(PLAY.standardCrits(R) && c.key === "7") fires += c.count;
       if(repairable(R, c.key)) crits += c.count;
@@ -146,7 +146,7 @@ export function renderEndPhase(){
   const fl = appState.G.fleet;
   const rows = appState.U.map((x, i) => {
     const R = x.R, st = appState.G.st[i];
-    if(R.kind !== "ship" || PLAY.isEscort(R) || PLAY.isFort(R)) return "";
+    if(R.kind !== "ship" || st.disengaged || PLAY.isEscort(R) || PLAY.isFort(R)) return "";
     const v = PLAY.view(R, st, fl);
     if(v.destroyed) return "";
     const crits = PLAY.activeCrits(st, R);

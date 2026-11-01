@@ -468,7 +468,7 @@ export function renderRoster(){
       ${fireReminder()}
       ${appState.V.compact ? "" : jumpStrip()}
       <div class="brow">
-        <button class="endbtn" data-act="endph" ${pend.n ? "" : "disabled"}>End phase<small>${pend.n ? pend.crits + " to repair" + (pend.fires ? " " + MID + " " + pend.fires + " fire" + (pend.fires > 1 ? "s" : "") : "") : "nothing to repair"}</small></button>
+        <button class="endbtn" data-act="endph" ${pend.n ? "" : "disabled"}>End phase<small>${pend.n ? pend.crits + (pend.crits === 1 ? " crit" : " crits") + (pend.fires ? " " + MID + " " + pend.fires + " fire" + (pend.fires > 1 ? "s" : "") : "") : "no crits"}</small></button>
         ${OPT.orders ? `<button class="turnbtn ${fl.mine ? "" : "enemy"}" data-act="${fl.mine ? "endturn" : "newturn"}">${fl.mine ? "End turn " + fl.turn : "Start turn " + (fl.turn + 1)}</button>`
                      : `<button class="turnbtn" data-act="newturn">New turn ${fl.turn + 1}</button>`}
         <div class="pager hide"><button class="ico" data-act="page" data-arg="-1" aria-label="Previous page">&lsaquo;</button><b>1 / 1</b><button class="ico" data-act="page" data-arg="1" aria-label="Next page">&rsaquo;</button></div>

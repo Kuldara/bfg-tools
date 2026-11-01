@@ -21,7 +21,7 @@ const phaseKey = () => appState.G.fleet.turn + (appState.G.fleet.mine ? "m" : "e
 export const repairOpen = (R, st) => PLAY.activeCrits(st, R).filter(c => repairable(R, c.key));
 export function canRepair(i){
   const R = appState.U[i].R, st = appState.G.st[i];
-  return R.kind === "ship" && !PLAY.isEscort(R) && !PLAY.isFort(R) && !PLAY.destroyed(R, st) && !st.hulkName && repairOpen(R, st).length > 0;
+  return R.kind === "ship" && !st.disengaged && !PLAY.isEscort(R) && !PLAY.isFort(R) && !PLAY.destroyed(R, st) && !st.hulkName && repairOpen(R, st).length > 0;
 }
 const rolledAlready = st => OPT.orders && st.repPhase === phaseKey();
 
@@ -78,6 +78,14 @@ export function endRepairs(i){
   const had = (appState.V.repNote || {})[i] || "";
   if(note.length) setNote(i, had + (had ? ", " : "") + note.join(", "));
   return true;
+}
+/* Repairs not spent do not outlast what they were for: the End Phase, or the last
+   critical that could use them. */
+export function dropStaleRepairs(all){
+  appState.U.forEach((x, i) => {
+    const st = appState.G.st[i];
+    if(st && st.repPick && (all || !canRepair(i))){ delete st.repPick; delete st.repTotal; }
+  });
 }
 /* every ship with something to repair, from the End Phase panel */
 export function rollAllRepairs(rng){

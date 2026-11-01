@@ -185,6 +185,21 @@ const six = n => Array.from({ length: 6 }, (x, k) => k < n ? 0.99 : 0);
     await tap('[data-act="firewarn"]');
     check("and it can be dismissed", !(await has(".firewarn")));
 
+    /* the End Phase counts what the ships on the table have; repairs do not linger */
+    await cd.evaluate(crits(0, { "3": 3, "6": 1 }));
+    await cd.evaluate(crits(1, { "5": 1 }));
+    check("the button counts criticals: 5 crits", /5 crits/i.test(await txt(".endbtn")), await txt(".endbtn"));
+    await cd.evaluate(`GFP.appState.G.st[1].disengaged = true; GFP.render(); 1`);
+    check("a disengaged ship is not counted: 4 crits", /4 crits/i.test(await txt(".endbtn")), await txt(".endbtn"));
+    await cd.evaluate(`GFP.appState.G.st[1].disengaged = false; GFP.appState.G.st[1].crits = {}; GFP.render(); 1`);
+    await tap('[data-act="pop"][data-i="0"][data-arg="crit"]');
+    await cd.evaluate(dice(six(2)));
+    await tap(REP);
+    await tap('[data-act="closepop"]');
+    await tap('[data-act="newturn"]');
+    check("repairs not spent end with the turn", !JSON.parse(await cd.evaluate(stOf(0))).repPick);
+    await cd.evaluate(`GFP.appState.V.fireWarn = false; GFP.render(); 1`);
+
     /* Track Blast Markers: on or off per card (p. 48, 88) */
     check("the setting off: no button", !(await has('[data-act="blastflag"]')));
     await cd.evaluate(`GFP.OPT.blast = true; GFP.render(); 1`); await sleep(120);

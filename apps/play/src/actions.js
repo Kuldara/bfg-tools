@@ -6,7 +6,7 @@ import { KEY_VIEW, KEY_WAKE, applyCommanderLd, cmdsAboard, coCmd, forgetLdDie, r
 import { crippledNow, unitName } from "./derived.js";
 import { jumpTo, pageLabel, render, rrOpen, rrPool, showPop, topRow, wake } from "./render.js";
 import { repairable } from "./share.js";
-import { clearRepairNotes, endRepairs, pickRepair, rollAllRepairs, rollRepair } from "./repair.js";
+import { clearRepairNotes, dropStaleRepairs, endRepairs, pickRepair, rollAllRepairs, rollRepair } from "./repair.js";
 import PLAY from "../rules.js";
 import { esc } from "../../../packages/ui/format.js";
 
@@ -333,6 +333,7 @@ export function act(name, i, arg){
     default: appState.UNDO.pop(); return;
   }
   dropStalePop();
+  dropStaleRepairs(name === "newturn" || name === "endturn");
   if(before){
     const after = PLAY.view(R, st, fleet);
     const qw = quadWord(R, st);
