@@ -9,7 +9,7 @@ import { peerHas, withPeer } from "./peer.js";
 import { esc } from "../../../packages/ui/format.js";
 import { TERR_SHORT } from "../../../packages/ui/celestial.js";
 import PLAY from "../rules.js";
-import { LISTS } from "../../../packages/ui/catalog.js";
+import { LISTS, SHIPS } from "../../../packages/ui/catalog.js";
 import { resolveFleet } from "./fleet-document.js";
 
 /* ======================================================= A SHIP'S ACTIONS == */
@@ -278,7 +278,7 @@ function renderRam(i){
   /* the books' classes when the opponent's fleet is not linked: one pick fills
      the three values below */
   const cat = foes ? "" : `<p class="aclab">Their ship</p><select class="acsel" data-sel="ramfoe" aria-label="Their ship's class, from the books"><option value="">pick a class, or set the values below</option>${LISTS.map((L, li) =>
-    `<optgroup label="${esc(L.nm)}">${L.secs.map((s, si) => s.ents.map((e, ei) => { const v = li + "|" + si + "|" + ei; return `<option value="${v}"${A.cat === v ? " selected" : ""}>${esc(e.l || "")}</option>`; }).join("")).join("")}</optgroup>`).join("")}</select>`;
+    `<optgroup label="${esc(L.nm)}">${L.secs.map((s, si) => s.ents.map((e, ei) => { if(!SHIPS[String(e.r)]) return ""; const v = li + "|" + si + "|" + ei; return `<option value="${v}"${A.cat === v ? " selected" : ""}>${esc(e.l || "")}</option>`; }).join("")).join("")}</optgroup>`).join("")}</select>`;
   return `<p class="foot">Pass All Ahead Full, name the target, test Leadership, and only then roll the extra distance. One ram per Movement Phase; the choice cannot change (p. 55).</p>${own}
     ${foes ? `<p class="aclab">Their ship</p><div class="bchips">${foes}</div>` : cat}
     <p class="aclab">Target</p><div class="bchips">${PLAY.RAM_SIZES.map((s, k) => chip("acset", "size:" + k, s[0].toUpperCase() + s.slice(1), A.size === k)).join("")}</div>
@@ -299,7 +299,7 @@ function renderTele(i){
       : `<p class="acres ok"><b>${r.d}.</b> Tell them: critical ${r.d} on their table, repaired as normal (p. 92); an escort is destroyed on 4+.</p>`)
     : bar ? `<p class="foot">This ship may not teleport now: ${esc(bar)}.</p>` : dice;
   const list = boats
-    ? `<ul class="acchk"><li>End Phase: one raid for each assault boat squadron that reached the ship; the boats then return to their carrier to be reloaded (p. 85)</li></ul>`
+    ? `<ul class="acchk"><li>On contact, after the turrets: one raid at once for each assault boat squadron left (p. 85)</li><li>The target may Brace against any Hit-and-Run, before the roll</li></ul>`
     : `<ul class="acchk"><li>End Phase, on Lock On or Reload Ordnance</li><li>The target has no shields and is within 10 cm</li><li>The target has no more hits left than this ship</li><li>Not crippled; one a turn</li></ul>`;
   return `${mode}${list}
     <p class="foot">One Hit-and-Run attack: a 1 fails, 2 or more is that result on the Critical Hits table. A fleet's bonus to Hit-and-Run is yours to add (p. 92).</p>

@@ -150,6 +150,17 @@ const dice = a => `(() => { const q = ${JSON.stringify(a.map(f => (f - 0.5) / 6)
     await tap('[data-act="actele"][data-arg="5"]');
     check("the die says the critical, and the ship is not marked as having teleported", /critical 5/.test(await cd.evaluate(`document.querySelector(".acts .box").innerText`)) && !(await cd.evaluate(`!!GFP.appState.G.st[1].teleported`)));
 
+    /* a ram's target from the books: ships only, and a pick fills the values */
+    await tap('[data-act="acclose"]');
+    await open(0);
+    await tap('[data-act="actab"][data-arg="ram"]');
+    const opts = JSON.parse(await cd.evaluate(`JSON.stringify([...document.querySelectorAll('[data-sel="ramfoe"] option')].map(o => o.textContent))`));
+    check("the books' classes are ships, not commanders", opts.length > 100 && opts.some(t => /^Retribution/i.test(t)) && !opts.some(t => /admiral|warmaster|warlord/i.test(t)), opts.length);
+    await cd.evaluate(`(() => { const s = document.querySelector('[data-sel="ramfoe"]'); s.value = [...s.options].find(o => /^Retribution/i.test(o.textContent)).value; s.dispatchEvent(new Event("change", { bubbles: true })); return 1; })()`);
+    await sleep(100);
+    const af = JSON.parse(await cd.evaluate(`JSON.stringify(GFP.appState.V.actions)`));
+    check("a pick fills size, armour and hits", af.size === 2 && af.hits === 12 && af.armour === 6, af);
+
     /* own dice come first: the page's roll is the last choice in every row */
     await tap('[data-act="acclose"]');
     await cd.evaluate(`(() => { const st = GFP.appState.G.st[0]; st.hits = 0; st.destroyed = false; st.hulk = null; st.hulkName = ""; st.disengaged = false; GFP.render(); return 1; })()`);
