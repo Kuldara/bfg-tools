@@ -98,6 +98,42 @@ const SETUP = `(() => {
     await cd.evaluate(`(() => { const f = document.querySelector(".sheet .shnm"); f.value = ""; f.dispatchEvent(new Event("input", { bubbles: true })); return 1; })()`);
     await cd.evaluate(`document.querySelector('[data-act="closesheet"]').click(); 1`); await sleep(400);
     check("an empty field gives the name back", (await names()).some(n => /^Lunar 1$/i.test(n)), await names());
+  /* the set-up's upgrade dice change the card's numbers (user 2.11.2026:
+     "shouldn't it give more hit points?"): a Blood Axe Warlord's ship with
+     a Reinforced Hull (Rulebook p. 158) */
+  {
+    const r = JSON.parse(await cd.evaluate(`(() => {
+      const G = GFP, L = G.LISTS.find(l => /Clanz/.test(l.nm));
+      const row = (sec, re) => { const s = L.secs.findIndex(x => sec.test(x.t)); const e = L.secs[s].ents.findIndex(x => re.test(x.l || "")); return [s, e, L.secs[s].ents[e]]; };
+      const [ws, we, wn] = row(/^WARLORD$/, /^Ork Warlord$/), [ks, ke, kn] = row(/Big ship/, /^Kill kroozer$/);
+      /* the clan and the refit as the builder saves them (docs/save-format.md: upn) */
+      const [bs, be, bn] = row(/CLAN UPGRADES/, /^Clan: Blood Axes/), [rs, re, rn] = row(/CLAN UPGRADES/, /^Imperial Navy refit, rolled randomly/);
+      const upn = {}; upn[L.secs[bs].t + "\u0001" + bn.l] = "take"; upn[L.secs[rs].t + "\u0001" + rn.l] = "take";
+      const res = G.resolveFleet({ ln: L.nm, limit: 1500, units: [
+        { s: ws, e: we, ref: wn.r, n: 1, opts: [], os: {}, name: "", sn: L.secs[ws].t, el: wn.l },
+        { s: ks, e: ke, ref: kn.r, n: 1, opts: [], os: {}, name: "", sn: L.secs[ks].t, el: kn.l, upn } ] });
+      if(res.error) throw new Error(res.error);
+      const up = (res.units[1].R.upgrades || []).filter(u => u.state === "take").map(u => u.label);
+      if(!up.some(l => /^Imperial Navy refit, rolled randomly/.test(l))) throw new Error("the refit was not taken: " + up.join(" | "));
+      G.newGame(res);
+      G.appState.G.st.forEach((st, i) => { if(st.ld == null) G.setLd(i, 8); });
+      G.appState.V.screen = "setup"; G.render();
+      const before = G.PLAY.view(G.appState.U[1].R, G.appState.G.st[1], G.appState.G.fleet);
+      const sel = document.querySelector('select[data-sel="pre"][data-key="inrefit"]');
+      if(!sel) throw new Error("no refit select: " + up.join(" | "));
+      sel.value = "1-4"; sel.dispatchEvent(new Event("change", { bubbles: true }));
+      const after = G.PLAY.view(G.appState.U[1].R, G.appState.G.st[1], G.appState.G.fleet);
+      const desc = (document.querySelector('select[data-sel="pre"][data-key="inrefit"] ~ .predesc') || {}).textContent || "";
+      G.appState.V.screen = "roster"; G.appState.V.compact = false; G.render();
+      const card = (document.querySelector('section.row[data-u="1"]') || {}).innerHTML || "";
+      return JSON.stringify({ before: [before.max, before.crippledAt, before.speed.base], after: [after.max, after.crippledAt, after.speed.base], fx: G.appState.G.st[1].fx, desc, boxes: (card.match(/aria-label="hits \\d+"/g) || []).length, spd: (/<small>SPD<\\/small><b>(\\d+ cm)/.exec(card) || [])[1] });
+    })()`));
+    check("a Kill Kroozer starts at 10 hits, crippled at 5, 20 cm", r.before.join() === "10,5,20", r.before);
+    check("Reinforced Hull picked: 13 hits (+25 % rounded up), crippled at 7, 15 cm (p. 158, 65)", r.after.join() === "13,7,15", r.after);
+    check("st.fx holds the numbers", r.fx && r.fx.hits === 3 && r.fx.speed === -5, r.fx);
+    check("the select says what is on the card now", /on the card: 13 hits, 15 cm/.test(r.desc), r.desc);
+    check("the card has 13 boxes and SPD 15 cm", r.boxes === 13 && r.spd === "15 cm", [r.boxes, r.spd]);
+  }
   }finally{ await cd.close(); }
   console.log((fail ? "FAIL " : "ok ") + pass + " passed, " + fail + " failed");
   process.exit(fail ? 1 : 0);

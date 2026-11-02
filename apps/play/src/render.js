@@ -4,7 +4,7 @@ import { OPT, PLAY_VERSION, TRACK, builderRaw, lsGet } from "./storage.js";
 import { $, MID, TIMES, fnv } from "./helpers.js";
 import { fleetFactsNow, fleetPoints, fleetsIn, parseDoc, resolveFleet } from "./fleet-document.js";
 import { KEY_WAKE, builderTool, carriersOf, cmdsAboard, coCmd, grpLabel, isEscGrp, ldPlanOf, ldRollers, loadPlay, preCounts, preRollsOf, sqnShip, toolBtn, wl2Box, wlExtra, wlTag } from "./game-state.js";
-import { IN_REFITS, inRefitKind, pregameRolls, pregameText } from "../../../packages/ui/pregame-tables.js";
+import { IN_REFITS, inRefitKind, pregameRolls, pregameText, pregameEffects } from "../../../packages/ui/pregame-tables.js";
 import { cataLabel, critLabel, groupUnits } from "./actions.js";
 import { upgradeLine, baseName, classTag, crippledNow, critChips, ldTile, memberWord, ordChip, ordnancePills, renderFleetPop, statsLine, unitName, weaponsLine, weaponsTable } from "./derived.js";
 import { builderFleets, endPending, fireReminder, jumpStrip, linkedFleets, renderEndPhase } from "./share.js";
@@ -332,12 +332,27 @@ function rowDice(i){
     const table = r.two ? IN_REFITS.map(T => T.roll + " " + T.name + ":\n" + T.rows.map((x, d) => "  " + (d + 1) + " " + plain(x[0]) + " - " + plain(x[1])).join("\n")).join("\n")
       : r.rows ? r.rows.map((x, d) => (d + 1) + " " + plain(x[0]) + " - " + plain(x[1])).join("\n") : "";
     const row = v ? (r.two ? inRefitKind(v.k).rows[v.d - 1] : r.rows ? r.rows[v.d - 1] : null) : null;
-    const desc = row && row[1] ? `<em class="predesc">${row[1]}</em>` : "";
+    const desc = row && row[1] ? `<em class="predesc">${row[1]}${appliedText(i, r)}</em>` : "";
     const choose = r.key === "gift" && st.giftChoice ? ` <em class="dice">natural 6 on Ld: may choose (Fleets p. 118)</em>` : "";
     const how = v ? (v.how === "roll" ? "rolled" : "chosen") : (r.pick ? "pick" : "to roll");
     return `<label class="pre${v ? "" : " open"}"><span>${esc(r.title)} <i>${how}</i></span><select data-sel="pre" data-i="${i}" data-key="${r.key}" aria-label="${esc(r.title)}"${table ? ` title="${esc(table)}"` : ""}><option value="">${r.pick ? "choose" : "roll or choose"}</option>${opts}</select>${choose}${desc}</label>`;
   }).join("");
   return { line: ld + man, pre: pre ? `<div class="pres">${pre}</div>` : "" };
+}
+/* What a rolled result changed on the card, in the numbers the card now
+   shows (st.fx, game-state.js syncPre): "on the card: 15 hits, 20 cm". A
+   result that changes no number says nothing here. */
+function appliedText(i, r){
+  const st = appState.G.st[i], f = pregameEffects([r], st.pre);
+  if(!Object.keys(f).length) return "";
+  const v = PLAY.view(appState.U[i].R, st, appState.G.fleet), out = [];
+  if(f.hitsPct) out.push(v.max + " hits");
+  if(f.speed) out.push(v.speed.base != null ? v.speed.base + " cm" : (f.speed > 0 ? "+" : "") + f.speed + " cm");
+  if(f.shields) out.push(v.shields.base != null ? v.shields.base + " shield" + (v.shields.base === 1 ? "" : "s") : "+" + f.shields + " shield");
+  if(f.turrets) out.push(v.turrets.base != null ? v.turrets.base + " turret" + (v.turrets.base === 1 ? "" : "s") : "+" + f.turrets + " turret");
+  if(f.ld) out.push("Ld +" + f.ld);
+  if(f.repair) out.push("+" + f.repair + " repair die");
+  return ` <b>on the card: ${esc(out.join(", "))}</b>`;
 }
 /* on the card: what was rolled before the game, with its page */
 export function preLine(i){
@@ -926,7 +941,7 @@ export function renderPop(i){
     const c = PLAY.catastrophic(R);
     const tiles = c.rows.map((r, k) => `<button class="${r.kind === "gone" ? "bad" : (st.hulk === r.kind && st.hulkName === r.name ? "on" : "")}" data-act="hulk" data-i="${i}" data-arg="${k}"><b>${esc(r.roll)}</b>${esc(r.name)}<small>${r.extra ? esc(r.extra) + " " + MID + " " : ""}${esc(r.text)}</small></button>`).join("");
     return `<div class="pop cata"><h4>${esc(c.title)}${c.dice ? " " + MID + " roll " + c.dice : ""} ${MID} ${c.fleets ? "Fleets" : "Rulebook"} p. ${c.page}</h4>
-      <p>${esc(unitName(i))} ${v.fort ? "has all four quadrants at 0 hits (" + R.stats.hits + " each to start)" : "is at 0 hits (" + R.stats.hits + " to start)"}. ${esc(c.note)}</p>
+      <p>${esc(unitName(i))} ${v.fort ? "has all four quadrants at 0 hits (" + v.max + " each to start)" : "is at 0 hits (" + v.max + " to start)"}. ${esc(c.note)}</p>
       <div class="tiles c2">${tiles}
         ${c.boarded ? `<button data-act="hulk" data-i="${i}" data-arg="boarded">Boarded to 0<small>no roll: a drifting hulk (p. 90)</small></button>` : ""}
       </div>

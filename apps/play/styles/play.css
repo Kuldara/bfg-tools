@@ -648,6 +648,7 @@ details.ldguide h4{margin:12px 12px 4px;font:700 12px var(--mono);text-transform
 .setrow .pre.open span i{color:var(--warn)}
 .setrow .pre select{min-height:34px;max-width:100%;flex:1 1 160px;font:13px var(--sans);border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);padding:0 6px}
 .setrow .pre em{font-style:normal;font-size:12px}
+.setrow .pre .predesc b{color:var(--ink);font:600 12px/1.35 var(--sans);text-transform:none;letter-spacing:0}
 .setrow .pre .predesc{flex:1 0 100%;margin:0;font:12px/1.35 var(--sans);color:var(--ink-2)}
 .preline{margin:8px 0 0;font:12.5px/1.5 var(--sans);color:var(--ink-2)}
 

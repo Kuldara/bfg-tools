@@ -68,7 +68,7 @@ export function shipAct(name, el){
   /* an enemy ship from the linked fleet fills the target in */
   if(name === "acfoe"){
     const j = parseInt(argS(), 10);
-    withPeer(() => { const R = appState.U[j].R; A.size = PLAY.ramSize(R); A.hits = PLAY.ramDice(R); A.armour = PLAY.frontArmour(R) || A.armour; A.foe = j; });
+    withPeer(() => { const R = appState.U[j].R; A.size = PLAY.ramSize(R); A.hits = PLAY.ramDice(R, appState.G.st[j]); A.armour = PLAY.frontArmour(R) || A.armour; A.foe = j; });
     A.res = null; render(); return true;
   }
   /* a class from the books fills the target in (user 2.11.2026: without the
@@ -100,7 +100,7 @@ export function shipAct(name, el){
     A.res = { test: ok, dice: dice, ld: ld, n: n }; render(); return true;
   }
   if(name === "acramroll"){
-    const R = appState.U[A.i].R, mine = rollN(PLAY.ramDice(R)), def = A.size === 3;
+    const R = appState.U[A.i].R, mine = rollN(PLAY.ramDice(R, appState.G.st[A.i])), def = A.size === 3;
     const theirs = rollN(PLAY.rammedDice(A.hits, A.headOn, def));
     const auto = PLAY.powerRam(R) ? 1 : 0;
     /* a defence always rolls "as if prow-on" (p. 56): against the front */
@@ -260,7 +260,7 @@ function renderRam(i){
   if(ld == null) return `<p class="foot">Set this ship's Leadership first.</p>${backBtn}`;
   const n = PLAY.ramTestDice(PLAY.ramSize(R), A.size), def = A.size === 3;
   const foes = peerHas() ? withPeer(() => appState.U.map((x, j) => x.R.kind === "ship" && !PLAY.destroyed(x.R, appState.G.st[j]) ? chip("acfoe", j, esc(unitName(j)), A.foe === j) : "").join("")) : "";
-  const back = PLAY.rammedDice(A.hits, A.headOn, def), mine = PLAY.ramDice(R), auto = PLAY.powerRam(R), front = PLAY.frontArmour(R);
+  const back = PLAY.rammedDice(A.hits, A.headOn, def), mine = PLAY.ramDice(R, appState.G.st[i]), auto = PLAY.powerRam(R), front = PLAY.frontArmour(R);
   const own = (R.rules || []).filter(x => /\bram(s|ming)?\b/i.test(String(x.t)) && !/power ram/i.test(String(x.t))).map(x => `<p class="foot">${esc(String(x.t).replace(/^\*\s*/, ""))}</p>`).join("");
   const rr = r && r.test === false && freeRR(i);
   let step;

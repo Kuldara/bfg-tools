@@ -8,7 +8,7 @@ import { esc } from "../../../packages/ui/format.js";
 import PLAY from "../rules.js";
 import DOMAIN from "../../../packages/rules/domain.js";
 import { DATA } from "../../../packages/ui/catalog.js";
-import { pregameRolls } from "../../../packages/ui/pregame-tables.js";
+import { pregameRolls, pregameEffects } from "../../../packages/ui/pregame-tables.js";
 
 /* ============================================================== STATE ===== */
 appState.G = null;      /* the game: persisted */
@@ -282,6 +282,7 @@ export function resumeGame(g){
   /* a record from before the quadrant tracks, the member boxes of one-hit
      defences or the unrolled Leaderships is brought up to them */
   appState.U.forEach((x, i) => PLAY.adoptUnit(x.R, appState.G.st[i]));
+  syncAllPre();                            /* a game saved before st.fx existed */
   fixedLds();
   return true;
 }
@@ -338,9 +339,21 @@ export function forgetLdDie(i){
 /* The other pre-game rolls (packages/ui/pregame-tables.js): stored as
    st.pre[key] = { d } or { k, d } (the two-dice refit), how "roll" or "pick" */
 export const preRollsOf = i => pregameRolls(appState.U[i].R);
+/* What the rolls do to the profile, in numbers the rules read (PLAY.view:
+   hits, speed, shields, turrets, Leadership, repair dice): st.fx, written
+   whenever st.pre changes and when a game is resumed. Reinforced Hull's
+   +25 % is turned into hits here, from the card's starting hits. */
+export function syncPre(i){
+  const R = appState.U[i].R, st = appState.G.st[i];
+  const fx = pregameEffects(preRollsOf(i), st.pre);
+  if(fx.hitsPct){ fx.hits = Math.ceil(((R.stats && R.stats.hits) | 0) * fx.hitsPct / 100); delete fx.hitsPct; }
+  if(Object.keys(fx).length) st.fx = fx; else delete st.fx;
+}
+export function syncAllPre(){ appState.U.forEach((x, i) => syncPre(i)); }
 export function rollPre(i, roll, rng){
   const st = appState.G.st[i]; st.pre = st.pre || {};
   st.pre[roll.key] = roll.two ? { k: PLAY.d6(rng), d: PLAY.d6(rng), how: "roll" } : { d: PLAY.d6(rng), how: "roll" };
+  syncPre(i);
 }
 export function rollAllPre(all, rng){
   appState.U.forEach((x, i) => preRollsOf(i).forEach(roll => {
@@ -353,8 +366,9 @@ export function rollAllPre(all, rng){
 export function setPre(i, key, val){
   const st = appState.G.st[i]; st.pre = st.pre || {};
   const m = String(val || "").match(/^(?:(\d)-)?(\d)$/);
-  if(!m){ delete st.pre[key]; return; }
-  st.pre[key] = m[1] ? { k: parseInt(m[1], 10), d: parseInt(m[2], 10), how: "pick" } : { d: parseInt(m[2], 10), how: "pick" };
+  if(!m) delete st.pre[key];
+  else st.pre[key] = m[1] ? { k: parseInt(m[1], 10), d: parseInt(m[2], 10), how: "pick" } : { d: parseInt(m[2], 10), how: "pick" };
+  syncPre(i);
 }
 /* how many pre-game rolls are still open / exist in the fleet */
 export function preCounts(){

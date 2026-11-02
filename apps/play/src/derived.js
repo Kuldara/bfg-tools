@@ -153,7 +153,7 @@ export function statsLine(v, R, esq){
     ["ARM", shortArmour(R.stats.armour), false],
     [/spore/i.test(R.stats.turretLabel || "") ? "SPORES" : "T", v.turrets.now == null ? v.turrets.text : v.turrets.now, v.turrets.now != null && v.turrets.now !== v.turrets.base],
   ]);
-  if(esq) parts.push(["HITS", R.stats.hits + " each", false]);
+  if(esq) parts.push(["HITS", v.max + " each", false]);
   return `<div class="stl">${parts.map(x => `<span class="${x[2] ? "mod" : ""}">${x[0] ? `<small>${x[0]}</small>` : ""}<b>${esc(String(x[1]))}</b></span>`).join("")}</div>`;
 }
 /* The armament as a table: badge, name, range, strength, the halved value

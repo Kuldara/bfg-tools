@@ -6,6 +6,7 @@ a tag `play-v<version>` deploys the Registry's site.
 ## Unreleased
 
 ### Added
+- A rolled or chosen refit changes the card's numbers (2.11.2026, T44): Reinforced Hull adds its 25 % to the starting hits (crippled at half of the new total) and takes 5 cm off, the shield, turret, speed and repair-die results are on the profile, Long Range Sensors is a +1 Ld modifier; the set-up's select says "on the card: 13 hits, 15 cm".
 - The set-up's upgrade dice (Mechanicus Gifts, the Imperial and Blood Axe refits, crew skills): the chosen result's text is under its select, and the whole table is the tooltip of the select and its options (2.11.2026).
 - Your own dice come first everywhere (2.11.2026, T49): Passed and Failed, a number or a result's tile lead, and the page's Roll is the dashed option after them. A failure on your own dice can spend a re-roll too. A ram's damage takes the hits you rolled, and a warp rift's distance is rolled only if asked.
 - The command check rolled if you ask (2.11.2026, RULINGS.md T49): the orders pop has Roll 2D6 against the ship's Leadership with what the page tracks; Under Fire and Enemy Contacts are chips when it does not. A pass leaves the order to tap, a failure is Check failed, and Re-roll spends one.

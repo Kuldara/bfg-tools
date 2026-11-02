@@ -529,7 +529,16 @@ project). Each has a select to pick or change it. **No re-roll** (the user, 31.1
 re-roll all buttons; an edit is like a manual input"*): the buttons roll only what
 is still without a value and are gone once everything has one, and the rolling is
 an option beside the taps; the result is printed on the card
-with its page, and its effect is not applied to the stats. **Not covered yet:** the
+with its page. **Its effect is on the card** (user 2.11.2026, a Blood Axe
+Warlord's ship with a Reinforced Hull: *"shouldn't it give more hit points?"*):
+the results that change a number change it - Reinforced Hull's +25 % hits
+(rounded up, starting hits, crippled at half of the new total, p. 65) and -5 cm,
+Additional Shield Generator, Extra Turrets, Auxiliary Power Relays, Advanced
+Engines and Advanced Drive Technology (+5 cm), Advanced Shielding, Ship
+Defence Grid, Long Range Sensors (+1 Ld, a named modifier) and Superior Damage
+Control (one repair die more); the select says "on the card: 13 hits, 15 cm".
+The rest (Evasive Jets, Targeting Matrix, special torpedoes, a crew skill) is
+text the player applies. **Not covered yet:** the
 Bakka Fleet-Admiral's rolled refits (p. 48) and the Mechanicus experimental
 cruiser (p. 124).
 
