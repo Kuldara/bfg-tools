@@ -7,6 +7,7 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 
 ### Fixed
 - The top bar's menus (Save, Saved fleets, the print setup) open in one place, under the buttons against the window's right edge, one at a time, and stay on the screen when the page scrolls.
+- Saved fleets: the open fleet can be opened again (Reopen), which brings back the saved version over the changes on the screen. Its row is first in the list and marked more clearly.
 - Changing a Warlord's clan left the Blood Axes' Imperial Navy refit taken, and its +20 on the ship. It now leaves with the clan (Fleets p. 371).
 
 ### Changed

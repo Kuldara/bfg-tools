@@ -65,7 +65,7 @@ function rowHTML(s, ctx){
   if(isOpen) tags.push(`<em class="sf-tag on">${ctx.changed ? "open, changed" : "open"}</em>`);
   if(s.from && FROM[s.from]) tags.push(`<em class="sf-tag">${FROM[s.from]}</em>`);
   const acts = `<span class="sf-acts">${
-      isOpen ? "" : `<button class="go pri" data-libopen="${esc(s.id)}" title="${esc("Open " + s.name + " on the " + s.ln + " list")}">Open</button>`
+      `<button class="go pri" data-libopen="${esc(s.id)}" title="${esc(isOpen ? "Open " + s.name + " again as it was saved, over the changes on the screen" : "Open " + s.name + " on the " + s.ln + " list")}">${isOpen ? "Reopen" : "Open"}</button>`
     }<span class="sf-more"><button class="go" data-send="${esc(s.id)}" title="${esc("Send " + s.name + " to another device, by link or as a file")}">Send</button><button class="del" data-libdel="${esc(s.id)}" title="${esc("Delete the saved fleet " + s.name)}">Delete</button></span></span>`;
   return `<div class="sf-row${isOpen ? " open" : ""}${sel ? " sel" : ""}${ctx.fresh(s.id) ? " fresh" : ""}" data-sfsel="${esc(s.id)}" role="option" aria-selected="${sel}" title="${esc(s.name)}">` +
     `<span class="sf-nm"><b>${esc(name)}</b>${tags.join("")}</span>` +
@@ -88,7 +88,8 @@ function chipsHTML(lib){
 /* The whole list: bar, chips, rows. */
 export function savedListHTML(lib, ctx){
   const st = appState.SAVES;
-  const list = shown(lib);
+  /* the open fleet first, whatever the sort (user 2.11.2026: which one is open) */
+  const list = shown(lib).sort((a, b) => (b.id === ctx.openId) - (a.id === ctx.openId));
   if(st.sel && !lib.saves.some(s => s.id === st.sel)) st.sel = null;
   const bar = `<div class="sf-bar">
     <input id="savesq" type="search" autocomplete="off" spellcheck="false" placeholder="Search ${lib.saves.length} fleets: name, list, points, date" value="${esc(st.q)}" aria-label="Search the saved fleets">

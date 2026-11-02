@@ -57,6 +57,29 @@ const SWEEP = `(async () => {
         check(where + "a menu's width, not the window's", out.every(o => o.right - o.left <= 680), out);
       }
     }
+    /* Reopen (user 2.11.2026): the open fleet's row is first and marked, and its
+       button brings back the saved version over the changes on the screen */
+    await cd.send("Emulation.setDeviceMetricsOverride", { width: 1300, height: 800, deviceScaleFactor: 1, mobile: false });
+    const r = JSON.parse(await cd.evaluate(`(async () => {
+      const G = GFR, S = () => G.appState.S, w = () => new Promise(r => setTimeout(r, 60));
+      S().units = []; G.addUnit(1, 0); G.addUnit(1, 0); G.render();
+      const mine = G.saveOpenAs("Mine", true); G.render();
+      const other = G.saveOpenAs("Other", true); G.saveOpenAs("Mine", false);
+      G.libOpen(mine.id); G.addUnit(1, 0); G.render(); await w();
+      document.querySelector("#saves > summary").click(); await w();
+      const first = document.querySelector("#savesbody .sf-row"), btn = first.querySelector("button[data-libopen]");
+      const asked = []; window.confirm = t => { asked.push(t); return true; };
+      const before = S().units.length;
+      const out = { first: first.querySelector(".sf-nm b").textContent, marked: first.classList.contains("open"), tag: first.querySelector(".sf-tag.on").textContent,
+        label: btn.textContent, before };
+      btn.click(); await w();
+      out.after = S().units.length; out.asked = asked.length; out.closed = !document.querySelector("#saves").open;
+      out.unsaved = G.openUnsaved();
+      return JSON.stringify(out);
+    })()`));
+    check("the open fleet's row is first and marked", r.first === "Mine" && r.marked && r.tag === "open, changed", r);
+    check("its button is Reopen", r.label === "Reopen", r);
+    check("Reopen brings back the saved fleet, after the one question", r.before === r.after + 1 && r.asked === 1 && r.closed && r.unsaved === false, r);
   } catch (e) {
     console.log("  FAIL  " + (e && e.stack || e)); fail++;
   } finally {
