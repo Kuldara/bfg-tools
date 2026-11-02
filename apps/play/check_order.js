@@ -58,6 +58,7 @@ const SETUP = `(() => {
     check("what was bought is said on the row", await cd.evaluate(`!!document.querySelector('.setrow[data-u="2"] .upl') && !document.querySelector('.setrow[data-u="0"] .upl')`));
     await shot("0-setup");
     await cd.evaluate(`GFP.appState.V.screen = "roster"; GFP.render(); 1`);
+    await sleep(500); /* the new screen's tap guard */
 
     /* the first card below the second */
     let from = await rect('section.row[data-u="0"] .r1 > .tag');

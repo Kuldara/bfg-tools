@@ -117,6 +117,7 @@ textarea{width:100%;min-height:120px;border-radius:8px;border:1px solid var(--li
 .seg button.sq{font-size:14px;min-width:52px}
 /* J235: the squadron switch is no Ld tile - a pill of its own under the name */
 .setrow .sqb{display:inline-flex;align-items:center;min-height:32px;margin-top:5px;padding:0 13px;border-radius:999px;border:1.5px dashed var(--sq2);background:none;color:var(--sq2);font:700 12px/1 var(--mono);letter-spacing:.04em}
+.setrow small + .sqb{margin-left:6px}
 .setrow .sqb.on{border-style:solid;background:var(--sqc);border-color:var(--sqc);color:#fff}
 /* a ship still without its Ld, and why Start is grey */
 .setrow.need{box-shadow:inset 3px 0 0 var(--warn);padding-left:9px}
