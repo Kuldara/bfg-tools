@@ -139,20 +139,22 @@ export function critChips(R, st, i){
 
 /* The spec line under the name: the profile as it stands now, a value a
    critical or crippling changed marked in the crippled colour. */
-/* The stats as tiles (user 2.11.2026: "what is big and easy to see"): the
-   number big, its label small above it; a value changed by damage in the
-   crippled colour. */
+/* The stats in one line, each in its place (user 2.11.2026: tiles made the
+   speed and the turn less clear): the label small, the number big, a value
+   changed by damage in the crippled colour. */
 export function statsLine(v, R, esq){
-  const sp = v.speed.now != null ? v.speed.now : v.speed.text + (v.speed.mods.length ? " " + v.speed.mods.map(m => m.v).join("") : "");
-  const parts = (v.still ? [["", "STATIONARY", false, ""]] : [
-    ["SPD", sp, v.speed.mods.length > 0, "cm"],
-    ["TURN", v.turns.none ? "NONE" : v.turns.text, v.turns.none, ""]]).concat([
-    ["SH", v.shields.now == null ? v.shields.text : v.shields.now, v.shields.now != null && v.shields.now !== v.shields.base, ""],
-    ["ARM", shortArmour(R.stats.armour), false, ""],
-    [/spore/i.test(R.stats.turretLabel || "") ? "SPORES" : "TURRETS", v.turrets.now == null ? v.turrets.text : v.turrets.now, v.turrets.now != null && v.turrets.now !== v.turrets.base, ""],
+  const sp = v.speed.now != null ? v.speed.now + " cm" : v.speed.text + (v.speed.mods.length ? " " + v.speed.mods.map(m => m.v).join("") : "");
+  /* a unit that does not move (Rulebook p. 100) has one word where a ship
+     has its speed and turns */
+  const parts = (v.still ? [["", "STATIONARY", false]] : [
+    ["SPD", sp, v.speed.mods.length > 0],
+    [v.turns.none ? "TURNS" : "", v.turns.none ? "NONE" : v.turns.text, v.turns.none]]).concat([
+    ["SH", v.shields.now == null ? v.shields.text : v.shields.now, v.shields.now != null && v.shields.now !== v.shields.base],
+    ["ARM", shortArmour(R.stats.armour), false],
+    [/spore/i.test(R.stats.turretLabel || "") ? "SPORES" : "T", v.turrets.now == null ? v.turrets.text : v.turrets.now, v.turrets.now != null && v.turrets.now !== v.turrets.base],
   ]);
-  if(esq) parts.push(["HITS", R.stats.hits, false, "each"]);
-  return `<div class="stt">${parts.map(x => `<span class="${x[2] ? "mod" : ""}"><small>${x[0]}</small><b>${esc(String(x[1]))}${x[3] ? `<i>${x[3]}</i>` : ""}</b></span>`).join("")}</div>`;
+  if(esq) parts.push(["HITS", R.stats.hits + " each", false]);
+  return `<div class="stl">${parts.map(x => `<span class="${x[2] ? "mod" : ""}">${x[0] ? `<small>${x[0]}</small>` : ""}<b>${esc(String(x[1]))}</b></span>`).join("")}</div>`;
 }
 /* The armament as a table: badge, name, range, strength, the halved value
    (crippled p. 65, braced p. 47, All Ahead Full etc. p. 46 - whichever the
@@ -217,7 +219,7 @@ export function weaponsLine(R, st, esq){
     const val = n == null ? String(a.strength).replace(/\s*squadrons?$/i, "") : esq ? n * alive : (!esq && a.silent ? n : cr && PLAY.num(a.now) != null ? PLAY.num(a.now) : n);
     const glyph = ps ? arcGlyph("left right").replace(/class="pick"/g, 'class="on"') : arcGlyph(a.arc);
     const title = ps ? a.name + " / " + rows[k + 1].name + ", each" : a.name;
-    return `<span class="wc${!esq && a.silent ? " off" : ""}${cr && n != null && !a.whole ? " half" : ""}" title="${esc(title)}"><i style="--bd:${badge}">${letter}</i><b>${esc(String(val))}</b>${cr && n != null && !a.whole && !a.silent ? `<s>${esq ? n * alive : n}</s>` : ""}${rangeHTML(R, a, k, "rpc")}${glyph}</span>`;
+    return `<span class="wc${!esq && a.silent ? " off" : ""}${cr && n != null && !a.whole ? " half" : ""}" title="${esc(title)}"><i style="--bd:${badge}">${letter}</i>${cr && n != null && !a.whole && !a.silent ? `<s>${esq ? n * alive : n}</s>` : ""}<b>${esc(String(val))}</b>${rangeHTML(R, a, k, "rpc")}${glyph}</span>`;
   }).join("")}</div>`;
 }
 /* The armament as a table with the numbers first (user 2.11.2026: "what is
@@ -225,7 +227,9 @@ export function weaponsLine(R, st, esq){
    does not): the badge, the strength in force now, big (halved when crippled
    p. 65, braced p. 47, All Ahead Full etc. p. 46 - whichever the table says
    applies - with the printed value small and struck beside it), the range in
-   its band's frame, the arc, and the name last, small. A port / starboard
+   its band's frame, the arc, and the name last, small. The columns keep
+   their places when a ship is crippled (user 2.11.2026): the printed value
+   stays first, small and struck, and the half beside it is the big one. A port / starboard
    pair is one row, "port and starboard, each", while both sides are the same
    in play (livePairs); a location knocked out by a critical (p. 67) parts
    the pair and is struck through with the reason. An escort squadron shows
@@ -272,12 +276,12 @@ export function weaponsTable(R, st, esq){
     const nmA = two ? esc(String(a.name).replace(/^(Port|Starboard|Stbd)\s+/i, "")) + " " + MID + " port and starboard, each" : esc(a.name);
     return `${head}<tr class="${cls}">
       <td class="bd"><span class="bg" style="--bd:${badge}">${letter}</span></td>
-      <td class="st${txt ? " txt" : ""}${cr && !keep && !silent && half !== "" ? " now" : ""}">${txt ? esc(a.strength) : cr && !keep && !silent && half !== "" ? half : (esq ? full : n)}${esq && alive !== 1 ? `<small>${TIMES}${alive}${a.nocombine ? " separate" : n != null ? " = " + full : ""}</small>` : ""}</td>
-      <td class="hf${txt ? " txt" : ""}">${silent || txt ? "" : cr && !keep ? `<s>${esq ? full : n}</s>` : half}</td>
+      <td class="st${txt ? " txt" : ""}${cr && !keep && !silent && half !== "" ? " was" : ""}">${txt ? esc(a.strength) : (esq ? full : n)}${esq && alive !== 1 ? `<small>${TIMES}${alive}${a.nocombine ? " separate" : n != null ? " = " + full : ""}</small>` : ""}</td>
+      <td class="hf${txt ? " txt" : ""}${cr && !keep && !silent && half !== "" ? " now" : ""}">${silent ? "" : half}</td>
       <td class="rg">${rangeHTML(R, a, k, "rp")}</td>
       <td class="ar">${two ? arcGlyph("left right").replace(/class="pick"/g, 'class="on"') : arcGlyph(a.arc)}</td>
       <td class="nm">${nmA}${silent ? `<small>${esc(a.silent)}</small>` : ""}</td></tr>`;
   }).join("");
-  return `<table class="wt glance${cr ? " crippled" : ""}"><thead><tr><th></th><th class="st">${cr ? "Now" : "Str"}</th><th class="hf">${cr ? "was" : "&frac12;"}</th><th class="rg">cm</th><th></th><th>Armament</th></tr></thead><tbody>${trs}</tbody></table>`;
+  return `<table class="wt glance${cr ? " crippled" : ""}"><thead><tr><th></th><th class="st">Str</th><th class="hf">&frac12;${cr ? "<small>now</small>" : ""}</th><th class="rg">cm</th><th></th><th>Armament</th></tr></thead><tbody>${trs}</tbody></table>`;
 }
 

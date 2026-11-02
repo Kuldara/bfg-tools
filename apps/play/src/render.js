@@ -578,13 +578,13 @@ export function squadronTable(units, names){
     const why = struck.length ? " " + MID + " " + struck.map(s => esc(who(s.ship)) + ": " + esc(String(s.name).toLowerCase()) + " " + esc(s.why)).join("; ") : "";
     return `<tr>
       <td class="bd"><span class="bg" style="--bd:${badge}">${letter}</span></td>
-      <td class="nm">${name}<small style="color:var(--card-mute)">${bands ? bands + " cm" : nums.map(p => PLAY.num(p.now)).join(" + ")}${lost}${dice ? " + dice on " + dice + (dice > 1 ? " rows" : " row") : ""}${r.contact ? " " + MID + " base contact (p. 99)" : ""}${why}</small></td>
-      <td class="rg">${esc(shortRange(r.range))}</td>
       <td class="st">${r.total}</td>
       <td class="hf">${half}</td>
-      <td class="ar">${arcGlyph(r.arc)}</td></tr>`;
+      <td class="rg">${esc(shortRange(r.range))}</td>
+      <td class="ar">${arcGlyph(r.arc)}</td>
+      <td class="nm">${name}<small>${bands ? bands + " cm" : nums.map(p => PLAY.num(p.now)).join(" + ")}${lost}${dice ? " + dice on " + dice + (dice > 1 ? " rows" : " row") : ""}${r.contact ? " " + MID + " base contact (p. 99)" : ""}${why}</small></td></tr>`;
   }).join("");
-  return `<table class="wt"><thead><tr><th></th><th>Combined fire${firing}</th><th>Range</th><th class="st">Str</th><th class="hf">&frac12;</th><th></th></tr></thead><tbody>${trs}</tbody></table>${diceFoot}`;
+  return `<table class="wt glance"><thead><tr><th></th><th class="st">Str</th><th class="hf">&frac12;</th><th class="rg">cm</th><th></th><th>Combined fire${firing}</th></tr></thead><tbody>${trs}</tbody></table>${diceFoot}`;
 }
 
 /* A commander's line on the card of his ship (J233: every commander's). */
@@ -668,7 +668,7 @@ export function hulkLine(R, st){
      the roll every attacker forces (p. 71); the full list is under
      CATASTROPHIC */
   const kind = st.hulk || "gone";
-  return `<div class="hulkl ${kind}">${ICON[kind] || ""}<span><b>${esc(st.hulkName).toUpperCase()}</b> ${esc(st.hulkText || "")}${st.hulk ? " " + MID + " " + esc(c.hulk.brief) : ""}</span></div>`;
+  return `<div class="hulkl ${kind}">${ICON[kind] || ""}<span><b>${esc(st.hulkName).toUpperCase()}</b>${st.hulk ? `<small>${esc(c.hulk.brief)}</small>` : ""}</span></div>`;
 }
 export function playedBtn(i){
   const p = appState.G.st[i].played | 0;
@@ -745,7 +745,7 @@ export function renderRow(i, inGroup){
   const chips = (OPT.orders && !inGroup ? ordChip(st) : "") + (v.crippled ? `<span class="chip crip">${qn}CRIPPLED</span>` : "") +
     (esq && !inGroup ? mobChip(PLAY.alive(st)) : "") +
     (v.quadGone && !v.destroyed ? `<span class="chip crip">${qn}AT 0 ${MID} ASTEROID FIELD</span>` : "") +
-    (v.destroyed ? hulkChip(st) : "") +
+    (v.destroyed && esq ? hulkChip(st) : "") +
     critChips(R, st, i) + (st.disengaged ? `<span class="chip">disengaged</span>` : "") +
     (OPT.orders ? (st.braceLock ? `<span class="chip lock">brace locked</span>` : "") + (st.boarding ? `<span class="chip lock">boarding</span>` : "") + (st.noOrdersTurn ? `<span class="chip lock">no fire/orders</span>` : "") : "");
   let r3;

@@ -285,6 +285,7 @@ select{min-height:var(--tap);border-radius:8px;border:1px solid var(--line);back
 .hulkl.blazing{background:var(--bad-wash);color:var(--bad)}
 .hulkl.gone{background:var(--cr);color:var(--cr-ink)}
 .row.dead .hulkl{opacity:1}
+.hulkl small{display:block;font:11.5px/1.3 var(--sans);color:var(--card-mute)}
 .band .hulkl{margin:0;background:none;padding:0;color:inherit}
 /* Re-roll boxes (user 5.10.2026): one per re-roll, tapped when it is used
    and tapped again if that was a slip. The colour says where it came from
@@ -311,10 +312,10 @@ select{min-height:var(--tap);border-radius:8px;border:1px solid var(--line);back
     linear-gradient(to top right,transparent calc(50% - 1.25px),var(--card-mute) calc(50% - 1.25px),var(--card-mute) calc(50% + 1.25px),transparent calc(50% + 1.25px)),
     linear-gradient(to bottom right,transparent calc(50% - 1.25px),var(--card-mute) calc(50% - 1.25px),var(--card-mute) calc(50% + 1.25px),transparent calc(50% + 1.25px))}
 .rrn{font:600 12px/1.25 var(--mono);color:var(--card-mute);flex:1 1 90px;min-width:0}
-.cmdl{display:flex;flex-wrap:wrap;align-items:center;gap:2px 6px;margin:4px 0 0;font:600 12.5px/1.2 var(--sans);color:var(--card-ink)}
+.cmdl{display:flex;flex-wrap:wrap;align-items:center;gap:2px 6px;margin:4px 0 0;font:600 12px/1.2 var(--sans);color:var(--card-ink)}
 .cmdl b{white-space:nowrap}
 .cmdl .tag{min-width:30px}
-.cmdl small{color:var(--card-mute);font-family:var(--mono);font-size:12px}
+.cmdl small{color:var(--card-mute);font:500 11px/1.2 var(--sans)}
 .pop.cata .tiles button{min-height:64px;align-items:flex-start;text-align:left}
 .pop.cata .tiles button small{white-space:normal}
 .pop.cata .hr{margin:10px 0 2px}
@@ -328,7 +329,7 @@ select{min-height:var(--tap);border-radius:8px;border:1px solid var(--line);back
 .grp-hd .r4 button{min-height:44px}
 /* the members line: a ship out of action is struck through with the
    reason, a crippled one is marked (its values are already halved) */
-.grp-hd .name small{white-space:normal;overflow:visible;text-overflow:clip}
+.grp-hd .name small{white-space:normal;overflow:visible;text-overflow:clip;font-size:11px}
 .grp-hd .name small s{color:var(--ink-3)}
 .grp-hd .name small i{font:600 10px/1 var(--mono);font-style:normal;letter-spacing:.06em;text-transform:uppercase;color:var(--bad)}
 .grp-hd .name small i.cr{color:var(--ink-2)}
@@ -779,8 +780,8 @@ details.paste .roomjoin{margin-top:6px}
 .acts .acchk{margin:8px 0;padding-left:18px;font:14px/1.5 var(--sans)}
 .acts .r4{margin-bottom:8px}
 /* What a ship carries, under its name */
-.upl{margin:3px 0 0;font:12.5px/1.3 var(--sans);color:var(--card-mute)}
-.main.compact .upl{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.upl{margin:3px 0 0;font:11.5px/1.3 var(--sans);color:var(--card-mute);opacity:.85}
+.main.compact .upl{display:none}
 .reppanel{margin:8px 0}
 .reppanel .r3{margin:0}
 .blastb{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;min-width:36px;min-height:var(--tap);border-radius:8px;border:1px solid var(--card-rule);background:var(--panel);color:var(--card-mute)}
@@ -813,25 +814,24 @@ details.paste .roomjoin{margin-top:6px}
 
 
 /* ---- the card at a glance (user 2.11.2026: what is big and easy to see) -- */
-/* the stats as tiles: the number big, its label small above it */
-.stt{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 0}
-.stt span{flex:1 1 auto;min-width:44px;padding:3px 6px 4px;border-radius:7px;background:var(--panel);border:1px solid var(--card-rule);text-align:center}
-.stt small{display:block;font:700 10px/1.1 var(--mono);letter-spacing:.06em;color:var(--card-mute)}
-.stt b{display:block;font:700 17px/1.15 var(--mono);color:var(--card-ink);white-space:nowrap}
-.stt b i{font:600 10px var(--mono);font-style:normal;color:var(--card-mute);margin-left:2px}
-.stt span.mod{border-color:var(--cr)}
-.stt span.mod b{color:var(--cr-ink)}
+/* the stats in one line: the label small, the number big */
+.stl{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 12px;margin:6px 0 2px;font-family:var(--mono)}
+.stl span{display:inline-flex;align-items:baseline;gap:4px;white-space:nowrap}
+.stl small{font:700 10.5px/1 var(--mono);letter-spacing:.06em;color:var(--card-mute)}
+.stl b{font:700 17px/1.1 var(--mono);color:var(--card-ink)}
+.stl span.mod b{color:var(--cr-ink)}
 /* the armament table: the numbers first, the name last and small */
 .wt.glance td.st{font-size:21px;padding-left:4px}
+.wt.glance td.st.was{font-size:13px;font-weight:600;color:var(--card-mute);text-decoration:line-through}
+.wt.glance td.hf.now{font-size:21px;font-weight:700;color:var(--cr-ink)}
 .wt.glance td.st,.wt.glance th.st{text-align:left}
 .wt.glance td.hf,.wt.glance th.hf{text-align:left;font-size:15px}
 .wt.glance td.nm{min-width:0;width:100%;font:12px/1.2 var(--sans);color:var(--card-mute)}
 .wt.glance td.nm small{display:block}
+.wt.glance td.nm small s{color:var(--bad)}
 .wt.glance td.ar{width:30px;text-align:left}
 .wt.glance .arcg{width:24px;height:24px}
-.wt.glance.crippled td.st{opacity:1;font-weight:700}
-.wt.glance td.st.now{color:var(--cr-ink)}
-.wt.glance td.hf s{color:var(--card-mute);font-weight:600;font-size:13px}
+.wt.glance.crippled td.st{opacity:1}
 .wt.glance tr.silent td.st{text-decoration:line-through;color:var(--card-mute)}
 .wt.glance th{font-size:10px}
 /* the compact row's chips: the number big, no names */

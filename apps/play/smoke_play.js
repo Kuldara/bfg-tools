@@ -377,7 +377,7 @@ function run(check){
     check("smoke: the Lunar's pairs are one row each: 3 rows, the strength first and the name last",
           trs === 3 && (lunarRow.match(/port and starboard, each/g) || []).length === 2 && /<td class="bd">[^]*?<td class="st">[^]*?<td class="nm">/.test(lunarRow) && !/Port weapons battery/.test(strip(lunarRow)),
           trs + " rows: " + strip(lunarRow).slice(0, 220));
-    check("smoke: the stats are tiles with the number big", /class="stt"/.test(lunarRow) && /<small>SPD<\/small><b>20<i>cm<\/i>/.test(lunarRow), (lunarRow.match(/class="stt".{0,120}/) || [""])[0]);
+    check("smoke: the stats are one line with the number big", /class="stl"/.test(lunarRow) && /<small>SPD<\/small><b>20 cm<\/b>/.test(lunarRow), (lunarRow.match(/class="stl".{0,120}/) || [""])[0]);
     /* v1.2 J183: one range in a frame of its band's colour (30 cm: #E69F00) */
     check("smoke: the ranges are framed in their band's colour as on the card (30 cm band) and the unit is in the heading", /class="rp"[^>]*--rb:#E69F00/.test(lunarRow) && /<th class="rg">cm<\/th>/.test(lunarRow), (lunarRow.match(/.{0,60}class="rp.{0,60}/) || [""])[0]);
     P(`act("pop", LU, "crit"); act("crit", LU, "4"); act("pop", LU, "crit")`);
