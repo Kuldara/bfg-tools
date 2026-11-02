@@ -9,6 +9,8 @@ import { peerHas, withPeer } from "./peer.js";
 import { esc } from "../../../packages/ui/format.js";
 import { TERR_SHORT } from "../../../packages/ui/celestial.js";
 import PLAY from "../rules.js";
+import { LISTS } from "../../../packages/ui/catalog.js";
+import { resolveFleet } from "./fleet-document.js";
 
 /* ======================================================= A SHIP'S ACTIONS == */
 /* The Actions button on a ship's card: what a ship may try beside moving and
@@ -35,7 +37,7 @@ function testLd(i){
   return lds.length ? Math.max.apply(null, lds) - (appState.G.fleet.radiation | 0) : null;
 }
 /* the first free re-roll, the fleet's or the ship's own */
-function freeRR(i){
+export function freeRR(i){
   const G = appState.G;
   for(const [pool, who] of [[G.fleet, -1], [G.st[i], i]]){
     const k = PLAY.rerollBoxes(pool).findIndex(b => !b.used && !b.lost);
@@ -47,7 +49,7 @@ function freeRR(i){
 export function shipAct(name, el){
   const V = appState.V;
   const argS = () => el.getAttribute("data-arg");
-  if(name === "actions"){ V.actions = { i: parseInt(el.getAttribute("data-i"), 10), tab: "", size: 1, armour: 5, hits: 8, headOn: false, blast: 0, enemies: 0, celestial: false, res: null }; render(); return true; }
+  if(name === "actions"){ V.actions = { i: parseInt(el.getAttribute("data-i"), 10), tab: "", size: 1, armour: 5, hits: 8, headOn: false, blast: 0, enemies: 0, celestial: false, boats: false, cat: "", res: null }; render(); return true; }
   const A = V.actions;
   if(!A) return false;
   const st = appState.G.st[A.i];
@@ -68,6 +70,21 @@ export function shipAct(name, el){
     const j = parseInt(argS(), 10);
     withPeer(() => { const R = appState.U[j].R; A.size = PLAY.ramSize(R); A.hits = PLAY.ramDice(R); A.armour = PLAY.frontArmour(R) || A.armour; A.foe = j; });
     A.res = null; render(); return true;
+  }
+  /* a class from the books fills the target in (user 2.11.2026: without the
+     opponent's fleet linked, three dials were the only way) */
+  if(name === "acfoecat"){
+    const v = String(el.value || "");
+    A.cat = v; A.foe = null; A.res = null;
+    const m = /^(\d+)\|(\d+)\|(\d+)$/.exec(v);
+    if(m){
+      const L = LISTS[+m[1]], sec = L && L.secs[+m[2]], en = sec && sec.ents[+m[3]];
+      const res = en ? resolveFleet({ ln: L.nm, limit: 0, units: [{ s: +m[2], e: +m[3], ref: en.r, n: 1, opts: [], os: {}, name: "", sn: sec.t, el: en.l }] }) : null;
+      const R = res && !res.error && res.units[0] && res.units[0].R;
+      if(R && R.kind === "ship"){ A.size = PLAY.ramSize(R); A.hits = PLAY.ramDice(R); A.armour = PLAY.frontArmour(R) || A.armour; }
+      else A.cat = "";
+    }
+    render(); return true;
   }
   if(name === "acdis"){
     const ld = PLAY.disengageLd(testLd(A.i), A.blast, A.celestial, A.enemies);
@@ -96,7 +113,8 @@ export function shipAct(name, el){
   }
   if(name === "actele"){
     const how = argS(), d = how === "roll" ? PLAY.d6() : parseInt(how, 10);
-    act("teleported", A.i);
+    /* an assault boat's raid is the ordnance's, not the ship's one a turn */
+    if(!A.boats) act("teleported", A.i);
     A.res = { d: d, how: how };
     render(); return true;
   }
@@ -150,6 +168,36 @@ export function shipAct(name, el){
   return false;
 }
 
+/* ------------------------------------------- the command check (p. 48) --- */
+/* The Leadership a special order is checked against (T49): the page's own view
+   of the ship, or the squadron's highest (p. 95), with what it tracks; Under
+   Fire and Enemy Contacts are the pop's chips when it does not. */
+export function orderLd(i){
+  const fl = appState.G.fleet, g = appState.G.grp[i], P = appState.V.pop || {};
+  const l = g ? PLAY.squadronLd(groupUnits(g).map(j => ({ R: appState.U[j].R, st: appState.G.st[j] })), fl) : PLAY.leadership(appState.U[i].R, appState.G.st[i], fl);
+  if(l.now == null) return null;
+  return Math.max(0, Math.min(10, l.now + (!OPT.blast && P.uf ? -1 : 0) + (!OPT.fleet && P.ec ? 1 : 0)));
+}
+/* Roll 2D6 in the orders pop: a pass leaves the order to tap, a failure is
+   Check failed (through act, so UNDO takes it back); Re-roll spends one. */
+export function orderAct(name, el){
+  const P = appState.V.pop;
+  if(!P || P.kind !== "order" || !/^ord(mod|roll|rr)$/.test(name)) return false;
+  const i = P.i;
+  if(name === "ordmod"){ const k = el.getAttribute("data-arg"); P[k] = !P[k]; P.res = null; render(); return true; }
+  if(name === "ordrr"){
+    const free = freeRR(i);
+    if(!free || !P.res || P.res.ok) return true;
+    act("undo"); act("rrbox", free.who, free.k);
+  }
+  const ld = orderLd(i);
+  if(ld == null) return true;
+  const dice = rollN(2), ok = sum(dice) <= ld;
+  const keep = { i: i, kind: "order", uf: P.uf, ec: P.ec, res: { dice: dice, ld: ld, ok: ok } };
+  if(!ok) act("orderfail", i);
+  appState.V.pop = keep; render(); return true;
+}
+
 /* ------------------------------------------------------------- the sheet --- */
 const chip = (act2, arg, label, on, extra) => `<button class="bchip${on ? " on" : ""}" data-act="${act2}" data-arg="${esc(String(arg))}"${extra || ""}>${label}</button>`;
 const stepper = (f, val, sub) => `<div class="steprow"><button data-act="acset" data-arg="${f}:-1" aria-label="Less">&minus;</button><div class="val">${val}<small>${sub}</small></div><button data-act="acset" data-arg="${f}:+1" aria-label="More">+</button></div>`;
@@ -172,7 +220,7 @@ function renderMain(i){
     row("board", "Board", "base contact, End Phase (Rulebook p. 89)"),
     still ? "" : row("ram", "Ram", "All Ahead Full, the dice and the damage (p. 55)"),
     still ? "" : row("dis", "Disengage", st.noOrdersTurn ? "failed this turn: no fire, no orders but Brace (p. 57)" : "end of the Movement Phase, Leadership test (p. 56)"),
-    bar === "escort" ? "" : row("tele", "Teleport attack", bar || "End Phase, shields down, within 10 cm (p. 92)", !!bar),
+    bar === "escort" ? "" : row("tele", "Hit-and-run", "teleport attack, or an assault boat's raid (pp. 85, 92)"),
     row("cel", "Celestial phenomena", "asteroids, clouds, warp rifts, planets, flares (pp. 109-115)")
   ].join("");
 }
@@ -210,8 +258,12 @@ function renderRam(i){
   else step = `<p class="acres ok">You rolled ${r.mine.join(" ")}${r.auto ? " + power ram" : ""}: <b>${r.dealt} hit${r.dealt === 1 ? "" : "s"} on them</b>, no shields (p. 55). Tell them.</p>
       <p class="acres ${r.taken ? "bad" : "ok"}">They rolled ${r.theirs.join(" ")} against ${r.front}+: <b>${r.taken} hit${r.taken === 1 ? "" : "s"} on this ship</b>${r.taken ? ", marked" : ""}.</p>
       <p class="foot">An explosion is resolved now and catches both ships. Then finish the move; it may board only a ship it touches at the end of it (p. 56).</p>`;
+  /* the books' classes when the opponent's fleet is not linked: one pick fills
+     the three values below */
+  const cat = foes ? "" : `<p class="aclab">Their ship</p><select class="acsel" data-sel="ramfoe" aria-label="Their ship's class, from the books"><option value="">pick a class, or set the values below</option>${LISTS.map((L, li) =>
+    `<optgroup label="${esc(L.nm)}">${L.secs.map((s, si) => s.ents.map((e, ei) => { const v = li + "|" + si + "|" + ei; return `<option value="${v}"${A.cat === v ? " selected" : ""}>${esc(e.l || "")}</option>`; }).join("")).join("")}</optgroup>`).join("")}</select>`;
   return `<p class="foot">Pass All Ahead Full, name the target, test Leadership, and only then roll the extra distance. One ram per Movement Phase; the choice cannot change (p. 55).</p>${own}
-    ${foes ? `<p class="aclab">Their ship</p><div class="bchips">${foes}</div>` : ""}
+    ${foes ? `<p class="aclab">Their ship</p><div class="bchips">${foes}</div>` : cat}
     <p class="aclab">Target</p><div class="bchips">${PLAY.RAM_SIZES.map((s, k) => chip("acset", "size:" + k, s[0].toUpperCase() + s.slice(1), A.size === k)).join("")}</div>
     <p class="aclab">Its armour where you hit it</p><div class="bchips">${[3, 4, 5, 6].map(v => chip("acset", "armour:" + v, v + "+", A.armour === v)).join("")}</div>
     <p class="aclab">Its starting hits</p>${stepper("hits", A.hits, "not what it has left")}
@@ -219,12 +271,20 @@ function renderRam(i){
     <p class="actotal">Ld ${ld} ${MID} <b>${n}D6, ${ld} or under</b>${n === 3 ? " (smaller target)" : n === 1 ? " (larger target)" : " (same size)"}</p>
     ${step}${backBtn}`;
 }
+/* One Hit-and-Run attack (p. 92): a teleport attack, with the ship's own
+   conditions, or an assault boat squadron's raid (p. 85). Own dice as well
+   (user 2.11.2026: the other helpers took them, this one did not). */
 function renderTele(i){
-  const r = appState.V.actions.res;
-  const out = !r ? `<div class="r4"><button data-act="actele" data-arg="roll">Roll D6</button></div>`
-    : r.d <= 1 ? `<p class="acres bad"><b>${r.d}: failed.</b></p>`
-    : `<p class="acres ok"><b>${r.d}.</b> Tell them: critical ${r.d} on their table, repaired as normal (p. 92); an escort is destroyed on 4+.</p>`;
-  return `<ul class="acchk"><li>End Phase, on Lock On or Reload Ordnance</li><li>The target has no shields and is within 10 cm</li><li>The target has no more hits left than this ship</li><li>Not crippled; one a turn</li></ul>
+  const A = appState.V.actions, r = A.res, boats = !!A.boats, bar = boats ? "" : teleportBar(i);
+  const mode = `<div class="bchips">${chip("acset", "boats:false", "Teleport attack", !boats)}${chip("acset", "boats:true", "Assault boats", boats)}</div>`;
+  const dice = `<div class="bchips">${chip("actele", "roll", "Roll D6", false)}${[1, 2, 3, 4, 5, 6].map(d => chip("actele", d, d, false)).join("")}</div>`;
+  const out = r ? (r.d <= 1 ? `<p class="acres bad"><b>${r.d}: failed.</b></p>`
+      : `<p class="acres ok"><b>${r.d}.</b> Tell them: critical ${r.d} on their table, repaired as normal (p. 92); an escort is destroyed on 4+.</p>`)
+    : bar ? `<p class="foot">This ship may not teleport now: ${esc(bar)}.</p>` : dice;
+  const list = boats
+    ? `<ul class="acchk"><li>End Phase: one raid for each assault boat squadron that reached the ship; the boats then return to their carrier to be reloaded (p. 85)</li></ul>`
+    : `<ul class="acchk"><li>End Phase, on Lock On or Reload Ordnance</li><li>The target has no shields and is within 10 cm</li><li>The target has no more hits left than this ship</li><li>Not crippled; one a turn</li></ul>`;
+  return `${mode}${list}
     <p class="foot">One Hit-and-Run attack: a 1 fails, 2 or more is that result on the Critical Hits table. A fleet's bonus to Hit-and-Run is yours to add (p. 92).</p>
     ${out}${backBtn}`;
 }
@@ -281,7 +341,7 @@ function renderCel(i){
 export function renderActions(){
   const A = appState.V.actions, i = A.i;
   const celName = A.tab === "cel" && A.cel ? CEL.find(c => c[0] === A.cel)[1] : "Celestial phenomena";
-  const title = { ram: "Ram", dis: "Disengage", tele: "Teleport attack", cel: celName }[A.tab] || "Actions";
+  const title = { ram: "Ram", dis: "Disengage", tele: "Hit-and-run", cel: celName }[A.tab] || "Actions";
   const body = A.tab === "ram" ? renderRam(i) : A.tab === "dis" ? renderDis(i) : A.tab === "tele" ? renderTele(i) : A.tab === "cel" ? renderCel(i) : renderMain(i);
   return `<div class="menu acts" data-act="acclose"><div class="box">
     <div class="mhd"><h2>${title}: ${esc(unitName(i))}</h2><button class="x" data-act="acclose" aria-label="Close">${CLOSE}</button></div>

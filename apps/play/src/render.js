@@ -14,7 +14,7 @@ import DOMAIN from "../../../packages/rules/domain.js";
 import { boardNoteLine, renderBoardSheet } from "./board.js";
 import { rosterOrder } from "./reorder.js";
 import { BURST, repairBtn, repairLines, repairPanel } from "./repair.js";
-import { renderActions } from "./ship-actions.js";
+import { freeRR, orderLd, renderActions } from "./ship-actions.js";
 import { edgeHandle, peerAfterRender, peerLoadCard, peerMenuWord, peerSetupCard, peerSide, renderPeerPanel, renderPeerSide, sidesStrip } from "./peer.js";
 
 /* ============================================================= RENDER ===== */
@@ -403,12 +403,12 @@ export function renderSetup(){
   return `<div class="top"><h1>Set up<small>${esc(appState.G.ln)} ${MID} ${fleetPoints(appState.U)} pts</small></h1>
       <div class="tools">${builderTool()}${started ? toolBtn("start", "undo", "Game", { off: !ready, tip: "Back to the game" }) : `<button class="tool" data-act="newgame" title="Back to the fleets: this set-up is not kept">Exit</button>`}</div></div>
     ${sidesStrip()}
-    <div class="main">${peerSetupCard()}${factsCard()}<div class="card"><h2>Leadership</h2>
+    <div class="main"><div class="card"><h2>Leadership</h2>
       ${ldGuide()}${rollBar()}
       <p>Tap the value each ship fights on, or let Roll Ld roll the ships still without one. SQN groups capital ships into a squadron: one Ld, one order, combined fire (p. 95, 99). Tap a ship's name to give it another one for this game.${appState.L0.clanz ? " Da Ork Clanz: a Warlord may swap Leadership with any one ship or escort squadron under his command (Fleets p. 374) - tap the swapped values." : ""}${anyFixed ? " Planetary defences do not roll: their checks are made on Ld 7 (Rulebook p. 100)." : ""}</p>
       ${frrRow}${rows}
       <button class="btn" data-act="start" ${ready ? "" : "disabled"}>${started ? "Back to the game" : "Start the game"}</button>
-      ${ready ? "" : `<p class="why">To start, pick the Ld of ${missing.length === 1 ? "one more ship" : missing.length + " more ships"}: ${missing.map(i => `<button data-act="seek" data-i="${i}">${esc(unitName(i))}</button>`).join(", ")}</p>`}</div></div>${edgeHandle()}`;
+      ${ready ? "" : `<p class="why">To start, pick the Ld of ${missing.length === 1 ? "one more ship" : missing.length + " more ships"}: ${missing.map(i => `<button data-act="seek" data-i="${i}">${esc(unitName(i))}</button>`).join(", ")}</p>`}</div>${factsCard()}${peerSetupCard()}</div>${edgeHandle()}`;
 }
 
 /* The roster's cards in their order, squadrons under their heads: the
@@ -839,7 +839,7 @@ export function renderPop(i){
       <button class="close" data-act="closepop">close</button></div>`;
   }
   if(kind === "order"){
-    const l = appState.G.grp[i] ? PLAY.squadronLd(groupUnits(appState.G.grp[i]).map(j => ({ R: appState.U[j].R, st: appState.G.st[j] })), fl) : PLAY.leadership(R, st, fl);
+    const P = appState.V.pop, ld = orderLd(i), res = P.res;
     /* only the orders this unit may take at all (R.orders): a planetary
        defence Reload Ordnance and Brace (Rulebook p. 100), a star fort and
        a Haven Lock On as well (Fleets p. 503, 111, 334) - its own rule
@@ -847,16 +847,26 @@ export function renderPop(i){
     const tiles = PLAY.ordersFor(R).filter(o => o.id !== "BFI").map(o =>
       `<button class="${st.order === o.id ? "on" : ""}" data-act="order" data-i="${i}" data-arg="${o.id}" ${PLAY.canOrder(st, fl, o.id, R) || st.order === o.id ? "" : "disabled"}>${esc(o.name)}${appState.V.info ? `<small>${esc(o.line)}</small>` : ""}</button>`).join("");
     const only = R.orders ? slotRule("orders") : "";
-    return `<div class="pop"><h4>Special orders ${MID} check vs Ld ${l.now == null ? "?" : l.now}</h4>
-      <p>${fl.orderLock ? "A check failed this turn: no more orders except Brace (p. 48)." : st.braceTurn ? "Braced: no other orders this turn (p. 47)." : "Tap an order = declared and passed. One per ship or squadron per turn (p. 46, 95)."}</p>
+    /* The check itself (p. 48), rolled if asked (T49): what the page tracks is in
+       the Ld already; Under Fire and Enemy Contacts are chips here when it does
+       not. A failure locks the fleet as Check failed does; UNDO takes it back.
+       Boarding and disengaging are not orders: they live in Actions and on the
+       card's Status (user 2.11.2026). */
+    const locked = fl.orderLock || st.braceTurn;
+    const rr = res && !res.ok && freeRR(i);
+    const mods = (OPT.blast ? "" : `<button class="bchip${P.uf ? " on" : ""}" data-act="ordmod" data-i="${i}" data-arg="uf">Under fire: &minus;1</button>`)
+      + (OPT.fleet ? "" : `<button class="bchip${P.ec ? " on" : ""}" data-act="ordmod" data-i="${i}" data-arg="ec">Enemy contacts: +1</button>`);
+    const check = ld == null || locked ? "" : `${mods ? `<div class="bchips">${mods}</div>` : ""}
+      ${res ? `<p class="acres ${res.ok ? "ok" : "bad"}"><b>${res.dice.join(" ")} = ${res.dice[0] + res.dice[1]}</b> against Ld ${res.ld}: <b>${res.ok ? "passed." : "failed."}</b> ${res.ok ? "Tap the order." : "No more orders this turn except Brace (p. 48)."}</p>${rr ? `<button class="btn sec" data-act="ordrr" data-i="${i}">Re-roll<small>uses one re-roll</small></button>` : ""}`
+          : `<div class="r4"><button data-act="ordroll" data-i="${i}">Roll 2D6<small>${ld} or under</small></button></div>`}`;
+    return `<div class="pop"><h4>Special orders ${MID} check vs Ld ${ld == null ? "?" : ld}</h4>
+      <p>${fl.orderLock ? "A check failed this turn: no more orders except Brace (p. 48)." : st.braceTurn ? "Braced: no other orders this turn (p. 47)." : "Tap an order = declared and passed, or roll the check first. One per ship or squadron per turn (p. 46, 95)."}</p>
       ${only ? `<p>${esc(only)}</p>` : ""}
+      ${check}
       <div class="tiles">${tiles}
         <button class="bad" data-act="orderfail" data-i="${i}" ${fl.orderLock ? "disabled" : ""}>Check failed<small>locks the fleet</small></button>
         <button class="warn" data-act="bracefail" data-i="${i}" ${st.braceLock ? "disabled" : ""}>Brace failed<small>p. 47</small></button>
         ${st.braceLock ? `<button class="ok" data-act="bracelock" data-i="${i}">Attacker done<small>brace again</small></button>` : ""}
-        <button class="${st.boarding ? "on" : ""}" data-act="boarding" data-i="${i}">Boarding<small>no fire this turn p. 89</small></button>
-        ${v.still ? "" : `<button class="${st.noOrdersTurn ? "on" : ""}" data-act="nofire" data-i="${i}">Disengage failed<small>no fire/orders p. 57</small></button>
-        <button class="${st.disengaged ? "on" : ""}" data-act="diseng" data-i="${i}">Disengaged<small>left the table p. 57</small></button>`}
         ${st.order || st.braceTurn ? `<button data-act="clearorder" data-i="${i}">Clear order</button>` : ""}
       </div>
       <button class="close" data-act="closepop">close</button></div>`;
@@ -909,6 +919,8 @@ export function renderPop(i){
     const tiles = c.rows.map((r, k) => `<button class="${r.kind === "gone" ? "bad" : (st.hulk === r.kind && st.hulkName === r.name ? "on" : "")}" data-act="hulk" data-i="${i}" data-arg="${k}"><b>${esc(r.roll)}</b>${esc(r.name)}<small>${r.extra ? esc(r.extra) + " " + MID + " " : ""}${esc(r.text)}</small></button>`).join("");
     return `<div class="pop cata"><h4>${esc(c.title)}${c.dice ? " " + MID + " roll " + c.dice : ""} ${MID} ${c.fleets ? "Fleets" : "Rulebook"} p. ${c.page}</h4>
       <p>${esc(unitName(i))} ${v.fort ? "has all four quadrants at 0 hits (" + R.stats.hits + " each to start)" : "is at 0 hits (" + R.stats.hits + " to start)"}. ${esc(c.note)}</p>
+      ${c.dice && !st.hulkName ? `<div class="r4"><button data-act="hulkroll" data-i="${i}">Roll ${esc(c.dice)}<small>the page marks the result</small></button></div>` : ""}
+      ${appState.V.pop.res ? `<p class="acres">Rolled <b>${appState.V.pop.res}</b>: ${esc(st.hulkName || "")}</p>` : ""}
       <div class="tiles c2">${tiles}
         ${c.boarded ? `<button data-act="hulk" data-i="${i}" data-arg="boarded">Boarded to 0<small>no roll: a drifting hulk (p. 90)</small></button>` : ""}
       </div>
@@ -967,12 +979,13 @@ export function renderSheet(i){
   /* a unit that cannot move cannot leave the table either (p. 56: the
      test is made "at the end of its Movement Phase"; p. 101: defences
      "always remain in place"): no disengage switches for it */
+  /* Disengaging is in Actions (the test, p. 56-57); here only the way back for
+     a ship marked disengaged by mistake (user 2.11.2026). */
   const flagBtns = [
       OPT.ordnance && !esq ? ordnancePills(i, v) : "",
       OPT.orders ? `<button class="${st.boarding ? "on" : ""}" data-act="boarding" data-i="${i}">boarding declared</button>` : "",
-      OPT.orders && !v.still ? `<button class="${st.noOrdersTurn ? "on bad" : ""}" data-act="nofire" data-i="${i}">disengage failed</button>` : "",
       OPT.orders && st.braceLock ? `<button class="on bad" data-act="bracelock" data-i="${i}">brace locked: attacker done</button>` : "",
-      v.still ? "" : `<button class="${st.disengaged ? "on" : ""}" data-act="diseng" data-i="${i}">disengaged (VP, p. 57)</button>`
+      st.disengaged ? `<button class="on" data-act="diseng" data-i="${i}">disengaged (VP, p. 57) ${MID} tap to take back</button>` : ""
     ].join("");
   const flags = flagBtns ? `<div class="sec"><h3>Status</h3><div class="flags">${flagBtns}</div></div>` : "";
   const rules = R.rules.slice();

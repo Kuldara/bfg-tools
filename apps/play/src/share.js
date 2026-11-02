@@ -1,5 +1,5 @@
 import { rosterOrder } from "./reorder.js";
-import { anyRepairRoll, repairBtn, repairLines } from "./repair.js";
+import { anyRepairRoll, repairPanel } from "./repair.js";
 import { appState } from "./state.js";
 import { builderRaw, lsGet, lsSet } from "./storage.js";
 import { MID, TIMES, fnv } from "./helpers.js";
@@ -152,19 +152,20 @@ export function renderEndPhase(){
     const crits = PLAY.activeCrits(st, R);
     if(!crits.length) return "";
     const nm = c => { const cm = R.damage.critical, row = cm && cm.rows.find(r => String(r[0]) === c.key); return String(row ? row[1] : (c.def ? c.def.name : c.key)).replace(/\s*\*\s*$/, ""); };
-    const reps = crits.map(c => repairable(R, c.key)
-      ? `<button data-act="repair" data-i="${i}" data-arg="${esc(c.key)}"><b>${esc(c.key)}</b> ${esc(nm(c))}${c.count > 1 ? " " + TIMES + c.count : ""}<small>tap when repaired</small></button>`
-      : `<span class="perm"><b>${esc(c.key)}</b> ${esc(nm(c))} ${MID} no repair (p. 67)</span>`).join("");
+    /* the repair is the critical table's own Repair, here as well (user 2.11.2026:
+       the per-result "tap when repaired" buttons were a third way to the same
+       thing); what cannot be repaired is said */
+    const perm = crits.filter(c => !repairable(R, c.key)).map(c => `<span class="perm"><b>${esc(c.key)}</b> ${esc(nm(c))} ${MID} no repair (p. 67)</span>`).join("");
     const fire = PLAY.standardCrits(R) && crits.some(c => c.key === "7");
     const n = fire ? Math.max(1, PLAY.fireDamage(R, st)) : 0;
     const times = st.fireTurn === fl.turn ? st.fireN | 0 : 0;
     const fireBtn = fire ? `<button class="fireb${times ? " done" : ""}" data-act="fire" data-i="${i}">Fire not put out: +${n} hit${n > 1 ? "s" : ""}<small>${times ? "added " + times + TIMES + " this turn" : "after the repair rolls (p. 67)"}</small></button>` : "";
     return `<div class="eprow" style="--kd:${factionCols(R.entry ? R.entry.list : appState.G.ln, R.source.faction || "")[0]}"><div class="ephd"><b>${esc(unitName(i))}</b><small>damage control ${v.repairDice}D6${R.damage.repair && R.damage.repair !== DOMAIN.REPAIR_LINE ? " " + MID + " " + esc(R.damage.repair) : ", a 6 repairs one (p. 88)"}</small></div>
-      ${repairBtn(i)}${repairLines(i)}<div class="eprep">${reps}</div>${fireBtn}</div>`;
+      ${repairPanel(i)}${perm ? `<div class="eprep">${perm}</div>` : ""}${fireBtn}</div>`;
   }).join("");
   return `<div class="menu endp" data-act="endph"><div class="box">
     <h2>End phase</h2>
-    <p class="foot">Both players repair in every End Phase (p. 88). Roll the dice shown, tap what was repaired, then a fire left burning costs a hit (p. 67); a ship's Crit table can roll for you. Blast Markers in contact halve the dice.</p>
+    <p class="foot">Both players repair in every End Phase (p. 88): Repair rolls the ship's dice and you tap what it fixes; then a fire left burning costs a hit (p. 67). Blast Markers in contact halve the dice.</p>
     ${anyRepairRoll() ? `<button class="btn" data-act="repairall">Repair all<small>roll for every ship below</small></button>` : ""}
     ${rows || `<p class="foot">Nothing to repair.</p>`}
     <button class="btn sec" data-act="endph">Done</button>
@@ -173,17 +174,22 @@ export function renderEndPhase(){
 
 /* A reminder at the change of turn, never damage (user 1.11.2026): the fires still
    burning whose hit has not gone on this turn. It sits in the bottom bar, above its
-   buttons, so nothing moves under a finger; a name goes to that ship. */
+   buttons, so nothing moves under a finger. A name's tap IS the hit (user
+   2.11.2026: it only scrolled, and a Hit on the card left the reminder standing);
+   the name then stays, ticked and dimmed, so the others do not shift. */
 export function fireReminder(){
   if(!appState.V.fireWarn) return "";
-  const G = appState.G, ships = [];
+  const G = appState.G, ships = []; let open = 0;
   appState.U.forEach((x, i) => {
     const R = x.R, st = G.st[i];
-    if(R.kind !== "ship" || PLAY.destroyed(R, st) || !PLAY.standardCrits(R) || st.fireTurn === G.fleet.turn) return;
+    if(R.kind !== "ship" || PLAY.destroyed(R, st) || !PLAY.standardCrits(R)) return;
     const n = PLAY.fireDamage(R, st);
-    if(n) ships.push(`<button data-act="jump" data-i="${i}">${esc(unitName(i))}${n > 1 ? " " + TIMES + n : ""}</button>`);
+    if(!n) return;
+    const done = st.fireTurn === G.fleet.turn;
+    if(!done) open++;
+    ships.push(`<button class="${done ? "done" : ""}" data-act="fire" data-i="${i}"${done ? " disabled" : ""}>${esc(unitName(i))}${n > 1 ? " " + TIMES + n : ""}${done ? " &#10003;" : ""}</button>`);
   });
-  return ships.length ? `<div class="firewarn"><span>Fires burning, tap each for its hit (p. 67):</span>${ships.join("")}<button class="x" data-act="firewarn" aria-label="Dismiss">&#10005;</button></div>` : "";
+  return open ? `<div class="firewarn"><span>Fires burning, tap each for its hit (p. 67):</span>${ships.join("")}<button class="x" data-act="firewarn" aria-label="Dismiss">&#10005;</button></div>` : "";
 }
 
 /* ------------------------------------------------- the strip of ships --- */

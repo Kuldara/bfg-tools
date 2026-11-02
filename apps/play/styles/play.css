@@ -779,9 +779,11 @@ details.paste .roomjoin{margin-top:6px}
 .acts .aclab{margin:10px 0 4px;font:600 13px/1.25 var(--sans);color:var(--ink-2)}
 .acts .acgap{margin-top:10px}
 .acts .actotal{margin:12px 0 8px;font:14px/1.35 var(--mono)}
-.acts .acres{margin:10px 0;padding:8px 10px;border-radius:8px;background:var(--sunk);font:14px/1.4 var(--sans)}
-.acts .acres.ok{border-left:4px solid var(--ok)}
-.acts .acres.bad{border-left:4px solid var(--bad)}
+.acts .acres,.pop .acres{margin:10px 0;padding:8px 10px;border-radius:8px;background:var(--sunk);font:14px/1.4 var(--sans)}
+.acts .acres.ok,.pop .acres.ok{border-left:4px solid var(--ok)}
+.acts .acres.bad,.pop .acres.bad{border-left:4px solid var(--bad)}
+.acts select.acsel{display:block;width:100%;min-height:40px;margin:0 0 10px;padding:0 8px;font:14px var(--sans);border:1px solid var(--line);border-radius:9px;background:var(--panel);color:var(--ink)}
+.firewarn button.done{opacity:.55;border-color:var(--line);background:none;color:var(--ink-3)}
 .acts .acchk{margin:8px 0;padding-left:18px;font:14px/1.5 var(--sans)}
 .acts .r4{margin-bottom:8px}
 /* What a ship carries, under its name */

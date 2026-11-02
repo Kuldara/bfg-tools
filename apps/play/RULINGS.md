@@ -592,6 +592,18 @@ success is a repair the player spends by tapping what to fix, even with only one
 kind on the ship; a counter says how many are left of how many, and Done leaves the rest. The menu's Auto repair brings back the first form described above.
 The table offers Full repair and Half repair side by side, with the reason (p. 88); with Blast Markers tracked the ship's state marks one, and the other stays on offer.
 
+**T49. The command check, rolled if asked.** **The user's decision 2.11.2026.**
+The orders pop rolls 2D6 against the Leadership the page shows (p. 48): Under Fire
+-1 and Enemy Contacts +1 when they are tracked, and as the player's chips when
+they are not; a radiation burst is in it (p. 115); never above 10. A pass leaves
+the order to tap, so the roll adds one tap to the fast path and none to a tapped
+order; a failure is Check failed (fleet locked except Brace, p. 48), and one
+re-roll may be spent on it. The same page rolls catastrophic damage on the hulk's
+table (D6 or 2D6, the row marked), and the Hit-and-Run die for a teleport attack
+or an assault boat's raid (pp. 85, 92). Disengaging and boarding are not orders:
+Actions has them (T46), the orders pop and the card's Status do not, except the
+way back for a ship marked disengaged by mistake.
+
 ## What is not tracked, and why
 
 - The strength of torpedo salvoes and attack craft markers on the table

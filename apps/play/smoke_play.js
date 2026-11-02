@@ -405,7 +405,7 @@ function run(check){
     P(`act("endph")`);
     const ep = P(`renderEndPhase()`);
     clean("the End Phase panel", ep);
-    check("smoke: ... it offers the repairs and the fire, and says the bridge cannot be repaired (p. 67)", new RegExp('data-act="repair" data-i="' + P(`GO`) + '" data-arg="7"').test(ep) && !/data-arg="9"/.test(ep) && /no repair \(p\. 67\)/.test(strip(ep)) && /data-act="fire"/.test(ep), strip(ep).slice(0, 300));
+    check("smoke: ... it offers the Repair roll and the fire, and says the bridge cannot be repaired (p. 67)", new RegExp('data-act="repairroll" data-i="' + P(`GO`) + '"').test(ep) && !/tap when repaired/.test(ep) && /no repair \(p\. 67\)/.test(strip(ep)) && /data-act="fire"/.test(ep), strip(ep).slice(0, 300));
     const h0 = P(`G.st[GO].hits`);
     P(`act("fire", GO); act("fire", GO)`);
     check("smoke: the fire button adds its hit each time and counts it: both players' End Phases (p. 88)", P(`G.st[GO].hits`) === h0 + 2 && /added 2/.test(strip(P(`renderEndPhase()`))), P(`G.st[GO].hits`) + " " + strip(P(`renderEndPhase()`)).slice(0, 200));

@@ -99,6 +99,17 @@ export function act(name, i, arg){
   }
   if(name === "closepop"){ appState.V.pop = null; render(); return; }
   if(name === "critpick"){ appState.V.pop = { i: i, kind: "crit", x: arg ? String(arg) : null }; render(); return; }
+  /* the catastrophic damage roll, if asked (T49): the page finds the row and
+     marks it through "hulk", so UNDO takes it back */
+  if(name === "hulkroll"){
+    const R = appState.U[i] && appState.U[i].R, c = R ? PLAY.catastrophic(R) : null, m = c ? /^(\d*)D6$/.exec(String(c.dice || "")) : null;
+    if(!m) return;
+    let t = 0; for(let k = 0; k < (parseInt(m[1], 10) || 1); k++) t += PLAY.d6();
+    const row = c.rows.findIndex(r => { const p = String(r.roll).split("-"); return p.length === 2 ? t >= +p[0] && t <= +p[1] : +p[0] === t; });
+    if(row < 0) return;
+    act("hulk", i, row);
+    appState.V.pop = { i: i, kind: "hulk", res: t }; render(); return;
+  }
   if(name === "page"){
     /* a page is a scroll position: jump there, nothing re-renders */
     if(!appState.V.pageTops) return;

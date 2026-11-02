@@ -7,7 +7,7 @@ import { render, tapSel } from "./render.js";
 import { builderFleets, copyText, forgetLinked, linkedFleets, openSend, takeFleetText } from "./share.js";
 import { peerAct } from "./peer.js";
 import { boardAct } from "./board.js";
-import { shipAct } from "./ship-actions.js";
+import { orderAct, shipAct } from "./ship-actions.js";
 
 /* ============================================================== EVENTS ===== */
 document.addEventListener("touchstart", () => {}, { passive: true });   /* :active on iOS */
@@ -34,6 +34,7 @@ document.addEventListener("click", ev => {
   if(peerAct(name, el)) return;
   if(boardAct(name, el)) return;
   if(shipAct(name, el)) return;
+  if(orderAct(name, el)) return;
   const i = el.hasAttribute("data-i") ? parseInt(el.getAttribute("data-i"), 10) : null;
   let arg = el.hasAttribute("data-arg") ? el.getAttribute("data-arg") : undefined;
   if(arg != null && /^-?\d+$/.test(arg)) arg = parseInt(arg, 10);
@@ -74,6 +75,8 @@ document.addEventListener("change", ev => {
   if(el.getAttribute("data-sel") === "on") act("on", parseInt(el.getAttribute("data-i"), 10), parseInt(el.value, 10));
   /* a pre-game upgrade chosen by hand (T44) */
   if(el.getAttribute("data-sel") === "pre") act("pre", parseInt(el.getAttribute("data-i"), 10), { key: el.getAttribute("data-key"), v: el.value });
+  /* a ram's target picked from the books (T46) */
+  if(el.getAttribute("data-sel") === "ramfoe") shipAct("acfoecat", el);
 });
 
 /* the set-up screen's Leadership guide stays as the player left it: the

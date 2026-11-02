@@ -6,6 +6,16 @@ a tag `play-v<version>` deploys the Registry's site.
 ## Unreleased
 
 ### Added
+- The command check rolled for you (2.11.2026, RULINGS.md T49): the orders pop has Roll 2D6 against the ship's Leadership with what the page tracks; Under Fire and Enemy Contacts are chips when it does not. A pass leaves the order to tap, a failure is Check failed, and Re-roll spends one.
+- Catastrophic damage rolled for you: Roll D6 or 2D6 on the hulk's table marks the row.
+- Hit-and-run covers an assault boat's raid as well as a teleport attack, and takes your own die (1 to 6).
+- A ram's target picked from the books: without the opponent's fleet linked, a class from any list fills its size, armour and hits.
+
+### Changed
+- Fewer places for one thing (2.11.2026): Disengage and Boarding are out of the orders pop and the card's Status (Actions has them; Status keeps only the way back for a ship marked disengaged by mistake); the End Phase lists Repair and the fire, not a button per result; the fire reminder's names add the hit themselves and stay ticked.
+- The set-up screen starts with Leadership; Fleet facts and the opponent's room come after it.
+
+### Added
 - The set-up rows show each ship's price and what was bought for it (2.11.2026), so two ships of one class can be told apart before they are named.
 - A tab icon that is a ship from above, not a warning triangle (1.11.2026); the installed app's icons as well.
 - Your own order of the cards (1.11.2026): drag a card by the small tag at its head. A squadron moves as a whole, UNDO takes it back, and the strip of ships follows.
