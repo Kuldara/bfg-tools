@@ -6,6 +6,7 @@ a tag `play-v<version>` deploys the Registry's site.
 ## Unreleased
 
 ### Added
+- The set-up rows show each ship's price and what was bought for it (2.11.2026), so two ships of one class can be told apart before they are named.
 - A tab icon that is a ship from above, not a warning triangle (1.11.2026); the installed app's icons as well.
 - Your own order of the cards (1.11.2026): drag a card by the small tag at its head. A squadron moves as a whole, UNDO takes it back, and the strip of ships follows.
 - The ship's name can be changed on its card.

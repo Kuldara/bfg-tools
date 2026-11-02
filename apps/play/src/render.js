@@ -357,7 +357,7 @@ export function renderSetup(){
       const pick = !caps.length ? "" : caps.length === 1
         ? `<span class="pill on">aboard ${esc(unitName(caps[0]))}</span>`
         : `<select data-sel="${fc ? "flag" : "on"}" data-i="${i}" aria-label="Aboard">${caps.map(j => `<option value="${j}" ${cur === j ? "selected" : ""}>aboard ${esc(unitName(j))}</option>`).join("")}</select>`;
-      return `<div class="setrow"><div class="who"><b>${esc(unitName(i))}</b><small>${ldTxt}${rrWords(R)}</small>${rowDice(i).pre}</div>
+      return `<div class="setrow"><div class="who"><b>${esc(unitName(i))}</b><small>${R.points ? R.points + " pts" + (ldTxt ? " " + MID + " " : "") : ""}${ldTxt}${rrWords(R)}</small>${rowDice(i).pre}</div>
         ${pick}</div>`;
     }
     if(R.kind !== "ship") return "";
@@ -383,8 +383,11 @@ export function renderSetup(){
        the squadron switch is a pill of its own under the name,
        away from the Ld tiles; a ship still without its Ld is marked */
     const need = st.ld == null;
+    /* two ships of one class are told apart by what was paid and bought for them
+       (user 2.11.2026) */
+    const taken = PLAY.takenFeatures(R);
     const sqBtn = sqn ? `<button class="sqb${appState.G.grp[i] ? " on" : ""}" data-act="grp" data-i="${i}"${appState.G.grp[i] ? ` style="--sqc:${sqColor(appState.G.grp[i])}"` : ""} title="Squadron: tap for A, B, C or none (p. 95, 99)">${appState.G.grp[i] ? "SQN " + appState.G.grp[i] : "+ SQN"}</button>` : "";
-    return `<div class="setrow${need ? " need" : ""}" data-u="${i}"><div class="who"><input class="nm" type="text" data-nm="${i}" value="${esc(unitName(i))}" placeholder="${esc(baseName(i))}" maxlength="40" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" aria-label="Name of this ship in the game"><small>${classTag(R)}${esq ? " " + TIMES + R.hulls + (fx ? "" : isEscGrp(appState.G.grp[i]) ? " " + MID + " one Ld for squadron " + grpLabel(appState.G.grp[i]) + " (" + groupUnits(appState.G.grp[i]).length + " cards)" : " " + MID + " one Ld for the squadron") : ""}${why}${youngGunzNote(i)}${rowDice(i).line}${need ? ` ${MID} <span class="needs">pick its Ld</span>` : ""}</small>${sqBtn}${rowDice(i).pre}</div>
+    return `<div class="setrow${need ? " need" : ""}" data-u="${i}"><div class="who"><input class="nm" type="text" data-nm="${i}" value="${esc(unitName(i))}" placeholder="${esc(baseName(i))}" maxlength="40" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" aria-label="Name of this ship in the game"><small>${classTag(R)}${esq ? " " + TIMES + R.hulls : ""}${R.points ? " " + MID + " " + R.points + " pts" : ""}${esq ? (fx ? "" : isEscGrp(appState.G.grp[i]) ? " " + MID + " one Ld for squadron " + grpLabel(appState.G.grp[i]) + " (" + groupUnits(appState.G.grp[i]).length + " cards)" : " " + MID + " one Ld for the squadron") : ""}${why}${youngGunzNote(i)}${rowDice(i).line}${need ? ` ${MID} <span class="needs">pick its Ld</span>` : ""}</small>${taken.length ? `<p class="upl">${taken.map(esc).join(" " + MID + " ")}</p>` : ""}${sqBtn}${rowDice(i).pre}</div>
       <div class="ctl">${fixed ? `<span class="pill on"><b>Ld ${st.ld}</b></span>` : `<div class="seg ld">${tiles}</div>`}</div></div>`;
   }).join("");
   /* a grey Start says why, and each name takes you to its row */

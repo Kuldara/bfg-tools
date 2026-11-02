@@ -14,7 +14,7 @@ const sleep = ms => new Promise(r => setTimeout(r, ms));
 const SETUP = `(() => {
   const G = GFP, L = G.LISTS.find(l => l.nm === "Imperial Navy \\u2014 Gothic Sector");
   const find = re => { const s = L.secs.findIndex(x => x.ents.some(e => re.test(e.l || ""))); const e = L.secs[s].ents.findIndex(x => re.test(x.l || "")); const en = L.secs[s].ents[e]; return { s, e, ref: en.r, n: 1, opts: [], os: {}, name: "", sn: L.secs[s].t, el: en.l }; };
-  const res = G.resolveFleet({ ln: L.nm, limit: 1500, units: [find(/^Lunar/), find(/^Dictator/), find(/^Lunar/), find(/^Gothic/)] });
+  const res = G.resolveFleet({ ln: L.nm, limit: 1500, units: [find(/^Lunar/), find(/^Dictator/), Object.assign(find(/^Lunar/), { opts: [0] }), find(/^Gothic/)] });
   if(res.error) throw new Error(res.error);
   G.newGame(res);
   G.appState.G.st.forEach((st, i) => { if(st.ld == null) G.setLd(i, 8); });
@@ -47,6 +47,17 @@ const SETUP = `(() => {
     const first = await names();
     check("the fleet's order to begin with", /^Lunar 1$/i.test(first[0]) && /^Dictator$/i.test(first[1]), first);
     await shot("1-start");
+
+    /* the set-up tells the two Lunars apart by what was paid and bought */
+    await cd.evaluate(`GFP.appState.V.screen = "setup"; GFP.render(); 1`);
+    const rowOf = i => cd.evaluate(`document.querySelector('.setrow[data-u="${i}"] .who').innerText`);
+    const plain = await rowOf(0), bought = await rowOf(2);
+    const ptsOf = s => +(/(\d+) pts/.exec(s) || [])[1];
+    check("the set-up shows the price", ptsOf(plain) === await cd.evaluate(`GFP.appState.U[0].R.points`), plain);
+    check("an upgrade raises the price shown", ptsOf(bought) > ptsOf(plain), [plain, bought]);
+    check("what was bought is said on the row", await cd.evaluate(`!!document.querySelector('.setrow[data-u="2"] .upl') && !document.querySelector('.setrow[data-u="0"] .upl')`));
+    await shot("0-setup");
+    await cd.evaluate(`GFP.appState.V.screen = "roster"; GFP.render(); 1`);
 
     /* the first card below the second */
     let from = await rect('section.row[data-u="0"] .r1 > .tag');
