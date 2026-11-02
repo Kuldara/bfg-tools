@@ -13,6 +13,7 @@ a tag `play-v<version>` deploys the Registry's site.
 - A ram's target picked from the books: without the opponent's fleet linked, a class from any list fills its size, armour and hits.
 
 ### Changed
+- The card at a glance (2.11.2026): the stats are tiles with the number big; the armament table leads with the badge and the strength in force now, big (the printed value small and struck beside it when halved), then the range, the arc, and the name last and small; a port / starboard pair is one row, "port and starboard, each", until a critical parts it. The compact row's chips are larger, with the strength now and the printed value, and no names.
 - Fewer places for one thing (2.11.2026): Disengage and Boarding are out of the orders pop and the card's Status (Actions has them; Status keeps only the way back for a ship marked disengaged by mistake); the fire reminder's names add the hit themselves and stay ticked.
 - The set-up screen starts with Leadership; Fleet facts and the opponent's room come after it.
 

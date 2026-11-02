@@ -217,10 +217,6 @@ select{min-height:var(--tap);border-radius:8px;border:1px solid var(--line);back
 .row .grpline{font:600 12px var(--mono);color:var(--acc);margin-top:4px}
 
 /* spec line and weapons table on the row */
-.stl{display:flex;flex-wrap:wrap;gap:2px 6px;margin:4px 0 0;font:600 12px/1.4 var(--mono);color:var(--card-mute)}
-.stl b{color:var(--card-ink);font-size:13px}
-.stl span.mod b{color:var(--cr-ink)}
-.stl em{font-style:normal;color:var(--card-rule)}
 .wt{width:100%;border-collapse:collapse;margin:6px 0 0;font-size:13px;table-layout:auto}
 .wt th{font:700 12px/1.2 var(--mono);color:var(--card-mute);text-align:left;padding:0 3px 2px;letter-spacing:.03em}
 .wt th.st,.wt th.hf{text-align:right}
@@ -235,7 +231,6 @@ select{min-height:var(--tap);border-radius:8px;border:1px solid var(--line);back
 .wt td.rg{white-space:nowrap;font:12px var(--mono);color:var(--card-mute)}
 .wt td.st,.wt td.hf{text-align:right;font:700 16px/1.1 var(--mono);white-space:nowrap}
 .wt td.st small{display:block;font:600 12px var(--mono);color:var(--card-mute)}
-.wt td.st i.ea{display:block;font:600 11px/1.1 var(--mono);font-style:normal;color:var(--card-mute)}
 .wt td.hf{color:var(--card-mute)}
 .wt.crippled tr:not(.nohalf) td.st{opacity:.4;font-weight:600}
 .wt td.st.txt,.wt td.hf.txt{font:600 12px/1.2 var(--mono);white-space:normal;color:var(--card-mute);text-align:right}
@@ -506,9 +501,6 @@ select{min-height:var(--tap);border-radius:8px;border:1px solid var(--line);back
    badge, one range and one strength "each" (two rows high); no line between
    the pair's own rows, so it reads as one weapon; the range in a frame of
    its band's colour */
-.wt td.bd[rowspan]{position:relative}
-.wt .bg.tall{position:absolute;left:0;top:5px;bottom:5px;width:20px;height:auto;line-height:1;display:flex;align-items:center;justify-content:center}
-.wt tr[data-pair="2"] td{border-top-color:transparent}
 .wt .rp{display:inline-block;min-width:2.1em;text-align:center;border:2px solid var(--rb);border-radius:6px;padding:0 4px;margin:-2px 0;
   background:var(--panel);color:var(--card-ink);font:700 14px/18px var(--mono)}
 .wt .rp.l{font-size:12px}
@@ -528,8 +520,8 @@ select{min-height:var(--tap);border-radius:8px;border:1px solid var(--line);back
 .main.compact .rrb{margin:4px 0 0}
 .wline{display:flex;flex-wrap:wrap;gap:3px 5px;margin:4px 0 0}
 .wc{display:inline-flex;align-items:center;gap:3px;padding:1px 4px 1px 1px;border-radius:5px;border:1px solid var(--card-rule);background:var(--panel)}
-.wc i{display:inline-block;width:17px;height:17px;line-height:17px;text-align:center;border-radius:4px;background:var(--bd);color:#fff;font:700 11px var(--mono);font-style:normal}
-.wc b{font:700 14px/1 var(--mono);color:var(--card-ink)}
+.wc i{display:inline-block;text-align:center;background:var(--bd);color:#fff;font-style:normal}
+.wc b{font-family:var(--mono);font-weight:700;line-height:1;color:var(--card-ink)}
 .wc em{font:600 11px/1 var(--mono);font-style:normal;color:var(--card-mute)}
 .wc .arcg{width:15px;height:15px}
 .wc.half b{color:var(--cr-ink)}
@@ -820,7 +812,7 @@ details.paste .roomjoin{margin-top:6px}
 .r4 button.rollb,.bchip.rollb,.btn.rollb{border-style:dashed}
 
 
-/* ---- prototypes 2.11.2026: what is big and easy to see ---------------- */
+/* ---- the card at a glance (user 2.11.2026: what is big and easy to see) -- */
 /* the stats as tiles: the number big, its label small above it */
 .stt{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 0}
 .stt span{flex:1 1 auto;min-width:44px;padding:3px 6px 4px;border-radius:7px;background:var(--panel);border:1px solid var(--card-rule);text-align:center}
@@ -829,7 +821,7 @@ details.paste .roomjoin{margin-top:6px}
 .stt b i{font:600 10px var(--mono);font-style:normal;color:var(--card-mute);margin-left:2px}
 .stt span.mod{border-color:var(--cr)}
 .stt span.mod b{color:var(--cr-ink)}
-/* proto A: the numbers first */
+/* the armament table: the numbers first, the name last and small */
 .wt.glance td.st{font-size:21px;padding-left:4px}
 .wt.glance td.st,.wt.glance th.st{text-align:left}
 .wt.glance td.hf,.wt.glance th.hf{text-align:left;font-size:15px}
@@ -842,16 +834,13 @@ details.paste .roomjoin{margin-top:6px}
 .wt.glance td.hf s{color:var(--card-mute);font-weight:600;font-size:13px}
 .wt.glance tr.silent td.st{text-decoration:line-through;color:var(--card-mute)}
 .wt.glance th{font-size:10px}
-/* proto B: chips, large, no table */
-.wline.big{gap:5px 6px;margin-top:6px}
-.wline.big .wc{flex:1 1 150px;min-width:0;gap:6px;padding:4px 7px 4px 4px;border-radius:8px;flex-wrap:wrap;align-items:center}
-.wline.big .wc i{width:24px;height:24px;line-height:24px;font-size:13px;border-radius:5px}
-.wline.big .wc b{font-size:20px}
-.wline.big .wc s{font:600 12px/1 var(--mono);color:var(--card-mute);text-decoration:line-through}
-.wline.big .wc .rpc{font-size:13px;line-height:18px;padding:0 5px}
-.wline.big .wc .arcg{width:22px;height:22px}
-.wline.big .wc small{flex:1 0 100%;font:11.5px/1.2 var(--sans);color:var(--card-mute);margin-top:-1px}
-.wline.big .wc.off b,.wline.big .wc.off small{text-decoration:line-through}
-.wline.big .wc.off{opacity:.55}
-.wline.big .wc.off b{text-decoration:line-through}
-.main.compact .wline.big .wc{flex:0 1 auto}
+/* the compact row's chips: the number big, no names */
+.wline{gap:5px 6px;margin-top:6px}
+.wline .wc{flex:0 1 auto;min-width:0;gap:6px;padding:4px 7px 4px 4px;border-radius:8px;flex-wrap:wrap;align-items:center}
+.wline .wc i{width:24px;height:24px;line-height:24px;font-size:13px;border-radius:5px}
+.wline .wc b{font-size:20px}
+.wline .wc s{font:600 12px/1 var(--mono);color:var(--card-mute);text-decoration:line-through}
+.wline .wc .rpc{font-size:13px;line-height:18px;padding:0 5px}
+.wline .wc .arcg{width:22px;height:22px}
+.wline .wc.off{opacity:.55}
+.wline .wc.off b{text-decoration:line-through}

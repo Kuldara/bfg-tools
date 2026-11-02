@@ -368,23 +368,21 @@ function run(check){
        var LU = U.findIndex(x => /^LUNAR/i.test(x.R.className || "")), GO = U.findIndex(x => /^GOTHIC/i.test(x.R.className || "")), SW = U.findIndex(x => /^SWORD/i.test(x.R.className || ""));
        U.forEach((x, i) => { if(x.R.kind === "ship" && G.st[i].ld == null) setLd(i, 8); }); act("start", null);`);
     check("smoke: a new screen takes no taps for a moment (a double tap must not pick on the next screen)", P(`V.guardUntil > Date.now() && V.lastScreen === "roster"`) === true);
-    /* the Lunar (Fleets p. 37): port and starboard batteries and lances are
-       pairs the way the printed card draws them (v1.2 J188, the user's
-       choice C: two rows with their own names and arcs, one badge, one
-       range and one strength "each"; ONE merged row was rejected as busy) */
+    /* the Lunar (Fleets p. 37): the numbers first (user 2.11.2026), and a
+       port / starboard pair one row, "port and starboard, each", while both
+       sides are the same in play (livePairs) */
     const lunarRow = P(`renderRow(LU, false)`);
     clean("the Lunar's row with its port/starboard pairs", lunarRow);
     const trs = (lunarRow.match(/<tr[ >]/g) || []).length - 1;   /* minus the heading row */
-    check("smoke: the Lunar's pairs are drawn as on the card: 5 rows, 2 pairs sharing badge, range and strength 'each'",
-          trs === 5 && (lunarRow.match(/data-pair="1"/g) || []).length === 2 && (lunarRow.match(/data-pair="2"/g) || []).length === 2 &&
-          (lunarRow.match(/rowspan="2"/g) || []).length >= 6 && /each/.test(strip(lunarRow)) && /Port weapons battery/.test(strip(lunarRow)) &&
-          (/Starboard weapons battery/.test(strip(lunarRow)) || (/Stbd weapons battery/.test(strip(lunarRow)) && /title="Starboard weapons battery"/.test(lunarRow))),
+    check("smoke: the Lunar's pairs are one row each: 3 rows, the strength first and the name last",
+          trs === 3 && (lunarRow.match(/port and starboard, each/g) || []).length === 2 && /<td class="bd">[^]*?<td class="st">[^]*?<td class="nm">/.test(lunarRow) && !/Port weapons battery/.test(strip(lunarRow)),
           trs + " rows: " + strip(lunarRow).slice(0, 220));
+    check("smoke: the stats are tiles with the number big", /class="stt"/.test(lunarRow) && /<small>SPD<\/small><b>20<i>cm<\/i>/.test(lunarRow), (lunarRow.match(/class="stt".{0,120}/) || [""])[0]);
     /* v1.2 J183: one range in a frame of its band's colour (30 cm: #E69F00) */
-    check("smoke: the ranges are framed in their band's colour as on the card (30 cm band) and the unit is in the heading", /class="rp"[^>]*--rb:#E69F00/.test(lunarRow) && /Range cm/.test(strip(lunarRow)), (lunarRow.match(/.{0,60}class="rp.{0,60}/) || [""])[0]);
+    check("smoke: the ranges are framed in their band's colour as on the card (30 cm band) and the unit is in the heading", /class="rp"[^>]*--rb:#E69F00/.test(lunarRow) && /<th class="rg">cm<\/th>/.test(lunarRow), (lunarRow.match(/.{0,60}class="rp.{0,60}/) || [""])[0]);
     P(`act("pop", LU, "crit"); act("crit", LU, "4"); act("pop", LU, "crit")`);
     const struck = P(`renderRow(LU, false)`);
-    check("smoke: Port Armament Damaged (p. 67) parts the pairs: the port rows struck through on their own, starboard whole", !/data-pair=/.test(struck) && (struck.match(/<tr class="silent/g) || []).length === 2, strip(struck).slice(0, 260));
+    check("smoke: Port Armament Damaged (p. 67) parts the pairs: 5 rows, the port rows struck through with the reason, starboard whole", (struck.match(/<tr[ >]/g) || []).length - 1 === 5 && (struck.match(/<tr class="silent/g) || []).length === 2 && /Port weapons battery/.test(strip(struck)) && /Starboard weapons battery/.test(strip(struck)), strip(struck).slice(0, 260));
     /* the compact view */
     P(`V.compact = true`);
     const croster = P(`renderRoster()`);
