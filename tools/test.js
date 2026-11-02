@@ -55,6 +55,7 @@ const STEPS = [
   ["registry",  "fleet links (Chrome)",    ["node", "apps/registry/check_links.js"], { slow: true }],
   ["registry",  "ship info (Chrome)",      ["node", "apps/registry/check_info.js"], { slow: true }],
   ["registry",  "Blood Axe escorts (Chrome)", ["node", "apps/registry/check_bloodaxe.js"], { slow: true }],
+  ["registry",  "Top bar menus (Chrome)", ["node", "apps/registry/check_menus.js"], { slow: true }],
   ["registry",  "Ork Clanz UI (Chrome)",   ["node", "apps/registry/metrics/clanz.js", "--mode=browse"], { slow: true }],
   ["play",      "rules and smoke",         ["node", "apps/play/test_play.js"]],
   ["play",      "fleets into boarding",    ["node", "apps/play/test_board_link.js"]],

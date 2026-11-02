@@ -166,6 +166,7 @@ $("#saves").ontoggle = () => {
 };
 $("#printset").ontoggle = placeSaves;
 window.onresize = placeSaves;
+if(window.addEventListener) window.addEventListener("scroll", placeSaves, { passive: true });
 $("#ppaper").onchange = e => setPrint(e.target.value, null);
 $("#pscale").onchange = e => setPrint(null, e.target.value);
 $("#printset").onclick = e => {
