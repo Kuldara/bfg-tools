@@ -139,10 +139,16 @@ const dice = a => `(() => { const q = ${JSON.stringify(a.map(f => (f - 0.5) / 6)
     }
     await tap('[data-act="acclose"]');
 
-    /* teleport is shut for a crippled ship (p. 92) */
+    /* teleport is shut for a crippled ship (p. 92); the row stays open for an
+       assault boat's raid, which takes a die */
     await cd.evaluate(`(() => { GFP.appState.G.st[1].hits = 5; GFP.render(); return 1; })()`);
     await open(1);
-    check("a crippled ship may not teleport (p. 92)", await cd.evaluate(`document.querySelector('[data-act="actab"][data-arg="tele"]').disabled`));
+    await tap('[data-act="actab"][data-arg="tele"]');
+    check("a crippled ship may not teleport (p. 92)", /may not teleport now: crippled/.test(await cd.evaluate(`document.querySelector(".acts .box").innerText`)) && !(await cd.evaluate(`!!document.querySelector('[data-act="actele"]')`)));
+    await tap('[data-act="acset"][data-arg="boats:true"]');
+    check("... but its assault boats may raid, with the player's own die", !!(await cd.evaluate(`document.querySelector('[data-act="actele"][data-arg="5"]')`)));
+    await tap('[data-act="actele"][data-arg="5"]');
+    check("the die says the critical, and the ship is not marked as having teleported", /critical 5/.test(await cd.evaluate(`document.querySelector(".acts .box").innerText`)) && !(await cd.evaluate(`!!GFP.appState.G.st[1].teleported`)));
   }finally{ await cd.close(); }
   console.log((fail ? "FAIL " : "ok ") + pass + " passed, " + fail + " failed");
   process.exit(fail ? 1 : 0);
