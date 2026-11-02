@@ -314,7 +314,10 @@ function rollBar(){
   return ldBtn || preBtn ? `<div class="rollbar">${ldBtn}${preBtn}</div>` : "";
 }
 /* the row's dice: the Leadership's die and sum; one select per pre-game
-   roll, to pick by hand or change what was rolled */
+   roll, to pick by hand or change what was rolled. The chosen result's short
+   text sits under the select, and the whole table is the tooltip of the
+   select and of each option (user 2.11.2026). */
+const plain = t => String(t == null ? "" : t).replace(/<[^>]+>/g, "").replace(/&ndash;/g, "-").replace(/&amp;/g, "&");
 function rowDice(i){
   const st = appState.G.st[i], p = ldPlanOf(i);
   const ld = st.ldWhy && st.ld != null ? ` ${MID} <span class="dice">${st.ldDie == null ? "" : "rolled "}${esc(st.ldWhy)}</span>` : "";
@@ -323,11 +326,16 @@ function rowDice(i){
     const v = (st.pre || {})[r.key];
     const cur = v ? (r.two ? v.k + "-" + v.d : String(v.d)) : "";
     const opts = r.two
-      ? IN_REFITS.map((T, t) => `<optgroup label="${esc(T.roll + " " + T.name)}">${T.rows.map((x, d) => { const val = (2 * t + 1) + "-" + (d + 1); const sel = v && inRefitKind(v.k) === T && v.d === d + 1; return `<option value="${val}"${sel ? " selected" : ""}>${esc(T.name.replace(/ refit$/, ""))} ${d + 1}: ${esc(x[0])}</option>`; }).join("")}</optgroup>`).join("")
-      : [1, 2, 3, 4, 5, 6].map(d => `<option value="${d}"${cur === String(d) ? " selected" : ""}>${d}${r.rows ? " " + esc(r.rows[d - 1][0]) : ""}</option>`).join("");
+      ? IN_REFITS.map((T, t) => `<optgroup label="${esc(T.roll + " " + T.name)}">${T.rows.map((x, d) => { const val = (2 * t + 1) + "-" + (d + 1); const sel = v && inRefitKind(v.k) === T && v.d === d + 1; return `<option value="${val}"${sel ? " selected" : ""} title="${esc(plain(x[1]))}">${esc(T.name.replace(/ refit$/, ""))} ${d + 1}: ${esc(x[0])}</option>`; }).join("")}</optgroup>`).join("")
+      : [1, 2, 3, 4, 5, 6].map(d => `<option value="${d}"${cur === String(d) ? " selected" : ""}${r.rows ? ` title="${esc(plain(r.rows[d - 1][1]))}"` : ""}>${d}${r.rows ? " " + esc(r.rows[d - 1][0]) : ""}</option>`).join("");
+    /* the table in full as the tooltip, and the chosen row's text under the select */
+    const table = r.two ? IN_REFITS.map(T => T.roll + " " + T.name + ":\n" + T.rows.map((x, d) => "  " + (d + 1) + " " + plain(x[0]) + " - " + plain(x[1])).join("\n")).join("\n")
+      : r.rows ? r.rows.map((x, d) => (d + 1) + " " + plain(x[0]) + " - " + plain(x[1])).join("\n") : "";
+    const row = v ? (r.two ? inRefitKind(v.k).rows[v.d - 1] : r.rows ? r.rows[v.d - 1] : null) : null;
+    const desc = row && row[1] ? `<em class="predesc">${row[1]}</em>` : "";
     const choose = r.key === "gift" && st.giftChoice ? ` <em class="dice">natural 6 on Ld: may choose (Fleets p. 118)</em>` : "";
     const how = v ? (v.how === "roll" ? "rolled" : "chosen") : (r.pick ? "pick" : "to roll");
-    return `<label class="pre${v ? "" : " open"}"><span>${esc(r.title)} <i>${how}</i></span><select data-sel="pre" data-i="${i}" data-key="${r.key}" aria-label="${esc(r.title)}"><option value="">${r.pick ? "choose" : "roll or choose"}</option>${opts}</select>${choose}</label>`;
+    return `<label class="pre${v ? "" : " open"}"><span>${esc(r.title)} <i>${how}</i></span><select data-sel="pre" data-i="${i}" data-key="${r.key}" aria-label="${esc(r.title)}"${table ? ` title="${esc(table)}"` : ""}><option value="">${r.pick ? "choose" : "roll or choose"}</option>${opts}</select>${choose}${desc}</label>`;
   }).join("");
   return { line: ld + man, pre: pre ? `<div class="pres">${pre}</div>` : "" };
 }
