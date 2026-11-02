@@ -6,7 +6,7 @@ import { fleetFactsNow, fleetPoints, fleetsIn, parseDoc, resolveFleet } from "./
 import { KEY_WAKE, builderTool, carriersOf, cmdsAboard, coCmd, grpLabel, isEscGrp, ldPlanOf, ldRollers, loadPlay, preCounts, preRollsOf, sqnShip, toolBtn, wl2Box, wlExtra, wlTag } from "./game-state.js";
 import { IN_REFITS, inRefitKind, pregameRolls, pregameText } from "../../../packages/ui/pregame-tables.js";
 import { cataLabel, critLabel, groupUnits } from "./actions.js";
-import { upgradeLine, baseName, classTag, crippledNow, critChips, ldTile, memberWord, ordChip, ordnancePills, renderFleetPop, statsLine, unitName, weaponsLine, weaponsTable } from "./derived.js";
+import { upgradeLine, baseName, classTag, crippledNow, critChips, ldTile, memberWord, ordChip, ordnancePills, renderFleetPop, statsLine, statsTiles, unitName, weaponsLine, weaponsTable } from "./derived.js";
 import { builderFleets, endPending, fireReminder, jumpStrip, linkedFleets, renderEndPhase } from "./share.js";
 import PLAY from "../rules.js";
 import { arcGlyph, esc, factionCols, shortArmour, shortRange, starHTML, title } from "../../../packages/ui/format.js";
@@ -790,8 +790,8 @@ export function renderRow(i, inGroup){
     ${upgradeLine(i)}
     ${cmdsAboard(i).map(cmdLine).join("")}${shipRRLine(i)}
     ${v.fort && !v.destroyed ? quadSelector(i, v) : ""}
-    ${v.destroyed && !esq ? hulkLine(R, st) : statsLine(v, R, esq)}
-    ${v.destroyed && !esq ? "" : compact ? weaponsLine(R, st, esq) : weaponsTable(R, st, esq)}
+    ${v.destroyed && !esq ? hulkLine(R, st) : appState.V.proto ? statsTiles(v, R, esq) : statsLine(v, R, esq)}
+    ${v.destroyed && !esq ? "" : compact ? weaponsLine(R, st, esq, appState.V.proto ? 2 : false) : appState.V.proto === "B" ? weaponsLine(R, st, esq, true) : weaponsTable(R, st, esq)}
     ${R.ruleCard && !v.destroyed && !compact ? ruleSteps(R) : ""}
     <div class="r3">${r3}${chips}${repairBtn(i)}</div>
     ${r4}

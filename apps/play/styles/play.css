@@ -818,3 +818,40 @@ details.paste .roomjoin{margin-top:6px}
 /* the page's roll is the option after the player's own dice: quieter, never first */
 .pop .aclab{margin:10px 0 4px;font:600 13px/1.25 var(--sans);color:var(--ink-2)}
 .r4 button.rollb,.bchip.rollb,.btn.rollb{border-style:dashed}
+
+
+/* ---- prototypes 2.11.2026: what is big and easy to see ---------------- */
+/* the stats as tiles: the number big, its label small above it */
+.stt{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 0}
+.stt span{flex:1 1 auto;min-width:44px;padding:3px 6px 4px;border-radius:7px;background:var(--panel);border:1px solid var(--card-rule);text-align:center}
+.stt small{display:block;font:700 10px/1.1 var(--mono);letter-spacing:.06em;color:var(--card-mute)}
+.stt b{display:block;font:700 17px/1.15 var(--mono);color:var(--card-ink);white-space:nowrap}
+.stt b i{font:600 10px var(--mono);font-style:normal;color:var(--card-mute);margin-left:2px}
+.stt span.mod{border-color:var(--cr)}
+.stt span.mod b{color:var(--cr-ink)}
+/* proto A: the numbers first */
+.wt.glance td.st{font-size:21px;padding-left:4px}
+.wt.glance td.st,.wt.glance th.st{text-align:left}
+.wt.glance td.hf,.wt.glance th.hf{text-align:left;font-size:15px}
+.wt.glance td.nm{min-width:0;width:100%;font:12px/1.2 var(--sans);color:var(--card-mute)}
+.wt.glance td.nm small{display:block}
+.wt.glance td.ar{width:30px;text-align:left}
+.wt.glance .arcg{width:24px;height:24px}
+.wt.glance.crippled td.st{opacity:1;font-weight:700}
+.wt.glance td.st.now{color:var(--cr-ink)}
+.wt.glance td.hf s{color:var(--card-mute);font-weight:600;font-size:13px}
+.wt.glance tr.silent td.st{text-decoration:line-through;color:var(--card-mute)}
+.wt.glance th{font-size:10px}
+/* proto B: chips, large, no table */
+.wline.big{gap:5px 6px;margin-top:6px}
+.wline.big .wc{flex:1 1 150px;min-width:0;gap:6px;padding:4px 7px 4px 4px;border-radius:8px;flex-wrap:wrap;align-items:center}
+.wline.big .wc i{width:24px;height:24px;line-height:24px;font-size:13px;border-radius:5px}
+.wline.big .wc b{font-size:20px}
+.wline.big .wc s{font:600 12px/1 var(--mono);color:var(--card-mute);text-decoration:line-through}
+.wline.big .wc .rpc{font-size:13px;line-height:18px;padding:0 5px}
+.wline.big .wc .arcg{width:22px;height:22px}
+.wline.big .wc small{flex:1 0 100%;font:11.5px/1.2 var(--sans);color:var(--card-mute);margin-top:-1px}
+.wline.big .wc.off b,.wline.big .wc.off small{text-decoration:line-through}
+.wline.big .wc.off{opacity:.55}
+.wline.big .wc.off b{text-decoration:line-through}
+.main.compact .wline.big .wc{flex:0 1 auto}
