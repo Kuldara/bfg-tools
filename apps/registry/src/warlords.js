@@ -268,9 +268,13 @@ export const HULK_CLAN_FX = {
    for the benefit (Fleets p. 371, ChatGPT audit UX-02). The Warlord's clan
    button buys it for all, which is what it says. */
 export function setClan(u, name, keepOff){
-  const ups = upgradesFor(u);
+  const ups = upgradesFor(u), C = L().clanz;
   ups.own.concat(ups.other).forEach(x => {
     const m = /^Clan: (.+?) \(/i.exec(String(x[2].l));
+    /* the refit is the Blood Axes' alone (p. 371): it leaves with the clan, or
+       its +20 stays on the ship (user 2.11.2026) */
+    if(!m && C && C.refit_re && new RegExp(C.refit_re, "i").test(String(x[2].l)) &&
+       !new RegExp(C.axe_clan, "i").test(name || "") && upState(u, x[0], x[1]) === "take") setUpState(u, x[0], x[1], "opt");
     /* an included clan (Zukov's Goffs, p. 383) is locked: not bought, not dropped */
     if(!m || x[2].incl) return;
     if(name && m[1].toLowerCase() === name.toLowerCase()){

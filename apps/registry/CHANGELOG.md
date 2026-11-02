@@ -5,6 +5,9 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 
 ## Unreleased
 
+### Fixed
+- Changing a Warlord's clan left the Blood Axes' Imperial Navy refit taken, and its +20 on the ship. It now leaves with the clan (Fleets p. 371).
+
 ### Changed
 - Saved fleets: one Send on each fleet and Send all replace Export, Copy, To phone, Export all, Copy all and All to phone. Send shows a four-letter code and its QR code (the other device scans it or types it at Receive), Send link for one fleet, and Save file. Without a connection it shows the fleet's own QR code or the file. Paste text is gone. Old links, codes and files still open.
 
