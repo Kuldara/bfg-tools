@@ -1667,6 +1667,7 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
   check("refit: +1 shield and +1 turret on the base (pp. 158-159): the Lunar's 2 and 2 are 3 and 3", v.shields.base === 3 && v.shields.now === 3 && v.turrets.base === 3 && v.turrets.now === 3, JSON.stringify([v.shields, v.turrets]));
   check("Long Range Sensors: +1 to the Leadership (Fleets p. 185)", v.ld.now === 8 && v.ld.mods.some(m => m.v === 1 && /sensors/.test(m.t)), JSON.stringify(v.ld));
   check("Superior Damage Control: one more repair die (p. 158)", PLAY.repairPlan(lunar, st).dice === 11, PLAY.repairPlan(lunar, st).dice);
+  check("... and the Damage control line says the same number", PLAY.repairDice(lunar, st) === PLAY.repairPlan(lunar, st).dice, PLAY.repairDice(lunar, st));
   check("the ram's dice are the starting hits with the refit (p. 56)", PLAY.ramDice(lunar, st) === 10 && PLAY.ramDice(lunar) === 8);
   check("the hits never go past the new maximum", (PLAY.addHits(lunar, st, 30), st.hits === 10), st.hits);
   const plain = PLAY.freshUnit(lunar);

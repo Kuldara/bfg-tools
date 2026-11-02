@@ -779,7 +779,7 @@ function rangeCm(t){
 function repairDice(R, st){
   var n = remaining(R, st);
   if(st.blast > 0) n = half(n);
-  return n;
+  return n + fx(st, "repair");
 }
 
 /* The dice to roll and the score that repairs, for the Repair button. Necrons
