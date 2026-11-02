@@ -815,3 +815,6 @@ details.paste .roomjoin{margin-top:6px}
 .shnm{display:block;width:100%;box-sizing:border-box;padding:2px 0;border:0;border-bottom:1px dashed rgba(255,255,255,.5);background:none;color:inherit;font:700 20px/1.1 var(--disp);text-transform:uppercase}
 .shnm:focus{outline:none;border-bottom:2px solid #fff}
 .reppick .repdone{border-color:var(--line);background:none;color:var(--ink-2)}
+/* the page's roll is the option after the player's own dice: quieter, never first */
+.pop .aclab{margin:10px 0 4px;font:600 13px/1.25 var(--sans);color:var(--ink-2)}
+.r4 button.rollb,.bchip.rollb,.btn.rollb{border-style:dashed}

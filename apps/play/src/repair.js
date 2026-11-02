@@ -132,7 +132,7 @@ function repairChoice(i){
   const opt = (arg, icon, name, p, when, rec) => `<button class="repopt${rec ? " rec" : ""}" data-act="repairroll" data-i="${i}" data-arg="${arg}">${icon}<span><b>${name} ${p.dice}D6</b><small>${when}</small></span></button>`;
   /* one hit left, or Repulsor Shielding: the two are the same roll */
   if(full.dice === part.dice) return `<div class="repopts">${opt("full", WRENCH, "Repair", full, "each " + to + " repairs one", true)}</div>`;
-  return `<p class="repwhy">One die per hit left, each ${to} repairs one. A Blast Marker touching the ship halves the dice (p. 88).</p>
+  return `<p class="repwhy">One die per hit left, each ${to} repairs one. A Blast Marker touching the ship halves the dice (p. 88). With your own dice, take a repaired result off with its &minus;; or let the page roll:</p>
     <div class="repopts">${opt("full", WRENCH, "Full repair", full, "no Blast Marker touching", !st.blast)}${opt("half", BURST, "Half repair", part, "a Blast Marker touching", OPT.blast && !!st.blast)}</div>`;
 }
 export function repairPanel(i){

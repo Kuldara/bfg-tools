@@ -6,13 +6,14 @@ a tag `play-v<version>` deploys the Registry's site.
 ## Unreleased
 
 ### Added
-- The command check rolled for you (2.11.2026, RULINGS.md T49): the orders pop has Roll 2D6 against the ship's Leadership with what the page tracks; Under Fire and Enemy Contacts are chips when it does not. A pass leaves the order to tap, a failure is Check failed, and Re-roll spends one.
-- Catastrophic damage rolled for you: Roll D6 or 2D6 on the hulk's table marks the row.
+- Your own dice come first everywhere (2.11.2026, T49): Passed and Failed, a number or a result's tile lead, and the page's Roll is the dashed option after them. A failure on your own dice can spend a re-roll too. A ram's damage takes the hits you rolled, and a warp rift's distance is rolled only if asked.
+- The command check rolled if you ask (2.11.2026, RULINGS.md T49): the orders pop has Roll 2D6 against the ship's Leadership with what the page tracks; Under Fire and Enemy Contacts are chips when it does not. A pass leaves the order to tap, a failure is Check failed, and Re-roll spends one.
+- Catastrophic damage rolled if you ask: Roll D6 or 2D6 on the hulk's table marks the row.
 - Hit-and-run covers an assault boat's raid as well as a teleport attack, and takes your own die (1 to 6).
 - A ram's target picked from the books: without the opponent's fleet linked, a class from any list fills its size, armour and hits.
 
 ### Changed
-- Fewer places for one thing (2.11.2026): Disengage and Boarding are out of the orders pop and the card's Status (Actions has them; Status keeps only the way back for a ship marked disengaged by mistake); the End Phase lists Repair and the fire, not a button per result; the fire reminder's names add the hit themselves and stay ticked.
+- Fewer places for one thing (2.11.2026): Disengage and Boarding are out of the orders pop and the card's Status (Actions has them; Status keeps only the way back for a ship marked disengaged by mistake); the fire reminder's names add the hit themselves and stay ticked.
 - The set-up screen starts with Leadership; Fleet facts and the opponent's room come after it.
 
 ### Added

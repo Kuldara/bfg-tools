@@ -149,6 +149,26 @@ const dice = a => `(() => { const q = ${JSON.stringify(a.map(f => (f - 0.5) / 6)
     check("... but its assault boats may raid, with the player's own die", !!(await cd.evaluate(`document.querySelector('[data-act="actele"][data-arg="5"]')`)));
     await tap('[data-act="actele"][data-arg="5"]');
     check("the die says the critical, and the ship is not marked as having teleported", /critical 5/.test(await cd.evaluate(`document.querySelector(".acts .box").innerText`)) && !(await cd.evaluate(`!!GFP.appState.G.st[1].teleported`)));
+
+    /* own dice come first: the page's roll is the last choice in every row */
+    await tap('[data-act="acclose"]');
+    await cd.evaluate(`(() => { const st = GFP.appState.G.st[0]; st.hits = 0; st.destroyed = false; st.hulk = null; st.hulkName = ""; st.disengaged = false; GFP.render(); return 1; })()`);
+    await open(0);
+    await tap('[data-act="actab"][data-arg="ram"]');
+    const lastIs = sel => cd.evaluate(`(() => { const b = [...document.querySelector(${JSON.stringify(sel)}).parentElement.children]; return b[b.length - 1].getAttribute("data-arg") === "roll"; })()`);
+    check("the ram's test: Passed and Failed before Roll", await lastIs('[data-act="acramtest"]'));
+    await tap('[data-act="acramtest"][data-arg="pass"]');
+    const h0 = JSON.parse(await cd.evaluate(`GFP.appState.G.st[0].hits`));
+    check("the ram's damage takes own dice", await cd.evaluate(`!!document.querySelector('[data-act="acramown"][data-arg="2"]')`));
+    await tap('[data-act="acramown"][data-arg="2"]');
+    check("... the hits taken go on the ship", JSON.parse(await cd.evaluate(`GFP.appState.G.st[0].hits`)) === h0 + 2);
+    await tap('[data-act="actab"][data-arg=""]');
+    await tap('[data-act="actab"][data-arg="cel"]');
+    await tap('[data-act="accel"][data-arg="rift"]');
+    await tap('[data-act="acrift"][data-arg="pass"]');
+    const riftTxt = await cd.evaluate(`document.querySelector(".acts .box").innerText`);
+    check("a rift's distance is not rolled unless asked", /2D6 × 10 cm/.test(riftTxt) && await cd.evaluate(`!!document.querySelector('[data-act="acriftfar"]')`), riftTxt);
+    await tap('[data-act="acclose"]');
   }finally{ await cd.close(); }
   console.log((fail ? "FAIL " : "ok ") + pass + " passed, " + fail + " failed");
   process.exit(fail ? 1 : 0);

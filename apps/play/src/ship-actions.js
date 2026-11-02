@@ -111,6 +111,14 @@ export function shipAct(name, el){
     if(!appState.G.st[A.i] || PLAY.destroyed(R, appState.G.st[A.i])) V.actions = null;
     render(); return true;
   }
+  /* own dice: they roll theirs on the table, the player taps what hit this ship */
+  if(name === "acramown"){
+    const taken = parseInt(argS(), 10), R = appState.U[A.i].R;
+    A.res = Object.assign({}, A.res, { own: true, taken: taken });
+    if(taken) act("ramhits", A.i, taken);
+    if(!appState.G.st[A.i] || PLAY.destroyed(R, appState.G.st[A.i])) V.actions = null;
+    render(); return true;
+  }
   if(name === "actele"){
     const how = argS(), d = how === "roll" ? PLAY.d6() : parseInt(how, 10);
     /* an assault boat's raid is the ordnance's, not the ship's one a turn */
@@ -146,15 +154,21 @@ export function shipAct(name, el){
   if(name === "acrift"){
     const how = argS(), ld = testLd(A.i), n = PLAY.riftTestDice(appState.U[A.i].R);
     const dice = how === "roll" ? rollN(n) : null, ok = dice ? sum(dice) <= ld : how === "pass";
-    const far = ok ? rollN(2) : null;
     if(!ok) act("warplost", A.i);
-    A.res = { test: ok, dice: dice, ld: ld, far: far };
+    A.res = { test: ok, dice: dice, ld: ld, far: null };
     render(); return true;
   }
+  if(name === "acriftfar"){ A.res = Object.assign({}, A.res, { far: rollN(2) }); render(); return true; }
   /* the failed roll taken back and made again with one re-roll (p. 48) */
   if(name === "acreroll"){
     const free = freeRR(A.i), kind = argS(), prev = A.res;
     if(!free) return true;
+    /* own dice: the box is spent and the same question asked again */
+    if(!prev.dice){
+      if(kind === "dis") act("undo");
+      act("rrbox", free.who, free.k);
+      A.res = null; render(); return true;
+    }
     if(kind === "dis") act("undo");
     act("rrbox", free.who, free.k);
     const dice = rollN(kind === "dis" ? 2 : prev.n);
@@ -178,7 +192,7 @@ export function orderLd(i){
   if(l.now == null) return null;
   return Math.max(0, Math.min(10, l.now + (!OPT.blast && P.uf ? -1 : 0) + (!OPT.fleet && P.ec ? 1 : 0)));
 }
-/* Roll 2D6 in the orders pop: a pass leaves the order to tap, a failure is
+/* Roll 2D6 in the orders pop, the option after the player's own dice: a pass leaves the order to tap, a failure is
    Check failed (through act, so UNDO takes it back); Re-roll spends one. */
 export function orderAct(name, el){
   const P = appState.V.pop;
@@ -229,7 +243,7 @@ function renderDis(i){
   if(ld == null) return `<p class="foot">Set this ship's Leadership first.</p>${backBtn}`;
   const total = PLAY.disengageLd(ld, A.blast, A.celestial, A.enemies);
   const R = appState.U[i].R, esq = PLAY.isEscort(R);
-  const rr = r && !r.ok && r.dice && freeRR(i);
+  const rr = r && !r.ok && freeRR(i);
   const after = !r ? "" : r.ok
     ? `<p class="acres ok">${r.dice ? diceLine(r.dice) + " against Ld " + r.ld + ": " : ""}<b>Disengaged.</b> ${esq ? "The squadron leaves" : "It leaves"} the table and may not return. For the enemy it counts 10% of its points, 25% if crippled first (p. 57).</p>`
     : `<p class="acres bad">${r.dice ? diceLine(r.dice) + " against Ld " + r.ld + ": " : ""}<b>Failed.</b> It stays, and may not fire, launch ordnance or use special orders except Brace this turn (p. 57).</p>${rr ? `<button class="btn sec" data-act="acreroll" data-arg="dis">Re-roll<small>uses one re-roll</small></button>` : ""}`;
@@ -238,7 +252,7 @@ function renderDis(i){
     <p class="aclab">Enemy ships and ordnance markers within 15 cm: &minus;1 each</p>${stepper("enemies", A.enemies, "&minus;" + A.enemies)}
     <div class="bchips acgap">${chip("acset", "celestial:" + !A.celestial, "Celestial phenomena within 15 cm: +3", A.celestial)}</div>
     <p class="actotal">Ld ${ld} ${MID} roll 2D6, <b>${Math.min(total, 10)} or under</b>${total > 10 ? ` (Ld ${total}, but 11 and 12 fail)` : ""}</p>
-    ${r ? after : `<div class="r4"><button data-act="acdis" data-arg="roll">Roll 2D6</button><button data-act="acdis" data-arg="pass">Passed</button><button data-act="acdis" data-arg="fail">Failed</button></div>`}
+    ${r ? after : `<div class="r4"><button data-act="acdis" data-arg="pass">Passed</button><button data-act="acdis" data-arg="fail">Failed</button><button class="rollb" data-act="acdis" data-arg="roll">Roll 2D6</button></div>`}
     ${backBtn}`;
 }
 function renderRam(i){
@@ -248,13 +262,16 @@ function renderRam(i){
   const foes = peerHas() ? withPeer(() => appState.U.map((x, j) => x.R.kind === "ship" && !PLAY.destroyed(x.R, appState.G.st[j]) ? chip("acfoe", j, esc(unitName(j)), A.foe === j) : "").join("")) : "";
   const back = PLAY.rammedDice(A.hits, A.headOn, def), mine = PLAY.ramDice(R), auto = PLAY.powerRam(R), front = PLAY.frontArmour(R);
   const own = (R.rules || []).filter(x => /\bram(s|ming)?\b/i.test(String(x.t)) && !/power ram/i.test(String(x.t))).map(x => `<p class="foot">${esc(String(x.t).replace(/^\*\s*/, ""))}</p>`).join("");
-  const rr = r && r.test === false && r.dice && freeRR(i);
+  const rr = r && r.test === false && freeRR(i);
   let step;
-  if(!r) step = `<div class="r4"><button data-act="acramtest" data-arg="roll">Roll ${n}D6</button><button data-act="acramtest" data-arg="pass">Passed</button><button data-act="acramtest" data-arg="fail">Failed</button></div>`;
+  if(!r) step = `<div class="r4"><button data-act="acramtest" data-arg="pass">Passed</button><button data-act="acramtest" data-arg="fail">Failed</button><button class="rollb" data-act="acramtest" data-arg="roll">Roll ${n}D6</button></div>`;
   else if(!r.test) step = `<p class="acres bad">${r.dice ? diceLine(r.dice) + " against Ld " + r.ld + ": " : ""}<b>Missed.</b> It moves normally under All Ahead Full (p. 55).</p>${rr ? `<button class="btn sec" data-act="acreroll" data-arg="ram">Re-roll<small>uses one re-roll</small></button>` : ""}`;
+  else if(r.own) step = `<p class="acres ${r.taken ? "bad" : "ok"}"><b>${r.taken} hit${r.taken === 1 ? "" : "s"} on this ship</b>${r.taken ? ", marked" : ""}.</p>
+      <p class="foot">An explosion is resolved now and catches both ships. Then finish the move; it may board only a ship it touches at the end of it (p. 56).</p>`;
   else if(r.mine == null) step = `<p class="acres ok">${r.dice ? diceLine(r.dice) + " against Ld " + r.ld + ": " : ""}<b>In position.</b> Move the full distance; on base contact, stop and resolve (p. 55).</p>
-      <p class="actotal"><b>${mine}D6</b> against Armour ${A.armour}+${auto ? " + 1 automatic (power ram)" : ""}; they roll <b>${back}D6</b> against your ${front}+</p>
-      <button class="btn" data-act="acramroll">Base contact: roll both</button>`;
+      <p class="actotal">On base contact: you roll <b>${mine}D6</b> against Armour ${A.armour}+${auto ? " + 1 automatic (power ram)" : ""}; they roll <b>${back}D6</b> against your ${front}+</p>
+      <p class="aclab">Hits on this ship</p><div class="bchips">${Array.from({ length: back + 1 }, (x, k) => chip("acramown", k, k, false)).join("")}</div>
+      <button class="btn sec rollb" data-act="acramroll">Roll both<small>the page rolls the two sides</small></button>`;
   else step = `<p class="acres ok">You rolled ${r.mine.join(" ")}${r.auto ? " + power ram" : ""}: <b>${r.dealt} hit${r.dealt === 1 ? "" : "s"} on them</b>, no shields (p. 55). Tell them.</p>
       <p class="acres ${r.taken ? "bad" : "ok"}">They rolled ${r.theirs.join(" ")} against ${r.front}+: <b>${r.taken} hit${r.taken === 1 ? "" : "s"} on this ship</b>${r.taken ? ", marked" : ""}.</p>
       <p class="foot">An explosion is resolved now and catches both ships. Then finish the move; it may board only a ship it touches at the end of it (p. 56).</p>`;
@@ -277,7 +294,7 @@ function renderRam(i){
 function renderTele(i){
   const A = appState.V.actions, r = A.res, boats = !!A.boats, bar = boats ? "" : teleportBar(i);
   const mode = `<div class="bchips">${chip("acset", "boats:false", "Teleport attack", !boats)}${chip("acset", "boats:true", "Assault boats", boats)}</div>`;
-  const dice = `<div class="bchips">${chip("actele", "roll", "Roll D6", false)}${[1, 2, 3, 4, 5, 6].map(d => chip("actele", d, d, false)).join("")}</div>`;
+  const dice = `<div class="bchips">${[1, 2, 3, 4, 5, 6].map(d => chip("actele", d, d, false)).join("")}${chip("actele", "roll", "Roll D6", false)}</div>`;
   const out = r ? (r.d <= 1 ? `<p class="acres bad"><b>${r.d}: failed.</b></p>`
       : `<p class="acres ok"><b>${r.d}.</b> Tell them: critical ${r.d} on their table, repaired as normal (p. 92); an escort is destroyed on 4+.</p>`)
     : bar ? `<p class="foot">This ship may not teleport now: ${esc(bar)}.</p>` : dice;
@@ -309,11 +326,11 @@ function renderAsteroid(i){
   const A = appState.V.actions, R = appState.U[i].R, st = appState.G.st[i], r = A.res, ld = testLd(i), n = PLAY.asteroidTestDice(st), esq = PLAY.isEscort(R);
   if(ld == null) return `<p class="foot">Set this ship's Leadership first.</p>${celBack}`;
   let step;
-  if(!r) step = `<div class="r4"><button data-act="acast" data-arg="roll">Roll ${n}D6</button><button data-act="acast" data-arg="pass">Passed</button><button data-act="acast" data-arg="fail">Failed</button></div>`;
+  if(!r) step = `<div class="r4"><button data-act="acast" data-arg="pass">Passed</button><button data-act="acast" data-arg="fail">Failed</button><button class="rollb" data-act="acast" data-arg="roll">Roll ${n}D6</button></div>`;
   else if(r.test) step = `<p class="acres ok">${r.dice ? diceLine(r.dice) + " against Ld " + r.ld + ": " : ""}<b>Through safely.</b></p>`;
   else if(r.d == null) step = `<p class="acres bad">${r.dice ? diceLine(r.dice) + " against Ld " + r.ld + ": " : ""}<b>Failed:</b> D6 damage.</p>
       ${esq && r.dice && !r.again ? `<button class="btn sec" data-act="acastagain">Re-roll<small>an escort's is free; the second roll stands</small></button>` : ""}
-      <div class="bchips">${chip("acastdmg", "roll", "Roll D6", false)}${[1, 2, 3, 4, 5, 6].map(d => chip("acastdmg", d, d, false)).join("")}</div>`;
+      <div class="bchips">${[1, 2, 3, 4, 5, 6].map(d => chip("acastdmg", d, d, false)).join("")}${chip("acastdmg", "roll", "Roll D6", false)}</div>`;
   else step = `<p class="acres ${r.hits ? "bad" : "ok"}">D6 = <b>${r.d}</b> against ${r.up} shield${r.up === 1 ? "" : "s"} up: <b>${r.hits} hit${r.hits === 1 ? "" : "s"}</b>${r.hits ? (esq ? ": tap them on the ships that touched the field, in the order they moved" : ", marked") : ""}. No Blast Markers, but it is slowed 5 cm this turn (p. 110).</p>`;
   return `${list(TERR_SHORT.asteroid)}
     ${appState.G.grp[i] && !esq ? `<p class="foot">A squadron tests once; on a failure each ship that touched takes D6 (p. 110). Roll it on each ship.</p>` : ""}
@@ -323,8 +340,8 @@ function renderAsteroid(i){
 function renderRift(i){
   const A = appState.V.actions, R = appState.U[i].R, r = A.res, ld = testLd(i), n = PLAY.riftTestDice(R);
   if(ld == null) return `<p class="foot">Set this ship's Leadership first.</p>${celBack}`;
-  const step = !r ? `<div class="r4"><button data-act="acrift" data-arg="roll">Roll ${n}D6</button><button data-act="acrift" data-arg="pass">Passed</button><button data-act="acrift" data-arg="fail">Failed</button></div>`
-    : r.test ? `<p class="acres ok">${r.dice ? diceLine(r.dice) + " against Ld " + r.ld + ": " : ""}<b>Through.</b> Place it up to ${sum(r.far) * 10} cm from the rift (${r.far.join(" + ")}, ×10), facing any way (p. 111).</p>`
+  const step = !r ? `<div class="r4"><button data-act="acrift" data-arg="pass">Passed</button><button data-act="acrift" data-arg="fail">Failed</button><button class="rollb" data-act="acrift" data-arg="roll">Roll ${n}D6</button></div>`
+    : r.test ? `<p class="acres ok">${r.dice ? diceLine(r.dice) + " against Ld " + r.ld + ": " : ""}<b>Through.</b> Place it up to ${r.far ? sum(r.far) * 10 + " cm from the rift (" + r.far.join(" + ") + ", ×10)" : "2D6 × 10 cm from the rift"}, facing any way (p. 111).</p>${r.far ? "" : `<div class="bchips">${chip("acriftfar", "", "Roll 2D6", false)}</div>`}`
     : `<p class="acres bad">${r.dice ? diceLine(r.dice) + " against Ld " + r.ld + ": " : ""}<b>Lost in the warp.</b> It counts as destroyed, for its full points. After the game a D6: on a 1 lost forever, on 2-6 it finds its way back (p. 112).</p>`;
   return `${list(TERR_SHORT.rift)}
     <p class="actotal">Ld ${ld} ${MID} <b>${n}D6, ${ld} or under</b></p>

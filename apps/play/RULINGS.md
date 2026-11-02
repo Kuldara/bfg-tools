@@ -593,6 +593,10 @@ kind on the ship; a counter says how many are left of how many, and Done leaves 
 The table offers Full repair and Half repair side by side, with the reason (p. 88); with Blast Markers tracked the ship's state marks one, and the other stays on offer.
 
 **T49. The command check, rolled if asked.** **The user's decision 2.11.2026.**
+The default is that the players roll their own dice: every helper leads with what
+they tap afterwards (Passed, Failed, a number, a result's tile), and the page's roll
+is the dashed option after it. That covers a ram's damage (the hits this ship took)
+and a warp rift's distance as well; the End Phase keeps a tap per result repaired.
 The orders pop rolls 2D6 against the Leadership the page shows (p. 48): Under Fire
 -1 and Enemy Contacts +1 when they are tracked, and as the player's chips when
 they are not; a radiation burst is in it (p. 115); never above 10. A pass leaves

@@ -856,19 +856,19 @@ export function renderPop(i){
     const rr = res && !res.ok && freeRR(i);
     const mods = (OPT.blast ? "" : `<button class="bchip${P.uf ? " on" : ""}" data-act="ordmod" data-i="${i}" data-arg="uf">Under fire: &minus;1</button>`)
       + (OPT.fleet ? "" : `<button class="bchip${P.ec ? " on" : ""}" data-act="ordmod" data-i="${i}" data-arg="ec">Enemy contacts: +1</button>`);
-    const check = ld == null || locked ? "" : `${mods ? `<div class="bchips">${mods}</div>` : ""}
+    const check = ld == null || locked ? "" : `<p class="aclab">Or let the page roll</p>${mods ? `<div class="bchips">${mods}</div>` : ""}
       ${res ? `<p class="acres ${res.ok ? "ok" : "bad"}"><b>${res.dice.join(" ")} = ${res.dice[0] + res.dice[1]}</b> against Ld ${res.ld}: <b>${res.ok ? "passed." : "failed."}</b> ${res.ok ? "Tap the order." : "No more orders this turn except Brace (p. 48)."}</p>${rr ? `<button class="btn sec" data-act="ordrr" data-i="${i}">Re-roll<small>uses one re-roll</small></button>` : ""}`
-          : `<div class="r4"><button data-act="ordroll" data-i="${i}">Roll 2D6<small>${ld} or under</small></button></div>`}`;
+          : `<div class="r4"><button class="rollb" data-act="ordroll" data-i="${i}">Roll 2D6<small>${ld} or under</small></button></div>`}`;
     return `<div class="pop"><h4>Special orders ${MID} check vs Ld ${ld == null ? "?" : ld}</h4>
-      <p>${fl.orderLock ? "A check failed this turn: no more orders except Brace (p. 48)." : st.braceTurn ? "Braced: no other orders this turn (p. 47)." : "Tap an order = declared and passed, or roll the check first. One per ship or squadron per turn (p. 46, 95)."}</p>
+      <p>${fl.orderLock ? "A check failed this turn: no more orders except Brace (p. 48)." : st.braceTurn ? "Braced: no other orders this turn (p. 47)." : "Roll the check with your own dice: passed, tap the order; failed, Check failed. One per ship or squadron per turn (p. 46, 95)."}</p>
       ${only ? `<p>${esc(only)}</p>` : ""}
-      ${check}
       <div class="tiles">${tiles}
         <button class="bad" data-act="orderfail" data-i="${i}" ${fl.orderLock ? "disabled" : ""}>Check failed<small>locks the fleet</small></button>
         <button class="warn" data-act="bracefail" data-i="${i}" ${st.braceLock ? "disabled" : ""}>Brace failed<small>p. 47</small></button>
         ${st.braceLock ? `<button class="ok" data-act="bracelock" data-i="${i}">Attacker done<small>brace again</small></button>` : ""}
         ${st.order || st.braceTurn ? `<button data-act="clearorder" data-i="${i}">Clear order</button>` : ""}
       </div>
+      ${check}
       <button class="close" data-act="closepop">close</button></div>`;
   }
   if(kind === "crit"){
@@ -919,11 +919,11 @@ export function renderPop(i){
     const tiles = c.rows.map((r, k) => `<button class="${r.kind === "gone" ? "bad" : (st.hulk === r.kind && st.hulkName === r.name ? "on" : "")}" data-act="hulk" data-i="${i}" data-arg="${k}"><b>${esc(r.roll)}</b>${esc(r.name)}<small>${r.extra ? esc(r.extra) + " " + MID + " " : ""}${esc(r.text)}</small></button>`).join("");
     return `<div class="pop cata"><h4>${esc(c.title)}${c.dice ? " " + MID + " roll " + c.dice : ""} ${MID} ${c.fleets ? "Fleets" : "Rulebook"} p. ${c.page}</h4>
       <p>${esc(unitName(i))} ${v.fort ? "has all four quadrants at 0 hits (" + R.stats.hits + " each to start)" : "is at 0 hits (" + R.stats.hits + " to start)"}. ${esc(c.note)}</p>
-      ${c.dice && !st.hulkName ? `<div class="r4"><button data-act="hulkroll" data-i="${i}">Roll ${esc(c.dice)}<small>the page marks the result</small></button></div>` : ""}
-      ${appState.V.pop.res ? `<p class="acres">Rolled <b>${appState.V.pop.res}</b>: ${esc(st.hulkName || "")}</p>` : ""}
       <div class="tiles c2">${tiles}
         ${c.boarded ? `<button data-act="hulk" data-i="${i}" data-arg="boarded">Boarded to 0<small>no roll: a drifting hulk (p. 90)</small></button>` : ""}
       </div>
+      ${c.dice && !st.hulkName ? `<p class="aclab">Or let the page roll</p><div class="r4"><button class="rollb" data-act="hulkroll" data-i="${i}">Roll ${esc(c.dice)}<small>the page marks the result</small></button></div>` : ""}
+      ${appState.V.pop.res ? `<p class="acres">Rolled <b>${appState.V.pop.res}</b>: ${esc(st.hulkName || "")}</p>` : ""}
       <p class="hr"><b>While it is a hulk</b></p><ul class="hulkrules">${c.hulk.list.map(t => `<li>${esc(t)}</li>`).join("")}</ul>
       ${c.explode ? `<p class="hr">${esc(c.explode)}</p>` : ""}
       <button class="close" data-act="closepop">close</button></div>`;
