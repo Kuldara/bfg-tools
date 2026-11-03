@@ -80,20 +80,24 @@ const SWEEP = `(async () => {
     check("the open fleet's row is first and marked", r.first === "Mine" && r.marked && r.tag === "open, changed", r);
     check("its button is Reopen", r.label === "Reopen", r);
     check("Reopen brings back the saved fleet, after the one question", r.before === r.after + 1 && r.asked === 1 && r.closed && r.unsaved === false, r);
-    /* Text and file under the fleet (user 3.11.2026): the open fleet's text,
-       pasted back, is a new saved fleet; the screen keeps its fleet */
+    /* Text and file in Saved fleets (user 3.11.2026): beside Import file; the open
+       fleet's text, pasted back, is a new saved fleet; the screen keeps its fleet */
     const x = JSON.parse(await cd.evaluate(`(async () => {
       const G = GFR, S = () => G.appState.S, w = () => new Promise(r => setTimeout(r, 60));
       localStorage.removeItem(G.KEY_LIB); S().units = []; G.addUnit(1, 0); G.addUnit(1, 0); G.render();
-      const d = document.querySelector("#xfer"), last = d.parentElement.lastElementChild === d;
-      d.querySelector("summary").click(); await w();
+      const d = document.querySelector("#saves"); if(!d.open) d.querySelector("summary").click(); await w();
+      const b = document.querySelector("#savesbody button[data-xfer]"), beside = !!b && !!b.parentElement.querySelector("[data-import]");
+      b.click(); await w();
       const text = G.fleetText(), n0 = G.libRead().saves.length, on = S().units.length;
-      document.querySelector("#xftext").value = text; document.querySelector("#xfadd").click(); await w();
-      return JSON.stringify({ last, open: d.open, parsed: JSON.parse(text).units.length, n0, n1: G.libRead().saves.length,
-        from: (G.libRead().saves[0] || {}).from, kept: S().units.length === on, cleared: document.querySelector("#xftext").value === "" });
+      const ta = document.querySelector("#xftext"); ta.value = text; ta.dispatchEvent(new Event("input", { bubbles: true }));
+      G.render(); await w();
+      const kept = document.querySelector("#xftext").value === text;
+      document.querySelector("#savesbody button[data-xf=add]").click(); await w();
+      return JSON.stringify({ beside, kept, parsed: JSON.parse(text).units.length, n0, n1: G.libRead().saves.length,
+        from: (G.libRead().saves[0] || {}).from, screen: S().units.length === on, cleared: G.appState.XFER.text === "" });
     })()`));
-    check("Text and file: last in the fleet column, folded until opened", x.last && x.open, x);
-    check("the fleet's text, pasted back, is a new saved fleet; the screen keeps its fleet", x.parsed === 2 && x.n1 === x.n0 + 1 && x.from === "paste" && x.kept && x.cleared, x);
+    check("Text and file: beside Import file; the pasted text survives a redraw", x.beside && x.kept, x);
+    check("the fleet's text, pasted back, is a new saved fleet; the screen keeps its fleet", x.parsed === 2 && x.n1 === x.n0 + 1 && x.from === "paste" && x.screen && x.cleared, x);
   } catch (e) {
     console.log("  FAIL  " + (e && e.stack || e)); fail++;
   } finally {

@@ -208,6 +208,9 @@ export function afterAdd(r, where){
 /* The Save button's panel: the name, Save and Save as new, and what the
    open fleet is now - not saved yet, saved, or changed since it was. */
 appState.SAVE_NAME = null; appState.SAVE_MSG = "";
+/* Text and file (user 3.11.2026): a button beside Send all, Receive and
+   Import file opens a box under them; the pasted text survives a redraw. */
+appState.XFER = { open: false, text: "" };
 export function renderSaveNow(lib){
   const box = $("#savebody"), dot = $("#savedot");
   const unsaved = openUnsaved(lib), s = openSave(lib);
@@ -259,5 +262,10 @@ export function renderSaves(){
     (editing ? `<div class="sh">Being edited, one per list</div>` + editing : "") +
     `<div class="rowf tools">${
       lib.saves.length ? `<button class="go" data-send="all" title="Every saved fleet to another device, or as a file for safekeeping">Send all</button>` : ""
-    }${hasSendPage() ? `<button class="go" data-receive title="Take fleets another device is sending">Receive</button>` : ""}<button class="go" data-import title="Add the fleets in a saved file">Import file</button></div>`;
+    }${hasSendPage() ? `<button class="go" data-receive title="Take fleets another device is sending">Receive</button>` : ""}<button class="go" data-import title="Add the fleets in a saved file">Import file</button><button class="go${appState.XFER.open ? " on" : ""}" data-xfer aria-expanded="${appState.XFER.open}" title="The open fleet as text or a file; a fleet's text into Saved fleets">Text and file</button></div>` +
+    (appState.XFER.open ? `<div class="xf-body">
+      <p>The open fleet as text or a file, and a fleet's text back in. What comes in goes into Saved fleets; the fleet on the screen stays.</p>
+      <div class="xf-row"><span class="xf-h">Out</span><button class="go" data-xf="copy" title="The open fleet as text (JSON) on the clipboard">Copy as text</button><button class="go" data-xf="save" title="The open fleet as a file">Save file</button></div>
+      <div class="xf-row"><span class="xf-h">In</span><textarea id="xftext" rows="3" spellcheck="false" placeholder="Paste a fleet's text here" aria-label="A fleet's text">${esc(appState.XFER.text)}</textarea></div>
+      <div class="xf-row"><span class="xf-h"></span><button class="go" data-xf="add">Add to Saved fleets</button></div></div>` : "");
 }

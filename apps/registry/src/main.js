@@ -119,10 +119,23 @@ if(document.addEventListener){
   document.addEventListener("dragend", dragScrollStop);
   document.addEventListener("drop", dragScrollStop);
 }
+/* Text and file in Saved fleets: the buttons answer on themselves */
+const sayOn = (btn, t) => { const back = btn.textContent; btn.textContent = t; setTimeout(() => { btn.textContent = back; }, 1600); };
+function xferDo(btn){
+  const k = btn.dataset.xf;
+  if(k === "copy"){ const t = fleetText(); if(t) copyInPlace(btn, t); else sayOn(btn, "No ships yet"); }
+  else if(k === "save"){ if(!saveFleetFile()) sayOn(btn, "No ships yet"); }
+  else if(k === "add"){
+    const t = appState.XFER.text;
+    if(!String(t || "").trim()){ sayOn(btn, "Paste first"); return; }
+    appState.XFER.text = "";
+    addFleetText(t);
+  }
+}
 /* the saved fleets browser: search, sort, chips, rows (saved-list.js) */
 const redrawSaves = () => { renderSaves(); placeSaves(); };
 const openFromList = id => { $("#saves").open = false; libOpen(id); };
-$("#saves").oninput = e => { savesInput(e, redrawSaves); };
+$("#saves").oninput = e => { if(e.target && e.target.id === "xftext"){ appState.XFER.text = e.target.value; return; } savesInput(e, redrawSaves); };
 $("#saves").onchange = e => { savesChange(e, redrawSaves); };
 $("#saves").ondblclick = e => { const id = savesDblClick(e); if(id) openFromList(id); };
 $("#saves").onkeydown = e => {
@@ -146,6 +159,10 @@ $("#saves").onclick = e => {
     }
     return;
   }
+  const xo = e.target.closest ? e.target.closest("button[data-xfer]") : null;
+  if(xo){ appState.XFER.open = !appState.XFER.open; redrawSaves(); return; }
+  const xf = e.target.closest ? e.target.closest("button[data-xf]") : null;
+  if(xf){ xferDo(xf); return; }
   const im = e.target.closest ? e.target.closest("button[data-import]") : null;
   if(im){ const inp = $("#importfile"); if(inp) inp.click(); return; }
   const go = e.target.closest ? e.target.closest("button[data-open]") : null;
@@ -188,14 +205,6 @@ export function clearOpen(){
     { appState.S.units = []; render(); }
 }
 $("#copy").onclick = () => copyInPlace($("#copy"), listText());
-/* Text and file, under the fleet: the buttons answer on themselves */
-const sayOn = (btn, t) => { const back = btn.textContent; btn.textContent = t; setTimeout(() => { btn.textContent = back; }, 1600); };
-if($("#xfer")){
-  $("#xfcopy").onclick = () => { const t = fleetText(); if(t) copyInPlace($("#xfcopy"), t); else sayOn($("#xfcopy"), "No ships yet"); };
-  $("#xfsave").onclick = () => { if(!saveFleetFile()) sayOn($("#xfsave"), "No ships yet"); };
-  $("#xfadd").onclick = () => { const ta = $("#xftext"); if(addFleetText(ta.value)) ta.value = ""; else sayOn($("#xfadd"), "Paste first"); };
-  $("#xfopen").onclick = () => { const inp = $("#importfile"); if(inp) inp.click(); };
-}
 /* The Save button: the panel names the open fleet; Save, Save as new, and
    Enter in the name do the same as the buttons. */
 $("#savenow").onclick = e => {
