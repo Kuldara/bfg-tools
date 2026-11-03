@@ -102,6 +102,14 @@
       <h2>Your fleet <span class="h2r"><em id="fleetmeta"></em><button type="button" class="fold" id="fleetall" hidden>Open all</button><button type="button" class="fold" id="fleetfold" aria-pressed="false" title="One line per unit: tap the arrow or the unit's name to open or close it">Compact</button></span></h2>
       <div id="fleet"></div>
     </section>
+    <details class="xfer" id="xfer"><summary>Text and file</summary>
+      <div class="xf-body">
+        <p>The open fleet as text or a file, and a fleet's text or file back in. What comes in goes into Saved fleets; the fleet on the screen stays.</p>
+        <div class="xf-row"><span class="xf-h">Out</span><button type="button" class="go" id="xfcopy" title="The open fleet as text (JSON) on the clipboard">Copy as text</button><button type="button" class="go" id="xfsave" title="The open fleet as a file">Save file</button></div>
+        <div class="xf-row"><span class="xf-h">In</span><textarea id="xftext" rows="3" spellcheck="false" placeholder="Paste a fleet's text here" aria-label="A fleet's text"></textarea></div>
+        <div class="xf-row"><span class="xf-h"></span><button type="button" class="go" id="xfadd">Add to Saved fleets</button><button type="button" class="go" id="xfopen" title="Add the fleets in a saved file">Open file</button></div>
+      </div>
+    </details>
   </div>
 </div>
 

@@ -5,6 +5,9 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 
 ## Unreleased
 
+### Added
+- Text and file, at the bottom of the fleet column: Copy as text and Save file for the open fleet, and a box to paste a fleet's text into Saved fleets beside Open file. Send, Receive and the top bar's buttons are as they were.
+
 ### Fixed
 - The top bar's menus (Save, Saved fleets, the print setup) open in one place, under the buttons against the window's right edge, one at a time, and stay on the screen when the page scrolls.
 - Saved fleets: the open fleet can be opened again (Reopen), which brings back the saved version over the changes on the screen. Its row is first in the list and marked more clearly.

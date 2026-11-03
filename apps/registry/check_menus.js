@@ -80,6 +80,20 @@ const SWEEP = `(async () => {
     check("the open fleet's row is first and marked", r.first === "Mine" && r.marked && r.tag === "open, changed", r);
     check("its button is Reopen", r.label === "Reopen", r);
     check("Reopen brings back the saved fleet, after the one question", r.before === r.after + 1 && r.asked === 1 && r.closed && r.unsaved === false, r);
+    /* Text and file under the fleet (user 3.11.2026): the open fleet's text,
+       pasted back, is a new saved fleet; the screen keeps its fleet */
+    const x = JSON.parse(await cd.evaluate(`(async () => {
+      const G = GFR, S = () => G.appState.S, w = () => new Promise(r => setTimeout(r, 60));
+      localStorage.removeItem(G.KEY_LIB); S().units = []; G.addUnit(1, 0); G.addUnit(1, 0); G.render();
+      const d = document.querySelector("#xfer"), last = d.parentElement.lastElementChild === d;
+      d.querySelector("summary").click(); await w();
+      const text = G.fleetText(), n0 = G.libRead().saves.length, on = S().units.length;
+      document.querySelector("#xftext").value = text; document.querySelector("#xfadd").click(); await w();
+      return JSON.stringify({ last, open: d.open, parsed: JSON.parse(text).units.length, n0, n1: G.libRead().saves.length,
+        from: (G.libRead().saves[0] || {}).from, kept: S().units.length === on, cleared: document.querySelector("#xftext").value === "" });
+    })()`));
+    check("Text and file: last in the fleet column, folded until opened", x.last && x.open, x);
+    check("the fleet's text, pasted back, is a new saved fleet; the screen keeps its fleet", x.parsed === 2 && x.n1 === x.n0 + 1 && x.from === "paste" && x.kept && x.cleared, x);
   } catch (e) {
     console.log("  FAIL  " + (e && e.stack || e)); fail++;
   } finally {

@@ -1,6 +1,6 @@
 import { $ } from "./boot.js";
 import { downloadEditable } from "./download-editable.js";
-import { fileNote } from "./fleet-files.js";
+import { addFleetText, fileNote, fleetText, saveFleetFile } from "./fleet-files.js";
 import { L, defaultRole, switchList } from "./model.js";
 import { placeSaves } from "./panels.js";
 import { copyInPlace, openSend } from "./phone.js";
@@ -188,6 +188,14 @@ export function clearOpen(){
     { appState.S.units = []; render(); }
 }
 $("#copy").onclick = () => copyInPlace($("#copy"), listText());
+/* Text and file, under the fleet: the buttons answer on themselves */
+const sayOn = (btn, t) => { const back = btn.textContent; btn.textContent = t; setTimeout(() => { btn.textContent = back; }, 1600); };
+if($("#xfer")){
+  $("#xfcopy").onclick = () => { const t = fleetText(); if(t) copyInPlace($("#xfcopy"), t); else sayOn($("#xfcopy"), "No ships yet"); };
+  $("#xfsave").onclick = () => { if(!saveFleetFile()) sayOn($("#xfsave"), "No ships yet"); };
+  $("#xfadd").onclick = () => { const ta = $("#xftext"); if(addFleetText(ta.value)) ta.value = ""; else sayOn($("#xfadd"), "Paste first"); };
+  $("#xfopen").onclick = () => { const inp = $("#importfile"); if(inp) inp.click(); };
+}
 /* The Save button: the panel names the open fleet; Save, Save as new, and
    Enter in the name do the same as the buttons. */
 $("#savenow").onclick = e => {
