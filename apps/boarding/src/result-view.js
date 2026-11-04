@@ -169,17 +169,21 @@ function drawHolo(box){
 /* One line per ship that could take a critical hit. */
 function critBlock(){
   var h = [], anyPending = false;
-  var groups = {att:[], def:[]};
-  R.crits.forEach(function(c){ groups[c.from].push(c); });
-  ["att","def"].forEach(function(from){
-    var list = groups[from]; if(!list.length) return;
+  /* the Berzerker Tide's extra rolls under a head of their own: they have no
+     roll to cause them, whatever the side's own critical needs */
+  var groups = {att:[], def:[], attT:[], defT:[]};
+  R.crits.forEach(function(c){ groups[c.from + (c.tide ? "T" : "")].push(c); });
+  ["att","attT","def","defT"].forEach(function(g){
+    var list = groups[g]; if(!list.length) return;
+    var from = g.slice(0, 3), tide = g.length > 3;
     var need = list[0].need, bonus = list[0].bonus;
-    if(need > 6){
+    if(!tide && need > 6){
       h.push('<div class="step done"><div class="q">'+esc(sideName(from))+
         ' causes no critical hit <span class="no">—</span></div></div>');
       return;
     }
-    var head = esc(sideName(from)) + (need===0
+    var head = tide ? esc(sideName(from)) + ' &mdash; <b>Berzerker Tide</b>: automatic critical damage rolls, no roll to cause them'
+      : esc(sideName(from)) + (need===0
       ? ' causes an <b>automatic</b> critical hit'
       : ' causes a critical hit on a <b>'+need+'+</b>') +
       (bonus ? ' <span style="color:var(--warn)">(+'+bonus+' Mark of Khorne)</span>' : '');
@@ -187,7 +191,7 @@ function critBlock(){
     var compact = list.filter(function(c){ return c.hit && c.table; }).length > 2;
     list.forEach(function(c){
       var target = esc(shipName(c.to, c.i));
-      var arrow = c.repeated ? "Additional Ramilies critical → " : "→ ";
+      var arrow = c.repeated ? "Additional Ramilies critical → " : c.tide ? esc(shipName(c.from, c.by)) + " → " : "→ ";
       if(c.hit === null){
         anyPending = true;
         pend.push(c);
@@ -381,8 +385,8 @@ function arkBlock(){
    it may not take any special orders (including Brace for Impact) in the next
    turn" (FL p.250) - so each Mark of Khorne ship of the side, with its own D3
    and its own lost orders. The player's own D3 first, the app's roll beside it
-   (user 4.11.2026). Neither book says whether the extra rolls use the same
-   threshold, so the app rolls them the same way and says so. */
+   (user 4.11.2026). The extra rolls need no roll to cause them (Remastered team
+   on Discord, 27.9.2023; RULINGS.md 7). */
 function tideShips(){
   var sc = R.score; if(!sc || !sc.winner) return [];
   var out = [];
@@ -403,9 +407,8 @@ function tideBlock(){
       ' may roll D3 extra critical rolls, but may then take no special orders (Brace for Impact '+
       'included) next turn (FL p.250).</div>');
     if(used){
-      h.push('<div class="q" style="color:var(--dim)">D3: <b>'+used.n+'</b> extra roll'+
-        (used.n===1?"":"s")+' at the same threshold. '+nm+' takes no special orders next turn. '+
-        'The books do not say whether the extra rolls use the same threshold, so they are rolled the same way.</div>');
+      h.push('<div class="q" style="color:var(--dim)">D3: <b>'+used.n+'</b> automatic critical damage roll'+
+        (used.n===1?"":"s")+' (above). '+nm+' takes no special orders next turn.</div>');
     } else {
       h.push('<div class="dieRow '+s.k+'"><div class="lab '+s.k+'-lab">'+nm+'<br>D3</div>');
       for(var n=1;n<=3;n++) h.push('<button class="die" data-r="tide" data-c="'+s.key+'" data-v="'+n+'">'+n+'</button>');

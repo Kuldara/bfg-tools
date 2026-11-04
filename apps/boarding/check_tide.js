@@ -6,7 +6,8 @@
    FL p.250: "Any ships with the Mark of Khorne conducting a boarding action may
    roll D3 extra critical damage rolls" (RULINGS.md 7). In both dice modes each
    Hades has its own row with 1, 2, 3; the app's Roll is there only when the app
-   rolls; a 2 for Hades 1 is two extra rolls and its own lost orders. */
+   rolls; a 2 for Hades 1 is two automatic critical damage rolls (no roll to
+   cause them, RULINGS.md 7) and its own lost orders. */
 "use strict";
 const path = require("path");
 const { launch } = require("../../tools/lib/chrome.js");
@@ -36,10 +37,10 @@ const check = (n, ok, got) => { console.log((ok ? "PASS " : "FAIL ") + n + (ok ?
         const row = x => document.querySelector('[data-die="' + x.dataset.die + '"][data-idx="' + x.dataset.idx + '"].sel');
         const next = b.find(x => !row(x)); if(!next) break; next.click(); } return 1; })()`);
     }
-    await sleep(300);
+    await sleep(700);
     const v = JSON.parse(await cd.evaluate(`JSON.stringify({
       blocks: [...document.querySelectorAll('[data-r="tide"]')].map(b => b.dataset.c + "=" + b.dataset.v),
-      text: [...document.querySelectorAll(".step")].map(s => s.innerText).filter(t => /Berzerker Tide/.test(t)) })`));
+      text: [...document.querySelectorAll(".step")].map(s => s.innerText).filter(t => /may roll D3/.test(t)) })`));
     check(dice + ": a Tide row for each Hades, with its own 1 2 3", ["att:0", "att:1"].every(k => [1, 2, 3].every(n => v.blocks.includes(k + "=" + n))) && v.text.length === 2, v);
     check(dice + ": the app's Roll only when the app rolls", v.blocks.includes("att:0=0") === (dice === "digital"), v.blocks);
     /* the player's own D3 for the first ship: 2 */
@@ -47,13 +48,17 @@ const check = (n, ok, got) => { console.log((ok ? "PASS " : "FAIL ") + n + (ok ?
     await cd.evaluate(`document.querySelector('[data-r="tide"][data-c="att:0"][data-v="2"]').click(); 1`);
     await sleep(200);
     const after = JSON.parse(await cd.evaluate(`JSON.stringify({ left: [...document.querySelectorAll('[data-r="tide"]')].map(b => b.dataset.c).filter((x, i, a) => a.indexOf(x) === i),
-      used: [...document.querySelectorAll(".step.done")].map(s => s.innerText).filter(t => /Berzerker Tide/.test(t)), errs: window.__errs })`));
-    check(dice + ": a 2 for the first Hades: its row says 2 extra rolls and no special orders, the other still to choose", after.left.join() === "att:1" && after.used.length === 1 && /Hades 1/.test(after.used[0]) && /D3: 2 extra rolls/.test(after.used[0]) && /takes no special orders next turn/.test(after.used[0]), after);
+      used: [...document.querySelectorAll(".step.done")].map(s => s.innerText).filter(t => /may roll D3/.test(t)), errs: window.__errs })`));
+    /* the two extra rolls hit with no roll to cause them (RULINGS.md 7) */
+    const auto = JSON.parse(await cd.evaluate(`JSON.stringify((() => { const st = [...document.querySelectorAll(".step")].find(s => /Berzerker Tide<\\/b>: automatic critical damage rolls/.test(s.innerHTML));
+      return st ? { hits: (st.innerText.match(/CRITICAL HIT/g) || []).length, rolled: /rolled/.test(st.innerText) } : null; })())`));
+    check(dice + ": ... the two extra rolls are critical hits with no roll to cause them, under their own head", !!auto && auto.hits === 2 && !auto.rolled, auto);
+    check(dice + ": a 2 for the first Hades: its row says 2 extra rolls and no special orders, the other still to choose", after.left.join() === "att:1" && after.used.length === 1 && /Hades 1/.test(after.used[0]) && /D3: 2 automatic critical damage rolls/.test(after.used[0]) && /takes no special orders next turn/.test(after.used[0]), after);
     if (dice === "digital") {
       await cd.evaluate(`document.querySelector('[data-r="tide"][data-c="att:1"][data-v="0"]').click(); 1`);
       await sleep(200);
-      const r2 = JSON.parse(await cd.evaluate(`JSON.stringify({ left: document.querySelectorAll('[data-r="tide"]').length, done: [...document.querySelectorAll(".step.done")].map(s => s.innerText).filter(t => /Berzerker Tide/.test(t)), errs: window.__errs })`));
-      check("digital: Roll for the second Hades: the app rolls its D3", r2.left === 0 && r2.done.length === 2 && r2.done.every(t => /D3: [123] extra roll/.test(t)) && !r2.errs.length, r2.done.map(t => t.slice(110, 160)));
+      const r2 = JSON.parse(await cd.evaluate(`JSON.stringify({ left: document.querySelectorAll('[data-r="tide"]').length, done: [...document.querySelectorAll(".step.done")].map(s => s.innerText).filter(t => /may roll D3/.test(t)), errs: window.__errs })`));
+      check("digital: Roll for the second Hades: the app rolls its D3", r2.left === 0 && r2.done.length === 2 && r2.done.every(t => /D3: [123] automatic critical damage roll/.test(t)) && !r2.errs.length, r2.done.map(t => t.slice(110, 160)));
     }
     check(dice + ": no page error", !(JSON.parse(await cd.evaluate(`JSON.stringify(window.__errs)`))).length);
   }

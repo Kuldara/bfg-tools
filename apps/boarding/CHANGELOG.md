@@ -5,6 +5,7 @@ Releases are tags `boarding-v<yyyy.mm.dd>`.
 ## Unreleased
 
 ### Changed
+- Berzerker Tide's extra rolls are automatic critical damage rolls (4.11.2026, RULINGS.md 7), under a head of their own; they were rolled at the side's own critical threshold.
 - Berzerker Tide (4.11.2026, RULINGS.md 7): each Mark of Khorne ship of the boarding has its own D3 and its own "no special orders next turn", and the D3 is the player's own (1, 2, 3), with the app's Roll beside it when the app rolls. It was one D3 for the whole side, always rolled by the app.
 
 ### Added
