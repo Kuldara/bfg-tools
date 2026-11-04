@@ -376,33 +376,42 @@ function arkBlock(){
     'catastrophic damage table.</div></div>';
 }
 
-/* A Berzerker Tide fleet may roll D3 extra critical rolls, and then may take no
-   special orders in the following turn (FL p.250). Neither book says whether the
-   extra rolls use the same threshold, so the app rolls them the same way and
-   says so. */
-function tideSide(){
-  var sc = R.score; if(!sc || !sc.winner) return null;
+/* The Berzerker Tide: "Any ships with the Mark of Khorne conducting a
+   boarding action may roll D3 extra critical damage rolls if desired, but then
+   it may not take any special orders (including Brace for Impact) in the next
+   turn" (FL p.250) - so each Mark of Khorne ship of the side, with its own D3
+   and its own lost orders. The player's own D3 first, the app's roll beside it
+   (user 4.11.2026). Neither book says whether the extra rolls use the same
+   threshold, so the app rolls them the same way and says so. */
+function tideShips(){
+  var sc = R.score; if(!sc || !sc.winner) return [];
   var out = [];
   ["att","def"].forEach(function(k){
-    if(B.extraCritRolls(eSide(k)) && B.sideHas(eSide(k), "khorne")) out.push(k);
+    if(!B.extraCritRolls(eSide(k))) return;
+    livingIdx(k).forEach(function(i){ if(B.has(eSide(k).ships[i], "khorne")) out.push({k:k, i:i, key:k+":"+i}); });
   });
-  return out.length ? out : null;
+  return out;
 }
 function tideBlock(){
-  var sides = tideSide(); if(!sides) return "";
+  var ships = tideShips(); if(!ships.length) return "";
   var h = [];
-  sides.forEach(function(k){
-    var used = R.tide && R.tide[k];
-    h.push('<div class="step'+(used?" done":"")+'"><div class="q"><b>Berzerker Tide</b> — '+
-      esc(sideName(k))+' may roll D3 extra critical rolls, but may then take no special '+
-      'orders next turn.</div>');
+  ships.forEach(function(s){
+    /* two ships of one class are Hades 1 and Hades 2 */
+    var same = ships.filter(function(o){ return o.k===s.k && shipName(o.k, o.i)===shipName(s.k, s.i); });
+    var used = R.tide && R.tide[s.key], nm = esc(shipName(s.k, s.i) + (same.length > 1 ? " " + (same.indexOf(s) + 1) : ""));
+    h.push('<div class="step'+(used?" done":"")+'"><div class="q"><b>Berzerker Tide</b> — '+nm+
+      ' may roll D3 extra critical rolls, but may then take no special orders (Brace for Impact '+
+      'included) next turn (FL p.250).</div>');
     if(used){
-      h.push('<div class="q" style="color:var(--dim)">D3 rolled: <b>'+used.n+'</b> extra roll'+
-        (used.n===1?"":"s")+' at the same threshold. The books do not say whether the extra '+
-        'rolls use the same threshold, so they are rolled the same way.</div>');
+      h.push('<div class="q" style="color:var(--dim)">D3: <b>'+used.n+'</b> extra roll'+
+        (used.n===1?"":"s")+' at the same threshold. '+nm+' takes no special orders next turn. '+
+        'The books do not say whether the extra rolls use the same threshold, so they are rolled the same way.</div>');
     } else {
-      h.push('<div class="actRow" style="margin:0"><button data-r="tide" data-c="'+k+
-        '">Use the Berzerker Tide</button></div>');
+      h.push('<div class="dieRow '+s.k+'"><div class="lab '+s.k+'-lab">'+nm+'<br>D3</div>');
+      for(var n=1;n<=3;n++) h.push('<button class="die" data-r="tide" data-c="'+s.key+'" data-v="'+n+'">'+n+'</button>');
+      h.push(S.dice==="digital" ? '<button class="die tideroll" data-r="tide" data-c="'+s.key+'" data-v="0" title="The app rolls the D3">Roll</button>'
+                                : '<div style="flex:1 1 0"></div>');
+      h.push('<div style="flex:2 1 0"></div></div>');
     }
     h.push('</div>');
   });

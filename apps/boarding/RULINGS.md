@@ -26,7 +26,14 @@ hit-and-run and teleports p. 92.
 6. **The Mark of Khorne's +1 to cause criticals applies to every Khorne ship**
    (REF). FL prints the sentence only for the Incursion list's Warmaster.
 7. **Berzerker Tide's D3 extra rolls** use the same threshold as the critical
-   itself. Neither book says which; the app says so in the result.
+   itself. Neither book says which; the app says so in the result. **Each Mark of
+   Khorne ship** of a multi-ship boarding has its own D3 and loses its own special
+   orders next turn: FL p. 250 speaks of "Any ships with the Mark of Khorne
+   conducting a boarding action ... then it may not take any special orders"
+   (user 4.11.2026: "per ship"). The book does not say which enemy ship the extra
+   rolls hit; the app takes the enemy ships in turn, carrying on from the extra
+   rolls already made against them. The D3 is the player's own, or the app's
+   when asked.
 8. **Tyranid spore cysts count as the defender's turrets** (REF and its example 3),
    added **after** the doubling.
 9. **A boarding Tyranid always gets the blast-marker modifier**, because boarding
