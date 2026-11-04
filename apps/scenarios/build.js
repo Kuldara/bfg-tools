@@ -28,13 +28,32 @@ const ALLOWED = ["http://www.w3.org", "https://drive.google.com", "https://speci
    navigation, which a CSP does not restrict */
 const CSP = `default-src 'none'; script-src 'self' 'unsafe-inline' ${kit.BEACON.script}; style-src 'unsafe-inline'; img-src 'self' data:; ` +
   `font-src 'self' data:; connect-src ${kit.BEACON.connect}; base-uri 'none'; form-action 'none'; frame-ancestors 'self'`;
+/* The names the app (src/) reads from the page's other scripts rather than
+   from its own modules (kit.bundle allows these and no others): the terrain
+   core, and the data files, read with typeof where a page may lack one. Each
+   must be declared at the top of the file named here, so a module's forgotten
+   import cannot hide in this list. */
+const PAGE_GLOBALS = {
+  "battlezone-core.js": ["BZ"],
+  "scenarios/fleet-rules.js": ["FLEET_LIST", "FLEET_RULES", "fleetRulesFor", "fleetRuleSide"],
+  "scenarios/open-points.js": ["OPEN"],
+  "scenarios/play-maps.js": ["PLAYMAP"],
+  "scenarios/sizes.js": ["SIZE"],
+  "scenarios/terrain-map.js": ["TERRAIN"],
+  "scenarios/terrain-info.js": ["TERR_INFO"],
+  "scenarios/wr-rating.js": ["WR_RATE"],
+};
 
 async function build() {
   const files = { "battlezone-core.js": battlezone.asNamespace() };
   for (const f of fs.readdirSync(kit.abs(HERE + "/scenarios")).filter(f => f.endsWith(".js")).sort())
     files["scenarios/" + f] = kit.read(HERE + "/scenarios/" + f);
+  for (const [f, names] of Object.entries(PAGE_GLOBALS))
+    for (const n of names)
+      if (!new RegExp("^(?:(?:var|let|const|function|class)\\s+" + n + "\\b|\\s*window\\." + n + "\\s*=)", "m").test(files[f] || ""))
+        throw new Error("PAGE_GLOBALS: " + f + " does not declare " + n);
 
-  files["app.js"] = await kit.bundle({ entry: HERE + "/src/index.js", globalName: "SL" });
+  files["app.js"] = await kit.bundle({ entry: HERE + "/src/index.js", globalName: "SL", pageGlobals: Object.values(PAGE_GLOBALS).flat() });
   let page = kit.expandIncludes(kit.read(HERE + "/index.html"), HERE);
   page = kit.fill(page, "version", APP.version);
   page = page.replace("<!--BFGTOOLS--><!--/BFGTOOLS-->", "<!--BFGTOOLS-->" + kit.badge("scenarios") + "<!--/BFGTOOLS-->");

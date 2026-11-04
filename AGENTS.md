@@ -147,6 +147,18 @@ the page guards reject them (`tools/lib/kit.js`).
 that more than one module assigns lives on `appState` (each app's
 `src/state.js`); do not reintroduce module-level `let`s that other modules set.
 
+**A forgotten import passes a harness.** esbuild bundles a module that uses
+another module's export without importing it, without a word: it renames the
+real declaration (`isEscGrp` -> `isEscGrp2`) and the bare name points at
+nothing. In a browser that is a ReferenceError. A harness that puts the page's
+exports on the global for its snippets (`apps/play/smoke_play.js`, the
+Registry's `PAGE_GLOBALS_JS`) made such a page pass: Play threw "isEscGrp is not
+defined" in Chrome on a line no check ran. `kit.bundle` now lists every name a
+script takes from the global scope (esbuild's own scope analysis,
+`tools/lib/free-names.js`) and stops the build on one a browser does not have;
+the smoke test checks the names it defines the same way. A browser API a page
+starts to use goes in `BROWSER` there, never one of the page's own names.
+
 **Headless Chrome can hang.** Every Chrome call in the tools has a time limit
 (`layout_check.js` retries once).
 

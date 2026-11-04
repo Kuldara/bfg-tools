@@ -1,4 +1,5 @@
 import { esc } from "./helpers.js";
+import { MAPS } from "./maps.js";
 import { fleetArr } from "./scenario-page.js";
 import { d6, endingResult, entryInfo, get, num, save, wins } from "./state.js";
 
