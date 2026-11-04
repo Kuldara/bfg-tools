@@ -529,14 +529,22 @@ function turns(R, st){
    are the player's to add before choosing it. For one day (13.10.2026) the
    page added them itself; the user took that out the same evening - the
    play page offers a plain choice of the Leadership value and automates
-   none of it (RULINGS.md T40). */
-function leadership(R, st, fleet){
+   none of it (RULINGS.md T40).
+   Da Ork Clanz: the skwadron's Mob Rule +1 is derived here (Fleets p. 372,
+   T63) - on while more than five models are left, never written into the
+   value. opt.test: a Leadership test that is no Command check (a ram, a
+   disengagement, a celestial phenomenon): Under Fire and Enemy Contacts
+   are "Command check modifiers" (p. 48) and stay out of it (T46). */
+function leadership(R, st, fleet, opt){
   if(st.ld == null) return { base: null, now: null, mods: [] };
+  var test = !!(opt && opt.test);
   var mods = [];
+  var mob = mobRule([{ R: R, st: st }]);
+  if(mob) mods.push(mob);
   if(fx(st, "ld")) mods.push({ t: "sensors", v: fx(st, "ld"), page: 185 });   /* Long Range Sensors, Fleets p. 185 */
   if(st.ldPerm) mods.push({ t: "bridge smashed", v: st.ldPerm, page: 67 });
-  if(st.blast > 0 && !reactiveHull(R)) mods.push({ t: "under fire", v: -1, page: 48 });
-  if(fleet && fleet.enemyOrders) mods.push({ t: "enemy contacts", v: 1, page: 48 });
+  if(!test && st.blast > 0 && !reactiveHull(R)) mods.push({ t: "under fire", v: -1, page: 48 });
+  if(!test && fleet && fleet.enemyOrders) mods.push({ t: "enemy contacts", v: 1, page: 48 });
   if(fleet && fleet.radiation) mods.push({ t: "radiation burst", v: -fleet.radiation, page: 115 });
   var now = st.ld + mods.reduce(function(a, m){ return a + m.v; }, 0);
   if(now > 10) now = 10;
@@ -652,8 +660,11 @@ function braced(st){ return st.order === "BFI" || (st.braceTurn > 0); }
 /* --- squadrons, p. 95 and p. 99 ---------------------------------------- */
 
 /* A squadron takes one Command check on "the highest surviving Leadership
-   value in the squadron" (p. 95); escorts have a single value already. */
-function squadronLd(units, fleet){
+   value in the squadron" (p. 95); escorts have a single value already.
+   Mob Rule's +1 is the skwadron's, counted over all its cards (Fleets
+   p. 372, T63); opt.test as in leadership (T46). */
+function squadronLd(units, fleet, opt){
+  var test = !!(opt && opt.test);
   var best = null, fire = false;
   units.forEach(function(u, idx){
     /* a destroyed ship is not surviving; a disengaged one has left the
@@ -666,13 +677,176 @@ function squadronLd(units, fleet){
   });
   if(!best) return { base: null, now: null, mods: [], idx: null };
   var mods = [];
+  var mob = mobRule(units);
+  if(mob) mods.push(mob);
   if(best.st.ldPerm) mods.push({ t: "bridge smashed", v: best.st.ldPerm, page: 67 });
-  if(fire) mods.push({ t: "under fire", v: -1, page: 95 });
-  if(fleet && fleet.enemyOrders) mods.push({ t: "enemy contacts", v: 1, page: 48 });
+  if(fire && !test) mods.push({ t: "under fire", v: -1, page: 95 });
+  if(!test && fleet && fleet.enemyOrders) mods.push({ t: "enemy contacts", v: 1, page: 48 });
   if(fleet && fleet.radiation) mods.push({ t: "radiation burst", v: -fleet.radiation, page: 115 });
   var now = best.st.ld + mods.reduce(function(a, m){ return a + m.v; }, 0);
   if(now > 10) now = 10;
   return { base: best.st.ld, now: now, mods: mods, idx: best.idx };
+}
+
+/* --- Da Ork Clanz: Mob Rule, Young Gunz and the Leadership swaps -------
+   Fleets Book WiP v0.40 p. 372 (MOB RULE, YOUNG GUNZ), p. 374 (the tiddla
+   list, the Warlord's swap), pp. 376-381 (the battleships' swap). The page
+   applies them at the set-up (the owner's decisions 4.11.2026, RULINGS.md
+   T63); everything stays the player's to change. */
+
+/* An Ork escort skwadron: "The Ork Clanz rules can be used in addition to
+   the normal Ork rules, but only with its dedicated Clanz fleet list"
+   (Fleets p. 370), whose escorts are the "Tiddla skwadron 3-10 Escorts"
+   (p. 374). Not every unit of one-hit members (isEscort): six defence
+   platforms are one too, and get no Mob Rule. A Blood Axe tiddla's
+   commandeered escorts (p. 371) are in its skwadron, not a tiddla of their
+   own. */
+var TIDDLA_SECTION = /^tiddla skwadron$/i, CLANZ_LIST = /\bDa Ork Clanz\b/i;
+function isTiddla(R){
+  return !!(R && R.kind === "ship" && isEscort(R) && R.entry &&
+    TIDDLA_SECTION.test(String(R.entry.section || "")) && CLANZ_LIST.test(String(R.entry.list || "")));
+}
+/* The models a skwadron has on the table now: every living member of its
+   cards, the free one and any commandeered ones counted; a card that has
+   disengaged has left the table (Rulebook p. 57). units: [{ R, st }]. */
+function skwadronModels(units){
+  return (units || []).reduce(function(a, u){ return a + (u && u.st && !u.st.disengaged ? alive(u.st) : 0); }, 0);
+}
+/* MOB RULE: "Ork escort skwadrons gain a +1 bonus to their Leadership while
+   they contain more than five models" (Fleets p. 372). A modifier, never a
+   change of the value: on for a skwadron the set-up applied (st.mob on its
+   cards, T63) with a tiddla card in it, while more than five are left. It
+   is the skwadron's, so a swap does not move it (T63). */
+function mobRule(units){
+  var us = (units || []).filter(function(u){ return u && u.R && u.st; });
+  if(!us.some(function(u){ return u.st.mob; }) || !us.some(function(u){ return isTiddla(u.R); })) return null;
+  return skwadronModels(us) > 5 ? { t: "mob rule", v: 1, page: 372 } : null;
+}
+/* YOUNG GUNZ: "Any Ork escort skwadron with a Leadership of 5 or 6 gets a
+   bonus escort ship added for free ... (the skwadron cannot exceed ten
+   escorts). Young Gunz can be applied before Mob Rule" (Fleets p. 372).
+   base: the skwadron's value after any swap ("This includes if the
+   leadership is a result of being swapped"), without Mob Rule; models: the
+   escorts paid for in it, commandeered ones too. */
+function youngGunz(base, models){
+  return (base === 5 || base === 6) && (models | 0) < 10;
+}
+/* What one vessel of a card was paid (T63, the owner's decision 4.11.2026):
+   its list price and what was bought for each vessel - Klaws "for +5 points
+   for each vessel, not per skwadron" (Fleets p. 390), a Gubbins row priced
+   per escort. A clan and the Gubbins "count for the whole skwadron
+   (regardless of how large it is!)" (pp. 371-372): not a vessel's. */
+function vesselPaid(R){
+  var p = R && R.entry && R.entry.price != null ? R.entry.price : 0;
+  (R && R.options || []).forEach(function(o){ if(o.state === "take" && o.cost > 0) p += o.cost * (o.qty || 1); });
+  (R && R.upgrades || []).forEach(function(u){ if(u.state === "take" && u.per === "hull" && !u.shared && u.price > 0) p += u.price; });
+  return p;
+}
+/* "The free ship can be any Ork escort class in the fleet list costing equal
+   to or less than that of the cheapest escort paid for in the skwadron"
+   (Fleets p. 372). paid: the skwadron's cards that were paid for (a
+   commandeered escort too, "at their listed cost", p. 371), never a free
+   one; classes: the list's Ork escort classes [{ label, price }] in the
+   list's order (the Clanz tiddla, p. 374), from the data. Returns the cap
+   and the card that sets it, the classes allowed, and the class the page
+   proposes: the cheapest class paid for that may be the free one, else the
+   first allowed in the list's order (its dearest). */
+function youngGunzChoice(paid, classes){
+  var cards = (paid || []).filter(function(R){ return R && R.kind === "ship"; });
+  if(!cards.length) return null;
+  var priced = cards.map(function(R, k){ return { R: R, price: vesselPaid(R), k: k }; });
+  var low = priced.reduce(function(a, x){ return !a || x.price < a.price ? x : a; }, null);
+  var allowed = (classes || []).filter(function(c){ return c && c.price != null && c.price <= low.price; });
+  var prop = null;
+  priced.slice().sort(function(a, b){ return a.price - b.price || a.k - b.k; }).some(function(x){
+    var lab = x.R.entry && x.R.entry.label;
+    if(allowed.some(function(c){ return c.label === lab; })){ prop = lab; return true; }
+    return false;
+  });
+  if(!prop && allowed.length) prop = allowed[0].label;
+  return { cap: low.price, by: low.R, allowed: allowed, proposal: prop };
+}
+/* An escort squadron rolls once: "Escorts roll once per squadron, with the
+   whole squadron sharing the leadership value rolled" (Rulebook p. 45). A
+   Clanz tiddla rolls on the Orks' table - "all Ork ships reduce their
+   Leadership by -1" (Fleets p. 360) - even when its first card is a Blood
+   Axe's commandeered escort (p. 371), which carries no Ork rule of its own
+   (T63). Any other squadron rolls on its first card's plan. */
+function skwadronPlan(Rs, list){
+  var rs = (Rs || []).filter(Boolean);
+  return ldPlan(rs.filter(isTiddla)[0] || rs[0], list);
+}
+/* THE BATTLESHIPS' SWAP: "When Leadership values are generated for the Ork
+   fleet, Hammer class battlekroozers can opt to swap Leadership ratings with
+   a Kill Kroozer or Terror Ship to represent the warlord dragooning the best
+   crew in the fleet aboard his vessel" - the same sentence in each named
+   battleship's rules (Fleets pp. 376, 378-381), in the Waaagh! and the Clanz
+   lists. The partner classes are read from the sentence; page: the
+   battleship's own. */
+var BB_SWAP = /swap Leadership ratings with (?:an? )?(.+?)(?: to represent\b|[.;]|$)/i;
+function bbSwapRule(R){
+  if(!R || R.kind !== "ship") return null;
+  var r = (R.rules || []).filter(function(x){ return BB_SWAP.test(String(x.t || "")); })[0];
+  if(!r) return null;
+  var kinds = String(r.t).match(BB_SWAP)[1].split(/\s*,\s*|\s+or\s+/)
+    .map(function(s){ return s.replace(/^(?:an?|the)\s+/i, "").trim(); }).filter(Boolean);
+  return { kinds: kinds, page: (R.source && R.source.page) || null };
+}
+/* A ship of a partner class: by its class name, or by its own rule -
+   "Zukov's Klaw is a Terror Ship that can only be used exactly as described
+   in these special rules" (Fleets p. 383, T63). Never an escort. */
+function bbSwapPartner(R, rule){
+  if(!R || R.kind !== "ship" || !rule || isEscort(R)) return false;
+  var nm = String(R.className || "").replace(/\s+/g, " ").trim().toLowerCase();
+  return rule.kinds.some(function(k){
+    var kk = k.toLowerCase();
+    if(nm === kk) return true;
+    var re = new RegExp("\\bis an? " + kk.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "\\b", "i");
+    return (R.rules || []).some(function(x){ return re.test(String(x.t || "")); });
+  });
+}
+/* THE WARLORD'S SWAP: "He may also swap leadership with any one ship or
+   escort squadron under his command" (Fleets p. 374) - his ship's value with
+   one other of his command. units: [{ i, R, grp }] under him; ship: the unit
+   he is aboard. Each capital ship on its own ("Each capital ship rolls
+   individually for leadership, even if it is in a squadron", Rulebook
+   p. 45), an escort squadron once by its first card; never his own ship or
+   its squadron, never a Leadership the book fixes (an Ork Hulk is "always
+   Leadership 6", Fleets p. 392). */
+function warlordSwapPartners(units, ship){
+  var us = (units || []).filter(function(u){ return u && u.R; });
+  var key = function(u){ return u.grp && /^e:/.test(String(u.grp)) ? String(u.grp) : "u" + u.i; };
+  var rolls = function(R){ var p = ldPlan(R); return !!(p && p.roll); };
+  var own = us.filter(function(u){ return u.i === ship; })[0];
+  if(own && !rolls(own.R)) return [];
+  var mine = own ? key(own) : "u" + ship, seen = {}, out = [];
+  us.forEach(function(u){
+    if(u.R.kind !== "ship" || !rolls(u.R)) return;
+    var k = key(u);
+    if(k === mine || seen[k]) return;
+    seen[k] = 1; out.push(u.i);
+  });
+  return out;
+}
+/* The swaps, one after another, each exchanging the two values as they
+   stand then. The page passes the battleships' first - "When Leadership
+   values are generated" (pp. 376-381) - then the Warlords' (p. 374), all in
+   Rulebook p. 123's "5. Generate Leadership" and before Young Gunz (T63).
+   vals: { key: value }; recs: [{ a, b, page }]. Returns the values after
+   them and each key's steps { from, to, with, page } for the line that says
+   why; a record with a value missing changes nothing. */
+function applySwaps(vals, recs){
+  var v = {}, steps = {};
+  Object.keys(vals || {}).forEach(function(k){ v[k] = vals[k]; });
+  (recs || []).forEach(function(r){
+    var a = String(r.a), b = String(r.b);
+    if(a === b || v[a] == null || v[b] == null) return;
+    var va = v[a], vb = v[b];
+    v[a] = vb; v[b] = va;
+    (steps[a] = steps[a] || []).push({ from: va, to: vb, with: r.b, page: r.page || null });
+    (steps[b] = steps[b] || []).push({ from: vb, to: va, with: r.a, page: r.page || null });
+  });
+  return { vals: v, steps: steps };
 }
 
 /* An escort squadron fires as one: its firepower is "added up and halved
@@ -1446,6 +1620,10 @@ return {
   clearBlast: clearBlast, killMember: killMember, reviveMember: reviveMember, alive: alive,
   endTurn: endTurn, cyclePlayed: cyclePlayed,
   squadronLd: squadronLd, escortFire: escortFire, squadronFire: squadronFire, squadronStatus: squadronStatus, noCombine: noCombine, rangeCm: rangeCm,
+  /* Da Ork Clanz: Mob Rule, Young Gunz, the Leadership swaps (T63) */
+  isTiddla: isTiddla, skwadronModels: skwadronModels, mobRule: mobRule, youngGunz: youngGunz, vesselPaid: vesselPaid,
+  youngGunzChoice: youngGunzChoice, skwadronPlan: skwadronPlan, bbSwapRule: bbSwapRule, bbSwapPartner: bbSwapPartner,
+  warlordSwapPartners: warlordSwapPartners, applySwaps: applySwaps,
   /* planetary defences (8.10.2026) */
   QUADS: QUADS, track: track, selectQuad: selectQuad, quadGone: quadGone, quadViews: quadViews, adoptUnit: adoptUnit, tapHit: tapHit,
   tickUnit: tickUnit, isInstallation: isInstallation, isStill: isStill, launchBays: launchBays,

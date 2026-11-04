@@ -1583,6 +1583,193 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
   check("d6: every face 1-6 from the generator", [1, 2, 3, 4, 5, 6].map(() => PLAY.d6(rng)).join("") === "123456");
 }
 
+/* --- Da Ork Clanz: Mob Rule, Young Gunz and the Leadership swaps -------
+   The page applies them at the set-up (the owner's decisions 4.11.2026,
+   RULINGS.md T63). Every expectation is the book's: Fleets Book WiP v0.40
+   p. 372 (MOB RULE, YOUNG GUNZ), p. 374 (the tiddla list, the Warlord's
+   swap), pp. 376-381 (the battleships' swap), p. 383 (Zukov's Klaw), p. 390
+   (Klaws); Rulebook v1.10 pp. 45, 48, 123. */
+{
+  const CLANZ = catalog.lists.find(x => /^Orks . Da Ork Clanz$/.test(x.nm));
+  const WAAAGH = catalog.lists.find(x => /^Orks . Waaagh!$/.test(x.nm));
+  /* a row of an Ork list, resolved as the page does; more: options, upgrades, adjust */
+  const ork = (L, secRe, labelRe, hulls, more) => {
+    for(const s of L.secs){
+      if(!secRe.test(s.t)) continue;
+      for(const en of s.ents){
+        if(en.k !== "unit" || !labelRe.test(en.l)) continue;
+        return DOMAIN.resolveUnit(Object.assign({ schemaVersion: DOMAIN.SCHEMA_VERSION, role: "core", entry: { list: L.nm, section: s.t, label: en.l },
+          ref: en.r == null ? null : String(en.r), hull: null, hulls: hulls || 1, name: "", note: "", adjust: 0, custom: null, members: [], options: {}, upgrades: {} }, more || {}), { list: L }, catalog);
+      }
+    }
+    throw new Error("no row " + labelRe + " in " + L.nm);
+  };
+  const has = name => typeof PLAY[name] === "function";
+  const call = (name, ...a) => has(name) ? PLAY[name](...a) : undefined;
+  const TID = /^Tiddla skwadron$/;
+  const brutes = n => ork(CLANZ, TID, /^Brute/, n);
+  const fleet = PLAY.freshFleet();
+  /* a card on the table: its Leadership, Mob Rule applied at the set-up (T63), extra members */
+  const card = (R, ld, mob, free) => { const st = PLAY.freshUnit(R); st.ld = ld; if(mob) st.mob = true; for(let k = 0; k < (free | 0); k++) st.members.push({ dead: false, free: true }); return st; };
+  const now = (R, st, opt) => PLAY.leadership(R, st, fleet, opt).now;
+
+  /* MOB RULE: "Ork escort skwadrons gain a +1 bonus to their Leadership while
+     they contain more than five models" (Fleets p. 372) */
+  const b6 = brutes(6), s6 = card(b6, 5, true);
+  check("Mob Rule: six Brutes on Ld 5 test on Ld 6, a named +1 (Fleets p. 372)",
+    now(b6, s6) === 6 && PLAY.leadership(b6, s6, fleet).mods.some(m => m.t === "mob rule" && m.v === 1 && m.page === 372), JSON.stringify(PLAY.leadership(b6, s6, fleet)));
+  PLAY.killMember(s6, 0);
+  check("Mob Rule: one of them lost, five left: Ld 5 - \"while they contain more than five models\" (p. 372)", now(b6, s6) === 5, JSON.stringify(PLAY.leadership(b6, s6, fleet)));
+  PLAY.reviveMember(s6, 0);
+  check("Mob Rule: never written into the Leadership itself: the value stays 5 (T63)", s6.ld === 5);
+  check("Mob Rule: a skwadron the set-up never applied has no +1 (T63: a game saved before has it off)", now(b6, card(b6, 5, false)) === 5);
+  /* "The Ork Clanz rules can be used in addition to the normal Ork rules, but
+     only with its dedicated Clanz fleet list" (Fleets p. 370) */
+  const w6 = ork(WAAAGH, /^ESCORTS$/, /^Brute/, 6);
+  check("Mob Rule: six Waaagh! Brutes get no +1 - Clanz only (Fleets p. 370)", now(w6, card(w6, 5, true)) === 5, JSON.stringify(PLAY.leadership(w6, card(w6, 5, true), fleet)));
+  /* six one-hit platforms are a unit of members too (Rulebook p. 100), not an
+     Ork escort skwadron: their checks are made "against Ld 7" */
+  const plat = ork(CLANZ, /^PLANETARY DEFENCES$/, /^Orbital defence laser platform$/, 6);
+  check("Mob Rule: six Orbital defence laser platforms in a Clanz fleet stay at Ld 7 (Rulebook p. 100)",
+    PLAY.isEscort(plat) && call("isTiddla", plat) === false && now(plat, card(plat, 7, true)) === 7, JSON.stringify([call("isTiddla", plat), now(plat, card(plat, 7, true))]));
+  check("Mob Rule: a tiddla card is an Ork escort skwadron (\"Tiddla skwadron 3-10 Escorts\", Fleets p. 374)", call("isTiddla", b6) === true && call("isTiddla", w6) === false);
+  /* "Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix
+     desired" (p. 374), one Leadership for the squadron (Rulebook p. 45) */
+  const sav3 = ork(CLANZ, TID, /^Savage/, 3), ons3 = ork(CLANZ, TID, /^Onslaught/, 3);
+  const mixed = [{ R: sav3, st: card(sav3, 8, true) }, { R: ons3, st: card(ons3, 8, true) }];
+  check("Mob Rule: three Savages and three Onslaughts are one skwadron of six: Ld 8 plays 9 (Fleets p. 372, 374)", PLAY.squadronLd(mixed, fleet).now === 9, JSON.stringify(PLAY.squadronLd(mixed, fleet)));
+  PLAY.killMember(mixed[0].st, 2);
+  check("Mob Rule: ... a Savage lost: five, Ld 8", PLAY.squadronLd(mixed, fleet).now === 8, JSON.stringify(PLAY.squadronLd(mixed, fleet)));
+  check("Mob Rule: never above 10 - \"Under no circumstance can a ship's Leadership be modified higher than Leadership 10\" (Rulebook p. 48)", now(b6, card(b6, 10, true)) === 10);
+  /* Ram, disengage and celestial tests are Leadership tests, not Command
+     checks: Under Fire and Enemy Contacts are "Command check modifiers"
+     (p. 48) and stay out of them (T46); Mob Rule and the sensors' +1 are the
+     ship's own Leadership */
+  const sb = card(b6, 5, true); sb.blast = 1;
+  const fe = PLAY.freshFleet(); fe.enemyOrders = true;
+  check("Mob Rule: a ram's test has it, without Under Fire and Enemy Contacts (T46): 5 + 1 = 6; the Command check 5 + 1 - 1 + 1 = 6",
+    PLAY.leadership(b6, sb, fe, { test: true }).now === 6 && !PLAY.leadership(b6, sb, fe, { test: true }).mods.some(m => /under fire|enemy contacts/.test(m.t)) && PLAY.leadership(b6, sb, fe).now === 6,
+    JSON.stringify([PLAY.leadership(b6, sb, fe, { test: true }), PLAY.leadership(b6, sb, fe)]));
+  const ls = PLAY.freshUnit(lunar); ls.ld = 8; ls.fx = { ld: 1 }; ls.blast = 1;
+  check("Long Range Sensors: +1 in a Leadership test too (Fleets p. 185), Under Fire not (T46): 9",
+    PLAY.leadership(lunar, ls, PLAY.freshFleet(), { test: true }).now === 9 && PLAY.leadership(lunar, ls, PLAY.freshFleet()).now === 8, JSON.stringify(PLAY.leadership(lunar, ls, PLAY.freshFleet(), { test: true })));
+
+  /* YOUNG GUNZ: "Any Ork escort skwadron with a Leadership of 5 or 6 gets a
+     bonus escort ship added for free ... (the skwadron cannot exceed ten
+     escorts). Young Gunz can be applied before Mob Rule" (Fleets p. 372) */
+  check("Young Gunz: on Ld 5 and 6 only (Fleets p. 372)", [5, 6].every(v => call("youngGunz", v, 5) === true) && [7, 8, 9, 10].every(v => call("youngGunz", v, 5) === false),
+    JSON.stringify([5, 6, 7, 8, 9, 10].map(v => call("youngGunz", v, 5))));
+  check("Young Gunz: never at ten - \"the skwadron cannot exceed ten escorts\"; nine get a tenth (p. 372)", call("youngGunz", 5, 10) === false && call("youngGunz", 6, 9) === true);
+  /* "a tiddla skwadron with five escorts that rolls Ld 5 may have a sixth
+     escort for free, increasing its Ld to 6!" (p. 372) */
+  const b5 = brutes(5), e5 = card(b5, 5, true, 1);
+  check("Young Gunz: the book's example: five escorts on Ld 5, a sixth for free, Ld 6 (p. 372)", call("youngGunz", 5, 5) === true && PLAY.alive(e5) === 6 && now(b5, e5) === 6, JSON.stringify([call("youngGunz", 5, 5), PLAY.alive(e5), now(b5, e5)]));
+  check("Young Gunz: six escorts on Ld 6, tested before Mob Rule: seven ships and Ld 7 (p. 372)", call("youngGunz", 6, 6) === true && call("youngGunz", 7, 6) === false && now(b6, card(b6, 6, true, 1)) === 7,
+    JSON.stringify([call("youngGunz", 6, 6), call("youngGunz", 7, 6), now(b6, card(b6, 6, true, 1))]));
+  /* "This includes if the leadership is a result of being swapped with that
+     of a Warboss!" (p. 372) - the Clanz Warlord's swap, "He may also swap
+     leadership with any one ship or escort squadron under his command" (p. 374) */
+  const sw1 = call("applySwaps", { T: 5, A: 8 }, [{ a: "T", b: "A", page: 374 }]);
+  check("Young Gunz: a tiddla that rolled 8, swapped with its Warlord's Terror Ship's 5, is on Ld 5 and gets it (pp. 372, 374)",
+    !!sw1 && sw1.vals.A === 5 && sw1.vals.T === 8 && call("youngGunz", sw1.vals.A, 5) === true, JSON.stringify(sw1));
+  const sw2 = call("applySwaps", { T: 8, A: 5 }, [{ a: "T", b: "A", page: 374 }]);
+  check("Young Gunz: ... and one that rolled 5, swapped up to 8, does not (p. 372)", !!sw2 && sw2.vals.A === 8 && call("youngGunz", sw2.vals.A, 5) === false, JSON.stringify(sw2));
+  /* T63 decision 5 (Rulebook p. 123 "5. Generate Leadership"): the battleship's
+     swap "When Leadership values are generated" (pp. 376-381) first, then the
+     Warlord's (p. 374) on the value after it */
+  const sw3 = call("applySwaps", { H: 6, K: 8, T: 5 }, [{ a: "H", b: "K", page: 376 }, { a: "K", b: "T", page: 374 }]);
+  check("swaps: a Hammer's swap with the Kill Kroozer first, then the Warlord aboard it swaps with the tiddla: the tiddla has the Hammer's 6 (T63)",
+    !!sw3 && sw3.vals.H === 8 && sw3.vals.K === 5 && sw3.vals.T === 6 && sw3.steps.T.length === 1 && sw3.steps.K.length === 2, JSON.stringify(sw3));
+  /* T63 decision 6: the +1 is the skwadron's ("while they contain more than
+     five models"), not the value's */
+  const sw4 = call("applySwaps", { B: 5, K: 7 }, [{ a: "K", b: "B", page: 374 }]) || { vals: {} };
+  check("Mob Rule stays with the skwadron that has the models: six Brutes swapped to the Kill Kroozer's 7 play 8, the Kroozer 5 (T63)",
+    now(b6, card(b6, sw4.vals.B, true)) === 8 && sw4.vals.K === 5, JSON.stringify(sw4));
+
+  /* "The free ship can be any Ork escort class in the fleet list costing equal
+     to or less than that of the cheapest escort paid for in the skwadron"
+     (p. 372). The list: "Tiddla skwadron 3-10 Escorts ... Ravager attack ship
+     40 pts; Onslaught attack ship 35 pts; Grunt assault ship 30 pts; Savage
+     gunship 30 pts; Brute ramship 25 pts" (p. 374). */
+  const classes = CLANZ.secs.find(s => TID.test(s.t)).ents.filter(e => e.k === "unit").map(e => ({ label: e.l, price: e.p }));
+  check("the tiddla classes are the book's five at its prices (Fleets p. 374)",
+    classes.map(c => c.label.split(" ")[0] + " " + c.price).join(", ") === "Ravager 40, Onslaught 35, Grunt 30, Savage 30, Brute 25", JSON.stringify(classes));
+  /* never undefined: a missing function fails its check, not the whole run */
+  const pick = (paid) => call("youngGunzChoice", paid, classes) || {};
+  const names = ch => ch && ch.allowed ? ch.allowed.map(c => c.label.split(" ")[0]).join(",") : "none";
+  check("Young Gunz: Brutes (25): a Brute only (p. 372)", names(pick([brutes(5)])) === "Brute" && pick([brutes(5)]).cap === 25, names(pick([brutes(5)])));
+  check("Young Gunz: Savages (30) and Onslaughts (35): Grunt, Savage or Brute; the page proposes the Savage", names(pick([sav3, ons3])) === "Grunt,Savage,Brute" && pick([sav3, ons3]).proposal === "Savage gunship",
+    JSON.stringify(pick([sav3, ons3])));
+  /* T63 decision 4: the cap is the price paid per vessel with its own options:
+     "Grunt assault ships can be equipped with Klaws for +5 points for each
+     vessel, not per skwadron" (p. 390) */
+  const klawId = (catalog.ships["388"].ol || []).find(o => /Klaws/.test(o.t)).id;
+  const gk = ork(CLANZ, TID, /^Grunt/, 4, { options: { [klawId]: { state: "take", qty: 1 } } });
+  check("Young Gunz: Grunts with Klaws are paid 35 each: up to 35, the Onslaught too; the Grunt is proposed (p. 390, T63)",
+    gk.points === 140 && names(pick([gk])) === "Onslaught,Grunt,Savage,Brute" && pick([gk]).cap === 35 && pick([gk]).proposal === "Grunt assault ship", JSON.stringify([gk.points, pick([gk])]));
+  const gub = ork(CLANZ, TID, /^Grunt/, 3, { upgrades: { [CLANZ.nm + "\u0001GUBBINS\u0001Klaws (Grunt: +5 per escort)"]: "take" } });
+  check("Young Gunz: ... the same with the Gubbins row \"+5 per escort\" (Fleets p. 372)", gub.points === 105 && pick([gub]).cap === 35, JSON.stringify([gub.points, pick([gub]) && pick([gub]).cap]));
+  check("Young Gunz: a Brute in a Grunt skwadron: the cheapest paid is 25, a Brute only", names(pick([ork(CLANZ, TID, /^Grunt/, 5), brutes(1)])) === "Brute", names(pick([ork(CLANZ, TID, /^Grunt/, 5), brutes(1)])));
+  /* "The point cost for clan upgrades for tiddla skwadrons count for the whole
+     skwadron (regardless of how large it is!)" (p. 371) */
+  const goffs = ork(CLANZ, TID, /^Brute/, 5, { upgrades: { [CLANZ.nm + "\u0001CLAN UPGRADES\u0001Clan: Goffs (Black)"]: "take" } });
+  check("Young Gunz: a clan is the whole skwadron's, not a vessel's: Goff Brutes still cap at 25 (p. 371)", goffs.points === 145 && pick([goffs]).cap === 25, JSON.stringify([goffs.points, pick([goffs]) && pick([goffs]).cap]));
+  /* "A Blood Axe tiddla skwadron of at least six escorts may include up to three
+     Imperial Navy and/or Chaos escorts from any fleet list at their listed
+     cost" (p. 371): paid for, but no Ork escort class */
+  const cobra = ork(CLANZ, /^BLOOD AXE COMMANDEERED ESCORTS$/, /^Cobra/, 1);
+  const rav = ork(CLANZ, TID, /^Ravager/, 6);
+  check("Young Gunz: Ravagers with a commandeered Cobra (30): Grunt, Savage or Brute, never a Cobra; the dearest is proposed (p. 371, 372)",
+    names(pick([rav, cobra])) === "Grunt,Savage,Brute" && pick([rav, cobra]).proposal === "Grunt assault ship" && pick([rav, cobra]).by === cobra, JSON.stringify(pick([rav, cobra]) && [pick([rav, cobra]).cap, pick([rav, cobra]).proposal]));
+
+  /* "Each destroyed escort earns its value in victory points provided the
+     entire escort squadron is destroyed" (Rulebook p. 123); the free escort is
+     0 pts and 0 VP (T63 decision 2) */
+  const v5 = card(b5, 5, true, 1);
+  [0, 1, 2, 3, 4].forEach(k => PLAY.killMember(v5, k));
+  check("VP: five Brutes and their free sixth, five lost: nothing yet (Rulebook p. 123)", PLAY.conceded(b5, v5) === 0);
+  PLAY.killMember(v5, 5);
+  check("VP: ... all six lost: the 125 paid, the free one nothing (p. 123, T63)", b5.points === 125 && PLAY.conceded(b5, v5) === 125, PLAY.conceded(b5, v5));
+  const freeB = ork(CLANZ, TID, /^Brute/, 1, { adjust: -25 });
+  const gone = R => { const st = card(R, 8, true); st.members.forEach(m => { m.dead = true; }); return { R: R, st: st, plus: 0 }; };
+  check("VP: a free Brute card in a squadron of Savages and Onslaughts: 90 + 105 + 0 when all are lost (p. 123, T63)",
+    freeB.points === 0 && PLAY.squadronConceded([gone(sav3), gone(ons3), gone(freeB)]) === 195, JSON.stringify([freeB.points, PLAY.squadronConceded([gone(sav3), gone(ons3), gone(freeB)])]));
+
+  /* "Escorts roll once per squadron, with the whole squadron sharing the
+     leadership value rolled" (Rulebook p. 45), and "all Ork ships reduce their
+     Leadership by -1" (Fleets p. 360): a Blood Axe tiddla rolls on the Ork
+     table whatever its first card is (T63 decision 7) */
+  const faces = p => [1, 2, 3, 4, 5, 6].map(d => (PLAY.ldFromDie(p, d) || {}).value).join(",");
+  check("Leadership: a Blood Axe tiddla with a commandeered Cobra as its first card rolls 5,6,6,7,7,8 (Rulebook p. 45, Fleets p. 360, T63)",
+    has("skwadronPlan") && faces(PLAY.skwadronPlan([cobra, brutes(5)])) === "5,6,6,7,7,8", has("skwadronPlan") ? faces(PLAY.skwadronPlan([cobra, brutes(5)])) : "no skwadronPlan");
+  check("Leadership: ... a Cobra on its own is on the Rulebook table, 6,7,7,8,8,9 (p. 45)", has("skwadronPlan") && faces(PLAY.skwadronPlan([cobra])) === "6,7,7,8,8,9");
+
+  /* THE BATTLESHIPS' SWAP: "When Leadership values are generated for the Ork
+     fleet, Hammer class battlekroozers can opt to swap Leadership ratings with
+     a Kill Kroozer or Terror Ship" (Fleets p. 376; the same sentence pp. 378-381) */
+  const UGE = /Uge ship skwadron$/, BIG = /^Big ship skwadron$/;
+  const bbPages = [[/^Hammer/, 376], [/^Dethdeala/, 378], [/^Gorbag/, 379], [/^Slamblasta/, 380], [/^Kroolboy/, 381]].map(([re, p]) => { const r = call("bbSwapRule", ork(CLANZ, UGE, re)); return r && r.page === p; });
+  check("swaps: every Ork battleship may swap, each on its own page (Fleets pp. 376, 378-381)", bbPages.every(Boolean), JSON.stringify(bbPages));
+  const rule = call("bbSwapRule", ork(CLANZ, UGE, /^Hammer/));
+  const partner = R => call("bbSwapPartner", R, rule) === true;
+  check("swaps: a battleship's partner is a Kill Kroozer or a Terror Ship (pp. 376-381)", partner(ork(CLANZ, BIG, /^Kill kroozer$/)) && partner(ork(CLANZ, BIG, /^Terror ship$/)));
+  /* "Zukov's Klaw is a Terror Ship that can only be used exactly as described
+     in these special rules" (p. 383, T63 decision 10) */
+  check("swaps: ... Zukov's Klaw is a Terror Ship (Fleets p. 383, T63)", partner(ork(CLANZ, BIG, /^Zukov/)));
+  check("swaps: ... not a Lite kroozer, an escort or another battleship", !partner(ork(CLANZ, BIG, /^Lite kroozer$/)) && !partner(brutes(5)) && !partner(ork(CLANZ, UGE, /^Dethdeala/)));
+  check("swaps: the Waaagh! battleships swap too - it is the profile's rule (p. 376)", !!call("bbSwapRule", ork(WAAAGH, /^BATTLESHIPS/, /^Hammer/)) && !call("bbSwapRule", ork(CLANZ, BIG, /^Kill kroozer$/)));
+  /* THE WARLORD'S SWAP: "He may also swap leadership with any one ship or
+     escort squadron under his command" (p. 374); "Each capital ship rolls
+     individually for leadership, even if it is in a squadron" (Rulebook p. 45) */
+  const kk = ork(CLANZ, BIG, /^Kill kroozer$/);
+  const cmd = [{ i: 1, R: b5, grp: null }, { i: 2, R: kk, grp: "A" }, { i: 3, R: kk, grp: "A" }, { i: 4, R: sav3, grp: "e:B" }, { i: 5, R: ons3, grp: "e:B" }];
+  check("swaps: a Warlord aboard a Kill Kroozer swaps with one ship or escort squadron of his own command: the Brutes, the other kroozer, squadron B once (p. 374)",
+    JSON.stringify(call("warlordSwapPartners", cmd, 2)) === "[1,3,4]", JSON.stringify(call("warlordSwapPartners", cmd, 2)));
+  check("swaps: ... aboard squadron B: never his own skwadron (p. 374)", JSON.stringify(call("warlordSwapPartners", cmd, 5)) === "[1,2,3]", JSON.stringify(call("warlordSwapPartners", cmd, 5)));
+  const hulk = ork(CLANZ, /^Space Hulks$/, /^Ork hulk$/);
+  check("swaps: ... an Ork Hulk is \"always Leadership 6\": nothing to swap (Fleets p. 392)", JSON.stringify(call("warlordSwapPartners", [{ i: 1, R: hulk, grp: null }, { i: 2, R: kk, grp: null }], 2)) === "[]");
+}
+
 /* --- Repair with one tap: the dice the book gives ---------------------- */
 {
 
