@@ -7,7 +7,7 @@ import { KEY_WAKE, SQN_LETTERS, builderTool, carriersOf, cmdsAboard, coCmd, grpH
 import { IN_REFITS, inRefitKind, pregameRolls, pregameText, pregameEffects } from "../../../packages/ui/pregame-tables.js";
 import { cataLabel, critLabel, groupUnits } from "./actions.js";
 import { upgradeLine, baseName, classTag, crippledNow, critChips, ldTile, memberWord, ordChip, ordnancePills, renderFleetPop, statsLine, unitName, weaponsLine, weaponsTable } from "./derived.js";
-import { builderFleets, endPending, fireReminder, jumpStrip, linkedFleets, renderEndPhase } from "./share.js";
+import { builderFleets, endPending, fireReminder, jumpStrip, renderEndPhase, savedFleets } from "./share.js";
 import PLAY from "../rules.js";
 import { arcGlyph, esc, factionCols, shortArmour, shortRange, starHTML, title } from "../../../packages/ui/format.js";
 import DOMAIN from "../../../packages/rules/domain.js";
@@ -213,29 +213,29 @@ export function renderLoad(){
       ${res.error ? `<p class="note bad">${esc(res.error)}</p>` : res.units.length !== g.st.length ? `<p class="note bad">The roster no longer resolves to the saved units (${res.units.length} of ${g.st.length}${res.lost.length ? ", " + res.lost.length + " could not be matched" : ""}). Start a new game.</p>` : `<button class="btn" data-act="resume">Resume game<small>turn ${g.fleet.turn}</small></button>`}
     </div>`;
   }
-  /* this device's own saved fleets - from links, QR codes and files (J208):
-     the newest ones are marked, and each keeps the name it was sent with */
-  const lk = linkedFleets();
-  const isNew = fp => Array.isArray(appState.V.linkNew) && appState.V.linkNew.indexOf(fp) >= 0;
+  /* the saved fleets: the builder's Saved fleets, one list (share.js
+     savedFleets) - a fleet that came by a link or a file is marked new */
+  const lk = savedFleets();
+  const isNew = id => Array.isArray(appState.V.linkNew) && appState.V.linkNew.indexOf(id) >= 0;
+  const FROM = { link: "from a link", file: "from a file", paste: "pasted", kept: "kept" };
   if(lk.length){
-    cards += `<div class="card"><h2>Saved fleets</h2>` + lk.map((f, k) => {
-      const res = resolveFleet(f.doc);
-      return `<div class="fl${isNew(f.fp) ? " fresh" : ""}">${res.error ? `<p class="note bad">${esc(f.doc.name || f.doc.ln || "")}: ${esc(res.error)}</p>` :
-        `<button class="btn ${isNew(f.fp) || (!appState.V.linkNew && k === 0) ? "" : "sec"}" data-act="linked" data-arg="${k}">${esc(f.doc.name || f.doc.ln)}<small>${f.doc.name ? esc(f.doc.ln) + " " + MID + " " : ""}${res.units.length} units ${MID} ${fleetPoints(res.units)} pts ${MID} ${f.how === "file" ? "file" : "link"} ${esc(f.date || "")}${isNew(f.fp) ? " " + MID + " new" : ""}</small></button>`}
-        <span class="side"><button class="mini" data-act="send" data-arg="s:${k}" aria-label="Send this fleet to another device">send</button>
-        <button class="mini" data-act="unlink" data-arg="${k}" aria-label="Forget this fleet on this device">forget</button></span></div>`;
+    cards += `<div class="card"><h2>Saved fleets</h2><p class="foot">The same list as Saved fleets in the builder.</p>` + lk.map((f, k) => {
+      const res = resolveFleet(f);
+      return `<div class="fl${isNew(f.id) ? " fresh" : ""}">${res.error ? `<p class="note bad">${esc(f.name || f.ln || "")}: ${esc(res.error)}</p>` :
+        `<button class="btn ${isNew(f.id) || (!appState.V.linkNew && k === 0) ? "" : "sec"}" data-act="linked" data-arg="${k}">${esc(f.name || f.ln)}<small>${esc(f.ln)} ${MID} ${res.units.length} units ${MID} ${fleetPoints(res.units)} pts${f.from && FROM[f.from] ? " " + MID + " " + FROM[f.from] : ""} ${esc(f.saved || "")}${isNew(f.id) ? " " + MID + " new" : ""}</small></button>`}
+        <button class="mini" data-act="send" data-arg="s:${k}" aria-label="Send this fleet to another device">send</button></div>`;
     }).join("") + (lk.length > 1 ? `<button class="btn sec" data-act="send" data-arg="all">Send all<small>every saved fleet to another device</small></button>` : "") + `</div>`;
   }
-  /* the builder's own fleets on this device: its saved fleets by name, then
-     the fleet each list is editing; play one here, or send it to another device */
+  /* the fleet each of the builder's lists is editing: not saved, so on its
+     own; play one here, or send it to another device */
   const bad = raw ? parseDoc(raw).error : "";
   if(bad) cards += `<div class="card"><h2>Fleet in this browser</h2><p class="note bad">${esc(bad)}</p></div>`;
   const bf = builderFleets();
   if(bf.length){
-    cards += `<div class="card"><h2>Fleets from the builder</h2>` + bf.map((f, k) => {
+    cards += `<div class="card"><h2>Being edited in the builder</h2>` + bf.map((f, k) => {
       const res = resolveFleet(f);
       return res.error ? `<p class="note bad">${esc(f.name || f.ln)}: ${esc(res.error)}</p>` :
-        `<div class="fl"><button class="btn ${k ? "sec" : ""}" data-act="newfrom" data-arg="${k}">${esc(f.name || f.ln)}<small>${f.name ? esc(f.ln) + " " + MID + " " : ""}${res.units.length} units ${MID} ${fleetPoints(res.units)} pts${res.lost.length ? " " + MID + " " + res.lost.length + " could not be matched" : ""} ${MID} ${f.saved ? "saved" : f.open ? "being edited" : "being edited, kept"}</small></button>
+        `<div class="fl"><button class="btn ${k ? "sec" : ""}" data-act="newfrom" data-arg="${k}">${esc(f.name || f.ln)}<small>${f.name ? esc(f.ln) + " " + MID + " " : ""}${res.units.length} units ${MID} ${fleetPoints(res.units)} pts${res.lost.length ? " " + MID + " " + res.lost.length + " could not be matched" : ""} ${MID} ${f.open ? "open in the builder" : "kept on its list"}</small></button>
           <button class="mini" data-act="send" data-arg="b:${k}" aria-label="Send this fleet to another device">send</button></div>`;
     }).join("") + `</div>`;
   }else if(!lk.length && !g && !bad){

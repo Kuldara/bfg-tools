@@ -5,6 +5,9 @@ a tag `play-v<version>` deploys the Registry's site.
 
 ## Unreleased
 
+### Changed
+- One list of saved fleets (4.11.2026): the load screen's Saved fleets is the builder's Saved fleets. A fleet that comes by a link, a code or a file goes in there, and the builder shows it; the page's own list from before is moved in once. The fleets the builder is editing are under Being edited in the builder. Deleting and renaming are done in the builder.
+
 ### Added
 - Da Ork Clanz: a mixed tiddla (escort cards with one Squadron letter, Fleets p. 374 "in any mix desired") is one squadron in the game, as every mixed escort squadron has been since 28.10.2026: one head ("Escort squadron T ×6 of 6") over each class's own card, one Leadership for all its cards, one order and one Brace, its victory points as a whole. A Blood Axe tiddla's commandeered escorts are in it. Mob Rule is on the head, counting the ships still alive on all its cards ("mob rule: +1 Ld (6 ships)", gone at five, p. 372), and Young Gunz is said once. RULINGS.md T42 still said escort squadrons stay units of their own; it now records this, the user's decision of 4.11.2026 (J244).
 - A rolled or chosen refit changes the card's numbers (2.11.2026, T44): Reinforced Hull adds its 25 % to the starting hits (crippled at half of the new total) and takes 5 cm off, the shield, turret, speed and repair-die results are on the profile, Long Range Sensors is a +1 Ld modifier; the set-up's select says "on the card: 13 hits, 15 cm".

@@ -438,32 +438,40 @@ function run(check){
     check("smoke: the link's base64url round-trips bytes", P(`(() => { const b = new Uint8Array([0, 1, 250, 255, 62, 63, 128]); return Array.from(unb64url(b64url(b))).join(","); })()`) === "0,1,250,255,62,63,128");
     const q = JSON.parse(P(`JSON.stringify((() => { const r = QR.encode("https://bfgtools.kuldare.com/play/x#fleet=abc"); return { v: r.version, n: r.size, rows: r.rows.length }; })())`));
     check("smoke: the QR code is a square of 4 x version + 17 modules (ISO 18004)", q.n === q.v * 4 + 17 && q.rows === q.n, JSON.stringify(q));
+    /* one list of saved fleets (user 4.11.2026): a file or a link goes into
+       the builder's Saved fleets, and the builder's working key is not written */
+    const LIBK = "gothic-fleet-registry-saves-v1";
+    const lib = () => JSON.parse(pg.store[LIBK] || '{"saves":[]}').saves;
     const builderKey = P(`lsGet(KEY_BUILDER)`);
     P(`takeFleetText(JSON.stringify(__doc), "file")`);
-    const lk = JSON.parse(P(`JSON.stringify(linkedFleets().map(f => [f.how, f.doc.ln]))`));
-    check("smoke: a fleet file goes on the page's own list and the builder's key is not written", lk.length === 1 && lk[0][0] === "file" && P(`lsGet(KEY_BUILDER)`) === builderKey, JSON.stringify(lk));
+    check("smoke: a fleet file goes into the builder's Saved fleets, not its working key", lib().length === 1 && lib()[0].from === "file" && lib()[0].ln === pg.ctx.__doc.ln && lib()[0].id && lib()[0].pts > 0 && P(`lsGet(KEY_BUILDER)`) === builderKey, JSON.stringify(lib().map(s => [s.from, s.ln, s.pts])));
     const load = P(`renderLoad()`);
     clean("the load screen with a fleet from a file", load);
-    check("smoke: ... the load screen lists it under Saved fleets, marked new, with its forget button", /Saved fleets/.test(strip(load)) && /data-act="linked" data-arg="0"/.test(load) && /new/.test(strip(load)) && /data-act="unlink"/.test(load));
-    P(`forgetLinked(0)`);
-    check("smoke: ... and forget takes it off", P(`linkedFleets().length`) === 0);
+    check("smoke: ... the load screen lists it under Saved fleets, marked new, and says it is the builder's list", /Saved fleets/.test(strip(load)) && /same list as Saved fleets in the builder/.test(strip(load)) && /data-act="linked" data-arg="0"/.test(load) && /new/.test(strip(load)) && !/data-act="unlink"/.test(load));
+    P(`takeFleetText(JSON.stringify(__doc), "link")`);
+    check("smoke: ... the same fleet again is not saved twice", lib().length === 1);
     /* J208: a link or a file carries the builder's names; every fleet in it
        is kept, named, and marked new */
-    P(`takeFleetText(JSON.stringify({ name: "Lunar pair", ln: __doc.ln, limit: 1500, units: __doc.units, fleets: [{ name: "Swords", ln: __doc.ln, limit: 1000, units: __doc.units.slice(3) }] }), "link")`);
+    P(`takeFleetText(JSON.stringify({ name: "Lunar pair", ln: __doc.ln, limit: 1400, units: __doc.units, fleets: [{ name: "Swords", ln: __doc.ln, limit: 1000, units: __doc.units.slice(3) }] }), "link")`);
     const named = strip(P(`renderLoad()`));
-    check("smoke: a link's fleets keep their names and are all marked new (J208)", P(`linkedFleets().map(f => f.doc.name).join("|")`) === "Lunar pair|Swords" && /Lunar pair/.test(named) && /Swords/.test(named) && P(`V.linkNew.length`) === 2, P(`JSON.stringify(linkedFleets().map(f => f.doc.name))`));
-    /* phone to phone (user 19.10.2026): this page's own saved fleets go on
-       by QR code or a shared link, one by one or all in one */
+    check("smoke: a link's fleets keep their names and are all marked new (J208)", lib().map(f => f.name).slice(0, 2).join("|") === "Lunar pair|Swords" && /Lunar pair/.test(named) && /Swords/.test(named) && P(`V.linkNew.length`) === 2, JSON.stringify(lib().map(f => f.name)));
+    /* phone to phone (user 19.10.2026): the saved fleets go on by QR code or a
+       shared link, one by one or all in one */
     const lp = P(`renderLoad()`);
-    check("smoke: every saved fleet on this phone has its own Send, and two or more have Send all", /data-act="send" data-arg="s:0"/.test(lp) && /data-act="send" data-arg="s:1"/.test(lp) && /data-act="send" data-arg="all"/.test(lp));
+    check("smoke: every saved fleet has its own Send, and two or more have Send all", /data-act="send" data-arg="s:0"/.test(lp) && /data-act="send" data-arg="s:1"/.test(lp) && /data-act="send" data-arg="all"/.test(lp));
     const all2 = JSON.parse(P(`JSON.stringify(phoneDoc("all"))`));
-    check("smoke: ... Send all carries every saved fleet with its name", all2.name === "Lunar pair" && (all2.fleets || []).length === 1 && all2.fleets[0].name === "Swords" && P(`phoneDoc("s:1").name`) === "Swords", JSON.stringify([all2.name, (all2.fleets || []).map(f => f.name)]));
-    P(`forgetLinked(1); forgetLinked(0)`);
-    /* the builder's named library on the same device (gothic-fleet-registry-saves-v1) */
-    pg.store["gothic-fleet-registry-saves-v1"] = JSON.stringify({ v: 1, saves: [{ id: "x1", name: "Club night", ln: L.nm, limit: 1500, units: pg.ctx.__doc.units, pts: 0, saved: "2026-10-19" }], open: {} });
-    const lib = P(`renderLoad()`);
-    check("smoke: the builder's saved fleets are on the load screen by name, ready to play or send to a phone", /Fleets from the builder/.test(strip(lib)) && /Club night/.test(strip(lib)) && /saved/.test(strip(lib)) && /data-act="newfrom" data-arg="0"/.test(lib) && /data-act="send" data-arg="b:0"/.test(lib) && P(`builderFleets()[0].name`) === "Club night" && P(`phoneDoc("b:0").name`) === "Club night", strip(lib).slice(0, 300));
-    delete pg.store["gothic-fleet-registry-saves-v1"];
+    check("smoke: ... Send all carries every saved fleet with its name", all2.name === "Lunar pair" && (all2.fleets || []).length === 2 && all2.fleets[0].name === "Swords" && P(`phoneDoc("s:1").name`) === "Swords", JSON.stringify([all2.name, (all2.fleets || []).map(f => f.name)]));
+    /* a fleet saved in the builder is on the same list, by name */
+    pg.store[LIBK] = JSON.stringify({ v: 1, saves: [{ id: "x1", name: "Club night", ln: L.nm, limit: 1500, units: pg.ctx.__doc.units, pts: 0, saved: "2026-10-19" }], open: {} });
+    const lb = P(`renderLoad()`);
+    check("smoke: the builder's saved fleets are the load screen's Saved fleets, ready to play or send", /Club night/.test(strip(lb)) && /data-act="linked" data-arg="0"/.test(lb) && /data-act="send" data-arg="s:0"/.test(lb) && !/Fleets from the builder/.test(strip(lb)));
+    /* Play's own list from before goes into the library once */
+    pg.store[LIBK] = JSON.stringify({ v: 1, saves: [], open: {} });
+    delete pg.store["gothic-fleet-play-linked-moved"];
+    pg.store["gothic-fleet-play-linked"] = JSON.stringify([{ fp: "a", how: "file", date: "2026-11-01", doc: { name: "Old phone fleet", ln: L.nm, limit: 1500, units: pg.ctx.__doc.units } }]);
+    P(`savedFleets()`); P(`savedFleets()`);
+    check("smoke: Play's old list is moved into Saved fleets once", lib().length === 1 && lib()[0].name === "Old phone fleet" && lib()[0].from === "file" && pg.store["gothic-fleet-play-linked-moved"] === "1", JSON.stringify(lib()));
+    delete pg.store[LIBK];
   });
 
   /* --------------------------- Space Marines: the Fortress-Monastery --- */
