@@ -30,7 +30,7 @@ const PY = process.platform === "win32" ? "python" : "python3";
 const STEPS = [
   ["build",     "build all apps",          ["node", "tools/build.js"]],
   ["data",      "data is reproducible",    [PY, "extractor/build_data.py"], { reproducible: "data/bfg_data.json" }],
-  ["data",      "matches data/schema.json", ["node", "--test", "tools/lib/*.test.js"]],
+  ["data",      "schema and import check", ["node", "--test", "tools/lib/*.test.js"]],
   ["data",      "section guard",           [PY, "extractor/build_data.py", "--prove-guard"]],
   ["data",      "list rules vs reference", [PY, "extractor/check_reference.py"]],
   ["data",      "golden arithmetic",       [PY, "extractor/check_golden_math.py"]],

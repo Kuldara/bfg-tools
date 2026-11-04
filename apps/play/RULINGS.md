@@ -401,7 +401,9 @@ text, and claims read from the book are checked on top (the page in the claim).
 the smoke test by itself. Two old defects of the page that the smoke test brought
 out were fixed at the same time: the card's SPEED box always showed a struck-out
 base value ("20 cm ~~20~~"), and the Fleets book's pages showed in notices
-without the book's name ("p. 423").
+without the book's name ("p. 423"). The page's exports and state are globals for
+the test's own snippets only: the page's own code that reaches for one throws, as
+it does in a browser (4.11.2026: they hid a name used without its import).
 
 **T40. An Ld choice of 5-10, no automation.** **The user's decision 13.10.2026:**
 Leadership automation of any kind is entirely out of scope for Play; just a

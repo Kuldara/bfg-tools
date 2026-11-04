@@ -56,15 +56,39 @@ function boot(html){
   ctx.window = { addEventListener(){}, matchMedia(){ return { matches: false }; }, scrollTo(){}, scrollBy(){}, innerHeight: 800, scrollY: 0 };
   ctx.globalThis = ctx;
   vm.createContext(ctx);
-  vm.runInContext(code, ctx, { filename: "Gothic Fleet Play.html" });
+  const PAGE_FILE = "Gothic Fleet Play.html";
+  vm.runInContext(code, ctx, { filename: PAGE_FILE });
   /* The page is one bundle (global GFP). The snippets below name its
      functions and state as they did when the page was one plain script, so
      every export is a live global here, and the shared state (G, U, ...) can
-     also be assigned. */
-  for(const k of Object.keys(ctx.GFP)) if(k !== "appState")
-    Object.defineProperty(ctx, k, { get: () => ctx.GFP[k], configurable: true });
-  for(const k of Object.keys(ctx.GFP.appState))
-    Object.defineProperty(ctx, k, { get: () => ctx.GFP.appState[k], set: v => { ctx.GFP.appState[k] = v; }, configurable: true });
+     also be assigned. These globals are the snippets' only: in a browser the
+     page's own code finds none of them, so a name it uses without importing
+     it throws here as it does there. Until 4.11.2026 they hid one: a failed
+     disengage in a squadron named isEscGrp without its import. */
+  const fromPage = fn => {
+    /* the file of the code that reached for the name: one frame, under fn */
+    const prep = Error.prepareStackTrace, lim = Error.stackTraceLimit;
+    try{
+      Error.prepareStackTrace = (e, frames) => frames; Error.stackTraceLimit = 1;
+      const o = {}; Error.captureStackTrace(o, fn);
+      const frames = o.stack;   /* read here: the stack is made when it is read */
+      return !!(frames && frames[0] && frames[0].getFileName() === PAGE_FILE);
+    }finally{ Error.prepareStackTrace = prep; Error.stackTraceLimit = lim; }
+  };
+  const notDefined = (k, fn) => {
+    const e = new ReferenceError(k + " is not defined (the page's own code uses it without an import; a browser throws here too)");
+    Error.captureStackTrace(e, fn);
+    return e;
+  };
+  for(const k of Object.keys(ctx.GFP)) if(k !== "appState"){
+    const get = () => { if(fromPage(get)) throw notDefined(k, get); return ctx.GFP[k]; };
+    Object.defineProperty(ctx, k, { get, configurable: true });
+  }
+  for(const k of Object.keys(ctx.GFP.appState)){
+    const get = () => { if(fromPage(get)) throw notDefined(k, get); return ctx.GFP.appState[k]; };
+    const set = v => { if(fromPage(set)) throw notDefined(k, set); ctx.GFP.appState[k] = v; };
+    Object.defineProperty(ctx, k, { get, set, configurable: true });
+  }
   ctx.__toasts = toasts; ctx.__strip = strip;
   ctx.__fire = (t, ev) => (listeners[t] || []).forEach(f => f(ev));
   const P = src => vm.runInContext(src, ctx, { filename: "smoke.js" });
@@ -529,6 +553,27 @@ function run(check){
           btn("Alpha") === "SQN " + g[0] && btn("Beta") === "SQN " + g[0] && btn("Gamma") === "+ SQN", JSON.stringify([btn("Alpha"), btn("Beta"), btn("Gamma")]));
     P(`act("grp", NX("Beta"))`);
     check("smoke: ... and the SQN button still takes a ship out of it", P(`G.grp[NX("Beta")] !== G.grp[NX("Alpha")]`) === true, P(`JSON.stringify(G.grp)`));
+  });
+
+  /* -------------- a failed disengage in a squadron (RULINGS.md T46) --- */
+  /* Rulebook p. 57: a capital ship in a squadron tests alone, and one that
+     fails "falls out of the squadron and may not attempt to re-join it"; an
+     escort squadron tests as one. The ships as the Actions helper gives them
+     (covers): the Lunar alone, both escort cards. */
+  guard("a failed disengage in a squadron", () => {
+    const pg = open(), P = pg.P;
+    const L = pg.DATA.lists.find(x => /^Imperial Navy . Gothic Sector$/.test(x.nm));
+    const tag = (u, sq) => Object.assign(u, { sq });
+    pg.ctx.__doc = { ln: L.nm, limit: 1500, units: [tag(saved(L, /^Cruisers$/, /^Lunar class cruiser$/), "C"), tag(saved(L, /^Cruisers$/, /^Lunar class cruiser$/), "C"),
+      tag(saved(L, /^ESCORTS$/, /^Sword class frigate$/, 3), "E"), tag(saved(L, /^ESCORTS$/, /^Cobra class destroyer$/, 2), "E")] };
+    P(`newGame(resolveFleet(__doc)); U.forEach((x, i) => { if(x.R.kind === "ship" && G.st[i].ld == null) setLd(i, 8); }); act("start", null);`);
+    check("smoke: the builder's tags make the Lunars one SQN group and the Sword and Cobra cards one escort squadron (J222)", P(`JSON.stringify(G.grp)`) === JSON.stringify(["A", "A", "e:E", "e:E"]), P(`JSON.stringify(G.grp)`));
+    P(`act("disengage", 0, { ok: false, ms: [0] })`);
+    check("smoke: a failed disengage takes the Lunar out of its squadron, marks it alone, and the other Lunar stays (p. 57)",
+      P(`G.grp[0] === null && G.grp[1] === "A" && !!G.st[0].noOrdersTurn && !G.st[1].noOrdersTurn`) === true, P(`JSON.stringify([G.grp, G.st.map(s => !!s.noOrdersTurn)])`));
+    P(`act("disengage", 2, { ok: false, ms: [2, 3] })`);
+    check("smoke: ... an escort squadron's failure marks both cards and keeps them one squadron (p. 57)",
+      P(`G.grp[2] === "e:E" && G.grp[3] === "e:E" && !!G.st[2].noOrdersTurn && !!G.st[3].noOrdersTurn`) === true, P(`JSON.stringify([G.grp, G.st.map(s => !!s.noOrdersTurn)])`));
   });
 
   /* ------------ J233: every Ork Warlord aboard a ship of his own (T43) --- */

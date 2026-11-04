@@ -70,7 +70,8 @@ behind this layout are in [docs/adr/](docs/adr/).
    `<!--@fonts-->`, `<!--@description-->`, the BFG Tools badge.
 4. Run the guards (`tools/lib/kit.js`): no control characters, every CSS
    variable defined, no external address except the allowed ones, the badge's
-   links; the Registry and Play are also pure ASCII.
+   links; the Registry and Play are also pure ASCII, and Play's modules use no
+   name another module exports without importing it (`checkImports`).
 5. Write `dist/<app>/` and, for the Registry and Boarding, a one-file package in
    `dist/share/`.
 
@@ -111,7 +112,7 @@ gives one verdict:
 
 | Group | Steps |
 |---|---|
-| data | rebuilds `data/bfg_data.json` and requires it unchanged; schema; reference checks; option effects |
+| data | rebuilds `data/bfg_data.json` and requires it unchanged; schema and the bundle import check (`tools/lib/*.test.js`); reference checks; option effects |
 | rules | `domain.js` is what `src/` makes, `test_domain.js` (5 700 assertions), symmetry |
 | registry | golden cases read from the book (414 units, 238 fleets) on every surface: price, profile, card, fleet view, save round trip; validator, upgrades, saving, save fuzzing, card structure, printed cards, random fleets, print layout in Chrome, the editable sheet in Chrome, a UI walk-through in Chrome |
 | play | rules and a smoke test of the built page |

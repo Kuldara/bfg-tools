@@ -2,7 +2,7 @@
    @@include expansion, bundling with esbuild, the BFG Tools badge, a
    deterministic one-file ZIP, and the guards every published page passes. */
 "use strict";
-const fs = require("fs"), path = require("path"), zlib = require("zlib"), crypto = require("crypto");
+const fs = require("fs"), os = require("os"), path = require("path"), zlib = require("zlib"), crypto = require("crypto");
 
 const REPO = path.resolve(__dirname, "..", "..");
 const DIST = path.join(REPO, "dist");
@@ -40,14 +40,22 @@ function fill(text, name, value, count = 1) {
 
 /* One self-contained script from an ES module entry. charset ascii keeps the
    page pure ASCII whatever the source contains; the global name exposes the
-   module's exports to the page tools (card printing, layout checks). */
-async function bundle({ entry, globalName, define = {} }) {
+   module's exports to the page tools (card printing, layout checks).
+   checkImports: the build fails when a module uses, without importing it, a
+   name that a module of the same bundle exports (freeExports). */
+async function bundle({ entry, globalName, define = {}, checkImports = false }) {
   const esbuild = require("esbuild");
-  const r = await esbuild.build({
+  const opts = {
     entryPoints: [abs(entry)], bundle: true, write: false, format: "iife", globalName,
     charset: "ascii", legalComments: "none", platform: "browser",
     define, logLevel: "silent",
-  });
+  };
+  const r = await esbuild.build(Object.assign({ metafile: checkImports }, opts));
+  if (checkImports) {
+    const free = await freeExports(esbuild, opts, r.metafile);
+    if (free.length) throw new Error(entry + ": " + free.map(f => `${f.users.length ? f.users.join(", ") : "a module"} uses ${f.name} without importing it ` +
+      `(${f.exporters.join(", ")} exports it): in the page it is not defined`).join("; "));
+  }
   /* esbuild prints an escaped control character ("\u0001", the separator of
      saved-fleet keys) as the raw byte. Raw control characters can only stand
      inside string, template or regex literals, where the escape means the
@@ -56,6 +64,49 @@ async function bundle({ entry, globalName, define = {} }) {
     c => "\\u" + c.charCodeAt(0).toString(16).padStart(4, "0"));
   if (/<\/script/i.test(js)) throw new Error(entry + ": the bundle contains </script");
   return js;
+}
+
+/* A name a module uses without importing it, though another module of the
+   bundle exports it, is a free global to esbuild: the bundle renames the
+   export (isEscGrp became isEscGrp2) and leaves the bare name, which the
+   browser cannot resolve - a ReferenceError at the first tap that reaches
+   it, and a test harness that makes the exports globals hides it (Play,
+   4.11.2026). esbuild's own scope analysis finds these: the bundle is built
+   again with an injected module that exports every exported name as a
+   marker, and inject binds exactly the free references to it. Returns
+   [{ name, users, exporters }], users the modules that use the name. */
+const FREE = "__bfg_free_name__";
+async function freeExports(esbuild, opts, metafile) {
+  const cwd = process.cwd(), rel = p => path.relative(REPO, path.resolve(cwd, p)).replace(/\\/g, "/");
+  const js = Object.keys(metafile.inputs).filter(p => /^(esm|cjs)$/.test(metafile.inputs[p].format || ""));
+  const esm = js.filter(p => metafile.inputs[p].format === "esm");
+  /* what each module exports: the modules one by one, not bundled */
+  const own = await esbuild.build({ entryPoints: esm.map(p => path.resolve(cwd, p)), bundle: false, write: false, format: "esm",
+    metafile: true, outdir: path.join(os.tmpdir(), "bfg-exports"), logLevel: "silent" });
+  const exporters = new Map();
+  for (const o of Object.values(own.metafile.outputs)) for (const n of o.exports || []) {
+    if (n === "default" || !/^[A-Za-z_$][\w$]*$/.test(n)) continue;
+    exporters.set(n, (exporters.get(n) || []).concat(rel(o.entryPoint)));
+  }
+  if (!exporters.size) return [];
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), "bfg-free-"));
+  try {
+    const inject = path.join(dir, "free-names.js");
+    fs.writeFileSync(inject, [...exporters.keys()].map((n, k) => `const m${k} = "${FREE}${n}"; export { m${k} as ${n} };`).join("\n") + "\n");
+    const marks = text => [...new Set([...text.matchAll(new RegExp(FREE + "([\\w$]+)", "g"))].map(m => m[1]))];
+    const found = marks((await esbuild.build(Object.assign({}, opts, { inject: [inject] }))).outputFiles[0].text);
+    if (!found.length) return [];
+    /* who uses them: each module alone, its imports left out */
+    const users = new Map(found.map(n => [n, []]));
+    for (const p of js) {
+      const one = await esbuild.build({ entryPoints: [path.resolve(cwd, p)], bundle: true, write: false, format: "esm",
+        external: ["*"], inject: [inject], define: opts.define, logLevel: "silent" });
+      for (const n of marks(one.outputFiles[0].text)) if (users.has(n)) users.get(n).push(rel(p));
+    }
+    return found.map(n => ({ name: n, users: users.get(n), exporters: exporters.get(n) }));
+  } finally {
+    fs.rmSync(dir, { recursive: true, force: true });
+  }
 }
 
 function badge(here) {

@@ -23,6 +23,21 @@ const SETUP = `(() => {
   G.appState.V.screen = "roster"; G.render();
   return 1;
 })()`;
+/* Squadrons for the disengage test: the builder's tags (`sq`,
+   apps/registry/docs/save-format.md) put the two Lunars in one SQN group
+   and the Sword and Cobra cards in one escort squadron (J222, 28.10.2026);
+   the Fleet-Admiral brings a re-roll. */
+const SQUADRONS = `(() => {
+  const G = GFP, L = G.LISTS.find(l => l.nm === "Imperial Navy \\u2014 Gothic Sector");
+  const row = (re, n, sq) => { const s = L.secs.findIndex(x => x.ents.some(e => re.test(e.l || ""))), e = L.secs[s].ents.findIndex(x => re.test(x.l || "")), en = L.secs[s].ents[e];
+    return Object.assign({ s, e, ref: en.r, n, opts: [], os: {}, name: "", sn: L.secs[s].t, el: en.l }, sq ? { sq } : {}); };
+  const res = G.resolveFleet({ ln: L.nm, limit: 1500, units: [row(/^Fleet-Admiral/, 1), row(/^Lunar/, 1, "C"), row(/^Lunar/, 1, "C"), row(/^Sword/, 3, "E"), row(/^Cobra/, 2, "E")] });
+  if(res.error) throw new Error(res.error);
+  G.newGame(res);
+  G.appState.G.st.forEach((st, i) => { if(G.appState.U[i].R.kind === "ship" && st.ld == null) G.setLd(i, 8); });
+  G.appState.V.screen = "roster"; G.render();
+  return JSON.stringify(G.appState.G.grp);
+})()`;
 /* a face to the generator: 6 -> 0.99, 1 -> 0 */
 const dice = a => `(() => { const q = ${JSON.stringify(a.map(f => (f - 0.5) / 6))}; Math.random = () => q.length ? q.shift() : 0; return 1; })()`;
 
@@ -36,9 +51,13 @@ const dice = a => `(() => { const q = ${JSON.stringify(a.map(f => (f - 0.5) / 6)
     const loaded = cd.once("Page.loadEventFired");
     await cd.send("Page.navigate", { url: "file:///" + PAGE.replace(/\\/g, "/").replace(/ /g, "%20") });
     await loaded;
+    /* an exception in a tap's handler shows nowhere else: the page keeps them */
+    await cd.evaluate("window.__errs = []; addEventListener('error', e => __errs.push(String(e.message))); 1");
+    const errs = async () => JSON.parse(await cd.evaluate("JSON.stringify(window.__errs)"));
     await cd.evaluate(SETUP);
     await sleep(800);
     const tap = async sel => { await cd.evaluate(`document.querySelector(${JSON.stringify(sel)}).click()`); await sleep(100); };
+    const has = sel => cd.evaluate(`!!document.querySelector(${JSON.stringify(sel)})`);
     const txt = sel => cd.evaluate(`(document.querySelector(${JSON.stringify(sel)}) || {}).innerText || ""`);
     const box = async () => (await txt(".acts .box")).toLowerCase();
     const st = i => cd.evaluate(`JSON.parse(JSON.stringify(GFP.appState.G.st[${i}]))`).then(x => typeof x === "string" ? JSON.parse(x) : x);
@@ -180,6 +199,55 @@ const dice = a => `(() => { const q = ${JSON.stringify(a.map(f => (f - 0.5) / 6)
     const riftTxt = await cd.evaluate(`document.querySelector(".acts .box").innerText`);
     check("a rift's distance is not rolled unless asked", /2D6 × 10 cm/.test(riftTxt) && await cd.evaluate(`!!document.querySelector('[data-act="acriftfar"]')`), riftTxt);
     await tap('[data-act="acclose"]');
+
+    /* a failed disengage in a squadron (p. 57, RULINGS.md T46): a capital ship
+       tests alone, and one that fails "falls out of the squadron and may not
+       attempt to re-join it"; an escort squadron tests as one and stays one */
+    const grp0 = await cd.evaluate(SQUADRONS);
+    await sleep(800);
+    const GRP = async () => JSON.parse(await cd.evaluate(`JSON.stringify(GFP.appState.G.grp)`));
+    check("the builder's tags: the Lunars are one SQN group, the Sword and Cobra cards one escort squadron (J222)", grp0 === JSON.stringify([null, "A", "A", "e:E", "e:E"]), grp0);
+    /* each step's own errors: those of the step before do not count again */
+    let e0 = (await errs()).length;
+    const errsNow = async () => { const all = await errs(), now = all.slice(e0); e0 = all.length; return now; };
+    await open(1);
+    await tap('[data-act="actab"][data-arg="dis"]');
+    check("in an SQN squadron the helper says it tests alone (p. 57)", /tests alone, and a failure takes it out of the squadron/.test(await box()), await box());
+    await tap('[data-act="acdis"][data-arg="fail"]');
+    let g = await GRP(), e = await errsNow();
+    check("a failed disengage in an SQN squadron: no error on the page", e.length === 0, e);
+    check("... the helper shows the result", /failed\./.test(await box()), await box());
+    check("... it falls out of the squadron, the other Lunar stays in it (p. 57)", g[1] === null && g[2] === "A", g);
+    check("... no fire and no orders but Brace, for it alone (p. 57)", (await ST(1)).noOrdersTurn && !(await ST(2)).noOrdersTurn, [await ST(1), await ST(2)]);
+    await tap('[data-act="undo"]');
+    g = await GRP();
+    check("UNDO puts it back in the squadron, unmarked", g[1] === "A" && !(await ST(1)).noOrdersTurn, g);
+    /* a re-roll takes the failure back and tests again (p. 48): a second
+       failure takes it out once more */
+    await cd.evaluate(dice([6, 6]));
+    await tap('[data-act="acdis"][data-arg="roll"]');
+    await errsNow();
+    const rr = await has('[data-act="acreroll"][data-arg="dis"]');
+    check("a failed roll offers the Admiral's re-roll", rr, await box());
+    if(rr){
+      await cd.evaluate(dice([6, 5]));
+      await tap('[data-act="acreroll"][data-arg="dis"]');
+      g = await GRP(); e = await errsNow();
+      check("a failed re-roll: no error on the page", e.length === 0, e);
+      check("... out of the squadron again, the re-roll spent, the new dice shown (p. 48, 57)",
+        g[1] === null && g[2] === "A" && (await ST(1)).noOrdersTurn && await cd.evaluate(`GFP.PLAY.rerollBoxes(GFP.appState.G.fleet).filter(b => b.used).length === 1`) && /6 5 = 11/.test(await box()),
+        [g, await box()]);
+    }
+    await tap('[data-act="acclose"]');
+    await open(3);
+    await tap('[data-act="actab"][data-arg="dis"]');
+    check("an escort squadron goes together (p. 57)", /the squadron goes together/.test(await box()), await box());
+    await tap('[data-act="acdis"][data-arg="fail"]');
+    g = await GRP(); e = await errsNow();
+    check("a failed disengage of an escort squadron: no error on the page", e.length === 0, e);
+    check("... both cards keep their squadron and both are marked (p. 57)", g[3] === "e:E" && g[4] === "e:E" && (await ST(3)).noOrdersTurn && (await ST(4)).noOrdersTurn, g);
+    await tap('[data-act="acclose"]');
+    check("no error on the page in the whole run", (await errs()).length === 0, await errs());
   }finally{ await cd.close(); }
   console.log((fail ? "FAIL " : "ok ") + pass + " passed, " + fail + " failed");
   process.exit(fail ? 1 : 0);

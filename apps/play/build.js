@@ -65,9 +65,12 @@ self.addEventListener("fetch", e => {
 
 async function build() {
   const data = kit.read("data/bfg_data.json");
+  /* checkImports: the smoke test once hid a name used without its import
+     (isEscGrp, 4.11.2026); the build stops on one now */
   const script = await kit.bundle({
     entry: HERE + "/src/index.js", globalName: "GFP",
     define: { __APP_VERSION__: JSON.stringify(APP.version) },
+    checkImports: true,
   });
   let page = kit.expandIncludes(kit.read(HERE + "/index.html"), HERE);
   page = kit.fill(page, "version", APP.version);

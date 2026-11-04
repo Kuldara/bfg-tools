@@ -19,6 +19,12 @@ a tag `play-v<version>` deploys the Registry's site.
 - Fewer places for one thing (2.11.2026): Disengage and Boarding are out of the orders pop and the card's Status (Actions has them; Status keeps only the way back for a ship marked disengaged by mistake); the fire reminder's names add the hit themselves and stay ticked.
 - The set-up screen starts with Leadership; Fleet facts and the opponent's room come after it.
 
+### Fixed
+- A failed disengage of a ship in a squadron (4.11.2026): the Disengage helper stopped on an error (`isEscGrp` was not imported), for a capital ship of an SQN squadron and a card of an escort squadron alike. The ship was marked, but the helper showed no result and no Re-roll, and a capital ship stayed in its squadron; now it falls out of it, as the book says (Rulebook p. 57, RULINGS.md T46).
+
+### Changed (for developers)
+- The build stops when a module uses a name that another module exports without importing it (`kit.bundle`'s `checkImports`, on for Play; its own cases in `tools/lib/kit.test.js`), and the smoke test's globals are for its own snippets only: the page's own code that reaches for one throws, as in a browser. `check_actions.js` keeps the page's errors and fails on any.
+
 ### Added
 - The set-up rows show each ship's price and what was bought for it (2.11.2026), so two ships of one class can be told apart before they are named.
 - A tab icon that is a ship from above, not a warning triangle (1.11.2026); the installed app's icons as well.

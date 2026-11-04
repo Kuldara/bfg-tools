@@ -147,6 +147,13 @@ the page guards reject them (`tools/lib/kit.js`).
 that more than one module assigns lives on `appState` (each app's
 `src/state.js`); do not reintroduce module-level `let`s that other modules set.
 
+**A missing import passed the smoke test.** Play's `actions.js` used `isEscGrp`
+without importing it: esbuild renamed the export to `isEscGrp2` and left the bare
+name, so a browser threw on a failed disengage in a squadron, while
+`smoke_play.js`, which made every export a global, passed. Its globals now throw
+for the page's own code, and `kit.bundle`'s `checkImports` stops the build on
+such a name (on for Play).
+
 **Headless Chrome can hang.** Every Chrome call in the tools has a time limit
 (`layout_check.js` retries once).
 
