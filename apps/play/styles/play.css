@@ -602,6 +602,10 @@ details.paste summary{min-height:var(--tap);display:flex;align-items:center;font
   .bottom .turnbtn{flex:0 0 260px}
   .sheet{left:50%;right:auto;width:min(680px,100vw);transform:translateX(-50%);border-left:1px solid var(--line);border-right:1px solid var(--line)}
   .card{max-width:720px;margin-left:auto;margin-right:auto}
+  /* a card in the grid fills its column: with auto margins alone it takes the
+     width of its text (up to 720 px) and runs under the next column's card
+     (the set-up's Leadership under Fleet facts, user 4.11.2026) */
+  .main>.card{width:100%;min-width:0}
   /* mouse density: the 44 px tap targets are a phone need; a laptop fits
      two rows of cards when the row is tighter */
   .row{padding:6px 8px 6px 10px}
