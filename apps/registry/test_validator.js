@@ -805,6 +805,25 @@ api.S.units[2].sq = "A"; api.S.units[3].sq = "A";
 eq(tidSq(), false, "Clanz: two Ravagers and a Grunt in one skwadron (one letter) is fine");
 build(cll, 1000, [["Ork Warlord", 1], ["Ork Warlord", 1], ["Ravager attack ship", 11]]);
 eq(tidSq(), true, "Clanz: an eleven-ship tiddla skwadron fails");
+/* The Warlord block's Needs line (warlordNeeds), for the request of
+   3.11.2026: two Ravagers and a Brute on cards of their own. p.374: "the
+   Warlord must be in command of one tiddla skwadron of at least three
+   escorts and one other skwadrons", and a tiddla is "3-10 Escorts, chosen
+   from the following list in any mix desired" (p.372: "up to ten"). A tiddla
+   outside 3-10 does not leave him complete, and when he has a tiddla too
+   many, two of his that fit in ten are named to be joined, as two kroozers
+   are. */
+const needOf = () => { const RF = api.fleetResolved(); return api.warlordNeeds((RF.warlords || [])[0], RF); };
+build(cll, 1000, [["Ork Warlord", 1], ["Ravager attack ship", 2], ["Brute ramship", 1]]);
+eq(needOf().ok, false, "Clanz Needs: a Warlord whose tiddlas have two escorts and one is not complete (p.374)");
+build(cll, 1000, [["Ork Warlord", 1], ["Ravager attack ship", 2], ["Brute ramship", 1], ["Savage gunship", 3]]);
+eq(/put Ravager Attack Ship ×2 and Brute Ram Ship in one skwadron/.test(needOf().text), true,
+   "Clanz Needs: a tiddla too many, and the Ravagers and the Brute are named to be one (p.374): " + needOf().text);
+api.S.units[1].sq = "A"; api.S.units[2].sq = "A";
+eq(needOf().ok, true, "Clanz Needs: ... with one letter they are one tiddla and he is complete: " + needOf().text);
+build(cll, 1000, [["Ork Warlord", 1], ["Ravager attack ship", 6], ["Brute ramship", 5], ["Rok", 1]]);
+api.S.units[1].sq = "A"; api.S.units[2].sq = "A";
+eq(needOf().ok, false, "Clanz Needs: a tiddla of eleven escorts in one letter is not complete (p.372, p.374)");
 /* J63 p.316: "If the fleet is worth over 750 points, an Autarch must be
    included to lead it. Eldar Autarch (Ld 9) ... Iyanden Bearer of the Flame
    (Ld 10)" and "If your fleet is led by an Autarch, you may include a single

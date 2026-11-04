@@ -211,7 +211,9 @@ export function builderGroups(units){
   /* A mixed escort squadron (28.10.2026): escort cards with one letter are
      one squadron here too - one Leadership, one order, one Brace - under
      the key "e:" + the builder's letter, which the SQN button never gives.
-     Each card keeps its own members to kill. */
+     Each card keeps its own members to kill. A Clanz mixed tiddla is one,
+     with a Blood Axe tiddla's commandeered escorts (RULINGS.md "T42, escort
+     squadrons", the user's decision 4.11.2026). */
   const escOf = units.map(x => x.u && x.u.sq && x.R.kind === "ship" && PLAY.isEscort(x.R) ? String(x.u.sq) : null);
   return tagOf.map((t, j) => t && letter[t] ? letter[t]
     : escOf[j] && escOf.filter(s => s === escOf[j]).length >= 2 ? "e:" + escOf[j] : null);
