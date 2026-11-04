@@ -1708,7 +1708,7 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
   check("Young Gunz: Grunts with Klaws are paid 35 each: up to 35, the Onslaught too; the Grunt is proposed (p. 390, T63)",
     gk.points === 140 && names(pick([gk])) === "Onslaught,Grunt,Savage,Brute" && pick([gk]).cap === 35 && pick([gk]).proposal === "Grunt assault ship", JSON.stringify([gk.points, pick([gk])]));
   const gub = ork(CLANZ, TID, /^Grunt/, 3, { upgrades: { [CLANZ.nm + "\u0001GUBBINS\u0001Klaws (Grunt: +5 per escort)"]: "take" } });
-  check("Young Gunz: ... the same with the Gubbins row \"+5 per escort\" (Fleets p. 372)", gub.points === 105 && pick([gub]).cap === 35, JSON.stringify([gub.points, pick([gub]) && pick([gub]).cap]));
+  check("Young Gunz: ... the same with the Gubbins row \"+5 per escort\" (Fleets p. 373)", gub.points === 105 && pick([gub]).cap === 35, JSON.stringify([gub.points, pick([gub]) && pick([gub]).cap]));
   check("Young Gunz: a Brute in a Grunt skwadron: the cheapest paid is 25, a Brute only", names(pick([ork(CLANZ, TID, /^Grunt/, 5), brutes(1)])) === "Brute", names(pick([ork(CLANZ, TID, /^Grunt/, 5), brutes(1)])));
   /* "The point cost for clan upgrades for tiddla skwadrons count for the whole
      skwadron (regardless of how large it is!)" (p. 371) */
@@ -1719,7 +1719,7 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
      cost" (p. 371): paid for, but no Ork escort class */
   const cobra = ork(CLANZ, /^BLOOD AXE COMMANDEERED ESCORTS$/, /^Cobra/, 1);
   const rav = ork(CLANZ, TID, /^Ravager/, 6);
-  check("Young Gunz: Ravagers with a commandeered Cobra (30): Grunt, Savage or Brute, never a Cobra; the dearest is proposed (p. 371, 372)",
+  check("Young Gunz: Ravagers with a commandeered Cobra (30): Grunt, Savage or Brute, never a Cobra (pp. 371, 372); the page proposes the first allowed class, the dearest (T63 decision 4)",
     names(pick([rav, cobra])) === "Grunt,Savage,Brute" && pick([rav, cobra]).proposal === "Grunt assault ship" && pick([rav, cobra]).by === cobra, JSON.stringify(pick([rav, cobra]) && [pick([rav, cobra]).cap, pick([rav, cobra]).proposal]));
 
   /* "Each destroyed escort earns its value in victory points provided the
