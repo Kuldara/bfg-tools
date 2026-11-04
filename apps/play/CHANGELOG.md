@@ -6,6 +6,17 @@ a tag `play-v<version>` deploys the Registry's site.
 ## Unreleased
 
 ### Added
+- Young Gunz and Mob Rule at the set-up (4.11.2026, RULINGS.md T63, the owner's design): under Roll Ld, **Apply Young Gunz & Mob Rule**, grey until every Ld is in. A Da Ork Clanz tiddla on Ld 5 or 6 - after the swaps, before Mob Rule - gets its free escort, the cheapest class paid for (Klaws counted per vessel); the mark's list takes another class within it or *No free escort*; it is 0 pts and concedes no VP. Then Mob Rule's +1 while more than five ships are left (Fleets p. 372). What changes gets a mark (*+1 Brute Ram Ship*, *+1 Ld · Mob Rule*), a changed Ld keeps its old value striped beside the ringed new one, and a line says why; a tap after Apply asks to *Apply again*. Under Start, the skwadrons not applied (it never blocks). In the game the +1 is in every Leadership the skwadron uses - the tile's *+1 mob*, the Ld pop, the card, the orders pop's check, Actions' tests - and goes with the sixth-from-last ship, with a toast; the free one's box is dashed. After Start Young Gunz is read-only; Mob Rule can still be applied (Menu > Set-up).
+- The Leadership swaps on their rows (T63): **Swap Ld** on a Clanz Warlord's row (his ship with one ship or escort squadron of his command, Fleets p. 374) and on an Ork battleship's, Waaagh! too (a Kill Kroozer, a Terror Ship or Zukov's Klaw, pp. 376-381, 383). The options say what the swap does (*Squadron B ×6: Ld 8 → 6, Young Gunz*); the two values change places at once, *no swap* puts them back, a tap on either ends it. The battleships' swaps come first, then the Warlords', then Young Gunz.
+
+### Changed
+- A Blood Axe tiddla rolls its one Leadership on the Ork table whatever its first card is (T63). The Mob Rule reminder no longer shows on six defence platforms (only on a Clanz tiddla the set-up did not apply). Actions' ram, disengage and celestial tests count Long Range Sensors' +1, as the card does (T46).
+- The Ld guide says how Young Gunz, Mob Rule and the swaps are applied; "tap the swapped values" and the Young Gunz note on the row are gone.
+
+### Fixed
+- A failed disengage of a capital ship in a squadron stopped the page (a missing import in `actions.js`).
+
+### Added
 - A rolled or chosen refit changes the card's numbers (2.11.2026, T44): Reinforced Hull adds its 25 % to the starting hits (crippled at half of the new total) and takes 5 cm off, the shield, turret, speed and repair-die results are on the profile, Long Range Sensors is a +1 Ld modifier; the set-up's select says "on the card: 13 hits, 15 cm".
 - The set-up's upgrade dice (Mechanicus Gifts, the Imperial and Blood Axe refits, crew skills): the chosen result's text is under its select, and the whole table is the tooltip of the select and its options (2.11.2026).
 - Your own dice come first everywhere (2.11.2026, T49): Passed and Failed, a number or a result's tile lead, and the page's Roll is the dashed option after them. A failure on your own dice can spend a re-roll too. A ram's damage takes the hits you rolled, and a warp rift's distance is rolled only if asked.

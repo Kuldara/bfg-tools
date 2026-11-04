@@ -5,9 +5,13 @@ choice. The choices are listed here, so that each can be disputed, and the code
 cites them by number (`T11`). The numbers are the original ones; T37-T39 were
 never used.
 
-Sources: a bare page (**p. 67**) is Rulebook v1.10; **Fleets p.** is the Fleets
-Book WiP v0.36. Printed page = PDF page. The Finnish original of this list, with
-the design notes around it, is `docs/history/registry/play/LUEMINUT.md`.
+Sources: a bare page (**p. 67**) is Rulebook v1.10 (v1.11 has the same pages);
+**Fleets p.** is the Fleets Book WiP v0.40 (29 Oct 2026, in use since 29.10.2026,
+AGENTS.md section 1). Printed page = PDF page. Rulings made before that date were
+written with v0.36 and some of them still give its pages (T40's Orks "Fleets
+p. 358" is v0.40 p. 360). The Finnish original of this list, with the design
+notes around it, is `docs/history/registry/play/LUEMINUT.md`. The numbers
+T50-T62 are the Registry's rulings.
 
 ## Rulings
 
@@ -515,10 +519,10 @@ Dark Eldar +1 (pp. 304, 344), a Chaos Space Marine crew +1 (p. 234), a transport
 Mechanicus copies pp. 128, 130, Nicassar Caravan p. 492); at most 10 (p. 48). Not
 rolled but put in by the same button: an Ork Hulk 6 (p. 392), a Sepulchre ship 10
 (p. 406), a Demiurg's starting value (pp. 488-490; its fall with damage is not
-tracked). Left to the player: the Tyranids (pp. 418-420, 429), the Ork
-battleships' and the Clanz Warlord's Ld swaps (pp. 374, 376-381), a Space Marine
-Captain on a Navy ship (p. 109), the Inquisitor's +1 (pp. 140-142), Long Range
-Sensors (p. 185) - the guide names them. One roll per escort squadron (p. 45); a
+tracked). Left to the player: the Tyranids (pp. 418-420, 429), a Space Marine
+Captain on a Navy ship (p. 100), the Inquisitor's +1 (pp. 150-151), Long Range
+Sensors (p. 185) - the guide names them. (The Ork battleships' and the Clanz
+Warlord's Ld swaps, pp. 374, 376-381, were the player's too, until T63.) One roll per escort squadron (p. 45); a
 fleet commander's fixed value on his flagship is not rolled over (T8). A natural 6
 on the Mechanicus table marks the ship's Gift as one it may choose (p. 118).
 **The other dice** (`packages/ui/pregame-tables.js`): the Mechanicus Gift (p. 119),
@@ -616,6 +620,111 @@ table (D6 or 2D6, the row marked), and the Hit-and-Run die for a teleport attack
 or an assault boat's raid (pp. 85, 92). Disengaging and boarding are not orders:
 Actions has them (T46), the orders pop and the card's Status do not, except the
 way back for a ship marked disengaged by mistake.
+
+**T63. Young Gunz, Mob Rule and the Ork Leadership swaps, applied at the
+set-up.** **The owner's decisions 4.11.2026**, and his design: under Roll Ld an
+*Apply Young Gunz & Mob Rule* button, grey until every Ld is set (by hand or by
+rolling); every unit that changes gets a mark (*+1 Brute Ram Ship*); a changed
+Ld is explained, and its old value stays striped beside the new one. The book
+(Fleets v0.40 p. 372): MOB RULE *"Ork escort skwadrons gain a +1 bonus to their
+Leadership while they contain more than five models"*; YOUNG GUNZ *"Any Ork
+escort skwadron with a Leadership of 5 or 6 gets a bonus escort ship added for
+free ... This includes if the leadership is a result of being swapped with that
+of a Warboss! The free ship can be any Ork escort class in the fleet list costing
+equal to or less than that of the cheapest escort paid for in the skwadron (the
+skwadron cannot exceed ten escorts). Young Gunz can be applied before Mob Rule:
+a tiddla skwadron with five escorts that rolls Ld 5 may have a sixth escort for
+free, increasing its Ld to 6!"* The Clanz Warlord *"may also swap leadership
+with any one ship or escort squadron under his command"* (p. 374), and the Ork
+battleships *"When Leadership values are generated for the Ork fleet, ... can
+opt to swap Leadership ratings with a Kill Kroozer or Terror Ship"* (Hammer
+p. 376, Dethdeala p. 378, Gorbag's Revenge p. 379, Slamblasta p. 380, Kroolboy
+p. 381). The decisions:
+1. **The page applies these rules.** This lifts the decision of 28.10.2026
+   ("information only, the player adds it") and T44's "the Ork battleships' and
+   the Clanz Warlord's Ld swaps are left to the player" (T40, T44). Everything
+   stays editable and a tapped value always wins: a tap ends the swaps the value
+   is in (the other side keeps the value it has, "kept from an ended swap"), and
+   before Start a skwadron whose value changes after Apply is no longer applied -
+   its free escort comes off, its class remembered - until *Apply again*.
+2. **The free escort is worth 0 pts and 0 VP.** Rulebook p. 123 does not say
+   (*"Each destroyed escort earns its value in victory points provided the
+   entire escort squadron is destroyed"*); nothing was paid for it, and the
+   Clanz text's own VP logic follows what was paid (pp. 371-372). On the card it
+   is one more member `{free: true}` of a card of its class (the card's paid
+   points are unchanged), or a card of its own at the end of the game's fleet
+   document with the saved field `adj` at minus its price. It is a model
+   everywhere else: fire, boarding, Mob Rule and the crippled count of a
+   disengaging squadron (p. 57, T7).
+3. **Young Gunz is optional**: the rule says "gets", the example "may have".
+   The mark's list always offers *No free escort*, and Apply keeps a "none" the
+   player chose.
+4. **The cap is the cheapest escort paid for in the skwadron at its paid price
+   per vessel, its per-vessel options included**: a Grunt with Klaws counts
+   30 + 5 = 35 (*"Grunt assault ships can be equipped with Klaws for +5 points
+   for each vessel, not per skwadron"*, p. 390; a Gubbins row priced per escort
+   likewise). Clan upgrades and Gubbins are paid for the whole skwadron
+   (*"regardless of how large it is"*, pp. 371-372) and do not count per vessel.
+   The free escort is any Ork escort class of the fleet list - the Clanz tiddla,
+   p. 374: Ravager 40, Onslaught 35, Grunt 30, Savage 30, Brute 25, read from the
+   data - whose list price is within the cap. It carries no per-vessel options
+   (no free Klaws: a free Grunt does not join a Grunt card that bought them, it
+   is a card of its own); the skwadron's clan and Gubbins cover it (it takes the
+   skwadron's letter, T60 - a lone tiddla is given one). Commandeered Imperial
+   and Chaos escorts (Blood Axes, p. 371) count as models and as escorts "paid
+   for", but the free ship must be an Ork class. A skwadron cannot exceed ten
+   escorts. Apply proposes the cheapest class paid for (when a Cobra sets the
+   cap, the first class allowed in the list's order).
+5. **The order** (Rulebook p. 123, *"5. Generate Leadership"*): an Ork
+   battleship's swap first (its own *"When Leadership values are generated"*,
+   pp. 376-381), then the Warlord's (p. 374) on the values after it, then Young
+   Gunz on the value after the swaps and before Mob Rule (*"Young Gunz can be
+   applied before Mob Rule"*, p. 372), then Mob Rule. Six escorts on Ld 6 get a
+   seventh and play Ld 7; Mob Rule first would have given Ld 7 and no escort.
+6. **Mob Rule's +1 stays with the skwadron that has the models**: a swap
+   exchanges the values without it. It is a modifier derived from the ships left
+   (`PLAY.mobRule`), never written into the value: it goes when the
+   sixth-from-last model is lost (a toast says so), and only a correction - a
+   revive tap or UNDO - brings it back. It is in every Leadership the skwadron
+   uses: the tile (*+1 mob*), the Ld pop, the card's LEADERSHIP, the orders pop's
+   check (T49) and Actions' ram, disengage and celestial tests - which now also
+   count Long Range Sensors' +1 (Fleets p. 185) and still not Under Fire or Enemy
+   Contacts (T46). Never above 10 (p. 48).
+7. **A Blood Axe tiddla with commandeered escorts rolls its one Ld** (p. 45)
+   **on the Ork table** (Orks -1, Fleets p. 360), whatever its first card is.
+8. **A contradiction, recorded** (AGENTS.md section 1): p. 375, *"Each skwadron
+   must be fielded with the number of ships chosen for it in this list; you
+   can't split up skwadrons or add more ships to them"*, and Rulebook p. 95,
+   *"Escort squadrons are selected as squadrons from the fleet list at the time
+   you pick your forces"*, against Young Gunz's added ship (p. 372). The specific
+   rule wins.
+9. **Young Gunz is decided before the game** (before deployment, Rulebook
+   p. 123): after Start it is read-only (*taken at set-up: a Brute, free*), and so
+   are the swaps; a tap in the game changes the value and leaves the skwadron
+   applied. Mob Rule can still be applied after Start (Menu > Set-up, *Apply Mob
+   Rule*) to a skwadron the set-up never reached - a game saved before this
+   ruling loads with nothing applied and keeps the reminder chip.
+10. **Zukov's Klaw counts as a Terror Ship** for the battleship swap
+    (*"Zukov's Klaw is a Terror Ship that can only be used exactly as described
+    in these special rules"*, p. 383).
+11. **"Warboss" in Young Gunz is read as the Clanz Warlord's swap** (p. 374): the
+    Clanz list has no Warboss.
+
+**Scope.** Mob Rule and Young Gunz are Da Ork Clanz rules (*"only with its
+dedicated Clanz fleet list"*, p. 370) for its Tiddla skwadron (p. 374),
+`PLAY.isTiddla` - not every unit of one-hit members (the reminder chip used to
+show on six defence platforms). The battleships' swap is their profiles' rule,
+in the Waaagh! list too. A kroozer is one battleship's partner at a time; a
+Warlord swaps his ship's value, an escort squadron as one. **Interface.** A Clanz
+fleet's Roll Ld stays in place, grey, once every ship has its Ld, so Apply under
+it never moves (a tap on Apply is not taken for 450 ms after Roll Ld); Apply is
+one act and one UNDO step. **The stale pages fixed with this ruling:** this
+file's header gave the Fleets pages as v0.36; T44's Space Marine Captain is
+p. 100 (not 109) and the Inquisitor's +1 pp. 150-151 (v0.36 pp. 140-142).
+**Code and tests:** `rules.js` (`isTiddla`, `mobRule`, `youngGunz`,
+`vesselPaid`, `youngGunzChoice`, `skwadronPlan`, `bbSwapRule`, `bbSwapPartner`,
+`warlordSwapPartners`, `applySwaps`), `src/game-state.js` (Apply, the free
+escorts, the swaps), `test_play.js`, `smoke_play.js`, `check_mob.js` (Chrome).
 
 ## What is not tracked, and why
 
