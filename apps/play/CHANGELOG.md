@@ -10,7 +10,7 @@ a tag `play-v<version>` deploys the Registry's site.
 - The Leadership swaps on their rows (T63): **Swap Ld** on a Clanz Warlord's row (his ship with one ship or escort squadron of his command, Fleets p. 374) and on an Ork battleship's, Waaagh! too (a Kill Kroozer, a Terror Ship or Zukov's Klaw, pp. 376-381, 383). The options say what the swap does (*Squadron B ×6: Ld 8 → 6, Young Gunz*); the two values change places at once, *no swap* puts them back, a tap on either ends it. The battleships' swaps come first, then the Warlords', then Young Gunz.
 
 ### Changed
-- A Blood Axe tiddla rolls its one Leadership on the Ork table whatever its first card is (T63). The Mob Rule reminder no longer shows on six defence platforms (only on a Clanz tiddla the set-up did not apply). Actions' ram, disengage and celestial tests count Long Range Sensors' +1, as the card does (T46).
+- A Blood Axe tiddla rolls its one Leadership on the Ork table whatever its first card is (T63). The Mob Rule chip is a Clanz tiddla's only, no longer on six defence platforms: applied, it counts the ships the +1 rests on; not applied, it is the old reminder. Actions' ram, disengage and celestial tests count Long Range Sensors' +1, as the card does (T46).
 - The Ld guide says how Young Gunz, Mob Rule and the swaps are applied; "tap the swapped values" and the Young Gunz note on the row are gone.
 
 ### Fixed

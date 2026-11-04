@@ -687,9 +687,12 @@ export function renderRoster(){
 export function mobChip(units){
   if(!appState.L0 || !appState.L0.clanz) return "";
   const us = (units || []).filter(u => u && u.R && u.st);
-  if(!us.some(u => PLAY.isTiddla(u.R)) || us.some(u => u.st.mob)) return "";
+  if(!us.some(u => PLAY.isTiddla(u.R))) return "";
   const n = PLAY.skwadronModels(us);
-  return n > 5 ? `<span class="chip" title="Ork escort skwadrons gain +1 Leadership while they contain more than five models (Fleets p. 372). Not applied to this skwadron: Menu &gt; Set-up, Apply Mob Rule - or add it to the Ld you play with.">mob rule: +1 Ld (${n} ships)</span>` : "";
+  if(n <= 5) return "";
+  /* applied: the +1 is in the numbers, the chip counts the ships it rests on */
+  if(us.some(u => u.st.mob)) return `<span class="chip ord" title="Mob Rule (Fleets p. 372): +1 Leadership while more than five models are left - in the Ld tile and every test">mob rule +1 ${MID} ${n} ships</span>`;
+  return `<span class="chip" title="Ork escort skwadrons gain +1 Leadership while they contain more than five models (Fleets p. 372). Not applied to this skwadron: Menu &gt; Set-up, Apply Mob Rule - or add it to the Ld you play with.">mob rule: +1 Ld (${n} ships)</span>`;
 }
 /* the quiet line of a card with a free escort (Young Gunz, Fleets p. 372) */
 export function ygLine(i){

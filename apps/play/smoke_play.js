@@ -732,6 +732,7 @@ function run(check){
     check("smoke: the free one's box is dashed, \"Young Gun: free, 0 pts\", and a quiet line says it",
       /<b class="[^"]*free[^"]*"[^>]*title="Young Gun: free, 0 pts \(Fleets p\. 372\)"/.test(P(`renderRow(BR, false)`)) && /\+1 free escort: Young Gunz \(Fleets p\. 372\)/.test(strip(P(`renderRow(BR, false)`))) && /6 of 6/.test(strip(P(`renderRow(BR, false)`))),
       strip(P(`renderRow(BR, false)`)).slice(0, 300));
+    check("smoke: ... the row's chip counts the ships the +1 rests on (the owner's prototype)", /mob rule \+1 . 6 ships/.test(strip(P(`renderRow(BR, false)`))) && !/add it to the Ld/.test(P(`renderRow(BR, false)`)), strip(P(`renderRow(BR, false)`)).slice(-200));
     check("smoke: the orders pop checks against it (T49): Ld 7", P(`orderLd(BR)`) === 7, P(`orderLd(BR)`));
     P(`V.actions = { i: BR, tab: "ram", size: 0, armour: 5, hits: 8, headOn: false, blast: 0, enemies: 0, celestial: false, boats: false, cat: "", res: null }`);
     check("smoke: ... and the ram's test in Actions (T46): Ld 7", /Ld 7 . 2D6, 7 or under/.test(strip(P(`renderActions()`))), strip(P(`renderActions()`)).slice(0, 300));
