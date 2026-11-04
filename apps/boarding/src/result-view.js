@@ -12,7 +12,7 @@ import { R, allocDone, cataDiceFor, cataNeeded, cataTableIdFor, critTableIdFor, 
    the very first render is already complete. */
 function resolveFreeTables(){
   (R.crits||[]).forEach(function(c){
-    if(c.hit && !c.table){
+    if(c.hit && !c.table && c.i !== null){
       var tid = critTableIdFor(c.to, c.i);
       if(!B.CRIT_TABLES[tid]) setTableFor(c, 0, tid);
     }
@@ -190,8 +190,14 @@ function critBlock(){
     var rows = [], pend = [];
     var compact = list.filter(function(c){ return c.hit && c.table; }).length > 2;
     list.forEach(function(c){
-      var target = esc(shipName(c.to, c.i));
       var arrow = c.repeated ? "Additional Ramilies critical → " : c.tide ? esc(shipName(c.from, c.by)) + " → " : "→ ";
+      if(c.tide && c.choose && !c.table){
+        /* several enemy ships: the boarder picks one for this roll (RULINGS.md 7) */
+        anyPending = true;
+        rows.push(tideTargetInput(c, arrow));
+        return;
+      }
+      var target = esc(shipName(c.to, c.i));
       if(c.hit === null){
         anyPending = true;
         pend.push(c);
@@ -279,6 +285,23 @@ function followupInput(c){
     esc(c.followup.rule.label)+'<br>D6</div>'];
   for(var i=1;i<=6;i++) h.push('<button class="die" data-r="critfollow" data-c="'+key+'" data-v="'+i+'">'+i+'</button>');
   h.push('</div>');
+  return h.join("");
+}
+/* One button per living enemy ship; the picked one stays lit, and with the
+   player's own dice its table row follows. Two of one class are "Lunar 1",
+   "Lunar 2". */
+function tideTargetInput(c, arrow){
+  var ids = livingIdx(c.to), names = ids.map(function(i){ return shipName(c.to, i); });
+  var h = ['<div class="q">'+arrow+(c.i===null ? '<b>pick the enemy ship</b>' : esc(names[ids.indexOf(c.i)]))+'</div>',
+           '<div class="dieRow '+c.from+'">'];
+  ids.forEach(function(i, n){
+    var nm = names[n], same = names.filter(function(x){ return x===nm; }).length > 1;
+    if(same) nm += " " + (names.slice(0, n + 1).filter(function(x){ return x===names[n]; }).length);
+    h.push('<button class="die'+(c.i===i?" sel":"")+'" style="flex:1 1 0;height:auto;min-height:38px;padding:4px;font-size:12px;line-height:1.15" '+
+      'data-r="tidetgt" data-c="'+c.cid+'" data-v="'+i+'">'+esc(nm)+'</button>');
+  });
+  h.push('</div>');
+  if(c.i!==null) h.push(tableInput(c));
   return h.join("");
 }
 function tableInput(c){
@@ -386,14 +409,14 @@ function arkBlock(){
    turn" (FL p.250) - so each Mark of Khorne ship of the side, with its own D3
    and its own lost orders. The player's own D3 first, the app's roll beside it
    (user 4.11.2026). The extra rolls need no roll to cause them (Remastered team
-   on Discord, 27.9.2023; RULINGS.md 7). */
+   on Discord, 27.9.2023; RULINGS.md 7). Only the boarding side: a ship
+   "conducting a boarding action", where the other side may "defend against an
+   enemy boarding action" (RB p.89; user 4.11.2026). */
 function tideShips(){
   var sc = R.score; if(!sc || !sc.winner) return [];
   var out = [];
-  ["att","def"].forEach(function(k){
-    if(!B.extraCritRolls(eSide(k))) return;
-    livingIdx(k).forEach(function(i){ if(B.has(eSide(k).ships[i], "khorne")) out.push({k:k, i:i, key:k+":"+i}); });
-  });
+  if(!B.extraCritRolls(eSide("att"))) return out;
+  livingIdx("att").forEach(function(i){ if(B.has(eSide("att").ships[i], "khorne")) out.push({k:"att", i:i, key:"att:"+i}); });
   return out;
 }
 function tideBlock(){

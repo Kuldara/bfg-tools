@@ -37,10 +37,16 @@ hit-and-run and teleports p. 92.
    Khorne ship** of a multi-ship boarding has its own D3 and loses its own special
    orders next turn: FL p. 250 speaks of "Any ships with the Mark of Khorne
    conducting a boarding action ... then it may not take any special orders"
-   (user 4.11.2026: "per ship"). The book does not say which enemy ship the extra
-   rolls hit; the app takes the enemy ships in turn, carrying on from the extra
-   rolls already made against them. The D3 is the player's own, or the app's
-   when asked.
+   (user 4.11.2026: "per ship"). It is one D3 per Khorne ship, not one per enemy
+   ship. The book does not say which enemy ship the extra rolls hit when several
+   are boarded (ruling 16); the boarder picks the ship for each roll (user
+   4.11.2026). Until
+   4.11.2026 the app took the enemy ships in turn. The D3 is the player's own, or the app's
+   when asked. **Only the boarding side** uses it (user 4.11.2026): FL p. 250
+   says "conducting a boarding action", and RB p. 89 sets the boarder against the
+   ship that "may defend against an enemy boarding action normally". Neither
+   book says outright that a defender cannot; until 4.11.2026 the app offered it
+   to a defending Mark of Khorne ship too.
 8. **Tyranid spore cysts count as the defender's turrets** (REF and its example 3),
    added **after** the doubling.
 9. **A boarding Tyranid always gets the blast-marker modifier**, because boarding
