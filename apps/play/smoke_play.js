@@ -1171,6 +1171,8 @@ function run(check){
     const sheet = P(`renderVpSheet()`);
     clean("the VP sheet", sheet);
     check("smoke: VP: the sheet has both scores and a what-if for my ship", /You score/.test(strip(sheet)) && /data-act="vpq" data-arg="m:cr:0"/.test(sheet), strip(sheet).slice(0, 300));
+    const order = (sheet.match(/data-act="vpq" data-arg="([^"]+)"/g) || []).map(s => s.replace(/.*data-arg="|"$/g, ""));
+    check("smoke: VP: the first two what-ifs are always I disengage, then the enemy disengages (user 4.11.2026)", order[0] === "m:all" && order[1] === "t:all", JSON.stringify(order));
     P(`V.vpQ = { "m:cr:0": 1 }`);
     check("smoke: VP: a ticked what-if shows now -> then (crippled: 25 %, p. 123) and changes nothing in the game",
           new RegExp("0→</span>" + Math.ceil(pts * 0.25)).test(P(`renderVpSheet()`)) && P(`G.st[0].hits | 0`) === 0 && P(`vpTotal()`) === 0);

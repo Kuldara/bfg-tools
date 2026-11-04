@@ -84,8 +84,9 @@ function myQuestions(){
   if(flag) Q.push({ key: "m:flag", text: "My flagship " + flag.name + " is destroyed (with " + flag.cmd + ")", ov: ovOf(flag.ms, "dd") });
   const ok = L.filter(u => u.state === "ok" && !u.esq && !u.cmd);
   ok.slice(0, 2).forEach(u => Q.push({ key: "m:cr:" + u.ms[0], text: u.name + " is crippled", ov: ovOf(u.ms, "cr") }));
+  /* always first (user 4.11.2026): I disengage now */
   const left = L.filter(u => u.state === "ok" || u.state === "cr");
-  if(left.length > 1) Q.push({ key: "m:all", text: "Everything of mine still in play disengages", ov: Object.assign({}, ...left.map(u => ovOf(u.ms, "dg"))) });
+  if(left.length) Q.unshift({ key: "m:all", text: "I disengage everything still in play", ov: Object.assign({}, ...left.map(u => ovOf(u.ms, "dg"))) });
   return Q;
 }
 function theirQuestions(){
@@ -98,6 +99,9 @@ function theirQuestions(){
     .forEach(u => Q.push({ key: "t:dd:" + u.ms[0], text: "I wipe out their " + u.name, ov: ovOf(u.ms, "dd") }));
   const flag = L.find(u => u.cmd && u.state !== "dd" && u.state !== "dg");
   if(flag) Q.push({ key: "t:flag", text: "I destroy their flagship " + flag.name + " (with " + flag.cmd + ")", ov: ovOf(flag.ms, "dd") });
+  /* always second: the enemy disengages now */
+  const left = L.filter(u => u.state === "ok" || u.state === "cr");
+  if(left.length) Q.unshift({ key: "t:all", text: "The enemy disengages everything still in play", ov: Object.assign({}, ...left.map(u => ovOf(u.ms, "dg"))) });
   return Q;
 }
 
@@ -178,7 +182,10 @@ export function renderVpSheet(){
     const dm = d.me == null ? "" : `<span class="me">${sgn(d.me - s0.me)}</span> / `;
     return `<button class="vpq${on[q.key] ? " on" : ""}" data-act="vpq" data-arg="${q.key}" aria-pressed="${!!on[q.key]}">${q.text}<small>${dm}<span class="them">${sgn(d.they - s0.they)}</span>${d.me == null ? " VP for the enemy" : " " + MID + " " + lead(d)}</small></button>`;
   };
-  const qs = mine.map(q => qBtn(q, "m")).concat(theirs.map(q => qBtn(q, "t")));
+  /* the two disengages first - mine, then theirs - then the rest */
+  const top = q => /:all$/.test(q.key);
+  const qs = mine.filter(top).map(q => qBtn(q, "m")).concat(theirs.filter(top).map(q => qBtn(q, "t")),
+    mine.filter(q => !top(q)).map(q => qBtn(q, "m")), theirs.filter(q => !top(q)).map(q => qBtn(q, "t")));
   return `<div class="menu" data-act="vp"><div class="box vpbox">
     <div class="mhd"><h2>Victory points</h2>${any ? `<button class="vpclr" data-act="vpclr">Clear</button>` : ""}<button class="x" data-act="vp" aria-label="Close">${CLOSE_X}</button></div>
     ${head}
