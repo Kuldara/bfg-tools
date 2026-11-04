@@ -1,8 +1,8 @@
 {
   "_read": "Fleet-level expectation cases, read from the book. The unit-level cases are in golden_cases.json; this file answers another question: what the FLEET's legality checks must say when a fleet is assembled around a sentence of the book. The driver is the same test_golden.js.",
   "_why_own_file": "golden_cases.json is 4600 lines of unit cases and it is edited in parallel in another session (the card cases). The fleet cases have a different shape and a different run, so they are in their own file. 1.1 phase 1, 14.9.2026.",
-  "_shape": "{ id, page, the list name in fleet.list, fleet: { list, limit, units: [ { entry (a regex for the list row) | ship (page number), n (hulls, default 1), repeat (how many SEPARATE units, default 1), opts: [{option, state, qty}], ups: [{upgrade, state}], adjust, list (source list, only in phase 3) } ] }, expect: { total, checks: [{ src | label, ok, v, warn, absent }], facts: [{ src | label, v, warn, absent }] (J214: fleet facts, attack rating etc.), others_ok, failing }, why }",
-  "_checks": "src = the book's sentence as it is in the rule's src field (a substring, normalised); label = a regex of the check row's heading. Each may hit exactly one row. others_ok = no other row may be red. failing = the exact number of red rows.",
+  "_shape": "{ id, page, the list name in fleet.list, fleet: { list, limit, units: [ { entry (a regex for the list row) | ship (page number), n (hulls, default 1), repeat (how many SEPARATE units, default 1), opts: [{option, state, qty}], ups: [{upgrade, state}], adjust, list (source list, only in phase 3) } ] }, expect: { total, checks: [{ src | label, ok, v, warn, absent }], facts: [{ src | label, v, warn, absent }] (J214: fleet facts, attack rating etc.), others_ok, failing, view_contains, view_lacks }, why }",
+  "_checks": "src = the book's sentence as it is in the rule's src field (a substring, normalised); label = a regex of the check row's heading. Each may hit exactly one row. others_ok = no other row may be red. failing = the exact number of red rows. view_contains / view_lacks = texts the fleet view must show or must not show, as in the unit cases: information the builder gives without a check row (a Clanz tiddla's Mob Rule, Fleets p. 372).",
   "_source": "Battlefleet Gothic: Remastered, Fleets Book WiP v0.36 (28.8.2025)",
   "cases": [
     {
@@ -8687,6 +8687,181 @@
         ]
       },
       "why": "Fleets p. 374: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”; p. 375: “Thus, the smallest fleet a single Warlord with only the one free re-roll may command is two tiddla skwadrons, each with three escorts.” One Brute and two Savages in one tag are one tiddla of three, and the Rok is the other skwadron; the Warlord's count used to see two tiddlas and a Rok. Brute 25 + 2 x Savage gunship 30 + Rok 80 = 165."
+    },
+    {
+      "id": "clanz-mixed-tiddla-two-ravagers-and-a-brute",
+      "page": 374,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Ravager attack ship",
+            "n": 2,
+            "sq": "T"
+          },
+          {
+            "entry": "^Brute ramship",
+            "n": 1,
+            "sq": "T"
+          },
+          {
+            "entry": "^Savage gunship",
+            "n": 3
+          }
+        ]
+      },
+      "expect": {
+        "total": 195,
+        "checks": [
+          {
+            "label": "^Tiddla skwadron T$",
+            "ok": true,
+            "v": "3 escorts: 2 Ravager attack ship + 1 Brute ramship"
+          },
+          {
+            "label": "^Warlord 1: skwadrons",
+            "ok": true,
+            "v": "1 tiddla + 1 other / 1 + 1"
+          }
+        ],
+        "others_ok": true
+      },
+      "why": "Fleets p. 374: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”; p. 375: “Thus, the smallest fleet a single Warlord with only the one free re-roll may command is two tiddla skwadrons, each with three escorts.” The user's example (3.11.2026): two Ravagers and a Brute, each class its own card, with one letter are one tiddla of three, so this smallest Warlord fleet is legal with three Savages as his second tiddla; card by card they would be two tiddlas under three. 2 x Ravager attack ship 40 + Brute ramship 25 + 3 x Savage gunship 30 = 195."
+    },
+    {
+      "id": "clanz-mixed-tiddla-of-eleven-is-too-many",
+      "page": 374,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Ravager attack ship",
+            "n": 6,
+            "sq": "T"
+          },
+          {
+            "entry": "^Brute ramship",
+            "n": 5,
+            "sq": "T"
+          },
+          {
+            "entry": "^Rok"
+          }
+        ]
+      },
+      "expect": {
+        "total": 445,
+        "checks": [
+          {
+            "label": "^Tiddla skwadron T$",
+            "ok": false,
+            "v": "11 escorts: 6 Ravager attack ship + 5 Brute ramship - too many, at most 10"
+          },
+          {
+            "label": "^Warlord 1: skwadrons",
+            "ok": true,
+            "v": "1 tiddla + 1 other / 1 + 1"
+          }
+        ],
+        "failing": 1
+      },
+      "why": "Fleets p. 374: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”; p. 372: “Note: the maximum number of escorts in an Ork squadron can be up to ten.” Six Ravagers and five Brutes with one letter are one tiddla of eleven, one too many, and only its size is red; card by card they would be two legal tiddlas of six and five. 6 x Ravager attack ship 40 + 5 x Brute ramship 25 + Rok 80 = 445."
+    },
+    {
+      "id": "clanz-mob-rule-counts-the-mixed-tiddla",
+      "page": 372,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Ravager attack ship",
+            "n": 3,
+            "sq": "T"
+          },
+          {
+            "entry": "^Brute ramship",
+            "n": 3,
+            "sq": "T"
+          },
+          {
+            "entry": "^Rok"
+          }
+        ]
+      },
+      "expect": {
+        "total": 275,
+        "checks": [
+          {
+            "label": "^Tiddla skwadron T$",
+            "ok": true,
+            "v": "6 escorts: 3 Ravager attack ship + 3 Brute ramship"
+          }
+        ],
+        "others_ok": true,
+        "view_contains": [
+          "Mob rule: +1 Ld while more than five ships"
+        ],
+        "view_lacks": [
+          "Mob rule: +1 Ld with six or more ships"
+        ]
+      },
+      "why": "Fleets p. 372, Mob Rule: “Ork escort skwadrons gain a +1 bonus to their Leadership while they contain more than five models”; p. 374: “Tiddla skwadron 3-10 Escorts, chosen from the following list in any mix desired”. Three Ravagers and three Brutes with one letter are one skwadron of six models, so the skwadron has the +1 although neither of its cards has more than five. The builder says so as information; the Leadership stays the player's (Play RULINGS T40). 3 x Ravager attack ship 40 + 3 x Brute ramship 25 + Rok 80 = 275."
+    },
+    {
+      "id": "clanz-mob-rule-not-at-five",
+      "page": 372,
+      "fleet": {
+        "list": "Orks — Da Ork Clanz",
+        "limit": 1000,
+        "units": [
+          {
+            "entry": "^Ork Warlord"
+          },
+          {
+            "entry": "^Ravager attack ship",
+            "n": 3,
+            "sq": "T"
+          },
+          {
+            "entry": "^Brute ramship",
+            "n": 2,
+            "sq": "T"
+          },
+          {
+            "entry": "^Rok"
+          }
+        ]
+      },
+      "expect": {
+        "total": 250,
+        "checks": [
+          {
+            "label": "^Tiddla skwadron T$",
+            "ok": true,
+            "v": "5 escorts: 3 Ravager attack ship + 2 Brute ramship"
+          }
+        ],
+        "others_ok": true,
+        "view_contains": [
+          "Mob rule: +1 Ld with six or more ships"
+        ],
+        "view_lacks": [
+          "Mob rule: +1 Ld while more than five ships"
+        ]
+      },
+      "why": "Fleets p. 372, Mob Rule: “Ork escort skwadrons gain a +1 bonus to their Leadership while they contain more than five models”. Five is not more than five: a mixed tiddla of three Ravagers and two Brutes has no bonus yet, and the builder says what it takes. 3 x Ravager attack ship 40 + 2 x Brute ramship 25 + Rok 80 = 250."
     },
     {
       "id": "clanz-blood-axe-three-ork-three-commandeered",

@@ -11,6 +11,11 @@
    the HTML. On top of that a few claims read from the book (the page is
    in the claim) or from this project's user interface principles.
 
+   The snippets name the page's functions and state bare, as globals of the
+   vm (boot). Before any of them runs, the page's own code is checked to take
+   none of those names from the global scope, so a forgotten import fails
+   here as it does in a browser (run()).
+
    npm test builds before it tests, so the page is always made from the
    current sources. SMOKE_PAGE=<file> runs the same checks on another
    build (for example a comparison page made from an older version).
@@ -19,6 +24,7 @@
      apps/play/test_play.js runs this at the end with the same counters. */
 "use strict";
 const fs = require("fs"), path = require("path"), vm = require("vm");
+const freeNames = require("../../tools/lib/free-names.js");
 const HERE = __dirname;
 /* The built page (npm run build). npm test builds before it tests, so the page
    is always made from the current sources. */
@@ -27,15 +33,19 @@ const BUILT = path.join(HERE, "..", "..", "dist", "registry", "play", "Gothic Fl
 /* To text: tags and icons removed, so a claim reads what the player reads. */
 const strip = h => String(h).replace(/<svg[\s\S]*?<\/svg>/g, " ").replace(/<[^>]+>/g, " ").replace(/&[a-z#0-9]+;/gi, " ").replace(/\s+/g, " ").trim();
 
+/* The page's data block and its app script: the one right after the data
+   block (the site's copy has a second, small one that registers the service
+   worker). */
+function pageParts(html){
+  const d0 = html.indexOf('<script id="bfgdata" type="application/json">') + '<script id="bfgdata" type="application/json">'.length;
+  const i0 = html.indexOf("<script>", d0) + "<script>".length, i1 = html.indexOf("</script>", i0);
+  return { dataText: html.slice(d0, html.indexOf("</script>", d0)), code: html.slice(i0, i1) };
+}
+
 /* The built page in one vm context. Returns P(src): runs code in the
    page's own scope and returns the value. */
 function boot(html){
-  /* the app script is the one right after the data block; the site's copy
-     has a second, small one that registers the service worker */
-  const d0 = html.indexOf('<script id="bfgdata" type="application/json">') + '<script id="bfgdata" type="application/json">'.length;
-  const dataText = html.slice(d0, html.indexOf("</script>", d0));
-  const i0 = html.indexOf("<script>", d0) + "<script>".length, i1 = html.indexOf("</script>", i0);
-  const code = html.slice(i0, i1);
+  const { dataText, code } = pageParts(html);
   const store = {}, toasts = [];
   const elem = () => ({ innerHTML: "", textContent: "", className: "", value: "", style: {}, disabled: false,
     classList: { add(){}, remove(){}, toggle(){}, contains(){ return false; } }, children: [],
@@ -60,15 +70,20 @@ function boot(html){
   /* The page is one bundle (global GFP). The snippets below name its
      functions and state as they did when the page was one plain script, so
      every export is a live global here, and the shared state (G, U, ...) can
-     also be assigned. */
-  for(const k of Object.keys(ctx.GFP)) if(k !== "appState")
-    Object.defineProperty(ctx, k, { get: () => ctx.GFP[k], configurable: true });
-  for(const k of Object.keys(ctx.GFP.appState))
-    Object.defineProperty(ctx, k, { get: () => ctx.GFP.appState[k], set: v => { ctx.GFP.appState[k] = v; }, configurable: true });
+     also be assigned. The page's own code would find them here too; run()
+     checks first that it never looks for one (defined: every name put here). */
+  const defined = [];
+  for(const k of Object.keys(ctx.GFP)) if(k !== "appState"){
+    Object.defineProperty(ctx, k, { get: () => ctx.GFP[k], configurable: true }); defined.push(k);
+  }
+  for(const k of Object.keys(ctx.GFP.appState)){
+    Object.defineProperty(ctx, k, { get: () => ctx.GFP.appState[k], set: v => { ctx.GFP.appState[k] = v; }, configurable: true }); defined.push(k);
+  }
   ctx.__toasts = toasts; ctx.__strip = strip;
   ctx.__fire = (t, ev) => (listeners[t] || []).forEach(f => f(ev));
+  defined.push("__toasts", "__strip", "__fire");
   const P = src => vm.runInContext(src, ctx, { filename: "smoke.js" });
-  return { P, ctx, toasts, store, APP, DATA: JSON.parse(dataText) };
+  return { P, ctx, toasts, store, APP, DATA: JSON.parse(dataText), defined };
 }
 
 /* A saved unit in the builder's format (schema 4): section and row by name. */
@@ -100,6 +115,22 @@ function run(check){
   if(!fs.existsSync(PAGE)){ check("smoke: the built page exists (npm run build)", false, PAGE); return; }
   const html = fs.readFileSync(PAGE, "utf8");
 
+  /* The harness hides nothing. boot() puts the page's exports and state on
+     the vm's global for the snippets; a module that uses another module's
+     export without importing it would find it there, and pass here while it
+     throws in a browser (actions.js called isEscGrp so, November 2026: a
+     capital ship in a squadron that failed to disengage). The page's free
+     names - each name its code takes from the global scope, by esbuild's own
+     scope analysis (tools/lib/free-names.js) - must include none of them;
+     then every check below sees the page as a browser does. The build stops
+     on any free name a browser lacks; this needs no list of the browser's. */
+  {
+    const named = new Set(boot(html).defined);
+    const leak = freeNames.ofScript(pageParts(html).code).filter(f => named.has(f.name));
+    check("smoke: the page's own code takes none of the " + named.size + " names the harness defines from the global scope",
+          leak.length === 0, leak.map(f => f.name + " (" + f.module + ": " + f.text.slice(0, 90) + ")").join("; "));
+  }
+
   /* every piece of HTML the page makes goes through here */
   const bad = h => { const t = strip(h); const m = t.match(/.{0,60}\b(undefined|NaN)\b.{0,40}/) || String(h).match(/.{0,60}(="undefined"|="NaN"|\[object Object\]).{0,40}/); return m ? m[0] : ""; };
   const clean = (what, h) => check("smoke: " + what + " renders clean", typeof h === "string" && h.length > 0 && !bad(h), typeof h !== "string" ? String(h) : h.length ? bad(h) : "empty");
@@ -110,6 +141,13 @@ function run(check){
   const open = () => {
     const pg = boot(html), raw = pg.P;
     pg.P = src => { try{ return raw(src); }catch(e){ check("smoke: the page does not throw at: " + String(src).replace(/\s+/g, " ").slice(0, 70), false, where(e)); return ""; } };
+    /* js run as a browser runs the page: there the exports are no globals,
+       so a module that uses another's export without importing it throws
+       (the harness's globals hid one in actions.js). js names the bundle
+       through GFP. */
+    pg.bare = js => pg.P(`(() => { const ks = Object.keys(GFP).concat(Object.keys(GFP.appState)), keep = {};
+      ks.forEach(k => { keep[k] = Object.getOwnPropertyDescriptor(globalThis, k); delete globalThis[k]; });
+      try{ return (${js}); }finally{ ks.forEach(k => { if(keep[k]) Object.defineProperty(globalThis, k, keep[k]); }); } })()`);
     return pg;
   };
 
@@ -431,32 +469,40 @@ function run(check){
     check("smoke: the link's base64url round-trips bytes", P(`(() => { const b = new Uint8Array([0, 1, 250, 255, 62, 63, 128]); return Array.from(unb64url(b64url(b))).join(","); })()`) === "0,1,250,255,62,63,128");
     const q = JSON.parse(P(`JSON.stringify((() => { const r = QR.encode("https://bfgtools.kuldare.com/play/x#fleet=abc"); return { v: r.version, n: r.size, rows: r.rows.length }; })())`));
     check("smoke: the QR code is a square of 4 x version + 17 modules (ISO 18004)", q.n === q.v * 4 + 17 && q.rows === q.n, JSON.stringify(q));
+    /* one list of saved fleets (user 4.11.2026): a file or a link goes into
+       the builder's Saved fleets, and the builder's working key is not written */
+    const LIBK = "gothic-fleet-registry-saves-v1";
+    const lib = () => JSON.parse(pg.store[LIBK] || '{"saves":[]}').saves;
     const builderKey = P(`lsGet(KEY_BUILDER)`);
     P(`takeFleetText(JSON.stringify(__doc), "file")`);
-    const lk = JSON.parse(P(`JSON.stringify(linkedFleets().map(f => [f.how, f.doc.ln]))`));
-    check("smoke: a fleet file goes on the page's own list and the builder's key is not written", lk.length === 1 && lk[0][0] === "file" && P(`lsGet(KEY_BUILDER)`) === builderKey, JSON.stringify(lk));
+    check("smoke: a fleet file goes into the builder's Saved fleets, not its working key", lib().length === 1 && lib()[0].from === "file" && lib()[0].ln === pg.ctx.__doc.ln && lib()[0].id && lib()[0].pts > 0 && P(`lsGet(KEY_BUILDER)`) === builderKey, JSON.stringify(lib().map(s => [s.from, s.ln, s.pts])));
     const load = P(`renderLoad()`);
     clean("the load screen with a fleet from a file", load);
-    check("smoke: ... the load screen lists it under Saved fleets, marked new, with its forget button", /Saved fleets/.test(strip(load)) && /data-act="linked" data-arg="0"/.test(load) && /new/.test(strip(load)) && /data-act="unlink"/.test(load));
-    P(`forgetLinked(0)`);
-    check("smoke: ... and forget takes it off", P(`linkedFleets().length`) === 0);
+    check("smoke: ... the load screen lists it under Saved fleets, marked new, and says it is the builder's list", /Saved fleets/.test(strip(load)) && /same list as Saved fleets in the builder/.test(strip(load)) && /data-act="linked" data-arg="0"/.test(load) && /new/.test(strip(load)) && !/data-act="unlink"/.test(load));
+    P(`takeFleetText(JSON.stringify(__doc), "link")`);
+    check("smoke: ... the same fleet again is not saved twice", lib().length === 1);
     /* J208: a link or a file carries the builder's names; every fleet in it
        is kept, named, and marked new */
-    P(`takeFleetText(JSON.stringify({ name: "Lunar pair", ln: __doc.ln, limit: 1500, units: __doc.units, fleets: [{ name: "Swords", ln: __doc.ln, limit: 1000, units: __doc.units.slice(3) }] }), "link")`);
+    P(`takeFleetText(JSON.stringify({ name: "Lunar pair", ln: __doc.ln, limit: 1400, units: __doc.units, fleets: [{ name: "Swords", ln: __doc.ln, limit: 1000, units: __doc.units.slice(3) }] }), "link")`);
     const named = strip(P(`renderLoad()`));
-    check("smoke: a link's fleets keep their names and are all marked new (J208)", P(`linkedFleets().map(f => f.doc.name).join("|")`) === "Lunar pair|Swords" && /Lunar pair/.test(named) && /Swords/.test(named) && P(`V.linkNew.length`) === 2, P(`JSON.stringify(linkedFleets().map(f => f.doc.name))`));
-    /* phone to phone (user 19.10.2026): this page's own saved fleets go on
-       by QR code or a shared link, one by one or all in one */
+    check("smoke: a link's fleets keep their names and are all marked new (J208)", lib().map(f => f.name).slice(0, 2).join("|") === "Lunar pair|Swords" && /Lunar pair/.test(named) && /Swords/.test(named) && P(`V.linkNew.length`) === 2, JSON.stringify(lib().map(f => f.name)));
+    /* phone to phone (user 19.10.2026): the saved fleets go on by QR code or a
+       shared link, one by one or all in one */
     const lp = P(`renderLoad()`);
-    check("smoke: every saved fleet on this phone has its own Send, and two or more have Send all", /data-act="send" data-arg="s:0"/.test(lp) && /data-act="send" data-arg="s:1"/.test(lp) && /data-act="send" data-arg="all"/.test(lp));
+    check("smoke: every saved fleet has its own Send, and two or more have Send all", /data-act="send" data-arg="s:0"/.test(lp) && /data-act="send" data-arg="s:1"/.test(lp) && /data-act="send" data-arg="all"/.test(lp));
     const all2 = JSON.parse(P(`JSON.stringify(phoneDoc("all"))`));
-    check("smoke: ... Send all carries every saved fleet with its name", all2.name === "Lunar pair" && (all2.fleets || []).length === 1 && all2.fleets[0].name === "Swords" && P(`phoneDoc("s:1").name`) === "Swords", JSON.stringify([all2.name, (all2.fleets || []).map(f => f.name)]));
-    P(`forgetLinked(1); forgetLinked(0)`);
-    /* the builder's named library on the same device (gothic-fleet-registry-saves-v1) */
-    pg.store["gothic-fleet-registry-saves-v1"] = JSON.stringify({ v: 1, saves: [{ id: "x1", name: "Club night", ln: L.nm, limit: 1500, units: pg.ctx.__doc.units, pts: 0, saved: "2026-10-19" }], open: {} });
-    const lib = P(`renderLoad()`);
-    check("smoke: the builder's saved fleets are on the load screen by name, ready to play or send to a phone", /Fleets from the builder/.test(strip(lib)) && /Club night/.test(strip(lib)) && /saved/.test(strip(lib)) && /data-act="newfrom" data-arg="0"/.test(lib) && /data-act="send" data-arg="b:0"/.test(lib) && P(`builderFleets()[0].name`) === "Club night" && P(`phoneDoc("b:0").name`) === "Club night", strip(lib).slice(0, 300));
-    delete pg.store["gothic-fleet-registry-saves-v1"];
+    check("smoke: ... Send all carries every saved fleet with its name", all2.name === "Lunar pair" && (all2.fleets || []).length === 2 && all2.fleets[0].name === "Swords" && P(`phoneDoc("s:1").name`) === "Swords", JSON.stringify([all2.name, (all2.fleets || []).map(f => f.name)]));
+    /* a fleet saved in the builder is on the same list, by name */
+    pg.store[LIBK] = JSON.stringify({ v: 1, saves: [{ id: "x1", name: "Club night", ln: L.nm, limit: 1500, units: pg.ctx.__doc.units, pts: 0, saved: "2026-10-19" }], open: {} });
+    const lb = P(`renderLoad()`);
+    check("smoke: the builder's saved fleets are the load screen's Saved fleets, ready to play or send", /Club night/.test(strip(lb)) && /data-act="linked" data-arg="0"/.test(lb) && /data-act="send" data-arg="s:0"/.test(lb) && !/Fleets from the builder/.test(strip(lb)));
+    /* Play's own list from before goes into the library once */
+    pg.store[LIBK] = JSON.stringify({ v: 1, saves: [], open: {} });
+    delete pg.store["gothic-fleet-play-linked-moved"];
+    pg.store["gothic-fleet-play-linked"] = JSON.stringify([{ fp: "a", how: "file", date: "2026-11-01", doc: { name: "Old phone fleet", ln: L.nm, limit: 1500, units: pg.ctx.__doc.units } }]);
+    P(`savedFleets()`); P(`savedFleets()`);
+    check("smoke: Play's old list is moved into Saved fleets once", lib().length === 1 && lib()[0].name === "Old phone fleet" && lib()[0].from === "file" && pg.store["gothic-fleet-play-linked-moved"] === "1", JSON.stringify(lib()));
+    delete pg.store[LIBK];
   });
 
   /* --------------------------- Space Marines: the Fortress-Monastery --- */
@@ -518,9 +564,11 @@ function run(check){
        var NX = n => U.findIndex(x => x.u.name === n);`);
     const g = JSON.parse(P(`JSON.stringify(["Alpha", "Beta", "Gamma", "Delta", "Blades"].map(n => G.grp[NX(n)]))`) || "[]");
     /* Fleets p. 13: cruisers "may be formed into squadrons of two to four
-       ships"; SQN gives them one Ld, one order and combined fire (p. 95, 99) */
-    check("smoke: two cruisers with the builder's squadron tag start the game in one SQN group (J222)",
-          g[0] != null && g[0] === g[1] && /^[ABC]$/.test(String(g[0])), JSON.stringify(g));
+       ships"; SQN gives them one Ld, one order and combined fire (p. 95, 99).
+       The group keeps the builder's letter, so the phone says what the
+       builder and the printed roster say (user 4.11.2026, T42). */
+    check("smoke: two cruisers with the builder's squadron tag start the game in one SQN group under its letter (J222, T42)",
+          g[0] === "C" && g[1] === "C", JSON.stringify(g));
     check("smoke: ... an untagged cruiser, a tag on one ship alone and the escort squadron start ungrouped",
           g[2] == null && g[3] == null && g[4] == null, JSON.stringify(g));
     const setup = P(`renderSetup()`);
@@ -529,6 +577,123 @@ function run(check){
           btn("Alpha") === "SQN " + g[0] && btn("Beta") === "SQN " + g[0] && btn("Gamma") === "+ SQN", JSON.stringify([btn("Alpha"), btn("Beta"), btn("Gamma")]));
     P(`act("grp", NX("Beta"))`);
     check("smoke: ... and the SQN button still takes a ship out of it", P(`G.grp[NX("Beta")] !== G.grp[NX("Alpha")]`) === true, P(`JSON.stringify(G.grp)`));
+  });
+
+  /* ---------- T42 (user 4.11.2026): every builder squadron, its own letter --- */
+  guard("five builder skwadrons", () => {
+    const pg = open(), P = pg.P;
+    const L = pg.DATA.lists.find(x => /^Orks . Da Ork Clanz$/.test(x.nm));
+    /* J232: Clanz kroozers (1-2) and Roks (1-4) are skwadrons by their tag
+       (Fleets p. 374). Two Warlords, five capital skwadrons B-F and a mixed
+       tiddla A of two cards (docs/save-format.md: uid, cmd, sq). */
+    const wl = uid => Object.assign(saved(L, /^WARLORD$/, /^Ork Warlord$/), { uid: uid });
+    const sk = (sec, re, n, name, cmd, sq) => Object.assign(saved(L, sec, re, n, name), { cmd: cmd }, sq ? { sq: sq } : {});
+    const T = /^Tiddla skwadron$/, BIG = /^Big ship skwadron$/, ROK = /^Roks$/;
+    pg.ctx.__doc = { ln: L.nm, limit: 3000, units: [
+      wl("w1"), sk(T, /^Savage/, 3, "Savages", "w1", "A"), sk(T, /^Onslaught/, 3, "Onslaughts", "w1", "A"), sk(T, /^Ravager/, 3, "Ravagers", "w1"),
+      sk(BIG, /^Terror ship$/, 1, "Terror 1", "w1", "B"), sk(BIG, /^Terror ship$/, 1, "Terror 2", "w1", "B"),
+      sk(ROK, /^Rok$/, 1, "Rok 1", "w1", "C"), sk(ROK, /^Rok$/, 1, "Rok 2", "w1", "C"),
+      wl("w2"), sk(T, /^Brute/, 3, "Brutes", "w2"), sk(T, /^Grunt/, 3, "Grunts", "w2"), sk(T, /^Ravager/, 3, "Raiders", "w2"),
+      sk(BIG, /^Kill kroozer$/, 1, "Kill 1", "w2", "D"), sk(BIG, /^Kill kroozer$/, 1, "Kill 2", "w2", "D"),
+      sk(ROK, /^Rok$/, 1, "Rok 3", "w2", "E"), sk(ROK, /^Rok$/, 1, "Rok 4", "w2", "E"), sk(ROK, /^Rok$/, 1, "Rok 5", "w2", "E"),
+      sk(BIG, /^Lite kroozer$/, 1, "Lite 1", "w2", "F"), sk(BIG, /^Lite kroozer$/, 1, "Lite 2", "w2", "F")] };
+    P(`newGame(resolveFleet(__doc)); V.screen = "setup"; save(); render();
+       var NX = n => U.findIndex(x => x.u.name === n);`);
+    const caps = ["Terror 1", "Terror 2", "Rok 1", "Rok 2", "Kill 1", "Kill 2", "Rok 3", "Rok 4", "Rok 5", "Lite 1", "Lite 2"];
+    const want = ["B", "B", "C", "C", "D", "D", "E", "E", "E", "F", "F"];
+    const grpOf = ns => JSON.parse(P(`JSON.stringify(${JSON.stringify(ns)}.map(n => G.grp[NX(n)]))`) || "[]");
+    const g = grpOf(caps);
+    check("smoke: five builder skwadrons start the game as five SQN groups, each under the builder's letter (T42, J232)",
+          JSON.stringify(g) === JSON.stringify(want), JSON.stringify(g));
+    check("smoke: ... the mixed tiddla stays one escort squadron under its letter A, which no capital squadron shows",
+          JSON.stringify(grpOf(["Savages", "Onslaughts", "Ravagers"])) === '["e:A","e:A",null]' && g.indexOf("A") < 0, JSON.stringify(grpOf(["Savages", "Onslaughts", "Ravagers"])));
+    const setup = P(`renderSetup()`);
+    clean("the five-skwadron set-up screen", setup);
+    const btn = n => { const m = new RegExp('data-act="grp" data-i="' + P(`NX(${JSON.stringify(n)})`) + '"[^>]*>([^<]*)<').exec(setup); return m ? m[1] : null; };
+    check("smoke: ... the set-up shows each ship's letter on its SQN button",
+          caps.every((n, k) => btn(n) === "SQN " + want[k]), JSON.stringify(caps.map(btn)));
+    /* the button: the letters in use, a new one (none of the fleet's, the
+       tiddla's A included), none, and round again */
+    const seq = [];
+    for(let k = 0; k < 7; k++){ P(`act("grp", NX("Kill 2"))`); seq.push(P(`G.grp[NX("Kill 2")]`)); }
+    check("smoke: ... the SQN button goes through every squadron's letter, then a new one no squadron of the fleet has, then none (T42)",
+          JSON.stringify(seq) === JSON.stringify(["E", "F", "G", null, "B", "C", "D"]), JSON.stringify(seq));
+    P(`U.forEach((x, i) => { if(x.R.kind === "ship" && G.st[i].ld == null) setLd(i, 6); }); act("start", null);`);
+    const roster = P(`renderRoster()`);
+    clean("the five-skwadron roster", roster);
+    check("smoke: ... the roster has a head for each of the five and for the tiddla",
+          ["Squadron B", "Squadron C", "Squadron D", "Squadron E", "Squadron F", "Escort squadron A"].every(s => strip(roster).indexOf(s) >= 0) &&
+          (roster.match(/class="row grp-hd/g) || []).length === 6, strip(roster).slice(0, 300));
+  });
+
+  /* -------- a squadron tag from a link or a file is data, not markup --- */
+  guard("squadron tags that are not the builder's", () => {
+    const pg = open(), P = pg.P;
+    const L = pg.DATA.lists.find(x => /^Imperial Navy . Gothic Sector$/.test(x.nm));
+    /* the builder writes one letter A-Z (freeSqTag); a hand-made file or a
+       crafted link can carry anything */
+    const MK = "<img src=x onerror=alert(1)>";
+    const tag = (u, sq) => Object.assign(u, { sq: sq });
+    pg.ctx.__doc = { ln: L.nm, limit: 9000, units: [
+      tag(saved(L, /^Cruisers$/, /^Lunar class cruiser$/, 1, "Alpha"), "x1"), tag(saved(L, /^Cruisers$/, /^Lunar class cruiser$/, 1, "Beta"), "x1"),
+      tag(saved(L, /^ESCORTS$/, /^Sword class frigate$/, 3, "Blades"), MK), tag(saved(L, /^ESCORTS$/, /^Cobra class destroyer$/, 3, "Snakes"), MK)] };
+    P(`newGame(resolveFleet(__doc)); V.screen = "setup"; save(); render();
+       var NX = n => U.findIndex(x => x.u.name === n);`);
+    check("smoke: two cruisers with a tag that is no letter start in one SQN group under a letter of their own (T42)",
+          P(`G.grp[NX("Alpha")] === "A" && G.grp[NX("Beta")] === "A"`) === true, P(`JSON.stringify(G.grp)`));
+    P(`U.forEach((x, i) => { if(x.R.kind === "ship" && G.st[i].ld == null) setLd(i, 8); });`);
+    const pages = [P(`renderSetup()`)];
+    P(`act("start", null)`);
+    pages.push(P(`renderRoster()`), P(`V.sheet = NX("Blades"); var __h = renderSheet(NX("Blades")); V.sheet = null; __h`), P(`V.menu = true; var __m = renderMenu(); V.menu = false; __m`));
+    check("smoke: ... markup in an escort squadron's tag is printed as text on every screen, never as markup",
+          pages.every(h => h.indexOf("<img") < 0) && pages[1].indexOf("&lt;img") >= 0,
+          pages.map(h => (h.match(/.{0,40}<img.{0,40}/) || [""])[0]).join(" | "));
+  });
+
+  /* ---------- Rulebook p. 57: a failed disengage leaves the squadron --- */
+  guard("a failed disengage in a squadron", () => {
+    const pg = open(), P = pg.P;
+    const L = pg.DATA.lists.find(x => /^Imperial Navy . Gothic Sector$/.test(x.nm));
+    const lun = name => Object.assign(saved(L, /^Cruisers$/, /^Lunar class cruiser$/, 1, name), { sq: "C" });
+    pg.ctx.__doc = { ln: L.nm, limit: 9000, units: [lun("Alpha"), lun("Beta")] };
+    P(`newGame(resolveFleet(__doc)); U.forEach((x, i) => setLd(i, 8)); act("start", null);
+       var NX = n => U.findIndex(x => x.u.name === n);`);
+    const beta = P(`NX("Beta")`);
+    /* the Actions helper's call (ship-actions.js), as a browser runs it */
+    pg.bare(`GFP.act("disengage", ${beta}, { ok: false, ms: [${beta}] })`);
+    /* p. 57: a capital ship in a squadron that fails "falls out of the
+       squadron and may not attempt to re-join it" */
+    check("smoke: a capital ship that fails to disengage falls out of its squadron, the page run as in a browser (Rulebook p. 57)",
+          P(`G.grp[NX("Beta")] === null && G.grp[NX("Alpha")] === "C"`) === true, P(`JSON.stringify(G.grp)`));
+  });
+
+  /* ------------- T46: a failed Disengage takes a capital ship out --- */
+  /* The ruling, RULINGS.md T46 from Rulebook p. 57: Disengage "failed sets
+     no-fire and takes a capital ship out of its squadron"; an escort
+     squadron is not taken apart. Through the ship's Actions, as the taps go.
+     In Chrome the cruiser's case threw "isEscGrp is not defined" (actions.js
+     had no import), and no check ran that line. */
+  guard("a failed Disengage", () => {
+    const pg = open(), P = pg.P;
+    const L = pg.DATA.lists.find(x => /^Imperial Navy . Gothic Sector$/.test(x.nm));
+    const lun = name => Object.assign(saved(L, /^Cruisers$/, /^Lunar class cruiser$/, 1, name), { sq: "C" });
+    const swd = name => Object.assign(saved(L, /^ESCORTS$/, /^Sword class frigate$/, 3, name), { sq: "E" });
+    pg.ctx.__doc = { ln: L.nm, limit: 9000, units: [lun("Alpha"), lun("Beta"), swd("Blades"), swd("Edges")] };
+    P(`newGame(resolveFleet(__doc)); V.screen = "setup"; save(); render();
+       var NX = n => U.findIndex(x => x.u.name === n);
+       var EL = (i, a) => ({ getAttribute: k => k === "data-i" ? String(i) : k === "data-arg" ? a : null, value: "" });
+       var FAIL = i => { shipAct("actions", EL(i, null)); shipAct("actab", EL(null, "dis")); shipAct("acdis", EL(null, "fail")); shipAct("acclose", EL(null, null)); };
+       U.forEach((x, i) => { if(x.R.kind === "ship" && G.st[i].ld == null) setLd(i, 8); }); act("start", null);`);
+    const g0 = JSON.parse(P(`JSON.stringify(["Alpha", "Beta", "Blades", "Edges"].map(n => G.grp[NX(n)]))`) || "[]");
+    check("smoke: the two tagged cruisers start as one squadron, the two tagged Sword cards as one escort squadron (J222)",
+          g0[0] != null && g0[0] === g0[1] && /^e:/.test(String(g0[2])) && g0[2] === g0[3], JSON.stringify(g0));
+    P(`FAIL(NX("Alpha"))`);
+    const a = JSON.parse(P(`JSON.stringify({ grp: [G.grp[NX("Alpha")], G.grp[NX("Beta")]], st: [G.st[NX("Alpha")]].map(s => ({ nofire: !!s.noOrdersTurn, gone: !!s.disengaged })) })`) || "{}");
+    check("smoke: a cruiser that fails to disengage falls out of its squadron, no fire this turn, still on the table; the other stays in (Rulebook p. 57, T46)",
+          !!a.grp && a.grp[0] == null && a.grp[1] === g0[1] && a.st[0].nofire && !a.st[0].gone, JSON.stringify(a));
+    P(`FAIL(NX("Blades"))`);
+    const e = JSON.parse(P(`JSON.stringify([G.grp[NX("Blades")], G.grp[NX("Edges")]])`) || "[]");
+    check("smoke: ... an escort squadron that fails stays one squadron (p. 57, T46)", e[0] === g0[2] && e[1] === g0[2], JSON.stringify(e));
   });
 
   /* ------------ J233: every Ork Warlord aboard a ship of his own (T43) --- */
@@ -848,6 +1013,48 @@ function run(check){
     check("smoke: ... its set-up after Start offers Apply Mob Rule only: Young Gunz was before the game", /Apply Mob Rule/.test(strip(b2)) && /Young Gunz was before the game/.test(strip(b2)) && !/disabled/.test(b2), strip(b2));
     P(`act("ygapply")`);
     check("smoke: ... applied: +1 in the numbers, no free escort", /^6 \+1 mob$/.test(strip(P(`ldTile(1)`))) && P(`G.st[1].members.length`) === 6 && P(`U.length`) === 2, strip(P(`ldTile(1)`)));
+  });
+
+  /* -- T42 (user 4.11.2026): a mixed tiddla is one squadron in the game -- */
+  guard("the Clanz mixed tiddla in the game", () => {
+    const pg = open(), P = pg.P;
+    const L = pg.DATA.lists.find(x => /^Orks . Da Ork Clanz$/.test(x.nm));
+    const sq = (u, tag) => Object.assign(u, { sq: tag });
+    /* Fleets p. 374: "Tiddla skwadron 3-10 Escorts, chosen from the
+       following list in any mix desired"; p. 371: "A Blood Axe tiddla
+       skwadron of at least six escorts may include up to three Imperial Navy
+       and/or Chaos escorts" - T is three Ravagers and three Brutes, A three
+       Savages and three commandeered Cobras, the Onslaughts a card alone */
+    pg.ctx.__doc = { ln: L.nm, limit: 1500, units: [saved(L, /^WARLORD$/, /^Ork Warlord$/),
+      sq(saved(L, /^Tiddla skwadron$/, /^Ravager attack ship$/, 3, "Rav"), "T"),
+      sq(saved(L, /^Tiddla skwadron$/, /^Brute ramship$/, 3, "Bru"), "T"),
+      Object.assign(saved(L, /^Tiddla skwadron$/, /^Savage gunship$/, 3, "Sav"), { sq: "A", upn: { "CLAN UPGRADES\u0001Clan: Blood Axes (Green)": "take" } }),
+      sq(saved(L, /^BLOOD AXE COMMANDEERED ESCORTS$/, /^Cobra class destroyer$/, 3, "Cob"), "A"),
+      saved(L, /^Tiddla skwadron$/, /^Onslaught attack ship$/, 3, "Ons")] };
+    P(`newGame(resolveFleet(__doc)); V.screen = "setup"; save(); render(); var NX = n => U.findIndex(x => x.u.name === n);`);
+    const NAMES = ["Rav", "Bru", "Sav", "Cob", "Ons"];
+    const grp = JSON.parse(P(`JSON.stringify(${JSON.stringify(NAMES)}.map(n => G.grp[NX(n)]))`) || "[]");
+    check("smoke: the cards of one tiddla letter are one squadron, a Blood Axe tiddla's commandeered escorts in it, a card without a letter alone (Fleets pp. 371, 374, T42)",
+          grp[0] != null && grp[0] === grp[1] && grp[2] != null && grp[2] === grp[3] && grp[0] !== grp[2] && grp[4] == null, JSON.stringify(grp));
+    /* Rulebook p. 45: Leadership is rolled "per escort squadron" */
+    const ld = P(`(() => { const r = ldRollers().map(i => U[i].u.name); setLd(NX("Rav"), 6);
+      return JSON.stringify([r, ${JSON.stringify(NAMES)}.map(n => G.st[NX(n)].ld)]); })()`);
+    check("smoke: ... each squadron rolls one Leadership: one roll for it, and the value set on one card is on all of its cards (p. 45)",
+          ld === JSON.stringify([["Rav", "Sav", "Ons"], [6, 6, null, null, null]]), ld);
+    /* Fleets p. 372, Young Gunz: "Any Ork escort skwadron with a Leadership of 5 or 6" */
+    /* T63: the Apply button under Roll Ld applies Young Gunz for the squadron; no note on its cards */
+    const yg = (strip(P(`renderSetup()`)).match(/Young Gunz: one free escort/g) || []).length;
+    check("smoke: ... Young Gunz is no note on any of its cards: Apply under Roll Ld applies it for the squadron (Fleets p. 372, T63)", yg === 0 && /data-act="ygapply"/.test(P(`renderSetup()`)), yg + " times");
+    P(`U.forEach((x, i) => { if(x.R.kind === "ship" && G.st[i].ld == null) setLd(i, 7); }); act("start", null);`);
+    /* Fleets p. 372, Mob Rule: "Ork escort skwadrons gain a +1 bonus to
+       their Leadership while they contain more than five models" */
+    const head = () => strip(P(`renderGroupHead(G.grp[NX("Rav")], groupUnits(G.grp[NX("Rav")]))`));
+    const cards = () => strip(P(`renderRow(NX("Rav"), true) + renderRow(NX("Bru"), true)`));
+    check("smoke: ... Mob Rule counts the skwadron: three Ravagers and three Brutes are six ships, said on the squadron's head and on neither card (Fleets p. 372)",
+          /mob rule: \+1 Ld \(6 ships\)/.test(head()) && !/mob rule/i.test(cards()), head().slice(0, 200) + " | " + cards().slice(0, 120));
+    P(`PLAY.killMember(G.st[NX("Rav")], 0)`);
+    check("smoke: ... with one ship lost, five are not more than five: the head says 5 of 6 and no Mob Rule (Fleets p. 372)",
+          /×5 of 6/.test(head()) && !/mob rule/i.test(head()), head().slice(0, 200));
   });
 
   /* ------------- the opponent's fleet (peer.js, user 31.10.2026) --- */

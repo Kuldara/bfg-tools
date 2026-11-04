@@ -5,18 +5,13 @@ a tag `play-v<version>` deploys the Registry's site.
 
 ## Unreleased
 
+### Changed
+- One list of saved fleets (4.11.2026): the load screen's Saved fleets is the builder's Saved fleets. A fleet that comes by a link, a code or a file goes in there, and the builder shows it; the page's own list from before is moved in once. The fleets the builder is editing are under Being edited in the builder. Deleting and renaming are done in the builder.
+
 ### Added
 - Young Gunz and Mob Rule at the set-up (4.11.2026, RULINGS.md T63, the owner's design): under Roll Ld, **Apply Young Gunz & Mob Rule**, grey until every Ld is in. A Da Ork Clanz tiddla on Ld 5 or 6 - after the swaps, before Mob Rule - gets its free escort, the cheapest class paid for (Klaws counted per vessel); the mark's list takes another class within it or *No free escort*; it is 0 pts and concedes no VP. Then Mob Rule's +1 while more than five ships are left (Fleets p. 372). What changes gets a mark (*+1 Brute Ram Ship*, *+1 Ld · Mob Rule*), a changed Ld keeps its old value striped beside the ringed new one, and a line says why; a tap after Apply asks to *Apply again*. Under Start, the skwadrons not applied (it never blocks). In the game the +1 is in every Leadership the skwadron uses - the tile's *+1 mob*, the Ld pop, the card, the orders pop's check, Actions' tests - and goes with the sixth-from-last ship, with a toast; the free one's box is dashed. After Start Young Gunz is read-only; Mob Rule can still be applied (Menu > Set-up).
 - The Leadership swaps on their rows (T63): **Swap Ld** on a Clanz Warlord's row (his ship with one ship or escort squadron of his command, Fleets p. 374) and on an Ork battleship's, Waaagh! too (a Kill Kroozer, a Terror Ship or Zukov's Klaw, pp. 376-381, 383). The options say what the swap does (*Squadron B ×6: Ld 8 → 6, Young Gunz*); the two values change places at once, *no swap* puts them back, a tap on either ends it. The battleships' swaps come first, then the Warlords', then Young Gunz.
-
-### Changed
-- A Blood Axe tiddla rolls its one Leadership on the Ork table whatever its first card is (T63). The Mob Rule chip is a Clanz tiddla's only, no longer on six defence platforms: applied, it counts the ships the +1 rests on; not applied, it is the old reminder. Actions' ram, disengage and celestial tests count Long Range Sensors' +1, as the card does (T46).
-- The Ld guide says how Young Gunz, Mob Rule and the swaps are applied; "tap the swapped values" and the Young Gunz note on the row are gone.
-
-### Fixed
-- A failed disengage of a capital ship in a squadron stopped the page (a missing import in `actions.js`).
-
-### Added
+- Da Ork Clanz: a mixed tiddla (escort cards with one Squadron letter, Fleets p. 374 "in any mix desired") is one squadron in the game, as every mixed escort squadron has been since 28.10.2026: one head ("Escort squadron T ×6 of 6") over each class's own card, one Leadership for all its cards, one order and one Brace, its victory points as a whole. A Blood Axe tiddla's commandeered escorts are in it. Mob Rule is on the head, counting the ships still alive on all its cards ("mob rule: +1 Ld (6 ships)", gone at five, p. 372), and Young Gunz is said once. RULINGS.md T42 still said escort squadrons stay units of their own; it now records this, the user's decision of 4.11.2026 (J244).
 - A rolled or chosen refit changes the card's numbers (2.11.2026, T44): Reinforced Hull adds its 25 % to the starting hits (crippled at half of the new total) and takes 5 cm off, the shield, turret, speed and repair-die results are on the profile, Long Range Sensors is a +1 Ld modifier; the set-up's select says "on the card: 13 hits, 15 cm".
 - The set-up's upgrade dice (Mechanicus Gifts, the Imperial and Blood Axe refits, crew skills): the chosen result's text is under its select, and the whole table is the tooltip of the select and its options (2.11.2026).
 - Your own dice come first everywhere (2.11.2026, T49): Passed and Failed, a number or a result's tile lead, and the page's Roll is the dashed option after them. A failure on your own dice can spend a re-roll too. A ram's damage takes the hits you rolled, and a warp rift's distance is rolled only if asked.
@@ -26,9 +21,17 @@ a tag `play-v<version>` deploys the Registry's site.
 - A ram's target picked from the books: without the opponent's fleet linked, a class from any list fills its size, armour and hits.
 
 ### Changed
+- A Blood Axe tiddla rolls its one Leadership on the Ork table whatever its first card is (T63). The Mob Rule chip is a Clanz tiddla's only, no longer on six defence platforms: applied, it counts the ships the +1 rests on; not applied, it is the old reminder. Actions' ram, disengage and celestial tests count Long Range Sensors' +1, as the card does (T46).
+- The Ld guide says how Young Gunz, Mob Rule and the swaps are applied; "tap the swapped values" and the Young Gunz note on the row are gone.
+- Every squadron from the builder starts as an SQN group under the builder's own letter (4.11.2026, RULINGS.md T42), so the phone says what the builder and the printed roster say. Play had three letters: the fourth squadron and later ones started without a group, with nothing said - common in Da Ork Clanz, whose kroozers and Roks are skwadrons by their letter. The SQN button goes through the fleet's squadrons, then a new letter, then none; a squadron's colour is its letter's.
 - The card at a glance (2.11.2026): the stats line keeps its places with the numbers bigger; the armament table leads with the badge and the strength in force now, big (when halved, the printed value stays first, small and struck, and the half beside it is the big one), then the range, the arc, and the name last and small; a port / starboard pair is one row, "port and starboard, each", until a critical parts it. The compact row's chips are larger, with the strength now and the printed value, and no names. A hulk's line is its name and what the enemy needs, small; the squadron's combined fire leads with the numbers too; the crew and upgrade line and a commander's re-roll words are small, and the compact row leaves the upgrade line out.
 - Fewer places for one thing (2.11.2026): Disengage and Boarding are out of the orders pop and the card's Status (Actions has them; Status keeps only the way back for a ship marked disengaged by mistake); the fire reminder's names add the hit themselves and stay ticked.
 - The set-up screen starts with Leadership; Fleet facts and the opponent's room come after it.
+
+### Fixed
+- A capital squadron no longer shows a mixed escort squadron's letter (4.11.2026): a tiddla marked A and the kroozers marked B were both SQN A.
+- A squadron letter from a fleet link or a file is printed as text (4.11.2026): markup in an escort squadron's letter went into the page as markup.
+- A capital ship in a squadron that fails to disengage falls out of the squadron (Rulebook p. 57; 4.11.2026): in a browser the page stopped with an error there, at a name one module used without importing it.
 
 ### Added
 - The set-up rows show each ship's price and what was bought for it (2.11.2026), so two ships of one class can be told apart before they are named.
@@ -61,6 +64,11 @@ a tag `play-v<version>` deploys the Registry's site.
 - Fleets WiP v0.40 and Rulebook v1.11 (29.10.2026): the cards and rules cite v0.40 pages; the fleet data is the Registry's v0.40 data (the power ram as a ship option, the Mechanicus profiles, mines that ignore shields).
 
 ### Fixed
+- A capital ship in a squadron that failed its Disengage test in Actions stayed
+  in the squadron, and the tap saved nothing: in a browser it threw "isEscGrp is
+  not defined" (an import missing in `actions.js`, which the tests' globals
+  hid). It falls out of the squadron now, with no fire this turn (Rulebook
+  p. 57, RULINGS.md T46).
 - The close button of the menu and of a card (30.10.2026): its cross is drawn, in the
   middle of the square; the "×" letter sat at the left edge.
 - Da Ork Clanz: a clan or a Gubbin bought on one card of a mixed tiddla (one
@@ -74,6 +82,11 @@ a tag `play-v<version>` deploys the Registry's site.
   per tab (J241), and Play reads it before the shared one (`builderRaw`).
 
 ### Changed (for developers)
+- The smoke test hides no forgotten import (4.11.2026): before its snippets
+  run, it checks that the page's code takes none of the names they share (every
+  export of `GFP`, the shared state) from the global scope, by esbuild's own
+  scope analysis (`tools/lib/free-names.js`). The build stops on any name a
+  bundle takes from the global scope that a browser does not have.
 - ES modules (`src/`) and `styles/play.css` instead of one template; the 24
   functions the build used to copy out of the Registry's template with regular
   expressions are imported from `packages/ui`.

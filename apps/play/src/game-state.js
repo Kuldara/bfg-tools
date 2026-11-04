@@ -185,24 +185,56 @@ export function wlExtra(j){
 /* The ships the SQN button is offered to: capital ships; a star fort
    "cannot squadron with other orbital defences" (Rulebook p. 100). */
 export function sqnShip(R){ return R.kind === "ship" && !PLAY.isEscort(R) && !PLAY.isFort(R); }
+/* A capital squadron's letter: the builder's own alphabet (freeSqTag,
+   apps/registry/src/warlords.js). */
+export const SQN_LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+const isSqnLetter = t => t.length === 1 && SQN_LETTERS.indexOf(t) >= 0;
 /* J222: the builder's squadrons (u.sq, the same tag = one squadron, J216)
-   start the game squadroned. A tag shared by two or more such ships gets
-   an SQN letter, A to C in the builder's tag order; a tag on one ship alone
-   and a fourth squadron start free, as does an escort (RULINGS.md T42). The
-   SQN button changes it as before. */
+   start the game squadroned. A tag shared by two or more such ships is an
+   SQN group under the builder's own letter, however many there are (user
+   4.11.2026: since J232 the Clanz kroozers and Roks are skwadrons by their
+   tag, so four or more are common), and the phone says what the builder and
+   the printed roster say. A tag that is no letter (the builder writes none:
+   a hand-made file, a crafted link) takes the first letter no tag of the
+   fleet has. A tag on one ship alone starts free, as does an escort
+   (RULINGS.md T42). The SQN button changes it as before (nextSqn). */
 export function builderGroups(units){
   const tagOf = units.map(x => x.u && x.u.sq && sqnShip(x.R) ? String(x.u.sq) : null);
-  const tags = tagOf.filter((t, j) => t && tagOf.indexOf(t) === j && tagOf.filter(s => s === t).length >= 2).sort().slice(0, 3);
+  const tags = tagOf.filter((t, j) => t && tagOf.indexOf(t) === j && tagOf.filter(s => s === t).length >= 2).sort();
+  const letter = {}, taken = units.map(x => x.u && x.u.sq ? String(x.u.sq) : "");
+  tags.forEach(t => { if(isSqnLetter(t)) letter[t] = t; });
+  tags.forEach(t => {
+    if(letter[t]) return;
+    const given = Object.keys(letter).map(k => letter[k]);
+    letter[t] = SQN_LETTERS.split("").filter(c => taken.indexOf(c) < 0 && given.indexOf(c) < 0)[0] || null;
+  });
   /* A mixed escort squadron (28.10.2026): escort cards with one letter are
      one squadron here too - one Leadership, one order, one Brace - under
      the key "e:" + the builder's letter, which the SQN button never gives.
-     Each card keeps its own members to kill. */
+     Each card keeps its own members to kill. A Clanz mixed tiddla is one,
+     with a Blood Axe tiddla's commandeered escorts (RULINGS.md "T42, escort
+     squadrons", the user's decision 4.11.2026). */
   const escOf = units.map(x => x.u && x.u.sq && x.R.kind === "ship" && PLAY.isEscort(x.R) ? String(x.u.sq) : null);
-  return tagOf.map((t, j) => t && tags.indexOf(t) >= 0 ? "ABC"[tags.indexOf(t)]
+  return tagOf.map((t, j) => t && letter[t] ? letter[t]
     : escOf[j] && escOf.filter(s => s === escOf[j]).length >= 2 ? "e:" + escOf[j] : null);
 }
 export const grpLabel = g => String(g || "").replace(/^e:/, "");
+/* the label in a page: an escort squadron's is the tag of a link or a file */
+export const grpHTML = g => esc(grpLabel(g));
 export const isEscGrp = g => /^e:/.test(String(g || ""));
+/* The SQN button (T42): none, the letters of the fleet's capital squadrons
+   in order (this ship's own among them), then one new letter - the first no
+   other ship has, in this game or in the builder - and none again. A ship
+   alone in that new letter goes on to none, never to another new one. */
+export function nextSqn(i){
+  const grp = appState.G.grp, cur = grp[i] == null ? null : grp[i];
+  const others = grp.filter((g, j) => j !== i && g);
+  const fresh = SQN_LETTERS.split("").filter(c => others.every(g => grpLabel(g) !== c) &&
+    appState.U.every((x, j) => j === i || !x.u || String(x.u.sq || "") !== c))[0] || null;
+  const mine = cur && !isEscGrp(cur) && cur !== fresh ? [cur] : [];
+  const seq = [null].concat(others.filter(g => !isEscGrp(g)).concat(mine).filter((g, k, a) => a.indexOf(g) === k).sort(), fresh ? [fresh] : []);
+  return seq[(seq.indexOf(cur) + 1) % seq.length];
+}
 /* A unit whose Leadership is not rolled has it from the start: planetary
    defences Ld 7 (Rulebook p. 100, Fleets p. 499), the Fortress-Monastery
    Ld 10 (Fleets p. 111). A value the player tapped for such a unit in an

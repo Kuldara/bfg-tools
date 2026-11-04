@@ -450,19 +450,41 @@ builder saves a squadron id `sq` for a unit (J216; the same letter = the same
 squadron, `apps/registry/docs/save-format.md`). A new game (`newGame` ->
 `builderGroups`, also from a link or a pasted fleet) gives an SQN group to the
 ships for which Set up offers the SQN button (`sqnShip`: a capital ship, not an
-escort and not a star fort, p. 100). An id that is on at least two such ships gets
-a letter A-C in the alphabetical order of the builder's ids (the builder's B and D
--> A and B), because the page has three SQN letters and their colours. **Limits:**
-a lone id (the Clanz one-kroozer skwadron p. 372 or an unfinished squadron) makes
-no group, because a one-ship group changes nothing on the table; the fourth and
-later squadrons start without a group; an escort squadron and a Blood Axe tiddla's
-commandeered escorts (J220) stay units of their own as before. The page does not
-enforce the squadron: a squadron the builder shows as red (e.g. a battleship and a
-grand cruiser together, Fleets p. 13) still starts as a group, because it is the
-fleet the player saved. The SQN button changes the group as before, and a
-continued game keeps its own groups (`G.grp` in the game save). Smoke test: two
-Lunars with the id C in the same group; a Lunar without an id, a lone Lunar with
-the id E and an escort squadron with the id C without a group.
+escort and not a star fort, p. 100). **Every squadron, under the builder's letter
+(the user's decision 4.11.2026):** an id that is on at least two such ships is an
+SQN group under the builder's own letter A-Z, however many squadrons there are,
+so the phone says what the builder and the printed roster say ("squadron E").
+Until then the page had three SQN letters and their colours: the ids became A-C in
+alphabetical order (the builder's B and D -> A and B), and the fourth and later
+squadrons started without a group, with nothing said. Since J232 a Da Ork Clanz
+fleet has its kroozers (1-2) and Roks (1-4) in skwadrons by their id (Fleets
+p. 374), so four or more are common, and a renumbered letter could be a mixed
+escort squadron's (a tiddla A and the kroozers B were both "SQN A"). An id that
+is no letter A-Z (the builder writes none: a hand-made file, a crafted link)
+takes the first letter that no id of the fleet has, and an escort squadron's id
+is printed as text, never as markup. **The SQN button** (`nextSqn`) goes through
+the letters of the fleet's capital squadrons in order, the ship's own among them,
+then one new letter (the first that no other ship has, in the game or in the
+builder), then none. **Colours:** a squadron's colour is its letter's, A-F the six
+and G the first again, for capital and mixed escort squadrons alike (the builder
+never gives the two kinds one letter); an escort card that is a squadron by
+itself takes them from the fourth on in the fleet's order. With more than six
+squadrons colours repeat, and the letter tells them apart. **Limits:** a lone id
+(the Clanz one-kroozer skwadron, Fleets p. 374, or an unfinished squadron) makes
+no group, because a one-ship group changes nothing on the table; an escort
+squadron of one card stays a unit of its own as before, and escort cards with
+one letter, a Blood Axe tiddla's commandeered escorts (J220) among them, are one
+escort squadron (below, "T42, escort squadrons", 4.11.2026). The page does not enforce the squadron: a squadron the builder
+shows as red (e.g. a battleship and a grand cruiser together, Fleets p. 13) still
+starts as a group, because it is the fleet the player saved. The SQN button
+changes the group as before, and a continued game keeps its own groups (`G.grp`
+in the game save): a game begun before 4.11.2026 keeps its A-C. Smoke test: two
+Lunars with the id C in group C; a Lunar without an id, a lone Lunar with the id
+E and an escort squadron with the id C without a group; a Clanz fleet with five
+capital skwadrons B-F and a mixed tiddla A starts with the groups B-F and the
+escort squadron A, and the SQN button on a ship of D goes E, F, G, none, B, C, D;
+two Lunars with the id x1 in group A; markup in an escort squadron's id printed
+as text on the set-up, the roster, the card and the menu.
 
 **T43. Every commander aboard a ship of his own (the Orks' Warlords).** J233
 (25.10.2026, Discord: *"you can only assign one of the warlords to a ship, the
@@ -620,6 +642,33 @@ table (D6 or 2D6, the row marked), and the Hit-and-Run die for a teleport attack
 or an assault boat's raid (pp. 85, 92). Disengaging and boarding are not orders:
 Actions has them (T46), the orders pop and the card's Status do not, except the
 way back for a ship marked disengaged by mistake.
+
+**T42, escort squadrons, the user's decision 4.11.2026.** Since the builder's mixed
+squadron (28.10.2026), escort cards with one squadron letter, two cards or more,
+start the game as one escort squadron (`builderGroups`: `G.grp` is "e:" and the
+letter, which the SQN button never gives). The ships in a squadron "can be of
+different classes as long as they are all of the same type" (p. 95), and a Da Ork
+Clanz tiddla is "3-10 Escorts, chosen from the following list in any mix desired"
+(Fleets p. 374, v0.40), so a mixed tiddla is such a squadron; a Blood Axe tiddla's
+commandeered Imperial Navy and Chaos escorts (Fleets p. 371) have its letter and
+are in it. The squadron has a head, "Escort squadron T ×6 of 6", with each card's
+ships alive, and every class keeps its own card under it, whose ships are tapped
+there. It rolls one Leadership ("per escort squadron", p. 45): the value set on
+one card is on all of them (`setLd`), and set-up rolls it once. It has one order
+and one Brace, and concedes its victory points as a whole (p. 123,
+`squadronConceded`). Mob Rule, "Ork escort skwadrons gain a +1 bonus to their
+Leadership while they contain more than five models" (Fleets p. 372, v0.40), is
+said on the head and on none of its cards, counting the ships still alive on all
+of them, commandeered ones too: "mob rule: +1 Ld (6 ships)", gone when five are
+left.
+Young Gunz (p. 372) is said once for the squadron at set-up. The Leadership stays
+the player's to tap (T40). The user was asked whether to keep this or show the
+squadron as one merged card, and kept it. Smoke test: three Ravagers and three
+Brutes with the letter T, three Savages of the Blood Axes with three commandeered
+Cobras as A, three Onslaughts without a letter; two squadrons and a card alone,
+one Ld per squadron, Young Gunz once, Mob Rule on T's head at six and not at
+five.
+(T63, 4.11.2026, supersedes the last two sentences' Young Gunz note and the Mob Rule reminder for a game set up after it: the page applies both, see T63.)
 
 **T63. Young Gunz, Mob Rule and the Ork Leadership swaps, applied at the
 set-up.** **The owner's decisions 4.11.2026**, and his design: under Roll Ld an
