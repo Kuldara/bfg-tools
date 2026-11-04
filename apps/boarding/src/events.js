@@ -44,28 +44,42 @@ function onDie(which, v, idx){
    D3 comes as n (user 4.11.2026: "let me roll the Berzerker Tide myself"); with
    none the app rolls it. The extra rolls are critical damage rolls with no roll
    to cause them (Remastered team on Discord, 27.9.2023: "Plus D3 critical damage
-   rolls. Not needing a 3+ first."), and go round the enemy ships, carrying on
-   from the extra rolls already made against them (RULINGS.md 7). */
+   rolls. Not needing a 3+ first."); with several enemy ships the boarder picks the
+   ship for each roll (RULINGS.md 7). */
 function useTide(key, n){
   var k = String(key).split(":")[0], si = +String(key).split(":")[1];
+  if(k !== "att") return;                 /* the boarding side only (RULINGS.md 7) */
   if(!(n >= 1 && n <= 3)) n = 1 + Math.floor(rng()*3);
   R.tide = R.tide || {};
   if(R.tide[key]) return;
   R.tide[key] = {n:n};
   var other = k==="att" ? "def" : "att";
   var targets = livingIdx(other);
-  var made = R.crits.filter(function(c){ return c.tide && c.from===k; }).length;
+  /* one enemy ship: every roll hits it; several: the boarder picks the ship
+     for each roll (user 4.11.2026), and i stays null until then */
+  var choose = targets.length > 1;
   for(var i=0;i<n && targets.length;i++){
-    var t = targets[(made + i) % targets.length];
-    R.crits.push({cid:"t"+k+si+"_"+i, to:other, i:t, from:k, by:si, need:0, bonus:0, roll:null, hit:true,
-                  table:null, extra:null, followup:null, tide:true});
+    R.crits.push({cid:"t"+k+si+"_"+i, to:other, i:choose ? null : targets[0], from:k, by:si, need:0, bonus:0, roll:null, hit:true,
+                  table:null, extra:null, followup:null, tide:true, choose:choose});
   }
-  if(S.dice==="digital"){
-    R.crits.filter(function(c){ return c.tide && !c.table; }).forEach(function(c){
-      var tid = critTableIdFor(c.to, c.i), T = B.CRIT_TABLES[tid];
-      setTableFor(c, T ? (T.dice===1 ? roll() : roll()+roll()) : 0, tid);
-    });
-  }
+  rollTideTables();
+  drawResult();
+}
+/* The app's dice roll the table at once for every extra roll with a target. */
+function rollTideTables(){
+  if(S.dice!=="digital") return;
+  R.crits.filter(function(c){ return c.tide && !c.table && c.i!==null; }).forEach(function(c){
+    var tid = critTableIdFor(c.to, c.i), T = B.CRIT_TABLES[tid];
+    setTableFor(c, T ? (T.dice===1 ? roll() : roll()+roll()) : 0, tid);
+  });
+}
+/* The boarder's choice of enemy ship for one extra roll; it can be changed
+   until the roll on the table is made. */
+function tideTarget(key, i){
+  var c = byKey(key);
+  if(!c || !c.choose || c.table || livingIdx(c.to).indexOf(i) < 0) return;
+  c.i = i;
+  rollTideTables();
   drawResult();
 }
 function byKey(key){
@@ -252,6 +266,7 @@ export function wireEvents(){
       case "critex": { var ce = byKey(c); if(ce) ce.extra = v; drawResult(); break; }
       case "critfollow": { var cf = byKey(c); if(cf) setFollowupFor(cf, v); drawResult(); break; }
       case "tide": useTide(c, v); break;
+      case "tidetgt": tideTarget(c, v); break;
       case "reroll": reroll(c); break;
       case "rerolldie": rerollDie(c, v, +(t.dataset.idx || 0)); break;
       case "noreroll": startMain(); drawResult(); break;
