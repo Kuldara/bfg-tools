@@ -520,8 +520,7 @@ Mechanicus copies pp. 128, 130, Nicassar Caravan p. 492); at most 10 (p. 48). No
 rolled but put in by the same button: an Ork Hulk 6 (p. 392), a Sepulchre ship 10
 (p. 406), a Demiurg's starting value (pp. 488-490; its fall with damage is not
 tracked). Left to the player: the Tyranids (pp. 418-420, 429), a Space Marine
-Captain on a Navy ship (p. 100), the Inquisitor's +1 (pp. 150-151), Long Range
-Sensors (p. 185) - the guide names them. (The Ork battleships' and the Clanz
+Captain on a Navy ship (p. 100), the Inquisitor's +1 (pp. 150-151) - the guide names them. (The Ork battleships' and the Clanz
 Warlord's Ld swaps, pp. 374, 376-381, were the player's too, until T63.) One roll per escort squadron (p. 45); a
 fleet commander's fixed value on his flagship is not rolled over (T8). A natural 6
 on the Mechanicus table marks the ship's Gift as one it may choose (p. 118).
@@ -700,8 +699,13 @@ p. 381). The decisions:
    rule wins.
 9. **Young Gunz is decided before the game** (before deployment, Rulebook
    p. 123): after Start it is read-only (*taken at set-up: a Brute, free*), and so
-   are the swaps; a tap in the game changes the value and leaves the skwadron
-   applied. Mob Rule can still be applied after Start (Menu > Set-up, *Apply Mob
+   are the swaps, and the Aboard select of a Warlord who has one (a move would
+   end his swap). A tap in the game's Ld pop changes the value and leaves the
+   skwadron applied; a tap on Menu > Set-up's tiles (which show the value it
+   plays at, Mob Rule's +1 in it) un-applies Mob Rule, the free escort staying,
+   until *Apply Mob Rule*. A reload before Start opens the set-up again: only
+   Start locks Young Gunz (a game saved before this ruling has no record of it
+   and resumes as started). Mob Rule can still be applied after Start (Menu > Set-up, *Apply Mob
    Rule*) to a skwadron the set-up never reached - a game saved before this
    ruling loads with nothing applied and keeps the reminder chip.
 10. **Zukov's Klaw counts as a Terror Ship** for the battleship swap

@@ -59,15 +59,22 @@ const dice = a => `(() => { const q = ${JSON.stringify(a.map(f => (f - 0.5) / 6)
     await shot("1-before-roll");
     const top0 = await topOf(apply);
     await cd.evaluate(dice([1, 4, 6, 3]));
-    await tap('button[data-act="rollld"]');
+    /* Roll Ld and, in the same moment, a second tap on the same place: it is
+       not Apply (the 450 ms guard Roll Ld sets) */
+    await cd.evaluate(`(() => { document.querySelector('button[data-act="rollld"]').click(); document.querySelector('${apply}').click(); return 1; })()`);
+    await sleep(120);
+    check("a tap on Apply right after Roll Ld is not taken (450 ms)", !(await ev(`!!GFP.appState.G.ygApplied`)));
     check("Roll Ld rolled every ship: Brutes 5, Kill Kroozer 7, squadron B 8, Terror Ship 6 (Rulebook p. 45, Fleets p. 360)",
       (await ev(`JSON.stringify([1, 2, 4, 5, 6].map(i => GFP.appState.G.st[i].ld))`)).join() === "5,7,8,8,6", await ev(`JSON.stringify(GFP.appState.G.st.map(s => s.ld))`));
     check("... Roll Ld stays where it was, grey, and Apply did not move under the finger", await disabled('button[data-act="rollld"]') === true && await topOf(apply) === top0, [top0, await topOf(apply)]);
     check("... Apply is ready now", await disabled(apply) === false && /2 skwadrons/.test(await txt(apply)), await txt(apply));
-    /* a second tap at once on the same place is not Apply (the guard) */
-    await cd.evaluate(`(() => { GFP.appState.V.ygGuard = Date.now() + 450; document.querySelector('${apply}').click(); return 1; })()`);
-    check("a tap on Apply right after Roll Ld is not taken (450 ms)", !(await ev(`!!GFP.appState.G.ygApplied`)));
     await shot("2-after-roll");
+    /* a reload before Start (a phone that drops the tab, the Builder link and
+       back) is still the set-up: Young Gunz is not locked (T63 decision 9) */
+    await load();
+    await sleep(500);
+    check("a reload before Start opens the set-up again, the game not started", JSON.stringify([await ev(`GFP.appState.V.screen`), await ev(`String(!!GFP.appState.G.started)`)]) === JSON.stringify(["setup", "false"]) && /2 skwadrons/.test(await txt(apply)),
+      [await ev(`GFP.appState.V.screen`), await txt(apply)]);
 
     /* W2 swaps his Terror Ship's 6 with squadron B's 8 (Fleets p. 374) */
     await choose('select[data-sel="swap"][data-i="3"]', 4);

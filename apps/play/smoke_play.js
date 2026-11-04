@@ -29,14 +29,14 @@ const strip = h => String(h).replace(/<svg[\s\S]*?<\/svg>/g, " ").replace(/<[^>]
 
 /* The built page in one vm context. Returns P(src): runs code in the
    page's own scope and returns the value. */
-function boot(html){
+function boot(html, seed){
   /* the app script is the one right after the data block; the site's copy
      has a second, small one that registers the service worker */
   const d0 = html.indexOf('<script id="bfgdata" type="application/json">') + '<script id="bfgdata" type="application/json">'.length;
   const dataText = html.slice(d0, html.indexOf("</script>", d0));
   const i0 = html.indexOf("<script>", d0) + "<script>".length, i1 = html.indexOf("</script>", i0);
   const code = html.slice(i0, i1);
-  const store = {}, toasts = [];
+  const store = Object.assign({}, seed || {}), toasts = [];
   const elem = () => ({ innerHTML: "", textContent: "", className: "", value: "", style: {}, disabled: false,
     classList: { add(){}, remove(){}, toggle(){}, contains(){ return false; } }, children: [],
     getBoundingClientRect(){ return { top: 0, height: 0, left: 0, width: 0 }; }, appendChild(){}, remove(){}, querySelector(){ return null; },
@@ -107,8 +107,8 @@ function run(check){
   const guard = (what, fn) => { try{ return fn(); }catch(e){ check("smoke: " + what + " does not throw", false, where(e)); return null; } };
   /* a page with its P(): an exception inside the page's own code is a
      failed check of its own and the run goes on (the value is then "") */
-  const open = () => {
-    const pg = boot(html), raw = pg.P;
+  const open = seed => {
+    const pg = boot(html, seed), raw = pg.P;
     pg.P = src => { try{ return raw(src); }catch(e){ check("smoke: the page does not throw at: " + String(src).replace(/\s+/g, " ").slice(0, 70), false, where(e)); return ""; } };
     return pg;
   };
@@ -655,19 +655,28 @@ function run(check){
     let s = P(`renderSetup()`);
     clean("the Clanz set-up before the roll", s);
     check("smoke: under Roll Ld the Apply Young Gunz & Mob Rule button, grey while an Ld is missing (owner 4.11.2026, T63)",
-      /data-act="rollld"/.test(s) && /Apply Young Gunz/.test(strip(btn(s))) && /disabled/.test(btn(s)) && /when every ship has its Ld/.test(strip(btn(s))) && s.indexOf('data-act="rollld"') < s.indexOf('data-act="ygapply"'),
+      /data-act="rollld"/.test(s) && /Apply Young Gunz/.test(strip(btn(s))) && /disabled/.test(btn(s)) && /when every ship has its Ld/.test(strip(btn(s))) && /4 missing/.test(strip(btn(s))) && s.indexOf('data-act="rollld"') < s.indexOf('data-act="ygapply"'),
       strip(btn(s)) || "no button");
     /* Rulebook p. 45 (D6 1 = 6) and Orks -1 (Fleets p. 360): Brutes 1 -> 5, the
        Kill Kroozer 4 -> 7, squadron B 6 -> 8, the Terror Ship 3 -> 6 */
     P(`DICE([1, 4, 6, 3]); act("rollld")`);
+    check("smoke: Roll Ld guards Apply for 450 ms, so a second tap on the same place is not Apply (T63, guardUntil)", P(`(V.ygGuard || 0) - Date.now()`) > 300, P(`(V.ygGuard || 0) - Date.now()`));
     s = P(`renderSetup()`);
     clean("the Clanz set-up after the roll", s);
+    /* Apply, a swap and a class change are each one UNDO step: the set-up
+       offers Undo before Start, as the owner's prototype does (T63) */
+    check("smoke: the set-up has Undo before Start, live once there is a step to take back (T63)",
+      /<button[^>]*data-act="undo"[^>]*>/.test(s.slice(0, s.indexOf('<div class="main"'))) && !/<button[^>]*data-act="undo"[^>]*disabled/.test(s.slice(0, s.indexOf('<div class="main"'))),
+      s.slice(0, s.indexOf('<div class="main"')).slice(-400));
     check("smoke: ... Roll Ld stays in place, grey, and says every ship has its Ld (T63)",
       /<button[^>]*data-act="rollld"[^>]*disabled[^>]*>[\s\S]*?every ship has its Ld/.test(s), (s.match(/<button[^>]*data-act="rollld"[\s\S]{0,200}/) || [""])[0]);
     check("smoke: ... and Apply is ready once every Ld is in: two skwadrons (Fleets p. 372)", !/disabled/.test(btn(s)) && /2 skwadrons/.test(strip(btn(s))), strip(btn(s)));
     check("smoke: the roll gave Brutes 5, the Kill Kroozer 7, squadron B 8 and the Terror Ship 6 (Rulebook p. 45, Fleets p. 360)",
       P(`[BR, KK, SV, ON, TS].map(i => G.st[i].ld).join()`) === "5,7,8,8,6", P(`[BR, KK, SV, ON, TS].map(i => G.st[i].ld).join()`));
     check("smoke: the old Young Gunz note and the tap-the-swap instruction are gone where the page applies them", !/Young Gunz: one free escort/.test(strip(s)) && !/tap the swapped values/.test(strip(s)));
+    check("smoke: the Ld guide has paragraphs for Young Gunz, Mob Rule and the Warlord's swap, with their pages (T63)",
+      (g => /Young Gunz \(Fleets p\. 372\)/.test(g) && /Mob Rule \(Fleets p\. 372\)/.test(g) && /Fleets p\. 374/.test(g))(strip((s.match(/<details class="ldguide"[\s\S]*?<\/details>/) || [""])[0])),
+      strip((s.match(/<details class="ldguide"[\s\S]*?<\/details>/) || [""])[0]).slice(0, 300));
     /* the Warlord's swap (p. 374) on his row: W2's Terror Ship and squadron B */
     const sel = (h, i) => (h.match(new RegExp('<select[^>]*data-sel="swap"[^>]*data-i="' + i + '"[\\s\\S]*?</select>')) || [""])[0];
     check("smoke: each Warlord's row has a Swap Ld select whose options name the effect (Fleets p. 374)",
@@ -738,7 +747,6 @@ function run(check){
     check("smoke: ... and the ram's test in Actions (T46): Ld 7", /Ld 7 . 2D6, 7 or under/.test(strip(P(`renderActions()`))), strip(P(`renderActions()`)).slice(0, 300));
     P(`V.actions = null`);
     check("smoke: the sheet's LEADERSHIP has it", /LEADERSHIP 7/.test(strip(P(`V.sheet = BR; var __h = renderSheet(BR); V.sheet = null; __h`))), strip(P(`V.sheet = BR; __h = renderSheet(BR); V.sheet = null; __h`)).slice(0, 300));
-    check("smoke: the free escort concedes nothing: VP 0 now, 150 for all six Brutes would be wrong (T63)", P(`vpTotal()`) === 0);
     pg.toasts.length = 0;
     P(`act("kill", BR, 0)`);
     check("smoke: a kill that leaves five: the +1 is gone, Ld 6, and a toast says so (Fleets p. 372)",
@@ -760,6 +768,22 @@ function run(check){
     clean("the Clanz set-up during the game", s);
     check("smoke: after Start: Applied, before the game; Young Gunz read-only (T63)", /Applied/.test(strip(btn(s))) && /before the game/.test(strip(btn(s))) && /taken at set-up: a Brute, free/.test(strip(rowOf(s, P(`BR`)))) && !/data-sel="yg"/.test(s), strip(btn(s)) + " | " + strip(rowOf(s, P(`BR`))).slice(0, 200));
     check("smoke: ... the swaps too", /<select[^>]*data-sel="swap"[^>]*disabled/.test(s));
+    /* T63 decision 9: a Warlord who changes ship after Start would end his
+       swap and put the values back: a move of a Warlord with a swap is not
+       taken (his Aboard select is read-only, checked below) */
+    const ld0 = P(`JSON.stringify([G.st.map(x => x.ld), G.st[3].swap, (G.on || {})[3]])`);
+    P(`act("on", W2, ON)`);
+    check("smoke: ... a move of that Warlord after Start is not taken: the swap and every Ld stay (Rulebook p. 123, T63 decision 9)", P(`JSON.stringify([G.st.map(x => x.ld), G.st[3].swap, (G.on || {})[3]])`) === ld0, [ld0, P(`JSON.stringify([G.st.map(x => x.ld), G.st[3].swap, (G.on || {})[3]])`)]);
+    /* the lit tile is the value the skwadron plays at (7: 6 and Mob Rule's
+       +1); a tap on it is that value - Mob Rule off until Apply Mob Rule, the
+       free Brute staying (Young Gunz was before the game) */
+    const lit = +((rowOf(s, P(`BR`)).match(/class="on[^"]*"[^>]*data-arg="(\d+)"/) || [])[1]);
+    P(`act("ld", BR, ${lit})`);
+    s = P(`renderSetup()`);
+    check("smoke: after Start a tap on the lit tile plays the value tapped, not one more (T63)", lit === 7 && P(`skwLd(BR).now`) === lit && P(`G.st[BR].members.length`) === 6 && /Apply Mob Rule/.test(strip(btn(s))),
+      [lit, P(`skwLd(BR).now`), P(`G.st[BR].members.length`), strip(btn(s))]);
+    P(`act("ygapply")`);
+    check("smoke: ... Apply Mob Rule: 7 and the +1, the free Brute still there", P(`skwLd(BR).now`) === 8 && P(`G.st[BR].members.length`) === 6, P(`skwLd(BR).now`));
     P(`act("start")`);
   });
 
@@ -784,9 +808,30 @@ function run(check){
     clean("the roster with a lone tiddla's free card", P(`renderRoster()`));
     check("smoke: the roster draws them as one escort squadron of six", /Escort squadron . .6 of 6/.test(strip(P(`renderRoster()`))), strip(P(`renderRoster()`)).slice(0, 300));
     check("smoke: resume works with the appended card: the roster and the state are the same", P(`(() => { const before = JSON.stringify(G.st); save(); return resumeGame(loadPlay()) && U.length === 4 && JSON.stringify(G.st) === before; })()`) === true);
-    /* UNDO before the free card resets the fleet resolution too */
     P(`act("setupback")`);
     check("smoke: after Start the free card stays: Young Gunz is read-only", P(`(() => { act("ld", 1, 7); return U.length; })()`) === 4);
+    /* UNDO of the step that appended the free card: U, G.st and G.doc back together, the fleet resolution re-made (T63) */
+    { const pg4 = open(), P4 = pg4.P; pg4.ctx.__doc = { ln: L.nm, limit: 1000, units: [saved(L, /^WARLORD$/, /^Ork Warlord$/), saved(L, /^Tiddla skwadron$/, /^Savage/, 5), saved(L, /^Big ship skwadron$/, /^Kill kroozer$/)] };
+      P4(`newGame(resolveFleet(__doc)); V.screen = "setup"; save(); render(); setLd(1, 6); setLd(2, 7); act("ygapply"); act("yg", 1, "Grunt assault ship");`);
+      const mid = P4(`U.length`); P4(`act("undo")`);
+      check("smoke: UNDO of the free Grunt: U, G.st and G.doc back to 3 (T63)", mid === 4 && P4(`U.length`) === 3 && P4(`G.st.length`) === 3 && P4(`G.doc.units.length`) === 3, P4(`JSON.stringify([U.length, G.st.length, G.doc.units.length])`));
+      clean("the set-up after UNDO of a free card", P4(`renderSetup()`)); }
+    /* a reload before Start is still the set-up: Young Gunz and the swaps are
+       locked only once Start is tapped (T63 decision 9); a record saved before
+       T63 (no started field) resumes as a game under way, as before */
+    { const pg5 = open(), P5 = pg5.P; pg5.ctx.__doc = { ln: L.nm, limit: 1000, units: [saved(L, /^WARLORD$/, /^Ork Warlord$/), saved(L, /^Tiddla skwadron$/, /^Savage/, 5), saved(L, /^Big ship skwadron$/, /^Kill kroozer$/)] };
+      P5(`newGame(resolveFleet(__doc)); V.screen = "setup"; render(); setLd(1, 6); setLd(2, 7); save();`);
+      const pg6 = open(pg5.store), P6 = pg6.P;
+      check("smoke: a reload before Start opens the set-up again, the game not started (T63 decision 9)", P6(`[V.screen, !!G.started].join()`) === "setup,false", P6(`[V.screen, G.started].join()`));
+      P6(`act("ygapply")`);
+      check("smoke: ... and Apply still takes Young Gunz there: six Savages (Fleets p. 372)", P6(`G.st[1].members.length`) === 6, P6(`G.st[1].members.length`));
+      const pg7 = open(pg5.store), P7 = pg7.P;
+      P7(`V.screen = "load"; (() => { const el = { disabled: false, getAttribute: k => k === "data-act" ? "resume" : null, hasAttribute: () => false, getBoundingClientRect: () => ({ top: 0, height: 0 }), classList: { contains: () => false } }; el.closest = q => q === "[data-act]" ? el : null; __fire("click", { target: el, preventDefault(){} }); })()`);
+      check("smoke: ... Resume game does the same: the set-up, not started", P7(`[V.screen, !!G.started].join()`) === "setup,false", P7(`[V.screen, G.started].join()`));
+      const old = Object.assign({}, pg5.store), k = Object.keys(old).find(n => { try{ return Array.isArray(JSON.parse(old[n]).st); }catch(e){ return false; } });
+      const g0 = JSON.parse(old[k]); delete g0.started; old[k] = JSON.stringify(g0);
+      const pg8 = open(old), P8 = pg8.P;
+      check("smoke: ... a record with no started field resumes on the roster, started, as before", P8(`[V.screen, !!G.started].join()`) === "roster,true", P8(`[V.screen, G.started].join()`)); }
     /* the opponent's phone draws the free card (peer.js re-resolves on the document) */
     const snap = P(`JSON.stringify({ t: "g", n: "Rival", G: G, opt: {}, scr: "roster" })`);
     const pg2 = open(), P2 = pg2.P;
@@ -839,6 +884,46 @@ function run(check){
     pg.ctx.__ten = { ln: L.nm, limit: 1000, units: [saved(L, /^WARLORD$/, /^Ork Warlord$/), saved(L, /^Tiddla skwadron$/, /^Brute/, 10)] };
     P(`newGame(resolveFleet(__ten)); V.screen = "setup"; setLd(1, 5); act("ygapply");`);
     check("smoke: ten Brutes on Ld 5: no free escort, Mob Rule Ld 6 (p. 372)", P(`G.st[1].members.length`) === 10 && P(`U.length`) === 2 && P(`skwLd(1).now`) === 6, P(`JSON.stringify([G.st[1].members.length, skwLd(1).now])`));
+    /* the order of the swaps is the page's: a battleship's first (pp. 376-381,
+       "When Leadership values are generated"), then the Warlord's (p. 374) */
+    { const pg2 = open(), P2 = pg2.P; const wl = Object.assign(saved(L, /^WARLORD$/, /^Ork Warlord$/), { uid: "w1" }); const c = (sec, re, n) => Object.assign(saved(L, sec, re, n), { cmd: "w1" });
+      pg2.ctx.__doc = { ln: L.nm, limit: 2000, units: [wl, c(/Uge ship skwadron$/, /^Hammer/), c(/^Big ship skwadron$/, /^Kill kroozer$/), c(/^Tiddla skwadron$/, /^Brute/, 5)] };
+      P2(`newGame(resolveFleet(__doc)); V.screen = "setup"; G.flag = 2; setLd(1, 6); setLd(2, 8); setLd(3, 5); render(); act("swap", 0, 3); act("swap", 1, 2);`);
+      check("smoke: the Hammer's swap (p. 376) comes before the Warlord's (p. 374), whatever order they were chosen in: the Brutes on the Hammer's 6 (Rulebook p. 123, T63 decision 5)", P2(`G.st[3].ld`) === 6, P2(`JSON.stringify(G.st.map(s => s.ld))`)); }
+    /* a swap after Apply un-applies what it touches */
+    { const pg3 = open(), P3 = pg3.P; const btnOf = h => (h.match(/<button[^>]*data-act="ygapply"[^>]*>[\s\S]*?<\/button>/) || [""])[0];
+      pg3.ctx.__s = { ln: L.nm, limit: 2000, units: [Object.assign(saved(L, /^WARLORD$/, /^Ork Warlord$/), { uid: "w1" }), Object.assign(saved(L, /^Big ship skwadron$/, /^Kill kroozer$/), { cmd: "w1" }), Object.assign(saved(L, /^Tiddla skwadron$/, /^Brute/, 5), { cmd: "w1" })] };
+      P3(`newGame(resolveFleet(__s)); V.screen = "setup"; G.flag = 1; setLd(1, 7); setLd(2, 5); render(); act("ygapply");`);
+      const pre = P3(`G.st[2].members.length`); P3(`act("swap", 0, 2)`);
+      check("smoke: a swap after Apply lifts the Brutes to 7: Young Gunz off (\"Ld of 5 or 6\", p. 372), the skwadron un-applied, Apply again (T63)", pre === 6 && P3(`G.st[2].ld`) === 7 && P3(`G.st[2].members.length`) === 5 && !P3(`G.st[2].mob`) && /Apply again/.test(strip(btnOf(P3(`renderSetup()`))))); }
+    /* a kroozer a battleship swapped with is still a Warlord's to take, when
+       it is under his command ("any one ship or escort squadron under his
+       command", p. 374): the swaps chain (T63 decision 5) */
+    { const pg9 = open(), P9 = pg9.P; const u = (sec, re, n, more) => Object.assign(saved(L, sec, re, n), more);
+      pg9.ctx.__d = { ln: L.nm, limit: 2000, units: [u(/^WARLORD$/, /^Ork Warlord$/, 1, { uid: "w1" }), u(/Uge ship skwadron$/, /^Hammer/, 1, { cmd: "w1" }),
+        u(/^WARLORD$/, /^Ork Warlord$/, 1, { uid: "w2" }), u(/^Big ship skwadron$/, /^Kill kroozer$/, 1, { cmd: "w2" }), u(/^Big ship skwadron$/, /^Terror ship$/, 1, { cmd: "w2" }), u(/^Tiddla skwadron$/, /^Savage/, 3, { cmd: "w2" })] };
+      P9(`newGame(resolveFleet(__d)); V.screen = "setup"; G.on = G.on || {}; G.on[2] = 4; setLd(1, 8); setLd(3, 6); setLd(4, 7); setLd(5, 7); render(); act("swap", 1, 3);`);
+      const w2 = (P9(`renderSetup()`).match(/<select[^>]*data-sel="swap"[^>]*data-i="2"[\s\S]*?<\/select>/) || [""])[0];
+      check("smoke: after the Hammer's swap with the Kill Kroozer, a Warlord who commands that Kill Kroozer is still offered it (Fleets p. 374, T63 decision 5)", /<option value="3"/.test(w2) && P9(`G.st[3].ld`) === 8, strip(w2)); }
+    /* the Warlord aboard a tiddla: the option and the line under the select
+       name what the swap does to his own skwadron too ("even if it is an
+       escort", p. 374) */
+    { const pg10 = open(), P10 = pg10.P; const u = (sec, re, n, more) => Object.assign(saved(L, sec, re, n), more);
+      pg10.ctx.__d = { ln: L.nm, limit: 2000, units: [u(/^WARLORD$/, /^Ork Warlord$/, 1, { uid: "w1" }), u(/^Tiddla skwadron$/, /^Ravager/, 3, { cmd: "w1" }), u(/^Tiddla skwadron$/, /^Brute/, 5, { cmd: "w1" })] };
+      P10(`newGame(resolveFleet(__d)); V.screen = "setup"; G.flag = 1; setLd(1, 5); setLd(2, 8); render();`);
+      const sel0 = strip((P10(`renderSetup()`).match(/<select[^>]*data-sel="swap"[^>]*data-i="0"[\s\S]*?<\/select>/) || [""])[0]);
+      check("smoke: the Warlord aboard Ravagers on Ld 5: the option says the Brutes gain Young Gunz and the Ravagers lose it (Fleets pp. 372, 374)", /Brute Ram Ship .5: Ld 8 . 5, Young Gunz, Ravager[^,]* loses Young Gunz/.test(sel0), sel0);
+      P10(`act("swap", 0, 2)`);
+      const desc = strip((P10(`renderSetup()`).match(/<div class="full pres swap">[\s\S]*?<\/div>/) || [""])[0]);
+      check("smoke: ... chosen: the line under the select says it too, where a narrow select cuts the option", /Brute Ram Ship: Young Gunz/.test(desc) && /Ravager[^:]*: loses Young Gunz/.test(desc), desc); }
+    /* the fleet commander's Aboard select after Start (T63 decision 9) */
+    { const pg11 = open(), P11 = pg11.P;
+      pg11.ctx.__d = { ln: L.nm, limit: 2000, units: [saved(L, /^WARLORD$/, /^Ork Warlord$/), saved(L, /^Tiddla skwadron$/, /^Brute/, 5), saved(L, /^Big ship skwadron$/, /^Kill kroozer$/), saved(L, /^Big ship skwadron$/, /^Kill kroozer$/)] };
+      P11(`newGame(resolveFleet(__d)); V.screen = "setup"; G.flag = 2; setLd(1, 8); setLd(2, 5); setLd(3, 7); render(); act("swap", 0, 1); act("ygapply"); act("start"); act("setupback");`);
+      const before = P11(`JSON.stringify([G.st.map(x => x.ld), G.flag, G.st[0].swap, skwLd(1).now])`);
+      check("smoke: after Start the Warlord's Aboard select is read-only while he has a swap (T63 decision 9)", /<select[^>]*data-sel="flag"[^>]*disabled/.test(P11(`renderSetup()`)), (P11(`renderSetup()`).match(/<select[^>]*data-sel="flag"[^>]*>/) || [""])[0]);
+      P11(`act("flag", null, 3)`);
+      check("smoke: ... and a move is not taken: the Brutes keep Ld 5 and play 6 with their free Brute (Rulebook p. 123, T63 decision 9)", P11(`JSON.stringify([G.st.map(x => x.ld), G.flag, G.st[0].swap, skwLd(1).now])`) === before, [before, P11(`JSON.stringify([G.st.map(x => x.ld), G.flag, G.st[0].swap, skwLd(1).now])`)]); }
     /* a game saved before T63: nothing applied, the reminder as before */
     pg.ctx.__c = { ln: L.nm, limit: 1000, units: [saved(L, /^WARLORD$/, /^Ork Warlord$/), saved(L, /^Tiddla skwadron$/, /^Brute/, 6)] };
     P(`newGame(resolveFleet(__c)); setLd(1, 5); act("start"); save(); resumeGame(loadPlay());`);

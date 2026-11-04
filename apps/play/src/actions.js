@@ -166,7 +166,11 @@ export function act(name, i, arg){
       if(arg !== st.ldRoll) forgetLdDie(i);
       setLd(i, arg);
       syncSwaps(touched);
-      if(!appState.G.started) unapplyCards(skwCards(i));
+      /* the set-up's lit tile is the value it plays at, Mob Rule's +1 in it:
+         a tap there un-applies it after Start too (Mob Rule only, the free
+         escort staying), or the +1 would count twice; the game's Ld pop
+         leaves it applied (T63 decision 9) */
+      if(!appState.G.started || appState.V.screen === "setup") unapplyCards(skwCards(i));
       break;
     }
     case "ldclear": st.ld = null; st.ldRoll = null; st.ldFrom = null; forgetLdDie(i); break;
@@ -178,9 +182,14 @@ export function act(name, i, arg){
     case "rollpre": rollAllPre(false); break;
     case "rollone": if(st.ld == null) rollLd(i); break;
     case "pre": setPre(i, arg.key, arg.v); break;
-    /* a Warlord who moves to another ship gives his swap up first (T63) */
-    case "flag": if(appState.G.cmd != null) endSwapOf(appState.G.cmd); appState.G.flag = arg; applyCommanderLd(); break;
-    case "on": endSwapOf(i); appState.G.on = appState.G.on || {}; appState.G.on[i] = arg; break;
+    /* a Warlord who moves to another ship gives his swap up first (T63);
+       after Start his swap is read-only, and so is his ship (decision 9) */
+    case "flag":
+      if(appState.G.started && appState.G.cmd != null && (appState.G.st[appState.G.cmd] || {}).swap != null){ appState.UNDO.pop(); return; }
+      if(appState.G.cmd != null) endSwapOf(appState.G.cmd); appState.G.flag = arg; applyCommanderLd(); break;
+    case "on":
+      if(appState.G.started && (appState.G.st[i] || {}).swap != null){ appState.UNDO.pop(); return; }
+      endSwapOf(i); appState.G.on = appState.G.on || {}; appState.G.on[i] = arg; break;
     /* Young Gunz and Mob Rule applied at the set-up (T63): one act, one UNDO */
     case "ygapply": {
       if(!tiddlaHeads().length){ appState.UNDO.pop(); return; }

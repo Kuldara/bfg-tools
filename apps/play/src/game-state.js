@@ -73,7 +73,7 @@ export function newGame(res){
      fleet as a whole (carriersOf, DOMAIN.resolveFleet) */
   appState.U = res.units; appState.L0 = res.L0; FR = null;
   appState.G = { v: 1, play: PLAY_VERSION, fp: res.fp, src: res.src || "builder", ln: res.doc.ln, limit: res.doc.limit, doc: res.doc,
-        fleet: fleet, st: st, grp: builderGroups(res.units), flag: null, cmd: cmd >= 0 ? cmd : null, ac: 0 };
+        fleet: fleet, st: st, grp: builderGroups(res.units), flag: null, cmd: cmd >= 0 ? cmd : null, ac: 0, started: false };
   if(cmd >= 0){
     /* the flagship defaults to the biggest capital ship; a platform, a
        station or a defence vessel never carries the commander, a star fort
@@ -339,7 +339,9 @@ export function syncFree(){
   const G = appState.G, U = appState.U, heads = tiddlaHeads(), want = {};
   heads.forEach(h => {
     const lab = G.st[h].yg;
-    if(lab && lab !== "none" && isApplied(h)) want[h] = { label: lab, host: ygHost(h, lab) };
+    /* after Start Young Gunz is read-only (T63 decision 9): an un-applied
+       skwadron keeps the free escort it took at the set-up */
+    if(lab && lab !== "none" && (isApplied(h) || G.started)) want[h] = { label: lab, host: ygHost(h, lab) };
   });
   const hosts = Object.keys(want).map(h => want[h].host).filter(k => k != null);
   U.forEach((x, k) => {
