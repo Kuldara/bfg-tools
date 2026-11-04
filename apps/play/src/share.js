@@ -1,14 +1,15 @@
-import { anyRepairRoll, repairBtn, repairLines } from "./repair.js";
+import { rosterOrder } from "./reorder.js";
+import { anyRepairRoll, repairPanel } from "./repair.js";
 import { appState } from "./state.js";
 import { builderRaw, lsGet, lsSet } from "./storage.js";
 import { MID, TIMES, fnv } from "./helpers.js";
-import { fleetsIn, parseDoc, resolveFleet } from "./fleet-document.js";
+import { fleetPoints, fleetsIn, parseDoc, resolveFleet } from "./fleet-document.js";
 import { BUILDER_URL, KEY_LINKED, save } from "./game-state.js";
 import { baseName, unitName } from "./derived.js";
 import { render } from "./render.js";
 import { PHONE_LINK, packFleet } from "../../../packages/ui/share-link.js";
 import DOMAIN from "../../../packages/rules/domain.js";
-import { readableQr } from "../../../packages/ui/qr.js";
+import { openSendSheet } from "../../../packages/ui/send.js";
 import PLAY from "../rules.js";
 import { esc, factionCols } from "../../../packages/ui/format.js";
 
@@ -16,25 +17,58 @@ import { esc, factionCols } from "../../../packages/ui/format.js";
 /* PHONE_LINK, b64url, packFleet, QR and qrSvg come from packages/ui (the
    share link and the QR code): the builder's Saved fleets make the same
    links. */
-/* A phone has no builder save of its own. A fleet comes to it inside a
-   link (#fleet=..., the fleet document deflated and base64url'd - nothing
-   is uploaded anywhere, the link IS the fleet) or as the builder's export
-   file. Either way it goes on the page's own list (KEY_LINKED), never into
-   the builder's key. */
-export function linkedFleets(){
+/* One list of saved fleets (user 4.11.2026: "always the same as the fleet
+   list - only one save list"): the builder's named library
+   (gothic-fleet-registry-saves-v1, apps/registry/docs/save-format.md), which
+   this page reads and adds to. A fleet that comes by a link, a code or a file
+   goes in there as the builder's Import does ("from": "link" or "file"), so
+   the builder's Saved fleets shows it, and a fleet saved in the builder is
+   here. The page writes only new saves; renaming and deleting are the
+   builder's. Play's own list of 1.-3.11.2026 (KEY_LINKED) is moved in once. */
+export const KEY_LIB_BUILDER = "gothic-fleet-registry-saves-v1";
+const KEY_MOVED = "gothic-fleet-play-linked-moved";
+function libRead(){
+  let o = null; try{ o = JSON.parse(lsGet(KEY_LIB_BUILDER) || "null"); }catch(e){}
+  const saves = o && Array.isArray(o.saves) ? o.saves.filter(s => s && typeof s === "object" && s.id && Array.isArray(s.units)) : [];
+  return { v: 1, saves: saves, open: o && o.open && typeof o.open === "object" ? o.open : {} };
+}
+let LIB_SEQ = 0;
+const today = () => { const d = new Date(), p = n => (n < 10 ? "0" : "") + n; return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()); };
+/* the builder's rules: the same list, limit and ships are the same fleet;
+   a name is not taken twice ("Name (2)") */
+const libKey = d => JSON.stringify([d.ln, d.limit | 0, d.units]);
+function libName(lib, nm){
+  const taken = n => lib.saves.some(s => s.name === n);
+  if(!taken(nm)) return nm;
+  let k = 2; while(taken(nm + " (" + k + ")")) k++;
+  return nm + " (" + k + ")";
+}
+/* Add one fleet document; returns the id of its save, new or already there. */
+export function addSaved(doc, how){
+  const lib = libRead();
+  const d = { ln: doc.ln, limit: typeof doc.limit === "number" && doc.limit >= 0 ? doc.limit | 0 : 0, units: doc.units };
+  const same = lib.saves.filter(s => libKey(s) === libKey(d))[0];
+  if(same) return same.id;
+  const res = resolveFleet(d), pts = res.error ? 0 : fleetPoints(res.units);
+  const s = { id: Date.now().toString(36) + "-p" + (LIB_SEQ++).toString(36), name: libName(lib, String(doc.name || "").trim() || (d.ln + " " + pts)),
+              ln: d.ln, limit: d.limit, units: d.units, pts: pts, saved: today(), from: how === "file" ? "file" : "link" };
+  lib.saves.unshift(s);
+  lsSet(KEY_LIB_BUILDER, JSON.stringify(lib));
+  return s.id;
+}
+/* Play's old list into the library, oldest first so the newest stays on top. */
+function moveOldList(){
+  if(lsGet(KEY_MOVED)) return;
   let a = null; try{ a = JSON.parse(lsGet(KEY_LINKED) || "[]"); }catch(e){}
-  return Array.isArray(a) ? a.filter(f => f && f.doc && Array.isArray(f.doc.units) && f.doc.units.length) : [];
+  (Array.isArray(a) ? a : []).filter(f => f && f.doc && Array.isArray(f.doc.units) && f.doc.units.length)
+    .reverse().forEach(f => addSaved(f.doc, f.how));
+  lsSet(KEY_MOVED, "1");
 }
-export function addLinked(doc, how){
-  const d = { name: doc.name || "", ln: doc.ln, limit: doc.limit, units: doc.units };
-  const fp = fnv(JSON.stringify([d.ln, d.units]));
-  const now = new Date(), pad = n => (n < 10 ? "0" : "") + n;
-  const all = linkedFleets().filter(f => f.fp !== fp);
-  all.unshift({ fp: fp, how: how, date: now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate()), doc: d });
-  lsSet(KEY_LINKED, JSON.stringify(all.slice(0, 40)));
-  return fp;
+/* The saved fleets, in the library's order (newest first). */
+export function savedFleets(){
+  moveOldList();
+  return libRead().saves.filter(s => s.units.length);
 }
-export function forgetLinked(k){ const all = linkedFleets(); all.splice(k, 1); lsSet(KEY_LINKED, JSON.stringify(all)); }
 /* A fleet document as text (a file, a pasted one, a link's content): every
    fleet in it goes on the list, the first one is marked new. */
 export function takeFleetText(text, how){
@@ -45,21 +79,15 @@ export function takeFleetText(text, how){
   const bad = fs.map(f => resolveFleet(f)).find(r => r.error);
   if(bad && fs.length === 1){ appState.V.loadErr = bad.error; render(); return false; }
   const fresh = [];
-  fs.slice().reverse().forEach(f => { fresh.push(addLinked(f, how)); });
+  fs.slice().reverse().forEach(f => { fresh.push(addSaved(f, how)); });
   appState.V.loadErr = ""; appState.V.linkNew = fresh; appState.V.screen = "load";
   render();
   return true;
 }
-/* The builder's fleets on this device, the named library first (J208,
-   gothic-fleet-registry-saves-v1) and then the fleet each list is editing
-   (gothic-fleet-registry-v1). Read, never written. */
-export const KEY_LIB_BUILDER = "gothic-fleet-registry-saves-v1";
+/* The fleet each of the builder's lists is editing (gothic-fleet-registry-v1):
+   not saves, so beside the saved fleets. Read, never written. */
 export function builderFleets(){
   const out = [];
-  let lib = null; try{ lib = JSON.parse(lsGet(KEY_LIB_BUILDER) || "null"); }catch(e){}
-  (lib && Array.isArray(lib.saves) ? lib.saves : []).forEach(f => {
-    if(f && Array.isArray(f.units) && f.units.length) out.push({ name: f.name || "", ln: f.ln, limit: f.limit, units: f.units, saved: true });
-  });
   const p = parseDoc(builderRaw() || "");
   if(p.o) fleetsIn(p.o).forEach(f => out.push(Object.assign({ saved: false }, f)));
   return out;
@@ -74,34 +102,29 @@ export function playBase(){
   const local = !loc || loc.protocol !== "https:" || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(loc.hostname);
   return local ? { url: PHONE_LINK.builder, remote: true } : { url: new URL(BUILDER_URL, loc.href).href, remote: false };
 }
-/* What a "to phone" sends: "b:<k>" a builder fleet on this device, "s:<k>"
-   one of this page's own saved fleets, "all" every one of them - from phone
+/* What a "to phone" sends: "b:<k>" a fleet the builder is editing, "s:<k>"
+   a saved fleet, "all" every saved fleet - from phone
    to phone too (user 19.10.2026: "the QR code ... should work for a phone
    as well, so you can go e.g. from phone to phone"). Names travel along. */
 export function phoneDoc(key){
   const one = f => ({ name: f.name || undefined, ln: f.ln, limit: f.limit, units: f.units });
   if(key === "all"){
-    const lk = linkedFleets().map(f => f.doc);
+    const lk = savedFleets();
     if(!lk.length) return null;
     const d = Object.assign({ schemaVersion: DOMAIN.SCHEMA_VERSION }, one(lk[0]));
     if(lk.length > 1) d.fleets = lk.slice(1).map(one);
     return d;
   }
   const m = /^([bs]):(\d+)$/.exec(String(key));
-  const f = !m ? null : m[1] === "b" ? builderFleets()[+m[2]] : (linkedFleets()[+m[2]] || {}).doc;
+  const f = !m ? null : m[1] === "b" ? builderFleets()[+m[2]] : savedFleets()[+m[2]];
   return f ? Object.assign({ schemaVersion: DOMAIN.SCHEMA_VERSION }, one(f)) : null;
 }
-export async function phoneLink(key){
-  appState.V.phoneUrl = ""; appState.V.phoneSvg = ""; appState.V.phoneErr = ""; appState.V.phoneN = 0;
-  try{
-    const d = phoneDoc(key);
-    if(!d) throw new Error("the fleet is no longer here");
-    const base = playBase();
-    appState.V.phoneUrl = base.url + "#" + await packFleet(d); appState.V.phoneRemote = base.remote;
-    appState.V.phoneN = 1 + (d.fleets || []).length;
-    appState.V.phoneSvg = readableQr(appState.V.phoneUrl);
-  }catch(e){ appState.V.phoneErr = String(e && e.message || e); }
-  if(appState.V.phone === key) render();
+/* Send (packages/ui/send.js): the sheet, with the send page beside this site's Play. */
+export function openSend(key){
+  const d = phoneDoc(key);
+  if(!d) return;
+  const name = (d.fleets ? (1 + d.fleets.length) + " fleets" : String(d.name || d.ln).replace(/[^\w .()-]+/g, "_")) + ".json";
+  openSendSheet({ doc: d, file: d, fileName: name, linkBase: playBase().url, page: "../send/index.html" });
 }
 /* Copy and share answer in place: the button says "Copied" (no toast). */
 export function copyText(text, what){
@@ -110,17 +133,6 @@ export function copyText(text, what){
     if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done, () => fallbackCopy(text) && done()); return; }
   }catch(e){}
   if(fallbackCopy(text)) done();
-}
-/* The fleets of a "to phone" as a file: the way when the link is too long for
-   a code. The builder's Import file and this page's Open a fleet file read it. */
-export function saveFleetFile(key){
-  const d = phoneDoc(key);
-  if(!d) return;
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(new Blob([JSON.stringify(d, null, 1)], { type: "application/json" }));
-  a.download = (d.fleets ? (1 + d.fleets.length) + " fleets" : String(d.name || d.ln).replace(/[^\w .()-]+/g, "_")) + ".json";
-  document.body.appendChild(a); a.click(); a.remove();
-  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
 }
 export function fallbackCopy(text){
   const t = document.createElement("textarea"); t.value = text; t.setAttribute("readonly", ""); t.style.position = "fixed"; t.style.opacity = "0";
@@ -149,7 +161,7 @@ export function endPending(){
   let fires = 0, crits = 0;
   appState.U.forEach((x, i) => {
     const R = x.R, st = appState.G.st[i];
-    if(R.kind !== "ship" || PLAY.isEscort(R) || PLAY.isFort(R) || PLAY.destroyed(R, st)) return;
+    if(R.kind !== "ship" || st.disengaged || PLAY.isEscort(R) || PLAY.isFort(R) || PLAY.destroyed(R, st)) return;
     PLAY.activeCrits(st, R).forEach(c => {
       if(PLAY.standardCrits(R) && c.key === "7") fires += c.count;
       if(repairable(R, c.key)) crits += c.count;
@@ -161,12 +173,14 @@ export function renderEndPhase(){
   const fl = appState.G.fleet;
   const rows = appState.U.map((x, i) => {
     const R = x.R, st = appState.G.st[i];
-    if(R.kind !== "ship" || PLAY.isEscort(R) || PLAY.isFort(R)) return "";
+    if(R.kind !== "ship" || st.disengaged || PLAY.isEscort(R) || PLAY.isFort(R)) return "";
     const v = PLAY.view(R, st, fl);
     if(v.destroyed) return "";
     const crits = PLAY.activeCrits(st, R);
     if(!crits.length) return "";
     const nm = c => { const cm = R.damage.critical, row = cm && cm.rows.find(r => String(r[0]) === c.key); return String(row ? row[1] : (c.def ? c.def.name : c.key)).replace(/\s*\*\s*$/, ""); };
+    /* the player's own dice come first (user 2.11.2026): a tap per result repaired;
+       the page's roll is the option under them */
     const reps = crits.map(c => repairable(R, c.key)
       ? `<button data-act="repair" data-i="${i}" data-arg="${esc(c.key)}"><b>${esc(c.key)}</b> ${esc(nm(c))}${c.count > 1 ? " " + TIMES + c.count : ""}<small>tap when repaired</small></button>`
       : `<span class="perm"><b>${esc(c.key)}</b> ${esc(nm(c))} ${MID} no repair (p. 67)</span>`).join("");
@@ -175,15 +189,35 @@ export function renderEndPhase(){
     const times = st.fireTurn === fl.turn ? st.fireN | 0 : 0;
     const fireBtn = fire ? `<button class="fireb${times ? " done" : ""}" data-act="fire" data-i="${i}">Fire not put out: +${n} hit${n > 1 ? "s" : ""}<small>${times ? "added " + times + TIMES + " this turn" : "after the repair rolls (p. 67)"}</small></button>` : "";
     return `<div class="eprow" style="--kd:${factionCols(R.entry ? R.entry.list : appState.G.ln, R.source.faction || "")[0]}"><div class="ephd"><b>${esc(unitName(i))}</b><small>damage control ${v.repairDice}D6${R.damage.repair && R.damage.repair !== DOMAIN.REPAIR_LINE ? " " + MID + " " + esc(R.damage.repair) : ", a 6 repairs one (p. 88)"}</small></div>
-      ${repairBtn(i)}${repairLines(i)}<div class="eprep">${reps}</div>${fireBtn}</div>`;
+      <div class="eprep">${reps}</div>${fireBtn}${repairPanel(i)}</div>`;
   }).join("");
   return `<div class="menu endp" data-act="endph"><div class="box">
     <h2>End phase</h2>
-    <p class="foot">Both players repair in every End Phase (p. 88). Repair rolls the dice shown, repairs and adds the hit of a fire left burning (p. 67); with your own dice, tap what was repaired, then the fire. Blast markers in contact halve the dice.</p>
-    ${anyRepairRoll() ? `<button class="btn" data-act="repairall">Repair all<small>roll for every ship below</small></button>` : ""}
+    <p class="foot">Both players repair in every End Phase (p. 88). Roll the dice shown and tap what was repaired, or let the page roll; then a fire left burning costs a hit (p. 67). Blast Markers in contact halve the dice.</p>
     ${rows || `<p class="foot">Nothing to repair.</p>`}
+    ${anyRepairRoll() ? `<button class="btn sec" data-act="repairall">Repair all<small>the page rolls for every ship above</small></button>` : ""}
     <button class="btn sec" data-act="endph">Done</button>
   </div></div>`;
+}
+
+/* A reminder at the change of turn, never damage (user 1.11.2026): the fires still
+   burning whose hit has not gone on this turn. It sits in the bottom bar, above its
+   buttons, so nothing moves under a finger. A name's tap IS the hit (user
+   2.11.2026: it only scrolled, and a Hit on the card left the reminder standing);
+   the name then stays, ticked and dimmed, so the others do not shift. */
+export function fireReminder(){
+  if(!appState.V.fireWarn) return "";
+  const G = appState.G, ships = []; let open = 0;
+  appState.U.forEach((x, i) => {
+    const R = x.R, st = G.st[i];
+    if(R.kind !== "ship" || PLAY.destroyed(R, st) || !PLAY.standardCrits(R)) return;
+    const n = PLAY.fireDamage(R, st);
+    if(!n) return;
+    const done = st.fireTurn === G.fleet.turn;
+    if(!done) open++;
+    ships.push(`<button class="${done ? "done" : ""}" data-act="fire" data-i="${i}"${done ? " disabled" : ""}>${esc(unitName(i))}${n > 1 ? " " + TIMES + n : ""}${done ? " &#10003;" : ""}</button>`);
+  });
+  return open ? `<div class="firewarn"><span>Fires burning, tap each for its hit (p. 67):</span>${ships.join("")}<button class="x" data-act="firewarn" aria-label="Dismiss">&#10005;</button></div>` : "";
 }
 
 /* ------------------------------------------------- the strip of ships --- */
@@ -196,8 +230,8 @@ export function shortName(i){
   return w.join(" ").length <= 10 ? w.join(" ") : w[0].slice(0, 9);
 }
 export function jumpStrip(){
-  const chips = appState.U.map((x, i) => {
-    const R = x.R, st = appState.G.st[i];
+  const chips = rosterOrder().map(i => {
+    const R = appState.U[i].R, st = appState.G.st[i];
     if(R.kind !== "ship" && !R.ruleCard) return "";
     const v = R.kind === "ship" ? PLAY.view(R, st, appState.G.fleet) : null;
     const cls = v ? (v.destroyed ? "dead" : v.crippled ? "cr" : "") + (st.played >= 2 ? " done" : "") : "";

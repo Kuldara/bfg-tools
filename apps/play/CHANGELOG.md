@@ -5,15 +5,49 @@ a tag `play-v<version>` deploys the Registry's site.
 
 ## Unreleased
 
+### Changed
+- One list of saved fleets (4.11.2026): the load screen's Saved fleets is the builder's Saved fleets. A fleet that comes by a link, a code or a file goes in there, and the builder shows it; the page's own list from before is moved in once. The fleets the builder is editing are under Being edited in the builder. Deleting and renaming are done in the builder.
+
 ### Added
-- Repair with one tap (1.11.2026, RULINGS.md T45): beside a ship's criticals, Repair rolls its damage-control dice (p. 88), repairs, and adds the hit of a fire left burning (p. 67). The player picks only when the dice cannot repair everything and there is more than one kind. What happened stays on a line until the next tap elsewhere; UNDO takes it back. The End Phase panel has Repair all.
+- Da Ork Clanz: a mixed tiddla (escort cards with one Squadron letter, Fleets p. 374 "in any mix desired") is one squadron in the game, as every mixed escort squadron has been since 28.10.2026: one head ("Escort squadron T ×6 of 6") over each class's own card, one Leadership for all its cards, one order and one Brace, its victory points as a whole. A Blood Axe tiddla's commandeered escorts are in it. Mob Rule is on the head, counting the ships still alive on all its cards ("mob rule: +1 Ld (6 ships)", gone at five, p. 372), and Young Gunz is said once. RULINGS.md T42 still said escort squadrons stay units of their own; it now records this, the user's decision of 4.11.2026 (J244).
+- A rolled or chosen refit changes the card's numbers (2.11.2026, T44): Reinforced Hull adds its 25 % to the starting hits (crippled at half of the new total) and takes 5 cm off, the shield, turret, speed and repair-die results are on the profile, Long Range Sensors is a +1 Ld modifier; the set-up's select says "on the card: 13 hits, 15 cm".
+- The set-up's upgrade dice (Mechanicus Gifts, the Imperial and Blood Axe refits, crew skills): the chosen result's text is under its select, and the whole table is the tooltip of the select and its options (2.11.2026).
+- Your own dice come first everywhere (2.11.2026, T49): Passed and Failed, a number or a result's tile lead, and the page's Roll is the dashed option after them. A failure on your own dice can spend a re-roll too. A ram's damage takes the hits you rolled, and a warp rift's distance is rolled only if asked.
+- The command check rolled if you ask (2.11.2026, RULINGS.md T49): the orders pop has Roll 2D6 against the ship's Leadership with what the page tracks; Under Fire and Enemy Contacts are chips when it does not. A pass leaves the order to tap, a failure is Check failed, and Re-roll spends one.
+- Catastrophic damage rolled if you ask: Roll D6 or 2D6 on the hulk's table marks the row.
+- Hit-and-run covers an assault boat's raid as well as a teleport attack, and takes your own die (1 to 6).
+- A ram's target picked from the books: without the opponent's fleet linked, a class from any list fills its size, armour and hits.
+
+### Changed
+- Every squadron from the builder starts as an SQN group under the builder's own letter (4.11.2026, RULINGS.md T42), so the phone says what the builder and the printed roster say. Play had three letters: the fourth squadron and later ones started without a group, with nothing said - common in Da Ork Clanz, whose kroozers and Roks are skwadrons by their letter. The SQN button goes through the fleet's squadrons, then a new letter, then none; a squadron's colour is its letter's.
+- The card at a glance (2.11.2026): the stats line keeps its places with the numbers bigger; the armament table leads with the badge and the strength in force now, big (when halved, the printed value stays first, small and struck, and the half beside it is the big one), then the range, the arc, and the name last and small; a port / starboard pair is one row, "port and starboard, each", until a critical parts it. The compact row's chips are larger, with the strength now and the printed value, and no names. A hulk's line is its name and what the enemy needs, small; the squadron's combined fire leads with the numbers too; the crew and upgrade line and a commander's re-roll words are small, and the compact row leaves the upgrade line out.
+- Fewer places for one thing (2.11.2026): Disengage and Boarding are out of the orders pop and the card's Status (Actions has them; Status keeps only the way back for a ship marked disengaged by mistake); the fire reminder's names add the hit themselves and stay ticked.
+- The set-up screen starts with Leadership; Fleet facts and the opponent's room come after it.
+
+### Fixed
+- A capital squadron no longer shows a mixed escort squadron's letter (4.11.2026): a tiddla marked A and the kroozers marked B were both SQN A.
+- A squadron letter from a fleet link or a file is printed as text (4.11.2026): markup in an escort squadron's letter went into the page as markup.
+- A capital ship in a squadron that fails to disengage falls out of the squadron (Rulebook p. 57; 4.11.2026): in a browser the page stopped with an error there, at a name one module used without importing it.
+
+### Added
+- The set-up rows show each ship's price and what was bought for it (2.11.2026), so two ships of one class can be told apart before they are named.
+- A tab icon that is a ship from above, not a warning triangle (1.11.2026); the installed app's icons as well.
+- Your own order of the cards (1.11.2026): drag a card by the small tag at its head. A squadron moves as a whole, UNDO takes it back, and the strip of ships follows.
+- The ship's name can be changed on its card.
+- Repair with one tap (1.11.2026, RULINGS.md T45): beside a ship's criticals, Repair rolls its damage-control dice (p. 88) and repairs; a fire left burning stays for you to tap (p. 67). The player picks only when the dice cannot repair everything and there is more than one kind. What happened stays on a line until the next tap elsewhere; UNDO takes it back. The End Phase panel has Repair all.
 - A ship's Actions (1.11.2026, RULINGS.md T46): a button in the card's top corner opens Board, Ram, Disengage and Teleport attack. Ram and Disengage say the rule, work out the dice with the target and the modifiers, roll if asked (Passed and Failed for own dice, Re-roll on a failure) and mark the result on the ship; what the enemy must mark is said to you. Board moved here from the row of big buttons.
 - Celestial phenomena in Actions (1.11.2026, RULINGS.md T47): the Rulebook's phenomena in short with pages; asteroids, gas clouds and warp rifts have helpers that roll and mark.
 
 ### Changed
+- A fire's hit is always your tap (1.11.2026): Repair no longer adds it, and the change of turn lists the ships still burning in the bottom bar.
+- Repair is under the critical table, so tapping it again cannot land on a result: repeated taps were adding Engine damage (1.11.2026).
+- The Blast Marker and shield tracking is gone (1.11.2026, RULINGS.md T48): the switch, the SH and Under Fire buttons and the markers' panel. Shields show as printed. Repair has a second button, a burst icon, for half the dice with Blast Markers in contact (p. 88).
+- Blast Markers are on or off (1.11.2026, T48): the menu's switch gives each card a burst button, -1 Ld and half the repair dice while on.
+- Repair moved into the critical table (1.11.2026, T45): each success is a repair to spend on what you choose, with a counter (1 repair left of 2) and Done. The menu's Auto repair puts it back on the card, repairing at once when there is nothing to choose.
+- A ship lost in a warp rift counts as destroyed, for its full points (T47). A radiation burst lowers the Leadership of Actions' tests (p. 115).
+- Fleets: Send and Send all replace To phone and All to phone, with the same sheet as the builder, and Receive takes fleets by code. The paste box is gone. The opponent's room is unchanged.
 - Ships nobody named (1.11.2026): a short name, numbered when a class appears more than once: Lunar 1, Lunar 2, Dictator. The class in full is on the ship's card, and a name from the builder or the set-up stays as it is.
 - What a ship bought and rolled before the game is on one quiet line under its name.
-- To phone: a link too long for a QR code a camera can read (over 1 000 characters, usually several fleets) shows no code; the panel offers Save file, Copy link and Share instead.
 
 ### Added
 - Back to the set-up during a game (31.10.2026): the menu's **Set-up** opens the Leadership, the squadrons and the opponent's room again, with the game record kept. There the start button and a top-bar **Game** button read *Back to the game*, and the *Exit* that forgets the record is not offered.
@@ -26,6 +60,11 @@ a tag `play-v<version>` deploys the Registry's site.
 - Fleets WiP v0.40 and Rulebook v1.11 (29.10.2026): the cards and rules cite v0.40 pages; the fleet data is the Registry's v0.40 data (the power ram as a ship option, the Mechanicus profiles, mines that ignore shields).
 
 ### Fixed
+- A capital ship in a squadron that failed its Disengage test in Actions stayed
+  in the squadron, and the tap saved nothing: in a browser it threw "isEscGrp is
+  not defined" (an import missing in `actions.js`, which the tests' globals
+  hid). It falls out of the squadron now, with no fire this turn (Rulebook
+  p. 57, RULINGS.md T46).
 - The close button of the menu and of a card (30.10.2026): its cross is drawn, in the
   middle of the square; the "×" letter sat at the left edge.
 - Da Ork Clanz: a clan or a Gubbin bought on one card of a mixed tiddla (one
@@ -39,6 +78,11 @@ a tag `play-v<version>` deploys the Registry's site.
   per tab (J241), and Play reads it before the shared one (`builderRaw`).
 
 ### Changed (for developers)
+- The smoke test hides no forgotten import (4.11.2026): before its snippets
+  run, it checks that the page's code takes none of the names they share (every
+  export of `GFP`, the shared state) from the global scope, by esbuild's own
+  scope analysis (`tools/lib/free-names.js`). The build stops on any name a
+  bundle takes from the global scope that a browser does not have.
 - ES modules (`src/`) and `styles/play.css` instead of one template; the 24
   functions the build used to copy out of the Registry's template with regular
   expressions are imported from `packages/ui`.

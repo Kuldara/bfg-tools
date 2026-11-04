@@ -31,6 +31,11 @@ Releases are tags `scenarios-v<version>`; the version is in `app.json`.
   p. 124 (was 122).
 
 ### Changed (for developers)
+- `src/data.js` imports `MAPS` from `maps.js` (4.11.2026) instead of reading
+  the copy that `src/index.js` puts on the page for the scenario files. The
+  build stops on a name `src/` takes from the global scope that is neither the
+  browser's nor in `PAGE_GLOBALS` (build.js: the core's `BZ` and the names the
+  data files declare, each checked against its file).
 - The page's one script is ES modules in `src/` (one concern each: views,
   maps, battlezone, bookkeeping ...), bundled into `app.js` with the exports on
   `window.SL`; the styles are `styles/scenarios.css`. The QR code comes from

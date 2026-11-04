@@ -669,16 +669,15 @@ const ASYNC = [];
     check("J241: an offer for a saved fleet says so", api.linkOffer({ name: "Tau again", ln: one.ln, limit: 1200, units: one.units }).saved, "Tau again");
     check("J241: junk and unknown lists make no offer", [api.linkOffer(null), api.linkOffer({ ln: "No such list", units: [{ el: "x" }] }), openReceived("{nope")], [null, null, false]);
   }
-  /* a bigger QR (user 19.10.2026): from the Full screen button and a tap on the code */
-  api.setPhone({ key: "x", url: "https://bfgtools.kuldare.com/play/x#fleet=abc", svg: "<svg></svg>", err: "", remote: false, n: 1 });
-  const pph = api.phonePanelHTML();
-  check("To phone panel has Full screen on the button and the code", [(pph.match(/data-qrfull/g) || []).length, /Full screen<\/button>/.test(pph), typeof api.qrFull], [2, true, "function"]);
-  /* too long for a code a camera reads (user 1.11.2026): no code, a file instead */
-  api.setPhone({ key: "all", url: "https://bfgtools.kuldare.com/#fleet=" + "x".repeat(2000), svg: "", err: "", remote: false, n: 6 });
-  const ppl = api.phonePanelHTML();
-  check("a link too long to scan: no code or Full screen, Export file and Copy link instead", [/data-qrfull/.test(ppl), /data-libexport="all"/.test(ppl), /data-copylink/.test(ppl), /Making the code/.test(ppl)], [false, true, true, false]);
-  check("the code stops at QR_MAX_CHARS", [api.readableQr("x".repeat(api.QR_MAX_CHARS)).startsWith("<svg"), api.readableQr("x".repeat(api.QR_MAX_CHARS + 1))], [true, ""]);
-  api.setPhone({ key: null });
+  /* Send (user 1.11.2026): one button per fleet, Send all, Receive, Import file */
+  {
+    const f = api.libFile("all");
+    check("Send: the file is the document with the file's tags", [f.file.app, f.file.ln, f.doc.ln, /saved fleets?\.json$/.test(f.name)], ["Gothic Fleet Registry fleet", f.doc.ln, f.doc.ln, true]);
+    check("Send: code rules", [api.parseCode("krak"), api.parseCode("https://x/send/#KRAK"), api.parseCode("KRIK"), api.parseCode("KR")], ["KRAK", "KRAK", null, null]);
+    const parts = api.splitParts("x".repeat(api.PART_CHARS * 2 + 5));
+    check("Send: a long message goes in parts under the relay's limit", [parts.length, parts.join("").length, parts.every(p => p.length <= 64000)], [3, api.PART_CHARS * 2 + 5, true]);
+    check("Send: only a fleet link is passed on", [api.isPacked("fleet=abc_-1"), api.isPacked("fleet=a\"><b>"), api.isPacked("javascript:x")], [true, false, false]);
+  }
   ASYNC.push(async () => {
     const doc = libDocument("all");
     const frag = await packFleet(doc);

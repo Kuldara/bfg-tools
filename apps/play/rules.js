@@ -399,6 +399,18 @@ function quadIndex(st){
 function track(R, st){
   return isFort(R) && st && st.quads ? st.quads[quadIndex(st)] : st;
 }
+/* What was rolled for the ship before the game and changed its profile in
+   numbers (st.fx, apps/play/src/game-state.js syncPre): a Reinforced Hull's
+   hits and -5 cm, an Additional Shield Generator, Extra Turrets, Long Range
+   Sensors, Superior Damage Control (Rulebook pp. 158-159, Fleets pp. 119,
+   185). Starting hits with the refit, and crippled at half of THAT
+   (p. 65: "half or more of its starting Damage Points"). */
+function fx(st, k){ return (st && st.fx && st.fx[k]) | 0; }
+function maxHits(R, st){ return ((R && R.stats && R.stats.hits) | 0) + fx(st, "hits"); }
+function crippledAt(R, st){
+  if(!R.damage || R.damage.crippledAt == null) return null;
+  return fx(st, "hits") ? Math.ceil(maxHits(R, st) / 2) : R.damage.crippledAt;
+}
 function selectQuad(st, k){
   if(st && st.quads && k >= 0 && k < st.quads.length) st.qsel = k | 0;
   return st;
@@ -407,7 +419,7 @@ function selectQuad(st, k){
    do no further damage, treat that quadrant of the base as an asteroid
    field from now on" (Fleets p. 501). */
 function quadGone(R, st){
-  return !!(isFort(R) && st.quads && (track(R, st).hits | 0) >= R.stats.hits);
+  return !!(isFort(R) && st.quads && (track(R, st).hits | 0) >= maxHits(R, st));
 }
 /* The same state seen with another quadrant selected - a shallow copy;
    the quadrants themselves are shared and not touched. */
@@ -422,7 +434,7 @@ function quadViews(R, st){
   if(!(isFort(R) && st.quads)) return null;
   return st.quads.map(function(q, k){
     var s = atQuad(st, k);
-    return { i: k, name: QUADS[k], hits: q.hits | 0, max: R.stats.hits, remaining: Math.max(0, R.stats.hits - (q.hits | 0)),
+    return { i: k, name: QUADS[k], hits: q.hits | 0, max: maxHits(R, st), remaining: Math.max(0, maxHits(R, st) - (q.hits | 0)),
              crippled: crippled(R, s), gone: quadGone(R, s),
              crits: Object.keys(q.crits || {}).filter(function(x){ return q.crits[x] > 0; }).length };
   });
@@ -432,18 +444,18 @@ function quadViews(R, st){
    a quadrant at 0 is gone, not crippled. */
 function crippled(R, st){
   if(!R.damage || !R.damage.crippled) return false;
-  if(isFort(R) && st.quads) return track(R, st).hits >= R.damage.crippledAt && !quadGone(R, st) && !destroyed(R, st);
-  return st.hits >= R.damage.crippledAt && !destroyed(R, st);
+  if(isFort(R) && st.quads) return track(R, st).hits >= crippledAt(R, st) && !quadGone(R, st) && !destroyed(R, st);
+  return st.hits >= crippledAt(R, st) && !destroyed(R, st);
 }
 /* "The fort itself is only destroyed once all four quadrants are reduced
    to 0 Damage Points" (Fleets p. 502). */
 function destroyed(R, st){
   if(st.destroyed) return true;
   if(isEscort(R) || tickUnit(R)) return (st.members || []).length > 0 && st.members.every(function(m){ return m.dead; });
-  if(isFort(R) && st.quads) return st.quads.every(function(q){ return (q.hits | 0) >= R.stats.hits; });
-  return R.stats ? st.hits >= R.stats.hits : false;
+  if(isFort(R) && st.quads) return st.quads.every(function(q){ return (q.hits | 0) >= maxHits(R, st); });
+  return R.stats ? st.hits >= maxHits(R, st) : false;
 }
-function remaining(R, st){ return R.stats ? Math.max(0, R.stats.hits - (track(R, st).hits | 0)) : 0; }
+function remaining(R, st){ return R.stats ? Math.max(0, maxHits(R, st) - (track(R, st).hits | 0)) : 0; }
 
 /* Shields: halved when crippled (p. 65), zero after Shields Collapse (p. 67)
    and on a hulk (p. 71). A Blast Marker is placed for every hit the shields
@@ -453,7 +465,7 @@ function remaining(R, st){ return R.stats ? Math.max(0, R.stats.hits - (track(R,
    and saves are not shields - shown as text, never halved. */
 function shields(R, st){
   var txt = String(R.stats && R.stats.shields || "").trim();
-  var base = /^\d+$/.test(txt) ? parseInt(txt, 10) : null;   /* "4+ save" is a save, Fleets p. 404 */
+  var base = /^\d+$/.test(txt) ? parseInt(txt, 10) + fx(st, "shields") : null;   /* "4+ save" is a save, Fleets p. 404 */
   if(base == null) return { base: null, text: txt, now: null, up: null };
   var now = base;
   if(stdCrit(R, st, "10") || st.hulk || quadGone(R, st)) now = 0;
@@ -467,6 +479,7 @@ function shields(R, st){
 function turrets(R, st){
   var base = num(R.stats && R.stats.turrets);
   if(base == null) return { base: null, text: String(R.stats && R.stats.turrets || ""), now: null };
+  base += fx(st, "turrets");
   var now = st.hulk || quadGone(R, st) ? 0 : (crippled(R, st) ? half(base) : base);
   return { base: base, text: String(base), now: now };
 }
@@ -485,6 +498,7 @@ function speed(R, st){
   var mcm = txt.trim().match(/^(\d+)\s*(?:cm)?$/i);
   var base = mcm ? parseInt(mcm[1], 10) : null;
   var still = isStill(R);
+  if(base != null && !still && fx(st, "speed")){ base = Math.max(0, base + fx(st, "speed")); txt = base + " cm"; }
   var mods = [];
   if(!still){
     /* Not for the hulls whose own note says so: Roks, Kroot Warspheres,
@@ -519,6 +533,7 @@ function turns(R, st){
 function leadership(R, st, fleet){
   if(st.ld == null) return { base: null, now: null, mods: [] };
   var mods = [];
+  if(fx(st, "ld")) mods.push({ t: "sensors", v: fx(st, "ld"), page: 185 });   /* Long Range Sensors, Fleets p. 185 */
   if(st.ldPerm) mods.push({ t: "bridge smashed", v: st.ldPerm, page: 67 });
   if(st.blast > 0 && !reactiveHull(R)) mods.push({ t: "under fire", v: -1, page: 48 });
   if(fleet && fleet.enemyOrders) mods.push({ t: "enemy contacts", v: 1, page: 48 });
@@ -764,20 +779,21 @@ function rangeCm(t){
 function repairDice(R, st){
   var n = remaining(R, st);
   if(st.blast > 0) n = half(n);
-  return n;
+  return n + fx(st, "repair");
 }
 
 /* The dice to roll and the score that repairs, for the Repair button. Necrons
    succeed on 4+ (Fleets p. 404), a Mechanicus vessel adds +1D6 (Fleets p. 120),
    Repulsor Shielding ignores Blast Markers on repairs until Shields Collapsed;
    the card's own repair line says which. RULINGS.md T45. */
-function repairPlan(R, st){
+function repairPlan(R, st, blast){
   var line = String(R.damage && R.damage.repair || "");
   var repulsor = (R.rules || []).some(function(r){ return /ignore Blast Marker[^.]*repairs/i.test(String(r.t)); }) &&
     !activeCrits(st, R).some(function(c){ return c.def && /shields? collapse/i.test(c.def.name); });
   var n = remaining(R, st);
-  if(st.blast > 0 && !repulsor) n = half(n);
-  return { dice: n + (/REPAIR \+1D6/i.test(line) ? 1 : 0), target: /4\+ = 1 crit/i.test(line) ? 4 : 6 };
+  /* blast: true or false is the player's word, otherwise the ship's own state */
+  if((blast == null ? st.blast > 0 : blast) && !repulsor) n = half(n);
+  return { dice: n + (/REPAIR \+1D6/i.test(line) ? 1 : 0) + fx(st, "repair"), target: /4\+ = 1 crit/i.test(line) ? 4 : 6 };
 }
 function repairRoll(plan, rng){
   var faces = [];
@@ -795,7 +811,7 @@ function ramSize(R){
   return /defen[cs]e/i.test(t) ? 3 : /battleship/i.test(t) ? 2 : /escort/i.test(t) ? 0 : 1;
 }
 function ramTestDice(mine, target){ return target < mine ? 3 : target === mine ? 2 : 1; }
-function ramDice(R){ return (R.stats && R.stats.hits) | 0; }
+function ramDice(R, st){ return maxHits(R, st); }
 function rammedDice(hits, headOn, defence){ return headOn || defence ? hits : half(hits); }
 function ramHits(faces, armour){ return faces.filter(function(f){ return f >= armour; }).length; }
 function frontArmour(R){ var m = String(R.stats && R.stats.armour || "").match(/\d+/); return m ? parseInt(m[0], 10) : null; }
@@ -856,7 +872,7 @@ function riftTestDice(R){ return /ELDAR/i.test(String(R.source && R.source.facti
 function boardingValue(R, st){
   var t = turrets(R, st);
   if(isFort(R) && st.quads){
-    var all = st.quads.reduce(function(a, q){ return a + Math.max(0, R.stats.hits - (q.hits | 0)); }, 0);
+    var all = st.quads.reduce(function(a, q){ return a + Math.max(0, maxHits(R, st) - (q.hits | 0)); }, 0);
     return { attack: all, defend: all + (t.now | 0), fort: true };
   }
   return { attack: remaining(R, st), defend: remaining(R, st) + (t.now | 0) };
@@ -1154,7 +1170,7 @@ function activeCrits(st, R){
 function addHits(R, st, n){
   if(isEscort(R) || !R.stats) return st;
   var t = track(R, st);
-  t.hits = Math.max(0, Math.min(R.stats.hits, (t.hits | 0) + (n | 0)));
+  t.hits = Math.max(0, Math.min(maxHits(R, st), (t.hits | 0) + (n | 0)));
   return st;
 }
 /* A tap on box n of the hit track: the damage is n, or n - 1 when that
@@ -1162,7 +1178,7 @@ function addHits(R, st, n){
 function tapHit(R, st, n){
   if(isEscort(R) || !R.stats) return st;
   var t = track(R, st);
-  t.hits = Math.max(0, Math.min(R.stats.hits, (t.hits | 0) === n ? n - 1 : n));
+  t.hits = Math.max(0, Math.min(maxHits(R, st), (t.hits | 0) === n ? n - 1 : n));
   return st;
 }
 
@@ -1403,8 +1419,8 @@ function view(R, st, fleet){
   return {
     escort: isEscort(R), capital: isCapital(R), fort: fort, still: isStill(R),
     quad: fort ? quadIndex(st) : null, quads: quadViews(R, st), quadGone: quadGone(R, st),
-    hits: track(R, st).hits | 0, max: R.stats ? R.stats.hits : 0, remaining: remaining(R, st),
-    crippledAt: R.damage ? R.damage.crippledAt : null,
+    hits: track(R, st).hits | 0, max: R.stats ? maxHits(R, st) : 0, remaining: remaining(R, st),
+    crippledAt: crippledAt(R, st),
     crippled: crippled(R, st), destroyed: destroyed(R, st), hulk: st.hulk,
     braced: braced(st), order: st.order ? ORDER_BY[st.order] : null,
     shields: shields(R, st), turrets: turrets(R, st), speed: speed(R, st), turns: turns(R, st),
@@ -1434,7 +1450,7 @@ return {
   QUADS: QUADS, track: track, selectQuad: selectQuad, quadGone: quadGone, quadViews: quadViews, adoptUnit: adoptUnit, tapHit: tapHit,
   tickUnit: tickUnit, isInstallation: isInstallation, isStill: isStill, launchBays: launchBays,
   fixedLd: fixedLd, LD_TABLES: LD_TABLES, ldPlan: ldPlan, ldFromDie: ldFromDie, d6: d6, mayOrder: mayOrder, ordersFor: ordersFor, mayCarryCommander: mayCarryCommander, defaultFlagship: defaultFlagship,
-  view: view, half: half, num: num
+  view: view, half: half, num: num, maxHits: maxHits
 };
 })();
 if(typeof module !== "undefined" && module.exports) module.exports = PLAY;

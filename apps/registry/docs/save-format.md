@@ -97,7 +97,7 @@ untouched by it.
   dot on the Save button shows it.
 - **Open** opens a save on its own list. The fleet being edited there gives way
   without a question only when nothing is lost.
-- **Import file, Paste text, and a link or QR code with several fleets** add to the
+- **Import file, and a link, QR code or Send with several fleets** add to the
   library and never touch the fleet on screen. The same fleet is not added twice.
 - **A link or QR code with one fleet** (J241) shows a dialog and saves nothing by
   itself: *Open it* puts the fleet on its own list in this tab, *Save to Saved
@@ -120,7 +120,7 @@ the library: when another tab changes it, the list redraws without saving.
 
 ## Files and links
 
-Export, Copy, To phone and a file all carry one document:
+Send, a link and a file all carry one document:
 
 ```json
 { "app": "Gothic Fleet Registry fleet", "page": "1.2", "schemaVersion": 4,

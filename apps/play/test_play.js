@@ -1594,6 +1594,9 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
   check("repair: one hit taken, 7D6 (p. 88: per Damage point remaining)", plan(lunar, st).dice === 7);
   st.blast = 1;
   check("repair: Blast Markers in contact, half rounding up: 4D6 (p. 88)", plan(lunar, st).dice === 4);
+  check("repair: the player can say a marker touches: 8 hits left 4D6 (p. 88)", PLAY.repairPlan(lunar, PLAY.freshUnit(lunar), true).dice === 4);
+  const marked = PLAY.freshUnit(lunar); marked.blast = 1;
+  check("repair: the player's word goes over the ship's marker: full 8D6", PLAY.repairPlan(lunar, marked, false).dice === 8 && PLAY.repairPlan(lunar, marked).dice === 4);
   const necron = { damage: { repair: "REPAIR: End Phase, D6 / remaining Hit; 4+ = 1 crit; blast contact 1/2 dice." }, stats: lunar.stats, rules: [] };
   check("repair: Necrons succeed on 4+ (Fleets p. 404)", plan(necron, PLAY.freshUnit(lunar)).target === 4);
   const mech = { damage: { repair: "ALL ADMECH: REPAIR +1D6." }, stats: lunar.stats, rules: [] };
@@ -1644,6 +1647,31 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
   const taken = PLAY.takenFeatures({ options: [{ state: "opt", text: "The ship may take a power ram for +5" }, { state: "take", text: "Can replace its prow torpedoes with a nova cannon at +20" }],
     upgrades: [{ state: "take", label: "Clan: Goffs (Black)" }, { state: "opt", label: "Maniac Gunners" }, { state: "take", label: "Reinforced Carapace \u00d72 (+2 Hits)" }] });
   check("features: only what was taken, without its fine print", taken.join() === "Nova cannon,Goffs,Reinforced Carapace \u00d72", taken.join());
+}
+
+/* --- A refit rolled before the game, on the profile (st.fx) ------------- */
+{
+  /* Reinforced Hull: "increasing its damage by 25% (rounded up) but reducing
+     its speed by 5 cm" (Rulebook p. 158): a Lunar of 8 hits and 20 cm has 10
+     hits and 15 cm, crippled at half of its starting hits (p. 65) - 5. */
+  const st = PLAY.freshUnit(lunar); st.ld = 7; st.fx = { hits: 2, speed: -5, shields: 1, turrets: 1, ld: 1, repair: 1 };
+  const v = PLAY.view(lunar, st, PLAY.freshFleet());
+  check("refit: +25 % hits are starting hits (p. 158): 8 -> 10", v.max === 10 && v.remaining === 10, JSON.stringify([v.max, v.remaining]));
+  check("refit: crippled at half of the new starting hits (p. 65): box 5", v.crippledAt === 5 && !v.crippled, v.crippledAt);
+  st.hits = 5;
+  check("refit: 5 hits on 10 is crippled, 9 is not destroyed", PLAY.crippled(lunar, st) && !PLAY.destroyed(lunar, st));
+  st.hits = 10;
+  check("refit: destroyed at the new 10, not at the card's 8", PLAY.destroyed(lunar, st));
+  st.hits = 0;
+  check("refit: -5 cm is on the base speed, not a modifier: 15 cm", v.speed.base === 15 && v.speed.now === 15 && v.speed.mods.length === 0 && v.speed.text === "15 cm", JSON.stringify(v.speed));
+  check("refit: +1 shield and +1 turret on the base (pp. 158-159): the Lunar's 2 and 2 are 3 and 3", v.shields.base === 3 && v.shields.now === 3 && v.turrets.base === 3 && v.turrets.now === 3, JSON.stringify([v.shields, v.turrets]));
+  check("Long Range Sensors: +1 to the Leadership (Fleets p. 185)", v.ld.now === 8 && v.ld.mods.some(m => m.v === 1 && /sensors/.test(m.t)), JSON.stringify(v.ld));
+  check("Superior Damage Control: one more repair die (p. 158)", PLAY.repairPlan(lunar, st).dice === 11, PLAY.repairPlan(lunar, st).dice);
+  check("... and the Damage control line says the same number", PLAY.repairDice(lunar, st) === PLAY.repairPlan(lunar, st).dice, PLAY.repairDice(lunar, st));
+  check("the ram's dice are the starting hits with the refit (p. 56)", PLAY.ramDice(lunar, st) === 10 && PLAY.ramDice(lunar) === 8);
+  check("the hits never go past the new maximum", (PLAY.addHits(lunar, st, 30), st.hits === 10), st.hits);
+  const plain = PLAY.freshUnit(lunar);
+  check("without a refit nothing moves: 8 hits, crippled at 4, 20 cm", PLAY.view(lunar, plain, PLAY.freshFleet()).max === 8 && PLAY.view(lunar, plain, PLAY.freshFleet()).crippledAt === 4 && PLAY.speed(lunar, plain).base === 20);
 }
 
 /* --- Celestial phenomena: the dice of a ship's helper ------------------- */

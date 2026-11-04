@@ -23,6 +23,21 @@ const SETUP = `(() => {
   G.appState.V.screen = "roster"; G.render();
   return 1;
 })()`;
+/* Squadrons for the disengage test: the builder's tags (`sq`,
+   apps/registry/docs/save-format.md) put the two Lunars in one SQN group under their letter C (T42)
+   and the Sword and Cobra cards in one escort squadron (J222, 28.10.2026);
+   the Fleet-Admiral brings a re-roll. */
+const SQUADRONS = `(() => {
+  const G = GFP, L = G.LISTS.find(l => l.nm === "Imperial Navy \\u2014 Gothic Sector");
+  const row = (re, n, sq) => { const s = L.secs.findIndex(x => x.ents.some(e => re.test(e.l || ""))), e = L.secs[s].ents.findIndex(x => re.test(x.l || "")), en = L.secs[s].ents[e];
+    return Object.assign({ s, e, ref: en.r, n, opts: [], os: {}, name: "", sn: L.secs[s].t, el: en.l }, sq ? { sq } : {}); };
+  const res = G.resolveFleet({ ln: L.nm, limit: 1500, units: [row(/^Fleet-Admiral/, 1), row(/^Lunar/, 1, "C"), row(/^Lunar/, 1, "C"), row(/^Sword/, 3, "E"), row(/^Cobra/, 2, "E")] });
+  if(res.error) throw new Error(res.error);
+  G.newGame(res);
+  G.appState.G.st.forEach((st, i) => { if(G.appState.U[i].R.kind === "ship" && st.ld == null) G.setLd(i, 8); });
+  G.appState.V.screen = "roster"; G.render();
+  return JSON.stringify(G.appState.G.grp);
+})()`;
 /* a face to the generator: 6 -> 0.99, 1 -> 0 */
 const dice = a => `(() => { const q = ${JSON.stringify(a.map(f => (f - 0.5) / 6))}; Math.random = () => q.length ? q.shift() : 0; return 1; })()`;
 
@@ -36,9 +51,13 @@ const dice = a => `(() => { const q = ${JSON.stringify(a.map(f => (f - 0.5) / 6)
     const loaded = cd.once("Page.loadEventFired");
     await cd.send("Page.navigate", { url: "file:///" + PAGE.replace(/\\/g, "/").replace(/ /g, "%20") });
     await loaded;
+    /* an exception in a tap's handler shows nowhere else: the page keeps them */
+    await cd.evaluate("window.__errs = []; addEventListener('error', e => __errs.push(String(e.message))); 1");
+    const errs = async () => JSON.parse(await cd.evaluate("JSON.stringify(window.__errs)"));
     await cd.evaluate(SETUP);
     await sleep(800);
     const tap = async sel => { await cd.evaluate(`document.querySelector(${JSON.stringify(sel)}).click()`); await sleep(100); };
+    const has = sel => cd.evaluate(`!!document.querySelector(${JSON.stringify(sel)})`);
     const txt = sel => cd.evaluate(`(document.querySelector(${JSON.stringify(sel)}) || {}).innerText || ""`);
     const box = async () => (await txt(".acts .box")).toLowerCase();
     const st = i => cd.evaluate(`JSON.parse(JSON.stringify(GFP.appState.G.st[${i}]))`).then(x => typeof x === "string" ? JSON.parse(x) : x);
@@ -113,19 +132,23 @@ const dice = a => `(() => { const q = ${JSON.stringify(a.map(f => (f - 0.5) / 6)
     check("D6 = 5 against 2 shields: 3 hits (p. 110)", s.hits === 3 && /3 hits/.test(await box()), s);
     await tap('[data-act="undo"]');
     await tap('[data-act="accelback"]');
-    /* a cloud is one Blast Marker (p. 110) */
+    /* a cloud is text now: the page does not count Blast Markers */
     await tap('[data-act="accel"][data-arg="gas"]');
-    await tap('[data-act="acgas"]');
-    s = await ST(1);
-    check("a cloud marks one Blast Marker (p. 110)", s.blast === 1, s);
-    await tap('[data-act="undo"]');
+    check("a cloud says it works as a Blast Marker (p. 110)", /blast marker/.test(await box()), await box());
     await tap('[data-act="accelback"]');
+    /* radiation lowers every ship's Leadership for the turn (p. 115) */
+    await cd.evaluate(`(() => { GFP.appState.G.fleet.radiation = 2; GFP.render(); return 1; })()`);
+    await tap('[data-act="accel"][data-arg="asteroid"]');
+    check("a radiation burst of 2: 6 or under (p. 115)", /6 or under/.test(await box()), await box());
+    await tap('[data-act="accelback"]');
+    await cd.evaluate(`(() => { GFP.appState.G.fleet.radiation = 0; GFP.render(); return 1; })()`);
     /* a rift: 3D6, a failure is gone from the table (pp. 111-112) */
     await tap('[data-act="accel"][data-arg="rift"]');
     check("warp rift: 3D6 (p. 111)", /3d6, 8 or under/.test(await box()), await box());
     await tap('[data-act="acrift"][data-arg="fail"]');
     s = await ST(1);
-    check("lost in the warp: off the table (p. 112)", s.disengaged, s);
+    check("lost in the warp: destroyed, not disengaged (user 1.11.2026, T47)", s.destroyed && !s.disengaged, s);
+    check("... and it gives its full points", await cd.evaluate(`GFP.vpOf(1) === (GFP.appState.U[1].R.points | 0)`), await cd.evaluate(`GFP.vpOf(1)`));
     await tap('[data-act="undo"]');
     await tap('[data-act="accelback"]');
     for(const k of ["planet", "sun", "flare", "radiation"]){
@@ -135,10 +158,96 @@ const dice = a => `(() => { const q = ${JSON.stringify(a.map(f => (f - 0.5) / 6)
     }
     await tap('[data-act="acclose"]');
 
-    /* teleport is shut for a crippled ship (p. 92) */
+    /* teleport is shut for a crippled ship (p. 92); the row stays open for an
+       assault boat's raid, which takes a die */
     await cd.evaluate(`(() => { GFP.appState.G.st[1].hits = 5; GFP.render(); return 1; })()`);
     await open(1);
-    check("a crippled ship may not teleport (p. 92)", await cd.evaluate(`document.querySelector('[data-act="actab"][data-arg="tele"]').disabled`));
+    await tap('[data-act="actab"][data-arg="tele"]');
+    check("a crippled ship may not teleport (p. 92)", /may not teleport now: crippled/.test(await cd.evaluate(`document.querySelector(".acts .box").innerText`)) && !(await cd.evaluate(`!!document.querySelector('[data-act="actele"]')`)));
+    await tap('[data-act="acset"][data-arg="boats:true"]');
+    check("... but its assault boats may raid, with the player's own die", !!(await cd.evaluate(`document.querySelector('[data-act="actele"][data-arg="5"]')`)));
+    await tap('[data-act="actele"][data-arg="5"]');
+    check("the die says the critical, and the ship is not marked as having teleported", /critical 5/.test(await cd.evaluate(`document.querySelector(".acts .box").innerText`)) && !(await cd.evaluate(`!!GFP.appState.G.st[1].teleported`)));
+
+    /* a ram's target from the books: ships only, and a pick fills the values */
+    await tap('[data-act="acclose"]');
+    await open(0);
+    await tap('[data-act="actab"][data-arg="ram"]');
+    const opts = JSON.parse(await cd.evaluate(`JSON.stringify([...document.querySelectorAll('[data-sel="ramfoe"] option')].map(o => o.textContent))`));
+    check("the books' classes are ships, not commanders", opts.length > 100 && opts.some(t => /^Retribution/i.test(t)) && !opts.some(t => /admiral|warmaster|warlord/i.test(t)), opts.length);
+    await cd.evaluate(`(() => { const s = document.querySelector('[data-sel="ramfoe"]'); s.value = [...s.options].find(o => /^Retribution/i.test(o.textContent)).value; s.dispatchEvent(new Event("change", { bubbles: true })); return 1; })()`);
+    await sleep(100);
+    const af = JSON.parse(await cd.evaluate(`JSON.stringify(GFP.appState.V.actions)`));
+    check("a pick fills size, armour and hits", af.size === 2 && af.hits === 12 && af.armour === 6, af);
+
+    /* own dice come first: the page's roll is the last choice in every row */
+    await tap('[data-act="acclose"]');
+    await cd.evaluate(`(() => { const st = GFP.appState.G.st[0]; st.hits = 0; st.destroyed = false; st.hulk = null; st.hulkName = ""; st.disengaged = false; GFP.render(); return 1; })()`);
+    await open(0);
+    await tap('[data-act="actab"][data-arg="ram"]');
+    const lastIs = sel => cd.evaluate(`(() => { const b = [...document.querySelector(${JSON.stringify(sel)}).parentElement.children]; return b[b.length - 1].getAttribute("data-arg") === "roll"; })()`);
+    check("the ram's test: Passed and Failed before Roll", await lastIs('[data-act="acramtest"]'));
+    await tap('[data-act="acramtest"][data-arg="pass"]');
+    const h0 = JSON.parse(await cd.evaluate(`GFP.appState.G.st[0].hits`));
+    check("the ram's damage takes own dice", await cd.evaluate(`!!document.querySelector('[data-act="acramown"][data-arg="2"]')`));
+    await tap('[data-act="acramown"][data-arg="2"]');
+    check("... the hits taken go on the ship", JSON.parse(await cd.evaluate(`GFP.appState.G.st[0].hits`)) === h0 + 2);
+    await tap('[data-act="actab"][data-arg=""]');
+    await tap('[data-act="actab"][data-arg="cel"]');
+    await tap('[data-act="accel"][data-arg="rift"]');
+    await tap('[data-act="acrift"][data-arg="pass"]');
+    const riftTxt = await cd.evaluate(`document.querySelector(".acts .box").innerText`);
+    check("a rift's distance is not rolled unless asked", /2D6 × 10 cm/.test(riftTxt) && await cd.evaluate(`!!document.querySelector('[data-act="acriftfar"]')`), riftTxt);
+    await tap('[data-act="acclose"]');
+
+    /* a failed disengage in a squadron (p. 57, RULINGS.md T46): a capital ship
+       tests alone, and one that fails "falls out of the squadron and may not
+       attempt to re-join it"; an escort squadron tests as one and stays one */
+    const grp0 = await cd.evaluate(SQUADRONS);
+    await sleep(800);
+    const GRP = async () => JSON.parse(await cd.evaluate(`JSON.stringify(GFP.appState.G.grp)`));
+    check("the builder's tags: the Lunars are one SQN group, the Sword and Cobra cards one escort squadron (J222)", grp0 === JSON.stringify([null, "C", "C", "e:E", "e:E"]), grp0);
+    /* each step's own errors: those of the step before do not count again */
+    let e0 = (await errs()).length;
+    const errsNow = async () => { const all = await errs(), now = all.slice(e0); e0 = all.length; return now; };
+    await open(1);
+    await tap('[data-act="actab"][data-arg="dis"]');
+    check("in an SQN squadron the helper says it tests alone (p. 57)", /tests alone, and a failure takes it out of the squadron/.test(await box()), await box());
+    await tap('[data-act="acdis"][data-arg="fail"]');
+    let g = await GRP(), e = await errsNow();
+    check("a failed disengage in an SQN squadron: no error on the page", e.length === 0, e);
+    check("... the helper shows the result", /failed\./.test(await box()), await box());
+    check("... it falls out of the squadron, the other Lunar stays in it (p. 57)", g[1] === null && g[2] === "C", g);
+    check("... no fire and no orders but Brace, for it alone (p. 57)", (await ST(1)).noOrdersTurn && !(await ST(2)).noOrdersTurn, [await ST(1), await ST(2)]);
+    await tap('[data-act="undo"]');
+    g = await GRP();
+    check("UNDO puts it back in the squadron, unmarked", g[1] === "C" && !(await ST(1)).noOrdersTurn, g);
+    /* a re-roll takes the failure back and tests again (p. 48): a second
+       failure takes it out once more */
+    await cd.evaluate(dice([6, 6]));
+    await tap('[data-act="acdis"][data-arg="roll"]');
+    await errsNow();
+    const rr = await has('[data-act="acreroll"][data-arg="dis"]');
+    check("a failed roll offers the Admiral's re-roll", rr, await box());
+    if(rr){
+      await cd.evaluate(dice([6, 5]));
+      await tap('[data-act="acreroll"][data-arg="dis"]');
+      g = await GRP(); e = await errsNow();
+      check("a failed re-roll: no error on the page", e.length === 0, e);
+      check("... out of the squadron again, the re-roll spent, the new dice shown (p. 48, 57)",
+        g[1] === null && g[2] === "C" && (await ST(1)).noOrdersTurn && await cd.evaluate(`GFP.PLAY.rerollBoxes(GFP.appState.G.fleet).filter(b => b.used).length === 1`) && /6 5 = 11/.test(await box()),
+        [g, await box()]);
+    }
+    await tap('[data-act="acclose"]');
+    await open(3);
+    await tap('[data-act="actab"][data-arg="dis"]');
+    check("an escort squadron goes together (p. 57)", /the squadron goes together/.test(await box()), await box());
+    await tap('[data-act="acdis"][data-arg="fail"]');
+    g = await GRP(); e = await errsNow();
+    check("a failed disengage of an escort squadron: no error on the page", e.length === 0, e);
+    check("... both cards keep their squadron and both are marked (p. 57)", g[3] === "e:E" && g[4] === "e:E" && (await ST(3)).noOrdersTurn && (await ST(4)).noOrdersTurn, g);
+    await tap('[data-act="acclose"]');
+    check("no error on the page in the whole run", (await errs()).length === 0, await errs());
   }finally{ await cd.close(); }
   console.log((fail ? "FAIL " : "ok ") + pass + " passed, " + fail + " failed");
   process.exit(fail ? 1 : 0);

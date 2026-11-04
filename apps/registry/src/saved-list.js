@@ -57,7 +57,7 @@ export function shown(lib){
   const st = appState.SAVES;
   return sorted(lib.saves, st.sort).filter(s => matches(s, st.q) && (!st.race || raceOf(s.ln) === st.race));
 }
-/* One fleet's row. ctx: { openId, changed, fresh, copyBox, phonePanel }. */
+/* One fleet's row. ctx: { openId, changed, fresh }. */
 function rowHTML(s, ctx){
   const st = appState.SAVES, isOpen = s.id === ctx.openId, sel = st.sel === s.id;
   const name = s.name;
@@ -65,15 +65,13 @@ function rowHTML(s, ctx){
   if(isOpen) tags.push(`<em class="sf-tag on">${ctx.changed ? "open, changed" : "open"}</em>`);
   if(s.from && FROM[s.from]) tags.push(`<em class="sf-tag">${FROM[s.from]}</em>`);
   const acts = `<span class="sf-acts">${
-      isOpen ? "" : `<button class="go pri" data-libopen="${esc(s.id)}" title="${esc("Open " + s.name + " on the " + s.ln + " list")}">Open</button>`
-    }<span class="sf-more"><button class="go" data-libexport="${esc(s.id)}" title="${esc("Save " + s.name + " as a file")}">Export</button><button class="go" data-copytext="${esc(s.id)}" title="${esc("Copy " + s.name + " as text")}">Copy</button><button class="go${appState.PHONE.key === s.id ? " on" : ""}" data-phone="${esc(s.id)}" title="${esc("A QR code of " + s.name + " for Gothic Fleet Play on a phone")}">To phone</button><button class="del" data-libdel="${esc(s.id)}" title="${esc("Delete the saved fleet " + s.name)}">Delete</button></span></span>`;
+      `<button class="go pri" data-libopen="${esc(s.id)}" title="${esc(isOpen ? "Open " + s.name + " again as it was saved, over the changes on the screen" : "Open " + s.name + " on the " + s.ln + " list")}">${isOpen ? "Reopen" : "Open"}</button>`
+    }<span class="sf-more"><button class="go" data-send="${esc(s.id)}" title="${esc("Send " + s.name + " to another device, by link or as a file")}">Send</button><button class="del" data-libdel="${esc(s.id)}" title="${esc("Delete the saved fleet " + s.name)}">Delete</button></span></span>`;
   return `<div class="sf-row${isOpen ? " open" : ""}${sel ? " sel" : ""}${ctx.fresh(s.id) ? " fresh" : ""}" data-sfsel="${esc(s.id)}" role="option" aria-selected="${sel}" title="${esc(s.name)}">` +
     `<span class="sf-nm"><b>${esc(name)}</b>${tags.join("")}</span>` +
     `<span class="sf-ln">${esc(s.ln)}</span>` +
     `<span class="sf-pts">${s.pts | 0}</span><span class="sf-dt">${shortDate(s.saved)}</span>` +
-    `<span class="sf-meta">${esc(s.ln)} &middot; ${s.pts | 0} pts &middot; ${shortDate(s.saved)}</span>${acts}</div>` +
-    (appState.COPYBOX && appState.COPYBOX.key === s.id ? ctx.copyBox() : "") +
-    (appState.PHONE.key === s.id ? ctx.phonePanel() : "");
+    `<span class="sf-meta">${esc(s.ln)} &middot; ${s.pts | 0} pts &middot; ${shortDate(s.saved)}</span>${acts}</div>`;
 }
 /* The race chips: every race with saved fleets, the most first. */
 function chipsHTML(lib){
@@ -90,7 +88,8 @@ function chipsHTML(lib){
 /* The whole list: bar, chips, rows. */
 export function savedListHTML(lib, ctx){
   const st = appState.SAVES;
-  const list = shown(lib);
+  /* the open fleet first, whatever the sort (user 2.11.2026: which one is open) */
+  const list = shown(lib).sort((a, b) => (b.id === ctx.openId) - (a.id === ctx.openId));
   if(st.sel && !lib.saves.some(s => s.id === st.sel)) st.sel = null;
   const bar = `<div class="sf-bar">
     <input id="savesq" type="search" autocomplete="off" spellcheck="false" placeholder="Search ${lib.saves.length} fleets: name, list, points, date" value="${esc(st.q)}" aria-label="Search the saved fleets">

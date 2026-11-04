@@ -118,6 +118,24 @@ const run = async (cd, js) => JSON.parse(await cd.evaluate("(async () => { " + H
     const goff = JSON.parse(await cd.evaluate("(async () => { " + HELP + START + clan("Goffs") + "return JSON.stringify((() => { " + clansOn + " })()); })()"));
     check("no clan picked: every clan's row on his tiddla", none.length > 2, true);
     check("a Goff Warlord: only the Goffs row on his tiddla", goff, ["Goffs"]);
+    /* a clan changed on the fly leaves no price behind (user 2.11.2026): the
+       same ship costs the same as with that clan picked from the start */
+    const flyCase = (from, row, to) => "(async () => { " + HELP + START + `
+      const add = re => { const L = G.LISTS[S().li]; for(let si = 0; si < L.secs.length; si++) for(let ei = 0; ei < L.secs[si].ents.length; ei++) if(re.test(L.secs[si].ents[ei].l) && L.secs[si].ents[ei].k !== 'up'){ G.addUnit(si, ei); G.render(); return; } };
+      const pts = () => S().units.reduce((a, u) => a + (G.resolveUnit(u).points | 0), 0);
+      S().units.length = 1; add(/^Gorbag/); await w();
+      ${clan(to)} const fresh = pts();
+      ${clan(from)}
+      const u = S().units[1], up = G.resolveUnit(u).upgrades.find(x => ${row}.test(x.label)), k = up.key.split(":").map(Number);
+      G.setUpState(u, k[0], k[1], "take"); G.render(); await w();
+      const paid = pts();
+      ${clan(to)}
+      return JSON.stringify({ paid, now: pts(), fresh }); })()`;
+    for (const [from, row, to] of [["Blood Axes", "/^Imperial Navy refit/", "Goffs"], ["Blood Axes", "/^Imperial Navy refit/", ""],
+                                   ["Goffs", "/^Looted Lances/", "Deathskullz"], ["Deathskullz", "/^Looted Lances/", "Goffs"]]) {
+      const f = JSON.parse(await cd.evaluate(flyCase(from, row, to)));
+      check("no price left behind: " + from + " " + row + " to " + (to || "no clan"), f.now, f.fresh);
+    }
     check("no errors on the page", t.errs, []);
   } catch (e) {
     console.log("  FAIL  " + (e && e.stack || e)); fail++;

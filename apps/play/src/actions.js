@@ -2,11 +2,11 @@ import { appState } from "./state.js";
 import { KEY_INFO, KEY_PLAY, OPT, TRACK, lsDel, lsGet, lsSet, normaliseUntracked, saveOpts } from "./storage.js";
 import { $ } from "./helpers.js";
 import { resolveFleet } from "./fleet-document.js";
-import { KEY_VIEW, KEY_WAKE, applyCommanderLd, cmdsAboard, coCmd, forgetLdDie, rollAllLd, rollAllPre, rollLd, save, setLd, setPre } from "./game-state.js";
+import { KEY_VIEW, KEY_WAKE, applyCommanderLd, cmdsAboard, coCmd, forgetLdDie, isEscGrp, nextSqn, rollAllLd, rollAllPre, rollLd, save, setLd, setPre } from "./game-state.js";
 import { crippledNow, unitName } from "./derived.js";
 import { jumpTo, pageLabel, render, rrOpen, rrPool, showPop, topRow, wake } from "./render.js";
 import { repairable } from "./share.js";
-import { clearRepairNotes, pickRepair, rollAllRepairs, rollRepair } from "./repair.js";
+import { clearRepairNotes, dropStaleRepairs, endRepairs, pickRepair, rollAllRepairs, rollRepair } from "./repair.js";
 import PLAY from "../rules.js";
 import { esc } from "../../../packages/ui/format.js";
 
@@ -99,6 +99,17 @@ export function act(name, i, arg){
   }
   if(name === "closepop"){ appState.V.pop = null; render(); return; }
   if(name === "critpick"){ appState.V.pop = { i: i, kind: "crit", x: arg ? String(arg) : null }; render(); return; }
+  /* the catastrophic damage roll, if asked (T49): the page finds the row and
+     marks it through "hulk", so UNDO takes it back */
+  if(name === "hulkroll"){
+    const R = appState.U[i] && appState.U[i].R, c = R ? PLAY.catastrophic(R) : null, m = c ? /^(\d*)D6$/.exec(String(c.dice || "")) : null;
+    if(!m) return;
+    let t = 0; for(let k = 0; k < (parseInt(m[1], 10) || 1); k++) t += PLAY.d6();
+    const row = c.rows.findIndex(r => { const p = String(r.roll).split("-"); return p.length === 2 ? t >= +p[0] && t <= +p[1] : +p[0] === t; });
+    if(row < 0) return;
+    act("hulk", i, row);
+    appState.V.pop = { i: i, kind: "hulk", res: t }; render(); return;
+  }
   if(name === "page"){
     /* a page is a scroll position: jump there, nothing re-renders */
     if(!appState.V.pageTops) return;
@@ -155,7 +166,8 @@ export function act(name, i, arg){
     case "flag": appState.G.flag = arg; applyCommanderLd(); break;
     case "on": appState.G.on = appState.G.on || {}; appState.G.on[i] = arg; break;
     case "wl2": st.wl2 = !st.wl2; break;
-    case "grp": { const seq = [null, "A", "B", "C"]; appState.G.grp[i] = seq[(seq.indexOf(appState.G.grp[i]) + 1) % seq.length]; break; }
+    /* the squadrons' letters, a new one, none (T42) */
+    case "grp": appState.G.grp[i] = nextSqn(i); break;
     case "start": appState.G.started = true; appState.V.screen = "roster"; break;
     /* which quadrant of a star fort the card shows and the next tap goes
        to: a choice of view, not an event - nothing for UNDO to take back,
@@ -175,7 +187,9 @@ export function act(name, i, arg){
       appState.V.flash = { i: i, key: null, t: Date.now(), msg: "+" + n + " hit" + (n > 1 ? "s" : "") + " from " + (n > 1 ? n + " fires" : "the fire") + " (p. 67)" }; break; }
     /* damage control in the End Phase (p. 88): one system repaired or one
        fire out per 6; a result that may not be repaired (p. 67) stays */
-    case "repairroll": if(!rollRepair(i)){ appState.UNDO.pop(); return; } break;
+    case "blastflag": st.blast = st.blast ? 0 : 1; break;
+    case "repairroll": if(!rollRepair(i, undefined, arg === "half" ? true : arg === "full" ? false : undefined)){ appState.UNDO.pop(); return; } break;
+    case "repairdone": if(!endRepairs(i)){ appState.UNDO.pop(); return; } break;
     case "repairpick": if(!pickRepair(i, String(arg))){ appState.UNDO.pop(); return; } break;
     case "repair": {
       const key = String(arg);
@@ -306,9 +320,15 @@ export function act(name, i, arg){
       else PLAY.addHits(R, st, arg);
       break;
     case "teleported": st.teleported = true; break;
+    case "reorder": appState.G.order = arg; break;
+    /* lost in a warp rift (p. 112): destroyed, for its full points (T47); one
+       ship of an escort card */
+    case "warplost":
+      if(PLAY.isEscort(R)){ const k = st.members.findIndex(m => !m.dead); if(k >= 0) PLAY.killMember(st, k); }
+      else { st.destroyed = true; st.hulk = null; st.hulkName = "Lost in the warp"; st.hulkText = "Gone from the battle (p. 112)."; }
+      break;
     case "torps": st.torps = !st.torps; break;
     case "craft": st.craft = !st.craft; break;
-    case "blast": if(arg === 0) PLAY.clearBlast(st); else st.blast = Math.max(0, (st.blast | 0) + arg); break;
     case "rr": PLAY.adjustRerolls(fleet, arg); break;
     /* one box: that re-roll is used, or back if the tap was a slip */
     case "rrbox": PLAY.toggleReroll(rrPool(i), arg); break;
@@ -317,13 +337,15 @@ export function act(name, i, arg){
     case "enemy": fleet.enemyOrders = !fleet.enemyOrders; break;
     case "rad": fleet.radiation = Math.max(0, (fleet.radiation | 0) + arg); break;
     case "ac": appState.G.ac = Math.max(0, (appState.G.ac | 0) + arg); break;
-    case "endturn": PLAY.endTurn(appState.G.st, fleet); appState.V.pop = null; appState.V.endph = false; break;
+    case "endturn": PLAY.endTurn(appState.G.st, fleet); appState.V.pop = null; appState.V.endph = false; appState.V.fireWarn = true; break;
     /* the turn button: played marks off, turn counter up (orders, braces
        and blast markers live on the table as tokens - not here) */
-    case "newturn": PLAY.newTurn(appState.G.st, fleet); appState.V.pop = null; appState.V.endph = false; break;
+    case "newturn": PLAY.newTurn(appState.G.st, fleet); appState.V.pop = null; appState.V.endph = false; appState.V.fireWarn = true; break;
+    case "firewarn": appState.UNDO.pop(); appState.V.fireWarn = false; save(); render(); return;
     default: appState.UNDO.pop(); return;
   }
   dropStalePop();
+  dropStaleRepairs(name === "newturn" || name === "endturn");
   if(before){
     const after = PLAY.view(R, st, fleet);
     const qw = quadWord(R, st);

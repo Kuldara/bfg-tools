@@ -17,19 +17,23 @@
    mobile networks need a TURN server. A WebSocket through Cloudflare works on
    every network.
 
+   GET /send/<CODE> is the same thing for sending fleets to another device
+   (packages/ui/send.js), kept apart from the rooms: its own name space, so a
+   send code never opens a game room or the other way round, and two pages.
+
    Limits: four pages in a room, 64 kB a message, pages only from the
    origins in ORIGINS (wrangler.json vars). Deploy: npm run publish:relay. */
 
 const CODE = /^[A-HJ-NP-Z]{4}$/;
-const MAX_PAGES = 4, MAX_BYTES = 64 * 1024;
+const MAX_PAGES = 4, SEND_PAGES = 2, MAX_BYTES = 64 * 1024;
 
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
     if (url.pathname === "/" || url.pathname === "/health") return new Response("Gothic Fleet Play relay\n", { headers: { "Content-Type": "text/plain" } });
-    const m = /^\/room\/([A-Za-z]{4})$/.exec(url.pathname);
+    const m = /^\/(room|send)\/([A-Za-z]{4})$/.exec(url.pathname);
     if (!m) return new Response("not found\n", { status: 404 });
-    const code = m[1].toUpperCase();
+    const send = m[1] === "send", code = m[2].toUpperCase();
     if (!CODE.test(code)) return new Response("bad room code\n", { status: 400 });
     if (req.headers.get("Upgrade") !== "websocket") return new Response("websocket expected\n", { status: 426 });
     const origin = req.headers.get("Origin") || "";
@@ -38,7 +42,10 @@ export default {
        distribution must work there too */
     const local = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
     if (origin && origin !== "null" && !local && !allowed.includes(origin)) return new Response("origin not allowed\n", { status: 403 });
-    return env.ROOMS.get(env.ROOMS.idFromName(code)).fetch(new Request(url.origin + "/room/" + code + (url.searchParams.get("join") ? "?join=1" : ""), req));
+    const q = new URLSearchParams();
+    if (url.searchParams.get("join")) q.set("join", "1");
+    if (send) q.set("max", String(SEND_PAGES));
+    return env.ROOMS.get(env.ROOMS.idFromName(send ? "send:" + code : code)).fetch(new Request(url.origin + "/room/" + code + "?" + q, req));
   }
 };
 
@@ -46,7 +53,7 @@ export class Room {
   constructor(state) { this.state = state; }
   async fetch(req) {
     const pages = this.state.getWebSockets();
-    if (pages.length >= MAX_PAGES) return new Response("the room is full\n", { status: 409 });
+    if (pages.length >= (Number(new URL(req.url).searchParams.get("max")) || MAX_PAGES)) return new Response("the room is full\n", { status: 409 });
     const pair = new WebSocketPair();
     if (new URL(req.url).searchParams.get("join") && !pages.length) {
       /* a typed code and nobody here: say so and hang up (a browser sees

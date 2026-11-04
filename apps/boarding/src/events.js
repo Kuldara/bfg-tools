@@ -38,26 +38,30 @@ function onDie(which, v, idx){
 
 
 /* ------------------------------------------------------------------ events */
-function useTide(k){
-  var n = 1 + Math.floor(rng()*3);
+/* The Berzerker Tide, one Mark of Khorne ship at a time (FL p.250: "Any ships
+   with the Mark of Khorne conducting a boarding action may roll D3 extra
+   critical damage rolls"): key "att:2" is that side's ship 2. The player's own
+   D3 comes as n (user 4.11.2026: "let me roll the Berzerker Tide myself"); with
+   none the app rolls it. The extra rolls are critical damage rolls with no roll
+   to cause them (Remastered team on Discord, 27.9.2023: "Plus D3 critical damage
+   rolls. Not needing a 3+ first."), and go round the enemy ships, carrying on
+   from the extra rolls already made against them (RULINGS.md 7). */
+function useTide(key, n){
+  var k = String(key).split(":")[0], si = +String(key).split(":")[1];
+  if(!(n >= 1 && n <= 3)) n = 1 + Math.floor(rng()*3);
   R.tide = R.tide || {};
-  R.tide[k] = {n:n};
+  if(R.tide[key]) return;
+  R.tide[key] = {n:n};
   var other = k==="att" ? "def" : "att";
-  var sc = R.score;
-  var need = (sc.winner===k) ? sc.critNeeds.win : sc.critNeeds.lose;
-  var bonus = B.critBonus(eSide(k));
   var targets = livingIdx(other);
+  var made = R.crits.filter(function(c){ return c.tide && c.from===k; }).length;
   for(var i=0;i<n && targets.length;i++){
-    var t = targets[i % targets.length];
-    var c = {cid:"t"+k+i, to:other, i:t, from:k, need:need, bonus:bonus, roll:null, hit:null,
-             table:null, extra:null, followup:null, tide:true};
-    if(need > 6) c.hit = false; else if(need === 0) c.hit = true;
-    R.crits.push(c);
+    var t = targets[(made + i) % targets.length];
+    R.crits.push({cid:"t"+k+si+"_"+i, to:other, i:t, from:k, by:si, need:0, bonus:0, roll:null, hit:true,
+                  table:null, extra:null, followup:null, tide:true});
   }
   if(S.dice==="digital"){
-    R.crits.filter(function(c){ return c.tide && !c.table && c.hit!==false; }).forEach(function(c){
-      if(c.hit===null){ c.roll = roll(); c.hit = (c.roll + c.bonus) >= c.need; }
-      if(!c.hit) return;
+    R.crits.filter(function(c){ return c.tide && !c.table; }).forEach(function(c){
       var tid = critTableIdFor(c.to, c.i), T = B.CRIT_TABLES[tid];
       setTableFor(c, T ? (T.dice===1 ? roll() : roll()+roll()) : 0, tid);
     });
@@ -247,7 +251,7 @@ export function wireEvents(){
       case "crittbl": setTable(byKey(c), v); break;
       case "critex": { var ce = byKey(c); if(ce) ce.extra = v; drawResult(); break; }
       case "critfollow": { var cf = byKey(c); if(cf) setFollowupFor(cf, v); drawResult(); break; }
-      case "tide": useTide(c); break;
+      case "tide": useTide(c, v); break;
       case "reroll": reroll(c); break;
       case "rerolldie": rerollDie(c, v, +(t.dataset.idx || 0)); break;
       case "noreroll": startMain(); drawResult(); break;

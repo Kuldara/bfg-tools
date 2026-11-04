@@ -67,7 +67,7 @@ input[type=number]{width:104px;font-family:var(--mono);font-variant-numeric:tabu
 .saves summary b{font:600 14px/1 var(--mono);color:var(--ink)}
 .saves summary::after{content:"\25BE";color:var(--ink-3)}
 .saves[open] summary::after{content:"\25B4"}
-.saves .panel{position:absolute;left:0;top:calc(100% + 6px);z-index:30;min-width:min(340px,92vw);max-width:min(520px,92vw);
+.saves .panel{position:fixed;z-index:30;min-width:min(340px,92vw);max-width:min(520px,92vw);
   overflow-y:auto;background:var(--panel);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:6px}
 .saves .rowf{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:var(--r);font:13px/1.3 var(--sans)}
 .saves .rowf+.rowf{border-top:1px solid var(--line-soft)}
@@ -75,11 +75,10 @@ input[type=number]{width:104px;font-family:var(--mono);font-variant-numeric:tabu
 .saves .rowf .nm{flex:1;min-width:0}
 .saves .rowf .nm b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .saves .rowf .nm i{font:11px/1.3 var(--mono);color:var(--ink-3);font-style:normal}
-.saves .rowf button,.saves .phonebox button{border:1px solid var(--line);background:var(--sunk);border-radius:var(--r);cursor:pointer;
+.saves .rowf button{border:1px solid var(--line);background:var(--sunk);border-radius:var(--r);cursor:pointer;
   color:var(--ink);font:600 11px/1 var(--sans);padding:6px 9px;letter-spacing:.03em;text-transform:uppercase}
 .saves .rowf button.del:hover{background:var(--bad-wash);color:var(--bad);border-color:var(--bad)}
-.saves .rowf button.go:hover,.saves .phonebox button.go:hover{background:var(--accent-wash);color:var(--accent-ink);border-color:var(--accent)}
-.saves .phonebox button[disabled]{opacity:.45;cursor:default}
+.saves .rowf button.go:hover{background:var(--accent-wash);color:var(--accent-ink);border-color:var(--accent)}
 .saves .empty{padding:8px;font:12px/1.4 var(--sans);color:var(--ink-3)}
 .saves .rowf.tools{border-top:1px solid var(--line-soft);margin-top:4px}
 .saves .rowf.tools .nm i{white-space:normal}
@@ -90,14 +89,6 @@ input[type=number]{width:104px;font-family:var(--mono);font-variant-numeric:tabu
 .saves .rowf button.del{margin-left:auto}
 .saves .panel{min-width:min(400px,92vw)}
 .saves .rowf button.on{background:var(--accent-wash);color:var(--accent-ink);border-color:var(--accent)}
-.saves .phonebox{margin:2px 0 8px;padding:8px;border:1px solid var(--line);border-radius:var(--r);background:var(--sunk);font:12px/1.4 var(--sans);color:var(--ink-2)}
-.saves .phonebox p{margin:4px 0}
-.saves .phonebox .qr{background:#fff;padding:6px;border-radius:6px;width:min(340px,100%);margin:0 auto 4px;cursor:zoom-in}
-.saves .phonebox .qr.big{width:min(480px,100%)}
-.saves .phonebox .qr svg{display:block;width:100%;height:auto}
-.saves .phonebox .plink{width:100%;font:11px var(--mono);padding:5px 6px;border:1px solid var(--line);border-radius:var(--r);background:var(--panel);color:var(--ink-2)}
-.saves .phonebox .pbtns{display:flex;gap:6px;margin-top:6px}
-.saves .phonebox .perr{color:var(--bad)}
 /* the named library and the Save button (J208) */
 .saves .sh{font:600 10px/1 var(--sans);letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);padding:9px 8px 3px}
 .saves .rowf.fresh{box-shadow:inset 3px 0 0 var(--accent)}
@@ -121,6 +112,16 @@ input[type=number]{width:104px;font-family:var(--mono);font-variant-numeric:tabu
 
 /* The saved fleets list (31.10.2026, saved-list.js): a search, a sort and
    race chips over one-line rows. */
+/* Text and file under Send all, Receive and Import file */
+.saves .xf-body{border-top:1px solid var(--line-soft);padding:8px}
+.saves .xf-body p{margin:0 0 6px;font:12px/1.4 var(--sans);color:var(--ink-3)}
+.saves .xf-row{display:flex;flex-wrap:wrap;gap:8px;align-items:flex-start;margin-top:6px}
+.saves .xf-h{flex:0 0 28px;padding-top:7px;font:600 10px/1 var(--sans);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.saves .xf-row textarea{flex:1 1 240px;min-width:0;font:12px/1.35 var(--mono);color:var(--ink);background:var(--sunk);border:1px solid var(--line);border-radius:var(--r);padding:6px 8px;resize:vertical}
+.saves .xf-row button{border:1px solid var(--line);background:var(--sunk);border-radius:var(--r);cursor:pointer;
+  color:var(--ink);font:600 11px/1 var(--sans);padding:6px 9px;letter-spacing:.03em;text-transform:uppercase}
+.saves .xf-row button:hover{background:var(--accent-wash);color:var(--accent-ink);border-color:var(--accent)}
+.saves .rowf.tools button[data-xfer].on{background:var(--accent-wash);color:var(--accent-ink);border-color:var(--accent)}
 .saves .panel.sf-panel{width:min(680px,96vw);max-width:96vw;padding-top:0}
 .sf-bar{position:sticky;top:0;z-index:2;display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 2px 6px;background:var(--panel);border-bottom:1px solid var(--line-soft)}
 .sf-bar input[type=search]{flex:1 1 220px;min-width:0;height:32px;padding:0 10px;font:13px var(--sans);color:var(--ink);background:var(--sunk);border:1px solid var(--line);border-radius:var(--r)}
@@ -137,12 +138,14 @@ input[type=number]{width:104px;font-family:var(--mono);font-variant-numeric:tabu
 .sf-row+.sf-row{border-top:1px solid var(--line-soft)}
 .sf-row:hover{background:var(--sunk)}
 .sf-row.sel{background:var(--sunk);box-shadow:inset 0 0 0 1px var(--accent)}
-.sf-row.open{background:var(--accent-wash)}
+.sf-row.open{background:var(--accent-wash);box-shadow:inset 3px 0 0 var(--accent)}
+.sf-row.open.sel{box-shadow:inset 3px 0 0 var(--accent),inset 0 0 0 1px var(--accent)}
+.sf-row.open .sf-nm b{color:var(--accent-ink)}
 .sf-row.fresh{box-shadow:inset 3px 0 0 var(--accent)}
 .sf-nm{min-width:0;display:flex;align-items:center;gap:6px}
 .sf-nm b{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .sf-tag{flex:none;font:10px/1 var(--mono);font-style:normal;color:var(--ink-3);border:1px solid var(--line);border-radius:999px;padding:2px 6px}
-.sf-tag.on{color:var(--accent-ink);border-color:var(--accent)}
+.sf-tag.on{color:#fff;background:var(--accent);border-color:var(--accent);font-weight:600}
 .sf-ln{font:11px/1.2 var(--mono);color:var(--ink-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .sf-meta{display:none}
 .sf-pts{font:600 12px var(--mono);text-align:right;color:var(--ink-2)}

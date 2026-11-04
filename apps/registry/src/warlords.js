@@ -66,6 +66,8 @@ export function orkPlain(s){
    tiddla escorts "in any mix desired" by their tag, a card without a tag by
    itself (the domain reads them the same way, clanzTiddlas). */
 export const SKW_MAX = { tiddla: 10, kroozer: 2, rok: 4 };
+/* "3-10 Escorts" (Fleets p. 374): the fewest a tiddla skwadron may have */
+export const SKW_MIN = { tiddla: 3 };
 export const SKW_LABEL = { tiddla: "tiddla (escorts)", kroozer: "kroozers (cruisers)", uge: "'Uge ship (battleship)", rok: "Roks", hulk: "Space Hulk" };
 const SKW_TIP = { tiddla: "A tiddla skwadron is 3-10 escorts in any mix; the same letter on two cards makes them one (Fleets p. 374)",
   kroozer: "A big ship skwadron is 1-2 kroozers (Fleets p. 374)", rok: "A Rok skwadron is 1-4 Roks (Fleets p. 374)" };
@@ -100,13 +102,21 @@ export function warlordSkwadrons(RF, wi){
   });
   return out;
 }
-/* two skwadrons of his that would make one, in words for Needs */
+/* two skwadrons of his that would make one, in words for Needs. Tiddlas
+   too (user 3.11.2026: two Ravagers and a Brute on cards of their own),
+   when he has more of them than re-rolls, so that joining two leaves him
+   one skwadron fewer: his two smallest that fit in ten, by name ("in any
+   mix desired", Fleets p. 374). */
 export function skwJoinable(RF, wi){
   const gs = warlordSkwadrons(RF, wi);
   for(const k of ["kroozer", "rok"]){
     const of = gs.filter(g => g.kind === k).sort((a, b) => a.hulls - b.hulls);
     if(of.length >= 2 && of[0].hulls + of[1].hulls <= SKW_MAX[k]) return k === "kroozer" ? "two kroozers" : "the Roks";
   }
+  const W = (RF.warlords || []).filter(x => x.unit === wi)[0];
+  const td = gs.filter(g => g.kind === "tiddla").sort((a, b) => a.hulls - b.hulls).slice(0, 2);
+  if(W && (W.tiddla || 0) > (W.rr || 1) && td.length === 2 && td[0].hulls + td[1].hulls <= SKW_MAX.tiddla)
+    return td.sort((a, b) => a.units[0] - b.units[0]).map(g => skwNames(RF, g)).join(" and ");
   return "";
 }
 export const skwNames = (RF, g) => g.units.map(i => shipCall(RF.units[i]) + (RF.units[i].hulls > 1 ? " \u00d7" + RF.units[i].hulls : "")).join(" + ");
@@ -268,9 +278,13 @@ export const HULK_CLAN_FX = {
    for the benefit (Fleets p. 371, ChatGPT audit UX-02). The Warlord's clan
    button buys it for all, which is what it says. */
 export function setClan(u, name, keepOff){
-  const ups = upgradesFor(u);
+  const ups = upgradesFor(u), C = L().clanz;
   ups.own.concat(ups.other).forEach(x => {
     const m = /^Clan: (.+?) \(/i.exec(String(x[2].l));
+    /* the refit is the Blood Axes' alone (p. 371): it leaves with the clan, or
+       its +20 stays on the ship (user 2.11.2026) */
+    if(!m && C && C.refit_re && new RegExp(C.refit_re, "i").test(String(x[2].l)) &&
+       !new RegExp(C.axe_clan, "i").test(name || "") && upState(u, x[0], x[1]) === "take") setUpState(u, x[0], x[1], "opt");
     /* an included clan (Zukov's Goffs, p. 383) is locked: not bought, not dropped */
     if(!m || x[2].incl) return;
     if(name && m[1].toLowerCase() === name.toLowerCase()){
@@ -523,6 +537,17 @@ export function warlordNeeds(W, RF){
     const join = skwJoinable(RF, W.unit);
     say.push((oth - rr) + " skwadron" + s(oth - rr) + " too many: " + (join ? "put " + join + " in one skwadron, " : "") +
       "buy a re-roll or send one to another Warlord");
+  }
+  /* A tiddla of his outside 3-10 escorts counts in the numbers above, but
+     the book asks for "one tiddla skwadron of at least three escorts" (Fleets
+     p. 374) and "up to ten" (p. 372): said here, so the block does not read
+     complete beside a red size check. */
+  const tds = warlordSkwadrons(RF, W.unit).filter(g => g.kind === "tiddla");
+  const short = tds.filter(g => g.hulls < SKW_MIN.tiddla), over = tds.filter(g => g.hulls > SKW_MAX.tiddla);
+  if(short.length || over.length){
+    const part = (gs, word) => gs.map(g => skwNames(RF, g)).join(" and ") + (gs.length > 1 ? " are " : " is ") + word;
+    say.push("a tiddla (escort) skwadron is " + SKW_MIN.tiddla + "–" + SKW_MAX.tiddla + " escorts: " +
+      [short.length ? part(short, "short") : "", over.length ? part(over, "over ten") : ""].filter(Boolean).join(", "));
   }
   if(W.uge && W.kro < 2) say.push("an 'Uge ship (battleship) needs two kroozers (cruisers)");
   if(W.uge > 1) say.push("only one 'Uge ship (battleship)");

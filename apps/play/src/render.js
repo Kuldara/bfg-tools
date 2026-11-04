@@ -3,17 +3,18 @@ import { wepClass } from "./setup.js";
 import { OPT, PLAY_VERSION, TRACK, builderRaw, lsGet } from "./storage.js";
 import { $, MID, TIMES, fnv } from "./helpers.js";
 import { fleetFactsNow, fleetPoints, fleetsIn, parseDoc, resolveFleet } from "./fleet-document.js";
-import { KEY_WAKE, builderTool, carriersOf, cmdsAboard, coCmd, grpLabel, isEscGrp, ldPlanOf, ldRollers, loadPlay, preCounts, preRollsOf, sqnShip, toolBtn, wl2Box, wlExtra, wlTag } from "./game-state.js";
-import { IN_REFITS, inRefitKind, pregameRolls, pregameText } from "../../../packages/ui/pregame-tables.js";
+import { KEY_WAKE, SQN_LETTERS, builderTool, carriersOf, cmdsAboard, coCmd, grpHTML, grpLabel, isEscGrp, ldPlanOf, ldRollers, loadPlay, preCounts, preRollsOf, sqnShip, toolBtn, wl2Box, wlExtra, wlTag } from "./game-state.js";
+import { IN_REFITS, inRefitKind, pregameRolls, pregameText, pregameEffects } from "../../../packages/ui/pregame-tables.js";
 import { cataLabel, critLabel, groupUnits } from "./actions.js";
 import { upgradeLine, baseName, classTag, crippledNow, critChips, ldTile, memberWord, ordChip, ordnancePills, renderFleetPop, statsLine, unitName, weaponsLine, weaponsTable } from "./derived.js";
-import { builderFleets, endPending, jumpStrip, linkedFleets, renderEndPhase } from "./share.js";
+import { builderFleets, endPending, fireReminder, jumpStrip, renderEndPhase, savedFleets } from "./share.js";
 import PLAY from "../rules.js";
 import { arcGlyph, esc, factionCols, shortArmour, shortRange, starHTML, title } from "../../../packages/ui/format.js";
 import DOMAIN from "../../../packages/rules/domain.js";
 import { boardNoteLine, renderBoardSheet } from "./board.js";
-import { repairBtn, repairLines } from "./repair.js";
-import { renderActions } from "./ship-actions.js";
+import { rosterOrder } from "./reorder.js";
+import { BURST, repairBtn, repairLines, repairPanel } from "./repair.js";
+import { freeRR, orderLd, renderActions } from "./ship-actions.js";
 import { edgeHandle, peerAfterRender, peerLoadCard, peerMenuWord, peerSetupCard, peerSide, renderPeerPanel, renderPeerSide, sidesStrip } from "./peer.js";
 
 /* ============================================================= RENDER ===== */
@@ -212,70 +213,43 @@ export function renderLoad(){
       ${res.error ? `<p class="note bad">${esc(res.error)}</p>` : res.units.length !== g.st.length ? `<p class="note bad">The roster no longer resolves to the saved units (${res.units.length} of ${g.st.length}${res.lost.length ? ", " + res.lost.length + " could not be matched" : ""}). Start a new game.</p>` : `<button class="btn" data-act="resume">Resume game<small>turn ${g.fleet.turn}</small></button>`}
     </div>`;
   }
-  /* this device's own saved fleets - from links, QR codes and files (J208):
-     the newest ones are marked, and each keeps the name it was sent with */
-  const lk = linkedFleets();
-  const isNew = fp => Array.isArray(appState.V.linkNew) && appState.V.linkNew.indexOf(fp) >= 0;
+  /* the saved fleets: the builder's Saved fleets, one list (share.js
+     savedFleets) - a fleet that came by a link or a file is marked new */
+  const lk = savedFleets();
+  const isNew = id => Array.isArray(appState.V.linkNew) && appState.V.linkNew.indexOf(id) >= 0;
+  const FROM = { link: "from a link", file: "from a file", paste: "pasted", kept: "kept" };
   if(lk.length){
-    cards += `<div class="card"><h2>Saved fleets</h2>` + lk.map((f, k) => {
-      const res = resolveFleet(f.doc);
-      return `<div class="fl${isNew(f.fp) ? " fresh" : ""}">${res.error ? `<p class="note bad">${esc(f.doc.name || f.doc.ln || "")}: ${esc(res.error)}</p>` :
-        `<button class="btn ${isNew(f.fp) || (!appState.V.linkNew && k === 0) ? "" : "sec"}" data-act="linked" data-arg="${k}">${esc(f.doc.name || f.doc.ln)}<small>${f.doc.name ? esc(f.doc.ln) + " " + MID + " " : ""}${res.units.length} units ${MID} ${fleetPoints(res.units)} pts ${MID} ${f.how === "file" ? "file" : "link"} ${esc(f.date || "")}${isNew(f.fp) ? " " + MID + " new" : ""}</small></button>`}
-        <span class="side"><button class="mini${appState.V.phone === "s:" + k ? " on" : ""}" data-act="phone" data-arg="s:${k}" aria-label="Send this fleet to another phone">to phone</button>
-        <button class="mini" data-act="unlink" data-arg="${k}" aria-label="Forget this fleet on this device">forget</button></span></div>
-        ${appState.V.phone === "s:" + k ? phonePanel() : ""}`;
-    }).join("") + (lk.length > 1 ? `<button class="btn sec${appState.V.phone === "all" ? " on" : ""}" data-act="phone" data-arg="all">All to phone<small>every saved fleet in one QR code</small></button>${appState.V.phone === "all" ? phonePanel() : ""}` : "") + `</div>`;
+    cards += `<div class="card"><h2>Saved fleets</h2><p class="foot">The same list as Saved fleets in the builder.</p>` + lk.map((f, k) => {
+      const res = resolveFleet(f);
+      return `<div class="fl${isNew(f.id) ? " fresh" : ""}">${res.error ? `<p class="note bad">${esc(f.name || f.ln || "")}: ${esc(res.error)}</p>` :
+        `<button class="btn ${isNew(f.id) || (!appState.V.linkNew && k === 0) ? "" : "sec"}" data-act="linked" data-arg="${k}">${esc(f.name || f.ln)}<small>${esc(f.ln)} ${MID} ${res.units.length} units ${MID} ${fleetPoints(res.units)} pts${f.from && FROM[f.from] ? " " + MID + " " + FROM[f.from] : ""} ${esc(f.saved || "")}${isNew(f.id) ? " " + MID + " new" : ""}</small></button>`}
+        <button class="mini" data-act="send" data-arg="s:${k}" aria-label="Send this fleet to another device">send</button></div>`;
+    }).join("") + (lk.length > 1 ? `<button class="btn sec" data-act="send" data-arg="all">Send all<small>every saved fleet to another device</small></button>` : "") + `</div>`;
   }
-  /* the builder's own fleets on this device: its saved fleets by name, then
-     the fleet each list is editing; play one here, or send it to a phone (a
-     QR code of the link, under the tapped button) */
+  /* the fleet each of the builder's lists is editing: not saved, so on its
+     own; play one here, or send it to another device */
   const bad = raw ? parseDoc(raw).error : "";
   if(bad) cards += `<div class="card"><h2>Fleet in this browser</h2><p class="note bad">${esc(bad)}</p></div>`;
   const bf = builderFleets();
   if(bf.length){
-    cards += `<div class="card"><h2>Fleets from the builder</h2>` + bf.map((f, k) => {
+    cards += `<div class="card"><h2>Being edited in the builder</h2>` + bf.map((f, k) => {
       const res = resolveFleet(f);
       return res.error ? `<p class="note bad">${esc(f.name || f.ln)}: ${esc(res.error)}</p>` :
-        `<div class="fl"><button class="btn ${k ? "sec" : ""}" data-act="newfrom" data-arg="${k}">${esc(f.name || f.ln)}<small>${f.name ? esc(f.ln) + " " + MID + " " : ""}${res.units.length} units ${MID} ${fleetPoints(res.units)} pts${res.lost.length ? " " + MID + " " + res.lost.length + " could not be matched" : ""} ${MID} ${f.saved ? "saved" : f.open ? "being edited" : "being edited, kept"}</small></button>
-          <button class="mini${appState.V.phone === "b:" + k ? " on" : ""}" data-act="phone" data-arg="b:${k}" aria-label="Send this fleet to a phone">to phone</button></div>
-        ${appState.V.phone === "b:" + k ? phonePanel() : ""}`;
+        `<div class="fl"><button class="btn ${k ? "sec" : ""}" data-act="newfrom" data-arg="${k}">${esc(f.name || f.ln)}<small>${f.name ? esc(f.ln) + " " + MID + " " : ""}${res.units.length} units ${MID} ${fleetPoints(res.units)} pts${res.lost.length ? " " + MID + " " + res.lost.length + " could not be matched" : ""} ${MID} ${f.open ? "open in the builder" : "kept on its list"}</small></button>
+          <button class="mini" data-act="send" data-arg="b:${k}" aria-label="Send this fleet to another device">send</button></div>`;
     }).join("") + `</div>`;
   }else if(!lk.length && !g && !bad){
-    cards += `<div class="card"><h2>No fleet on this device</h2><p>Three ways to bring one: open this page from the builder (its Play button) and its fleets are here by themselves; in the builder's <b>Saved fleets</b>, tap <b>To phone</b> and scan the code; or open a fleet file below.</p></div>`;
+    cards += `<div class="card"><h2>No fleet on this device</h2><p>Three ways to bring one: open this page from the builder (its Play button) and its fleets are here by themselves; on the other device tap <b>Send</b> and scan its code; or use Receive or a fleet file below.</p></div>`;
   }
   cards += peerLoadCard();
-  cards += `<div class="card"><h2>Open a fleet file</h2>
-    <p>The builder's <b>Saved fleets &rsaquo; Export</b> or <b>Export all as file</b>. On a phone it can come by mail or chat; its fleets go on this page's Saved fleets.</p>
+  cards += `<div class="card"><h2>Bring fleets here</h2>
+    <button class="btn sec" data-act="receive">Receive<small>type the code another device shows</small></button>
     <label class="btn sec">Open a fleet file<input type="file" id="fleetfile" accept=".json,application/json,text/plain" style="display:none"></label>
-    ${appState.V.loadErr ? `<p class="note bad">${esc(appState.V.loadErr)}</p>` : ""}
-    <details class="paste"><summary>or paste the file's text</summary>
-      <textarea id="paste" placeholder="Paste the fleet document (JSON) here"></textarea>
-      <button class="btn sec" data-act="paste">Load pasted fleet</button></details></div>`;
+    ${appState.V.loadErr ? `<p class="note bad">${esc(appState.V.loadErr)}</p>` : ""}</div>`;
   return `<div class="top"><h1 style="flex:1 1 auto">Gothic Fleet Play<small>prototype ${PLAY_VERSION}</small></h1><div class="tools">${builderTool()}</div></div>
     <div class="main">${cards}
     <p class="foot" style="padding:0 6px">Record, do not adjudicate: the page keeps what happened to each ship and shows what the rulebook makes of it. It never changes the fleet you built.</p></div>`;
 }
-/* The phone panel under a builder fleet: the QR code, the link, copy and
-   share. The fleet travels inside the link; nothing is uploaded. */
-export function phonePanel(){
-  const V = appState.V, canShare = typeof navigator !== "undefined" && !!navigator.share;
-  const link = `<input class="link" readonly value="${esc(V.phoneUrl || "")}" aria-label="The link">`;
-  const send = `<button data-act="copylink" ${V.phoneUrl ? "" : "disabled"}>${V.copied === "link" ? "Copied" : "Copy link"}</button>${canShare ? `<button data-act="sharelink" ${V.phoneUrl ? "" : "disabled"}>Share</button>` : ""}`;
-  const opens = `the fleet builder opens there${V.phoneRemote ? " (the published page, bfgtools.kuldare.com)" : ""} ${V.phoneN > 1 ? "with all " + V.phoneN + " fleets in its Saved fleets" : "with the fleet on screen"}`;
-  /* too long for a code a camera can read: the file first, the link as it is */
-  if(V.phoneUrl && !V.phoneSvg && !V.phoneErr) return `<div class="phone">
-    <p class="foot">${V.phoneN > 1 ? "These " + V.phoneN + " fleets are" : "This fleet is"} too much for a QR code a camera can read. Save a file and send it to the other phone, where Open a fleet file reads it. Or send the link: ${opens}. Some chat apps cut a link this long (${V.phoneUrl.length} characters).</p>
-    ${link}
-    <div class="r4"><button data-act="savefile" data-arg="${esc(String(V.phone))}">Save file</button>${send}</div>
-  </div>`;
-  return `<div class="phone">
-    ${V.phoneErr ? `<p class="note bad">${esc(V.phoneErr)}</p>` : V.phoneSvg ? `<div class="qr" data-act="qrfull" title="Full screen">${V.phoneSvg}</div>` : `<p class="foot">Making the code&hellip;</p>`}
-    <p class="foot">Hold this screen up to the other phone's camera (brightness up helps), or ${canShare ? "Share the link to it" : "send it the link"}: ${opens}: Save keeps it, Play plays it. The fleet is inside the link itself; nothing is uploaded.</p>
-    ${link}
-    <div class="r4"><button data-act="qrfull" ${V.phoneSvg ? "" : "disabled"}>Full screen</button>${send}</div>
-  </div>`;
-}
-
 export function factsCard(){
   const fs = fleetFactsNow();
   return fs.length ? `<div class="card"><h2>Fleet facts</h2>${fs.map(f =>
@@ -340,7 +314,10 @@ function rollBar(){
   return ldBtn || preBtn ? `<div class="rollbar">${ldBtn}${preBtn}</div>` : "";
 }
 /* the row's dice: the Leadership's die and sum; one select per pre-game
-   roll, to pick by hand or change what was rolled */
+   roll, to pick by hand or change what was rolled. The chosen result's short
+   text sits under the select, and the whole table is the tooltip of the
+   select and of each option (user 2.11.2026). */
+const plain = t => String(t == null ? "" : t).replace(/<[^>]+>/g, "").replace(/&ndash;/g, "-").replace(/&amp;/g, "&");
 function rowDice(i){
   const st = appState.G.st[i], p = ldPlanOf(i);
   const ld = st.ldWhy && st.ld != null ? ` ${MID} <span class="dice">${st.ldDie == null ? "" : "rolled "}${esc(st.ldWhy)}</span>` : "";
@@ -349,13 +326,33 @@ function rowDice(i){
     const v = (st.pre || {})[r.key];
     const cur = v ? (r.two ? v.k + "-" + v.d : String(v.d)) : "";
     const opts = r.two
-      ? IN_REFITS.map((T, t) => `<optgroup label="${esc(T.roll + " " + T.name)}">${T.rows.map((x, d) => { const val = (2 * t + 1) + "-" + (d + 1); const sel = v && inRefitKind(v.k) === T && v.d === d + 1; return `<option value="${val}"${sel ? " selected" : ""}>${esc(T.name.replace(/ refit$/, ""))} ${d + 1}: ${esc(x[0])}</option>`; }).join("")}</optgroup>`).join("")
-      : [1, 2, 3, 4, 5, 6].map(d => `<option value="${d}"${cur === String(d) ? " selected" : ""}>${d}${r.rows ? " " + esc(r.rows[d - 1][0]) : ""}</option>`).join("");
+      ? IN_REFITS.map((T, t) => `<optgroup label="${esc(T.roll + " " + T.name)}">${T.rows.map((x, d) => { const val = (2 * t + 1) + "-" + (d + 1); const sel = v && inRefitKind(v.k) === T && v.d === d + 1; return `<option value="${val}"${sel ? " selected" : ""} title="${esc(plain(x[1]))}">${esc(T.name.replace(/ refit$/, ""))} ${d + 1}: ${esc(x[0])}</option>`; }).join("")}</optgroup>`).join("")
+      : [1, 2, 3, 4, 5, 6].map(d => `<option value="${d}"${cur === String(d) ? " selected" : ""}${r.rows ? ` title="${esc(plain(r.rows[d - 1][1]))}"` : ""}>${d}${r.rows ? " " + esc(r.rows[d - 1][0]) : ""}</option>`).join("");
+    /* the table in full as the tooltip, and the chosen row's text under the select */
+    const table = r.two ? IN_REFITS.map(T => T.roll + " " + T.name + ":\n" + T.rows.map((x, d) => "  " + (d + 1) + " " + plain(x[0]) + " - " + plain(x[1])).join("\n")).join("\n")
+      : r.rows ? r.rows.map((x, d) => (d + 1) + " " + plain(x[0]) + " - " + plain(x[1])).join("\n") : "";
+    const row = v ? (r.two ? inRefitKind(v.k).rows[v.d - 1] : r.rows ? r.rows[v.d - 1] : null) : null;
+    const desc = row && row[1] ? `<em class="predesc">${row[1]}${appliedText(i, r)}</em>` : "";
     const choose = r.key === "gift" && st.giftChoice ? ` <em class="dice">natural 6 on Ld: may choose (Fleets p. 118)</em>` : "";
     const how = v ? (v.how === "roll" ? "rolled" : "chosen") : (r.pick ? "pick" : "to roll");
-    return `<label class="pre${v ? "" : " open"}"><span>${esc(r.title)} <i>${how}</i></span><select data-sel="pre" data-i="${i}" data-key="${r.key}" aria-label="${esc(r.title)}"><option value="">${r.pick ? "choose" : "roll or choose"}</option>${opts}</select>${choose}</label>`;
+    return `<label class="pre${v ? "" : " open"}"><span>${esc(r.title)} <i>${how}</i></span><select data-sel="pre" data-i="${i}" data-key="${r.key}" aria-label="${esc(r.title)}"${table ? ` title="${esc(table)}"` : ""}><option value="">${r.pick ? "choose" : "roll or choose"}</option>${opts}</select>${choose}${desc}</label>`;
   }).join("");
   return { line: ld + man, pre: pre ? `<div class="pres">${pre}</div>` : "" };
+}
+/* What a rolled result changed on the card, in the numbers the card now
+   shows (st.fx, game-state.js syncPre): "on the card: 15 hits, 20 cm". A
+   result that changes no number says nothing here. */
+function appliedText(i, r){
+  const st = appState.G.st[i], f = pregameEffects([r], st.pre);
+  if(!Object.keys(f).length) return "";
+  const v = PLAY.view(appState.U[i].R, st, appState.G.fleet), out = [];
+  if(f.hitsPct) out.push(v.max + " hits");
+  if(f.speed) out.push(v.speed.base != null ? v.speed.base + " cm" : (f.speed > 0 ? "+" : "") + f.speed + " cm");
+  if(f.shields) out.push(v.shields.base != null ? v.shields.base + " shield" + (v.shields.base === 1 ? "" : "s") : "+" + f.shields + " shield");
+  if(f.turrets) out.push(v.turrets.base != null ? v.turrets.base + " turret" + (v.turrets.base === 1 ? "" : "s") : "+" + f.turrets + " turret");
+  if(f.ld) out.push("Ld +" + f.ld);
+  if(f.repair) out.push("+" + f.repair + " repair die");
+  return ` <b>on the card: ${esc(out.join(", "))}</b>`;
 }
 /* on the card: what was rolled before the game, with its page */
 export function preLine(i){
@@ -383,7 +380,7 @@ export function renderSetup(){
       const pick = !caps.length ? "" : caps.length === 1
         ? `<span class="pill on">aboard ${esc(unitName(caps[0]))}</span>`
         : `<select data-sel="${fc ? "flag" : "on"}" data-i="${i}" aria-label="Aboard">${caps.map(j => `<option value="${j}" ${cur === j ? "selected" : ""}>aboard ${esc(unitName(j))}</option>`).join("")}</select>`;
-      return `<div class="setrow"><div class="who"><b>${esc(unitName(i))}</b><small>${ldTxt}${rrWords(R)}</small>${rowDice(i).pre}</div>
+      return `<div class="setrow"><div class="who"><b>${esc(unitName(i))}</b><small>${R.points ? R.points + " pts" + (ldTxt ? " " + MID + " " : "") : ""}${ldTxt}${rrWords(R)}</small>${rowDice(i).pre}</div>
         ${pick}</div>`;
     }
     if(R.kind !== "ship") return "";
@@ -409,8 +406,11 @@ export function renderSetup(){
        the squadron switch is a pill of its own under the name,
        away from the Ld tiles; a ship still without its Ld is marked */
     const need = st.ld == null;
-    const sqBtn = sqn ? `<button class="sqb${appState.G.grp[i] ? " on" : ""}" data-act="grp" data-i="${i}"${appState.G.grp[i] ? ` style="--sqc:${sqColor(appState.G.grp[i])}"` : ""} title="Squadron: tap for A, B, C or none (p. 95, 99)">${appState.G.grp[i] ? "SQN " + appState.G.grp[i] : "+ SQN"}</button>` : "";
-    return `<div class="setrow${need ? " need" : ""}" data-u="${i}"><div class="who"><input class="nm" type="text" data-nm="${i}" value="${esc(unitName(i))}" placeholder="${esc(baseName(i))}" maxlength="40" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" aria-label="Name of this ship in the game"><small>${classTag(R)}${esq ? " " + TIMES + R.hulls + (fx ? "" : isEscGrp(appState.G.grp[i]) ? " " + MID + " one Ld for squadron " + grpLabel(appState.G.grp[i]) + " (" + groupUnits(appState.G.grp[i]).length + " cards)" : " " + MID + " one Ld for the squadron") : ""}${why}${youngGunzNote(i)}${rowDice(i).line}${need ? ` ${MID} <span class="needs">pick its Ld</span>` : ""}</small>${sqBtn}${rowDice(i).pre}</div>
+    /* two ships of one class are told apart by what was paid and bought for them
+       (user 2.11.2026) */
+    const taken = PLAY.takenFeatures(R);
+    const sqBtn = sqn ? `<button class="sqb${appState.G.grp[i] ? " on" : ""}" data-act="grp" data-i="${i}"${appState.G.grp[i] ? ` style="--sqc:${sqColor(appState.G.grp[i])}"` : ""} title="Squadron: each tap gives the next squadron's letter, then a new squadron, then none (p. 95, 99)">${appState.G.grp[i] ? "SQN " + grpHTML(appState.G.grp[i]) : "+ SQN"}</button>` : "";
+    return `<div class="setrow${need ? " need" : ""}" data-u="${i}"><div class="who"><input class="nm" type="text" data-nm="${i}" value="${esc(unitName(i))}" placeholder="${esc(baseName(i))}" maxlength="40" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" aria-label="Name of this ship in the game"><small>${classTag(R)}${esq ? " " + TIMES + R.hulls : ""}${R.points ? " " + MID + " " + R.points + " pts" : ""}${esq ? (fx ? "" : isEscGrp(appState.G.grp[i]) ? " " + MID + " one Ld for squadron " + grpHTML(appState.G.grp[i]) + " (" + groupUnits(appState.G.grp[i]).length + " cards)" : " " + MID + " one Ld for the squadron") : ""}${why}${youngGunzNote(i)}${rowDice(i).line}${need ? ` ${MID} <span class="needs">pick its Ld</span>` : ""}</small>${taken.length ? `<p class="upl">${taken.map(esc).join(" " + MID + " ")}</p>` : ""}${sqBtn}${rowDice(i).pre}</div>
       <div class="ctl">${fixed ? `<span class="pill on"><b>Ld ${st.ld}</b></span>` : `<div class="seg ld">${tiles}</div>`}</div></div>`;
   }).join("");
   /* a grey Start says why, and each name takes you to its row */
@@ -426,19 +426,20 @@ export function renderSetup(){
   return `<div class="top"><h1>Set up<small>${esc(appState.G.ln)} ${MID} ${fleetPoints(appState.U)} pts</small></h1>
       <div class="tools">${builderTool()}${started ? toolBtn("start", "undo", "Game", { off: !ready, tip: "Back to the game" }) : `<button class="tool" data-act="newgame" title="Back to the fleets: this set-up is not kept">Exit</button>`}</div></div>
     ${sidesStrip()}
-    <div class="main">${peerSetupCard()}${factsCard()}<div class="card"><h2>Leadership</h2>
+    <div class="main"><div class="card"><h2>Leadership</h2>
       ${ldGuide()}${rollBar()}
       <p>Tap the value each ship fights on, or let Roll Ld roll the ships still without one. SQN groups capital ships into a squadron: one Ld, one order, combined fire (p. 95, 99). Tap a ship's name to give it another one for this game.${appState.L0.clanz ? " Da Ork Clanz: a Warlord may swap Leadership with any one ship or escort squadron under his command (Fleets p. 374) - tap the swapped values." : ""}${anyFixed ? " Planetary defences do not roll: their checks are made on Ld 7 (Rulebook p. 100)." : ""}</p>
       ${frrRow}${rows}
       <button class="btn" data-act="start" ${ready ? "" : "disabled"}>${started ? "Back to the game" : "Start the game"}</button>
-      ${ready ? "" : `<p class="why">To start, pick the Ld of ${missing.length === 1 ? "one more ship" : missing.length + " more ships"}: ${missing.map(i => `<button data-act="seek" data-i="${i}">${esc(unitName(i))}</button>`).join(", ")}</p>`}</div></div>${edgeHandle()}`;
+      ${ready ? "" : `<p class="why">To start, pick the Ld of ${missing.length === 1 ? "one more ship" : missing.length + " more ships"}: ${missing.map(i => `<button data-act="seek" data-i="${i}">${esc(unitName(i))}</button>`).join(", ")}</p>`}</div>${factsCard()}${peerSetupCard()}</div>${edgeHandle()}`;
 }
 
 /* The roster's cards in their order, squadrons under their heads: the
    player's own and, read-only, the opponent's (peer.js swaps the game in). */
 export function rosterRows(){
   const done = {}, out = [];
-  appState.U.forEach((x, i) => {
+  rosterOrder().forEach(i => {
+    const x = appState.U[i];
     if(done[i]) return;
     const g = appState.G.grp[i];
     /* a capital squadron, or a mixed escort squadron (builderGroups "e:") */
@@ -490,9 +491,10 @@ export function renderRoster(){
     ${appState.V.pop && appState.V.pop.i === -1 ? renderFleetPop() : ""}
     <div class="main${appState.V.compact ? " compact" : ""}">${out.join("")}</div>${edgeHandle()}
     <div class="bottom">
+      ${fireReminder()}
       ${appState.V.compact ? "" : jumpStrip()}
       <div class="brow">
-        <button class="endbtn" data-act="endph" ${pend.n ? "" : "disabled"}>End phase<small>${pend.n ? pend.crits + " to repair" + (pend.fires ? " " + MID + " " + pend.fires + " fire" + (pend.fires > 1 ? "s" : "") : "") : "nothing to repair"}</small></button>
+        <button class="endbtn" data-act="endph" ${pend.n ? "" : "disabled"}>End phase<small>${pend.n ? pend.crits + (pend.crits === 1 ? " crit" : " crits") + (pend.fires ? " " + MID + " " + pend.fires + " fire" + (pend.fires > 1 ? "s" : "") : "") : "no crits"}</small></button>
         ${OPT.orders ? `<button class="turnbtn ${fl.mine ? "" : "enemy"}" data-act="${fl.mine ? "endturn" : "newturn"}">${fl.mine ? "End turn " + fl.turn : "Start turn " + (fl.turn + 1)}</button>`
                      : `<button class="turnbtn" data-act="newturn">New turn ${fl.turn + 1}</button>`}
         <div class="pager hide"><button class="ico" data-act="page" data-arg="-1" aria-label="Previous page">&lsaquo;</button><b>1 / 1</b><button class="ico" data-act="page" data-arg="1" aria-label="Next page">&rsaquo;</button></div>
@@ -521,10 +523,16 @@ export function youngGunzNote(i){
   return ` ${MID} <span class="yg" title="Any Ork escort skwadron with a Leadership of 5 or 6 gets a bonus escort ship added for free: any Ork escort class of the list costing no more than the cheapest paid for in the skwadron, ten at most. Young Gunz comes before Mob Rule (Fleets p. 372).">Young Gunz: one free escort (Fleets p. 372)</span>`;
 }
 /* A squadron's own colour ties its header and its members together. */
-/* A squadron's colour: the capital squadrons A, B, C take the first three,
-   each escort squadron (a card of its own) the next in the fleet's order. */
+/* A squadron's colour is its letter's (T42): A to F take the six colours and
+   G starts them again, for a capital squadron and a mixed escort squadron
+   alike - the builder never gives the two kinds one letter. An escort card
+   that is a squadron by itself takes them from the fourth on, in the
+   fleet's order (escColor). */
 export const SQ_COLS = ["var(--sq1)", "var(--sq2)", "var(--sq3)", "var(--sq4)", "var(--sq5)", "var(--sq6)"];
-export function sqColor(letter){ return isEscGrp(letter) ? SQ_COLS[(3 + "ABCDEFGHIJKLMNOPQRSTUVWXYZ".indexOf(grpLabel(letter))) % SQ_COLS.length] : SQ_COLS[Math.max(0, "ABC".indexOf(letter))]; }
+export function sqColor(letter){
+  const t = grpLabel(letter);
+  return SQ_COLS[(t.length === 1 ? Math.max(0, SQN_LETTERS.indexOf(t)) : 0) % SQ_COLS.length];
+}
 export function escColor(i){
   const k = appState.U.slice(0, i).filter(x => x.R.kind === "ship" && PLAY.isEscort(x.R)).length;
   return SQ_COLS[(3 + k) % SQ_COLS.length];
@@ -538,7 +546,7 @@ export function renderGroupHead(letter, ms){
   /* who is still on the table: a member out of action is struck through
      with the reason, a crippled one marked (its values are halved already) */
   const status = PLAY.squadronStatus(units);
-  const escG = isEscGrp(letter), lab = grpLabel(letter);
+  const escG = isEscGrp(letter), lab = grpHTML(letter);
   /* a mixed escort squadron: each card's ships alive, and the total */
   const alive = escG ? ms.map(j => PLAY.alive(appState.G.st[j])) : [];
   const total = escG ? ms.reduce((a, j) => a + (appState.U[j].R.hulls | 0), 0) : 0;
@@ -548,7 +556,7 @@ export function renderGroupHead(letter, ms){
     return esc(names[k]) + (escG ? " " + TIMES + alive[k] : "") + (status.crippled.indexOf(k) >= 0 ? ` <i class="cr">crippled</i>` : "");
   }).join(", ");
   const mob = escG ? mobChip(alive.reduce((a, n) => a + n, 0)) : "";
-  return `<section class="row grp-hd${escG ? " esc" : ""}" data-g="${letter}" style="--kd:${kd};--km:${km};--sq:${sqColor(letter)}">
+  return `<section class="row grp-hd${escG ? " esc" : ""}" data-g="${esc(letter)}" style="--kd:${kd};--km:${km};--sq:${sqColor(letter)}">
     <div class="r1"><span class="tag grp">SQN ${lab}</span>
       <div class="name"><b>${escG ? "Escort squadron " + lab + " " + TIMES + alive.reduce((a, n) => a + n, 0) + " of " + total : "Squadron " + lab}</b><small>${members}${from.idx != null ? " " + MID + " Ld of " + esc(names[from.idx]) + " (p. 95)" : ""}</small></div>
       ${ldTile(ms[0])}
@@ -599,13 +607,13 @@ export function squadronTable(units, names){
     const why = struck.length ? " " + MID + " " + struck.map(s => esc(who(s.ship)) + ": " + esc(String(s.name).toLowerCase()) + " " + esc(s.why)).join("; ") : "";
     return `<tr>
       <td class="bd"><span class="bg" style="--bd:${badge}">${letter}</span></td>
-      <td class="nm">${name}<small style="color:var(--card-mute)">${bands ? bands + " cm" : nums.map(p => PLAY.num(p.now)).join(" + ")}${lost}${dice ? " + dice on " + dice + (dice > 1 ? " rows" : " row") : ""}${r.contact ? " " + MID + " base contact (p. 99)" : ""}${why}</small></td>
-      <td class="rg">${esc(shortRange(r.range))}</td>
       <td class="st">${r.total}</td>
       <td class="hf">${half}</td>
-      <td class="ar">${arcGlyph(r.arc)}</td></tr>`;
+      <td class="rg">${esc(shortRange(r.range))}</td>
+      <td class="ar">${arcGlyph(r.arc)}</td>
+      <td class="nm">${name}<small>${bands ? bands + " cm" : nums.map(p => PLAY.num(p.now)).join(" + ")}${lost}${dice ? " + dice on " + dice + (dice > 1 ? " rows" : " row") : ""}${r.contact ? " " + MID + " base contact (p. 99)" : ""}${why}</small></td></tr>`;
   }).join("");
-  return `<table class="wt"><thead><tr><th></th><th>Combined fire${firing}</th><th>Range</th><th class="st">Str</th><th class="hf">&frac12;</th><th></th></tr></thead><tbody>${trs}</tbody></table>${diceFoot}`;
+  return `<table class="wt glance"><thead><tr><th></th><th class="st">Str</th><th class="hf">&frac12;</th><th class="rg">cm</th><th></th><th>Combined fire${firing}</th></tr></thead><tbody>${trs}</tbody></table>${diceFoot}`;
 }
 
 /* A commander's line on the card of his ship (J233: every commander's). */
@@ -689,7 +697,7 @@ export function hulkLine(R, st){
      the roll every attacker forces (p. 71); the full list is under
      CATASTROPHIC */
   const kind = st.hulk || "gone";
-  return `<div class="hulkl ${kind}">${ICON[kind] || ""}<span><b>${esc(st.hulkName).toUpperCase()}</b> ${esc(st.hulkText || "")}${st.hulk ? " " + MID + " " + esc(c.hulk.brief) : ""}</span></div>`;
+  return `<div class="hulkl ${kind}">${ICON[kind] || ""}<span><b>${esc(st.hulkName).toUpperCase()}</b>${st.hulk ? `<small>${esc(c.hulk.brief)}</small>` : ""}</span></div>`;
 }
 export function playedBtn(i){
   const p = appState.G.st[i].played | 0;
@@ -766,7 +774,7 @@ export function renderRow(i, inGroup){
   const chips = (OPT.orders && !inGroup ? ordChip(st) : "") + (v.crippled ? `<span class="chip crip">${qn}CRIPPLED</span>` : "") +
     (esq && !inGroup ? mobChip(PLAY.alive(st)) : "") +
     (v.quadGone && !v.destroyed ? `<span class="chip crip">${qn}AT 0 ${MID} ASTEROID FIELD</span>` : "") +
-    (v.destroyed ? hulkChip(st) : "") +
+    (v.destroyed && esq ? hulkChip(st) : "") +
     critChips(R, st, i) + (st.disengaged ? `<span class="chip">disengaged</span>` : "") +
     (OPT.orders ? (st.braceLock ? `<span class="chip lock">brace locked</span>` : "") + (st.boarding ? `<span class="chip lock">boarding</span>` : "") + (st.noOrdersTurn ? `<span class="chip lock">no fire/orders</span>` : "") : "");
   let r3;
@@ -774,18 +782,18 @@ export function renderRow(i, inGroup){
     /* one box per ship, filled when it is gone (p. 66: one hit or any
        critical destroys an escort) */
     r3 = `<div class="hits mem">${st.members.map((m, k) => `<b class="${m.dead ? "on" : ""}" data-act="kill" data-i="${i}" data-arg="${k}" role="button" aria-label="${memberWord(R, 1)} ${k + 1}">${k + 1}</b>`).join("")}</div>
-      <span class="stat">${v.alive} of ${R.hulls}</span>` +
-      (OPT.shields ? `<button class="stat ${st.blast ? "off" : ""}" data-act="blast" data-i="${i}" data-arg="${st.blast ? 0 : 1}">UNDER FIRE <b>${st.blast ? "-1 Ld" : "no"}</b></button>` : "");
+      <span class="stat">${v.alive} of ${R.hulls}</span>`;
   }else{
     r3 = hitsTrack(i, v, false) +
-      (OPT.shields ? `<button class="stat ${v.shields.now != null && v.shields.up < v.shields.now ? "off" : ""}" data-act="pop" data-i="${i}" data-arg="blast">SH <b>${v.shields.now == null ? esc(v.shields.text) : v.shields.up + "/" + v.shields.now}</b>${st.blast ? "<small>BM " + st.blast + "</small>" : ""}</button>` : "") +
       (OPT.ordnance ? ordnancePills(i, v) : "");
   }
   const orderBtns = !OPT.orders || inGroup ? "" : `<button class="brace ${v.braced ? "on" : ""}" data-act="brace" data-i="${i}" ${PLAY.canOrder(st, appState.G.fleet, "BFI", R) ? "" : "disabled"}>Brace</button>
       <button class="order ${st.order && st.order !== "BFI" ? "on" : ""}" data-act="pop" data-i="${i}" data-arg="order">${st.order && st.order !== "BFI" ? esc(PLAY.ORDER_BY[st.order].name) : "Order"}</button>`;
   /* a star fort's HIT and CRIT go to the selected quadrant; one at 0
      takes no further damage (Fleets p. 501) */
-  const critLine = (v.quadGone ? qn + "at 0" : (v.crits.length ? v.crits.length + " active" : "2D6") + (qn && v.crits.length ? " " + qn.trim() : ""));
+  const critLine = st.repPick ? st.repPick + " to repair" : (v.quadGone ? qn + "at 0" : (v.crits.length ? v.crits.length + " active" : "2D6") + (qn && v.crits.length ? " " + qn.trim() : ""));
+  /* on or off (T48): a Blast Marker in contact */
+  const blastBtn = OPT.blast && !v.destroyed && !st.disengaged ? `<button class="blastb${st.blast ? " on" : ""}" data-act="blastflag" data-i="${i}" aria-pressed="${!!st.blast}" aria-label="Blast Marker in contact" title="Blast Marker in contact: -1 Ld (p. 48), half the damage-control dice (p. 88)">${BURST}</button>` : "";
   /* The compact row (user 19.10.2026): what a hit or a critical needs and
      nothing else - the name, Ld, CRIT, the spec line the enemy asks about
      (armour, shields), the track and the chips. The track takes a hit in
@@ -805,9 +813,9 @@ export function renderRow(i, inGroup){
     ? (v.destroyed ? "" : (inGroup ? "" : ldTile(i, "", true)) + (esq ? "" : `<button class="crit cmini" data-act="pop" data-i="${i}" data-arg="crit" ${v.quadGone ? "disabled" : ""}>Crit<small>${critLine}</small></button>`) + (inGroup ? "" : playedBtn(i, v)))
     : (inGroup || v.destroyed ? "" : ldTile(i) + playedBtn(i, v));
   return `<section class="${cls}" data-u="${i}" style="--kd:${kd};--km:${km}${sqc ? ";--sq:" + sqc : ""}">
-    <div class="r1"><span class="tag">${classTag(R)}${esq ? TIMES + v.alive : ""}</span>${inGroup ? `<span class="tag sq" title="Squadron ${grpLabel(appState.G.grp[i])}">SQN ${grpLabel(appState.G.grp[i])}</span>` : ""}${wlTag(i)}
+    <div class="r1"><span class="tag">${classTag(R)}${esq ? TIMES + v.alive : ""}</span>${inGroup ? `<span class="tag sq" title="Squadron ${grpHTML(appState.G.grp[i])}">SQN ${grpHTML(appState.G.grp[i])}</span>` : ""}${wlTag(i)}
       <button class="name" data-act="sheet" data-i="${i}"><b>${esc(unitName(i))}</b><small>${esc(sub)}</small></button>
-      ${r1tail}${actBtn}</div>
+      ${blastBtn}${r1tail}${actBtn}</div>
     ${upgradeLine(i)}
     ${cmdsAboard(i).map(cmdLine).join("")}${shipRRLine(i)}
     ${v.fort && !v.destroyed ? quadSelector(i, v) : ""}
@@ -815,8 +823,8 @@ export function renderRow(i, inGroup){
     ${v.destroyed && !esq ? "" : compact ? weaponsLine(R, st, esq) : weaponsTable(R, st, esq)}
     ${R.ruleCard && !v.destroyed && !compact ? ruleSteps(R) : ""}
     <div class="r3">${r3}${chips}${repairBtn(i)}</div>
-    ${repairLines(i)}
     ${r4}
+    ${repairLines(i)}
     ${appState.V.pop && appState.V.pop.i === i && appState.V.sheet == null && !(inGroup && /^(ld|order)$/.test(appState.V.pop.kind)) ? renderPop(i) : ""}
   </section>`;
 }
@@ -859,16 +867,8 @@ export function renderPop(i){
       ${st.ldFrom === "commander" ? `<p>The commander's Leadership line applies to this flagship: a fixed value stands in for the roll, a bonus is added to it.</p>` : ""}
       <button class="close" data-act="closepop">close</button></div>`;
   }
-  if(kind === "blast"){
-    return `<div class="pop"><h4>Blast markers touching the base</h4>
-      <p>One is placed per hit the shields block (p. 70); each one in contact takes a shield off when fired upon (p. 69), -1 Ld (p. 48) and halves damage-control dice (p. 88). Shields come back when the ship moves clear (p. 70).</p>
-      ${slotRule("blast") ? `<p>${esc(slotRule("blast"))}</p>` : ""}
-      <div class="steprow"><button data-act="blast" data-i="${i}" data-arg="-1">&minus;</button><div class="val">${st.blast | 0}<small>shields up ${v.shields.up == null ? "-" : v.shields.up + " of " + v.shields.now}</small></div><button data-act="blast" data-i="${i}" data-arg="1">+</button></div>
-      <button class="btn sec" data-act="blast" data-i="${i}" data-arg="0">${v.still ? "All removed" : "Moved clear"} ${MID} shields up</button>
-      <button class="close" data-act="closepop">close</button></div>`;
-  }
   if(kind === "order"){
-    const l = appState.G.grp[i] ? PLAY.squadronLd(groupUnits(appState.G.grp[i]).map(j => ({ R: appState.U[j].R, st: appState.G.st[j] })), fl) : PLAY.leadership(R, st, fl);
+    const P = appState.V.pop, ld = orderLd(i), res = P.res;
     /* only the orders this unit may take at all (R.orders): a planetary
        defence Reload Ordnance and Brace (Rulebook p. 100), a star fort and
        a Haven Lock On as well (Fleets p. 503, 111, 334) - its own rule
@@ -876,18 +876,28 @@ export function renderPop(i){
     const tiles = PLAY.ordersFor(R).filter(o => o.id !== "BFI").map(o =>
       `<button class="${st.order === o.id ? "on" : ""}" data-act="order" data-i="${i}" data-arg="${o.id}" ${PLAY.canOrder(st, fl, o.id, R) || st.order === o.id ? "" : "disabled"}>${esc(o.name)}${appState.V.info ? `<small>${esc(o.line)}</small>` : ""}</button>`).join("");
     const only = R.orders ? slotRule("orders") : "";
-    return `<div class="pop"><h4>Special orders ${MID} check vs Ld ${l.now == null ? "?" : l.now}</h4>
-      <p>${fl.orderLock ? "A check failed this turn: no more orders except Brace (p. 48)." : st.braceTurn ? "Braced: no other orders this turn (p. 47)." : "Tap an order = declared and passed. One per ship or squadron per turn (p. 46, 95)."}</p>
+    /* The check itself (p. 48), rolled if asked (T49): what the page tracks is in
+       the Ld already; Under Fire and Enemy Contacts are chips here when it does
+       not. A failure locks the fleet as Check failed does; UNDO takes it back.
+       Boarding and disengaging are not orders: they live in Actions and on the
+       card's Status (user 2.11.2026). */
+    const locked = fl.orderLock || st.braceTurn;
+    const rr = res && !res.ok && freeRR(i);
+    const mods = (OPT.blast ? "" : `<button class="bchip${P.uf ? " on" : ""}" data-act="ordmod" data-i="${i}" data-arg="uf">Under fire: &minus;1</button>`)
+      + (OPT.fleet ? "" : `<button class="bchip${P.ec ? " on" : ""}" data-act="ordmod" data-i="${i}" data-arg="ec">Enemy contacts: +1</button>`);
+    const check = ld == null || locked ? "" : `<p class="aclab">Or let the page roll</p>${mods ? `<div class="bchips">${mods}</div>` : ""}
+      ${res ? `<p class="acres ${res.ok ? "ok" : "bad"}"><b>${res.dice.join(" ")} = ${res.dice[0] + res.dice[1]}</b> against Ld ${res.ld}: <b>${res.ok ? "passed." : "failed."}</b> ${res.ok ? "Tap the order." : "No more orders this turn except Brace (p. 48)."}</p>${rr ? `<button class="btn sec" data-act="ordrr" data-i="${i}">Re-roll<small>uses one re-roll</small></button>` : ""}`
+          : `<div class="r4"><button class="rollb" data-act="ordroll" data-i="${i}">Roll 2D6<small>${ld} or under</small></button></div>`}`;
+    return `<div class="pop"><h4>Special orders ${MID} check vs Ld ${ld == null ? "?" : ld}</h4>
+      <p>${fl.orderLock ? "A check failed this turn: no more orders except Brace (p. 48)." : st.braceTurn ? "Braced: no other orders this turn (p. 47)." : "Roll the check with your own dice: passed, tap the order; failed, Check failed. One per ship or squadron per turn (p. 46, 95)."}</p>
       ${only ? `<p>${esc(only)}</p>` : ""}
       <div class="tiles">${tiles}
         <button class="bad" data-act="orderfail" data-i="${i}" ${fl.orderLock ? "disabled" : ""}>Check failed<small>locks the fleet</small></button>
         <button class="warn" data-act="bracefail" data-i="${i}" ${st.braceLock ? "disabled" : ""}>Brace failed<small>p. 47</small></button>
         ${st.braceLock ? `<button class="ok" data-act="bracelock" data-i="${i}">Attacker done<small>brace again</small></button>` : ""}
-        <button class="${st.boarding ? "on" : ""}" data-act="boarding" data-i="${i}">Boarding<small>no fire this turn p. 89</small></button>
-        ${v.still ? "" : `<button class="${st.noOrdersTurn ? "on" : ""}" data-act="nofire" data-i="${i}">Disengage failed<small>no fire/orders p. 57</small></button>
-        <button class="${st.disengaged ? "on" : ""}" data-act="diseng" data-i="${i}">Disengaged<small>left the table p. 57</small></button>`}
         ${st.order || st.braceTurn ? `<button data-act="clearorder" data-i="${i}">Clear order</button>` : ""}
       </div>
+      ${check}
       <button class="close" data-act="closepop">close</button></div>`;
   }
   if(kind === "crit"){
@@ -928,6 +938,7 @@ export function renderPop(i){
       <p class="last ${fl ? "fresh" : ""}">${fl ? esc(fl.msg) : (appState.V.flash && appState.V.flash.i === i ? esc(appState.V.flash.msg) : "Tap a result to add it; the table stays open until you close it.")}</p>
       <div class="tiles">${tiles}${wide}</div>
       ${xrow}
+      ${repairPanel(i)}
       <p>Damage control: <b>${v.repairDice}D6</b> (half with blast markers in contact), each 6 repairs one system or puts out one fire (p. 88).${R.damage.repair ? " " + esc(R.damage.repair) : ""}</p>
       ${appState.V.info && cm.foot ? `<p class="foot">${esc(cm.foot)}</p>` : ""}
       <button class="close" data-act="closepop">close</button></div>`;
@@ -936,10 +947,12 @@ export function renderPop(i){
     const c = PLAY.catastrophic(R);
     const tiles = c.rows.map((r, k) => `<button class="${r.kind === "gone" ? "bad" : (st.hulk === r.kind && st.hulkName === r.name ? "on" : "")}" data-act="hulk" data-i="${i}" data-arg="${k}"><b>${esc(r.roll)}</b>${esc(r.name)}<small>${r.extra ? esc(r.extra) + " " + MID + " " : ""}${esc(r.text)}</small></button>`).join("");
     return `<div class="pop cata"><h4>${esc(c.title)}${c.dice ? " " + MID + " roll " + c.dice : ""} ${MID} ${c.fleets ? "Fleets" : "Rulebook"} p. ${c.page}</h4>
-      <p>${esc(unitName(i))} ${v.fort ? "has all four quadrants at 0 hits (" + R.stats.hits + " each to start)" : "is at 0 hits (" + R.stats.hits + " to start)"}. ${esc(c.note)}</p>
+      <p>${esc(unitName(i))} ${v.fort ? "has all four quadrants at 0 hits (" + v.max + " each to start)" : "is at 0 hits (" + v.max + " to start)"}. ${esc(c.note)}</p>
       <div class="tiles c2">${tiles}
         ${c.boarded ? `<button data-act="hulk" data-i="${i}" data-arg="boarded">Boarded to 0<small>no roll: a drifting hulk (p. 90)</small></button>` : ""}
       </div>
+      ${c.dice && !st.hulkName ? `<p class="aclab">Or let the page roll</p><div class="r4"><button class="rollb" data-act="hulkroll" data-i="${i}">Roll ${esc(c.dice)}<small>the page marks the result</small></button></div>` : ""}
+      ${appState.V.pop.res ? `<p class="acres">Rolled <b>${appState.V.pop.res}</b>: ${esc(st.hulkName || "")}</p>` : ""}
       <p class="hr"><b>While it is a hulk</b></p><ul class="hulkrules">${c.hulk.list.map(t => `<li>${esc(t)}</li>`).join("")}</ul>
       ${c.explode ? `<p class="hr">${esc(c.explode)}</p>` : ""}
       <button class="close" data-act="closepop">close</button></div>`;
@@ -965,8 +978,7 @@ export function renderSheet(i){
   const stats = `<div class="stats">
     ${stat("SPEED", v.speed.now != null ? v.speed.now + " cm" : esc(v.speed.text), v.speed.now != null ? v.speed.base + " cm" : null, v.speed.mods.map(m => m.t).join(", "))}
     ${stat("TURNS", esc(v.turns.text), null, v.turns.none ? "NONE (crit 6)" : "")}
-    ${esq || !OPT.shields ? stat("SHIELDS", v.shields.now == null ? esc(v.shields.text) : v.shields.now, v.shields.now == null ? null : v.shields.base, esq ? "per ship" : "")
-      : stat("SHIELDS", v.shields.now == null ? esc(v.shields.text) : v.shields.up + "/" + v.shields.now, v.shields.now == null ? null : v.shields.base, st.blast ? "BM " + st.blast + (v.shields.up < v.shields.now ? ": tap when moved clear" : "") : "up", "blast")}
+    ${stat("SHIELDS", v.shields.now == null ? esc(v.shields.text) : v.shields.now, v.shields.now == null ? null : v.shields.base, esq ? "per ship" : "")}
     ${stat("ARMOUR", esc(shortArmour(R.stats.armour)), null, "")}
     ${stat(esc(R.stats.turretLabel || "TURRETS"), v.turrets.now == null ? esc(v.turrets.text) : v.turrets.now, v.turrets.now == null ? null : v.turrets.text, "")}
     ${stat("LEADERSHIP", v.ld.now == null ? "?" : v.ld.now, v.ld.base, v.ld.mods.map(m => (m.v > 0 ? "+" : "") + m.v + " " + m.t).join(", "), "ld")}
@@ -982,7 +994,7 @@ export function renderSheet(i){
       ${OPT.orders ? `<div class="r4"><button class="brace ${v.braced ? "on" : ""}" data-act="brace" data-i="${i}" ${PLAY.canOrder(st, fl, "BFI", R) ? "" : "disabled"}>Brace</button>
         <button class="order ${st.order && st.order !== "BFI" ? "on" : ""}" data-act="pop" data-i="${i}" data-arg="order">${st.order && st.order !== "BFI" ? esc(PLAY.ORDER_BY[st.order].name) : "Order"}</button></div>
       ${appState.V.pop && appState.V.pop.i === i && appState.V.pop.kind === "order" ? renderPop(i) : ""}` : ""}
-      <p class="foot">${esc(R.damage.note)} ${MID} VP conceded ${isEscGrp(appState.G.grp[i]) ? "by squadron " + grpLabel(appState.G.grp[i]) + " " + vpOfGroup(i) + " (all its cards, p. 123)" : PLAY.conceded(R, st, cmdPts(i)) + " (" + PLAY.concededPage(R) + ")"}</p></div>`
+      <p class="foot">${esc(R.damage.note)} ${MID} VP conceded ${isEscGrp(appState.G.grp[i]) ? "by squadron " + grpHTML(appState.G.grp[i]) + " " + vpOfGroup(i) + " (all its cards, p. 123)" : PLAY.conceded(R, st, cmdPts(i)) + " (" + PLAY.concededPage(R) + ")"}</p></div>`
     : `<div class="sec"><h3>Damage<em>${qn ? qn + " " + MID + " " : ""}${v.hits} of ${v.max} ${MID} crippled from box ${v.crippledAt}</em></h3>
       ${v.destroyed ? "" : hitsTrack(i, v, true)}
       <p class="crline">${esc(R.damage.note)}</p>
@@ -996,13 +1008,13 @@ export function renderSheet(i){
   /* a unit that cannot move cannot leave the table either (p. 56: the
      test is made "at the end of its Movement Phase"; p. 101: defences
      "always remain in place"): no disengage switches for it */
+  /* Disengaging is in Actions (the test, p. 56-57); here only the way back for
+     a ship marked disengaged by mistake (user 2.11.2026). */
   const flagBtns = [
       OPT.ordnance && !esq ? ordnancePills(i, v) : "",
-      OPT.shields && esq ? `<button class="${st.blast ? "on bad" : ""}" data-act="blast" data-i="${i}" data-arg="${st.blast ? 0 : 1}">under fire: -1 Ld (p. 48, 95)</button>` : "",
       OPT.orders ? `<button class="${st.boarding ? "on" : ""}" data-act="boarding" data-i="${i}">boarding declared</button>` : "",
-      OPT.orders && !v.still ? `<button class="${st.noOrdersTurn ? "on bad" : ""}" data-act="nofire" data-i="${i}">disengage failed</button>` : "",
       OPT.orders && st.braceLock ? `<button class="on bad" data-act="bracelock" data-i="${i}">brace locked: attacker done</button>` : "",
-      v.still ? "" : `<button class="${st.disengaged ? "on" : ""}" data-act="diseng" data-i="${i}">disengaged (VP, p. 57)</button>`
+      st.disengaged ? `<button class="on" data-act="diseng" data-i="${i}">disengaged (VP, p. 57) ${MID} tap to take back</button>` : ""
     ].join("");
   const flags = flagBtns ? `<div class="sec"><h3>Status</h3><div class="flags">${flagBtns}</div></div>` : "";
   const rules = R.rules.slice();
@@ -1018,10 +1030,10 @@ export function renderSheet(i){
      its armament, always on the card */
   const ruleSec = R.ruleCard ? `<div class="sec"><h3>${esc(R.ruleCard.title)}<em>Fleets p. ${R.ruleCard.page}</em></h3><p class="lead">${esc(R.ruleCard.lead || "")}</p>${ruleSteps(R)}</div>` : "";
   return `<div class="sheet" style="--kd:${kd};--km:${km}">
-    <div class="sh-hd"><div class="t"><h2>${esc(unitName(i))}</h2><p>${esc(sub)}</p></div>${ldTile(i)}<button class="x" data-act="closesheet" aria-label="Close">${CLOSE_X}</button></div>
+    <div class="sh-hd"><div class="t"><input class="shnm" type="text" data-nm="${i}" value="${esc(unitName(i))}" placeholder="${esc(baseName(i))}" maxlength="40" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" aria-label="Name of this ship in the game"><p>${esc(sub)}</p></div>${ldTile(i)}<button class="x" data-act="closesheet" aria-label="Close">${CLOSE_X}</button></div>
     <div class="sh-body">${band}${upgradeLine(i)}${cmdsAboard(i).map(cmdLine).join("")}${shipRRLine(i)}${v.fort && !v.destroyed ? quadSelector(i, v) : ""}${stats}${preLine(i)}
-      ${appState.V.pop && appState.V.pop.i === i && /^(ld|blast)$/.test(appState.V.pop.kind) ? renderPop(i) : ""}
-      <div class="sec"><h3>Armament<em>Str as printed ${MID} &frac12; when halved</em></h3>${weaponsTable(R, st, esq)}</div>
+      ${appState.V.pop && appState.V.pop.i === i && /^ld$/.test(appState.V.pop.kind) ? renderPop(i) : ""}
+      <div class="sec"><h3>Armament<em>in force now ${MID} as printed beside it</em></h3>${weaponsTable(R, st, esq)}</div>
       ${ruleSec}${damage}${crits}${flags}${info}
       <button class="btn sec" data-act="closesheet">Back to the fleet</button>
     </div></div>`;
@@ -1036,7 +1048,7 @@ export function renderSheet(i){
 export function renderMenu(){
   /* every row that can concede points: ships, and orbital mines bought one
      by one (Fleets p. 512) */
-  const rows = appState.U.map((x, i) => x.R.kind === "ship" || PLAY.tickUnit(x.R) ? `<tr><td>${esc(unitName(i))}${cmdPts(i) ? " + " + esc(cmdsAboard(i).map(unitName).join(", ")) : ""}${appState.G.st[i].disengaged ? " (disengaged)" : ""}${isEscGrp(appState.G.grp[i]) ? " (squadron " + grpLabel(appState.G.grp[i]) + ")" : ""}</td><td>${vpOf(i)}</td></tr>` : "").join("");
+  const rows = appState.U.map((x, i) => x.R.kind === "ship" || PLAY.tickUnit(x.R) ? `<tr><td>${esc(unitName(i))}${cmdPts(i) ? " + " + esc(cmdsAboard(i).map(unitName).join(", ")) : ""}${appState.G.st[i].disengaged ? " (disengaged)" : ""}${isEscGrp(appState.G.grp[i]) ? " (squadron " + grpHTML(appState.G.grp[i]) + ")" : ""}</td><td>${vpOf(i)}</td></tr>` : "").join("");
   const vp = vpTotal(), mo = appState.V.menuOpen || {};
   const nec = appState.U.some(u => u.R && u.R.source && /NECRON/i.test(String(u.R.source.faction || ""))) ? "; Necrons Fleets p. 404" : "";
   const all = TRACK.every(t => OPT[t[0]]), some = TRACK.some(t => OPT[t[0]]);

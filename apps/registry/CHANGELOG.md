@@ -5,6 +5,18 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 
 ## Unreleased
 
+### Added
+- Saved fleets: Text and file, beside Send all, Receive and Import file: Copy as text and Save file for the open fleet, and a box to paste a fleet's text into Saved fleets. Send, Receive and the top bar's buttons are as they were.
+
+### Fixed
+- The top bar's menus (Save, Saved fleets, the print setup) open in one place, under the buttons against the window's right edge, one at a time, and stay on the screen when the page scrolls.
+- Saved fleets: the open fleet can be opened again (Reopen), which brings back the saved version over the changes on the screen. Its row is first in the list and marked more clearly.
+- Changing a Warlord's clan left the Blood Axes' Imperial Navy refit taken, and its +20 on the ship. It now leaves with the clan (Fleets p. 371).
+- Da Ork Clanz, a mixed tiddla (J244, user 3.11.2026: two Ravagers and a Brute, each class on its own card, should make one legal tiddla). They do: the cards of one Squadron letter are one tiddla of 3-10 escorts "chosen from the following list in any mix desired" (Fleets p. 374), made with *Mixed squadron* in the Tiddla section, the cards' Squadron menu or *join* in the Warlord block's Skwadrons, and counted as one. The Warlord's Needs line, in his block and in Buying for, did not lead there: with those three cards and three Savages it said "1 skwadron too many: buy a re-roll or send one to another Warlord". With a tiddla too many it now names his two smallest tiddlas that fit in ten to put in one skwadron, as it names two kroozers. A tiddla outside 3-10 escorts is named too ("a tiddla (escort) skwadron is 3–10 escorts: Ravager Attack Ship ×2 and Brute Ram Ship are short"), so the block no longer reads "complete" beside a red size check (p. 374: "one tiddla skwadron of at least three escorts"; p. 372: "up to ten").
+
+### Changed
+- Saved fleets: one Send on each fleet and Send all replace Export, Copy, To phone, Export all, Copy all and All to phone. Send shows a four-letter code and its QR code (the other device scans it or types it at Receive), Send link for one fleet, and Save file. Without a connection it shows the fleet's own QR code or the file. Paste text is gone. Old links, codes and files still open.
+
 ### Fixed: a reserve counts by its class, not by the heading it was printed under (1.11.2026)
 - Fleets p. 14: limits are "determined for the fleet as a whole, regardless of whether they were purchased from the list or as reserves". A borrowed ship was matched to the host list by section heading, so a class printed under another heading went wrong: a Mars from Bastion Fleets ("Battleships") counted nowhere in the Gothic Sector; a Mechanicus cruiser from Bakka ("Battlecruisers") took a battlecruiser slot elsewhere and did not count as a cruiser; a Clanz kill kroozer did not count as a kroozer in Waaagh!. 55 of 1,544 host, rule and ship combinations were wrong.
 - **Ruling T62** (open interpretation, 1.11.2026): a borrowed ship counts in the host section that holds its category and class (battlecruiser, grand, heavy, light, plain cruiser), its own heading first. Bakka's "in the same manner as battlecruisers" (p. 49) is a rule of the Bakka list; as a reserve elsewhere the ship is a cruiser. A class the host list does not have (a grand cruiser in the Gothic Sector) still counts nowhere, and the fleet says so.

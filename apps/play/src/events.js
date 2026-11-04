@@ -1,14 +1,13 @@
 import { appState } from "./state.js";
 import { $ } from "./helpers.js";
-import { fleetsIn, parseDoc, resolveFleet } from "./fleet-document.js";
+import { resolveFleet } from "./fleet-document.js";
 import { loadPlay, newGame, resumeGame, save } from "./game-state.js";
 import { act } from "./actions.js";
 import { render, tapSel } from "./render.js";
-import { builderFleets, copyText, forgetLinked, linkedFleets, phoneLink, saveFleetFile, shareText, takeFleetText } from "./share.js";
-import { qrFull } from "../../../packages/ui/qr.js";
+import { builderFleets, copyText, openSend, savedFleets, takeFleetText } from "./share.js";
 import { peerAct } from "./peer.js";
 import { boardAct } from "./board.js";
-import { shipAct } from "./ship-actions.js";
+import { orderAct, shipAct } from "./ship-actions.js";
 
 /* ============================================================== EVENTS ===== */
 document.addEventListener("touchstart", () => {}, { passive: true });   /* :active on iOS */
@@ -20,6 +19,8 @@ document.addEventListener("click", ev => {
      taps in the first moments after a screen change are not taken */
   if(Date.now() < appState.V.guardUntil){ ev.preventDefault(); return; }
   const name = el.getAttribute("data-act");
+  /* a repair changes what is under the finger: the next tap waits a moment */
+  if(/^repair/.test(name)) appState.V.guardUntil = Date.now() + 400;
   /* The tapped control stays where the finger is (user 30.9.2026: the screen
      must not move). render() finds the same control again and shifts the
      scroll by however far it moved - a chip line or a band appearing above
@@ -33,6 +34,7 @@ document.addEventListener("click", ev => {
   if(peerAct(name, el)) return;
   if(boardAct(name, el)) return;
   if(shipAct(name, el)) return;
+  if(orderAct(name, el)) return;
   const i = el.hasAttribute("data-i") ? parseInt(el.getAttribute("data-i"), 10) : null;
   let arg = el.hasAttribute("data-arg") ? el.getAttribute("data-arg") : undefined;
   if(arg != null && /^-?\d+$/.test(arg)) arg = parseInt(arg, 10);
@@ -43,32 +45,20 @@ document.addEventListener("click", ev => {
     if(loadPlay() && !confirm("A game is in progress. Start a new one and forget its record?")) return;
     newGame(res); appState.V.screen = "setup"; save(); render(); return;
   }
-  /* a fleet that came by a link or a file (the page's own list) */
+  /* a saved fleet (the builder's Saved fleets, share.js savedFleets) */
   if(name === "linked"){
-    const f = linkedFleets()[arg]; if(!f) return;
-    const res = resolveFleet(f.doc); if(res.error){ appState.V.loadErr = res.error; render(); return; }
+    const f = savedFleets()[arg]; if(!f) return;
+    const res = resolveFleet(f); if(res.error){ appState.V.loadErr = res.error; render(); return; }
     if(loadPlay() && !confirm("A game is in progress. Start a new one and forget its record?")) return;
-    res.src = "link"; newGame(res); appState.V.screen = "setup"; save(); render(); return;
+    res.src = "saved"; newGame(res); appState.V.screen = "setup"; save(); render(); return;
   }
-  if(name === "unlink"){ forgetLinked(arg); render(); return; }
-  /* the QR code and the link for a builder fleet: open under its button */
-  if(name === "phone"){ appState.V.phone = appState.V.phone === arg ? null : arg; appState.V.copied = ""; render(); if(appState.V.phone != null) phoneLink(arg); return; }
-  if(name === "savefile"){ saveFleetFile(arg); return; }
-  if(name === "qrfull"){ if(appState.V.phoneSvg) qrFull(appState.V.phoneSvg); return; }
-  if(name === "copylink"){ copyText(appState.V.phoneUrl || "", "link"); return; }
-  if(name === "sharelink"){ shareText("Gothic Fleet Play", appState.V.phoneUrl || ""); return; }
+  if(name === "send"){ openSend(arg); return; }
+  if(name === "receive"){ location.href = "../send/index.html"; return; }
   if(name === "pickfile"){ const f = $("#fleetfile"); if(f){ f.value = ""; f.click(); } return; }
-  if(name === "paste"){
-    const p = parseDoc(($("#paste") && $("#paste").value) || "");
-    if(p.error){ appState.V.loadErr = p.error; render(); return; }
-    const fs = fleetsIn(p.o); if(!fs.length){ appState.V.loadErr = "The document has no ships in it."; render(); return; }
-    const res = resolveFleet(fs[0]); if(res.error){ appState.V.loadErr = res.error; render(); return; }
-    appState.V.loadErr = ""; res.src = "paste"; newGame(res); appState.V.screen = "setup"; save(); render(); return;
-  }
   act(name, i, arg);
 });
-/* A fleet file (the builder's Export file, or any fleet document): it goes
-   on the page's own list of fleets, the same as a link. */
+/* A fleet file (Save file in the builder, or any fleet document): it goes
+   into Saved fleets, the same as a link. */
 document.addEventListener("change", ev => {
   const inp = ev.target;
   if(!inp || inp.id !== "fleetfile" || !inp.files || !inp.files[0]) return;
@@ -84,6 +74,8 @@ document.addEventListener("change", ev => {
   if(el.getAttribute("data-sel") === "on") act("on", parseInt(el.getAttribute("data-i"), 10), parseInt(el.value, 10));
   /* a pre-game upgrade chosen by hand (T44) */
   if(el.getAttribute("data-sel") === "pre") act("pre", parseInt(el.getAttribute("data-i"), 10), { key: el.getAttribute("data-key"), v: el.value });
+  /* a ram's target picked from the books (T46) */
+  if(el.getAttribute("data-sel") === "ramfoe") shipAct("acfoecat", el);
 });
 
 /* the set-up screen's Leadership guide stays as the player left it: the

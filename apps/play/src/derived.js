@@ -139,6 +139,9 @@ export function critChips(R, st, i){
 
 /* The spec line under the name: the profile as it stands now, a value a
    critical or crippling changed marked in the crippled colour. */
+/* The stats in one line, each in its place (user 2.11.2026: tiles made the
+   speed and the turn less clear): the label small, the number big, a value
+   changed by damage in the crippled colour. */
 export function statsLine(v, R, esq){
   const sp = v.speed.now != null ? v.speed.now + " cm" : v.speed.text + (v.speed.mods.length ? " " + v.speed.mods.map(m => m.v).join("") : "");
   /* a unit that does not move (Rulebook p. 100) has one word where a ship
@@ -150,8 +153,8 @@ export function statsLine(v, R, esq){
     ["ARM", shortArmour(R.stats.armour), false],
     [/spore/i.test(R.stats.turretLabel || "") ? "SPORES" : "T", v.turrets.now == null ? v.turrets.text : v.turrets.now, v.turrets.now != null && v.turrets.now !== v.turrets.base],
   ]);
-  if(esq) parts.push(["HITS", R.stats.hits + " each", false]);
-  return `<div class="stl">${parts.map(x => `<span class="${x[2] ? "mod" : ""}">${x[0] ? x[0] + " " : ""}<b>${esc(String(x[1]))}</b></span>`).join(`<em>${MID}</em>`)}</div>`;
+  if(esq) parts.push(["HITS", v.max + " each", false]);
+  return `<div class="stl">${parts.map(x => `<span class="${x[2] ? "mod" : ""}">${x[0] ? `<small>${x[0]}</small>` : ""}<b>${esc(String(x[1]))}</b></span>`).join("")}</div>`;
 }
 /* The armament as a table: badge, name, range, strength, the halved value
    (crippled p. 65, braced p. 47, All Ahead Full etc. p. 46 - whichever the
@@ -199,8 +202,9 @@ export function rangeHTML(R, a, k, cls){
 }
 /* The compact row's armament: one chip per row of the table - the badge,
    the strength in force now (halved when crippled or braced, struck through
-   when silenced), the range in its band's colour and the arc; a live pair
-   is one chip with both arcs. The names are on the card. */
+   when silenced) with the printed value small beside it, the range in its
+   band's colour and the arc; a live pair is one chip with both arcs. No
+   names (user 2.11.2026): the badge, the arc and the card say which. */
 export function weaponsLine(R, st, esq){
   const v = PLAY.view(R, st, appState.G.fleet);
   const rows = esq ? PLAY.escortFire(R, st) : v.arms;
@@ -212,20 +216,26 @@ export function weaponsLine(R, st, esq){
     const ps = pairs[k] === 1;
     const [letter, badge] = wepClass(a.name);
     const n = PLAY.num(a.strength), alive = esq ? a.ships : 1;
-    const val = n == null ? String(a.strength).replace(/\s*squadrons?$/i, "") : esq ? n * alive : (cr && PLAY.num(a.now) != null ? PLAY.num(a.now) : n);
+    const val = n == null ? String(a.strength).replace(/\s*squadrons?$/i, "") : esq ? n * alive : (!esq && a.silent ? n : cr && PLAY.num(a.now) != null ? PLAY.num(a.now) : n);
     const glyph = ps ? arcGlyph("left right").replace(/class="pick"/g, 'class="on"') : arcGlyph(a.arc);
     const title = ps ? a.name + " / " + rows[k + 1].name + ", each" : a.name;
-    return `<span class="wc${!esq && a.silent ? " off" : ""}${cr && n != null && !a.whole ? " half" : ""}" title="${esc(title)}"><i style="--bd:${badge}">${letter}</i><b>${esc(String(val))}</b>${rangeHTML(R, a, k, "rpc")}${glyph}</span>`;
+    return `<span class="wc${!esq && a.silent ? " off" : ""}${cr && n != null && !a.whole ? " half" : ""}" title="${esc(title)}"><i style="--bd:${badge}">${letter}</i>${cr && n != null && !a.whole && !a.silent ? `<s>${esq ? n * alive : n}</s>` : ""}<b>${esc(String(val))}</b>${rangeHTML(R, a, k, "rpc")}${glyph}</span>`;
   }).join("")}</div>`;
 }
-/* The armament as a table, drawn the way the printed card is (v1.2): a
-   pair of port / starboard rows keeps both names and both arcs and shares
-   one tall badge, one range and one strength with "each" under it (the
-   user's choice C, 12.10.2026 - one merged row was turned down as busy); a
-   range in its band's frame. Then the play page's own: the halved value
-   (crippled p. 65, braced p. 47, All Ahead Full etc. p. 46 - whichever the
-   table says applies), a location knocked out by a critical (p. 67) struck
-   through, an escort squadron's per-ship value, total (p. 99) and half. */
+/* The armament as a table with the numbers first (user 2.11.2026: "what is
+   big and easy to see" - the names were large and said nothing the badge
+   does not): the badge, the strength in force now, big (halved when crippled
+   p. 65, braced p. 47, All Ahead Full etc. p. 46 - whichever the table says
+   applies - with the printed value small and struck beside it), the range in
+   its band's frame, the arc, and the name last, small. The columns keep
+   their places when a ship is crippled (user 2.11.2026): the printed value
+   stays first, small and struck, and the half beside it is the big one. A port / starboard
+   pair is one row, "port and starboard, each", while both sides are the same
+   in play (livePairs); a location knocked out by a critical (p. 67) parts
+   the pair and is struck through with the reason. An escort squadron shows
+   the total (p. 99) with the per-ship value. The merged pair row was turned
+   down on 12.10.2026 when the names led the row; with the numbers leading
+   it reads as one weapon. */
 export function weaponsTable(R, st, esq){
   const v = PLAY.view(R, st, appState.G.fleet);
   const rows = esq ? PLAY.escortFire(R, st) : v.arms;
@@ -260,23 +270,18 @@ export function weaponsTable(R, st, esq){
       head = `<tr class="zn"><td colspan="6">${a.zone === "basilica" ? "Basilica " + MID + " the whole fort's" : esc(PLAY.QUADS[v.quad]) + " quadrant"}</td></tr>`;
     }
     const cls = `${silent ? "silent" : ""}${half === "" ? " nohalf" : ""}${keep ? " keep" : ""}`.trim();
-    /* the card's own shortening (v1.2 J186): a name that would wrap onto a
-       second line on a phone says Stbd - the full name is the tooltip */
-    const nm = String(a.name).length > 22 ? String(a.name).replace(/\bStarboard\b/, "Stbd") : String(a.name);
-    const name = `<td class="nm"${nm !== a.name ? ` title="${esc(a.name)}"` : ""}>${esc(nm)}${silent ? `<small>${esc(a.silent)}</small>` : ""}</td>`;
-    const arc = `<td class="ar">${arcGlyph(a.arc)}</td>`;
-    /* the lower row of a pair: its name and its arc - the badge, range,
-       strength and half are the upper row's, two rows high */
-    if(pr === 2) return `<tr class="${cls}" data-pair="2">${name}${arc}</tr>`;
-    const rs = pr === 1 ? ' rowspan="2"' : "";
-    return `${head}<tr class="${cls}"${pr ? ' data-pair="1"' : ""}>
-      <td class="bd"${rs}><span class="bg${pr ? " tall" : ""}" style="--bd:${badge}">${letter}</span></td>
-      ${name}
-      <td class="rg"${rs}>${rangeHTML(R, a, k, "rp")}</td>
-      <td class="st${txt ? " txt" : ""}"${rs}>${txt ? esc(a.strength) : n}${esq && alive !== 1 ? `<small>${TIMES}${alive}${a.nocombine ? " separate" : n != null ? " = " + full : ""}</small>` : pr ? `<i class="ea">each</i>` : ""}</td>
-      <td class="hf${txt ? " txt" : ""}"${rs}>${silent ? "" : half}</td>
-      ${arc}</tr>`;
+    /* the lower row of a pair is in the upper one */
+    if(pr === 2) return "";
+    const two = pr === 1 ? rows[k + 1] : null;
+    const nmA = two ? esc(String(a.name).replace(/^(Port|Starboard|Stbd)\s+/i, "")) + " " + MID + " port and starboard, each" : esc(a.name);
+    return `${head}<tr class="${cls}">
+      <td class="bd"><span class="bg" style="--bd:${badge}">${letter}</span></td>
+      <td class="st${txt ? " txt" : ""}${cr && !keep && !silent && half !== "" ? " was" : ""}">${txt ? esc(a.strength) : (esq ? full : n)}${esq && alive !== 1 ? `<small>${TIMES}${alive}${a.nocombine ? " separate" : n != null ? " = " + full : ""}</small>` : ""}</td>
+      <td class="hf${txt ? " txt" : ""}${cr && !keep && !silent && half !== "" ? " now" : ""}">${silent ? "" : half}</td>
+      <td class="rg">${rangeHTML(R, a, k, "rp")}</td>
+      <td class="ar">${two ? arcGlyph("left right").replace(/class="pick"/g, 'class="on"') : arcGlyph(a.arc)}</td>
+      <td class="nm">${nmA}${silent ? `<small>${esc(a.silent)}</small>` : ""}</td></tr>`;
   }).join("");
-  return `<table class="wt${cr ? " crippled" : ""}"><thead><tr><th></th><th>Armament</th><th class="rg">Range cm</th><th class="st">Str</th><th class="hf">&frac12;${cr ? "<small>now</small>" : ""}</th><th></th></tr></thead><tbody>${trs}</tbody></table>`;
+  return `<table class="wt glance${cr ? " crippled" : ""}"><thead><tr><th></th><th class="st">Str</th><th class="hf">&frac12;${cr ? "<small>now</small>" : ""}</th><th class="rg">cm</th><th></th><th>Armament</th></tr></thead><tbody>${trs}</tbody></table>`;
 }
 

@@ -8,7 +8,12 @@
    api has every export of src/index.js (read live, so a value a module
    reassigns is current), DOMAIN, and accessors for the shared state that the
    tests set from outside: S / getS / setS (the open fleet), getNote / setNote
-   (the restore note) and setPhone (the phone panel). */
+   (the restore note).
+
+   api is not the global: each module keeps its own scope, so a forgotten
+   import is a ReferenceError here as in a browser (on the lines a test runs).
+   Node's own globals (process, Buffer ...) are there, though; the build stops
+   on any name a browser lacks (tools/lib/free-names.js). */
 "use strict";
 const path = require("path");
 const fs = require("fs");
@@ -23,7 +28,6 @@ function loadApp() {
     DOMAIN,
     getS: () => App.appState.S, setS: v => { App.appState.S = v; },
     getNote: () => App.appState.LOAD_NOTE, setNote: v => { App.appState.LOAD_NOTE = v; },
-    setPhone: v => { App.appState.PHONE = v; },
   });
   return api;
 }
@@ -40,7 +44,9 @@ function builtPage() {
    check): the page is one bundle whose exports are on window.GFR. This makes
    every export a global again, and the shared state (S, ...) assignable, so a
    script can say S.units or render() as it did when the page was one plain
-   script. */
+   script. The page's own code sees them too, so a module's forgotten import
+   would work under this and nowhere else; the build stops on one
+   (tools/lib/free-names.js), and names window already has are left alone. */
 const PAGE_GLOBALS_JS = "(function(){" +
   "for(const k of Object.keys(GFR)) if(k !== 'appState' && !(k in window))" +
   " Object.defineProperty(window, k, { get: () => GFR[k], configurable: true });" +

@@ -65,7 +65,9 @@ behind this layout are in [docs/adr/](docs/adr/).
 1. Expand `@@include` lines in the app's `index.html` (CSS files, the terrain core).
 2. Bundle `src/index.js` with esbuild (`format: iife`, ASCII output). The bundle's
    exports are on one global (`GFR` for the Registry, `GFP` for Play) so page
-   tools and tests can reach them.
+   tools and tests can reach them. Every name the bundle takes from the global
+   scope must be the browser's (`tools/lib/free-names.js`), or one the page's
+   other scripts declare: a forgotten import stops the build.
 3. Fill the page's markers: `<!--@data-->` (the JSON), `<!--@script-->`,
    `<!--@fonts-->`, `<!--@description-->`, the BFG Tools badge.
 4. Run the guards (`tools/lib/kit.js`): no control characters, every CSS
