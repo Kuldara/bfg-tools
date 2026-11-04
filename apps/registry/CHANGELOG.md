@@ -5,6 +5,10 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 
 ## Unreleased
 
+### Changed
+- A press shows until the page answers (4.11.2026): the control pulses from the moment it is pressed until the redraw is done, so a slow click no longer looks like nothing happened.
+- Faster (4.11.2026): the fleet's legality is worked out once per change, not once for every row that asks; a 22-unit Ork Clanz fleet redraws in 0.4 s instead of 4 s.
+
 ### Added
 - Saved fleets: Text and file, beside Send all, Receive and Import file: Copy as text and Save file for the open fleet, and a box to paste a fleet's text into Saved fleets. Send, Receive and the top bar's buttons are as they were.
 
