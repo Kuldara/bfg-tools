@@ -9,7 +9,9 @@ import { drawResult } from "./result-view.js";
 import { setFollowupFor } from "./events.js";
 
 /* ------------------------------------------------------------------ rolling */
-export var rng = Math.random;
+/* Math.random looked up at each roll, not taken once at load: a test that
+   replaces Math.random gets its dice (check_tide.js was rolling real ones) */
+export function rng(){ return Math.random(); }
 export function roll(){ return 1 + Math.floor(rng()*6); }
 var holoResult = null;
 /* One save, for one hull, recorded on that hull so it survives everything until
