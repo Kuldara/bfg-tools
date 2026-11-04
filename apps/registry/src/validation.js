@@ -39,10 +39,15 @@ export function fleetResolved(){
      host-list upgrade keys, so the legality panel neither counted nor
      priced them (spot check 20, seed 2026091443 - the host's Strand of
      Fortune stayed green with no Lord in the fleet). */
+  const key = JSON.stringify([L().nm, appState.S.limit | 0, appState.S.units]);
+  if(key === RF_MEMO.key) return RF_MEMO.rf;
   const ctx = { list: L(), host: L() };
-  return DOMAIN.resolveFleet({ list: L().nm, limit: appState.S.limit|0,
+  const rf = DOMAIN.resolveFleet({ list: L().nm, limit: appState.S.limit|0,
     units: appState.S.units.map(u => DOMAIN.fromLegacyUnit(u, ctx, DATA)) }, DATA);
+  RF_MEMO.key = key; RF_MEMO.rf = rf;
+  return rf;
 }
+const RF_MEMO = { key: null, rf: null };
 export function checks(){ return fleetResolved().checks; }
 /* Fleet facts (J214): the attack rating, what the enemy gets for free and
    victory points that are not a ship's cost - worked out from the fleet,
