@@ -130,6 +130,17 @@ const dice = a => `(() => { const q = ${JSON.stringify(a.map(f => (f - 0.5) / 6)
     await sleep(300);
     check("Menu > Set-up during the game: Applied, before the game; Young Gunz read-only", /before the game/.test(await txt(apply)) && /taken at set-up/.test(await txt('.setrow[data-u="1"]')), [await txt(apply), await txt('.setrow[data-u="1"]')]);
     await shot("8-setup-dark");
+    /* a laptop: the set-up's cards side by side, none under another (user
+       4.11.2026: Leadership ran under Fleet facts) */
+    await cd.send("Emulation.setDeviceMetricsOverride", { width: 1309, height: 900, deviceScaleFactor: 1, mobile: false });
+    await sleep(300);
+    /* a long choice in a Swap Ld list (a battleship and a big skwadron make one) widens a card that sizes to its text */
+    await cd.evaluate(`(() => { const s = document.querySelector(".main>.card select"); if(s){ const o = document.createElement("option"); o.text = "Gorbag's Revenge Battleship and Squadron C x10: Ld 8 -> 6, Young Gunz, Mob Rule"; s.add(o); } return 1; })()`);
+    const lap = await ev(`JSON.stringify((() => { const r = [...document.querySelectorAll(".main>.card")].map(c => { const b = c.getBoundingClientRect(); return { h: (c.querySelector("h2") || {}).innerText, l: b.left, r: b.right, t: b.top, b: b.bottom }; });
+      const hit = []; r.forEach((a, i) => r.slice(i + 1).forEach(b => { if(a.l < b.r - 1 && b.l < a.r - 1 && a.t < b.b - 1 && b.t < a.b - 1) hit.push(a.h + " / " + b.h); }));
+      return { n: r.length, cols: new Set(r.map(x => Math.round(x.l))).size, hit }; })())`);
+    check("a laptop's set-up: the cards side by side, none under another", lap.n >= 2 && lap.cols >= 2 && !lap.hit.length, lap);
+    await shot("9-setup-laptop");
   }finally{ await cd.close(); }
   console.log((fail ? "FAIL " : "ok ") + pass + " passed, " + fail + " failed");
   process.exit(fail ? 1 : 0);

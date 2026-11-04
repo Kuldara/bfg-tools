@@ -5,6 +5,9 @@ a tag `play-v<version>` deploys the Registry's site.
 
 ## Unreleased
 
+### Fixed
+- On a laptop the set-up's cards no longer overlap: a card took the width of its longest line (a long Swap Ld choice) and ran under the next column's card, Leadership under Fleet facts. A card now fills its column (check_mob.js checks it at 1309 px).
+
 ### Changed
 - One list of saved fleets (4.11.2026): the load screen's Saved fleets is the builder's Saved fleets. A fleet that comes by a link, a code or a file goes in there, and the builder shows it; the page's own list from before is moved in once. The fleets the builder is editing are under Being edited in the builder. Deleting and renaming are done in the builder.
 
