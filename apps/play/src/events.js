@@ -6,6 +6,7 @@ import { act } from "./actions.js";
 import { render, tapSel } from "./render.js";
 import { builderFleets, copyText, openSend, savedFleets, takeFleetText } from "./share.js";
 import { peerAct } from "./peer.js";
+import { vpAct } from "./vp.js";
 import { boardAct } from "./board.js";
 import { orderAct, shipAct } from "./ship-actions.js";
 
@@ -31,9 +32,10 @@ document.addEventListener("click", ev => {
   const tr = el.getBoundingClientRect();
   appState.TAP = { sel: tapSel(el), top: tr.top + tr.height / 2 };
   /* a tap inside the menu box is not a tap on the backdrop */
-  if((name === "menu" || name === "endph" || name === "peerpanel" || name === "boardclose" || name === "acclose") && el.classList.contains("menu") && ev.target.closest(".box")) return;
+  if((name === "menu" || name === "endph" || name === "peerpanel" || name === "boardclose" || name === "acclose" || name === "vp") && el.classList.contains("menu") && ev.target.closest(".box")) return;
   /* the opponent's fleet is to look at: its cards take no taps */
   if(el.closest(".peerview")) return;
+  if(vpAct(name, el)) return;
   if(peerAct(name, el)) return;
   if(boardAct(name, el)) return;
   if(shipAct(name, el)) return;

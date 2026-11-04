@@ -1162,6 +1162,25 @@ function run(check){
     check("smoke: after drawing their side my own game is back", P(`G.ln`) === TAU.nm && P(`U.length`) === 1 && /Tau/.test(P(`renderRoster()`)) && P(`V.side`) === "peer");
     P(`V.side = "me"`);
     check("smoke: the tabs and the edge tab appear once there is an opponent", /class="sides/.test(P(`renderRoster()`)) && /class="edge r/.test(P(`renderRoster()`)));
+    /* victory points (src/vp.js, user 4.11.2026): the bar's VP is a button,
+       with an opponent both scores; the sheet's what-ifs and the card's
+       ladder count without touching the game; a disengaged card is card B */
+    const pts = P(`U[0].R.points | 0`);
+    check("smoke: VP: with an opponent the bar's VP is a button with both scores", /data-act="vp"[^>]*>[\s\S]*class="me">0<[\s\S]*class="them">0</.test(P(`renderRoster()`)) && /vpbtn duo/.test(P(`renderRoster()`)));
+    P(`V.vp = true`);
+    const sheet = P(`renderVpSheet()`);
+    clean("the VP sheet", sheet);
+    check("smoke: VP: the sheet has both scores and a what-if for my ship", /You score/.test(strip(sheet)) && /data-act="vpq" data-arg="m:cr:0"/.test(sheet), strip(sheet).slice(0, 300));
+    P(`V.vpQ = { "m:cr:0": 1 }`);
+    check("smoke: VP: a ticked what-if shows now -> then (crippled: 25 %, p. 123) and changes nothing in the game",
+          new RegExp("0→</span>" + Math.ceil(pts * 0.25)).test(P(`renderVpSheet()`)) && P(`G.st[0].hits | 0`) === 0 && P(`vpTotal()`) === 0);
+    P(`V.vp = false; V.vpQ = {}`);
+    const lad = P(`renderRow(0)`);
+    check("smoke: VP: the ship's card has the ladder, destroyed = its points", /data-act="vpk"/.test(lad) && new RegExp('data-arg="dd"[^>]*>destroyed<b>' + pts + "<").test(lad), strip(lad).slice(-200));
+    P(`G.st[0].disengaged = true`);
+    const dis = P(`renderRow(0)`);
+    check("smoke: VP: a disengaged card is grey with its band and no ladder (10 %, p. 123)", /class="row [^"]*\bdis\b/.test(dis) && new RegExp("DISENGAGED[^<]*gets " + Math.ceil(pts * 0.1) + " VP").test(dis) && !/data-act="vpk"/.test(dis));
+    P(`G.st[0].disengaged = false`);
     clean("the link panel", P(`renderPeerPanel()`));
     check("smoke: a room code is read typed, with spaces, lower case or from a link; I and O are not room letters", P(`JSON.stringify([parseRoom("krak"), parseRoom(" K R A K "), parseRoom("https://x/p.html#room=WAAG"), parseRoom("KIOK"), parseRoom("KRAKEN"), parseRoom("")])`) === '["KRAK","KRAK","WAAG",null,null,null]');
     check("smoke: a new room code is four room letters", /^[A-HJ-NP-Z]{4}$/.test(P(`newRoomCode()`)));

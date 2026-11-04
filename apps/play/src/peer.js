@@ -6,6 +6,7 @@ import { swapFleetRes } from "./game-state.js";
 import { CLOSE_X, render, rosterRows, vpTotal } from "./render.js";
 import { toast } from "./actions.js";
 import { copyText, shareText } from "./share.js";
+import { vpButton } from "./vp.js";
 import { esc, factionCols } from "../../../packages/ui/format.js";
 import { qrFull, qrSvg } from "../../../packages/ui/qr.js";
 import { PHONE_LINK } from "../../../packages/ui/share-link.js";
@@ -328,7 +329,7 @@ export function renderPeerSide(){
     `<div class="main peerview${appState.V.compact ? " compact" : ""}">${body}</div>${edgeHandle()}
     <div class="bottom"><div class="brow peerbar">
       <div class="psum"><b>${esc(peerLabel())}</b>${ships} ship${ships === 1 ? "" : "s"} ${MID} ${pts} pts ${MID} ${toPlay} to play<small>read-only ${MID} ${esc(statusWord())}</small></div>
-      <div class="vp">they concede<b>VP ${vp}</b></div>
+      ${vpButton("their side")}
     </div></div>`;
 }
 

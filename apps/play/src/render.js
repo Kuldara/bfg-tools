@@ -16,6 +16,7 @@ import { boardNoteLine, renderBoardSheet } from "./board.js";
 import { rosterOrder } from "./reorder.js";
 import { BURST, repairBtn, repairLines, repairPanel } from "./repair.js";
 import { freeRR, orderLd, renderActions } from "./ship-actions.js";
+import { disBand, renderVpSheet, vpButton, vpLadder } from "./vp.js";
 import { edgeHandle, peerAfterRender, peerLoadCard, peerMenuWord, peerSetupCard, peerSide, renderPeerPanel, renderPeerSide, sidesStrip } from "./peer.js";
 
 /* ============================================================= RENDER ===== */
@@ -82,6 +83,7 @@ export function render(){
   if(appState.V.peerPanel) html += renderPeerPanel();
   else if(!peer && appState.V.menu && appState.G) html += renderMenu();
   else if(!peer && appState.V.endph && appState.G && appState.V.screen === "roster") html += renderEndPhase();
+  else if(appState.V.vp && appState.G && (peer || appState.V.screen === "roster")) html += renderVpSheet();
   $("#app").innerHTML = html;
   /* A new screen starts at its top, not at the old one's scroll (user
      19.10.2026: the set-up opened half-way down, its first ship off the
@@ -679,7 +681,7 @@ export function renderRoster(){
         ${OPT.orders ? `<button class="turnbtn ${fl.mine ? "" : "enemy"}" data-act="${fl.mine ? "endturn" : "newturn"}">${fl.mine ? "End turn " + fl.turn : "Start turn " + (fl.turn + 1)}</button>`
                      : `<button class="turnbtn" data-act="newturn">New turn ${fl.turn + 1}</button>`}
         <div class="pager hide"><button class="ico" data-act="page" data-arg="-1" aria-label="Previous page">&lsaquo;</button><b>1 / 1</b><button class="ico" data-act="page" data-arg="1" aria-label="Next page">&rsaquo;</button></div>
-        <div class="vp">${OPT.orders && !fl.mine ? "brace, hits, crits" : toPlay + " to play"}<b>VP ${vp}</b></div>
+        ${vpButton(OPT.orders && !fl.mine ? "brace, hits, crits" : toPlay + " to play")}
       </div>
     </div>`;
 }
@@ -746,12 +748,16 @@ export function renderGroupHead(letter, ms){
     return esc(names[k]) + (escG ? " " + TIMES + alive[k] : "") + (status.crippled.indexOf(k) >= 0 ? ` <i class="cr">crippled</i>` : "");
   }).join(", ");
   const mob = escG ? mobChip(units) : "";
-  return `<section class="row grp-hd${escG ? " esc" : ""}" data-g="${esc(letter)}" style="--kd:${kd};--km:${km};--sq:${sqColor(letter)}">
+  /* an escort squadron off the table, not destroyed: card B (user 4.11.2026) */
+  const gone = j => PLAY.destroyed(appState.U[j].R, appState.G.st[j]);
+  const gDis = escG && ms.every(j => appState.G.st[j].disengaged || gone(j)) && !ms.every(gone);
+  return `<section class="row grp-hd${escG ? " esc" : ""}${gDis ? " dis" : ""}" data-g="${esc(letter)}" style="--kd:${kd};--km:${km};--sq:${sqColor(letter)}">
     <div class="r1"><span class="tag grp">SQN ${lab}</span>
       <div class="name"><b>${escG ? "Escort squadron " + lab + " " + TIMES + alive.reduce((a, n) => a + n, 0) + " of " + total : "Squadron " + lab}</b><small>${members}${from.idx != null ? " " + MID + " Ld of " + esc(names[from.idx]) + " (p. 95)" : ""}</small></div>
       ${ldTile(ms[0])}
       <button class="played p${st0.played}" data-act="played" data-i="${ms[0]}">${["TO PLAY", "MOVED", "SHOT"][st0.played]}</button></div>
     ${mob ? `<div class="r3">${mob}</div>` : ""}
+    ${gDis ? disBand(ms[0]) : escG ? vpLadder(ms[0]) : ""}
     ${appState.V.compact || escG ? "" : squadronTable(units, names)}
     ${OPT.orders && ordChip(st0) ? `<div class="r2">${ordChip(st0)}</div>` : ""}
     ${OPT.orders ? `<div class="r4">
@@ -957,7 +963,8 @@ export function renderRow(i, inGroup){
   const [kd, km] = factionCols(R.entry ? R.entry.list : appState.G.ln, R.source.faction || "");
   const esq = v.escort;
   const sqc = inGroup ? sqColor(appState.G.grp[i]) : esq ? escColor(i) : null;
-  const cls = ["row", esq ? "esc" : "cap", v.crippled ? "crippled" : "", v.destroyed ? "dead" : "", v.destroyed && !esq && !st.hulk && st.hulkName ? "gone" : "", "pl" + st.played, inGroup ? "ingrp" : "", sqc ? "sqd" : ""].join(" ");
+  const dis = st.disengaged && !v.destroyed;
+  const cls = ["row", esq ? "esc" : "cap", v.crippled ? "crippled" : "", v.destroyed ? "dead" : "", dis ? "dis" : "", v.destroyed && !esq && !st.hulk && st.hulkName ? "gone" : "", "pl" + st.played, inGroup ? "ingrp" : "", sqc ? "sqd" : ""].join(" ");
   const nMem = esq ? (st.members || []).length : 0;
   const sub = [R.name ? title(R.className) : "", R.stats.type, esq ? nMem + " " + memberWord(R, nMem) : (R.points | 0) + " pts"].filter(Boolean).join(" " + MID + " ");
   /* a star fort's chips are the selected quadrant's, and say which */
@@ -1007,6 +1014,7 @@ export function renderRow(i, inGroup){
     <div class="r1"><span class="tag">${classTag(R)}${esq ? TIMES + v.alive : ""}</span>${inGroup ? `<span class="tag sq" title="Squadron ${grpHTML(appState.G.grp[i])}">SQN ${grpHTML(appState.G.grp[i])}</span>` : ""}${wlTag(i)}
       <button class="name" data-act="sheet" data-i="${i}"><b>${esc(unitName(i))}</b><small>${esc(sub)}</small></button>
       ${blastBtn}${r1tail}${actBtn}</div>
+    ${dis && !(esq && inGroup) ? disBand(i) : ""}
     ${upgradeLine(i)}${esq ? ygLine(i) : ""}
     ${cmdsAboard(i).map(cmdLine).join("")}${shipRRLine(i)}
     ${v.fort && !v.destroyed ? quadSelector(i, v) : ""}
@@ -1014,6 +1022,7 @@ export function renderRow(i, inGroup){
     ${v.destroyed && !esq ? "" : compact ? weaponsLine(R, st, esq) : weaponsTable(R, st, esq)}
     ${R.ruleCard && !v.destroyed && !compact ? ruleSteps(R) : ""}
     <div class="r3">${r3}${chips}${repairBtn(i)}</div>
+    ${esq && inGroup ? "" : vpLadder(i)}
     ${r4}
     ${repairLines(i)}
     ${appState.V.pop && appState.V.pop.i === i && appState.V.sheet == null && !(inGroup && /^(ld|order)$/.test(appState.V.pop.kind)) ? renderPop(i) : ""}
