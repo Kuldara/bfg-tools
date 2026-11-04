@@ -19,4 +19,12 @@ button,input,select,textarea{font:inherit;color:inherit}
 :where(summary):active{filter:brightness(.88)}
 @media (hover:hover){:where(button,a.btn,a.tool,[role=button]):not([disabled]):hover{filter:brightness(1.12)}}
 @media (prefers-reduced-motion:reduce){:where(button,a.btn,a.tool,[role=button],[data-act]):active{transform:none}}
+/* A press shows until the page has answered (user 4.11.2026: "click and wait
+   and nothing happens"). The class goes on at pointerdown, a task of its own,
+   so it is painted before the click's work starts; transform and opacity run
+   on the compositor, so the pulse goes on while a redraw holds the page. The
+   redraw replaces the element, or main.js takes the class off after it. */
+.tapping{animation:tap-pulse .5s ease-in-out infinite alternate}
+@keyframes tap-pulse{from{transform:scale(.95);opacity:.7}to{transform:scale(.99);opacity:1}}
+@media (prefers-reduced-motion:reduce){.tapping{animation:none;opacity:.7}}
 

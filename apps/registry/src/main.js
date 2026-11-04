@@ -23,6 +23,24 @@ export const dropKept = nm => {
 /* :active press feedback on iOS Safari needs a touch listener on the page. */
 /* (the test harnesses load this page with a stub document that has no listeners) */
 if(document.addEventListener) document.addEventListener("touchstart", () => {}, { passive: true });
+/* The press stays on the control until the page has answered: tokens.css
+   .tapping, on at pointerdown, off a frame after the click's work (or when
+   the press goes nowhere). */
+if(document.addEventListener){
+  const TAPPABLE = "button,a.btn,a.tool,[role=button],[data-act],summary,label.btn";
+  let tapped = null;
+  const done = () => { const el = tapped; tapped = null;
+    if(el) requestAnimationFrame(() => setTimeout(() => el.classList.remove("tapping"), 0)); };
+  document.addEventListener("pointerdown", e => {
+    const el = e.button === 0 && e.target.closest ? e.target.closest(TAPPABLE) : null;
+    if(!el || el.disabled) return;
+    tapped = el; el.classList.add("tapping");
+  }, { passive: true, capture: true });
+  document.addEventListener("click", done, true);
+  document.addEventListener("pointercancel", done, true);
+  /* a press that slides off its control ends in no click */
+  document.addEventListener("pointerup", () => setTimeout(done, 400), true);
+}
 /* One column on a phone puts Your fleet under the whole catalogue. A swipe
    to the right goes straight to the fleet, a swipe to the left back to
    where the catalogue was (user 18.10.2026: "a swipe right takes you
