@@ -110,6 +110,13 @@ function run(check){
   const open = () => {
     const pg = boot(html), raw = pg.P;
     pg.P = src => { try{ return raw(src); }catch(e){ check("smoke: the page does not throw at: " + String(src).replace(/\s+/g, " ").slice(0, 70), false, where(e)); return ""; } };
+    /* js run as a browser runs the page: there the exports are no globals,
+       so a module that uses another's export without importing it throws
+       (the harness's globals hid one in actions.js). js names the bundle
+       through GFP. */
+    pg.bare = js => pg.P(`(() => { const ks = Object.keys(GFP).concat(Object.keys(GFP.appState)), keep = {};
+      ks.forEach(k => { keep[k] = Object.getOwnPropertyDescriptor(globalThis, k); delete globalThis[k]; });
+      try{ return (${js}); }finally{ ks.forEach(k => { if(keep[k]) Object.defineProperty(globalThis, k, keep[k]); }); } })()`);
     return pg;
   };
 
@@ -602,6 +609,23 @@ function run(check){
     check("smoke: ... markup in an escort squadron's tag is printed as text on every screen, never as markup",
           pages.every(h => h.indexOf("<img") < 0) && pages[1].indexOf("&lt;img") >= 0,
           pages.map(h => (h.match(/.{0,40}<img.{0,40}/) || [""])[0]).join(" | "));
+  });
+
+  /* ---------- Rulebook p. 57: a failed disengage leaves the squadron --- */
+  guard("a failed disengage in a squadron", () => {
+    const pg = open(), P = pg.P;
+    const L = pg.DATA.lists.find(x => /^Imperial Navy . Gothic Sector$/.test(x.nm));
+    const lun = name => Object.assign(saved(L, /^Cruisers$/, /^Lunar class cruiser$/, 1, name), { sq: "C" });
+    pg.ctx.__doc = { ln: L.nm, limit: 9000, units: [lun("Alpha"), lun("Beta")] };
+    P(`newGame(resolveFleet(__doc)); U.forEach((x, i) => setLd(i, 8)); act("start", null);
+       var NX = n => U.findIndex(x => x.u.name === n);`);
+    const beta = P(`NX("Beta")`);
+    /* the Actions helper's call (ship-actions.js), as a browser runs it */
+    pg.bare(`GFP.act("disengage", ${beta}, { ok: false, ms: [${beta}] })`);
+    /* p. 57: a capital ship in a squadron that fails "falls out of the
+       squadron and may not attempt to re-join it" */
+    check("smoke: a capital ship that fails to disengage falls out of its squadron, the page run as in a browser (Rulebook p. 57)",
+          P(`G.grp[NX("Beta")] === null && G.grp[NX("Alpha")] === "C"`) === true, P(`JSON.stringify(G.grp)`));
   });
 
   /* ------------ J233: every Ork Warlord aboard a ship of his own (T43) --- */

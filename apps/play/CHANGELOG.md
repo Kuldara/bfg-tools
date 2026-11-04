@@ -23,6 +23,7 @@ a tag `play-v<version>` deploys the Registry's site.
 ### Fixed
 - A capital squadron no longer shows a mixed escort squadron's letter (4.11.2026): a tiddla marked A and the kroozers marked B were both SQN A.
 - A squadron letter from a fleet link or a file is printed as text (4.11.2026): markup in an escort squadron's letter went into the page as markup.
+- A capital ship in a squadron that fails to disengage falls out of the squadron (Rulebook p. 57; 4.11.2026): in a browser the page stopped with an error there, at a name one module used without importing it.
 
 ### Added
 - The set-up rows show each ship's price and what was bought for it (2.11.2026), so two ships of one class can be told apart before they are named.
