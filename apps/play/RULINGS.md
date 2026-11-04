@@ -451,8 +451,9 @@ a letter A-C in the alphabetical order of the builder's ids (the builder's B and
 -> A and B), because the page has three SQN letters and their colours. **Limits:**
 a lone id (the Clanz one-kroozer skwadron p. 372 or an unfinished squadron) makes
 no group, because a one-ship group changes nothing on the table; the fourth and
-later squadrons start without a group; an escort squadron and a Blood Axe tiddla's
-commandeered escorts (J220) stay units of their own as before. The page does not
+later squadrons start without a group; an escort squadron of one card stays a
+unit of its own as before, and escort cards with one letter are one squadron
+(below, "T42, escort squadrons", 4.11.2026). The page does not
 enforce the squadron: a squadron the builder shows as red (e.g. a battleship and a
 grand cruiser together, Fleets p. 13) still starts as a group, because it is the
 fleet the player saved. The SQN button changes the group as before, and a
@@ -616,6 +617,32 @@ table (D6 or 2D6, the row marked), and the Hit-and-Run die for a teleport attack
 or an assault boat's raid (pp. 85, 92). Disengaging and boarding are not orders:
 Actions has them (T46), the orders pop and the card's Status do not, except the
 way back for a ship marked disengaged by mistake.
+
+**T42, escort squadrons, the user's decision 4.11.2026.** Since the builder's mixed
+squadron (28.10.2026), escort cards with one squadron letter, two cards or more,
+start the game as one escort squadron (`builderGroups`: `G.grp` is "e:" and the
+letter, which the SQN button never gives). The ships in a squadron "can be of
+different classes as long as they are all of the same type" (p. 95), and a Da Ork
+Clanz tiddla is "3-10 Escorts, chosen from the following list in any mix desired"
+(Fleets p. 374, v0.40), so a mixed tiddla is such a squadron; a Blood Axe tiddla's
+commandeered Imperial Navy and Chaos escorts (Fleets p. 371) have its letter and
+are in it. The squadron has a head, "Escort squadron T ×6 of 6", with each card's
+ships alive, and every class keeps its own card under it, whose ships are tapped
+there. It rolls one Leadership ("per escort squadron", p. 45): the value set on
+one card is on all of them (`setLd`), and set-up rolls it once. It has one order
+and one Brace, and concedes its victory points as a whole (p. 123,
+`squadronConceded`). Mob Rule, "Ork escort skwadrons gain a +1 bonus to their
+Leadership while they contain more than five models" (Fleets p. 372, v0.40), is
+said on the head and on none of its cards, counting the ships still alive on all
+of them, commandeered ones too: "mob rule: +1 Ld (6 ships)", gone when five are
+left.
+Young Gunz (p. 372) is said once for the squadron at set-up. The Leadership stays
+the player's to tap (T40). The user was asked whether to keep this or show the
+squadron as one merged card, and kept it. Smoke test: three Ravagers and three
+Brutes with the letter T, three Savages of the Blood Axes with three commandeered
+Cobras as A, three Onslaughts without a letter; two squadrons and a card alone,
+one Ld per squadron, Young Gunz once, Mob Rule on T's head at six and not at
+five.
 
 ## What is not tracked, and why
 

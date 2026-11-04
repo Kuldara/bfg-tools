@@ -631,6 +631,47 @@ function run(check){
           !!got.sp && got.sp[1] === "30 cm" && got.sp[2] === "25 cm" && got.pts === 215, JSON.stringify(got));
   });
 
+  /* -- T42 (user 4.11.2026): a mixed tiddla is one squadron in the game -- */
+  guard("the Clanz mixed tiddla in the game", () => {
+    const pg = open(), P = pg.P;
+    const L = pg.DATA.lists.find(x => /^Orks . Da Ork Clanz$/.test(x.nm));
+    const sq = (u, tag) => Object.assign(u, { sq: tag });
+    /* Fleets p. 374: "Tiddla skwadron 3-10 Escorts, chosen from the
+       following list in any mix desired"; p. 371: "A Blood Axe tiddla
+       skwadron of at least six escorts may include up to three Imperial Navy
+       and/or Chaos escorts" - T is three Ravagers and three Brutes, A three
+       Savages and three commandeered Cobras, the Onslaughts a card alone */
+    pg.ctx.__doc = { ln: L.nm, limit: 1500, units: [saved(L, /^WARLORD$/, /^Ork Warlord$/),
+      sq(saved(L, /^Tiddla skwadron$/, /^Ravager attack ship$/, 3, "Rav"), "T"),
+      sq(saved(L, /^Tiddla skwadron$/, /^Brute ramship$/, 3, "Bru"), "T"),
+      Object.assign(saved(L, /^Tiddla skwadron$/, /^Savage gunship$/, 3, "Sav"), { sq: "A", upn: { "CLAN UPGRADES\u0001Clan: Blood Axes (Green)": "take" } }),
+      sq(saved(L, /^BLOOD AXE COMMANDEERED ESCORTS$/, /^Cobra class destroyer$/, 3, "Cob"), "A"),
+      saved(L, /^Tiddla skwadron$/, /^Onslaught attack ship$/, 3, "Ons")] };
+    P(`newGame(resolveFleet(__doc)); V.screen = "setup"; save(); render(); var NX = n => U.findIndex(x => x.u.name === n);`);
+    const NAMES = ["Rav", "Bru", "Sav", "Cob", "Ons"];
+    const grp = JSON.parse(P(`JSON.stringify(${JSON.stringify(NAMES)}.map(n => G.grp[NX(n)]))`) || "[]");
+    check("smoke: the cards of one tiddla letter are one squadron, a Blood Axe tiddla's commandeered escorts in it, a card without a letter alone (Fleets pp. 371, 374, T42)",
+          grp[0] != null && grp[0] === grp[1] && grp[2] != null && grp[2] === grp[3] && grp[0] !== grp[2] && grp[4] == null, JSON.stringify(grp));
+    /* Rulebook p. 45: Leadership is rolled "per escort squadron" */
+    const ld = P(`(() => { const r = ldRollers().map(i => U[i].u.name); setLd(NX("Rav"), 6);
+      return JSON.stringify([r, ${JSON.stringify(NAMES)}.map(n => G.st[NX(n)].ld)]); })()`);
+    check("smoke: ... each squadron rolls one Leadership: one roll for it, and the value set on one card is on all of its cards (p. 45)",
+          ld === JSON.stringify([["Rav", "Sav", "Ons"], [6, 6, null, null, null]]), ld);
+    /* Fleets p. 372, Young Gunz: "Any Ork escort skwadron with a Leadership of 5 or 6" */
+    const yg = (strip(P(`renderSetup()`)).match(/Young Gunz: one free escort/g) || []).length;
+    check("smoke: ... Young Gunz is said once for the squadron, not on each of its cards (Fleets p. 372)", yg === 1, yg + " times");
+    P(`U.forEach((x, i) => { if(x.R.kind === "ship" && G.st[i].ld == null) setLd(i, 7); }); act("start", null);`);
+    /* Fleets p. 372, Mob Rule: "Ork escort skwadrons gain a +1 bonus to
+       their Leadership while they contain more than five models" */
+    const head = () => strip(P(`renderGroupHead(G.grp[NX("Rav")], groupUnits(G.grp[NX("Rav")]))`));
+    const cards = () => strip(P(`renderRow(NX("Rav"), true) + renderRow(NX("Bru"), true)`));
+    check("smoke: ... Mob Rule counts the skwadron: three Ravagers and three Brutes are six ships, said on the squadron's head and on neither card (Fleets p. 372)",
+          /mob rule: \+1 Ld \(6 ships\)/.test(head()) && !/mob rule/i.test(cards()), head().slice(0, 200) + " | " + cards().slice(0, 120));
+    P(`PLAY.killMember(G.st[NX("Rav")], 0)`);
+    check("smoke: ... with one ship lost, five are not more than five: the head says 5 of 6 and no Mob Rule (Fleets p. 372)",
+          /×5 of 6/.test(head()) && !/mob rule/i.test(head()), head().slice(0, 200));
+  });
+
   /* ------------- the opponent's fleet (peer.js, user 31.10.2026) --- */
   guard("the opponent's fleet", () => {
     const pg = open(), P = pg.P;

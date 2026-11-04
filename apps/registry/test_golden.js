@@ -782,7 +782,7 @@ function matchCheckRow(row, x) {
 const keyOfCheck = x => (x.src ? '"' + String(x.src).slice(0, 44) + '"' : "/" + x.label + "/");
 
 const FLEET_EXPECT_KEYS = ["aboard", "checks", "facts", "failing", "no_issues",
-                          "others_ok", "total", "units"];
+                          "others_ok", "total", "units", "view_contains", "view_lacks"];
 
 function runFleetCase(c) {
   const r = { id: c.id, page: c.page, status: c.status || "expect_pass",
@@ -888,6 +888,16 @@ function runFleetCase(c) {
       r.checks.push("unit /" + x.entry + "/: points disagree: fleet view " + pv + ", card " + (Rc && Rc.points) +
                     ", fleet " + (RF.units[i] && RF.units[i].points));
   });
+  /* What the fleet view says about the whole fleet (view_contains /
+     view_lacks, read as in the unit cases): information the builder shows
+     without a check row, such as a Clanz tiddla skwadron's Mob Rule (Fleets
+     p. 372), which counts the skwadron and not one of its cards. */
+  if (e.view_contains || e.view_lacks) {
+    api.renderFleet();
+    const w = { profile: [] };
+    surfaceWordChecks({ view_contains: e.view_contains, view_lacks: e.view_lacks }, el("#fleet").innerHTML, "", w);
+    w.profile.forEach(m => r.checks.push(m));
+  }
   if (e.others_ok)
     cs.filter(row => !row.ok && claimed.indexOf(row) < 0).forEach(row =>
       r.checks.push("unexpected red: " + row.t + " (" + row.v + ")"));
