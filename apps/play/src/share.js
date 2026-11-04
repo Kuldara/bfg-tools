@@ -3,7 +3,7 @@ import { anyRepairRoll, repairPanel } from "./repair.js";
 import { appState } from "./state.js";
 import { builderRaw, lsGet, lsSet } from "./storage.js";
 import { MID, TIMES, fnv } from "./helpers.js";
-import { fleetsIn, parseDoc, resolveFleet } from "./fleet-document.js";
+import { fleetPoints, fleetsIn, parseDoc, resolveFleet } from "./fleet-document.js";
 import { BUILDER_URL, KEY_LINKED, save } from "./game-state.js";
 import { baseName, unitName } from "./derived.js";
 import { render } from "./render.js";
@@ -17,25 +17,58 @@ import { esc, factionCols } from "../../../packages/ui/format.js";
 /* PHONE_LINK, b64url, packFleet, QR and qrSvg come from packages/ui (the
    share link and the QR code): the builder's Saved fleets make the same
    links. */
-/* A phone has no builder save of its own. A fleet comes to it inside a
-   link (#fleet=..., the fleet document deflated and base64url'd - nothing
-   is uploaded anywhere, the link IS the fleet) or as the builder's export
-   file. Either way it goes on the page's own list (KEY_LINKED), never into
-   the builder's key. */
-export function linkedFleets(){
+/* One list of saved fleets (user 4.11.2026: "always the same as the fleet
+   list - only one save list"): the builder's named library
+   (gothic-fleet-registry-saves-v1, apps/registry/docs/save-format.md), which
+   this page reads and adds to. A fleet that comes by a link, a code or a file
+   goes in there as the builder's Import does ("from": "link" or "file"), so
+   the builder's Saved fleets shows it, and a fleet saved in the builder is
+   here. The page writes only new saves; renaming and deleting are the
+   builder's. Play's own list of 1.-3.11.2026 (KEY_LINKED) is moved in once. */
+export const KEY_LIB_BUILDER = "gothic-fleet-registry-saves-v1";
+const KEY_MOVED = "gothic-fleet-play-linked-moved";
+function libRead(){
+  let o = null; try{ o = JSON.parse(lsGet(KEY_LIB_BUILDER) || "null"); }catch(e){}
+  const saves = o && Array.isArray(o.saves) ? o.saves.filter(s => s && typeof s === "object" && s.id && Array.isArray(s.units)) : [];
+  return { v: 1, saves: saves, open: o && o.open && typeof o.open === "object" ? o.open : {} };
+}
+let LIB_SEQ = 0;
+const today = () => { const d = new Date(), p = n => (n < 10 ? "0" : "") + n; return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate()); };
+/* the builder's rules: the same list, limit and ships are the same fleet;
+   a name is not taken twice ("Name (2)") */
+const libKey = d => JSON.stringify([d.ln, d.limit | 0, d.units]);
+function libName(lib, nm){
+  const taken = n => lib.saves.some(s => s.name === n);
+  if(!taken(nm)) return nm;
+  let k = 2; while(taken(nm + " (" + k + ")")) k++;
+  return nm + " (" + k + ")";
+}
+/* Add one fleet document; returns the id of its save, new or already there. */
+export function addSaved(doc, how){
+  const lib = libRead();
+  const d = { ln: doc.ln, limit: typeof doc.limit === "number" && doc.limit >= 0 ? doc.limit | 0 : 0, units: doc.units };
+  const same = lib.saves.filter(s => libKey(s) === libKey(d))[0];
+  if(same) return same.id;
+  const res = resolveFleet(d), pts = res.error ? 0 : fleetPoints(res.units);
+  const s = { id: Date.now().toString(36) + "-p" + (LIB_SEQ++).toString(36), name: libName(lib, String(doc.name || "").trim() || (d.ln + " " + pts)),
+              ln: d.ln, limit: d.limit, units: d.units, pts: pts, saved: today(), from: how === "file" ? "file" : "link" };
+  lib.saves.unshift(s);
+  lsSet(KEY_LIB_BUILDER, JSON.stringify(lib));
+  return s.id;
+}
+/* Play's old list into the library, oldest first so the newest stays on top. */
+function moveOldList(){
+  if(lsGet(KEY_MOVED)) return;
   let a = null; try{ a = JSON.parse(lsGet(KEY_LINKED) || "[]"); }catch(e){}
-  return Array.isArray(a) ? a.filter(f => f && f.doc && Array.isArray(f.doc.units) && f.doc.units.length) : [];
+  (Array.isArray(a) ? a : []).filter(f => f && f.doc && Array.isArray(f.doc.units) && f.doc.units.length)
+    .reverse().forEach(f => addSaved(f.doc, f.how));
+  lsSet(KEY_MOVED, "1");
 }
-export function addLinked(doc, how){
-  const d = { name: doc.name || "", ln: doc.ln, limit: doc.limit, units: doc.units };
-  const fp = fnv(JSON.stringify([d.ln, d.units]));
-  const now = new Date(), pad = n => (n < 10 ? "0" : "") + n;
-  const all = linkedFleets().filter(f => f.fp !== fp);
-  all.unshift({ fp: fp, how: how, date: now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate()), doc: d });
-  lsSet(KEY_LINKED, JSON.stringify(all.slice(0, 40)));
-  return fp;
+/* The saved fleets, in the library's order (newest first). */
+export function savedFleets(){
+  moveOldList();
+  return libRead().saves.filter(s => s.units.length);
 }
-export function forgetLinked(k){ const all = linkedFleets(); all.splice(k, 1); lsSet(KEY_LINKED, JSON.stringify(all)); }
 /* A fleet document as text (a file, a pasted one, a link's content): every
    fleet in it goes on the list, the first one is marked new. */
 export function takeFleetText(text, how){
@@ -46,21 +79,15 @@ export function takeFleetText(text, how){
   const bad = fs.map(f => resolveFleet(f)).find(r => r.error);
   if(bad && fs.length === 1){ appState.V.loadErr = bad.error; render(); return false; }
   const fresh = [];
-  fs.slice().reverse().forEach(f => { fresh.push(addLinked(f, how)); });
+  fs.slice().reverse().forEach(f => { fresh.push(addSaved(f, how)); });
   appState.V.loadErr = ""; appState.V.linkNew = fresh; appState.V.screen = "load";
   render();
   return true;
 }
-/* The builder's fleets on this device, the named library first (J208,
-   gothic-fleet-registry-saves-v1) and then the fleet each list is editing
-   (gothic-fleet-registry-v1). Read, never written. */
-export const KEY_LIB_BUILDER = "gothic-fleet-registry-saves-v1";
+/* The fleet each of the builder's lists is editing (gothic-fleet-registry-v1):
+   not saves, so beside the saved fleets. Read, never written. */
 export function builderFleets(){
   const out = [];
-  let lib = null; try{ lib = JSON.parse(lsGet(KEY_LIB_BUILDER) || "null"); }catch(e){}
-  (lib && Array.isArray(lib.saves) ? lib.saves : []).forEach(f => {
-    if(f && Array.isArray(f.units) && f.units.length) out.push({ name: f.name || "", ln: f.ln, limit: f.limit, units: f.units, saved: true });
-  });
   const p = parseDoc(builderRaw() || "");
   if(p.o) fleetsIn(p.o).forEach(f => out.push(Object.assign({ saved: false }, f)));
   return out;
@@ -75,21 +102,21 @@ export function playBase(){
   const local = !loc || loc.protocol !== "https:" || /^(localhost|127\.0\.0\.1|\[::1\])$/.test(loc.hostname);
   return local ? { url: PHONE_LINK.builder, remote: true } : { url: new URL(BUILDER_URL, loc.href).href, remote: false };
 }
-/* What a "to phone" sends: "b:<k>" a builder fleet on this device, "s:<k>"
-   one of this page's own saved fleets, "all" every one of them - from phone
+/* What a "to phone" sends: "b:<k>" a fleet the builder is editing, "s:<k>"
+   a saved fleet, "all" every saved fleet - from phone
    to phone too (user 19.10.2026: "the QR code ... should work for a phone
    as well, so you can go e.g. from phone to phone"). Names travel along. */
 export function phoneDoc(key){
   const one = f => ({ name: f.name || undefined, ln: f.ln, limit: f.limit, units: f.units });
   if(key === "all"){
-    const lk = linkedFleets().map(f => f.doc);
+    const lk = savedFleets();
     if(!lk.length) return null;
     const d = Object.assign({ schemaVersion: DOMAIN.SCHEMA_VERSION }, one(lk[0]));
     if(lk.length > 1) d.fleets = lk.slice(1).map(one);
     return d;
   }
   const m = /^([bs]):(\d+)$/.exec(String(key));
-  const f = !m ? null : m[1] === "b" ? builderFleets()[+m[2]] : (linkedFleets()[+m[2]] || {}).doc;
+  const f = !m ? null : m[1] === "b" ? builderFleets()[+m[2]] : savedFleets()[+m[2]];
   return f ? Object.assign({ schemaVersion: DOMAIN.SCHEMA_VERSION }, one(f)) : null;
 }
 /* Send (packages/ui/send.js): the sheet, with the send page beside this site's Play. */

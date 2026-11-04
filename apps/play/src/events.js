@@ -4,7 +4,7 @@ import { resolveFleet } from "./fleet-document.js";
 import { loadPlay, newGame, resumeGame, save } from "./game-state.js";
 import { act } from "./actions.js";
 import { render, tapSel } from "./render.js";
-import { builderFleets, copyText, forgetLinked, linkedFleets, openSend, takeFleetText } from "./share.js";
+import { builderFleets, copyText, openSend, savedFleets, takeFleetText } from "./share.js";
 import { peerAct } from "./peer.js";
 import { boardAct } from "./board.js";
 import { orderAct, shipAct } from "./ship-actions.js";
@@ -45,21 +45,20 @@ document.addEventListener("click", ev => {
     if(loadPlay() && !confirm("A game is in progress. Start a new one and forget its record?")) return;
     newGame(res); appState.V.screen = "setup"; save(); render(); return;
   }
-  /* a fleet that came by a link or a file (the page's own list) */
+  /* a saved fleet (the builder's Saved fleets, share.js savedFleets) */
   if(name === "linked"){
-    const f = linkedFleets()[arg]; if(!f) return;
-    const res = resolveFleet(f.doc); if(res.error){ appState.V.loadErr = res.error; render(); return; }
+    const f = savedFleets()[arg]; if(!f) return;
+    const res = resolveFleet(f); if(res.error){ appState.V.loadErr = res.error; render(); return; }
     if(loadPlay() && !confirm("A game is in progress. Start a new one and forget its record?")) return;
-    res.src = "link"; newGame(res); appState.V.screen = "setup"; save(); render(); return;
+    res.src = "saved"; newGame(res); appState.V.screen = "setup"; save(); render(); return;
   }
-  if(name === "unlink"){ forgetLinked(arg); render(); return; }
   if(name === "send"){ openSend(arg); return; }
   if(name === "receive"){ location.href = "../send/index.html"; return; }
   if(name === "pickfile"){ const f = $("#fleetfile"); if(f){ f.value = ""; f.click(); } return; }
   act(name, i, arg);
 });
-/* A fleet file (the builder's Export file, or any fleet document): it goes
-   on the page's own list of fleets, the same as a link. */
+/* A fleet file (Save file in the builder, or any fleet document): it goes
+   into Saved fleets, the same as a link. */
 document.addEventListener("change", ev => {
   const inp = ev.target;
   if(!inp || inp.id !== "fleetfile" || !inp.files || !inp.files[0]) return;

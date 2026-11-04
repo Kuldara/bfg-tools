@@ -5,6 +5,9 @@ a tag `play-v<version>` deploys the Registry's site.
 
 ## Unreleased
 
+### Changed
+- One list of saved fleets (4.11.2026): the load screen's Saved fleets is the builder's Saved fleets. A fleet that comes by a link, a code or a file goes in there, and the builder shows it; the page's own list from before is moved in once. The fleets the builder is editing are under Being edited in the builder. Deleting and renaming are done in the builder.
+
 ### Added
 - A rolled or chosen refit changes the card's numbers (2.11.2026, T44): Reinforced Hull adds its 25 % to the starting hits (crippled at half of the new total) and takes 5 cm off, the shield, turret, speed and repair-die results are on the profile, Long Range Sensors is a +1 Ld modifier; the set-up's select says "on the card: 13 hits, 15 cm".
 - The set-up's upgrade dice (Mechanicus Gifts, the Imperial and Blood Axe refits, crew skills): the chosen result's text is under its select, and the whole table is the tooltip of the select and its options (2.11.2026).
