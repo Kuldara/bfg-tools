@@ -11,6 +11,11 @@
    the HTML. On top of that a few claims read from the book (the page is
    in the claim) or from this project's user interface principles.
 
+   The snippets name the page's functions and state bare, as globals of the
+   vm (boot). Before any of them runs, the page's own code is checked to take
+   none of those names from the global scope, so a forgotten import fails
+   here as it does in a browser (run()).
+
    npm test builds before it tests, so the page is always made from the
    current sources. SMOKE_PAGE=<file> runs the same checks on another
    build (for example a comparison page made from an older version).
@@ -19,6 +24,7 @@
      apps/play/test_play.js runs this at the end with the same counters. */
 "use strict";
 const fs = require("fs"), path = require("path"), vm = require("vm");
+const freeNames = require("../../tools/lib/free-names.js");
 const HERE = __dirname;
 /* The built page (npm run build). npm test builds before it tests, so the page
    is always made from the current sources. */
@@ -27,15 +33,19 @@ const BUILT = path.join(HERE, "..", "..", "dist", "registry", "play", "Gothic Fl
 /* To text: tags and icons removed, so a claim reads what the player reads. */
 const strip = h => String(h).replace(/<svg[\s\S]*?<\/svg>/g, " ").replace(/<[^>]+>/g, " ").replace(/&[a-z#0-9]+;/gi, " ").replace(/\s+/g, " ").trim();
 
+/* The page's data block and its app script: the one right after the data
+   block (the site's copy has a second, small one that registers the service
+   worker). */
+function pageParts(html){
+  const d0 = html.indexOf('<script id="bfgdata" type="application/json">') + '<script id="bfgdata" type="application/json">'.length;
+  const i0 = html.indexOf("<script>", d0) + "<script>".length, i1 = html.indexOf("</script>", i0);
+  return { dataText: html.slice(d0, html.indexOf("</script>", d0)), code: html.slice(i0, i1) };
+}
+
 /* The built page in one vm context. Returns P(src): runs code in the
    page's own scope and returns the value. */
 function boot(html){
-  /* the app script is the one right after the data block; the site's copy
-     has a second, small one that registers the service worker */
-  const d0 = html.indexOf('<script id="bfgdata" type="application/json">') + '<script id="bfgdata" type="application/json">'.length;
-  const dataText = html.slice(d0, html.indexOf("</script>", d0));
-  const i0 = html.indexOf("<script>", d0) + "<script>".length, i1 = html.indexOf("</script>", i0);
-  const code = html.slice(i0, i1);
+  const { dataText, code } = pageParts(html);
   const store = {}, toasts = [];
   const elem = () => ({ innerHTML: "", textContent: "", className: "", value: "", style: {}, disabled: false,
     classList: { add(){}, remove(){}, toggle(){}, contains(){ return false; } }, children: [],
@@ -60,15 +70,20 @@ function boot(html){
   /* The page is one bundle (global GFP). The snippets below name its
      functions and state as they did when the page was one plain script, so
      every export is a live global here, and the shared state (G, U, ...) can
-     also be assigned. */
-  for(const k of Object.keys(ctx.GFP)) if(k !== "appState")
-    Object.defineProperty(ctx, k, { get: () => ctx.GFP[k], configurable: true });
-  for(const k of Object.keys(ctx.GFP.appState))
-    Object.defineProperty(ctx, k, { get: () => ctx.GFP.appState[k], set: v => { ctx.GFP.appState[k] = v; }, configurable: true });
+     also be assigned. The page's own code would find them here too; run()
+     checks first that it never looks for one (defined: every name put here). */
+  const defined = [];
+  for(const k of Object.keys(ctx.GFP)) if(k !== "appState"){
+    Object.defineProperty(ctx, k, { get: () => ctx.GFP[k], configurable: true }); defined.push(k);
+  }
+  for(const k of Object.keys(ctx.GFP.appState)){
+    Object.defineProperty(ctx, k, { get: () => ctx.GFP.appState[k], set: v => { ctx.GFP.appState[k] = v; }, configurable: true }); defined.push(k);
+  }
   ctx.__toasts = toasts; ctx.__strip = strip;
   ctx.__fire = (t, ev) => (listeners[t] || []).forEach(f => f(ev));
+  defined.push("__toasts", "__strip", "__fire");
   const P = src => vm.runInContext(src, ctx, { filename: "smoke.js" });
-  return { P, ctx, toasts, store, APP, DATA: JSON.parse(dataText) };
+  return { P, ctx, toasts, store, APP, DATA: JSON.parse(dataText), defined };
 }
 
 /* A saved unit in the builder's format (schema 4): section and row by name. */
@@ -99,6 +114,22 @@ function run(check){
   const PAGE = process.env.SMOKE_PAGE || BUILT;
   if(!fs.existsSync(PAGE)){ check("smoke: the built page exists (npm run build)", false, PAGE); return; }
   const html = fs.readFileSync(PAGE, "utf8");
+
+  /* The harness hides nothing. boot() puts the page's exports and state on
+     the vm's global for the snippets; a module that uses another module's
+     export without importing it would find it there, and pass here while it
+     throws in a browser (actions.js called isEscGrp so, November 2026: a
+     capital ship in a squadron that failed to disengage). The page's free
+     names - each name its code takes from the global scope, by esbuild's own
+     scope analysis (tools/lib/free-names.js) - must include none of them;
+     then every check below sees the page as a browser does. The build stops
+     on any free name a browser lacks; this needs no list of the browser's. */
+  {
+    const named = new Set(boot(html).defined);
+    const leak = freeNames.ofScript(pageParts(html).code).filter(f => named.has(f.name));
+    check("smoke: the page's own code takes none of the " + named.size + " names the harness defines from the global scope",
+          leak.length === 0, leak.map(f => f.name + " (" + f.module + ": " + f.text.slice(0, 90) + ")").join("; "));
+  }
 
   /* every piece of HTML the page makes goes through here */
   const bad = h => { const t = strip(h); const m = t.match(/.{0,60}\b(undefined|NaN)\b.{0,40}/) || String(h).match(/.{0,60}(="undefined"|="NaN"|\[object Object\]).{0,40}/); return m ? m[0] : ""; };
@@ -634,6 +665,35 @@ function run(check){
        squadron and may not attempt to re-join it" */
     check("smoke: a capital ship that fails to disengage falls out of its squadron, the page run as in a browser (Rulebook p. 57)",
           P(`G.grp[NX("Beta")] === null && G.grp[NX("Alpha")] === "C"`) === true, P(`JSON.stringify(G.grp)`));
+  });
+
+  /* ------------- T46: a failed Disengage takes a capital ship out --- */
+  /* The ruling, RULINGS.md T46 from Rulebook p. 57: Disengage "failed sets
+     no-fire and takes a capital ship out of its squadron"; an escort
+     squadron is not taken apart. Through the ship's Actions, as the taps go.
+     In Chrome the cruiser's case threw "isEscGrp is not defined" (actions.js
+     had no import), and no check ran that line. */
+  guard("a failed Disengage", () => {
+    const pg = open(), P = pg.P;
+    const L = pg.DATA.lists.find(x => /^Imperial Navy . Gothic Sector$/.test(x.nm));
+    const lun = name => Object.assign(saved(L, /^Cruisers$/, /^Lunar class cruiser$/, 1, name), { sq: "C" });
+    const swd = name => Object.assign(saved(L, /^ESCORTS$/, /^Sword class frigate$/, 3, name), { sq: "E" });
+    pg.ctx.__doc = { ln: L.nm, limit: 9000, units: [lun("Alpha"), lun("Beta"), swd("Blades"), swd("Edges")] };
+    P(`newGame(resolveFleet(__doc)); V.screen = "setup"; save(); render();
+       var NX = n => U.findIndex(x => x.u.name === n);
+       var EL = (i, a) => ({ getAttribute: k => k === "data-i" ? String(i) : k === "data-arg" ? a : null, value: "" });
+       var FAIL = i => { shipAct("actions", EL(i, null)); shipAct("actab", EL(null, "dis")); shipAct("acdis", EL(null, "fail")); shipAct("acclose", EL(null, null)); };
+       U.forEach((x, i) => { if(x.R.kind === "ship" && G.st[i].ld == null) setLd(i, 8); }); act("start", null);`);
+    const g0 = JSON.parse(P(`JSON.stringify(["Alpha", "Beta", "Blades", "Edges"].map(n => G.grp[NX(n)]))`) || "[]");
+    check("smoke: the two tagged cruisers start as one squadron, the two tagged Sword cards as one escort squadron (J222)",
+          g0[0] != null && g0[0] === g0[1] && /^e:/.test(String(g0[2])) && g0[2] === g0[3], JSON.stringify(g0));
+    P(`FAIL(NX("Alpha"))`);
+    const a = JSON.parse(P(`JSON.stringify({ grp: [G.grp[NX("Alpha")], G.grp[NX("Beta")]], st: [G.st[NX("Alpha")]].map(s => ({ nofire: !!s.noOrdersTurn, gone: !!s.disengaged })) })`) || "{}");
+    check("smoke: a cruiser that fails to disengage falls out of its squadron, no fire this turn, still on the table; the other stays in (Rulebook p. 57, T46)",
+          !!a.grp && a.grp[0] == null && a.grp[1] === g0[1] && a.st[0].nofire && !a.st[0].gone, JSON.stringify(a));
+    P(`FAIL(NX("Blades"))`);
+    const e = JSON.parse(P(`JSON.stringify([G.grp[NX("Blades")], G.grp[NX("Edges")]])`) || "[]");
+    check("smoke: ... an escort squadron that fails stays one squadron (p. 57, T46)", e[0] === g0[2] && e[1] === g0[2], JSON.stringify(e));
   });
 
   /* ------------ J233: every Ork Warlord aboard a ship of his own (T43) --- */

@@ -3,6 +3,7 @@
    deterministic one-file ZIP, and the guards every published page passes. */
 "use strict";
 const fs = require("fs"), path = require("path"), zlib = require("zlib"), crypto = require("crypto");
+const freeNames = require("./free-names.js");
 
 const REPO = path.resolve(__dirname, "..", "..");
 const DIST = path.join(REPO, "dist");
@@ -40,14 +41,21 @@ function fill(text, name, value, count = 1) {
 
 /* One self-contained script from an ES module entry. charset ascii keeps the
    page pure ASCII whatever the source contains; the global name exposes the
-   module's exports to the page tools (card printing, layout checks). */
-async function bundle({ entry, globalName, define = {} }) {
+   module's exports to the page tools (card printing, layout checks).
+
+   Every name the script takes from the global scope must be the browser's
+   (tools/lib/free-names.js), or one that pageGlobals lists: a name the page's
+   other scripts declare. Anything else is a ReferenceError in a browser - a
+   forgotten import, which esbuild bundles without a word - and the build
+   stops on it. */
+async function bundle({ entry, globalName, define = {}, pageGlobals = [] }) {
   const esbuild = require("esbuild");
-  const r = await esbuild.build({
+  const options = {
     entryPoints: [abs(entry)], bundle: true, write: false, format: "iife", globalName,
     charset: "ascii", legalComments: "none", platform: "browser",
     define, logLevel: "silent",
-  });
+  };
+  const r = await esbuild.build(options);
   /* esbuild prints an escaped control character ("\u0001", the separator of
      saved-fleet keys) as the raw byte. Raw control characters can only stand
      inside string, template or regex literals, where the escape means the
@@ -55,6 +63,8 @@ async function bundle({ entry, globalName, define = {} }) {
   const js = r.outputFiles[0].text.replace(/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/g,
     c => "\\u" + c.charCodeAt(0).toString(16).padStart(4, "0"));
   if (/<\/script/i.test(js)) throw new Error(entry + ": the bundle contains </script");
+  const unknown = (await freeNames.ofBundle(options, js)).filter(f => !freeNames.allowed(f.name) && !pageGlobals.includes(f.name));
+  if (unknown.length) throw new Error(freeNames.report(entry, unknown));
   return js;
 }
 

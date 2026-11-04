@@ -60,6 +60,11 @@ a tag `play-v<version>` deploys the Registry's site.
 - Fleets WiP v0.40 and Rulebook v1.11 (29.10.2026): the cards and rules cite v0.40 pages; the fleet data is the Registry's v0.40 data (the power ram as a ship option, the Mechanicus profiles, mines that ignore shields).
 
 ### Fixed
+- A capital ship in a squadron that failed its Disengage test in Actions stayed
+  in the squadron, and the tap saved nothing: in a browser it threw "isEscGrp is
+  not defined" (an import missing in `actions.js`, which the tests' globals
+  hid). It falls out of the squadron now, with no fire this turn (Rulebook
+  p. 57, RULINGS.md T46).
 - The close button of the menu and of a card (30.10.2026): its cross is drawn, in the
   middle of the square; the "×" letter sat at the left edge.
 - Da Ork Clanz: a clan or a Gubbin bought on one card of a mixed tiddla (one
@@ -73,6 +78,11 @@ a tag `play-v<version>` deploys the Registry's site.
   per tab (J241), and Play reads it before the shared one (`builderRaw`).
 
 ### Changed (for developers)
+- The smoke test hides no forgotten import (4.11.2026): before its snippets
+  run, it checks that the page's code takes none of the names they share (every
+  export of `GFP`, the shared state) from the global scope, by esbuild's own
+  scope analysis (`tools/lib/free-names.js`). The build stops on any name a
+  bundle takes from the global scope that a browser does not have.
 - ES modules (`src/`) and `styles/play.css` instead of one template; the 24
   functions the build used to copy out of the Registry's template with regular
   expressions are imported from `packages/ui`.
