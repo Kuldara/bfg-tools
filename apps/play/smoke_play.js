@@ -518,9 +518,11 @@ function run(check){
        var NX = n => U.findIndex(x => x.u.name === n);`);
     const g = JSON.parse(P(`JSON.stringify(["Alpha", "Beta", "Gamma", "Delta", "Blades"].map(n => G.grp[NX(n)]))`) || "[]");
     /* Fleets p. 13: cruisers "may be formed into squadrons of two to four
-       ships"; SQN gives them one Ld, one order and combined fire (p. 95, 99) */
-    check("smoke: two cruisers with the builder's squadron tag start the game in one SQN group (J222)",
-          g[0] != null && g[0] === g[1] && /^[ABC]$/.test(String(g[0])), JSON.stringify(g));
+       ships"; SQN gives them one Ld, one order and combined fire (p. 95, 99).
+       The group keeps the builder's letter, so the phone says what the
+       builder and the printed roster say (user 4.11.2026, T42). */
+    check("smoke: two cruisers with the builder's squadron tag start the game in one SQN group under its letter (J222, T42)",
+          g[0] === "C" && g[1] === "C", JSON.stringify(g));
     check("smoke: ... an untagged cruiser, a tag on one ship alone and the escort squadron start ungrouped",
           g[2] == null && g[3] == null && g[4] == null, JSON.stringify(g));
     const setup = P(`renderSetup()`);
@@ -529,6 +531,77 @@ function run(check){
           btn("Alpha") === "SQN " + g[0] && btn("Beta") === "SQN " + g[0] && btn("Gamma") === "+ SQN", JSON.stringify([btn("Alpha"), btn("Beta"), btn("Gamma")]));
     P(`act("grp", NX("Beta"))`);
     check("smoke: ... and the SQN button still takes a ship out of it", P(`G.grp[NX("Beta")] !== G.grp[NX("Alpha")]`) === true, P(`JSON.stringify(G.grp)`));
+  });
+
+  /* ---------- T42 (user 4.11.2026): every builder squadron, its own letter --- */
+  guard("five builder skwadrons", () => {
+    const pg = open(), P = pg.P;
+    const L = pg.DATA.lists.find(x => /^Orks . Da Ork Clanz$/.test(x.nm));
+    /* J232: Clanz kroozers (1-2) and Roks (1-4) are skwadrons by their tag
+       (Fleets p. 374). Two Warlords, five capital skwadrons B-F and a mixed
+       tiddla A of two cards (docs/save-format.md: uid, cmd, sq). */
+    const wl = uid => Object.assign(saved(L, /^WARLORD$/, /^Ork Warlord$/), { uid: uid });
+    const sk = (sec, re, n, name, cmd, sq) => Object.assign(saved(L, sec, re, n, name), { cmd: cmd }, sq ? { sq: sq } : {});
+    const T = /^Tiddla skwadron$/, BIG = /^Big ship skwadron$/, ROK = /^Roks$/;
+    pg.ctx.__doc = { ln: L.nm, limit: 3000, units: [
+      wl("w1"), sk(T, /^Savage/, 3, "Savages", "w1", "A"), sk(T, /^Onslaught/, 3, "Onslaughts", "w1", "A"), sk(T, /^Ravager/, 3, "Ravagers", "w1"),
+      sk(BIG, /^Terror ship$/, 1, "Terror 1", "w1", "B"), sk(BIG, /^Terror ship$/, 1, "Terror 2", "w1", "B"),
+      sk(ROK, /^Rok$/, 1, "Rok 1", "w1", "C"), sk(ROK, /^Rok$/, 1, "Rok 2", "w1", "C"),
+      wl("w2"), sk(T, /^Brute/, 3, "Brutes", "w2"), sk(T, /^Grunt/, 3, "Grunts", "w2"), sk(T, /^Ravager/, 3, "Raiders", "w2"),
+      sk(BIG, /^Kill kroozer$/, 1, "Kill 1", "w2", "D"), sk(BIG, /^Kill kroozer$/, 1, "Kill 2", "w2", "D"),
+      sk(ROK, /^Rok$/, 1, "Rok 3", "w2", "E"), sk(ROK, /^Rok$/, 1, "Rok 4", "w2", "E"), sk(ROK, /^Rok$/, 1, "Rok 5", "w2", "E"),
+      sk(BIG, /^Lite kroozer$/, 1, "Lite 1", "w2", "F"), sk(BIG, /^Lite kroozer$/, 1, "Lite 2", "w2", "F")] };
+    P(`newGame(resolveFleet(__doc)); V.screen = "setup"; save(); render();
+       var NX = n => U.findIndex(x => x.u.name === n);`);
+    const caps = ["Terror 1", "Terror 2", "Rok 1", "Rok 2", "Kill 1", "Kill 2", "Rok 3", "Rok 4", "Rok 5", "Lite 1", "Lite 2"];
+    const want = ["B", "B", "C", "C", "D", "D", "E", "E", "E", "F", "F"];
+    const grpOf = ns => JSON.parse(P(`JSON.stringify(${JSON.stringify(ns)}.map(n => G.grp[NX(n)]))`) || "[]");
+    const g = grpOf(caps);
+    check("smoke: five builder skwadrons start the game as five SQN groups, each under the builder's letter (T42, J232)",
+          JSON.stringify(g) === JSON.stringify(want), JSON.stringify(g));
+    check("smoke: ... the mixed tiddla stays one escort squadron under its letter A, which no capital squadron shows",
+          JSON.stringify(grpOf(["Savages", "Onslaughts", "Ravagers"])) === '["e:A","e:A",null]' && g.indexOf("A") < 0, JSON.stringify(grpOf(["Savages", "Onslaughts", "Ravagers"])));
+    const setup = P(`renderSetup()`);
+    clean("the five-skwadron set-up screen", setup);
+    const btn = n => { const m = new RegExp('data-act="grp" data-i="' + P(`NX(${JSON.stringify(n)})`) + '"[^>]*>([^<]*)<').exec(setup); return m ? m[1] : null; };
+    check("smoke: ... the set-up shows each ship's letter on its SQN button",
+          caps.every((n, k) => btn(n) === "SQN " + want[k]), JSON.stringify(caps.map(btn)));
+    /* the button: the letters in use, a new one (none of the fleet's, the
+       tiddla's A included), none, and round again */
+    const seq = [];
+    for(let k = 0; k < 7; k++){ P(`act("grp", NX("Kill 2"))`); seq.push(P(`G.grp[NX("Kill 2")]`)); }
+    check("smoke: ... the SQN button goes through every squadron's letter, then a new one no squadron of the fleet has, then none (T42)",
+          JSON.stringify(seq) === JSON.stringify(["E", "F", "G", null, "B", "C", "D"]), JSON.stringify(seq));
+    P(`U.forEach((x, i) => { if(x.R.kind === "ship" && G.st[i].ld == null) setLd(i, 6); }); act("start", null);`);
+    const roster = P(`renderRoster()`);
+    clean("the five-skwadron roster", roster);
+    check("smoke: ... the roster has a head for each of the five and for the tiddla",
+          ["Squadron B", "Squadron C", "Squadron D", "Squadron E", "Squadron F", "Escort squadron A"].every(s => strip(roster).indexOf(s) >= 0) &&
+          (roster.match(/class="row grp-hd/g) || []).length === 6, strip(roster).slice(0, 300));
+  });
+
+  /* -------- a squadron tag from a link or a file is data, not markup --- */
+  guard("squadron tags that are not the builder's", () => {
+    const pg = open(), P = pg.P;
+    const L = pg.DATA.lists.find(x => /^Imperial Navy . Gothic Sector$/.test(x.nm));
+    /* the builder writes one letter A-Z (freeSqTag); a hand-made file or a
+       crafted link can carry anything */
+    const MK = "<img src=x onerror=alert(1)>";
+    const tag = (u, sq) => Object.assign(u, { sq: sq });
+    pg.ctx.__doc = { ln: L.nm, limit: 9000, units: [
+      tag(saved(L, /^Cruisers$/, /^Lunar class cruiser$/, 1, "Alpha"), "x1"), tag(saved(L, /^Cruisers$/, /^Lunar class cruiser$/, 1, "Beta"), "x1"),
+      tag(saved(L, /^ESCORTS$/, /^Sword class frigate$/, 3, "Blades"), MK), tag(saved(L, /^ESCORTS$/, /^Cobra class destroyer$/, 3, "Snakes"), MK)] };
+    P(`newGame(resolveFleet(__doc)); V.screen = "setup"; save(); render();
+       var NX = n => U.findIndex(x => x.u.name === n);`);
+    check("smoke: two cruisers with a tag that is no letter start in one SQN group under a letter of their own (T42)",
+          P(`G.grp[NX("Alpha")] === "A" && G.grp[NX("Beta")] === "A"`) === true, P(`JSON.stringify(G.grp)`));
+    P(`U.forEach((x, i) => { if(x.R.kind === "ship" && G.st[i].ld == null) setLd(i, 8); });`);
+    const pages = [P(`renderSetup()`)];
+    P(`act("start", null)`);
+    pages.push(P(`renderRoster()`), P(`V.sheet = NX("Blades"); var __h = renderSheet(NX("Blades")); V.sheet = null; __h`), P(`V.menu = true; var __m = renderMenu(); V.menu = false; __m`));
+    check("smoke: ... markup in an escort squadron's tag is printed as text on every screen, never as markup",
+          pages.every(h => h.indexOf("<img") < 0) && pages[1].indexOf("&lt;img") >= 0,
+          pages.map(h => (h.match(/.{0,40}<img.{0,40}/) || [""])[0]).join(" | "));
   });
 
   /* ------------ J233: every Ork Warlord aboard a ship of his own (T43) --- */
