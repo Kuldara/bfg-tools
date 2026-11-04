@@ -659,9 +659,10 @@ details.ldguide h4{margin:12px 12px 4px;font:700 12px var(--mono);text-transform
 /* ---- Young Gunz, Mob Rule and the Ld swaps at the set-up (T63) ---- */
 /* the owner's design 4.11.2026: Apply under Roll Ld, one column, so neither
    moves when the other's text changes */
-.rollbar.yg{flex-direction:column;align-items:stretch;margin-top:8px}
-.rollbar.yg .btn{flex:0 0 auto;margin-top:0}
-.btn.ygbtn[disabled]{opacity:1;background:var(--sunk);color:var(--ink-3);border:1px solid var(--line)}
+.rollbar.yg{flex-direction:column;align-items:stretch;margin:8px 0 12px}
+.rollbar.yg .btn{flex:0 0 auto;margin:0}
+/* both grey buttons alike (the owner's prototype); "done" below overrides */
+.rollbar.yg .btn[disabled]{opacity:1;background:var(--sunk);color:var(--ink-3);border:1px solid var(--line)}
 .btn.ygbtn.done[disabled]{background:var(--ok-wash);color:var(--ok);border-color:var(--ok)}
 /* a changed Ld: the old value striped, the value it plays at ringed */
 .seg.ld button.was{background:var(--sunk);background:repeating-linear-gradient(135deg,var(--sunk) 0 5px,color-mix(in srgb,var(--accent) 34%,var(--sunk)) 5px 8px);

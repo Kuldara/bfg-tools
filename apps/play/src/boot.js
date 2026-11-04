@@ -34,10 +34,14 @@ export function takeLinkFromAddress(){
     const raw = builderRaw();
     const p = raw ? parseDoc(raw) : null;
     const same = (g.src && g.src !== "builder") || !p || !p.o || fleetsIn(p.o).some(f => fnv(JSON.stringify([f.ln, f.units])) === g.fp);
-    appState.V.screen = same ? "roster" : "load";
+    /* a record still at its set-up (started false, T63) opens the set-up
+       again: Young Gunz and the swaps are locked only by Start */
+    const setup = appState.G.started === false;
+    appState.V.screen = same ? (setup ? "setup" : "roster") : "load";
     /* a record that opens on the roster is a game under way (its set-up,
-       from the menu, says Back to the game) */
-    if(same) appState.G.started = true;
+       from the menu, says Back to the game); one saved before T63 has no
+       started field and is one */
+    if(same && !setup) appState.G.started = true;
   }
   takeLinkFromAddress();
   peerBoot();

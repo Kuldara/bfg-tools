@@ -474,9 +474,11 @@ function swapBlock(j){
   const ship = bb ? j : wlShip(j);
   if(ship == null || !G.st[ship]) return "";
   const a = skwHead(ship), recs = swapRecs(), mine = recs.filter(r => r.j === j)[0];
-  /* a kroozer another battleship has taken is not offered again */
-  const taken = {}; recs.forEach(r => { if(r.j !== j && isBbSwapper(r.j)) taken[r.b] = 1; });
-  const partners = (bb ? bbPartners(j) : wlPartners(j)).filter(p => !taken[p] || (mine && mine.b === p));
+  /* a kroozer another battleship has taken is not offered to a battleship
+     again; a Warlord who commands it may still take it, the swaps chain
+     (p. 374, T63 decision 5) */
+  const taken = {}; recs.forEach(r => { if(bb && r.j !== j && isBbSwapper(r.j)) taken[r.b] = 1; });
+  const partners = bb ? bbPartners(j).filter(p => !taken[p] || (mine && mine.b === p)) : wlPartners(j);
   if(!partners.length || G.st[a].ld == null || partners.some(p => G.st[p].ld == null)) return "";
   /* the values before this swap: a battleship's on the first values (its
      swap comes first), a Warlord's after the others (T63) */
@@ -484,20 +486,26 @@ function swapBlock(j){
   const play = swapPlay(others).vals;
   const before = h => h in play ? play[h] : (G.st[h].ldFrom == null && G.st[h].ldRoll != null ? G.st[h].ldRoll : G.st[h].ld);
   const heads = tiddlaHeads();
+  /* what a swap with p does to Young Gunz ("Ld of 5 or 6", p. 372): on p,
+     and on the Warlord's own skwadron when he is aboard a tiddla ("even if
+     it is an escort", p. 374) - the own one only when it changes */
+  const ygEff = (h, from, to, quiet) => {
+    if(heads.indexOf(h) < 0) return "";
+    const was = PLAY.youngGunz(from, paidModels(h)), now = PLAY.youngGunz(to, paidModels(h));
+    return now && !was ? "Young Gunz" : was && !now ? "loses Young Gunz" : now && !quiet ? "still Young Gunz" : "";
+  };
+  const effOf = p => ({ p: ygEff(p, before(p), before(a)), a: p === a ? "" : ygEff(a, before(a), before(p), true) });
   const label = p => {
-    const vp = before(p), va = before(a);
-    let eff = "";
-    if(heads.indexOf(p) >= 0){
-      const was = PLAY.youngGunz(vp, paidModels(p)), now = PLAY.youngGunz(va, paidModels(p));
-      eff = now && !was ? ", Young Gunz" : was && !now ? ", loses Young Gunz" : now ? ", still Young Gunz" : "";
-    }
+    const vp = before(p), va = before(a), e = effOf(p);
     const esq = PLAY.isEscort(appState.U[p].R);
-    return esc(skwName(p)) + (esq ? " " + TIMES + paidModels(p) : "") + ": Ld " + vp + " \u2192 " + va + eff;
+    return esc(skwName(p)) + (esq ? " " + TIMES + paidModels(p) : "") + ": Ld " + vp + " \u2192 " + va + (e.p ? ", " + e.p : "") + (e.a ? ", " + esc(skwName(a)) + " " + e.a : "");
   };
   const cur = mine ? mine.b : null;
+  /* the effect again under the select: a narrow one cuts its option's end */
+  const curEff = cur == null ? "" : (e => (e.p ? " " + MID + " " + esc(skwName(cur)) + ": " + e.p : "") + (e.a ? " " + MID + " " + esc(skwName(a)) + ": " + e.a : ""))(effOf(cur));
   const rule = bb ? PLAY.bbSwapRule(appState.U[j].R) : null, page = bb ? (rule.page || 376) : 374;
   const desc = cur != null
-    ? `<b>${esc(skwName(a))} plays Ld ${G.st[a].ld}, ${esc(skwName(cur))} Ld ${G.st[cur].ld}</b> ${MID} a tap on either value ends the swap (Fleets p. ${page})`
+    ? `<b>${esc(skwName(a))} plays Ld ${G.st[a].ld}, ${esc(skwName(cur))} Ld ${G.st[cur].ld}</b>${curEff} ${MID} a tap on either value ends the swap (Fleets p. ${page})`
     : bb ? `When the Leadership is generated it may swap with a ${esc(rule.kinds.join(" or "))} of the fleet; Zukov's Klaw is a Terror Ship (Fleets pp. ${page}, 383)`
     : `His ship (${esc(skwName(a))}, Ld ${before(a)}) may trade values with one ship or escort squadron of his command, before Young Gunz (Fleets p. 374)`;
   return `<div class="full pres swap"><label class="pre"><span>Swap Ld <i>${cur != null ? "swapped" : "optional"}</i></span><select data-sel="swap" data-i="${j}" aria-label="Swap Leadership"${G.started ? " disabled" : ""}><option value="">no swap</option>${partners.map(p => `<option value="${p}"${cur === p ? " selected" : ""}>${label(p)}</option>`).join("")}</select><em class="predesc">${desc}</em></label></div>`;
@@ -532,7 +540,7 @@ export function renderSetup(){
       /* every commander boards (J233): one ship is said, more are a choice */
       const pick = !caps.length ? "" : caps.length === 1
         ? `<span class="pill on">aboard ${esc(unitName(caps[0]))}</span>`
-        : `<select data-sel="${fc ? "flag" : "on"}" data-i="${i}" aria-label="Aboard">${caps.map(j => `<option value="${j}" ${cur === j ? "selected" : ""}>aboard ${esc(unitName(j))}</option>`).join("")}</select>`;
+        : `<select data-sel="${fc ? "flag" : "on"}" data-i="${i}" aria-label="Aboard"${appState.G.started && st && st.swap != null ? " disabled" : ""}>${caps.map(j => `<option value="${j}" ${cur === j ? "selected" : ""}>aboard ${esc(unitName(j))}</option>`).join("")}</select>`;
       return `<div class="setrow"><div class="who"><b>${esc(unitName(i))}</b><small>${R.points ? R.points + " pts" + (ldTxt ? " " + MID + " " : "") : ""}${ldTxt}${rrWords(R)}</small>${rowDice(i).pre}</div>
         ${pick}${swapBlock(i)}</div>`;
     }
@@ -592,7 +600,7 @@ export function renderSetup(){
   const pend = ready ? tiddlaHeads().filter(h => !isApplied(h)) : [];
   const ygWhy = pend.length ? `<p class="why q">${started ? "Mob Rule" : "Young Gunz &amp; Mob Rule"} not applied${appState.G.ygApplied && !started ? " to the new values" : ""}: ${pend.map(h => `<button data-act="seek" data-i="${h}">${esc(skwName(h))}</button>`).join(", ")} (Fleets p. 372)</p>` : "";
   return `<div class="top"><h1>Set up<small>${esc(appState.G.ln)} ${MID} ${fleetPoints(appState.U)} pts</small></h1>
-      <div class="tools">${builderTool()}${started ? toolBtn("start", "undo", "Game", { off: !ready, tip: "Back to the game" }) : `<button class="tool" data-act="newgame" title="Back to the fleets: this set-up is not kept">Exit</button>`}</div></div>
+      <div class="tools">${builderTool()}${toolBtn("undo", "undo", "Undo", { off: !appState.UNDO.length, tip: "Undo the last tap" })}${started ? toolBtn("start", "undo", "Game", { off: !ready, tip: "Back to the game" }) : `<button class="tool" data-act="newgame" title="Back to the fleets: this set-up is not kept">Exit</button>`}</div></div>
     ${sidesStrip()}
     <div class="main"><div class="card"><h2>Leadership</h2>
       ${ldGuide()}${rollBar()}
