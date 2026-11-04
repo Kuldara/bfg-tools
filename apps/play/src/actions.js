@@ -2,7 +2,7 @@ import { appState } from "./state.js";
 import { KEY_INFO, KEY_PLAY, OPT, TRACK, lsDel, lsGet, lsSet, normaliseUntracked, saveOpts } from "./storage.js";
 import { $ } from "./helpers.js";
 import { resolveFleet } from "./fleet-document.js";
-import { KEY_VIEW, KEY_WAKE, applyCommanderLd, cmdsAboard, coCmd, forgetLdDie, rollAllLd, rollAllPre, rollLd, save, setLd, setPre } from "./game-state.js";
+import { KEY_VIEW, KEY_WAKE, applyCommanderLd, cmdsAboard, coCmd, forgetLdDie, isEscGrp, nextSqn, rollAllLd, rollAllPre, rollLd, save, setLd, setPre } from "./game-state.js";
 import { crippledNow, unitName } from "./derived.js";
 import { jumpTo, pageLabel, render, rrOpen, rrPool, showPop, topRow, wake } from "./render.js";
 import { repairable } from "./share.js";
@@ -166,7 +166,8 @@ export function act(name, i, arg){
     case "flag": appState.G.flag = arg; applyCommanderLd(); break;
     case "on": appState.G.on = appState.G.on || {}; appState.G.on[i] = arg; break;
     case "wl2": st.wl2 = !st.wl2; break;
-    case "grp": { const seq = [null, "A", "B", "C"]; appState.G.grp[i] = seq[(seq.indexOf(appState.G.grp[i]) + 1) % seq.length]; break; }
+    /* the squadrons' letters, a new one, none (T42) */
+    case "grp": appState.G.grp[i] = nextSqn(i); break;
     case "start": appState.G.started = true; appState.V.screen = "roster"; break;
     /* which quadrant of a star fort the card shows and the next tap goes
        to: a choice of view, not an event - nothing for UNDO to take back,

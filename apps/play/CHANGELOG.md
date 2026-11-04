@@ -15,9 +15,15 @@ a tag `play-v<version>` deploys the Registry's site.
 - A ram's target picked from the books: without the opponent's fleet linked, a class from any list fills its size, armour and hits.
 
 ### Changed
+- Every squadron from the builder starts as an SQN group under the builder's own letter (4.11.2026, RULINGS.md T42), so the phone says what the builder and the printed roster say. Play had three letters: the fourth squadron and later ones started without a group, with nothing said - common in Da Ork Clanz, whose kroozers and Roks are skwadrons by their letter. The SQN button goes through the fleet's squadrons, then a new letter, then none; a squadron's colour is its letter's.
 - The card at a glance (2.11.2026): the stats line keeps its places with the numbers bigger; the armament table leads with the badge and the strength in force now, big (when halved, the printed value stays first, small and struck, and the half beside it is the big one), then the range, the arc, and the name last and small; a port / starboard pair is one row, "port and starboard, each", until a critical parts it. The compact row's chips are larger, with the strength now and the printed value, and no names. A hulk's line is its name and what the enemy needs, small; the squadron's combined fire leads with the numbers too; the crew and upgrade line and a commander's re-roll words are small, and the compact row leaves the upgrade line out.
 - Fewer places for one thing (2.11.2026): Disengage and Boarding are out of the orders pop and the card's Status (Actions has them; Status keeps only the way back for a ship marked disengaged by mistake); the fire reminder's names add the hit themselves and stay ticked.
 - The set-up screen starts with Leadership; Fleet facts and the opponent's room come after it.
+
+### Fixed
+- A capital squadron no longer shows a mixed escort squadron's letter (4.11.2026): a tiddla marked A and the kroozers marked B were both SQN A.
+- A squadron letter from a fleet link or a file is printed as text (4.11.2026): markup in an escort squadron's letter went into the page as markup.
+- A capital ship in a squadron that fails to disengage falls out of the squadron (Rulebook p. 57; 4.11.2026): in a browser the page stopped with an error there, at a name one module used without importing it.
 
 ### Added
 - The set-up rows show each ship's price and what was bought for it (2.11.2026), so two ships of one class can be told apart before they are named.
