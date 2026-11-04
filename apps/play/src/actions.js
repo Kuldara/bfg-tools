@@ -2,7 +2,8 @@ import { appState } from "./state.js";
 import { KEY_INFO, KEY_PLAY, OPT, TRACK, lsDel, lsGet, lsSet, normaliseUntracked, saveOpts } from "./storage.js";
 import { $ } from "./helpers.js";
 import { resolveFleet } from "./fleet-document.js";
-import { KEY_VIEW, KEY_WAKE, applyCommanderLd, cmdsAboard, coCmd, forgetLdDie, rollAllLd, rollAllPre, rollLd, save, setLd, setPre } from "./game-state.js";
+import { KEY_VIEW, KEY_WAKE, applyCommanderLd, cmdsAboard, coCmd, forgetLdDie, isEscGrp, rollAllLd, rollAllPre, rollLd, save, setLd, setPre, swapFleetRes,
+  applyYG, endSwapOf, endSwapsAt, setSwap, setYG, skwCards, skwHead, skwLd, skwName, skwUnits, syncSwaps, tiddlaHeads, unapplyCards } from "./game-state.js";
 import { crippledNow, unitName } from "./derived.js";
 import { jumpTo, pageLabel, render, rrOpen, rrPool, showPop, topRow, wake } from "./render.js";
 import { repairable } from "./share.js";
@@ -63,7 +64,9 @@ export function act(name, i, arg){
     clearRepairNotes();
     /* a helper's shown result went with what it marked */
     if(appState.V.actions) appState.V.actions.res = null;
-    const res = resolveFleet(appState.G.doc); appState.U = res.units; appState.L0 = res.L0;
+    /* the fleet document may have changed (a free escort of Young Gunz,
+       T63): the cached fleet resolution goes with it */
+    const res = resolveFleet(appState.G.doc); appState.U = res.units; appState.L0 = res.L0; swapFleetRes(null);
     dropStalePop();
     save(); render(); return;
   }
@@ -151,20 +154,44 @@ export function act(name, i, arg){
   /* where this unit's hits and criticals are counted: on itself, or on a
      star fort's selected quadrant (Fleets p. 501) */
   const tk = R && st ? PLAY.track(R, st) : st;
+  /* a loss can take a skwadron's Mob Rule +1 away (Fleets p. 372, T63) */
+  const mob0 = /^(kill|ramhits|warplost|boardres)$/.test(name) && R && R.kind === "ship" && PLAY.isEscort(R) ? !!PLAY.mobRule(skwUnits(skwHead(i))) : null;
   switch(name){
     /* a tapped value is the player's: a rolled die that gave another one
-       is forgotten (T44) */
-    case "ld": if(arg !== st.ldRoll) forgetLdDie(i); setLd(i, arg); break;
+       is forgotten (T44). It ends the swaps it is in, the other side keeping
+       its value, and before Start the skwadron is no longer applied: Young
+       Gunz and Mob Rule are worked out again from the new value (T63) */
+    case "ld": {
+      const touched = endSwapsAt(i);
+      if(arg !== st.ldRoll) forgetLdDie(i);
+      setLd(i, arg);
+      syncSwaps(touched);
+      if(!appState.G.started) unapplyCards(skwCards(i));
+      break;
+    }
     case "ldclear": st.ld = null; st.ldRoll = null; st.ldFrom = null; forgetLdDie(i); break;
     /* the set-up screen's dice (user 31.10.2026, RULINGS.md T44): only
        what is still without a value - there is no re-roll; a change after
-       the roll is a manual input (user 31.10.2026) */
-    case "rollld": rollAllLd(false); break;
+       the roll is a manual input (user 31.10.2026). The Apply button under
+       Roll Ld takes no tap for a moment (T63, the guard in events.js). */
+    case "rollld": rollAllLd(false); appState.V.ygGuard = Date.now() + 450; break;
     case "rollpre": rollAllPre(false); break;
     case "rollone": if(st.ld == null) rollLd(i); break;
     case "pre": setPre(i, arg.key, arg.v); break;
-    case "flag": appState.G.flag = arg; applyCommanderLd(); break;
-    case "on": appState.G.on = appState.G.on || {}; appState.G.on[i] = arg; break;
+    /* a Warlord who moves to another ship gives his swap up first (T63) */
+    case "flag": if(appState.G.cmd != null) endSwapOf(appState.G.cmd); appState.G.flag = arg; applyCommanderLd(); break;
+    case "on": endSwapOf(i); appState.G.on = appState.G.on || {}; appState.G.on[i] = arg; break;
+    /* Young Gunz and Mob Rule applied at the set-up (T63): one act, one UNDO */
+    case "ygapply": {
+      if(!tiddlaHeads().length){ appState.UNDO.pop(); return; }
+      const got = applyYG();
+      toast("Applied (Fleets p. 372): " + (got.length ? got.join(" \u00b7 ") : "nothing changes"));
+      break;
+    }
+    /* the free escort's class, or none (the mark's list) */
+    case "yg": if(!setYG(i, arg)){ appState.UNDO.pop(); return; } break;
+    /* a battleship's or a Warlord's swap, or none (Fleets pp. 374, 376-381) */
+    case "swap": if(!setSwap(i, arg)){ appState.UNDO.pop(); return; } break;
     case "wl2": st.wl2 = !st.wl2; break;
     case "grp": { const seq = [null, "A", "B", "C"]; appState.G.grp[i] = seq[(seq.indexOf(appState.G.grp[i]) + 1) % seq.length]; break; }
     case "start": appState.G.started = true; appState.V.screen = "roster"; break;
@@ -345,6 +372,13 @@ export function act(name, i, arg){
   }
   dropStalePop();
   dropStaleRepairs(name === "newturn" || name === "endturn");
+  /* "while they contain more than five models" (Fleets p. 372): the sixth
+     from last lost, the +1 is gone; a revive tap is a correction */
+  if(mob0 != null){
+    const h = skwHead(i), us = skwUnits(h), mob1 = !!PLAY.mobRule(us), n = PLAY.skwadronModels(us);
+    if(mob0 && !mob1) toast(skwName(h) + ": " + (n === 5 ? "five" : n) + " left - Mob Rule's +1 is gone, Ld " + skwLd(h).now + " (Fleets p. 372)", "crip");
+    else if(!mob0 && mob1) toast(skwName(h) + ": " + n + " ships - Mob Rule's +1 is back (a correction)");
+  }
   if(before){
     const after = PLAY.view(R, st, fleet);
     const qw = quadWord(R, st);
@@ -364,7 +398,7 @@ export function act(name, i, arg){
       /* one-hit units make no Catastrophic Damage roll: an escort leaves a
          Blast Marker (p. 71), a one-hit defence nothing the book names
          (p. 101) - no table opens */
-      if(after.escort) toast(unitName(i) + ": " + (R.hulls > 1 ? "all " + R.hulls + " destroyed" : "destroyed") + ". " + c.rows[0].text, "crip");
+      if(after.escort) toast(unitName(i) + ": " + (st.members.length > 1 ? "all " + st.members.length + " destroyed" : "destroyed") + ". " + c.rows[0].text, "crip");
       else if(st.hulkName) toast(unitName(i) + ": " + st.hulkName, "crip");
       else {
         toast(unitName(i) + " is out of action: " + (c.dice ? "roll " + c.dice + " on the " + c.title + " table (" + (c.fleets ? "Fleets " : "") + "p. " + c.page + ")" : c.rows[0].text), "crip");

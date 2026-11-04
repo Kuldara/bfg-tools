@@ -1,6 +1,6 @@
 import { appState } from "./state.js";
 import { OPT, TRACK, lsDel, lsGet, lsSet } from "./storage.js";
-import { MID } from "./helpers.js";
+import { MID, fnv } from "./helpers.js";
 import { fleetPoints, resolveFleet } from "./fleet-document.js";
 import { swapFleetRes } from "./game-state.js";
 import { CLOSE_X, render, rosterRows, vpTotal } from "./render.js";
@@ -203,10 +203,14 @@ export function takeSnapshot(m){
   P.scr = m.scr === "setup" || m.scr === "roster" ? m.scr : "load";
   P.at = m.at || Date.now();
   P.G = G;
-  if(G && G.fp !== P.fp){
+  /* their fleet is drawn again when their game's own document changes, not
+     only their builder fleet (G.fp): a free escort of Young Gunz is a card
+     appended to it (T63) */
+  const dfp = G ? fnv(JSON.stringify([G.doc.ln, G.doc.units])) : "";
+  if(G && dfp !== P.fp){
     const res = resolveFleet(G.doc);
     P.rerr = res.error ? res.error : res.units.length !== G.st.length ? "Their roster does not resolve here as it does on their phone (" + res.units.length + " of " + G.st.length + " units): the two pages may be different versions." : "";
-    P.U = P.rerr ? [] : res.units; P.L0 = P.rerr ? null : res.L0; P.fp = G.fp; P.FR = null;
+    P.U = P.rerr ? [] : res.units; P.L0 = P.rerr ? null : res.L0; P.fp = dfp; P.FR = null;
   }
   if(!G){ P.U = []; P.L0 = null; P.fp = ""; }
 }

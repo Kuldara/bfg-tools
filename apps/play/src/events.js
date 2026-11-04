@@ -19,6 +19,9 @@ document.addEventListener("click", ev => {
      taps in the first moments after a screen change are not taken */
   if(Date.now() < appState.V.guardUntil){ ev.preventDefault(); return; }
   const name = el.getAttribute("data-act");
+  /* Apply Young Gunz & Mob Rule sits under Roll Ld: a second tap of the roll
+     does not land on it (T63) */
+  if(name === "ygapply" && Date.now() < (appState.V.ygGuard || 0)){ ev.preventDefault(); return; }
   /* a repair changes what is under the finger: the next tap waits a moment */
   if(/^repair/.test(name)) appState.V.guardUntil = Date.now() + 400;
   /* The tapped control stays where the finger is (user 30.9.2026: the screen
@@ -77,6 +80,10 @@ document.addEventListener("change", ev => {
   if(el.getAttribute("data-sel") === "pre") act("pre", parseInt(el.getAttribute("data-i"), 10), { key: el.getAttribute("data-key"), v: el.value });
   /* a ram's target picked from the books (T46) */
   if(el.getAttribute("data-sel") === "ramfoe") shipAct("acfoecat", el);
+  /* Swap Ld on a battleship's or a Warlord's row, and the free escort's
+     class (T63) */
+  if(el.getAttribute("data-sel") === "swap") act("swap", parseInt(el.getAttribute("data-i"), 10), el.value === "" ? null : parseInt(el.value, 10));
+  if(el.getAttribute("data-sel") === "yg") act("yg", parseInt(el.getAttribute("data-i"), 10), el.value);
 });
 
 /* the set-up screen's Leadership guide stays as the player left it: the

@@ -4,7 +4,7 @@ import { MID } from "./helpers.js";
 import { resolveFleet } from "./fleet-document.js";
 import { unitName } from "./derived.js";
 import { fleetRR } from "./render.js";
-import { esc } from "../../../packages/ui/format.js";
+import { esc, title } from "../../../packages/ui/format.js";
 import PLAY from "../rules.js";
 import DOMAIN from "../../../packages/rules/domain.js";
 import { DATA } from "../../../packages/ui/catalog.js";
@@ -256,8 +256,330 @@ export function setLd(i, v){
      squadron"): the value goes on every card of the squadron */
   const g = appState.G.grp[i];
   const ms = isEscGrp(g) ? appState.G.grp.map((x, j) => x === g ? j : -1).filter(j => j >= 0) : [i];
-  ms.forEach(j => { const st = appState.G.st[j]; st.ldRoll = v; st.ld = v; st.ldFrom = null; });
+  ms.forEach(j => { const st = appState.G.st[j]; st.ldRoll = v; st.ld = v; st.ldFrom = null; delete st.ldKept; });
   if(ms.indexOf(appState.G.flag) >= 0) applyCommanderLd();
+}
+
+/* ---- Da Ork Clanz: Young Gunz, Mob Rule and the Leadership swaps -------
+   The owner's design of 4.11.2026 (RULINGS.md T63): under Roll Ld, Apply
+   works Young Gunz and Mob Rule out on the values the set-up shows, in the
+   book's order - a battleship's swap (Fleets pp. 376-381), then a
+   Warlord's (p. 374), then Young Gunz on the value after them, then Mob
+   Rule (p. 372). Everything stays the player's to change: a tapped value
+   always wins (T44). The state: st.mob on every card of an applied
+   skwadron; st.yg (a class label or "none") and st.ygPick (the class
+   remembered) on its first card; st.swap (the partner) on the battleship or
+   the Warlord who swaps; a free escort is one more member {free: true} of
+   a card of its class, or a card of its own appended at the end (u.yg). */
+
+/* the cards of unit i's skwadron: its escort squadron (one Leadership,
+   Rulebook p. 45), else itself */
+export function skwCards(i){
+  const g = appState.G.grp[i];
+  return isEscGrp(g) ? appState.G.grp.map((x, j) => x === g ? j : -1).filter(j => j >= 0) : [i];
+}
+export const skwHead = i => skwCards(i)[0];
+export const skwUnits = h => skwCards(h).map(j => ({ R: appState.U[j].R, st: appState.G.st[j] }));
+/* a card the page added for Young Gunz: a free escort of a class the
+   skwadron has no card of, appended after every card of the builder */
+export const isFreeCard = j => !!(appState.U[j] && appState.U[j].u && appState.U[j].u.yg);
+export const paidCards = h => skwCards(h).filter(j => !isFreeCard(j));
+/* the escorts paid for, commandeered ones too: "the skwadron cannot exceed
+   ten escorts" (Fleets p. 372) */
+export const paidModels = h => paidCards(h).reduce((a, j) => a + (appState.U[j].R.hulls | 0), 0);
+export const isApplied = h => skwCards(h).some(j => !!appState.G.st[j].mob);
+export const skwName = h => isEscGrp(appState.G.grp[h]) ? "Squadron " + grpLabel(appState.G.grp[h]) : unitName(h);
+/* the skwadron's Leadership now, Mob Rule and all (PLAY.squadronLd /
+   PLAY.leadership) */
+export function skwLd(h, opt){
+  const us = skwUnits(h);
+  return us.length > 1 ? PLAY.squadronLd(us, appState.G.fleet, opt) : PLAY.leadership(us[0].R, us[0].st, appState.G.fleet, opt);
+}
+/* the Ork tiddla skwadrons of a Da Ork Clanz fleet, by their first card */
+export function tiddlaHeads(){
+  if(!appState.L0 || !appState.L0.clanz || !appState.G) return [];
+  const seen = {};
+  return appState.U.map((x, i) => {
+    if(x.R.kind !== "ship" || isFreeCard(i)) return -1;
+    const h = skwHead(i);
+    if(seen[h]) return -1;
+    seen[h] = 1;
+    return skwCards(h).some(j => PLAY.isTiddla(appState.U[j].R)) ? h : -1;
+  }).filter(i => i >= 0);
+}
+/* the list's Ork escort classes in its order, from the data: the Clanz
+   tiddla's five (Fleets p. 374) */
+export function ygClasses(){
+  const L0 = appState.L0, c = L0 && L0.clanz;
+  const sec = c && c.tiddla ? L0.secs.find(s => new RegExp(c.tiddla, "i").test(s.t)) : null;
+  return sec ? sec.ents.filter(e => e.k === "unit").map(e => ({ label: e.l, price: e.p, ref: e.r })) : [];
+}
+export const ygChoice = h => PLAY.youngGunzChoice(paidCards(h).map(j => appState.U[j].R), ygClasses());
+/* Young Gunz is tested on the value after the swaps and before Mob Rule
+   (p. 372): st.ld, which Mob Rule never touches */
+export const ygEligible = h => PLAY.youngGunz(appState.G.st[h].ld, paidModels(h));
+/* the free escort's class is one of a paid card's of the skwadron that
+   bought nothing per vessel: one more member of it; a Grunt card with Klaws
+   is not one - the free Grunt has none (T63) */
+function ygHost(h, label){
+  return paidCards(h).find(j => { const R = appState.U[j].R; return PLAY.isTiddla(R) && R.entry.label === label && PLAY.vesselPaid(R) === (R.entry.price | 0); });
+}
+/* where the skwadron's free escort is now: { label, card, own } */
+export function ygFree(h){
+  const st = appState.G.st[h], lab = st && st.yg;
+  if(!lab || lab === "none") return null;
+  const own = skwCards(h).find(j => isFreeCard(j) && appState.U[j].R.entry.label === lab);
+  if(own != null) return { label: lab, card: own, own: true };
+  const host = skwCards(h).find(j => !isFreeCard(j) && (appState.G.st[j].members || []).some(m => m.free));
+  return host != null ? { label: lab, card: host, own: false } : null;
+}
+/* the free escorts the decisions ask for, put on the cards: a member more,
+   or a card of its own. Returns true when the fleet document changed. */
+export function syncFree(){
+  const G = appState.G, U = appState.U, heads = tiddlaHeads(), want = {};
+  heads.forEach(h => {
+    const lab = G.st[h].yg;
+    if(lab && lab !== "none" && isApplied(h)) want[h] = { label: lab, host: ygHost(h, lab) };
+  });
+  const hosts = Object.keys(want).map(h => want[h].host).filter(k => k != null);
+  U.forEach((x, k) => {
+    const st = G.st[k];
+    if(!Array.isArray(st.members) || isFreeCard(k)) return;
+    const has = st.members.some(m => m.free), host = hosts.indexOf(k) >= 0;
+    if(has && !host) st.members = st.members.filter(m => !m.free);
+    else if(host && !has) st.members.push({ dead: false, free: true });
+  });
+  const first = U.findIndex((x, k) => isFreeCard(k)), b = first < 0 ? U.length : first;
+  const desired = heads.filter(h => want[h] && want[h].host == null).map(h => ({ h: h, label: want[h].label }));
+  const have = U.slice(b).map(x => ({ h: x.u.ygOf, label: x.R.entry.label }));
+  if(JSON.stringify(desired) === JSON.stringify(have)) return false;
+  return rebuildFree(b, desired);
+}
+/* The free cards are the last rows of the game's own fleet document and of
+   every list kept by unit (G.st, G.grp, G.nm, G.order): they are rebuilt
+   there, and nothing of the builder's rows moves (AGENTS.md: a shifted index
+   shows nowhere). A free card is one ship at 0 pts (the saved field adj),
+   in its skwadron's letter, so its clan and Gubbins cover it (Fleets
+   pp. 371-372, T60); a lone tiddla is given a letter for it, and gives it
+   back when the card goes. */
+function rebuildFree(b, desired){
+  const G = appState.G, L0 = appState.L0, U0 = appState.U;
+  const keep = JSON.stringify(G);
+  G.doc = JSON.parse(JSON.stringify(G.doc));     /* the game's own copy, never the builder's */
+  const rowOf = k => U0[k] && U0[k].d != null ? G.doc.units[U0[k].d] : null;
+  G.doc.units = G.doc.units.filter(u => !(u && u.yg));
+  G.st.length = b; G.grp.length = b;
+  if(G.nm) Object.keys(G.nm).forEach(k => { if(+k >= b) delete G.nm[k]; });
+  if(Array.isArray(G.order)) G.order = G.order.filter(k => k < b);
+  /* a skwadron of one card left: no squadron of its own any more */
+  for(let k = 0; k < b; k++){
+    const g = G.grp[k];
+    if(!isEscGrp(g) || G.grp.filter(x => x === g).length > 1 || desired.some(w => w.h === k)) continue;
+    G.grp[k] = null;
+    const row = rowOf(k);
+    if(row && row.ygSq){ delete row.sq; delete row.ygSq; }
+  }
+  const si = L0.secs.findIndex(s => new RegExp(L0.clanz.tiddla, "i").test(s.t));
+  const used = () => G.doc.units.map(u => u && u.sq).filter(Boolean).map(String);
+  for(const w of desired){
+    const sec = L0.secs[si], ei = sec ? sec.ents.findIndex(e => e.l === w.label) : -1, en = ei >= 0 ? sec.ents[ei] : null, hrow = rowOf(w.h);
+    if(!en || !hrow){ appState.G = JSON.parse(keep); return false; }
+    let letter = hrow.sq;
+    if(!letter){ letter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").find(c => used().indexOf(c) < 0) || "Z"; hrow.sq = letter; hrow.ygSq = 1; }
+    const g = "e:" + letter;
+    G.grp[w.h] = g;
+    /* named for the strip and the lists: "Free Grunt" (the class in full is on its card) */
+    const sh = DATA.ships[String(en.r)];
+    G.doc.units.push({ s: si, e: ei, sn: sec.t, el: en.l, ref: en.r, n: 1, name: "Free " + title(String(sh ? sh.nm : en.l).split(/\s+/)[0]), adj: -(en.p | 0), sq: letter, cmd: hrow.cmd, yg: 1, ygOf: w.h });
+    G.grp.push(g);
+  }
+  const res = resolveFleet(G.doc);
+  if(res.error || res.units.length !== b + desired.length){ appState.G = JSON.parse(keep); return false; }
+  appState.U = res.units; appState.L0 = res.L0; FR = null;
+  /* a free card shares its skwadron's one Leadership and Mob Rule (p. 45) */
+  desired.forEach(w => {
+    const k = G.st.length, st0 = G.st[w.h], st = PLAY.freshUnit(res.units[k].R);
+    st.ld = st0.ld; st.ldRoll = st0.ldRoll; st.ldFrom = st0.ldFrom;
+    if(st0.mob) st.mob = true;
+    (st.members || []).forEach(m => { m.free = true; });
+    G.st.push(st);
+  });
+  return true;
+}
+/* Apply (one act, one UNDO step): every Ork tiddla skwadron, Young Gunz on
+   the value after the swaps - kept "none", the class remembered if still
+   allowed, else the page's proposal; off when it is not on Ld 5-6 or has ten
+   - then Mob Rule's +1 on. After Start Young Gunz is read-only: Mob Rule
+   only (T63). Returns what it did, for the toast. */
+export function applyYG(){
+  const G = appState.G, heads = tiddlaHeads();
+  const before = {};
+  heads.forEach(h => { before[h] = skwLd(h).now; });
+  heads.forEach(h => {
+    const st = G.st[h];
+    if(!G.started){
+      const ch = ygChoice(h);
+      if(ygEligible(h) && ch && ch.allowed.length){
+        const ok = lab => !!lab && lab !== "none" && ch.allowed.some(c => c.label === lab);
+        if(st.yg !== "none") st.yg = ok(st.yg) ? st.yg : ok(st.ygPick) ? st.ygPick : ch.proposal;
+      }else if(st.yg && st.yg !== "none"){ st.ygPick = st.yg; delete st.yg; }
+    }
+    skwCards(h).forEach(k => { G.st[k].mob = true; });
+  });
+  G.ygApplied = true;
+  syncFree();
+  const out = [];
+  tiddlaHeads().forEach(h => {
+    const f = ygFree(h), now = skwLd(h).now;
+    if(f && !G.started) out.push("+1 " + title(appState.U[f.card].R.className));
+    if(now !== before[h] || PLAY.mobRule(skwUnits(h))) out.push(skwName(h) + " Ld " + G.st[h].ld + " \u2192 " + now);
+  });
+  return out;
+}
+/* A skwadron no longer applied - its value changed after Apply: Mob Rule
+   off until Apply again; before Start its free escort comes off, its class
+   remembered, and a "none" stays (T63). */
+export function unapply(h){
+  const G = appState.G;
+  if(!isApplied(h)) return false;
+  skwCards(h).forEach(k => { delete G.st[k].mob; });
+  const st = G.st[h];
+  if(!G.started && st.yg && st.yg !== "none"){ st.ygPick = st.yg; delete st.yg; }
+  return true;
+}
+/* the skwadrons of these cards, un-applied; the free escorts follow */
+export function unapplyCards(cards){
+  const heads = tiddlaHeads(), done = {};
+  let any = false;
+  (cards || []).forEach(k => { const h = skwHead(k); if(done[h] || heads.indexOf(h) < 0) return; done[h] = 1; if(unapply(h)) any = true; });
+  if(any) syncFree();
+  return any;
+}
+/* the mark's choice: another class allowed, or "none" (Young Gunz is
+   optional: "gets", but the book's example "may have", T63) */
+export function setYG(h, val){
+  const G = appState.G, st = G.st[h];
+  if(G.started || !isApplied(h) || !st) return false;
+  if(val === "none") st.yg = "none";
+  else{
+    const ch = ygChoice(h);
+    if(!ch || !ch.allowed.some(c => c.label === val)) return false;
+    st.yg = val; st.ygPick = val;
+  }
+  syncFree();
+  return true;
+}
+/* --- the swaps: a battleship's (Fleets pp. 376-381) and a Clanz Warlord's
+   (p. 374), chosen on their rows; the values are worked out from the first
+   values (the roll or the tap, st.ldRoll) with the swaps in the book's
+   order: the battleships' first, then the Warlords' (T63 decision 5) --- */
+/* the ship a Warlord is aboard (J233) */
+export const wlShip = j => j === appState.G.cmd ? appState.G.flag : (appState.G.on || {})[j];
+export const isBbSwapper = j => !!(appState.U[j] && appState.U[j].R.kind === "ship" && !isFreeCard(j) && PLAY.bbSwapRule(appState.U[j].R));
+export const isClanzWarlord = j => !!(appState.L0 && appState.L0.clanz && isWarlord(j));
+/* the partners a battleship may take: a Kill Kroozer, a Terror Ship or
+   Zukov's Klaw of the fleet (pp. 376-381, 383), whose Leadership is rolled */
+export function bbPartners(j){
+  const rule = PLAY.bbSwapRule(appState.U[j].R);
+  return appState.U.map((x, k) => k !== j && PLAY.bbSwapPartner(x.R, rule) && (ldPlanOf(k) || {}).roll ? k : -1).filter(k => k >= 0);
+}
+/* the partners a Warlord may take: one ship or escort squadron of his own
+   command (p. 374), each by its first card */
+export function wlPartners(j){
+  const W = (fleetRes().warlords || []).filter(w => w && w.unit === j)[0], ship = wlShip(j);
+  if(!W || ship == null || !W.units) return [];
+  const us = W.units.filter(k => appState.U[k] && !isFreeCard(k)).map(k => ({ i: k, R: appState.U[k].R, grp: appState.G.grp[k] }));
+  return PLAY.warlordSwapPartners(us, ship).map(k => skwHead(k));
+}
+/* the swaps in force, in the order they apply: { j (who chose it), a (his
+   ship's skwadron), b (the partner's), page } */
+export function swapRecs(){
+  const G = appState.G, out = [];
+  if(!G) return out;
+  appState.U.forEach((x, j) => {
+    const p = G.st[j] && G.st[j].swap;
+    if(p == null || !isBbSwapper(j) || bbPartners(j).indexOf(p) < 0) return;
+    out.push({ j: j, a: j, b: p, page: PLAY.bbSwapRule(x.R).page || 376 });
+  });
+  appState.U.forEach((x, j) => {
+    const p = G.st[j] && G.st[j].swap, a = isClanzWarlord(j) ? wlShip(j) : null;
+    if(p == null || a == null || wlPartners(j).indexOf(p) < 0) return;
+    out.push({ j: j, a: skwHead(a), b: p, page: 374 });
+  });
+  return out;
+}
+/* a card's first value: its roll or tap before any swap */
+const firstLd = k => { const st = appState.G.st[k]; return st.ldFrom == null && st.ldRoll != null ? st.ldRoll : st.ld; };
+/* the swaps played out on the first values (PLAY.applySwaps), by skwadron */
+export function swapPlay(recs){
+  const vals = {};
+  (recs || swapRecs()).forEach(r => [r.a, r.b].forEach(h => { if(!(h in vals)) vals[h] = firstLd(h); }));
+  return PLAY.applySwaps(vals, recs || swapRecs());
+}
+/* every card's value from the first values and the swaps; touched: cards of
+   a swap that has just ended, back to their first values */
+export function syncSwaps(touched){
+  const G = appState.G, recs = swapRecs(), play = swapPlay(recs);
+  const cards = (touched || []).slice();
+  recs.forEach(r => cards.push.apply(cards, skwCards(r.a).concat(skwCards(r.b))));
+  cards.forEach(k => { const st = G.st[k]; if(st && st.ldFrom == null && st.ldRoll != null) st.ld = st.ldRoll; });
+  Object.keys(play.vals).forEach(h => skwCards(+h).forEach(k => { const st = G.st[k]; if(st && st.ldFrom == null && play.vals[h] != null) st.ld = play.vals[h]; }));
+}
+/* A tap on a value ends the swaps it is in (T44: a tapped value always
+   wins); the other side keeps the value it has now - "kept from an ended
+   swap", the owner's prototype - and so does each value a chain of swaps
+   passed through. Returns the cards it touched. */
+export function endSwapsAt(i){
+  const G = appState.G, recs = swapRecs(), h = skwHead(i);
+  const comp = [h], hit = [];
+  let grew = true;
+  while(grew){
+    grew = false;
+    recs.forEach((r, n) => {
+      if(hit.indexOf(n) >= 0 || (comp.indexOf(r.a) < 0 && comp.indexOf(r.b) < 0)) return;
+      hit.push(n); grew = true;
+      [r.a, r.b].forEach(u => { if(comp.indexOf(u) < 0) comp.push(u); });
+    });
+  }
+  if(!hit.length) return [];
+  const touched = [], page = {};
+  hit.forEach(n => [recs[n].a, recs[n].b].forEach(u => { if(!(u in page)) page[u] = recs[n].page || true; }));
+  comp.forEach(u => skwCards(u).forEach(k => {
+    const st = G.st[k];
+    touched.push(k);
+    if(u === h || st.ldFrom != null || st.ld == null || st.ldRoll === st.ld) return;
+    st.ldRoll = st.ld; st.ldKept = page[u] || true; delete st.ldDie; delete st.ldWhy;
+  }));
+  hit.forEach(n => { delete G.st[recs[n].j].swap; });
+  return touched;
+}
+/* A swap chosen on its row, or "no swap" (p = null): the two values are
+   exchanged at once, or back; the skwadrons it touches are no longer
+   applied (T63). */
+export function setSwap(j, p){
+  const G = appState.G, st = G.st[j];
+  if(!st) return false;
+  const old = swapRecs().filter(r => r.j === j), touched = [];
+  old.forEach(r => touched.push.apply(touched, skwCards(r.a).concat(skwCards(r.b))));
+  const ok = p == null ? true : isBbSwapper(j) ? bbPartners(j).indexOf(p) >= 0 : isClanzWarlord(j) && wlPartners(j).indexOf(p) >= 0;
+  if(!ok) return false;
+  const was = G.st.map(s => s.ld);
+  if(p == null) delete st.swap; else st.swap = p;
+  syncSwaps(touched);
+  swapRecs().filter(r => r.j === j).forEach(r => touched.push.apply(touched, skwCards(r.a).concat(skwCards(r.b))));
+  G.st.forEach((s, k) => { if(s.ld !== was[k]) touched.push(k); });
+  if(!G.started) unapplyCards(touched);
+  return true;
+}
+/* a Warlord who moves to another ship: his swap ends first, the values back */
+export function endSwapOf(j){
+  const G = appState.G;
+  if(!G.st[j] || G.st[j].swap == null) return;
+  const old = swapRecs().filter(r => r.j === j), touched = [];
+  old.forEach(r => touched.push.apply(touched, skwCards(r.a).concat(skwCards(r.b))));
+  delete G.st[j].swap;
+  syncSwaps(touched);
+  if(!G.started) unapplyCards(touched);
 }
 
 export function save(){
@@ -291,8 +613,13 @@ export function resumeGame(g){
 /* ---- Rolling before the game (user 31.10.2026, RULINGS.md T44) --------
    The page rolls when the player asks it to; every value stays the
    player's to change (the Ld tiles, the selects). */
-/* a unit's Leadership plan on its fleet's table (PLAY.ldPlan) */
-export const ldPlanOf = i => PLAY.ldPlan(appState.U[i].R, appState.L0 && appState.L0.nm);
+/* a unit's Leadership plan on its fleet's table (PLAY.ldPlan); an escort
+   squadron of several cards rolls once, a Clanz tiddla on the Orks' table
+   whatever its first card is (PLAY.skwadronPlan, T63) */
+export const ldPlanOf = i => {
+  const g = appState.G && appState.G.grp ? appState.G.grp[i] : null, nm = appState.L0 && appState.L0.nm;
+  return isEscGrp(g) ? PLAY.skwadronPlan(skwCards(i).map(j => appState.U[j].R), nm) : PLAY.ldPlan(appState.U[i].R, nm);
+};
 /* the units that roll: a ship whose plan rolls, one card per escort
    squadron (p. 45: "per escort squadron") */
 export function ldRollers(){
@@ -323,6 +650,8 @@ export function rollLd(i, rng){
     const st = appState.G.st[j]; st.ldDie = r.die; st.ldWhy = r.why;
     if(p.table === PLAY.LD_TABLES.mechanicus && r.die === 6) st.giftChoice = true; else delete st.giftChoice;
   });
+  /* a value rolled into a swap already chosen takes its place in it */
+  if(swapRecs().length) syncSwaps(ms);
   return r;
 }
 /* only the units still without a value; all = true rolls every one again

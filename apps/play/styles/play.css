@@ -8,16 +8,20 @@
   /* squadron colours (user 30.9.2026): every squadron its own, strong
      enough for a frame on either card colour and white tag text */
   --sq1:#B97512; --sq2:#2C7FC4; --sq3:#8A4FC4; --sq4:#2E8A5E; --sq5:#C4492F; --sq6:#B8407E;
+  /* text on the accent and the brass of the set-up's marks (T63) */
+  --on-acc:#FFFFFF; --on-brass:#FFFFFF;
 }
 @media (prefers-color-scheme:dark){
   :root:not([data-theme="light"]){
     --card:#1B232C; --card-ink:#E4EAF0; --card-mute:#8F9CA9; --card-rule:#2C3945;
     --acc:#E0955A; --cr:#3A2224; --cr-ink:#E5A2A6; --brace:#6FBF8E; --brace-wash:#162C21;
+    --on-acc:#08110F; --on-brass:#1A1405;
   }
 }
 :root[data-theme="dark"]{
   --card:#1B232C; --card-ink:#E4EAF0; --card-mute:#8F9CA9; --card-rule:#2C3945;
   --acc:#E0955A; --cr:#3A2224; --cr-ink:#E5A2A6; --brace:#6FBF8E; --brace-wash:#162C21;
+  --on-acc:#08110F; --on-brass:#1A1405;
 }
 
 *{box-sizing:border-box}
@@ -651,6 +655,37 @@ details.ldguide h4{margin:12px 12px 4px;font:700 12px var(--mono);text-transform
 .setrow .pre .predesc b{color:var(--ink);font:600 12px/1.35 var(--sans);text-transform:none;letter-spacing:0}
 .setrow .pre .predesc{flex:1 0 100%;margin:0;font:12px/1.35 var(--sans);color:var(--ink-2)}
 .preline{margin:8px 0 0;font:12.5px/1.5 var(--sans);color:var(--ink-2)}
+
+/* ---- Young Gunz, Mob Rule and the Ld swaps at the set-up (T63) ---- */
+/* the owner's design 4.11.2026: Apply under Roll Ld, one column, so neither
+   moves when the other's text changes */
+.rollbar.yg{flex-direction:column;align-items:stretch;margin-top:8px}
+.rollbar.yg .btn{flex:0 0 auto;margin-top:0}
+.btn.ygbtn[disabled]{opacity:1;background:var(--sunk);color:var(--ink-3);border:1px solid var(--line)}
+.btn.ygbtn.done[disabled]{background:var(--ok-wash);color:var(--ok);border-color:var(--ok)}
+/* a changed Ld: the old value striped, the value it plays at ringed */
+.seg.ld button.was{background:var(--sunk);background:repeating-linear-gradient(135deg,var(--sunk) 0 5px,color-mix(in srgb,var(--accent) 34%,var(--sunk)) 5px 8px);
+  border:1.5px dashed var(--accent);color:var(--ink-2)}
+.seg.ld button.on.chg{box-shadow:0 0 0 2px var(--panel),0 0 0 4px var(--accent)}
+.setrow .full{flex:1 0 100%;min-width:0}
+.setrow .full > :first-child{margin-top:0}
+.marks{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:4px 0 2px}
+.mark{display:inline-flex;align-items:center;min-height:30px;padding:0 11px;border-radius:999px;background:var(--accent);color:var(--on-acc);font:700 13px/1 var(--sans)}
+.mark.mob{background:var(--brass);color:var(--on-brass)}
+.mark.off{background:var(--sunk);color:var(--ink-2);border:1px solid var(--line)}
+.marks select.mini{width:auto;max-width:100%;min-height:32px;font:13px var(--sans);padding:0 6px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink)}
+.marks .marksub{font:12px/1.3 var(--sans);color:var(--ink-3)}
+p.marksub{margin:2px 0 4px;font:12px/1.35 var(--sans);color:var(--ink-3)}
+.chgwhy{margin:4px 0 0;font:600 13px/1.4 var(--sans);color:var(--accent-ink)}
+.setrow .needs.chg{margin:4px 0 0;font:600 12.5px/1.35 var(--sans)}
+.setrow.ask{box-shadow:inset 3px 0 0 var(--warn);padding-left:9px}
+.setrow .pres.swap{margin-top:2px}
+.setrow .pres.swap select:disabled{opacity:.7}
+.why.q{color:var(--ink-3)}
+.why.q button{color:var(--ink-2)}
+/* the free escort in the game: its box dashed (Fleets p. 372) */
+.hits.mem b.free{border-style:dashed;border-width:2px;border-color:var(--accent)}
+.hits.mem b.free.on{border-style:dashed}
 
 /* ===================================================== OPPONENT'S FLEET ===== */
 /* (src/peer.js) The two sides - my fleet, theirs - as tabs under the top

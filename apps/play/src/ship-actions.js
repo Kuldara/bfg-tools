@@ -27,14 +27,17 @@ function covers(i){
   const g = appState.G.grp[i];
   return isEscGrp(g) ? groupUnits(g) : [i];
 }
-/* Leadership for these tests: the ship's own, with a smashed bridge and any
-   radiation burst. p. 48's
-   Under Fire and enemy contacts are "Command check modifiers"; disengaging has
-   its own list (p. 56). A squadron of escorts tests on its highest. */
+/* Leadership for these tests: the ship's own - Long Range Sensors (Fleets
+   p. 185), a smashed bridge, a radiation burst (p. 115) and a Clanz
+   skwadron's Mob Rule (Fleets p. 372, T63) - from the same rules as every
+   other Ld on the card. p. 48's Under Fire and enemy contacts are "Command
+   check modifiers" and stay out (opt test); disengaging has its own list
+   (p. 56). An escort squadron tests on its one Leadership. */
 function testLd(i){
-  const ms = covers(i), lds = ms.map(j => { const st = appState.G.st[j]; return st.ld == null ? null : st.ld + (st.ldPerm | 0); }).filter(v => v != null);
-  /* a radiation burst lowers every ship's Leadership for the turn (p. 115) */
-  return lds.length ? Math.max.apply(null, lds) - (appState.G.fleet.radiation | 0) : null;
+  const ms = covers(i), fl = appState.G.fleet, opt = { test: true };
+  const l = ms.length > 1 ? PLAY.squadronLd(ms.map(j => ({ R: appState.U[j].R, st: appState.G.st[j] })), fl, opt)
+    : PLAY.leadership(appState.U[i].R, appState.G.st[i], fl, opt);
+  return l.now;
 }
 /* the first free re-roll, the fleet's or the ship's own */
 export function freeRR(i){

@@ -3,7 +3,8 @@ import { wepClass } from "./setup.js";
 import { OPT, PLAY_VERSION, TRACK, builderRaw, lsGet } from "./storage.js";
 import { $, MID, TIMES, fnv } from "./helpers.js";
 import { fleetFactsNow, fleetPoints, fleetsIn, parseDoc, resolveFleet } from "./fleet-document.js";
-import { KEY_WAKE, builderTool, carriersOf, cmdsAboard, coCmd, grpLabel, isEscGrp, ldPlanOf, ldRollers, loadPlay, preCounts, preRollsOf, sqnShip, toolBtn, wl2Box, wlExtra, wlTag } from "./game-state.js";
+import { KEY_WAKE, builderTool, carriersOf, cmdsAboard, coCmd, grpLabel, isEscGrp, ldPlanOf, ldRollers, loadPlay, preCounts, preRollsOf, sqnShip, toolBtn, wl2Box, wlExtra, wlTag,
+  bbPartners, isApplied, isBbSwapper, isClanzWarlord, isFreeCard, paidModels, skwHead, skwLd, skwName, skwUnits, swapPlay, swapRecs, tiddlaHeads, wlPartners, wlShip, ygChoice, ygEligible, ygFree } from "./game-state.js";
 import { IN_REFITS, inRefitKind, pregameRolls, pregameText, pregameEffects } from "../../../packages/ui/pregame-tables.js";
 import { cataLabel, critLabel, groupUnits } from "./actions.js";
 import { upgradeLine, baseName, classTag, crippledNow, critChips, ldTile, memberWord, ordChip, ordnancePills, renderFleetPop, statsLine, unitName, weaponsLine, weaponsTable } from "./derived.js";
@@ -289,9 +290,11 @@ export function ldGuide(){
     "One roll per capital ship and one per escort squadron (p. 45); a capital squadron tests on its highest Ld (p. 95). Nothing goes above 10 (p. 48).",
     appState.G.cmd != null ? "The fleet commander's Leadership goes on his flagship after the roll: a fixed value replaces it, a bonus is added (max 10). Another commander's line is yours to add (T40)." : "",
     R0.some(R => R.gifts) ? "Adeptus Mechanicus: a ship that rolls a natural 6 for its Leadership may choose its Mechanicus Gift instead of rolling it, unless it carries an Archmagos (Fleets p. 118)." : "",
-    /swap Leadership ratings with a Kill Kroozer or Terror Ship/i.test(txt) ? "Ork battleships: once the Leadership is rolled, the battleship may swap its value with a Kill Kroozer or Terror Ship (Fleets pp. 376-381) - tap the swapped values." : "",
-    appState.L0 && appState.L0.clanz ? "Da Ork Clanz: a Warlord may swap Leadership with any one ship or escort squadron under his command (Fleets p. 374)." : "",
-    R0.some(R => pregameRolls(R).some(r => r.key === "xeno")) ? "Xenotech Long Range Sensors: +1 to base Leadership, max 10 (Fleets p. 185) - add it to the ship's value." : ""
+    /swap Leadership ratings with a Kill Kroozer or Terror Ship/i.test(txt) ? "Ork battleships: when the Leadership is generated, a battleship may swap its value with a Kill Kroozer or Terror Ship of the fleet (Fleets pp. 376-381) - Zukov's Klaw is a Terror Ship (p. 383). Choose it with Swap Ld on the battleship's row: the two values change places at once, and a tap on either ends it." : "",
+    appState.L0 && appState.L0.clanz ? "Da Ork Clanz: a Warlord may swap his ship's Leadership with any one ship or escort squadron under his command (Fleets p. 374) - Swap Ld on his row. A battleship's swap comes first, then the Warlords', then Young Gunz and Mob Rule (Rulebook p. 123, T63)." : "",
+    tiddlaHeads().length ? "Young Gunz (Fleets p. 372): an Ork escort skwadron on Ld 5 or 6 - after the Orks' -1 and any swap, before Mob Rule - gets one escort for free: any Ork escort class of the list costing no more than the cheapest escort paid for in it, its options for each vessel counted (Klaws, p. 390), ten at most. Apply takes the cheapest class paid for, or the one you chose before; the mark's list changes it or says No free escort. The free escort is 0 pts and concedes no VP (T63)." : "",
+    tiddlaHeads().length ? "Mob Rule (Fleets p. 372): +1 Ld while a skwadron has more than five ships, the free one and any commandeered ones counted. After Apply the page adds it to every Leadership the skwadron uses, and takes it off when five are left; a swap does not move it (T63). A Blood Axe tiddla rolls its one Ld on the Ork table (Rulebook p. 45, Fleets p. 360)." : "",
+    R0.some(R => pregameRolls(R).some(r => r.key === "xeno")) ? "Xenotech Long Range Sensors: +1 to base Leadership, max 10 (Fleets p. 185) - the page adds it, a named modifier." : ""
   ].filter(Boolean);
   /* the other dice: each table once, with the ships that roll on it */
   const tabs = {}, tOrder = [];
@@ -309,9 +312,47 @@ export function ldGuide(){
 function rollBar(){
   const rollers = ldRollers(), open = rollers.filter(i => appState.G.st[i].ld == null).length;
   const pc = preCounts();
-  const ldBtn = open ? `<button class="btn sec" data-act="rollld">Roll Ld<small>${open === rollers.length ? open + " to roll" : open + " still to roll"}</small></button>` : "";
+  /* Da Ork Clanz with a tiddla (the owner's design 4.11.2026, T63): Roll Ld
+     stays in place, grey, once every ship has its Ld, so the Apply button
+     under it never moves under the finger; other fleets as before (T44) */
+  const yg = tiddlaHeads().length > 0;
+  const ldBtn = open ? `<button class="btn sec" data-act="rollld">Roll Ld<small>${open === rollers.length ? open + " to roll" : open + " still to roll"}</small></button>`
+    : yg ? `<button class="btn sec" data-act="rollld" disabled>Roll Ld<small>every ship has its Ld</small></button>` : "";
   const preBtn = pc.open ? `<button class="btn sec" data-act="rollpre">Roll upgrades<small>${pc.open} to roll</small></button>` : "";
-  return ldBtn || preBtn ? `<div class="rollbar">${ldBtn}${preBtn}</div>` : "";
+  return ldBtn || preBtn || yg ? `<div class="rollbar${yg ? " yg" : ""}">${ldBtn}${yg ? ygButton() : ""}${preBtn}</div>` : "";
+}
+/* the ships still without an Ld, one per skwadron (one roll, Rulebook p. 45) */
+function ldMissing(){
+  const seen = {};
+  return appState.U.filter((x, i) => {
+    if(x.R.kind !== "ship" || appState.G.st[i].ld != null) return false;
+    const k = skwHead(i);
+    if(seen[k]) return false;
+    seen[k] = 1; return true;
+  }).length;
+}
+/* Apply Young Gunz & Mob Rule (T63): grey until every Ld is in; Applied
+   with what it did; Apply again after a change; after Start Mob Rule only */
+function ygButton(){
+  const G = appState.G, heads = tiddlaHeads(), pend = heads.filter(h => !isApplied(h)), miss = ldMissing();
+  let lab = "Apply Young Gunz &amp; Mob Rule", sm, on = true, done = false;
+  if(miss){ on = false; sm = "when every ship has its Ld " + MID + " " + miss + " missing"; }
+  else if(G.started){
+    if(pend.length){ lab = "Apply Mob Rule"; sm = "Young Gunz was before the game (Fleets p. 372)"; }
+    else { on = false; done = true; lab = "Applied \u2713"; sm = "before the game"; }
+  }
+  else if(!G.ygApplied) sm = heads.length + " skwadron" + (heads.length === 1 ? "" : "s") + " " + MID + " Fleets p. 372";
+  else if(pend.length){ lab = "Apply again"; sm = pend.length + " changed since " + MID + " Fleets p. 372"; }
+  else { on = false; done = true; lab = "Applied \u2713"; sm = ygSummary(); }
+  return `<button class="btn ygbtn${done ? " done" : ""}" data-act="ygapply"${on ? "" : " disabled"}>${lab}<small>${esc(sm)}</small></button>`;
+}
+/* what Apply did, for the grey button: "+1 Brute, Mob Rule on 2" */
+function ygSummary(){
+  const heads = tiddlaHeads(), out = [];
+  heads.forEach(h => { const f = ygFree(h); if(f) out.push("+1 " + f.label.split(" ")[0]); });
+  const mob = heads.filter(h => PLAY.mobRule(skwUnits(h))).length;
+  if(mob) out.push("Mob Rule on " + mob);
+  return out.join(" " + MID + " ") || "nothing to add";
 }
 /* the row's dice: the Leadership's die and sum; one select per pre-game
    roll, to pick by hand or change what was rolled. The chosen result's short
@@ -320,7 +361,9 @@ function rollBar(){
 const plain = t => String(t == null ? "" : t).replace(/<[^>]+>/g, "").replace(/&ndash;/g, "-").replace(/&amp;/g, "&");
 function rowDice(i){
   const st = appState.G.st[i], p = ldPlanOf(i);
-  const ld = st.ldWhy && st.ld != null ? ` ${MID} <span class="dice">${st.ldDie == null ? "" : "rolled "}${esc(st.ldWhy)}</span>` : "";
+  /* a value a tap ended a swap with stays (T63): said so, not the old die */
+  const ld = st.ldKept && st.ldRoll != null ? ` ${MID} <span class="dice">Ld ${st.ldRoll} kept from an ended swap (Fleets p. ${st.ldKept === true ? 374 : st.ldKept})</span>`
+    : st.ldWhy && st.ld != null ? ` ${MID} <span class="dice">${st.ldDie == null ? "" : "rolled "}${esc(st.ldWhy)}</span>` : "";
   const man = p && p.manual ? ` ${MID} ${esc(p.note)}` : "";
   const pre = preRollsOf(i).map(r => {
     const v = (st.pre || {})[r.key];
@@ -361,9 +404,119 @@ export function preLine(i){
   return `<p class="preline">${rs.map(r => { const v = st.pre[r.key]; const row = r.two ? inRefitKind(v.k).rows[v.d - 1] : r.rows ? r.rows[v.d - 1] : null;
     return `<b>${esc(r.title)}:</b> ${esc(pregameText(r, v))}${row ? " &ndash; " + row[1] : ""} (${r.two ? "Rulebook pp. 158-159" : (r.key === "crew" ? "Rulebook" : "Fleets") + " p. " + r.page})`; }).join("<br>")}</p>`;
 }
+/* ---- Young Gunz, Mob Rule and the swaps on the set-up rows (T63) ----- */
+/* The value a row plays at - the base, and Mob Rule's +1 on an applied
+   skwadron of more than five (Fleets p. 372) - and its first value (the roll
+   or the tap before any swap). When they differ the first one is striped,
+   the lit one ringed, and a line says why. */
+function setLdInfo(i){
+  const st = appState.G.st[i];
+  if(st.ldFrom != null || st.ld == null) return { lit: st.ldRoll, first: st.ldRoll, moved: false };
+  const h = skwHead(i), mob = PLAY.mobRule(skwUnits(h));
+  const lit = Math.min(10, st.ld + (mob ? 1 : 0)), first = st.ldRoll != null ? st.ldRoll : st.ld;
+  return { lit: lit, first: first, moved: lit !== first };
+}
+function ldTiles(i){
+  const n = setLdInfo(i);
+  return PLAY.LD_VALUES.map(v => {
+    const on = v === n.lit, was = n.moved && v === n.first;
+    return `<button class="${on ? "on" + (n.moved ? " chg" : "") : was ? "was" : ""}" data-act="ld" data-i="${i}" data-arg="${v}"${was ? ` aria-label="${v}, before the change"` : ""}>${v}</button>`;
+  }).join("");
+}
+/* "Ld 8 -> 6: swapped with Terror Ship (Fleets p. 374), 6 -> 7: Mob Rule
+   +1, 7 ships with the free Savage (Fleets p. 372)" - on a skwadron's first
+   card or a ship's own row */
+function whyLine(i){
+  const st = appState.G.st[i], h = skwHead(i);
+  if(h !== i || st.ldFrom != null || st.ld == null) return "";
+  const parts = [], steps = swapPlay().steps[h] || [];
+  steps.forEach(s => parts.push((parts.length ? "" : "Ld ") + s.from + " \u2192 " + s.to + ": swapped with " + esc(skwName(+s.with)) + " (Fleets p. " + s.page + ")"));
+  const us = skwUnits(h);
+  if(PLAY.mobRule(us)){
+    const f = ygFree(h);
+    parts.push((parts.length ? "" : "Ld ") + st.ld + " \u2192 " + Math.min(10, st.ld + 1) + ": Mob Rule +1, " + PLAY.skwadronModels(us) + " ships" + (f ? " with the free " + esc(f.label.split(" ")[0]) : "") + " (Fleets p. 372)");
+  }
+  return parts.length ? `<p class="chgwhy">${parts.join(" " + MID + " ")}</p>` : "";
+}
+/* the mark's list: the classes the free escort may be, at their list prices,
+   and No free escort (Young Gunz is optional, T63) */
+function ygSelect(h){
+  const ch = ygChoice(h), cur = appState.G.st[h].yg;
+  const opts = (ch ? ch.allowed : []).map(c => `<option value="${esc(c.label)}"${cur === c.label ? " selected" : ""}>${esc(c.label)} ${MID} ${c.price} pts</option>`).join("");
+  return `<select class="mini" data-sel="yg" data-i="${h}" aria-label="The free escort (Young Gunz, Fleets p. 372)">${opts}<option value="none"${cur === "none" ? " selected" : ""}>No free escort</option></select>`;
+}
+/* the marks of a row: "+1 Brute Ram Ship" on the card the free escort joins
+   (or its own), "+1 Ld, Mob Rule" on the skwadron's first card */
+function ygMarks(i){
+  const G = appState.G, h = skwHead(i), st = G.st[h];
+  if(tiddlaHeads().indexOf(h) < 0) return "";
+  const out = [], f = ygFree(h), us = skwUnits(h);
+  if(f && f.card === i){
+    const name = esc(title(appState.U[f.card].R.className));
+    out.push(G.started
+      ? `<div class="marks"><span class="mark">+1 ${name}</span><span class="marksub">taken at set-up: a ${esc(f.label.split(" ")[0])}, free (Fleets p. 372)</span></div>`
+      : `<div class="marks"><span class="mark">+1 ${name}</span>${ygSelect(h)}</div><p class="marksub">free, 0 pts, no VP ${MID} Young Gunz: Ld ${st.ld} (Fleets p. 372)</p>`);
+  }
+  if(i === h && st.yg === "none" && isApplied(h))
+    out.push(G.started ? `<div class="marks"><span class="mark off">Young Gunz: none taken at set-up</span></div>`
+      : ygEligible(h) ? `<div class="marks"><span class="mark off">Young Gunz: none taken</span>${ygSelect(h)}</div>` : "");
+  if(i === h && PLAY.mobRule(us)) out.push(`<div class="marks"><span class="mark mob">+1 Ld ${MID} Mob Rule</span></div>`);
+  return out.join("");
+}
+/* a value changed after Apply, before the game: Apply again (T63) */
+const ygStale = i => { const G = appState.G, h = skwHead(i); return i === h && !!G.ygApplied && !G.started && G.st[h].ld != null && tiddlaHeads().indexOf(h) >= 0 && !isApplied(h); };
+/* Swap Ld on a battleship's row (Fleets pp. 376-381) or a Clanz Warlord's
+   (p. 374): the options name what the swap does ("Squadron B x6: Ld 8 -> 6,
+   Young Gunz"); choosing exchanges the two values at once */
+function swapBlock(j){
+  const G = appState.G, bb = isBbSwapper(j), wl = !bb && isClanzWarlord(j);
+  if(!bb && !wl) return "";
+  const ship = bb ? j : wlShip(j);
+  if(ship == null || !G.st[ship]) return "";
+  const a = skwHead(ship), recs = swapRecs(), mine = recs.filter(r => r.j === j)[0];
+  /* a kroozer another battleship has taken is not offered again */
+  const taken = {}; recs.forEach(r => { if(r.j !== j && isBbSwapper(r.j)) taken[r.b] = 1; });
+  const partners = (bb ? bbPartners(j) : wlPartners(j)).filter(p => !taken[p] || (mine && mine.b === p));
+  if(!partners.length || G.st[a].ld == null || partners.some(p => G.st[p].ld == null)) return "";
+  /* the values before this swap: a battleship's on the first values (its
+     swap comes first), a Warlord's after the others (T63) */
+  const others = recs.filter(r => r.j !== j && (!bb || isBbSwapper(r.j)));
+  const play = swapPlay(others).vals;
+  const before = h => h in play ? play[h] : (G.st[h].ldFrom == null && G.st[h].ldRoll != null ? G.st[h].ldRoll : G.st[h].ld);
+  const heads = tiddlaHeads();
+  const label = p => {
+    const vp = before(p), va = before(a);
+    let eff = "";
+    if(heads.indexOf(p) >= 0){
+      const was = PLAY.youngGunz(vp, paidModels(p)), now = PLAY.youngGunz(va, paidModels(p));
+      eff = now && !was ? ", Young Gunz" : was && !now ? ", loses Young Gunz" : now ? ", still Young Gunz" : "";
+    }
+    const esq = PLAY.isEscort(appState.U[p].R);
+    return esc(skwName(p)) + (esq ? " " + TIMES + paidModels(p) : "") + ": Ld " + vp + " \u2192 " + va + eff;
+  };
+  const cur = mine ? mine.b : null;
+  const rule = bb ? PLAY.bbSwapRule(appState.U[j].R) : null, page = bb ? (rule.page || 376) : 374;
+  const desc = cur != null
+    ? `<b>${esc(skwName(a))} plays Ld ${G.st[a].ld}, ${esc(skwName(cur))} Ld ${G.st[cur].ld}</b> ${MID} a tap on either value ends the swap (Fleets p. ${page})`
+    : bb ? `When the Leadership is generated it may swap with a ${esc(rule.kinds.join(" or "))} of the fleet; Zukov's Klaw is a Terror Ship (Fleets pp. ${page}, 383)`
+    : `His ship (${esc(skwName(a))}, Ld ${before(a)}) may trade values with one ship or escort squadron of his command, before Young Gunz (Fleets p. 374)`;
+  return `<div class="full pres swap"><label class="pre"><span>Swap Ld <i>${cur != null ? "swapped" : "optional"}</i></span><select data-sel="swap" data-i="${j}" aria-label="Swap Leadership"${G.started ? " disabled" : ""}><option value="">no swap</option>${partners.map(p => `<option value="${p}"${cur === p ? " selected" : ""}>${label(p)}</option>`).join("")}</select><em class="predesc">${desc}</em></label></div>`;
+}
+/* the set-up's order: every row of the fleet, a free escort's own card
+   (appended at the end, T63) right under its skwadron's cards */
+function setupOrder(){
+  const out = [];
+  appState.U.forEach((x, i) => { if(!isFreeCard(i)) out.push(i); });
+  appState.U.forEach((x, i) => {
+    if(!isFreeCard(i)) return;
+    const g = appState.G.grp[i], at = out.reduce((a, k, n) => appState.G.grp[k] === g ? n : a, -1);
+    out.splice(at + 1, 0, i);
+  });
+  return out;
+}
 export function renderSetup(){
-  const rows = appState.U.map((x, i) => {
-    const R = x.R, st = appState.G.st[i];
+  const rows = setupOrder().map(i => {
+    const x = appState.U[i], R = x.R, st = appState.G.st[i];
     if(R.kind === "commander"){
       /* who he may board: a capital ship, a star fort (Fleets p. 503,
          p. 111) or a Haven (p. 334) - never a platform, a station or a
@@ -381,14 +534,21 @@ export function renderSetup(){
         ? `<span class="pill on">aboard ${esc(unitName(caps[0]))}</span>`
         : `<select data-sel="${fc ? "flag" : "on"}" data-i="${i}" aria-label="Aboard">${caps.map(j => `<option value="${j}" ${cur === j ? "selected" : ""}>aboard ${esc(unitName(j))}</option>`).join("")}</select>`;
       return `<div class="setrow"><div class="who"><b>${esc(unitName(i))}</b><small>${R.points ? R.points + " pts" + (ldTxt ? " " + MID + " " : "") : ""}${ldTxt}${rrWords(R)}</small>${rowDice(i).pre}</div>
-        ${pick}</div>`;
+        ${pick}${swapBlock(i)}</div>`;
     }
     if(R.kind !== "ship") return "";
     const esq = PLAY.isEscort(R);
+    /* a free escort's own card (Young Gunz, T63): the skwadron's one Ld, no tiles */
+    if(isFreeCard(i)){
+      const g = appState.G.grp[i], h = skwHead(i);
+      return `<div class="setrow free" data-u="${i}"><div class="who"><input class="nm" type="text" data-nm="${i}" value="${esc(unitName(i))}" placeholder="${esc(baseName(i))}" maxlength="40" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" aria-label="Name of this ship in the game"><small>${classTag(R)} ${TIMES}1 ${MID} free, 0 pts ${MID} one Ld for squadron ${esc(grpLabel(g))} (${cardsWord(g)})</small></div>
+        <div class="ctl"><span class="pill on"><b>Ld ${setLdInfo(h).lit}</b></span></div><div class="full">${ygMarks(i)}</div></div>`;
+    }
     /* Ld 5 to Ld 10: the rulebook's table gives 6-9 (p. 45), the fleets'
        own tables 5 (Orks, Fleets p. 360) to 10 (Space Marines, p. 94), and
-       a fleet may hold ships of another table (PLAY.LD_VALUES) */
-    const tiles = PLAY.LD_VALUES.map(v => `<button class="${st.ldRoll === v ? "on" : ""}" data-act="ld" data-i="${i}" data-arg="${v}">${v}</button>`).join("");
+       a fleet may hold ships of another table (PLAY.LD_VALUES). The lit
+       tile is the value it plays at, a value it changed from striped (T63). */
+    const tiles = ldTiles(i);
     /* no roll: the commander's own line on the flagship, or a Leadership
        the book fixes - the pill carries the value, the line the reason and
        its page */
@@ -410,8 +570,11 @@ export function renderSetup(){
        (user 2.11.2026) */
     const taken = PLAY.takenFeatures(R);
     const sqBtn = sqn ? `<button class="sqb${appState.G.grp[i] ? " on" : ""}" data-act="grp" data-i="${i}"${appState.G.grp[i] ? ` style="--sqc:${sqColor(appState.G.grp[i])}"` : ""} title="Squadron: tap for A, B, C or none (p. 95, 99)">${appState.G.grp[i] ? "SQN " + appState.G.grp[i] : "+ SQN"}</button>` : "";
-    return `<div class="setrow${need ? " need" : ""}" data-u="${i}"><div class="who"><input class="nm" type="text" data-nm="${i}" value="${esc(unitName(i))}" placeholder="${esc(baseName(i))}" maxlength="40" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" aria-label="Name of this ship in the game"><small>${classTag(R)}${esq ? " " + TIMES + R.hulls : ""}${R.points ? " " + MID + " " + R.points + " pts" : ""}${esq ? (fx ? "" : isEscGrp(appState.G.grp[i]) ? " " + MID + " one Ld for squadron " + grpLabel(appState.G.grp[i]) + " (" + groupUnits(appState.G.grp[i]).length + " cards)" : " " + MID + " one Ld for the squadron") : ""}${why}${youngGunzNote(i)}${rowDice(i).line}${need ? ` ${MID} <span class="needs">pick its Ld</span>` : ""}</small>${taken.length ? `<p class="upl">${taken.map(esc).join(" " + MID + " ")}</p>` : ""}${sqBtn}${rowDice(i).pre}</div>
-      <div class="ctl">${fixed ? `<span class="pill on"><b>Ld ${st.ld}</b></span>` : `<div class="seg ld">${tiles}</div>`}</div></div>`;
+    /* the escorts of the card, a free one joining it as "x5 -> 6" (T63) */
+    const nFree = (st.members || []).filter(m => m.free).length;
+    const below = fixed ? "" : ygMarks(i) + whyLine(i) + (ygStale(i) ? `<p class="needs chg">Ld changed after Apply: press Apply again - Young Gunz and Mob Rule are worked out from the new value (Fleets p. 372)</p>` : "");
+    return `<div class="setrow${need ? " need" : ""}${ygStale(i) ? " ask" : ""}" data-u="${i}"><div class="who"><input class="nm" type="text" data-nm="${i}" value="${esc(unitName(i))}" placeholder="${esc(baseName(i))}" maxlength="40" autocomplete="off" autocapitalize="words" spellcheck="false" enterkeyhint="done" aria-label="Name of this ship in the game"><small>${classTag(R)}${esq ? " " + TIMES + R.hulls + (nFree ? " \u2192 " + (R.hulls + nFree) : "") : ""}${R.points ? " " + MID + " " + R.points + " pts" : ""}${esq ? (fx ? "" : isEscGrp(appState.G.grp[i]) ? " " + MID + " one Ld for squadron " + grpLabel(appState.G.grp[i]) + " (" + cardsWord(appState.G.grp[i]) + ")" : " " + MID + " one Ld for the squadron") : ""}${why}${rowDice(i).line}${need ? ` ${MID} <span class="needs">pick its Ld</span>` : ""}</small>${taken.length ? `<p class="upl">${taken.map(esc).join(" " + MID + " ")}</p>` : ""}${sqBtn}${rowDice(i).pre}</div>
+      <div class="ctl">${fixed ? `<span class="pill on"><b>Ld ${st.ld}</b></span>` : `<div class="seg ld">${tiles}</div>`}</div>${swapBlock(i)}${below ? `<div class="full">${below}</div>` : ""}</div>`;
   }).join("");
   /* a grey Start says why, and each name takes you to its row */
   const missing = appState.U.map((x, i) => x.R.kind === "ship" && appState.G.st[i].ld == null ? i : -1).filter(i => i >= 0);
@@ -423,15 +586,25 @@ export function renderSetup(){
   const anyFixed = appState.U.some(x => PLAY.fixedLd(x.R) && PLAY.fixedLd(x.R).value === 7);
   const frr = fleetRR();
   const frrRow = frr ? `<div class="setrow"><div class="who"><b>Fleet re-rolls</b><small>${esc(frr.text)} ${MID} the fleet's own, no commander (Fleets p. ${frr.page})</small></div><span class="pill on">RR <b>${appState.G.fleet.rerolls | 0}</b></span></div>` : "";
+  /* the swaps are chosen on their rows now (T63); the skwadrons Apply has not
+     reached are named under Start, which they never block */
+  const clanz = !!appState.L0.clanz, bbs = appState.U.some((x, j) => isBbSwapper(j));
+  const pend = ready ? tiddlaHeads().filter(h => !isApplied(h)) : [];
+  const ygWhy = pend.length ? `<p class="why q">${started ? "Mob Rule" : "Young Gunz &amp; Mob Rule"} not applied${appState.G.ygApplied && !started ? " to the new values" : ""}: ${pend.map(h => `<button data-act="seek" data-i="${h}">${esc(skwName(h))}</button>`).join(", ")} (Fleets p. 372)</p>` : "";
   return `<div class="top"><h1>Set up<small>${esc(appState.G.ln)} ${MID} ${fleetPoints(appState.U)} pts</small></h1>
       <div class="tools">${builderTool()}${started ? toolBtn("start", "undo", "Game", { off: !ready, tip: "Back to the game" }) : `<button class="tool" data-act="newgame" title="Back to the fleets: this set-up is not kept">Exit</button>`}</div></div>
     ${sidesStrip()}
     <div class="main"><div class="card"><h2>Leadership</h2>
       ${ldGuide()}${rollBar()}
-      <p>Tap the value each ship fights on, or let Roll Ld roll the ships still without one. SQN groups capital ships into a squadron: one Ld, one order, combined fire (p. 95, 99). Tap a ship's name to give it another one for this game.${appState.L0.clanz ? " Da Ork Clanz: a Warlord may swap Leadership with any one ship or escort squadron under his command (Fleets p. 374) - tap the swapped values." : ""}${anyFixed ? " Planetary defences do not roll: their checks are made on Ld 7 (Rulebook p. 100)." : ""}</p>
+      <p>Tap the value each ship fights on, or let Roll Ld roll the ships still without one. SQN groups capital ships into a squadron: one Ld, one order, combined fire (p. 95, 99). Tap a ship's name to give it another one for this game.${clanz ? " Da Ork Clanz: a Warlord may swap Leadership with any one ship or escort squadron under his command (Fleets p. 374) - choose it on the Warlord's row before Apply. What changes gets a mark, and a changed Ld keeps its old value striped." : ""}${bbs ? " An Ork battleship may swap its Ld with a Kill Kroozer or Terror Ship (Fleets pp. 376-381): Swap Ld on its row." : ""}${anyFixed ? " Planetary defences do not roll: their checks are made on Ld 7 (Rulebook p. 100)." : ""}</p>
       ${frrRow}${rows}
       <button class="btn" data-act="start" ${ready ? "" : "disabled"}>${started ? "Back to the game" : "Start the game"}</button>
-      ${ready ? "" : `<p class="why">To start, pick the Ld of ${missing.length === 1 ? "one more ship" : missing.length + " more ships"}: ${missing.map(i => `<button data-act="seek" data-i="${i}">${esc(unitName(i))}</button>`).join(", ")}</p>`}</div>${factsCard()}${peerSetupCard()}</div>${edgeHandle()}`;
+      ${ready ? "" : `<p class="why">To start, pick the Ld of ${missing.length === 1 ? "one more ship" : missing.length + " more ships"}: ${missing.map(i => `<button data-act="seek" data-i="${i}">${esc(unitName(i))}</button>`).join(", ")}</p>`}${ygWhy}</div>${factsCard()}${peerSetupCard()}</div>${edgeHandle()}`;
+}
+/* "2 cards" or "2 cards + 1 free" (Young Gunz, T63) */
+function cardsWord(g){
+  const ms = groupUnits(g), free = ms.filter(isFreeCard).length, paid = ms.length - free;
+  return paid + (paid === 1 ? " card" : " cards") + (free ? " + " + free + " free" : "");
 }
 
 /* The roster's cards in their order, squadrons under their heads: the
@@ -505,22 +678,27 @@ export function renderRoster(){
 
 
 
-/* Da Ork Clanz, Fleets p. 372 (user 28.10.2026: information only, the
-   player adds it - RULINGS.md T40): "Ork escort skwadrons gain a +1 bonus
-   to their Leadership while they contain more than five models". */
-export function mobChip(n){
-  return appState.L0 && appState.L0.clanz && n > 5
-    ? `<span class="chip" title="Ork escort skwadrons gain +1 Leadership while they contain more than five models (Fleets p. 372). Add it to the Ld you play with.">mob rule: +1 Ld (${n} ships)</span>` : "";
-}
-/* Young Gunz, Fleets p. 372: "Any Ork escort skwadron with a Leadership of 5
-   or 6 gets a bonus escort ship added for free" - said at set-up, where the
-   Ld is picked; the free ship is the player's to add */
-export function youngGunzNote(i){
+/* Da Ork Clanz, Fleets p. 372: "Ork escort skwadrons gain a +1 bonus to
+   their Leadership while they contain more than five models". Applied at the
+   set-up it is in the numbers ("+1 mob" on the tile, T63); a skwadron Apply
+   never reached - a game saved before - keeps this reminder. Only an Ork
+   tiddla (PLAY.isTiddla): six defence platforms are no skwadron.
+   units: [{ R, st }] of the skwadron. */
+export function mobChip(units){
   if(!appState.L0 || !appState.L0.clanz) return "";
-  const R = appState.U[i].R, st = appState.G.st[i], g = appState.G.grp[i];
-  if(!PLAY.isEscort(R) || (st.ld !== 5 && st.ld !== 6)) return "";
-  if(isEscGrp(g) && groupUnits(g)[0] !== i) return "";
-  return ` ${MID} <span class="yg" title="Any Ork escort skwadron with a Leadership of 5 or 6 gets a bonus escort ship added for free: any Ork escort class of the list costing no more than the cheapest paid for in the skwadron, ten at most. Young Gunz comes before Mob Rule (Fleets p. 372).">Young Gunz: one free escort (Fleets p. 372)</span>`;
+  const us = (units || []).filter(u => u && u.R && u.st);
+  if(!us.some(u => PLAY.isTiddla(u.R)) || us.some(u => u.st.mob)) return "";
+  const n = PLAY.skwadronModels(us);
+  return n > 5 ? `<span class="chip" title="Ork escort skwadrons gain +1 Leadership while they contain more than five models (Fleets p. 372). Not applied to this skwadron: Menu &gt; Set-up, Apply Mob Rule - or add it to the Ld you play with.">mob rule: +1 Ld (${n} ships)</span>` : "";
+}
+/* the quiet line of a card with a free escort (Young Gunz, Fleets p. 372) */
+export function ygLine(i){
+  if(isFreeCard(i)) return `<p class="upl">Young Gun: free, 0 pts (Fleets p. 372)</p>`;
+  return (appState.G.st[i].members || []).some(m => m.free) ? `<p class="upl">+1 free escort: Young Gunz (Fleets p. 372)</p>` : "";
+}
+/* a member's box: struck when it is gone; the free one dashed (T63) */
+export function memberBox(i, R, m, k, label){
+  return `<b class="${[m.dead ? "on" : "", m.free ? "free" : ""].filter(Boolean).join(" ")}" data-act="kill" data-i="${i}" data-arg="${k}" role="button" aria-label="${memberWord(R, 1)} ${k + 1}${m.free ? ", free" : ""}"${m.free ? ` title="Young Gun: free, 0 pts (Fleets p. 372)"` : ""}>${label}</b>`;
 }
 /* A squadron's own colour ties its header and its members together. */
 /* A squadron's colour: the capital squadrons A, B, C take the first three,
@@ -543,13 +721,14 @@ export function renderGroupHead(letter, ms){
   const escG = isEscGrp(letter), lab = grpLabel(letter);
   /* a mixed escort squadron: each card's ships alive, and the total */
   const alive = escG ? ms.map(j => PLAY.alive(appState.G.st[j])) : [];
-  const total = escG ? ms.reduce((a, j) => a + (appState.U[j].R.hulls | 0), 0) : 0;
+  /* every member, a free one of Young Gunz too (T63) */
+  const total = escG ? ms.reduce((a, j) => a + (appState.G.st[j].members || []).length, 0) : 0;
   const members = ms.map((j, k) => {
     const o = status.out.find(x => x.idx === k);
     if(o) return `<s>${esc(names[k])}</s> <i>${o.why}</i>`;
     return esc(names[k]) + (escG ? " " + TIMES + alive[k] : "") + (status.crippled.indexOf(k) >= 0 ? ` <i class="cr">crippled</i>` : "");
   }).join(", ");
-  const mob = escG ? mobChip(alive.reduce((a, n) => a + n, 0)) : "";
+  const mob = escG ? mobChip(units) : "";
   return `<section class="row grp-hd${escG ? " esc" : ""}" data-g="${letter}" style="--kd:${kd};--km:${km};--sq:${sqColor(letter)}">
     <div class="r1"><span class="tag grp">SQN ${lab}</span>
       <div class="name"><b>${escG ? "Escort squadron " + lab + " " + TIMES + alive.reduce((a, n) => a + n, 0) + " of " + total : "Squadron " + lab}</b><small>${members}${from.idx != null ? " " + MID + " Ld of " + esc(names[from.idx]) + " (p. 95)" : ""}</small></div>
@@ -762,11 +941,12 @@ export function renderRow(i, inGroup){
   const esq = v.escort;
   const sqc = inGroup ? sqColor(appState.G.grp[i]) : esq ? escColor(i) : null;
   const cls = ["row", esq ? "esc" : "cap", v.crippled ? "crippled" : "", v.destroyed ? "dead" : "", v.destroyed && !esq && !st.hulk && st.hulkName ? "gone" : "", "pl" + st.played, inGroup ? "ingrp" : "", sqc ? "sqd" : ""].join(" ");
-  const sub = [R.name ? title(R.className) : "", R.stats.type, esq ? R.hulls + " " + memberWord(R, R.hulls) : (R.points | 0) + " pts"].filter(Boolean).join(" " + MID + " ");
+  const nMem = esq ? (st.members || []).length : 0;
+  const sub = [R.name ? title(R.className) : "", R.stats.type, esq ? nMem + " " + memberWord(R, nMem) : (R.points | 0) + " pts"].filter(Boolean).join(" " + MID + " ");
   /* a star fort's chips are the selected quadrant's, and say which */
   const qn = v.fort ? PLAY.QUADS[v.quad] + " " : "";
   const chips = (OPT.orders && !inGroup ? ordChip(st) : "") + (v.crippled ? `<span class="chip crip">${qn}CRIPPLED</span>` : "") +
-    (esq && !inGroup ? mobChip(PLAY.alive(st)) : "") +
+    (esq && !inGroup ? mobChip([{ R: R, st: st }]) : "") +
     (v.quadGone && !v.destroyed ? `<span class="chip crip">${qn}AT 0 ${MID} ASTEROID FIELD</span>` : "") +
     (v.destroyed && esq ? hulkChip(st) : "") +
     critChips(R, st, i) + (st.disengaged ? `<span class="chip">disengaged</span>` : "") +
@@ -775,8 +955,8 @@ export function renderRow(i, inGroup){
   if(esq){
     /* one box per ship, filled when it is gone (p. 66: one hit or any
        critical destroys an escort) */
-    r3 = `<div class="hits mem">${st.members.map((m, k) => `<b class="${m.dead ? "on" : ""}" data-act="kill" data-i="${i}" data-arg="${k}" role="button" aria-label="${memberWord(R, 1)} ${k + 1}">${k + 1}</b>`).join("")}</div>
-      <span class="stat">${v.alive} of ${R.hulls}</span>`;
+    r3 = `<div class="hits mem">${st.members.map((m, k) => memberBox(i, R, m, k, k + 1)).join("")}</div>
+      <span class="stat">${v.alive} of ${nMem}</span>`;
   }else{
     r3 = hitsTrack(i, v, false) +
       (OPT.ordnance ? ordnancePills(i, v) : "");
@@ -810,7 +990,7 @@ export function renderRow(i, inGroup){
     <div class="r1"><span class="tag">${classTag(R)}${esq ? TIMES + v.alive : ""}</span>${inGroup ? `<span class="tag sq" title="Squadron ${grpLabel(appState.G.grp[i])}">SQN ${grpLabel(appState.G.grp[i])}</span>` : ""}${wlTag(i)}
       <button class="name" data-act="sheet" data-i="${i}"><b>${esc(unitName(i))}</b><small>${esc(sub)}</small></button>
       ${blastBtn}${r1tail}${actBtn}</div>
-    ${upgradeLine(i)}
+    ${upgradeLine(i)}${esq ? ygLine(i) : ""}
     ${cmdsAboard(i).map(cmdLine).join("")}${shipRRLine(i)}
     ${v.fort && !v.destroyed ? quadSelector(i, v) : ""}
     ${v.destroyed && !esq ? hulkLine(R, st) : statsLine(v, R, esq)}
@@ -841,8 +1021,11 @@ export function renderPop(i){
      wrote it with its page: the page shows it, it does not retell it */
   const slotRule = slot => { const r = (R.rules || []).find(x => x.slot === slot); return r ? String(r.t).replace(/^\*\s*/, "") : ""; };
   if(kind === "ld"){
-    const l = PLAY.leadership(R, st, fl);
+    /* an escort squadron's one Leadership, Mob Rule and all (T63) */
+    const l = isEscGrp(appState.G.grp[i]) ? skwLd(skwHead(i)) : PLAY.leadership(R, st, fl);
     const others = appState.G.grp[i] ? groupUnits(appState.G.grp[i]).filter(j => j !== i) : [];
+    const modsP = l.now != null && l.mods.length ? `<p>Plays at <b>Ld ${l.now}</b>: ${l.mods.map(m => (m.v > 0 ? "+" : "") + m.v + " " + esc(m.t) + (m.t === "mob rule" ? ", " + PLAY.skwadronModels(skwUnits(skwHead(i))) + " ships" : "") + " (" + (m.page === 372 || m.page === 185 ? "Fleets " : "") + "p. " + m.page + ")").join(", ")}.</p>` : "";
+    const litLd = st.ldFrom === "commander" ? st.ldRoll : st.ld;
     /* a Leadership the book fixes (planetary defences Ld 7, Rulebook
        p. 100; the Fortress-Monastery Ld 10, Fleets p. 111) is not rolled:
        no dice tiles, the reason instead */
@@ -856,8 +1039,9 @@ export function renderPop(i){
     return `<div class="pop"><h4>Leadership ${appState.G.grp[i] ? MID + " " + esc(unitName(i)) + " " : ""}${MID} rolled ${l.base == null ? "?" : l.base}${st.ldPerm ? " " + MID + " bridge smashed " + st.ldPerm : ""}</h4>
       ${others2}
       <p>${l.base == null ? "Roll a D6 (p. 45): 1 = 6, 2-3 = 7, 4-5 = 8, 6 = 9 - or on the fleet's own table: Ld 5 (Orks, Fleets p. 360) to Ld 10 (Space Marines, Fleets p. 94)." : "Command checks: 2D6 equal to or under Ld; -1 under fire, +1 enemy contacts, never above 10 (p. 48) - count those from the table."}</p>
+      ${modsP}
       ${(() => { const p = ldPlanOf(i); return p && p.roll && st.ld == null ? `<p><button class="chip" data-act="rollone" data-i="${i}">Roll D6</button> on the ${esc(p.table.name)} table (${bookPg(p.table.book, p.table.page)})${p.mods.map(m => `, ${m.v > 0 ? "+" : ""}${m.v} ${esc(m.t)}`).join("")}${st.ldWhy ? ` ${MID} rolled ${esc(st.ldWhy)}` : ""}</p>` : ""; })()}
-      <div class="tiles c6">${PLAY.LD_VALUES.map(n => `<button class="${st.ldRoll === n ? "on" : ""}" data-act="ld" data-i="${i}" data-arg="${n}"><b>${n}</b></button>`).join("")}</div>
+      <div class="tiles c6">${PLAY.LD_VALUES.map(n => `<button class="${litLd === n ? "on" : ""}" data-act="ld" data-i="${i}" data-arg="${n}"><b>${n}</b></button>`).join("")}</div>
       ${st.ldFrom === "commander" ? `<p>The commander's Leadership line applies to this flagship: a fixed value stands in for the roll, a bonus is added to it.</p>` : ""}
       <button class="close" data-act="closepop">close</button></div>`;
   }
@@ -959,6 +1143,9 @@ export function renderSheet(i){
   const R = appState.U[i].R, st = appState.G.st[i], fl = appState.G.fleet;
   if(R.kind !== "ship") return R.ruleCard ? renderRuleSheet(i) : "";
   const v = PLAY.view(R, st, fl);
+  /* a card of an escort squadron shows the squadron's one Leadership, its
+     Mob Rule counted over all its cards (Rulebook p. 45, Fleets p. 372) */
+  if(isEscGrp(appState.G.grp[i])) v.ld = skwLd(skwHead(i));
   const [kd, km] = factionCols(R.entry ? R.entry.list : appState.G.ln, R.source.faction || "");
   const esq = v.escort;
   const sub = [title(R.className), R.source.faction ? title(R.source.faction) : "", R.stats.type, "pg. " + R.source.page, (R.points | 0) + " pts", cmdsAboard(i).length ? cmdsAboard(i).map(unitName).join(", ") + " aboard" : ""].filter(Boolean).join(" | ");
@@ -983,8 +1170,8 @@ export function renderSheet(i){
     <div class="r4"><button class="crit" data-act="pop" data-i="${i}" data-arg="crit">Criticals<small>${R.damage.triggerHint}</small></button></div>
     ${appState.V.pop && appState.V.pop.i === i && /^crit/.test(appState.V.pop.kind) ? renderPop(i) : ""}
   </div>`;
-  const damage = esq ? `<div class="sec"><h3>Squadron<em>${v.alive} of ${R.hulls} ${MID} ${R.squadron ? "squadron " + R.squadron.min + "-" + R.squadron.max : ""}</em></h3>
-      <div class="hits mem">${st.members.map((m, k) => `<b class="${m.dead ? "on" : ""}" data-act="kill" data-i="${i}" data-arg="${k}" role="button">${esc(R.members[k] || String(k + 1))}</b>`).join("")}</div>
+  const damage = esq ? `<div class="sec"><h3>Squadron<em>${v.alive} of ${st.members.length} ${MID} ${R.squadron ? "squadron " + R.squadron.min + "-" + R.squadron.max : ""}</em></h3>
+      <div class="hits mem">${st.members.map((m, k) => memberBox(i, R, m, k, esc(R.members[k] || String(k + 1)))).join("")}</div>${ygLine(i)}
       ${OPT.orders ? `<div class="r4"><button class="brace ${v.braced ? "on" : ""}" data-act="brace" data-i="${i}" ${PLAY.canOrder(st, fl, "BFI", R) ? "" : "disabled"}>Brace</button>
         <button class="order ${st.order && st.order !== "BFI" ? "on" : ""}" data-act="pop" data-i="${i}" data-arg="order">${st.order && st.order !== "BFI" ? esc(PLAY.ORDER_BY[st.order].name) : "Order"}</button></div>
       ${appState.V.pop && appState.V.pop.i === i && appState.V.pop.kind === "order" ? renderPop(i) : ""}` : ""}

@@ -29,15 +29,18 @@ export function resolveFleet(f){
   const L0 = listByName(f.ln);
   if(!L0) return { error: "The fleet list \"" + f.ln + "\" is not in this build." };
   const lost = [];
-  const kept = resolveSaved(clone(f.units), L0, lost);
+  const rows = clone(f.units);
+  const kept = resolveSaved(rows, L0, lost);
   const ctxs = kept.map(u => ({ list: listOf(u, L0), host: L0 }));
   /* a Da Ork Clanz tiddla skwadron's clan and Gubbins are on every row of
      its tag and paid once (Fleets pp. 371-372, ruling T60), as the builder
      resolves them */
   const its = DOMAIN.shareSkwadronUpgrades(kept.map((u, i) => DOMAIN.fromLegacyUnit(u, ctxs[i], DATA)), { list: L0, host: L0 }, DATA);
+  /* d: the unit's row in the document (a row that is lost is not a unit) -
+     the free escort of Young Gunz edits the game's own copy by it (T63) */
   const units = kept.map((u, i) => {
     const R = DOMAIN.resolveUnit(its[i], ctxs[i], DATA);
-    return R ? { u: u, R: R, it: its[i] } : null;
+    return R ? { u: u, R: R, it: its[i], d: rows.indexOf(u) } : null;
   }).filter(Boolean);
   return { L0: L0, units: units, lost: lost,
            fp: fnv(JSON.stringify([f.ln, f.units])),
