@@ -48,8 +48,9 @@
 }
 .uhead .ty{font:400 11px/1 var(--mono);color:var(--ink-3)}
 /* a squadron's number of ships, right after its class (user 6.11.2026) */
-/* as quiet as the Warlord picker beside it (user 6.11.2026: the coloured one was too much) */
-.uhead .cnt{align-self:center;font:600 13px/1.2 var(--mono);color:var(--ink);background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:3px 6px}
+/* between the first coloured chip and the picker's quiet box (user 6.11.2026):
+   the accent's line and figure, no wash */
+.uhead .cnt{align-self:center;font:700 14px/1.2 var(--mono);color:var(--accent-ink);background:var(--panel);border:1px solid var(--accent);border-radius:var(--r);padding:3px 6px}
 .uhead .pts{margin-left:auto;font:600 14px/1 var(--mono);color:var(--brass)}
 .uctl{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:7px}
 .uctl .sqr{font:400 11px/1 var(--mono);color:var(--ink-3)}
