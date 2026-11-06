@@ -743,7 +743,9 @@ export function unitHTML(R, ui, st){
     ? R.options.filter(o => !o.forbidden).map(o => {
     const st2 = o.state;
     const blocked = !o.dependencyMet;
-    const c = optCostLabel(o.cost);
+    /* an escort squadron pays it for every ship: the multiplier and the
+       result, as a list upgrade per ship shows them (upCostLabel) */
+    const c = o.cost && o.perShip > 1 ? optCostLabel(o.cost) + " / ship = " + optCostLabel(o.cost * o.perShip) : optCostLabel(o.cost);
     const b = (v, lab, cls) => `<button type="button" class="${cls||""}"
         data-u="${ui}" data-o="${o.index}" data-v="${v}" aria-pressed="${st2===v}"
         ${v === "take" && blocked ? "disabled" : ""}

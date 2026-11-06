@@ -104,6 +104,8 @@ export function optionsOf(sel){
     var dep = o.dep != null && ol[o.dep] ? ol[o.dep].id : null;
     return {
       id: o.id, text: o.t, cost: o.c == null ? null : o.c, variable: !!o.var,
+      /* an escort squadron pays each option once per ship (hullOptionPts) */
+      perShip: sel.escort ? sel.hulls : 1,
       state: st, qty: optCount(sel, i), max: o.qty ? (o.qty.max || 1) : 1,
       group: o.grp || null, groupMax: o.grp ? Math.max(1, o.gmax || 1) : null,
       dependsOn: dep, dependencyMet: dep == null || optState(sel, o.dep) === "take",

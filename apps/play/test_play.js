@@ -1707,8 +1707,11 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
   const gk = ork(CLANZ, TID, /^Grunt/, 4, { options: { [klawId]: { state: "take", qty: 1 } } });
   check("Young Gunz: Grunts with Klaws are paid 35 each: up to 35, the Onslaught too; the Grunt is proposed (p. 390, T63)",
     gk.points === 140 && names(pick([gk])) === "Onslaught,Grunt,Savage,Brute" && pick([gk]).cap === 35 && pick([gk]).proposal === "Grunt assault ship", JSON.stringify([gk.points, pick([gk])]));
-  const gub = ork(CLANZ, TID, /^Grunt/, 3, { upgrades: { [CLANZ.nm + "\u0001GUBBINS\u0001Klaws (Grunt: +5 per escort)"]: "take" } });
-  check("Young Gunz: ... the same with the Gubbins row \"+5 per escort\" (Fleets p. 373)", gub.points === 105 && pick([gub]).cap === 35, JSON.stringify([gub.points, pick([gub]) && pick([gub]).cap]));
+  /* p. 373 "(Not for escorts except the Grunt at +5 points per escort.)" is
+     that same option: no GUBBINS row of its own since 6.11.2026 (an old save's
+     row is read as the option, packages/ui/saved-fleet.js, test_save.js 17) */
+  check("Young Gunz: Klaws on Grunts is only the Grunt's own option, no GUBBINS row (Fleets pp. 373, 390)",
+    !CLANZ.secs.some(s => s.ents.some(e => /^Klaws \(Grunt/.test(e.l || ""))));
   check("Young Gunz: a Brute in a Grunt skwadron: the cheapest paid is 25, a Brute only", names(pick([ork(CLANZ, TID, /^Grunt/, 5), brutes(1)])) === "Brute", names(pick([ork(CLANZ, TID, /^Grunt/, 5), brutes(1)])));
   /* "The point cost for clan upgrades for tiddla skwadrons count for the whole
      skwadron (regardless of how large it is!)" (p. 371) */

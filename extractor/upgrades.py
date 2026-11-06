@@ -318,11 +318,11 @@ ESC_SPLITS = [
           cond=dict(esc=1, nmno="hulk", has="heavy gunz"),
           desc="Any heavy gunz batteries on the escorts are replaced with a Strength-2 lance battery. Range is 15 cm for escorts. The cost is for the whole tiddla skwadron.")),
     # p.373 Klaws: "(Not for escorts except the Grunt at +5 points per escort.)"
-    # The list's only Gubbin priced per escort, so per="hull"
-    # and not a fixed price for the whole skwadron (interpretation decision T31, 14.9.2026).
-    (_CLANZ, _GUB, "Klaws", "Klaws (Grunt: +5 per escort)",
-     dict(p=5, per="hull", cond=dict(esc=1, nm="grunt"),
-          desc="Grunt assault ships only, +5 points per escort. Once per turn on base contact roll 2D6; each 4+ is one hit ignoring shields (not holofields). Brace works. Two hits latch on: neither ship moves if the target is the same class or smaller, both shoot at half effect, and it attacks again each End phase.")),
+    # is the Grunt's own option, p.390 "Grunt assault ships can be equipped with
+    # Klaws for +5 points for each vessel, not per skwadron" (ships/388 ol). The
+    # GUBBINS row "Klaws (Grunt: +5 per escort)" (T31, 14.9.2026) was the same
+    # purchase twice (user 6.11.2026); an old save's row is read as the option
+    # (packages/ui/saved-fleet.js).
 ]
 _ESC_SPLIT_HITS = [0]
 _DEATHSKULLZ_HITS = [0]

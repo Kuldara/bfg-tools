@@ -193,7 +193,8 @@ for Lx in lists_out:
                 e["cond"] = c
                 _zk += 1
 print("Zukov limits: %d" % _zk)
-assert _zk == 20, "20 Zukov limits expected, found %d" % _zk
+# 19 since 6.11.2026: the Grunt Klaws row is the Grunt's own option (p. 390)
+assert _zk == 19, "19 Zukov limits expected, found %d" % _zk
 
 # Adeptus Mechanicus (p.125 ORDNANCE): "They may not use assault boats, even
 # if their Imperial Navy counterparts may have access to this type of

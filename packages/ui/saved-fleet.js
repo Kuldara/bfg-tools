@@ -142,6 +142,12 @@ export function resolveSaved(units, L0, lost){
         if(ri >= 0){ u.os = u.os || {}; if(u.os[ri] == null) u.os[ri] = u.upn[k]; usedKey[k] = 1; return; }
       }
       if(/^Mechanicus (turret refit|dorsal lance battery)/.test(nm)){ usedKey[k] = 1; return; }
+      /* Da Ork Clanz (saves before 6.11.2026): the GUBBINS row "Klaws (Grunt:
+         +5 per escort)" was the Grunt's own option twice (Fleets p. 390) */
+      if(/^Klaws \(Grunt/.test(nm) && sh && sh.ol){
+        const ri = sh.ol.findIndex(o => /equipped with Klaws/i.test(o.t));
+        if(ri >= 0){ u.os = u.os || {}; if(u.os[ri] == null || u.os[ri] === "opt") u.os[ri] = u.upn[k]; usedKey[k] = 1; return; }
+      }
     });
     Object.keys(u.upn).forEach(k => {
       if(!usedKey[k] && u.upn[k] !== "off")

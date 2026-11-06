@@ -3635,6 +3635,8 @@ var __rules = (() => {
         text: o.t,
         cost: o.c == null ? null : o.c,
         variable: !!o.var,
+        /* an escort squadron pays each option once per ship (hullOptionPts) */
+        perShip: sel.escort ? sel.hulls : 1,
         state: st,
         qty: optCount(sel, i),
         max: o.qty ? o.qty.max || 1 : 1,

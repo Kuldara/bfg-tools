@@ -311,7 +311,8 @@ print("ship class price list rows attached: %d" % upgrades._HULL_PRICE_HITS[0])
 # which is already included in the cost" (p.249, 251, 253). Tzeentch and
 # Black Crusade do not include the Mark.
 print("list upgrade effects: %d, escort versions: %d" % (len(upgrades._ROW_EFFECT_LOG), upgrades._ESC_SPLIT_HITS[0]))
-assert upgrades._ESC_SPLIT_HITS[0] == 3, "3 escort versions expected"
+# 2 since 6.11.2026: the Grunt Klaws row is the Grunt's own option (p. 390)
+assert upgrades._ESC_SPLIT_HITS[0] == 2, "2 escort versions expected, found %d" % upgrades._ESC_SPLIT_HITS[0]
 assert upgrades._DEATHSKULLZ_HITS[0] == 5, "5 Deathskullz copies expected, found %d" % upgrades._DEATHSKULLZ_HITS[0]
 assert upgrades._BIO_EACH_HITS[0] == 8, "8 bio multiples expected, found %d" % upgrades._BIO_EACH_HITS[0]
 assert upgrades._ROW_COND_HITS[0] == 20, "20 ROW_CONDS hits expected, found %d: %r" % (upgrades._ROW_COND_HITS[0], upgrades._ROW_COND_LOG)

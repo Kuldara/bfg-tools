@@ -666,5 +666,21 @@ console.log("\n=== Overlapping swap options exclude each other ===");
                                  aw: "Weapons battery/45 cm/12/All round" });
 }
 
+console.log("\n=== Z  Grunt Klaws: one row, its price per ship (user 6.11.2026) ===");
+{
+  /* p. 390 "Grunt assault ships can be equipped with Klaws for +5 points for
+     each vessel, not per skwadron"; the GUBBINS row of p. 373 was the same
+     purchase a second time */
+  const L = useList("Da Ork Clanz");
+  const g = add(L, "Grunt assault ship", "Tiddla skwadron");
+  g.n = 5;
+  const ki = (SHIPS[String(g.ref)].ol || []).findIndex(o => /equipped with Klaws/.test(o.t));
+  api.setOptState(g, ki, "take");
+  eq(api.unitPts(g), 5 * 35, "five Grunts with Klaws: 5 x (30 + 5)");
+  const h = api.unitRowHTML(g, 0).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
+  ok(/equipped with Klaws for \+5 points for each vessel, not per skwadron\. \+5 \/ ship = \+25/.test(h), "the option's price says per ship and the total: +5 / ship = +25");
+  eq((h.match(/Klaws \(Grunt/g) || []).length, 0, "no second Klaws row under the fleet-list upgrades");
+}
+
 console.log(fails ? "\n" + fails + " tests failed" : "\nall tests passed");
 process.exit(fails ? 1 : 0);

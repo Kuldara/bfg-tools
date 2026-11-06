@@ -449,6 +449,31 @@ check("both shifts: the right row", entOf(S3.units[1]).l, "Kraken");
   check("schema 2 -> 3: no notice", getNote(), "");
 }
 
+/* 17. Da Ork Clanz: Klaws on Grunts is the Grunt's own option (Fleets p. 390
+       "Grunt assault ships can be equipped with Klaws for +5 points for each
+       vessel"); the GUBBINS row "Klaws (Grunt: +5 per escort)" (p. 373, T31)
+       was the same purchase twice (user 6.11.2026). A save that took the old
+       row opens with the option taken, at the same price, and says nothing. */
+{
+  const li = LISTS.findIndex(L => /Da Ork Clanz/.test(L.nm));
+  const L0 = LISTS[li];
+  const si = L0.secs.findIndex(s => s.t === "Tiddla skwadron");
+  const ei = L0.secs[si].ents.findIndex(e => /^Grunt assault ship/.test(e.l));
+  const gsi = L0.secs.findIndex(s => s.t === "GUBBINS");
+  check("Klaws: no GUBBINS row for Grunts beside the Grunt's own option",
+        L0.secs[gsi].ents.filter(e => /^Klaws \(Grunt/.test(e.l)).length, 0);
+  const sh = SHIPS[String(L0.secs[si].ents[ei].r)];
+  const ki = (sh.ol || []).findIndex(o => /equipped with Klaws/.test(o.t));
+  const u = { s: si, e: ei, ref: L0.secs[si].ents[ei].r, n: 5, opts: [], name: "",
+              el: L0.secs[si].ents[ei].l, sn: L0.secs[si].t,
+              upn: { "GUBBINS\u0001Klaws (Grunt: +5 per escort)": "take" } };
+  const S17 = restore(JSON.stringify({ li: li, ln: L0.nm, limit: 1500, units: [u] }));
+  check("Klaws: an old save's GUBBINS Klaws is the Grunt's own option, taken",
+        ki >= 0 && optState(S17.units[0], ki), "take");
+  check("Klaws: ... the same price, five Grunts 5 x (30 + 5)", unitPts(S17.units[0]), 175);
+  check("Klaws: ... and no notice", getNote(), "");
+}
+
 /* 12. per-list memory (J146): switching lists does not lose the fleet, it
    is stashed under its own list's name and returns when the list is chosen again. The open
    fleet stays in `units`, the others are in `fleets` - so an old build still
