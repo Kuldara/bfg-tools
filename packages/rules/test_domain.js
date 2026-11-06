@@ -4006,7 +4006,7 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
   };
   const up = (secRe, labRe) => { const r = row(secRe, labRe); return DOMAIN.upgradeId(L.nm, r.s.t, r.e.l); };
   const ES = up(/^CLAN UPGRADES$/, /^Clan: Evil Sunz/), DS = up(/^CLAN UPGRADES$/, /^Clan: Deathskullz/), BA = up(/^CLAN UPGRADES$/, /^Clan: Blood Axes/);
-  const SB = up(/^GUBBINS$/, /^Soopa Boostas$/), KL = up(/^GUBBINS$/, /^Klaws \(Grunt/), LL = up(/^GUBBINS$/, /^Looted Lances \(escorts: 15 cm\) \(Deathskullz/);
+  const SB = up(/^GUBBINS$/, /^Soopa Boostas$/), LL = up(/^GUBBINS$/, /^Looted Lances \(escorts: 15 cm\) \(Deathskullz/);
   const unit = (secRe, labRe, n, sq, ups) => {
     const r = row(secRe, labRe);
     const it = { schemaVersion: DOMAIN.SCHEMA_VERSION, role: "core", entry: { list: L.nm, section: r.s.t, label: r.e.l },
@@ -4044,9 +4044,14 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
   const apart = fleet([unit(T, /^Savage gunship/, 3, null, [ES]), unit(T, /^Onslaught attack ship/, 3, null, [])]);
   check("T60: two cards without a letter are two tiddlas: the clan stays on its own card",
         apart.units[2].stats.speed === "20 cm" && apart.totals.points === 215, apart.units[2].stats.speed + " " + apart.totals.points);
-  const kl = fleet([unit(T, /^Grunt assault ship/, 3, "T", [KL]), unit(T, /^Grunt assault ship/, 2, "T", [])]);
-  check("T60: Klaws are +5 per escort, each card's own (p. 373): 5 x 30 + 3 x 5 = 165",
-        kl.totals.points === 165 && upOf(kl.units[2], KL).state !== "take", kl.totals.points + " " + upOf(kl.units[2], KL).state);
+  /* Klaws is the Grunt's own option, +5 per vessel (p. 390; the GUBBINS row
+     of p. 373 was the same purchase, gone 6.11.2026): each card's own */
+  const klawId = (catalog.ships["388"].ol || []).find(o => /equipped with Klaws/.test(o.t)).id;
+  const g3 = unit(T, /^Grunt assault ship/, 3, "T", []); g3.options[klawId] = { state: "take", qty: 1 };
+  const kl = fleet([g3, unit(T, /^Grunt assault ship/, 2, "T", [])]);
+  const klOpt = R => (R.options || []).find(o => o.id === klawId) || {};
+  check("T60: Klaws are +5 per escort, each card's own (p. 390): 5 x 30 + 3 x 5 = 165",
+        kl.totals.points === 165 && klOpt(kl.units[1]).state === "take" && klOpt(kl.units[2]).state !== "take", kl.totals.points + " " + klOpt(kl.units[2]).state);
   const ds = fleet([unit(T, /^Savage gunship/, 3, "T", [DS, LL]), unit(T, /^Savage gunship/, 2, "T", [])]);
   const lance = R => R.weapons.some(w => w.state === "active" && /lance/i.test(w.a[0]) && /15/.test(String(w.a[1])));
   check("T60: Deathskullz' free looted lances reach the tiddla's other card (p. 371): 5 x 30 + 30 = 180",

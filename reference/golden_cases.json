@@ -6716,26 +6716,20 @@
     },
     {
       "id": "clanz-grunt-klaws-per-escort",
-      "page": 373,
+      "page": 390,
       "list": "Orks — Da Ork Clanz",
       "ship": "388",
       "n": 3,
       "select": [
         {
-          "upgrade": "^Klaws \\(Grunt"
+          "option": "equipped with Klaws"
         }
       ],
       "expect": {
         "points": 105,
-        "upgrades": [
-          {
-            "match": "Klaws \\(Grunt",
-            "state": "take",
-            "cost": 15
-          }
-        ]
+        "upgrade_not_offered": "^Klaws \\(Grunt"
       },
-      "why": "p.373 Klaws: “(Not for escorts except the Grunt at +5 points per escort.)” Klaws is the list's only Gubbin priced per escort; the other escort rows are paid for the whole skwadron. A squadron of three Grunts 3 x 30 + 3 x 5 = 105 (T31)."
+      "why": "p.390 Grunt OPTIONS: “Grunt assault ships can be equipped with Klaws for +5 points for each vessel, not per skwadron.” p.373's “(Not for escorts except the Grunt at +5 points per escort.)” is that same purchase, so there is no GUBBINS row for it (was T31, removed 6.11.2026 at the user's word: it was offered twice). Three Grunts 3 x 30 + 3 x 5 = 105."
     },
     {
       "id": "incursion-despoiler-no-orbital-mines",
