@@ -986,8 +986,9 @@ function run(check){
   guard("the Clanz free Grunt with Klaws", () => {
     const pg = open(), P = pg.P;
     const L = pg.DATA.lists.find(x => /^Orks . Da Ork Clanz$/.test(x.nm));
-    const gub = L.secs.find(s => /^GUBBINS$/.test(s.t)), klaws = gub.ents.find(e => /^Klaws \(Grunt/.test(e.l)).l;
-    const gr = Object.assign(saved(L, /^Tiddla skwadron$/, /^Grunt/, 5), { sq: "B", upn: { ["GUBBINS\u0001" + klaws]: "take" } });
+    /* a save from before 6.11.2026: Klaws on the GUBBINS row, now read as the
+       Grunt's own option (Fleets p. 390, packages/ui/saved-fleet.js) */
+    const gr = Object.assign(saved(L, /^Tiddla skwadron$/, /^Grunt/, 5), { sq: "B", upn: { "GUBBINS\u0001Klaws (Grunt: +5 per escort)": "take" } });
     pg.ctx.__doc = { ln: L.nm, limit: 1000, units: [saved(L, /^WARLORD$/, /^Ork Warlord$/), gr] };
     P(`newGame(resolveFleet(__doc)); V.screen = "setup"; save(); render(); setLd(1, 5); act("ygapply");`);
     check("smoke: five Grunts with Klaws on Ld 5: the free Grunt is a sixth ship on their card, no card of its own (owner 6.11.2026, T63)",
