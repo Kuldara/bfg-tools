@@ -65,10 +65,15 @@ const IN = expr => `(() => { const f = document.querySelector(".boardframe"); co
     const txt = await cd.evaluate(IN(`d.getElementById("board").innerText`));
     check("six Goff Grunts against a Dictator: value 12 vs 11, +3 (Fleets pp. 371, 390; Rulebook p. 90)", /12\s*BOARDING/.test(txt) && /\+3\s*ROLL/.test(txt) && /11\s*BOARDING/.test(txt), txt.slice(0, 300));
     /* roll, then apply */
+    /* the boarding page's dice from a seed (BOARD_SEED, else 7): the same
+       result every run - with Math.random's own, one run in five ended on
+       a step the loop below did not take (6.11.2026) */
+    const seed = +(process.env.BOARD_SEED || 7);
+    await cd.evaluate(IN(`(() => { let x = ${seed} >>> 0 || 1; w.Math.random = () => { x = (Math.imul(x, 1664525) + 1013904223) >>> 0; return x / 4294967296; }; return 1; })()`));
     await cd.evaluate(IN(`d.querySelector('[data-a="roll"]').click()`));
     await sleep(500);
     await shot("4-result");
-    for(let n = 0; n < 12; n++){
+    for(let n = 0; n < 30; n++){
       const done = await cd.evaluate(IN(`(() => { if(!f) return "gone"; const s = d.getElementById("resultSheet"); const a = ['[data-r="apply"]:not([disabled])', '[data-r="next"]', '[data-r="noreroll"]', '[data-r="alloc+"]'].map(q => s.querySelector(q)).find(Boolean); if(!a) return "wait"; a.click(); return a.dataset.r; })()`));
       if(done === "gone" || done === "next") break;
       await sleep(250);
@@ -77,7 +82,8 @@ const IN = expr => `(() => { const f = document.querySelector(".boardframe"); co
     await shot("5-back");
     const closed = await cd.evaluate(`!document.querySelector(".boardframe")`);
     const grapple = await cd.evaluate(`!!(GFP.appState.G.board)`);
-    check("the result closes it, or a grapple keeps it open for the next End Phase", closed || grapple);
+    const stuck = closed || grapple ? "" : await cd.evaluate(IN(`(() => { const s = d.getElementById("resultSheet"); return s ? [...s.querySelectorAll("[data-r]")].map(b => b.dataset.r + (b.disabled ? "(off)" : "")).join(" ") + " | " + s.innerText.slice(0, 300) : "no result sheet"; })()`));
+    check("the result closes it, or a grapple keeps it open for the next End Phase", closed || grapple, stuck);
     if(closed){
       const r = JSON.parse(await cd.evaluate(`JSON.stringify({ note: GFP.appState.V.boardNote, alive: GFP.PLAY.alive(GFP.appState.G.st[1]) })`));
       check("what happened is on the page", !!r.note && (r.note.ours.length + r.note.theirs.length) > 0, r);
