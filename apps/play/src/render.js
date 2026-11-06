@@ -7,7 +7,7 @@ import { KEY_WAKE, SQN_LETTERS, builderTool, carriersOf, cmdsAboard, coCmd, grpH
   bbPartners, isApplied, isBbSwapper, isClanzWarlord, isFreeCard, paidModels, skwHead, skwLd, skwName, skwUnits, swapPlay, swapRecs, tiddlaHeads, wlPartners, wlShip, ygChoice, ygEligible, ygFree } from "./game-state.js";
 import { IN_REFITS, inRefitKind, pregameRolls, pregameText, pregameEffects } from "../../../packages/ui/pregame-tables.js";
 import { cataLabel, critLabel, groupUnits } from "./actions.js";
-import { upgradeLine, baseName, classTag, crippledNow, critChips, ldTile, memberWord, ordChip, ordnancePills, renderFleetPop, statsLine, unitName, weaponsLine, weaponsTable } from "./derived.js";
+import { arcMap, upgradeLine, baseName, classTag, crippledNow, critChips, ldTile, memberWord, ordChip, ordnancePills, renderFleetPop, specStrip, unitName, weaponsTable } from "./derived.js";
 import { builderFleets, endPending, fireReminder, jumpStrip, renderEndPhase, savedFleets } from "./share.js";
 import PLAY from "../rules.js";
 import { arcGlyph, esc, factionCols, shortArmour, shortRange, starHTML, title } from "../../../packages/ui/format.js";
@@ -975,16 +975,19 @@ export function renderRow(i, inGroup){
     (v.destroyed && esq ? hulkChip(st) : "") +
     critChips(R, st, i) + (st.disengaged ? `<span class="chip">disengaged</span>` : "") +
     (OPT.orders ? (st.braceLock ? `<span class="chip lock">brace locked</span>` : "") + (st.boarding ? `<span class="chip lock">boarding</span>` : "") + (st.noOrdersTurn ? `<span class="chip lock">no fire/orders</span>` : "") : "");
-  let r3;
-  if(esq){
-    /* one box per ship, filled when it is gone (p. 66: one hit or any
-       critical destroys an escort) */
-    r3 = `<div class="hits mem">${st.members.map((m, k) => memberBox(i, R, m, k, k + 1)).join("")}</div>
-      <span class="stat">${v.alive} of ${nMem}</span>`;
-  }else{
-    r3 = hitsTrack(i, v, false) +
-      (OPT.ordnance ? ordnancePills(i, v) : "");
-  }
+  /* The card at a glance (user 6.11.2026, prototype B): the arcs first -
+     the armament as the ship seen from above, right under the name - then
+     the spec line, the commander and re-roll lines, the damage, the chips,
+     the VP ladder and the buttons; the compact view is the same card
+     smaller, the arcs first too. The damage: the hits left big, the track
+     beside it to tap a hit on; an escort squadron's ships alive and one box
+     per ship, filled when it is gone (p. 66: one hit or any critical
+     destroys an escort). A wreck has no track (p. 71). */
+  const compact = appState.V.compact;
+  const hp = v.destroyed && !esq ? "" : esq
+    ? `<div class="hp esc"><span class="ro"><b>${v.alive}</b><small>of ${nMem}</small></span><div class="hits mem">${st.members.map((m, k) => memberBox(i, R, m, k, k + 1)).join("")}</div></div>`
+    : `<div class="hp${compact ? " c" : ""}"><span class="ro${v.crippled ? " cr" : ""}"><b>${Math.max(0, v.max - v.hits)}</b><small>/${v.max}${compact ? "" : " left"}</small></span>${hitsTrack(i, v, false)}</div>`;
+  const r3 = chips + (OPT.ordnance && !esq ? ordnancePills(i, v) : "") + repairBtn(i);
   const orderBtns = !OPT.orders || inGroup ? "" : `<button class="brace ${v.braced ? "on" : ""}" data-act="brace" data-i="${i}" ${PLAY.canOrder(st, appState.G.fleet, "BFI", R) ? "" : "disabled"}>Brace</button>
       <button class="order ${st.order && st.order !== "BFI" ? "on" : ""}" data-act="pop" data-i="${i}" data-arg="order">${st.order && st.order !== "BFI" ? esc(PLAY.ORDER_BY[st.order].name) : "Order"}</button>`;
   /* a star fort's HIT and CRIT go to the selected quadrant; one at 0
@@ -993,12 +996,10 @@ export function renderRow(i, inGroup){
   /* on or off (T48): a Blast Marker in contact */
   const blastBtn = OPT.blast && !v.destroyed && !st.disengaged ? `<button class="blastb${st.blast ? " on" : ""}" data-act="blastflag" data-i="${i}" aria-pressed="${!!st.blast}" aria-label="Blast Marker in contact" title="Blast Marker in contact: -1 Ld (p. 48), half the damage-control dice (p. 88)">${BURST}</button>` : "";
   /* The compact row (user 19.10.2026): what a hit or a critical needs and
-     nothing else - the name, Ld, CRIT, the spec line the enemy asks about
-     (armour, shields), the track and the chips. The track takes a hit in
-     one tap, so HIT +1 is not repeated; the weapons are on the card (the
-     name). Brace and orders stay when they are tracked: they are the enemy
-     turn's own taps. */
-  const compact = appState.V.compact;
+     nothing else - the name, Ld, CRIT, the arc map, the spec line the enemy
+     asks about (armour, shields), the track and the chips. The track takes
+     a hit in one tap, so HIT +1 is not repeated. Brace and orders stay when
+     they are tracked: they are the enemy turn's own taps. */
   /* the top corner (user 1.11.2026): boarding, ramming, disengaging and the rest */
   const actBtn = !v.destroyed && !st.disengaged ? `<button class="actb" data-act="actions" data-i="${i}" aria-label="Actions: board, ram, disengage"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg><small>Actions</small></button>` : "";
   const r4 = v.destroyed ? (esq ? "" : `<div class="r4"><button data-act="pop" data-i="${i}" data-arg="hulk">Catastrophic<small>${cataLabel(R, st)}</small></button></div>`)
@@ -1015,13 +1016,14 @@ export function renderRow(i, inGroup){
       <button class="name" data-act="sheet" data-i="${i}"><b>${esc(unitName(i))}</b><small>${esc(sub)}</small></button>
       ${blastBtn}${r1tail}${actBtn}</div>
     ${dis && !(esq && inGroup) ? disBand(i) : ""}
+    ${v.fort && !v.destroyed ? quadSelector(i, v) : ""}
+    ${v.destroyed && !esq ? hulkLine(R, st) : arcMap(R, st, esq, compact)}
+    ${v.destroyed && !esq ? "" : specStrip(v, R, esq, compact)}
     ${upgradeLine(i)}${esq ? ygLine(i) : ""}
     ${cmdsAboard(i).map(cmdLine).join("")}${shipRRLine(i)}
-    ${v.fort && !v.destroyed ? quadSelector(i, v) : ""}
-    ${v.destroyed && !esq ? hulkLine(R, st) : statsLine(v, R, esq)}
-    ${v.destroyed && !esq ? "" : compact ? weaponsLine(R, st, esq) : weaponsTable(R, st, esq)}
     ${R.ruleCard && !v.destroyed && !compact ? ruleSteps(R) : ""}
-    <div class="r3">${r3}${chips}${repairBtn(i)}</div>
+    ${hp}
+    ${r3 ? `<div class="r3">${r3}</div>` : ""}
     ${esq && inGroup ? "" : vpLadder(i)}
     ${r4}
     ${repairLines(i)}
@@ -1181,7 +1183,7 @@ export function renderSheet(i){
   const band = v.destroyed ? `<div class="band dead">${esq ? (memberWord(R, 2) === "ships" ? "SQUADRON DESTROYED" : "ALL DESTROYED") : hulkLine(R, st)}</div>` :
     v.quadGone ? `<div class="band dead">${esc(qn.toUpperCase())} AT 0 ${MID} it takes no further damage; that quarter of the base is an asteroid field from now on (Fleets p. 501)</div>` :
     (v.crippled ? `<div class="band crip">${qn ? esc(qn.toUpperCase()) + " " : ""}CRIPPLED ${MID} ${esc(crippledNow(R, st))} (${v.fort ? "Fleets p. 501" : "p. 65"})</div>` : "");
-  const stat = (label, now, base, extra, tap) => `<div class="${tap ? "tapp" : ""}">${tap ? `<button data-act="pop" data-i="${i}" data-arg="${tap}">` : ""}<span>${label}</span><b>${now}${base != null && String(base) !== String(now) ? `<s>${esc(String(base))}</s>` : ""}${extra ? `<i>${esc(extra)}</i>` : ""}</b>${tap ? "</button>" : ""}</div>`;
+  const stat = (label, now, base, extra, tap) => `<div class="${tap ? "tapp" : ""}">${tap ? `<button data-act="pop" data-i="${i}" data-arg="${tap}">` : ""}<span>${label}</span><b${String(now).replace(/<[^>]+>/g, "").length > 6 ? ' class="txt"' : ""}>${now}${base != null && String(base) !== String(now) ? `<s>${esc(String(base))}</s>` : ""}${extra ? `<i>${esc(extra)}</i>` : ""}</b>${tap ? "</button>" : ""}</div>`;
   const stats = `<div class="stats">
     ${stat("SPEED", v.speed.now != null ? v.speed.now + " cm" : esc(v.speed.text), v.speed.now != null ? v.speed.base + " cm" : null, v.speed.mods.map(m => m.t).join(", "))}
     ${stat("TURNS", esc(v.turns.text), null, v.turns.none ? "NONE (crit 6)" : "")}

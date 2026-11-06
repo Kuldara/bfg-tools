@@ -407,7 +407,7 @@ select{min-height:var(--tap);border-radius:8px;border:1px solid var(--line);back
 .band.br{background:var(--brace-wash);color:var(--brace)}
 .band.dead{background:var(--sunk);color:var(--ink-2)}
 .band.lock{background:var(--warn-wash);color:var(--warn)}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:0 0 10px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin:0 0 10px}
 .stats div{background:var(--panel);border:1px solid var(--card-rule);border-radius:8px;padding:6px 8px;min-height:56px}
 .stats span{display:block;font:700 12px/1 var(--mono);color:var(--km);letter-spacing:.05em}
 .stats b{display:block;font:700 19px/1.2 var(--mono);color:var(--card-ink);white-space:nowrap}
@@ -509,8 +509,6 @@ select{min-height:var(--tap);border-radius:8px;border:1px solid var(--line);back
 .wt .rp{display:inline-block;min-width:2.1em;text-align:center;border:2px solid var(--rb);border-radius:6px;padding:0 4px;margin:-2px 0;
   background:var(--panel);color:var(--card-ink);font:700 14px/18px var(--mono)}
 .wt .rp.l{font-size:12px}
-.wc .rpc{display:inline-block;border:1.5px solid var(--rb);border-radius:4px;padding:0 3px;font:700 11px/14px var(--mono);color:var(--card-ink)}
-.wc .rpc.l{font-size:10px}
 /* the compact rows: CRIT in the name line, no weapons table */
 .r1 .cmini{flex:0 0 auto;min-width:58px;min-height:var(--tap);border-radius:8px;border:1px solid var(--bad);background:var(--bad-wash);color:var(--bad);
   font:700 13px/1.05 var(--disp);letter-spacing:.04em;text-transform:uppercase;display:flex;flex-direction:column;align-items:center;justify-content:center}
@@ -523,18 +521,8 @@ select{min-height:var(--tap);border-radius:8px;border:1px solid var(--line);back
 .main.compact .r1 .cmini{min-width:50px}
 .main.compact .cmdl small,.main.compact .rrn{display:none}
 .main.compact .rrb{margin:4px 0 0}
-.wline{display:flex;flex-wrap:wrap;gap:3px 5px;margin:4px 0 0}
-.wc{display:inline-flex;align-items:center;gap:3px;padding:1px 4px 1px 1px;border-radius:5px;border:1px solid var(--card-rule);background:var(--panel)}
-.wc i{display:inline-block;text-align:center;background:var(--bd);color:#fff;font-style:normal}
-.wc b{font-family:var(--mono);font-weight:700;line-height:1;color:var(--card-ink)}
-.wc em{font:600 11px/1 var(--mono);font-style:normal;color:var(--card-mute)}
-.wc .arcg{width:15px;height:15px}
-.wc.half b{color:var(--cr-ink)}
-.wc.off{opacity:.55}
-.wc.off b{text-decoration:line-through}
 .main.compact .row{padding-top:4px;padding-bottom:4px}
 .main.compact .r3{margin-top:4px}
-.main.compact .stl{margin-top:2px}
 /* the End Phase panel */
 .endp .eprow{border-left:5px solid var(--kd);border-radius:8px;background:var(--sunk);padding:8px 10px;margin:0 0 8px}
 .endp .ephd b{font:700 15px/1.1 var(--disp);text-transform:uppercase}
@@ -611,7 +599,6 @@ details.paste summary{min-height:var(--tap);display:flex;align-items:center;font
   .row{padding:6px 8px 6px 10px}
   .r1 .name b{font-size:15px}
   .ldt,.played{min-height:38px}
-  .stl{margin-top:2px}
   .wt{margin-top:4px}
   .wt td{padding:2px 3px}
   .wt td.nm{font-size:13px}
@@ -856,12 +843,6 @@ details.paste .roomjoin{margin-top:6px}
 
 
 /* ---- the card at a glance (user 2.11.2026: what is big and easy to see) -- */
-/* the stats in one line: the label small, the number big */
-.stl{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 12px;margin:6px 0 2px;font-family:var(--mono)}
-.stl span{display:inline-flex;align-items:baseline;gap:4px;white-space:nowrap}
-.stl small{font:700 10.5px/1 var(--mono);letter-spacing:.06em;color:var(--card-mute)}
-.stl b{font:700 17px/1.1 var(--mono);color:var(--card-ink)}
-.stl span.mod b{color:var(--cr-ink)}
 /* the armament table: the numbers first, the name last and small */
 .wt.glance td.st{font-size:21px;padding-left:4px}
 .wt.glance td.st.was{font-size:13px;font-weight:600;color:var(--card-mute);text-decoration:line-through}
@@ -876,16 +857,6 @@ details.paste .roomjoin{margin-top:6px}
 .wt.glance.crippled td.st{opacity:1}
 .wt.glance tr.silent td.st{text-decoration:line-through;color:var(--card-mute)}
 .wt.glance th{font-size:10px}
-/* the compact row's chips: the number big, no names */
-.wline{gap:5px 6px;margin-top:6px}
-.wline .wc{flex:0 1 auto;min-width:0;gap:6px;padding:4px 7px 4px 4px;border-radius:8px;flex-wrap:wrap;align-items:center}
-.wline .wc i{width:24px;height:24px;line-height:24px;font-size:13px;border-radius:5px}
-.wline .wc b{font-size:20px}
-.wline .wc s{font:600 12px/1 var(--mono);color:var(--card-mute);text-decoration:line-through}
-.wline .wc .rpc{font-size:13px;line-height:18px;padding:0 5px}
-.wline .wc .arcg{width:22px;height:22px}
-.wline .wc.off{opacity:.55}
-.wline .wc.off b{text-decoration:line-through}
 
 /* ===================================================== VICTORY POINTS ===== */
 /* The VP button, the score sheet, the ladder on a card and the disengaged
@@ -934,3 +905,77 @@ details.paste .roomjoin{margin-top:6px}
 .row.dis{border:2px solid var(--dis);border-left:6px solid var(--dis)}
 .row.dis>*:not(.disband):not(.pop){filter:grayscale(1);opacity:.62}
 .row.dis .disband{margin:4px -8px 6px -10px;padding:4px 10px;background:var(--dis);color:#10161B;font:700 11px/1.3 var(--mono);letter-spacing:.06em}
+
+/* ===================================================== THE ARC MAP ===== */
+/* The card at a glance (user 6.11.2026, prototype B): the armament as the
+   ship seen from above - PORT | PROW | STBD - a weapon a cell over the
+   sectors it covers, the rear arc and the arcless rows (bays, hooks) on
+   lines under the map; the spec line in two groups; the hits left big
+   beside the track. The compact view is the same, smaller. */
+.amap{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-flow:row dense;gap:4px;margin:6px 0 2px}
+.amap .ah{font:700 10.5px/1 var(--mono);letter-spacing:.06em;color:var(--card-mute);text-align:center;padding:1px 0 2px;border-bottom:2px solid var(--card-rule)}
+.amap .ah:first-child{text-align:left}
+.amap .ah:nth-child(3){text-align:right}
+/* a weapon: the badge, the value in force (the printed one struck when
+   halved), the range in its band's frame; a cell too narrow for all three
+   drops the range under the value; a span's name small, cut if it must */
+.wx{display:inline-flex;flex-wrap:wrap;align-items:center;gap:2px 5px;min-width:0;padding:3px 7px 3px 3px;border:1px solid var(--card-rule);border-radius:7px;background:var(--panel);color:var(--card-ink);overflow:hidden}
+.wx .bg{flex:0 0 auto;display:inline-block;width:22px;height:22px;line-height:22px;text-align:center;border-radius:5px;background:var(--bd);color:#fff;font:700 12px var(--mono);font-style:normal}
+.wx b{font:700 19px/1 var(--mono);white-space:nowrap}
+/* a dice strength reads as a number; words wrap rather than cut */
+.wx b.d{font-size:17px}
+.wx b.t{font-size:12px;line-height:1.1;white-space:normal;min-width:0;overflow-wrap:anywhere}
+.wx .hm{font:700 12px/1 var(--mono);color:var(--cr-ink);margin-right:-3px}
+.wx s{font:600 12px/1 var(--mono);color:var(--card-mute)}
+.wx small{font:600 11px/1 var(--mono);color:var(--card-mute);margin-left:-3px}
+.wx .rp{display:inline-block;flex:0 0 auto;border:1.5px solid var(--rb);border-radius:5px;padding:0 4px;font:700 12px/17px var(--mono);color:var(--card-ink)}
+.wx .rp.l{font-size:10.5px}
+.wx em{flex:1 1 auto;min-width:0;font:600 11px/1.1 var(--sans);font-style:normal;color:var(--card-mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wx.half{background:var(--cr);border-color:var(--cr-ink)}
+.wx.half b{color:var(--cr-ink)}
+.wx.off{opacity:.5}
+.wx.off b{text-decoration:line-through}
+.wx.twin{border-style:dashed;border-color:var(--card-mute)}
+.amap .wx.span{background:linear-gradient(90deg,var(--panel),var(--sunk) 50%,var(--panel))}
+.amap .wx.span.half{background:var(--cr)}
+/* the rear arc and the ordnance without an arc: a line each */
+.aline{display:flex;align-items:center;gap:6px;padding:3px 0 0;margin-top:3px;border-top:1px dashed var(--card-rule)}
+.aline .al{flex:0 0 auto;font:700 12px/1 var(--mono);color:var(--card-mute);white-space:nowrap}
+.aline .al b{color:var(--card-ink);font-size:12px;letter-spacing:.04em}
+.aline .ai{display:flex;flex-wrap:wrap;gap:4px;min-width:0;flex:1 1 auto}
+/* the spec line: the move on the left, the defence on the right */
+.spec{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:2px 12px;margin:6px 0 0;padding-top:4px;border-top:1px solid var(--card-rule);font-family:var(--mono)}
+.spec .g{display:inline-flex;align-items:baseline;gap:4px;white-space:nowrap}
+.spec b{font:700 19px/1.1 var(--mono);color:var(--card-ink)}
+.spec b.w{font-size:14px}
+.spec b.mod{color:var(--cr-ink)}
+.spec small{font:700 10.5px/1 var(--mono);letter-spacing:.06em;color:var(--card-mute)}
+.spec .mv b+small+b{margin-left:4px}
+/* the damage: the hits left, big, and the track beside it */
+.hp{display:flex;align-items:center;gap:8px;margin:6px 0 0}
+.hp .ro{flex:0 0 auto;min-width:52px;display:flex;align-items:baseline;gap:2px}
+.hp .ro b{font:800 26px/1 var(--mono);color:var(--card-ink)}
+.hp .ro small{font:600 12px/1 var(--mono);color:var(--card-mute)}
+.hp .ro.cr b{color:var(--cr-ink)}
+.hp .hits{flex:1 1 0;min-width:0}
+.hp .hits b{min-width:12px}
+.hp .hits.mem{flex:1 1 auto}
+/* compact: the same map smaller, the headings glyphs alone, no numbers in the boxes */
+.main.compact .amap{gap:3px;margin-top:4px}
+.main.compact .amap .ah{font-size:10px;padding:0 0 1px;line-height:11px;border-bottom-width:1px}
+.main.compact .wx{padding:2px 5px 2px 2px;gap:2px 4px}
+.main.compact .wx .bg{width:19px;height:19px;line-height:19px;font-size:11px}
+.main.compact .wx b{font-size:16px}
+.main.compact .wx b.d{font-size:15px}
+.main.compact .wx b.t{font-size:11px}
+.main.compact .wx .rp{font-size:11px;line-height:15px}
+.main.compact .aline{padding-top:2px;margin-top:2px}
+.main.compact .aline .al{font-size:13px}
+.main.compact .spec{margin-top:4px;padding-top:2px}
+.main.compact .spec b{font-size:15px}
+.main.compact .hp{margin-top:4px}
+.main.compact .hp .ro{min-width:44px}
+.main.compact .hp .ro b{font-size:20px}
+.main.compact .hp .hits b{height:28px;line-height:26px;font-size:0}
+/* a text value (Holofields, Shadowfields) fits its cell at 360 px */
+.stats b.txt{font-size:13px;white-space:normal;overflow-wrap:anywhere}

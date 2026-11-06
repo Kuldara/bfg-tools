@@ -126,13 +126,13 @@ const SETUP = `(() => {
       const desc = (document.querySelector('select[data-sel="pre"][data-key="inrefit"] ~ .predesc') || {}).textContent || "";
       G.appState.V.screen = "roster"; G.appState.V.compact = false; G.render();
       const card = (document.querySelector('section.row[data-u="1"]') || {}).innerHTML || "";
-      return JSON.stringify({ before: [before.max, before.crippledAt, before.speed.base], after: [after.max, after.crippledAt, after.speed.base], fx: G.appState.G.st[1].fx, desc, boxes: (card.match(/aria-label="hits \\d+"/g) || []).length, spd: (/<small>SPD<\\/small><b>(\\d+ cm)/.exec(card) || [])[1] });
+      return JSON.stringify({ before: [before.max, before.crippledAt, before.speed.base], after: [after.max, after.crippledAt, after.speed.base], fx: G.appState.G.st[1].fx, desc, boxes: (card.match(/aria-label="hits \\d+"/g) || []).length, spd: (/class="spec[^"]*"[\\s\\S]*?<b(?: class="mod")?>(\\d+)<\\/b><small>cm/.exec(card) || [])[1] });
     })()`));
     check("a Kill Kroozer starts at 10 hits, crippled at 5, 20 cm", r.before.join() === "10,5,20", r.before);
     check("Reinforced Hull picked: 13 hits (+25 % rounded up), crippled at 7, 15 cm (p. 158, 65)", r.after.join() === "13,7,15", r.after);
     check("st.fx holds the numbers", r.fx && r.fx.hits === 3 && r.fx.speed === -5, r.fx);
     check("the select says what is on the card now", /on the card: 13 hits, 15 cm/.test(r.desc), r.desc);
-    check("the card has 13 boxes and SPD 15 cm", r.boxes === 13 && r.spd === "15 cm", [r.boxes, r.spd]);
+    check("the card has 13 boxes and 15 cm on its spec line", r.boxes === 13 && r.spd === "15", [r.boxes, r.spd]);
   }
   }finally{ await cd.close(); }
   console.log((fail ? "FAIL " : "ok ") + pass + " passed, " + fail + " failed");

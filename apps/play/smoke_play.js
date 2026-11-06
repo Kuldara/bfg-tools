@@ -326,7 +326,7 @@ function run(check){
     clean("the Ramilies' critical table", fortCrit);
     check("smoke: the Ramilies' critical table names the quadrant it is for (Fleets p. 501)", /STAR FORT/.test(strip(fortCrit)) && /NW/.test(strip(fortCrit)), strip(fortCrit).slice(0, 120));
     P(`act("crit", ${I.fort}, "11")`);
-    check("smoke: critical 11 on NW: the Basilica rows are struck on every quadrant's view (Fleets p. 505)", P(`act("quad", ${I.fort}, 2); V.pop = null; PLAY.armament(U[${I.fort}].R, G.st[${I.fort}]).filter(a => a.zone === "basilica").every(a => !!a.silent)`) === true && /Basilica penetrated/.test(rowT(I.fort)));
+    check("smoke: critical 11 on NW: the Basilica rows are struck on every quadrant's view (Fleets p. 505)", P(`act("quad", ${I.fort}, 2); V.pop = null; PLAY.armament(U[${I.fort}].R, G.st[${I.fort}]).filter(a => a.zone === "basilica").every(a => !!a.silent)`) === true && /class="wx[^"]*\boff\b[^"]*"[^>]*title="[^"]*Basilica penetrated/.test(row(I.fort)), String(row(I.fort).match(/class="wx[^"]*\boff\b[^"]*"[^>]*/g)));
     pg.toasts.length = 0;
     P(`[0, 2, 3].forEach(q => { act("quad", ${I.fort}, q); for(let k = 0; k < 12; k++) act("hit", ${I.fort}); });`);
     check("smoke: all four at 0: the fort is destroyed and its own D6 table opens (Fleets p. 502, 505)", P(`PLAY.destroyed(U[${I.fort}].R, G.st[${I.fort}])`) && P(`JSON.stringify(V.pop)`) === JSON.stringify({ i: I.fort, kind: "hulk" }) && pg.toasts.some(t => /D6/.test(t) && /505/.test(t)), JSON.stringify(pg.toasts.slice(-1)) + " " + P(`JSON.stringify(V.pop)`));
@@ -406,26 +406,30 @@ function run(check){
        var LU = U.findIndex(x => /^LUNAR/i.test(x.R.className || "")), GO = U.findIndex(x => /^GOTHIC/i.test(x.R.className || "")), SW = U.findIndex(x => /^SWORD/i.test(x.R.className || ""));
        U.forEach((x, i) => { if(x.R.kind === "ship" && G.st[i].ld == null) setLd(i, 8); }); act("start", null);`);
     check("smoke: a new screen takes no taps for a moment (a double tap must not pick on the next screen)", P(`V.guardUntil > Date.now() && V.lastScreen === "roster"`) === true);
-    /* the Lunar (Fleets p. 37): the numbers first (user 2.11.2026), and a
-       port / starboard pair one row, "port and starboard, each", while both
-       sides are the same in play (livePairs) */
+    /* the Lunar (Fleets p. 37) as the arc map (user 6.11.2026, prototype B):
+       the port rows in the PORT column, the starboard rows in STBD, the prow
+       torpedoes in PROW, each weapon once; the names are the tooltips and
+       the card's table (the name) */
     const lunarRow = P(`renderRow(LU, false)`);
-    clean("the Lunar's row with its port/starboard pairs", lunarRow);
-    const trs = (lunarRow.match(/<tr[ >]/g) || []).length - 1;   /* minus the heading row */
-    check("smoke: the Lunar's pairs are one row each: 3 rows, the strength first and the name last",
-          trs === 3 && (lunarRow.match(/port and starboard, each/g) || []).length === 2 && /<td class="bd">[^]*?<td class="st">[^]*?<td class="nm">/.test(lunarRow) && !/Port weapons battery/.test(strip(lunarRow)),
-          trs + " rows: " + strip(lunarRow).slice(0, 220));
-    check("smoke: the stats are one line with the number big", /class="stl"/.test(lunarRow) && /<small>SPD<\/small><b>20 cm<\/b>/.test(lunarRow), (lunarRow.match(/class="stl".{0,120}/) || [""])[0]);
+    clean("the Lunar's row with its arc map", lunarRow);
+    const cols = (lunarRow.match(/grid-column:\d \/ \d/g) || []).map(s => s.replace("grid-column:", ""));
+    check("smoke: the Lunar's map has two port cells, two starboard cells and the prow torpedoes in the middle, no table on the row",
+          /class="amap"/.test(lunarRow) && !/<table class="wt/.test(lunarRow) && cols.filter(c => c === "1 / 2").length === 2 && cols.filter(c => c === "3 / 4").length === 2 && cols.filter(c => c === "2 / 3").length === 1,
+          JSON.stringify(cols) + " " + strip(lunarRow).slice(0, 220));
+    check("smoke: the map comes right under the name, before the spec line: the move left, the defence right, the numbers big",
+          lunarRow.indexOf('class="amap"') < lunarRow.indexOf('class="spec"') && /<b>20<\/b><small>cm<\/small><b>45°<\/b>/.test(lunarRow) && /<small>SH<\/small><b>2<\/b><small>ARM<\/small><b>6\+\/5\+<\/b>/.test(lunarRow), (lunarRow.match(/class="spec".{0,200}/) || [""])[0]);
+    check("smoke: the hits left are said big, 8/8 left, with the track beside them", /class="hp"[^]*?<b>8<\/b><small>\/8 left<\/small>[^]*?aria-label="hits 1"/.test(lunarRow), (lunarRow.match(/class="hp.{0,160}/) || [""])[0]);
     /* v1.2 J183: one range in a frame of its band's colour (30 cm: #E69F00) */
-    check("smoke: the ranges are framed in their band's colour as on the card (30 cm band) and the unit is in the heading", /class="rp"[^>]*--rb:#E69F00/.test(lunarRow) && /<th class="rg">cm<\/th>/.test(lunarRow), (lunarRow.match(/.{0,60}class="rp.{0,60}/) || [""])[0]);
+    check("smoke: the ranges are framed in their band's colour as on the card (30 cm band)", /class="rp"[^>]*--rb:#E69F00/.test(lunarRow), (lunarRow.match(/.{0,60}class="rp.{0,60}/) || [""])[0]);
     P(`act("pop", LU, "crit"); act("crit", LU, "4"); act("pop", LU, "crit")`);
     const struck = P(`renderRow(LU, false)`);
-    check("smoke: Port Armament Damaged (p. 67) parts the pairs: 5 rows, the port rows struck through with the reason, starboard whole", (struck.match(/<tr[ >]/g) || []).length - 1 === 5 && (struck.match(/<tr class="silent/g) || []).length === 2 && /Port weapons battery/.test(strip(struck)) && /Starboard weapons battery/.test(strip(struck)), strip(struck).slice(0, 260));
-    /* the compact view */
+    check("smoke: Port Armament Damaged (p. 67) strikes the two port cells with the reason in their tooltip, the starboard cells whole",
+          (struck.match(/class="wx off"/g) || []).length === 2 && /class="wx off" title="Port weapons battery[^"]*damaged \(critical 4\)"/.test(struck) && !/class="wx off" title="Starboard/.test(struck), strip(struck).slice(0, 260));
+    /* the compact view: the same map, smaller */
     P(`V.compact = true`);
     const croster = P(`renderRoster()`);
     clean("the compact roster", croster);
-    check("smoke: compact rows carry the weapons line and CRIT in the name line, no weapons table, no strip", /class="wline"/.test(croster) && !/<table class="wt/.test(croster) && /class="crit cmini"/.test(croster) && !/class="jump"/.test(croster));
+    check("smoke: compact rows carry the arc map and CRIT in the name line, no weapons table, no strip", /class="amap"/.test(croster) && !/<table class="wt/.test(croster) && /class="crit cmini"/.test(croster) && !/class="jump"/.test(croster));
     P(`V.compact = false`);
     const froster = P(`renderRoster()`);
     check("smoke: the full roster has the strip with a chip per unit and its End Phase button", (froster.match(/data-act="jump"/g) || []).length === 3 && /data-act="endph"/.test(froster), (froster.match(/data-act="jump"/g) || []).length);

@@ -137,24 +137,22 @@ export function critChips(R, st, i){
   }).join("");
 }
 
-/* The spec line under the name: the profile as it stands now, a value a
-   critical or crippling changed marked in the crippled colour. */
-/* The stats in one line, each in its place (user 2.11.2026: tiles made the
-   speed and the turn less clear): the label small, the number big, a value
-   changed by damage in the crippled colour. */
-export function statsLine(v, R, esq){
-  const sp = v.speed.now != null ? v.speed.now + " cm" : v.speed.text + (v.speed.mods.length ? " " + v.speed.mods.map(m => m.v).join("") : "");
-  /* a unit that does not move (Rulebook p. 100) has one word where a ship
-     has its speed and turns */
-  const parts = (v.still ? [["", "STATIONARY", false]] : [
-    ["SPD", sp, v.speed.mods.length > 0],
-    [v.turns.none ? "TURNS" : "", v.turns.none ? "NONE" : v.turns.text, v.turns.none]]).concat([
-    ["SH", v.shields.now == null ? v.shields.text : v.shields.now, v.shields.now != null && v.shields.now !== v.shields.base],
-    ["ARM", shortArmour(R.stats.armour), false],
-    [/spore/i.test(R.stats.turretLabel || "") ? "SPORES" : "T", v.turrets.now == null ? v.turrets.text : v.turrets.now, v.turrets.now != null && v.turrets.now !== v.turrets.base],
-  ]);
-  if(esq) parts.push(["HITS", v.max + " each", false]);
-  return `<div class="stl">${parts.map(x => `<span class="${x[2] ? "mod" : ""}">${x[0] ? `<small>${x[0]}</small>` : ""}<b>${esc(String(x[1]))}</b></span>`).join("")}</div>`;
+/* The spec line (user 6.11.2026, prototype B; before it, one line of
+   label-and-number pairs, user 2.11.2026): the move on the left - the speed
+   and the turn - and what the enemy asks about on the right - shields,
+   armour, turrets, and an escort's hits each; the number big, the label
+   small, a value damage changed in the crippled colour. A unit that does
+   not move (Rulebook p. 100) has one word in place of the move. */
+export function specStrip(v, R, esq, compact){
+  const B = (txt, mod) => `<b${mod ? ' class="mod"' : ""}>${esc(String(txt))}</b>`;
+  const m = v.speed.now == null ? String(v.speed.text).match(/^(.*?)\s*cm$/i) : null;
+  const sp = v.speed.now != null ? String(v.speed.now) : (m ? m[1] : String(v.speed.text)) + (v.speed.mods.length ? " " + v.speed.mods.map(x => x.v).join("") : "");
+  const cm = v.speed.now != null || !!m;
+  const mv = v.still ? `<span class="g"><b class="w">STATIONARY</b></span>`
+    : `<span class="g mv">${B(sp, v.speed.mods.length > 0)}${cm ? "<small>cm</small>" : ""}${B(v.turns.none ? "no turns" : v.turns.text, v.turns.none)}</span>`;
+  const T = /spore/i.test(R.stats.turretLabel || "") ? "SPR" : "T";
+  const df = `<span class="g df"><small>SH</small>${B(v.shields.now == null ? v.shields.text : v.shields.now, v.shields.now != null && v.shields.now !== v.shields.base)}<small>ARM</small>${B(shortArmour(R.stats.armour))}<small>${T}</small>${B(v.turrets.now == null ? v.turrets.text : v.turrets.now, v.turrets.now != null && v.turrets.now !== v.turrets.base)}${esq ? `<small>HITS</small>${B(v.max)}<small>each</small>` : ""}</span>`;
+  return `<div class="spec${compact ? " c" : ""}">${mv}${df}</div>`;
 }
 /* The armament as a table: badge, name, range, strength, the halved value
    (crippled p. 65, braced p. 47, All Ahead Full etc. p. 46 - whichever the
@@ -200,27 +198,112 @@ export function rangeHTML(R, a, k, cls){
   if(rc) return `<span class="${cls}${rc.label.length > 3 ? " l" : ""}" style="--rb:${rc.color}">${esc(rc.label)}</span>`;
   return esc(String(rangeText(a.range)).replace(/\s*cm\b/g, ""));
 }
-/* The compact row's armament: one chip per row of the table - the badge,
-   the strength in force now (halved when crippled or braced, struck through
-   when silenced) with the printed value small beside it, the range in its
-   band's colour and the arc; a live pair is one chip with both arcs. No
-   names (user 2.11.2026): the badge, the arc and the card say which. */
-export function weaponsLine(R, st, esq){
-  const v = PLAY.view(R, st, appState.G.fleet);
+/* ---- the card at a glance (user 6.11.2026, prototype B): the arc map ---- */
+/* Which sectors an arc covers: L, F, R and B (rear); all for all round /
+   all around; quad for a star fort's quadrant weapons (Fleets p. 501: the
+   firer picks the arc); none for a row without an arc (launch bays, a
+   gravitic hook). */
+export function arcSectors(arc){
+  const a = String(arc || "").toLowerCase();
+  if(/all\s*(round|around)/.test(a)) return { L: 1, F: 1, R: 1, B: 1, all: 1 };
+  if(/quadrant/.test(a)) return { quad: 1 };
+  const s = {};
+  if(/left/.test(a)) s.L = 1;
+  if(/front/.test(a)) s.F = 1;
+  if(/right/.test(a)) s.R = 1;
+  if(/rear|aft/.test(a)) s.B = 1;
+  if(!s.L && !s.F && !s.R && !s.B) s.none = 1;
+  return s;
+}
+const DICE = /^\d*D\d+(\s*[+-]\s*\d+)?$/i;
+/* a text strength, short: "Capacity: 1 Orca/Warden" is "1 Orca/Warden",
+   "Special (max. 8)" is "Special <=8"; "2 squadrons" is a number already */
+const shortStrength = t => String(t == null ? "" : t).replace(/^Capacity:\s*/i, "").replace(/\s*squadrons?\b/i, "").replace(/\s*\(max\.\s*(\d+)\)/i, " ≤$1");
+/* The card's rows (view.arms, or escortFire for an escort squadron) as the
+   map's items: the value in force now and the printed one when it is
+   halved (crippled p. 65, braced p. 47, an order p. 46 - whichever the
+   rules layer applied), a dice or text strength as text, the range in its
+   band's frame (rangeHTML), the sectors of the arc. A text strength the
+   rules layer halved ("Special (x0.5)") is said with a half sign and the
+   crippled colour instead. */
+export function arcItems(R, st, esq, v){
+  v = v || PLAY.view(R, st, appState.G.fleet);
   const rows = esq ? PLAY.escortFire(R, st) : v.arms;
-  if(!rows.length) return `<p class="noarm">No armament</p>`;
-  const pairs = livePairs(R, rows, esq);
-  const cr = !esq && (v.crippled || (OPT.orders && (v.braced || (v.order && v.order.arm < 1))));
-  return `<div class="wline">${rows.map((a, k) => {
-    if(pairs[k] === 2) return "";
-    const ps = pairs[k] === 1;
+  const cr = v.crippled || (OPT.orders && !esq && (v.braced || (v.order && v.order.arm < 1)));
+  return rows.map((a, k) => {
     const [letter, badge] = wepClass(a.name);
-    const n = PLAY.num(a.strength), alive = esq ? a.ships : 1;
-    const val = n == null ? String(a.strength).replace(/\s*squadrons?$/i, "") : esq ? n * alive : (!esq && a.silent ? n : cr && PLAY.num(a.now) != null ? PLAY.num(a.now) : n);
-    const glyph = ps ? arcGlyph("left right").replace(/class="pick"/g, 'class="on"') : arcGlyph(a.arc);
-    const title = ps ? a.name + " / " + rows[k + 1].name + ", each" : a.name;
-    return `<span class="wc${!esq && a.silent ? " off" : ""}${cr && n != null && !a.whole ? " half" : ""}" title="${esc(title)}"><i style="--bd:${badge}">${letter}</i>${cr && n != null && !a.whole && !a.silent ? `<s>${esq ? n * alive : n}</s>` : ""}<b>${esc(String(val))}</b>${rangeHTML(R, a, k, "rpc")}${glyph}</span>`;
-  }).join("")}</div>`;
+    const n = PLAY.num(a.strength);
+    let full = n, now = n, half = false, txt = null;
+    if(esq){ full = n == null ? null : n * a.ships; now = a.now; half = n != null && !!a.halved; }
+    else if(n != null){ const nn = PLAY.num(a.now); if(cr && !a.whole && nn != null && nn !== n){ now = nn; half = true; } }
+    if(n == null){
+      let t = String(!esq && cr && !a.whole && a.now !== a.strength ? a.now : a.strength);
+      const m = t.match(/\s*\(x\s*[\d.]+\)\s*$/i);
+      if(m){ t = t.slice(0, m.index); half = true; }
+      if(esq && a.halved) half = true;
+      txt = shortStrength(t);
+    }
+    return { k: k, letter: letter, badge: badge, name: a.name, txt: txt, full: full, now: now, half: half,
+             ships: esq ? a.ships : 0, each: esq ? a.each : null, nocombine: !!(esq && a.nocombine),
+             silent: !esq && a.silent ? a.silent : "", bays: !!a.bays, torp: !!a.torp, zone: a.zone || "",
+             sect: arcSectors(a.arc), arc: a.arc, range: rangeHTML(R, a, k, "rp") };
+  });
+}
+/* a span's name without the class the badge gives: "dorsal lance" */
+const spanName = n => { const s = String(n).toLowerCase(); const t = s.replace(/\s*battery$/, ""); return t.split(" ").length > 1 ? t : s; };
+const sideWord = n => /^port\b/i.test(n) ? "port" : /^(starboard|stbd)\b/i.test(n) ? "stbd" : /^dorsal\b/i.test(n) ? "dorsal" : /^prow\b/i.test(n) ? "prow" : /^keel\b/i.test(n) ? "keel" : /^stern\b/i.test(n) ? "stern" : "";
+/* one weapon of the map: the badge, the value in force (the printed one
+   struck beside it when halved), the range in its band's frame, a label
+   small; the name, the arc and the reason it is silent are the tooltip */
+function arcCell(w, style, cls, label){
+  const val = w.txt != null
+    ? (w.half ? `<span class="hm">½</span>` : "") + `<b class="${DICE.test(w.txt) ? "d" : "t"}">${esc(w.txt)}</b>` + (w.ships > 1 ? `<small>${TIMES}${w.ships}</small>` : "")
+    : (w.half ? `<s>${w.full}</s>` : "") + `<b>${w.now}</b>` + (w.ships > 1 && w.each != null ? `<small>${w.ships}${TIMES}${w.each}${w.nocombine ? " separate" : ""}</small>` : "");
+  const tip = w.name + (w.arc && w.arc !== "–" ? " · " + w.arc : "") + (w.each != null && w.ships > 1 ? " · " + w.each + " each" + (w.nocombine ? ", not combined" : "") : "") + (w.silent ? " · " + w.silent : "");
+  const c = ["wx", w.half ? "half" : "", w.silent ? "off" : "", cls || ""].filter(Boolean).join(" ").replace(/\s+/g, " ").trim();
+  return `<span class="${c}" title="${esc(tip)}"${style ? ` style="${style}"` : ""}><i class="bg" style="--bd:${w.badge}">${w.letter}</i>${val}${w.range}${label ? `<em>${esc(label)}</em>` : ""}</span>`;
+}
+/* The armament as the ship seen from above (user 6.11.2026, prototype B,
+   chosen over a table with the arc first and over one row per sector):
+   three columns, PORT | PROW | STBD, and a weapon is a cell over the
+   sectors its arc covers - a port battery the left column, a prow lance
+   the middle, a dorsal lance L/F/R the whole width - so "what fires at a
+   target on my left" is one column, with no arc glyph to read. Single-
+   sector cells first (a port / starboard pair shares a row), wider spans
+   under them; all round and a star fort's quadrant weapons span all three
+   and say so. The rear arc (a hulk's aft battery) and the rows without an
+   arc (launch bays, gravitic hooks) have lines of their own under the map.
+   The compact view is the same map smaller, the headings glyphs alone. */
+export function arcMap(R, st, esq, compact){
+  const v = PLAY.view(R, st, appState.G.fleet);
+  const list = arcItems(R, st, esq, v);
+  if(!list.length) return `<p class="noarm">No armament</p>`;
+  const cells = [], ord = [], rear = [];
+  const quadWord = v.fort ? PLAY.QUADS[v.quad] + " quadrant" : "quadrant";
+  list.forEach(w => {
+    const s = w.sect;
+    if(w.bays || s.none) ord.push(w);
+    else if(s.quad) cells.push({ w: w, a: 1, b: 4, note: quadWord });
+    else if(s.all) cells.push({ w: w, a: 1, b: 4, note: "all round" });
+    else if(s.B && !s.L && !s.F && !s.R) rear.push(w);
+    /* one weapon that fires to either side (a Scythe's lightning arc): a
+       dashed cell in each column, the same weapon */
+    else if(s.L && s.R && !s.F){ cells.push({ w: w, a: 1, b: 2, note: "either side", twin: 1 }); cells.push({ w: w, a: 3, b: 4, note: "either side", twin: 1 }); }
+    else cells.push({ w: w, a: s.L ? 1 : s.F ? 2 : 3, b: s.R ? 4 : s.F ? 3 : 2, note: "" });
+  });
+  cells.sort((p, q) => (p.b - p.a) - (q.b - q.a) || p.a - q.a || p.w.k - q.w.k);
+  const head = compact ? `<span class="ah">◀</span><span class="ah">▲</span><span class="ah">▶</span>`
+    : `<span class="ah">◀ PORT</span><span class="ah">▲ PROW</span><span class="ah">STBD ▶</span>`;
+  const body = cells.map(c => {
+    const span = c.b - c.a;
+    const bas = c.w.zone === "basilica" ? "basilica" : "";
+    const label = span > 1 ? (compact ? (c.note || "") : [bas, c.note || spanName(c.w.name)].filter(Boolean).join(" · ")) : (c.note && !compact ? c.note : "");
+    return arcCell(c.w, `grid-column:${c.a} / ${c.b}`, (span > 1 ? "span" : "") + (c.twin ? " twin" : ""), label);
+  }).join("");
+  const line = (glyph, word, items) => `<div class="aline"><span class="al">${glyph}${compact ? "" : ` <b>${word}</b>`}</span><span class="ai">${items}</span></div>`;
+  return (cells.length ? `<div class="amap">${head}${body}</div>` : "") +
+    (rear.length ? line("▼", "REAR", rear.map(w => arcCell(w, "", "", "")).join("")) : "") +
+    (ord.length ? line("✈", "ORD", ord.map(w => arcCell(w, "", "", w.zone === "basilica" ? "basilica" : sideWord(w.name))).join("")) : "");
 }
 /* The armament as a table with the numbers first (user 2.11.2026: "what is
    big and easy to see" - the names were large and said nothing the badge
@@ -259,7 +342,10 @@ export function weaponsTable(R, st, esq){
        (Fleets p. 501): its strength stays the value in force */
     const keep = !esq && a.whole && !(OPT.orders && (v.braced || (v.order && v.order.arm < 1)));
     if(!esq && cr && !keep && n != null && PLAY.num(a.now) != null) half = PLAY.num(a.now);
-    if(!esq && cr && !keep && n == null && a.now !== a.strength) half = esc(String(a.now));
+    /* a halved text strength ("Capacity: 1 Orca/Warden (x0.5)"): a half
+       sign in the column, not the text twice - two long texts in one row
+       ran a Tau card off a 360 px screen (6.11.2026) */
+    if(!esq && cr && !keep && n == null && a.now !== a.strength) half = "½";
     const silent = !esq && !!a.silent;
     const txt = n == null;
     const pr = pairs[k];

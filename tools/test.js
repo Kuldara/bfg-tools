@@ -64,6 +64,7 @@ const STEPS = [
   ["play",      "Repair button (Chrome)",  ["node", "apps/play/check_repair.js"], { slow: true }],
   ["play",      "ship Actions (Chrome)",   ["node", "apps/play/check_actions.js"], { slow: true }],
   ["play",      "Young Gunz, Mob Rule (Chrome)", ["node", "apps/play/check_mob.js"], { slow: true }],
+  ["play",      "every class's card at phone width (Chrome)", ["node", "apps/play/check_cards.js"], { slow: true }],
   ["boarding",  "engine",                  ["node", "apps/boarding/test_engine.js"]],
   ["boarding",  "fuzz",                    ["node", "apps/boarding/test_fuzz.js"]],
   ["boarding",  "page walks (Chrome)",     ["node", "apps/boarding/test_page.js"], { slow: true }],
