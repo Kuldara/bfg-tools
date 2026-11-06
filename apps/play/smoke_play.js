@@ -956,6 +956,45 @@ function run(check){
     P(`act("start")`);
   });
 
+  /* ------- T64: the commander's ship in an escort squadron, own Ld ----- */
+  guard("the commander aboard an escort, a capital ship's own Ld", () => {
+    const pg = open(), P = pg.P;
+    const L = pg.DATA.lists.find(x => /^Orks . Da Ork Clanz$/.test(x.nm));
+    pg.ctx.__doc = { ln: L.nm, limit: 1000, units: [saved(L, /^WARLORD$/, /^Ork Warlord$/), Object.assign(saved(L, /^Tiddla skwadron$/, /^Grunt/, 5), { sq: "B" })] };
+    P(`newGame(resolveFleet(__doc)); V.screen = "setup"; U.forEach((x, i) => { if(x.R.kind === "ship") setLd(i, 7); }); act("start");`);
+    const r0 = P(`renderRow(1, false)`);
+    check("smoke: a Warlord on five Grunts: the fifth box has the crown (Fleets p. 374, T64)", P(`cmdCrown(1)`) === 4 && (r0.match(/class="crown"/g) || []).length === 1 && /data-arg="4"[^>]*aria-label="ship 5, the commander's ship"/.test(r0), (r0.match(/<b class="crown".{0,120}/) || [""])[0]);
+    P(`act("kill", 1, 4)`);
+    const r1 = strip(P(`renderRow(1, false)`));
+    check("smoke: ... the crowned ship destroyed: his re-roll and +2 boarding are lost, said on the card (T64)", P(`G.fleet.rerollsLost && G.fleet.rerolls === 0`) === true && /his ship is destroyed/.test(r1) && /lost: his ship destroyed/.test(r1), r1.slice(0, 300));
+    P(`act("kill", 1, 4)`);
+    check("smoke: ... tapped back: the re-roll is back", P(`!G.fleet.rerollsLost && G.fleet.rerolls === 1 && !G.st[1].cmdDead`) === true);
+    P(`act("kill", 1, 0)`);
+    check("smoke: ... another ship destroyed: the commander stays", P(`!G.fleet.rerollsLost`) === true);
+    const pg2 = open(), P2 = pg2.P;
+    const t = () => Object.assign(saved(L, /^Big ship skwadron$/, /^Terror/), { sq: "A" });
+    pg2.ctx.__doc = { ln: L.nm, limit: 1000, units: [saved(L, /^WARLORD$/, /^Ork Warlord$/), t(), t()] };
+    P2(`newGame(resolveFleet(__doc)); V.screen = "setup"; setLd(1, 6); setLd(2, 7); act("start");`);
+    const a = P2(`renderRow(1, true)`), b = P2(`renderRow(2, true)`);
+    clean("a squadron ship's row with its own Ld", a);
+    check("smoke: two Terror ships in SQN A: each card shows its own Ld, 6 and 7, marked own (T64)", /class="ldt own"[^>]*><b>6<\/b><small>own/.test(a) && /class="ldt own"[^>]*><b>7<\/b><small>own/.test(b), strip(a).slice(0, 120));
+  });
+
+  /* ------- T63: Grunts with Klaws get their free Grunt on their card --- */
+  /* the owner, 6.11.2026: the free ship is like the skwadron's cheapest one,
+     so five Grunts with Klaws are six on one card, not a "Free Grunt" card */
+  guard("the Clanz free Grunt with Klaws", () => {
+    const pg = open(), P = pg.P;
+    const L = pg.DATA.lists.find(x => /^Orks . Da Ork Clanz$/.test(x.nm));
+    const gub = L.secs.find(s => /^GUBBINS$/.test(s.t)), klaws = gub.ents.find(e => /^Klaws \(Grunt/.test(e.l)).l;
+    const gr = Object.assign(saved(L, /^Tiddla skwadron$/, /^Grunt/, 5), { sq: "B", upn: { ["GUBBINS\u0001" + klaws]: "take" } });
+    pg.ctx.__doc = { ln: L.nm, limit: 1000, units: [saved(L, /^WARLORD$/, /^Ork Warlord$/), gr] };
+    P(`newGame(resolveFleet(__doc)); V.screen = "setup"; save(); render(); setLd(1, 5); act("ygapply");`);
+    check("smoke: five Grunts with Klaws on Ld 5: the free Grunt is a sixth ship on their card, no card of its own (owner 6.11.2026, T63)",
+      P(`PLAY.vesselPaid(U[1].R)`) === 35 && P(`U.length`) === 2 && P(`G.st[1].members.length`) === 6 && P(`G.st[1].members.filter(m => m.free).length`) === 1,
+      P(`JSON.stringify([PLAY.vesselPaid(U[1].R), U.length, G.st[1].members])`));
+  });
+
   /* ------- T63: a lone tiddla's free escort of another class ---------- */
   guard("the Clanz lone tiddla's free card", () => {
     const pg = open(), P = pg.P;

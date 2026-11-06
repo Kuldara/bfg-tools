@@ -979,3 +979,14 @@ details.paste .roomjoin{margin-top:6px}
 .main.compact .hp .hits b{height:28px;line-height:26px;font-size:0}
 /* a text value (Holofields, Shadowfields) fits its cell at 360 px */
 .stats b.txt{font-size:13px;white-space:normal;overflow-wrap:anywhere}
+
+/* a capital ship's own Ld in a squadron: to read, dashed (the squadron's is
+   in the header, p. 95); the commander's ship in an escort squadron: a
+   crown on its box (Fleets p. 374), and his line when it is gone */
+.ldt.own{border-style:dashed;background:transparent;cursor:default}
+.ldt.own small{color:var(--card-mute)}
+.hits.mem b.crown{position:relative;border-color:var(--acc);border-width:2px}
+.hits.mem b .crn{position:absolute;top:-10px;right:-7px;width:19px;height:19px;fill:var(--acc);stroke:var(--card);stroke-width:1.5}
+.hits.mem b.on .crn{fill:var(--card-mute)}
+.cmdl.gone b{text-decoration:line-through;color:var(--card-mute)}
+.cmdl .cmdgone{color:var(--bad);font:600 11px/1.2 var(--sans)}

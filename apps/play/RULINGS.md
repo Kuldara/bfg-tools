@@ -715,9 +715,13 @@ p. 381). The decisions:
    (*"regardless of how large it is"*, pp. 371-372) and do not count per vessel.
    The free escort is any Ork escort class of the fleet list - the Clanz tiddla,
    p. 374: Ravager 40, Onslaught 35, Grunt 30, Savage 30, Brute 25, read from the
-   data - whose list price is within the cap. It carries no per-vessel options
-   (no free Klaws: a free Grunt does not join a Grunt card that bought them, it
-   is a card of its own); the skwadron's clan and Gubbins cover it (it takes the
+   data - whose list price is within the cap. A free escort of a class the
+   skwadron has a card of is one more ship of that card, like the others on it,
+   its per-vessel options included (the owner, 6.11.2026, J: "it gives one like
+   the cheapest ship of the squadron ... all of them alike, so the same card" -
+   five Grunts with Klaws get a sixth on their card; before this it was a card
+   of its own without Klaws); of two cards of the class, the one paid least per
+   vessel. The skwadron's clan and Gubbins cover it (it takes the
    skwadron's letter, T60 - a lone tiddla is given one). Commandeered Imperial
    and Chaos escorts (Blood Axes, p. 371) count as models and as escorts "paid
    for", but the free ship must be an Ork class. A skwadron cannot exceed ten
@@ -778,6 +782,27 @@ p. 100 (not 109) and the Inquisitor's +1 pp. 150-151 (v0.36 pp. 140-142).
 `vesselPaid`, `youngGunzChoice`, `skwadronPlan`, `bbSwapRule`, `bbSwapPartner`,
 `warlordSwapPartners`, `applySwaps`), `src/game-state.js` (Apply, the free
 escorts, the swaps), `test_play.js`, `smoke_play.js`, `check_mob.js` (Chrome).
+
+**T64. A commander aboard an escort, and a capital ship's own Leadership in
+a squadron** (the owner, 6.11.2026).
+- A Warlord "must be embarked on the most expensive ship under his own command
+  ... even if it is an escort - annotate which one it is" (Fleets p. 374). On
+  an escort card the page annotates it: the card's last paid ship (the
+  highest number, a Young Gun's free box never) has a crown. Any escort
+  carrying a commander gets it, not only an Ork's.
+- That ship destroyed, the commander is gone with it: his re-rolls are lost
+  for the battle as with a Bridge Smashed (p. 67), a Warlord's +2 boarding
+  roll (p. 374) with them, and a Leadership his line gave the squadron goes
+  back to its roll. The book says it only of the bridge; that a commander
+  does not outlive his ship is the owner's reading. The box tapped back (a
+  mis-tap), all of it comes back; a Bridge Smashed taken before stays.
+- In a squadron of capital ships each card shows its own Leadership,
+  dashed and marked *own*, beside the squadron's value in the header, which
+  is the one tested (p. 95, the highest of the squadron). It is to read: the
+  set-up and the header's tile set it.
+**Code and tests:** `src/game-state.js` (`cmdCrown`, `syncCmdShip`, `cmdGone`),
+`src/render.js` (`memberBox`, `cmdLine`, `rrBoxesHTML`), `src/derived.js`
+(`ownLdTile`), `smoke_play.js`.
 
 ## What is not tracked, and why
 
