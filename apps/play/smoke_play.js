@@ -956,6 +956,21 @@ function run(check){
     P(`act("start")`);
   });
 
+  /* ------- T63: Grunts with Klaws get their free Grunt on their card --- */
+  /* the owner, 6.11.2026: the free ship is like the skwadron's cheapest one,
+     so five Grunts with Klaws are six on one card, not a "Free Grunt" card */
+  guard("the Clanz free Grunt with Klaws", () => {
+    const pg = open(), P = pg.P;
+    const L = pg.DATA.lists.find(x => /^Orks . Da Ork Clanz$/.test(x.nm));
+    const gub = L.secs.find(s => /^GUBBINS$/.test(s.t)), klaws = gub.ents.find(e => /^Klaws \(Grunt/.test(e.l)).l;
+    const gr = Object.assign(saved(L, /^Tiddla skwadron$/, /^Grunt/, 5), { sq: "B", upn: { ["GUBBINS\u0001" + klaws]: "take" } });
+    pg.ctx.__doc = { ln: L.nm, limit: 1000, units: [saved(L, /^WARLORD$/, /^Ork Warlord$/), gr] };
+    P(`newGame(resolveFleet(__doc)); V.screen = "setup"; save(); render(); setLd(1, 5); act("ygapply");`);
+    check("smoke: five Grunts with Klaws on Ld 5: the free Grunt is a sixth ship on their card, no card of its own (owner 6.11.2026, T63)",
+      P(`PLAY.vesselPaid(U[1].R)`) === 35 && P(`U.length`) === 2 && P(`G.st[1].members.length`) === 6 && P(`G.st[1].members.filter(m => m.free).length`) === 1,
+      P(`JSON.stringify([PLAY.vesselPaid(U[1].R), U.length, G.st[1].members])`));
+  });
+
   /* ------- T63: a lone tiddla's free escort of another class ---------- */
   guard("the Clanz lone tiddla's free card", () => {
     const pg = open(), P = pg.P;

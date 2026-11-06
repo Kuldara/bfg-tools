@@ -350,11 +350,15 @@ export const ygChoice = h => PLAY.youngGunzChoice(paidCards(h).map(j => appState
 /* Young Gunz is tested on the value after the swaps and before Mob Rule
    (p. 372): st.ld, which Mob Rule never touches */
 export const ygEligible = h => PLAY.youngGunz(appState.G.st[h].ld, paidModels(h));
-/* the free escort's class is one of a paid card's of the skwadron that
-   bought nothing per vessel: one more member of it; a Grunt card with Klaws
-   is not one - the free Grunt has none (T63) */
+/* the free escort is one more member of a paid card of its class: the
+   free ship is like the skwadron's cheapest one (the owner, 6.11.2026: "it
+   gives one like the cheapest ship of the squadron ... the same card"), a
+   Grunt card with Klaws included - its per-vessel options come with it.
+   Of two cards of the class, the one paid least per vessel. A class the
+   skwadron has no card of is a card of its own (T63). */
 function ygHost(h, label){
-  return paidCards(h).find(j => { const R = appState.U[j].R; return PLAY.isTiddla(R) && R.entry.label === label && PLAY.vesselPaid(R) === (R.entry.price | 0); });
+  const cards = paidCards(h).filter(j => { const R = appState.U[j].R; return PLAY.isTiddla(R) && R.entry.label === label; });
+  return cards.sort((a, b) => PLAY.vesselPaid(appState.U[a].R) - PLAY.vesselPaid(appState.U[b].R))[0];
 }
 /* where the skwadron's free escort is now: { label, card, own } */
 export function ygFree(h){

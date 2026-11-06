@@ -6,6 +6,7 @@ a tag `play-v<version>` deploys the Registry's site.
 ## Unreleased
 
 ### Fixed
+- Young Gunz: five Grunts with Klaws got their free Grunt as a card of its own ("Free Grunt", no Klaws). The free ship is like the skwadron's cheapest one (the owner, 6.11.2026), so it is a sixth ship on their card, Klaws and all; a class the skwadron has no card of is still a card of its own (RULINGS.md T63, point 4). A game started before keeps its card; a new set-up puts it on the card.
 - A card wider than the phone (found by the prototypes' measurement, 6.11.2026): on 13 classes - the Tau with gravitic hooks, a crippled Kor Caste Orbital City worst at +100 px - the row's armament table ran off a 360 px screen and the page scrolled sideways, a text strength ("Capacity: 1 Orca/Warden (x0.5)") in two columns of a table that could not shrink. The row has no table now (see Changed), and on the ship's own card the table lets such a text wrap. check_cards.js draws every class, fresh and crippled, in both views and on its card at 360 px, and fails on a card wider than that or a cell whose text is cut.
 - On a laptop the set-up's cards no longer overlap: a card took the width of its longest line (a long Swap Ld choice) and ran under the next column's card, Leadership under Fleet facts. A card now fills its column (check_mob.js checks it at 1309 px).
 

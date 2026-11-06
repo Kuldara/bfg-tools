@@ -715,9 +715,13 @@ p. 381). The decisions:
    (*"regardless of how large it is"*, pp. 371-372) and do not count per vessel.
    The free escort is any Ork escort class of the fleet list - the Clanz tiddla,
    p. 374: Ravager 40, Onslaught 35, Grunt 30, Savage 30, Brute 25, read from the
-   data - whose list price is within the cap. It carries no per-vessel options
-   (no free Klaws: a free Grunt does not join a Grunt card that bought them, it
-   is a card of its own); the skwadron's clan and Gubbins cover it (it takes the
+   data - whose list price is within the cap. A free escort of a class the
+   skwadron has a card of is one more ship of that card, like the others on it,
+   its per-vessel options included (the owner, 6.11.2026, J: "it gives one like
+   the cheapest ship of the squadron ... all of them alike, so the same card" -
+   five Grunts with Klaws get a sixth on their card; before this it was a card
+   of its own without Klaws); of two cards of the class, the one paid least per
+   vessel. The skwadron's clan and Gubbins cover it (it takes the
    skwadron's letter, T60 - a lone tiddla is given one). Commandeered Imperial
    and Chaos escorts (Blood Axes, p. 371) count as models and as escorts "paid
    for", but the free ship must be an Ork class. A skwadron cannot exceed ten
