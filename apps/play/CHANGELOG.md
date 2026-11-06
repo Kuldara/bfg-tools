@@ -5,6 +5,9 @@ a tag `play-v<version>` deploys the Registry's site.
 
 ## Unreleased
 
+### Changed
+- A squadron's number of ships is read right after its kind (6.11.2026): on the row the tag says ESC and a large ×3 follows it; on the set-up a bold ×3 (×3 → 4 with a free escort); in the strip of ships a larger ×3.
+
 ### Fixed
 - Young Gunz: five Grunts with Klaws got their free Grunt as a card of its own ("Free Grunt", no Klaws). The free ship is like the skwadron's cheapest one (the owner, 6.11.2026), so it is a sixth ship on their card, Klaws and all; a class the skwadron has no card of is still a card of its own (RULINGS.md T63, point 4). A game started before keeps its card; a new set-up puts it on the card.
 - A card wider than the phone (found by the prototypes' measurement, 6.11.2026): on 13 classes - the Tau with gravitic hooks, a crippled Kor Caste Orbital City worst at +100 px - the row's armament table ran off a 360 px screen and the page scrolled sideways, a text strength ("Capacity: 1 Orca/Warden (x0.5)") in two columns of a table that could not shrink. The row has no table now (see Changed), and on the ship's own card the table lets such a text wrap. check_cards.js draws every class, fresh and crippled, in both views and on its card at 360 px, and fails on a card wider than that or a cell whose text is cut.

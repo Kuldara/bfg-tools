@@ -680,6 +680,12 @@ console.log("\n=== Z  Grunt Klaws: one row, its price per ship (user 6.11.2026) 
   const h = api.unitRowHTML(g, 0).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
   ok(/equipped with Klaws for \+5 points for each vessel, not per skwadron\. \+5 \/ ship = \+25/.test(h), "the option's price says per ship and the total: +5 / ship = +25");
   eq((h.match(/Klaws \(Grunt/g) || []).length, 0, "no second Klaws row under the fleet-list upgrades");
+  /* the user, 6.11.2026: the number of ships is a squadron's second thing to
+     read, right after its class - its own mark in the head, not small print */
+  const hd = api.unitRowHTML(g, 0);
+  ok(/class="cls"[\s\S]*?<span class="cnt"[^>]*>×5<\/span>/.test(hd.split('class="pts"')[0]), "the head shows the count after the class: x5");
+  const one = add(L, "Ork Warlord", "WARLORD");
+  ok(!/class="cnt"/.test(api.unitRowHTML(one, 1)), "a single ship has no count");
 }
 
 console.log(fails ? "\n" + fails + " tests failed" : "\nall tests passed");

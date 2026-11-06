@@ -6,6 +6,7 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 ## Unreleased
 
 ### Changed
+- A squadron's number of ships is its own mark right after the class, "Brute Ram Ship ×3", open or folded (6.11.2026: the second thing to read, it was small print). The folded line no longer repeats it.
 - Da Ork Clanz: Klaws on Grunt assault ships is one row, the Grunt's own option (Fleets p. 390; 6.11.2026). The GUBBINS row "Klaws (Grunt: +5 per escort)" (p. 373, ruling T31) was the same purchase a second time and is gone; a saved fleet that took it opens with the option taken, at the same price.
 - An escort squadron's own options show their price per ship and the total, "+5 / ship = +25", as the list's per-ship upgrades do; the option said only "+5" while the squadron paid for every ship.
 - A press shows until the page answers (4.11.2026): the control pulses from the moment it is pressed until the redraw is done, so a slow click no longer looks like nothing happened.

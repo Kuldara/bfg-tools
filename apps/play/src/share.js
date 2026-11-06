@@ -235,7 +235,7 @@ export function jumpStrip(){
     if(R.kind !== "ship" && !R.ruleCard) return "";
     const v = R.kind === "ship" ? PLAY.view(R, st, appState.G.fleet) : null;
     const cls = v ? (v.destroyed ? "dead" : v.crippled ? "cr" : "") + (st.played >= 2 ? " done" : "") : "";
-    return `<button class="${cls.trim()}" data-act="jump" data-i="${i}">${esc(shortName(i))}${v && v.escort ? `<small>${TIMES}${v.alive}</small>` : ""}</button>`;
+    return `<button class="${cls.trim()}" data-act="jump" data-i="${i}">${esc(shortName(i))}${v && v.escort ? `<small class="cnt">${TIMES}${v.alive}</small>` : ""}</button>`;
   }).join("");
   return `<div class="jump" role="navigation" aria-label="Go to a ship">${chips}</div>`;
 }

@@ -980,6 +980,21 @@ function run(check){
     check("smoke: two Terror ships in SQN A: each card shows its own Ld, 6 and 7, marked own (T64)", /class="ldt own"[^>]*><b>6<\/b><small>own/.test(a) && /class="ldt own"[^>]*><b>7<\/b><small>own/.test(b), strip(a).slice(0, 120));
   });
 
+  /* ------- the number of ships, right after the class (user 6.11.2026) */
+  guard("the squadron's number of ships", () => {
+    const pg = open(), P = pg.P;
+    const L = pg.DATA.lists.find(x => /^Imperial Navy . Gothic Sector$/.test(x.nm));
+    pg.ctx.__doc = { ln: L.nm, limit: 1500, units: [saved(L, /^Admiral$/, /^Fleet-Admiral \(Ld 8\)$/), saved(L, /^Cruisers$/, /^Lunar class cruiser$/), saved(L, /^ESCORTS$/, /^Sword class frigate$/, 3)] };
+    P(`newGame(resolveFleet(__doc)); V.screen = "setup"; save(); render(); var SW = U.findIndex(x => /^SWORD/i.test(x.R.className || "")), LU = U.findIndex(x => /^LUNAR/i.test(x.R.className || ""));`);
+    const set = P(`renderSetup()`);
+    const swRow = set.slice(set.indexOf('data-u="' + P(`SW`) + '"'));
+    check("smoke: the set-up's escort row says x3 in its own bold mark (user 6.11.2026)", /<small>ESC <b class="cnt">×3<\/b> /.test(swRow.slice(0, 1200)), swRow.slice(0, 300));
+    P(`U.forEach((x, i) => { if(x.R.kind === "ship" && G.st[i].ld == null) setLd(i, 8); }); act("start", null);`);
+    const sw = P(`renderRow(SW)`), lu = P(`renderRow(LU)`);
+    check("smoke: the roster's escort row: the tag ESC, then x3 of its own (user 6.11.2026)", /<span class="tag">ESC<\/span><span class="cnt"[^>]*>×3<\/span>/.test(sw), sw.slice(0, 300));
+    check("smoke: ... a capital ship has no count", !/class="cnt"/.test(lu));
+  });
+
   /* ------- T63: Grunts with Klaws get their free Grunt on their card --- */
   /* the owner, 6.11.2026: the free ship is like the skwadron's cheapest one,
      so five Grunts with Klaws are six on one card, not a "Free Grunt" card */

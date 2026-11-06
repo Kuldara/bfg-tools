@@ -848,7 +848,10 @@ export function unitHTML(R, ui, st){
       <button type="button" class="grip" data-grip="${ui}" draggable="true" aria-label="Move this unit"
         title="Drag to reorder, or move it a step with the arrow keys">${GRIP}</button>${st.ab && st.ab.send || ""}
       ${fold ? `<button type="button" class="ufold" data-unfold="${ui}" aria-expanded="${fold === "open"}" aria-label="${foldTip}" title="${foldTip}">${fold === "open" ? "▾" : "▸"}</button><button type="button" class="cls" data-unfold="${ui}" aria-expanded="${fold === "open"}" title="${foldTip}">${esc(title(R.className))}</button>`
-             : `<span class="cls">${esc(title(R.className))}</span>`}${ship ? infoBtnHTML("u:" + ui, "Everything about this ship") : ""}${role}
+             : `<span class="cls">${esc(title(R.className))}</span>`}${
+        /* the number of ships, a squadron's second thing to read after its
+           class (user 6.11.2026): its own mark, open or folded */
+        esc_ ? `<span class="cnt" title="${R.hulls} ${R.hulls === 1 ? "ship" : "ships"} in this ${grouped ? "squadron" : "card"}">\u00d7${R.hulls}</span>` : ""}${ship ? infoBtnHTML("u:" + ui, "Everything about this ship") : ""}${role}
       ${R.entry && R.entry.badRef ? '<span class="ty" style="color:var(--bad)">source page ref wrong</span>' : ""}
       <span class="ty">${st.ab && st.ab.tag ? esc(st.ab.tag) + " " : ""}${esc(ship && st.ab && st.ab.tag ? String(R.stats.type).toLowerCase() : ship ? R.stats.type
         : R.kind === "commander" ? "commander"
@@ -896,7 +899,6 @@ export function unitHTML(R, ui, st){
 export function unitSummaryHTML(R, st){
   const bits = [];
   if(st.name) bits.push(`<b>${esc(st.name)}</b>`);
-  if(R.kind === "ship" && R.squadron) bits.push("&times;" + (R.hulls | 0));
   if(R.kind === "commander" && R.rerolls && R.rerolls.total) bits.push(R.rerolls.total + " re-roll" + (R.rerolls.total > 1 ? "s" : ""));
   (R.upgrades || []).filter(up => up.state === "take" && !up.included).forEach(up => bits.push(esc(up.label)));
   const on = (R.options || []).filter(o => o.state === "take" && !o.forbidden).length;
