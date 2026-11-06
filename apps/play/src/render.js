@@ -4,10 +4,10 @@ import { OPT, PLAY_VERSION, TRACK, builderRaw, lsGet } from "./storage.js";
 import { $, MID, TIMES, fnv } from "./helpers.js";
 import { fleetFactsNow, fleetPoints, fleetsIn, parseDoc, resolveFleet } from "./fleet-document.js";
 import { KEY_WAKE, SQN_LETTERS, builderTool, carriersOf, cmdsAboard, coCmd, grpHTML, grpLabel, isEscGrp, ldPlanOf, ldRollers, loadPlay, preCounts, preRollsOf, sqnShip, toolBtn, wl2Box, wlExtra, wlTag,
-  bbPartners, isApplied, isBbSwapper, isClanzWarlord, isFreeCard, paidModels, skwHead, skwLd, skwName, skwUnits, swapPlay, swapRecs, tiddlaHeads, wlPartners, wlShip, ygChoice, ygEligible, ygFree } from "./game-state.js";
+  bbPartners, cmdCrown, cmdGone, isWarlord, isApplied, isBbSwapper, isClanzWarlord, isFreeCard, paidModels, skwHead, skwLd, skwName, skwUnits, swapPlay, swapRecs, tiddlaHeads, wlPartners, wlShip, ygChoice, ygEligible, ygFree } from "./game-state.js";
 import { IN_REFITS, inRefitKind, pregameRolls, pregameText, pregameEffects } from "../../../packages/ui/pregame-tables.js";
 import { cataLabel, critLabel, groupUnits } from "./actions.js";
-import { arcMap, upgradeLine, baseName, classTag, crippledNow, critChips, ldTile, memberWord, ordChip, ordnancePills, renderFleetPop, specStrip, unitName, weaponsTable } from "./derived.js";
+import { arcMap, ownLdTile, upgradeLine, baseName, classTag, crippledNow, critChips, ldTile, memberWord, ordChip, ordnancePills, renderFleetPop, specStrip, unitName, weaponsTable } from "./derived.js";
 import { builderFleets, endPending, fireReminder, jumpStrip, renderEndPhase, savedFleets } from "./share.js";
 import PLAY from "../rules.js";
 import { arcGlyph, esc, factionCols, shortArmour, shortRange, starHTML, title } from "../../../packages/ui/format.js";
@@ -711,8 +711,13 @@ export function ygLine(i){
 }
 /* a member's box: struck when it is gone; the free one dashed (T63) */
 export function memberBox(i, R, m, k, label){
-  return `<b class="${[m.dead ? "on" : "", m.free ? "free" : ""].filter(Boolean).join(" ")}" data-act="kill" data-i="${i}" data-arg="${k}" role="button" aria-label="${memberWord(R, 1)} ${k + 1}${m.free ? ", free" : ""}"${m.free ? ` title="Young Gun: free, 0 pts (Fleets p. 372)"` : ""}>${label}</b>`;
+  /* the ship that carries the commander (Fleets p. 374: "annotate which one it is") */
+  const crown = k === cmdCrown(i);
+  const tip = m.free ? "Young Gun: free, 0 pts (Fleets p. 372)" : crown ? cmdsAboard(i).map(unitName).join(", ") + " aboard this ship (Fleets p. 374)" : "";
+  return `<b class="${[m.dead ? "on" : "", m.free ? "free" : "", crown ? "crown" : ""].filter(Boolean).join(" ")}" data-act="kill" data-i="${i}" data-arg="${k}" role="button" aria-label="${memberWord(R, 1)} ${k + 1}${m.free ? ", free" : ""}${crown ? ", the commander's ship" : ""}"${tip ? ` title="${esc(tip)}"` : ""}>${label}${crown ? CROWN : ""}</b>`;
 }
+/* the commander's ship's mark */
+export const CROWN = '<svg class="crn" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 8l4.5 4L12 4l4.5 8L21 8l-2 11H5z"/></svg>';
 /* A squadron's own colour ties its header and its members together. */
 /* A squadron's colour is its letter's (T42): A to F take the six colours and
    G starts them again, for a capital squadron and a mixed escort squadron
@@ -817,7 +822,9 @@ export function cmdLine(j){
   const C = appState.U[j].R, ld = C.leadership;
   /* another commander's Leadership is the player's, in the tapped value (T40) */
   const ldTxt = !ld || ld.value == null ? "" : (ld.kind === "fixed" ? "Ld " + ld.value : "+" + ld.value + " Ld") + (j === appState.G.cmd ? "" : " (in the tapped value)");
-  return `<div class="cmdl"><span class="tag">CMD</span><b>${esc(unitName(j))}</b><small>${ldTxt}${rrWords(C)}</small>${wlExtra(j)}</div>${rrBoxesHTML(j)}`;
+  /* aboard an escort: the crowned box is his ship; gone, he is (T64) */
+  const gone = cmdGone(j) ? `<small class="cmdgone">† his ship is destroyed: his re-rolls${isWarlord(j) ? " and +2 boarding" : ""} are lost</small>` : "";
+  return `<div class="cmdl${gone ? " gone" : ""}"><span class="tag">CMD</span><b>${esc(unitName(j))}</b>${gone || `<small>${ldTxt}${rrWords(C)}</small>${wlExtra(j)}`}</div>${rrBoxesHTML(j)}`;
 }
 /* A ship's own re-rolls on its card: the sentence and the boxes. */
 export function shipRRLine(i){
@@ -858,7 +865,7 @@ export function rrBoxesHTML(i){
      brings the box back then. */
   const perTurn = !pool.rerollsPerTurn ? "" : OPT.orders ? " " + MID + " back every turn (Fleets p. 241)"
     : " " + MID + " 1 per turn (Fleets p. 241): back at NEW TURN - tap it back yourself for the enemy's turn";
-  const note = pool.rerollsLost ? (i >= 0 && i !== appState.G.cmd ? "lost: his ship's bridge smashed (p. 67)" : "lost: flagship bridge smashed (p. 67)")
+  const note = pool.cmdGone ? "lost: his ship destroyed" : pool.rerollsLost ? (i >= 0 && i !== appState.G.cmd ? "lost: his ship's bridge smashed (p. 67)" : "lost: flagship bridge smashed (p. 67)")
     : (left + " of " + boxes.length + " left") + perTurn + (open ? " " + MID + " + open option: tap if bought" : "");
   return `<div class="rrb">${boxes.map((b, k) =>
       `<button class="rrx ${b.kind}${b.used ? " used" : ""}" data-act="rrbox" data-i="${i}" data-arg="${k}" aria-pressed="${b.used}"${b.lost ? " disabled" : ""} aria-label="${esc("Re-roll " + (k + 1) + " of " + boxes.length + ", " + (RR_TIP[b.kind] || "") + ": " + (b.lost ? "lost" : b.used ? "used" : "free"))}" title="${esc(RR_TIP[b.kind] || "")}"><b>RR</b><small>${RR_WORD[b.kind] || ""}</small></button>`).join("")}${
@@ -1009,8 +1016,8 @@ export function renderRow(i, inGroup){
       <button class="crit" data-act="pop" data-i="${i}" data-arg="crit" ${v.quadGone ? "disabled" : ""}>Crit<small>${critLine}</small></button>
     </div>`;
   const r1tail = compact
-    ? (v.destroyed ? "" : (inGroup ? "" : ldTile(i, "", true)) + (esq ? "" : `<button class="crit cmini" data-act="pop" data-i="${i}" data-arg="crit" ${v.quadGone ? "disabled" : ""}>Crit<small>${critLine}</small></button>`) + (inGroup ? "" : playedBtn(i, v)))
-    : (inGroup || v.destroyed ? "" : ldTile(i) + playedBtn(i, v));
+    ? (v.destroyed ? "" : (inGroup ? (esq ? "" : ownLdTile(i, true)) : ldTile(i, "", true)) + (esq ? "" : `<button class="crit cmini" data-act="pop" data-i="${i}" data-arg="crit" ${v.quadGone ? "disabled" : ""}>Crit<small>${critLine}</small></button>`) + (inGroup ? "" : playedBtn(i, v)))
+    : (v.destroyed ? "" : inGroup ? (esq ? "" : ownLdTile(i)) : ldTile(i) + playedBtn(i, v));
   return `<section class="${cls}" data-u="${i}" style="--kd:${kd};--km:${km}${sqc ? ";--sq:" + sqc : ""}">
     <div class="r1"><span class="tag">${classTag(R)}${esq ? TIMES + v.alive : ""}</span>${inGroup ? `<span class="tag sq" title="Squadron ${grpHTML(appState.G.grp[i])}">SQN ${grpHTML(appState.G.grp[i])}</span>` : ""}${wlTag(i)}
       <button class="name" data-act="sheet" data-i="${i}"><b>${esc(unitName(i))}</b><small>${esc(sub)}</small></button>

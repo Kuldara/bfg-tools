@@ -783,6 +783,27 @@ p. 100 (not 109) and the Inquisitor's +1 pp. 150-151 (v0.36 pp. 140-142).
 `warlordSwapPartners`, `applySwaps`), `src/game-state.js` (Apply, the free
 escorts, the swaps), `test_play.js`, `smoke_play.js`, `check_mob.js` (Chrome).
 
+**T64. A commander aboard an escort, and a capital ship's own Leadership in
+a squadron** (the owner, 6.11.2026).
+- A Warlord "must be embarked on the most expensive ship under his own command
+  ... even if it is an escort - annotate which one it is" (Fleets p. 374). On
+  an escort card the page annotates it: the card's last paid ship (the
+  highest number, a Young Gun's free box never) has a crown. Any escort
+  carrying a commander gets it, not only an Ork's.
+- That ship destroyed, the commander is gone with it: his re-rolls are lost
+  for the battle as with a Bridge Smashed (p. 67), a Warlord's +2 boarding
+  roll (p. 374) with them, and a Leadership his line gave the squadron goes
+  back to its roll. The book says it only of the bridge; that a commander
+  does not outlive his ship is the owner's reading. The box tapped back (a
+  mis-tap), all of it comes back; a Bridge Smashed taken before stays.
+- In a squadron of capital ships each card shows its own Leadership,
+  dashed and marked *own*, beside the squadron's value in the header, which
+  is the one tested (p. 95, the highest of the squadron). It is to read: the
+  set-up and the header's tile set it.
+**Code and tests:** `src/game-state.js` (`cmdCrown`, `syncCmdShip`, `cmdGone`),
+`src/render.js` (`memberBox`, `cmdLine`, `rrBoxesHTML`), `src/derived.js`
+(`ownLdTile`), `smoke_play.js`.
+
 ## What is not tracked, and why
 
 - The strength of torpedo salvoes and attack craft markers on the table

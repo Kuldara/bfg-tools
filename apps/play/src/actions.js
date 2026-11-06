@@ -2,7 +2,7 @@ import { appState } from "./state.js";
 import { KEY_INFO, KEY_PLAY, OPT, TRACK, lsDel, lsGet, lsSet, normaliseUntracked, saveOpts } from "./storage.js";
 import { $ } from "./helpers.js";
 import { resolveFleet } from "./fleet-document.js";
-import { KEY_VIEW, KEY_WAKE, applyCommanderLd, cmdsAboard, coCmd, forgetLdDie, isEscGrp, nextSqn, rollAllLd, rollAllPre, rollLd, save, setLd, setPre, swapFleetRes,
+import { KEY_VIEW, KEY_WAKE, applyCommanderLd, syncCmdShip, cmdsAboard, coCmd, forgetLdDie, isEscGrp, nextSqn, rollAllLd, rollAllPre, rollLd, save, setLd, setPre, swapFleetRes,
   applyYG, endSwapOf, endSwapsAt, setSwap, setYG, skwCards, skwHead, skwLd, skwName, skwUnits, syncSwaps, tiddlaHeads, unapplyCards } from "./game-state.js";
 import { crippledNow, unitName } from "./derived.js";
 import { jumpTo, pageLabel, render, rrOpen, rrPool, showPop, topRow, wake } from "./render.js";
@@ -297,7 +297,7 @@ export function act(name, i, arg){
     }
     /* a unit that cannot move goes straight to SHOT (Rulebook p. 100) */
     case "played": members(i).forEach(j => PLAY.cyclePlayed(appState.G.st[j], appState.U[j].R)); break;
-    case "kill": if(st.members[arg].dead) PLAY.reviveMember(st, arg); else PLAY.killMember(st, arg); break;
+    case "kill": if(st.members[arg].dead) PLAY.reviveMember(st, arg); else PLAY.killMember(st, arg); syncCmdShip(i); break;
     case "hulk": {
       /* arg = index into PLAY.catastrophic(R).rows, or "boarded" (p. 90);
          only a ship at 0 hits takes a result */
@@ -314,7 +314,7 @@ export function act(name, i, arg){
        a critical's extra damage already in it; a ship boarded to 0 is a drifting
        hulk without a roll (p. 90) */
     case "boardres": arg.forEach(x => {
-      if(PLAY.isEscort(R)){ if(x.fin <= 0) PLAY.killMember(st, x.m); return; }
+      if(PLAY.isEscort(R)){ if(x.fin <= 0){ PLAY.killMember(st, x.m); syncCmdShip(i); } return; }
       PLAY.addHits(R, st, x.before - x.fin);
       x.crits.forEach(c => {
         const keys = R.damage && R.damage.critical && R.damage.critical.rows ? R.damage.critical.rows.map(r => String(r[0])) : [];

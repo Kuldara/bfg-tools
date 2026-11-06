@@ -143,6 +143,40 @@ export function cmdsAboard(i){
   Object.keys(appState.G.on || {}).forEach(j => { if(appState.G.on[j] === i) out.push(+j); });
   return out;
 }
+/* A commander aboard an escort squadron (a Warlord "must be embarked on the
+   most expensive ship under his own command ... even if it is an escort -
+   annotate which one it is", Fleets p. 374): the card's last paid ship
+   carries him - its box has a crown (the owner, 6.11.2026). -1: none. */
+export function cmdCrown(i){
+  const st = appState.G.st[i], R = appState.U[i] && appState.U[i].R;
+  if(!R || R.kind !== "ship" || !PLAY.isEscort(R) || !Array.isArray(st.members) || !cmdsAboard(i).length) return -1;
+  for(let k = st.members.length - 1; k >= 0; k--) if(!st.members[k].free) return k;
+  return -1;
+}
+/* The crowned ship gone, the commander is gone with it (the owner,
+   6.11.2026, RULINGS.md T64): his re-rolls are lost as with a Bridge
+   Smashed (p. 67), his +2 boarding roll too, and a Leadership his line gave
+   the squadron goes back to its roll. The ship back (a mis-tap), all of it
+   comes back. st.cmdDead on the card marks the state. */
+export function syncCmdShip(i){
+  const k = cmdCrown(i);
+  if(k < 0) return;
+  const st = appState.G.st[i], dead = !!st.members[k].dead;
+  if(dead === !!st.cmdDead) return;
+  if(dead) st.cmdDead = true; else delete st.cmdDead;
+  cmdsAboard(i).forEach(j => {
+    const pool = j === appState.G.cmd ? appState.G.fleet : appState.G.st[j];
+    if(!pool) return;
+    if(dead){ pool.cmdGone = true; if(!pool.rerollsLost){ PLAY.flagshipBridgeSmashed(pool); pool.lostWithShip = true; } }
+    else { delete pool.cmdGone; if(pool.lostWithShip){ delete pool.lostWithShip; PLAY.flagshipBridgeRestored(pool); } }
+  });
+  if(i === appState.G.flag){
+    if(dead) skwCards(i).forEach(j => { const s = appState.G.st[j]; if(s.ldFrom === "commander"){ s.ld = s.ldRoll; s.ldFrom = null; } });
+    else applyCommanderLd();
+  }
+}
+/* commander j's ship is gone (syncCmdShip) */
+export const cmdGone = j => { const p = j === appState.G.cmd ? appState.G.fleet : appState.G.st[j]; return !!(p && p.cmdGone); };
 /* A commander equal to the fleet commander - a second or third Ork
    Warlord: he leads ships of his own, so a Bridge Smashed on his ship loses
    his re-rolls as the flagship's loses the fleet commander's (p. 67, T43). */
@@ -172,8 +206,8 @@ export function wlTag(i){
    not like them (a once-per-game thing at the same place on the card) */
 export function wl2Box(j){
   if(!(j >= 0 && isWarlord(j) && appState.L0.clanz)) return "";
-  const used = !!appState.G.st[j].wl2;
-  return `<button class="rrx b2${used ? " used" : ""}" data-act="wl2" data-i="${j}" aria-pressed="${used}" aria-label="${used ? "Plus 2 to a boarding roll: used" : "Plus 2 to one boarding roll this game: free"}" title="Fleets p. 374: a Warlord adds +2 to one boarding dice roll per game"><b>+2</b><small>boarding</small></button>`;
+  const used = !!appState.G.st[j].wl2, gone = cmdGone(j);
+  return `<button class="rrx b2${used || gone ? " used" : ""}" data-act="wl2" data-i="${j}" aria-pressed="${used}"${gone ? " disabled" : ""} aria-label="${used ? "Plus 2 to a boarding roll: used" : "Plus 2 to one boarding roll this game: free"}" title="Fleets p. 374: a Warlord adds +2 to one boarding dice roll per game"><b>+2</b><small>boarding</small></button>`;
 }
 export function wlExtra(j){
   if(!isWarlord(j)) return "";

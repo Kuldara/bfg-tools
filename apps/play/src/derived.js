@@ -91,6 +91,15 @@ export function ldTile(i, extraCls, short){
 }
 
 
+/* A capital ship in a squadron: its own Leadership beside the squadron's
+   (the owner, 6.11.2026: "show the ship's own Ld too, marked as its own -
+   sometimes it matters"). The squadron tests on the header's value (p. 95);
+   this one is to read, the set-up and the header's tile set it. */
+export function ownLdTile(i, short){
+  const l = PLAY.leadership(appState.U[i].R, appState.G.st[i], appState.G.fleet);
+  const mods = l.mods.map(m => (m.v > 0 ? "+" : "") + m.v + " " + m.t.split(" ")[0]).join(" ");
+  return `<span class="ldt own" title="This ship's own Leadership${mods ? " (" + esc(mods) + ")" : ""}. The squadron tests on the Ld in its header (p. 95)." aria-label="Own Leadership ${l.now == null ? "not set" : l.now}"><b>${l.now == null ? "?" : l.now}</b><small>own${short || !mods ? "" : " " + esc(mods)}</small></span>`;
+}
 export function ordChip(st){
   if(st.order === "BFI" || st.braceTurn) return `<span class="chip br">BRACED</span>`;
   if(st.order) return `<span class="chip ord">${esc(PLAY.ORDER_BY[st.order].name)}</span>`;
