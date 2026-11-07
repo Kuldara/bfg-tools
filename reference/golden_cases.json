@@ -7426,15 +7426,15 @@
       "select": [],
       "expect": {
         "points": 155,
-        "max_points": 180,
+        "max_points": 200,
         "card_contains": [
-          "max 180"
+          "max 200"
         ],
         "card_lacks": [
           "max 175"
         ]
       },
-      "why": "Fleets p.384: 'May replace its prow heavy gun battery with a torpedo launcha ... at no extra points cost' and 'If fitted with a torpedo launcha, it may carry boarding torpedoes ... at a cost of +5 pts'; the list p.369 DAKKA DAKKA: 'Ork capital ships can add +2 turrets to their ships for +20 points'. The most expensive legal configuration is 155 + 0 + 5 + 20 = 180. Spot check 21 (12.10.2026): the card read 'max 175' - the search did not open the free prerequisite, so the +5 behind it was not counted."
+      "why": "Fleets p.384: 'May replace its prow heavy gun battery with a torpedo launcha ... at no extra points cost' and 'If fitted with a torpedo launcha, it may carry boarding torpedoes ... at a cost of +5 pts'; the list p.369 DAKKA DAKKA: 'Ork capital ships can add +2 turrets to their ships for +20 points'; and since 7.11.2026 the Special Torpedoes roll, 20 pts (p. 19, offered on the Waaagh! list, legal with a Warlord aboard who has Looted Torpedoes, p. 368). The most expensive configuration is 155 + 0 + 5 + 20 + 20 = 200. Open question, not decided here: RB p.79 speaks of 'boarding torpedoes or any other “special” torpedo type' and p.19 allows one special torpedo type per ship; the builder offers both rows on every list as before. Spot check 21 (12.10.2026): the card read 'max 175' - the search did not open the free prerequisite, so the +5 behind it was not counted."
     },
     {
       "id": "dragonship-ceiling-counts-vampire-raiders",

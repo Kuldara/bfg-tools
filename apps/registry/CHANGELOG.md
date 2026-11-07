@@ -5,6 +5,9 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 
 ## Unreleased
 
+### Fixed
+- Ork Waaagh!: special torpedoes (20 pts, Strength up to 6) are offered to a capital ship with torpedoes (Fleets p. 19). Looted Torpedoes is the Warlord's vessel upgrade on this list (p. 368), so the row was never offered; now the legality panel says "Special torpedoes: <ship>" green with a Warlord aboard who has Looted Torpedoes, red without (7.11.2026). Da Ork Clanz is as before: the ship buys Looted Torpedoes itself.
+
 ### Changed
 - Da Ork Clanz: picking or changing a Warlord's clan leaves a paid clan's row at Option on each of his skwadrons - on the card, not bought - to be taken where the skwadron pays for the benefit (Fleets p. 371; 7.11.2026). A free clan (Blood Axes, Snakebites) is still taken, since it costs nothing and the Blood Axe tiddla's commandeered escorts need it. A row already taken stays taken.
 - A squadron's number of ships is its own mark right after the class, "Brute Ram Ship ×3", open or folded (6.11.2026: the second thing to read, it was small print). The folded line no longer repeats it.

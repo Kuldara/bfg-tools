@@ -416,8 +416,17 @@ for Lx in lists_out:
         _add.append(("Special torpedoes (Eldar, Strength up to 6)", 40, dict(_ST_BASE, tsmax=6, **_fl)))
         _add.append(("Special torpedoes (Eldar, Strength 7 or more)", 60, dict(_ST_BASE, tsmin=7, **_fl)))
     if "ORK" in _grp:
+        # Where Looted Torpedoes is the Warlord's vessel upgrade (Waaagh!, p. 368:
+        # "A vessel carrying a Warlord ... may include up to one of the upgrades
+        # shown below"), it is bought on the Warlord, not the ship: the row is
+        # offered to the ship and the fleet check "Special torpedoes: <ship>"
+        # asks for a Warlord aboard with it (packages/rules fleet-specials.js,
+        # user 7.11.2026). Where a ship buys it (Da Ork Clanz Gubbins) the row
+        # waits for it on the ship.
+        _lt_ship = any(re.match(r"^Looted Torpedoes", str(e.get("l") or "")) and s_["t"].strip().upper() != "WARLORD"
+                       for s_ in Lx["secs"] for e in s_["ents"] if e.get("k") == "up")
         _add.append(("Special torpedoes (Looted Torpedoes)", 20,
-                     dict(_ST_BASE, fl=r"^ORK", up=r"^Looted Torpedoes")))
+                     dict(_ST_BASE, fl=r"^ORK", up=r"^Looted Torpedoes") if _lt_ship else dict(_ST_BASE, fl=r"^ORK")))
     if not _add:
         continue
     _sec = [x for x in Lx["secs"] if x["t"].strip().upper() == "ORDNANCE"]

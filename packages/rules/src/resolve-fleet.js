@@ -12,7 +12,7 @@ import { citeText, clanzCommand, fleetFacts, placeCommanders } from "./fleet.js"
 import { checkCommanderPrice, checkDefences, checkOptionShares, checkRequiredWeapons, checkUnitIssues, checkWarmasterMark, checkWebway } from "./fleet-purchases.js";
 import { checkReserveRaces, checkReserveSources, checkReserveTypes } from "./fleet-reserves.js";
 import { checkRowLimits, checkSectionRules, fleetCounters } from "./fleet-sections.js";
-import { checkBorrowedShips, checkHulkPowerfields, checkListSpecials, checkOrkClanz, checkSquadronMix, checkSquadrons } from "./fleet-specials.js";
+import { checkBorrowedShips, checkHulkPowerfields, checkListSpecials, checkLootedSpecialTorpedoes, checkOrkClanz, checkSquadronMix, checkSquadrons } from "./fleet-specials.js";
 import { roleOfIntent } from "./lending.js";
 import { shareSkwadronUpgrades } from "./skwadron.js";
 import { resolveUnit } from "./unit.js";
@@ -105,6 +105,7 @@ export function resolveFleet(fleetIntent, catalog){
   checkListSpecials(F);
   var wsum = checkOrkClanz(F);
   checkHulkPowerfields(F);
+  checkLootedSpecialTorpedoes(F);
   aboard.forEach(function(a){
     if(!a.ruled) return;
     var cm = members[a.unit], sm = a.ship != null ? members[a.ship] : null;

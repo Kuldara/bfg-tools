@@ -7191,6 +7191,32 @@ var __rules = (() => {
     }
     return wsum;
   }
+  function checkLootedSpecialTorpedoes(F) {
+    var members = F.members, out = F.out, aboard = F.aboard || [];
+    var took = function(m, re) {
+      return !!(m && m.R && (m.R.upgrades || []).some(function(u) {
+        return u.state === "take" && re.test(String(u.label || ""));
+      }));
+    };
+    var ST = /^Special torpedoes \(Looted Torpedoes\)/i, LT = /^Looted Torpedoes/i;
+    members.forEach(function(m, i) {
+      if (!m.R || m.R.kind !== "ship" || !took(m, ST) || took(m, LT)) return;
+      var cms = aboard.filter(function(a) {
+        return a.ship === i;
+      }).map(function(a) {
+        return members[a.unit];
+      });
+      var ok = cms.some(function(c) {
+        return took(c, LT);
+      });
+      out.push({
+        ok,
+        t: "Special torpedoes: " + m.en.l,
+        v: ok ? "Looted Torpedoes of the Warlord aboard" : "only with Looted Torpedoes: a Warlord aboard who has them",
+        s: "Fleets pp. 19, 368"
+      });
+    });
+  }
   function checkHulkPowerfields(F) {
     var L = F.L, members = F.members, out = F.out, tookUp = F.tookUp, upRows = F.upRows, aboard = F.aboard;
     if (L.hulk_pf) {
@@ -7439,6 +7465,7 @@ var __rules = (() => {
     checkListSpecials(F);
     var wsum = checkOrkClanz(F);
     checkHulkPowerfields(F);
+    checkLootedSpecialTorpedoes(F);
     aboard.forEach(function(a) {
       if (!a.ruled) return;
       var cm = members[a.unit], sm = a.ship != null ? members[a.ship] : null;

@@ -10334,6 +10334,118 @@
         ]
       },
       "why": "Ruling T62 (open interpretation). Bakka p.49 takes Mechanicus cruisers 'instead of and in the same manner as Imperial Navy battlecruisers', a rule of the Bakka list, which prints them under 'Battlecruisers'. In another list the ship is what its class says, a cruiser: it counts towards 'one battlecruiser for every two cruisers' and uses no battlecruiser slot."
+    },
+    {
+      "id": "waaagh-special-torps-warlord-with-looted-aboard",
+      "page": 19,
+      "fleet": {
+        "list": "Orks — Waaagh!",
+        "limit": 1500,
+        "units": [
+          {
+            "entry": "^Ork Warlord",
+            "aboard": "^Hammer",
+            "ups": [
+              {
+                "upgrade": "^Looted Torpedoes"
+              }
+            ]
+          },
+          {
+            "entry": "^Hammer",
+            "ups": [
+              {
+                "upgrade": "^Special torpedoes \\(Looted Torpedoes\\)"
+              }
+            ]
+          },
+          {
+            "entry": "^Kill kroozer"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Special torpedoes: Hammer",
+            "ok": true
+          }
+        ]
+      },
+      "why": "Fleets p. 19: “Ork ships may only use special torpedoes if they have been upgraded to have Looted Torpedoes, but count as having a Torpedo Strength of up to 6.” In the Waaagh! list Looted Torpedoes is the Warlord's vessel upgrade (p. 368: “A vessel carrying a Warlord ... may include up to one of the upgrades shown below”), so the ship that carries a Warlord with it may roll on the Special Torpedoes table (20 pts, Strength up to 6). User 7.11.2026."
+    },
+    {
+      "id": "waaagh-special-torps-warlord-without-looted",
+      "page": 19,
+      "fleet": {
+        "list": "Orks — Waaagh!",
+        "limit": 1500,
+        "units": [
+          {
+            "entry": "^Ork Warlord",
+            "aboard": "^Hammer"
+          },
+          {
+            "entry": "^Hammer",
+            "ups": [
+              {
+                "upgrade": "^Special torpedoes \\(Looted Torpedoes\\)"
+              }
+            ]
+          },
+          {
+            "entry": "^Kill kroozer"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Special torpedoes: Hammer",
+            "ok": false
+          }
+        ]
+      },
+      "why": "Fleets p. 19: “Ork ships may only use special torpedoes if they have been upgraded to have Looted Torpedoes, but count as having a Torpedo Strength of up to 6.” In the Waaagh! list Looted Torpedoes is the Warlord's vessel upgrade (p. 368: “A vessel carrying a Warlord ... may include up to one of the upgrades shown below”), so the ship that carries a Warlord with it may roll on the Special Torpedoes table (20 pts, Strength up to 6). User 7.11.2026."
+    },
+    {
+      "id": "waaagh-special-torps-looted-warlord-on-another-ship",
+      "page": 19,
+      "fleet": {
+        "list": "Orks — Waaagh!",
+        "limit": 1500,
+        "units": [
+          {
+            "entry": "^Ork Warlord",
+            "aboard": "^Kill kroozer",
+            "ups": [
+              {
+                "upgrade": "^Looted Torpedoes"
+              }
+            ]
+          },
+          {
+            "entry": "^Hammer",
+            "ups": [
+              {
+                "upgrade": "^Special torpedoes \\(Looted Torpedoes\\)"
+              }
+            ]
+          },
+          {
+            "entry": "^Kill kroozer"
+          }
+        ]
+      },
+      "expect": {
+        "checks": [
+          {
+            "label": "^Special torpedoes: Hammer",
+            "ok": false
+          }
+        ]
+      },
+      "why": "Fleets p. 19: “Ork ships may only use special torpedoes if they have been upgraded to have Looted Torpedoes, but count as having a Torpedo Strength of up to 6.” In the Waaagh! list Looted Torpedoes is the Warlord's vessel upgrade (p. 368: “A vessel carrying a Warlord ... may include up to one of the upgrades shown below”), so the ship that carries a Warlord with it may roll on the Special Torpedoes table (20 pts, Strength up to 6). User 7.11.2026."
     }
   ]
 }

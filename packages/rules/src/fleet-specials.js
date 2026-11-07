@@ -439,6 +439,27 @@ export function checkOrkClanz(F){
   return wsum;
 }
 
+/* Ork special torpedoes where Looted Torpedoes is the Warlord's vessel
+   upgrade (Waaagh!, Fleets p. 368): "Ork ships may only use special torpedoes
+   if they have been upgraded to have Looted Torpedoes" (p. 19). The row is the
+   ship's; the Looted Torpedoes are the Warlord's, so whether the ship has them
+   depends on who is aboard - placement never changes a price (J8), so it is
+   a check (user 7.11.2026). A ship that bought Looted Torpedoes itself (Da Ork
+   Clanz Gubbins) needs no row: its condition already asks for them. */
+export function checkLootedSpecialTorpedoes(F){
+  var members = F.members, out = F.out, aboard = F.aboard || [];
+  var took = function(m, re){ return !!(m && m.R && (m.R.upgrades || []).some(function(u){ return u.state === "take" && re.test(String(u.label || "")); })); };
+  var ST = /^Special torpedoes \(Looted Torpedoes\)/i, LT = /^Looted Torpedoes/i;
+  members.forEach(function(m, i){
+    if(!m.R || m.R.kind !== "ship" || !took(m, ST) || took(m, LT)) return;
+    var cms = aboard.filter(function(a){ return a.ship === i; }).map(function(a){ return members[a.unit]; });
+    var ok = cms.some(function(c){ return took(c, LT); });
+    out.push({ ok: ok, t: "Special torpedoes: " + m.en.l,
+      v: ok ? "Looted Torpedoes of the Warlord aboard" : "only with Looted Torpedoes: a Warlord aboard who has them",
+      s: "Fleets pp. 19, 368" });
+  });
+}
+
 /* A Warlord aboard a space hulk: Extra Powerfields at its own price. */
 export function checkHulkPowerfields(F){
   var L = F.L, members = F.members, out = F.out, tookUp = F.tookUp, upRows = F.upRows, aboard = F.aboard;
