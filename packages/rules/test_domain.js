@@ -2879,7 +2879,7 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
       name: "", note: "", adjust: 0, custom: null, members: [], options: {}, upgrades: {} }, { list: L }, catalog); };
   const WA = catalog.lists.filter(L => L.nm === "Orks \u2014 Waaagh!")[0], IY = catalog.lists.filter(L => L.nm === "Eldar \u2014 Iyanden Craftworld")[0];
   const kk = mkRef(WA, "382"), dr = mkRef(IY, "330");
-  check("Kill kroozer: ceiling 180 (launcha 0 + boarding torpedoes 5 + Dakka Dakka 20)", kk.maxPoints === 180, kk.maxPoints);
+  check("Kill kroozer: ceiling 200 (launcha 0 + boarding torpedoes 5 + Dakka Dakka 20 + special torpedoes 20, Waaagh! since 7.11.2026, Fleets pp. 19, 368)", kk.maxPoints === 200, kk.maxPoints);
   check("Dragonship: ceiling 350 (behind the launch bays choice torpedo bombers 60 + Vampire raiders 10, and the Aspect Warrior Host 20)", dr.maxPoints === 350, dr.maxPoints);
   check("... and the price does not change: 155 and 260", kk.points === 155 && dr.points === 260, JSON.stringify([kk.points, dr.points]));
   /* A choose-one group: when one is taken, the others are no longer Options but
