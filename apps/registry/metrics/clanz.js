@@ -238,10 +238,14 @@ function inPage(){
       ws.forEach((w, k) => {
         const wi = S.units.indexOf(w), R = resolveUnit(w);
         const mine = S.units.filter((u, i) => RF.command && RF.command[i] === wi);
-        const clans = []; mine.forEach(u => resolveUnit(u).upgrades.forEach(x => {
-          const m = /^Clan: (\w[\w ]*?) \(/.exec(String(x.label)); if(m && x.state === "take" && clans.indexOf(m[1]) < 0) clans.push(m[1]); }));
-        out["W" + (k + 1)] = { rr: R.rerolls ? R.rerolls.total : 1, clan: clans.join(","), ships: mine.map(name).sort(),
-          clanAll: mine.every(u => resolveUnit(u).upgrades.some(x => /^Clan: /.test(x.label) && x.state === "take") || !resolveUnit(u).upgrades.some(x => /^Clan: /.test(x.label))) };
+        /* his clan is the one picked in his block; since 7.11.2026 (the user)
+           a paid clan's row stands at Option on each skwadron, so "on every
+           skwadron" is the row offered (Option or taken), none of another clan taken */
+        const clan = w.clan || "";
+        const rowOf = u => resolveUnit(u).upgrades.filter(x => /^Clan: /.test(x.label));
+        out["W" + (k + 1)] = { rr: R.rerolls ? R.rerolls.total : 1, clan: clan, ships: mine.map(name).sort(),
+          clanAll: mine.every(u => !rowOf(u).length || rowOf(u).some(x => x.label.indexOf("Clan: " + clan + " (") === 0 && x.state !== "off") &&
+                                   !rowOf(u).some(x => x.state === "take" && x.label.indexOf("Clan: " + clan + " (") !== 0)) };
       });
       const bad = RF.checks.filter(c => !c.ok).map(c => c.t + " = " + c.v);
       return { counts: C, warlords: out, bad: bad, total: total(), names: Object.keys(NAMES) };

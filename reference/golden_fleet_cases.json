@@ -9267,7 +9267,7 @@
         ]
       },
       "expect": {
-        "total": 270,
+        "total": 250,
         "checks": [
           {
             "label": "^Warlord 1: one clan",
@@ -9276,7 +9276,7 @@
           }
         ]
       },
-      "why": "Fleets p. 371: “A Warlord and his skwadrons may only be from one clan, but as many different clans as desired can be in a single fleet.” The Warlord is a Goff, so his kroozer that bought Evil Sunz is a second clan (RAW-04). The Brutes take their Warlord's Goffs as they are added (J226). Kill kroozer 155 + Evil Sunz 20 + 3 x Brute ramship 25 + Goffs 20 = 270."
+      "why": "Fleets p. 371: “A Warlord and his skwadrons may only be from one clan, but as many different clans as desired can be in a single fleet.” The Warlord is a Goff, so his kroozer that bought Evil Sunz is a second clan (RAW-04). The Brutes are offered their Warlord's Goffs as they are added (J226), at Option since 7.11.2026 (the user: a paid clan is not bought by itself; p. 371 lets a skwadron leave the benefit unpaid). Kill kroozer 155 + Evil Sunz 20 + 3 x Brute ramship 25 = 250."
     },
     {
       "id": "clanz-goff-warlord-zukov-and-a-goff-kill",
