@@ -120,22 +120,41 @@ const run = async (cd, js) => JSON.parse(await cd.evaluate("(async () => { " + H
     check("a Goff Warlord: only the Goffs row on his tiddla", goff, ["Goffs"]);
     /* a clan changed on the fly leaves no price behind (user 2.11.2026): the
        same ship costs the same as with that clan picked from the start */
-    const flyCase = (from, row, to) => "(async () => { " + HELP + START + `
+    const flyCase = (from, row, to, again) => "(async () => { " + HELP + START + `
       const add = re => { const L = G.LISTS[S().li]; for(let si = 0; si < L.secs.length; si++) for(let ei = 0; ei < L.secs[si].ents.length; ei++) if(re.test(L.secs[si].ents[ei].l) && L.secs[si].ents[ei].k !== 'up'){ G.addUnit(si, ei); G.render(); return; } };
       const pts = () => S().units.reduce((a, u) => a + (G.resolveUnit(u).points | 0), 0);
       S().units.length = 1; add(/^Gorbag/); await w();
-      ${clan(to)} const fresh = pts();
+      ${clan(to)} let fresh = pts();
+      if(${again}){ const u0 = S().units[1], up0 = G.resolveUnit(u0).upgrades.find(x => ${row}.test(x.label)), k0 = up0.key.split(":").map(Number);
+        G.setUpState(u0, k0[0], k0[1], "take"); G.render(); await w(); fresh = pts(); G.setUpState(u0, k0[0], k0[1], "opt"); G.render(); await w(); }
       ${clan(from)}
       const u = S().units[1], up = G.resolveUnit(u).upgrades.find(x => ${row}.test(x.label)), k = up.key.split(":").map(Number);
       G.setUpState(u, k[0], k[1], "take"); G.render(); await w();
       const paid = pts();
       ${clan(to)}
       return JSON.stringify({ paid, now: pts(), fresh }); })()`;
-    for (const [from, row, to] of [["Blood Axes", "/^Imperial Navy refit/", "Goffs"], ["Blood Axes", "/^Imperial Navy refit/", ""],
-                                   ["Goffs", "/^Looted Lances/", "Deathskullz"], ["Deathskullz", "/^Looted Lances/", "Goffs"]]) {
-      const f = JSON.parse(await cd.evaluate(flyCase(from, row, to)));
+    /* again: the row bought before the change stays bought (a paid clan is
+       Option since 7.11.2026, so Deathskullz no longer makes the lances free
+       by itself) - compared with the same row bought on a fresh pick */
+    for (const [from, row, to, again] of [["Blood Axes", "/^Imperial Navy refit/", "Goffs", false], ["Blood Axes", "/^Imperial Navy refit/", "", false],
+                                   ["Goffs", "/^Looted Lances/", "Deathskullz", true], ["Deathskullz", "/^Looted Lances/", "Goffs", true]]) {
+      const f = JSON.parse(await cd.evaluate(flyCase(from, row, to, again)));
       check("no price left behind: " + from + " " + row + " to " + (to || "no clan"), f.now, f.fresh);
     }
+    /* the user, 7.11.2026: taking or changing the Warlord's clan leaves its
+       row at Option on each skwadron - shown, not bought (Fleets p. 371: a
+       skwadron may leave the benefit unpaid) */
+    const optCase = JSON.parse(await cd.evaluate("(async () => { " + HELP + START + `
+      const rav = () => S().units[1], pts = () => G.resolveUnit(rav()).points;
+      const clanRows = () => G.resolveUnit(rav()).upgrades.filter(x => /^Clan: /.test(x.label)).map(x => x.label.replace(/ [(].*/, "") + ":" + x.state);
+      const p0 = pts();
+      ${clan("Goffs")} const goffs = clanRows(), p1 = pts();
+      ${clan("Evil Sunz")} const sunz = clanRows(), p2 = pts();
+      ${clan("Blood Axes")} const axes = clanRows();
+      return JSON.stringify({ p0, p1, p2, goffs, sunz, axes }); })()`));
+    check("... a free clan is taken: Blood Axes (free, its tiddla's commandeered escorts need it)", optCase.axes.filter(s => /take/.test(s)), ["Clan: Blood Axes:take"]);
+    check("a clan picked: its row is Option on the skwadron, nothing bought", [optCase.goffs.filter(s => /take/.test(s)).length, optCase.goffs.some(s => /^Clan: Goffs:opt$/.test(s)), optCase.p1 - optCase.p0], [0, true, 0]);
+    check("... and changed: the new clan's row is Option too, nothing bought", [optCase.sunz.filter(s => /take/.test(s)).length, optCase.sunz.some(s => /^Clan: Evil Sunz:opt$/.test(s)), optCase.p2 - optCase.p0], [0, true, 0]);
     check("no errors on the page", t.errs, []);
   } catch (e) {
     console.log("  FAIL  " + (e && e.stack || e)); fail++;

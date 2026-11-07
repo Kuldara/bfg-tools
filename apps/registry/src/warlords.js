@@ -271,12 +271,17 @@ export const HULK_CLAN_FX = {
   "Blood Axes": ["Warlord: random IN refit, +20"],
   "Snakebites": ["+1 to Brace"]
 };
-/* Take one clan's row on a unit, where the unit is offered it; "" takes
-   none of them (the rows go back to their open state). */
+/* Offer one clan's row on a unit, where the unit is offered it (user
+   7.11.2026: taking or changing the clan leaves it at Option on each): a
+   paid row stands at Option - on the card, not bought - and the player takes
+   it where the skwadron pays for the benefit; a free row (Blood Axes,
+   Snakebites) is taken, since it costs nothing and the Blood Axe tiddla's
+   commandeered escorts need it (p. 371; the user's choice). A row already
+   taken stays taken. "" offers none of them (the rows go back to their open
+   state). */
 /* keepOff: a move to another Warlord keeps a skwadron's own "not this
    benefit" (its clan row set off): being of a clan does not oblige it to pay
-   for the benefit (Fleets p. 371, ChatGPT audit UX-02). The Warlord's clan
-   button buys it for all, which is what it says. */
+   for the benefit (Fleets p. 371, ChatGPT audit UX-02). */
 export function setClan(u, name, keepOff){
   const ups = upgradesFor(u), C = L().clanz;
   ups.own.concat(ups.other).forEach(x => {
@@ -288,7 +293,8 @@ export function setClan(u, name, keepOff){
     /* an included clan (Zukov's Goffs, p. 383) is locked: not bought, not dropped */
     if(!m || x[2].incl) return;
     if(name && m[1].toLowerCase() === name.toLowerCase()){
-      if(!(keepOff && upState(u, x[0], x[1]) === "off")) setUpState(u, x[0], x[1], "take");
+      const st = upState(u, x[0], x[1]);
+      if(st !== "take" && !(keepOff && st === "off")) setUpState(u, x[0], x[1], x[2].p ? "opt" : "take");
     }
     else if(upState(u, x[0], x[1]) === "take") setUpState(u, x[0], x[1], "opt");
   });
@@ -695,8 +701,9 @@ export function fleetControlsHTML(RF){
       <div class="wlrow"><span class="abl">Clan</span><span class="seg wrap">${seg("data-wlclan", `data-c=""`, "None", !clan && !(W && W.clans && W.clans.length > 1))}${
         CLANS.map(c => seg("data-wlclan", `data-c="${esc(c)}"`, c, clan === c,
           hulk && c === "Evil Sunz" ? "Not for a hulk: it gives speed (Fleets p. 392)"
-            : (CI[c] ? CI[c].desc + " (" + clanCost(CI[c]) + ")" : "") + " His clan, bought for every skwadron of his;" +
-              " a skwadron may leave the benefit unpaid (Fleets p. 371): set its Clan row off under Other fleet-list upgrades.",
+            : (CI[c] ? CI[c].desc + " (" + clanCost(CI[c]) + ")" : "") + (CI[c] && CI[c].p ? " His clan: its row is put at Option on every skwadron of his;" +
+              " take it where the skwadron pays for the benefit (Fleets p. 371), under Other fleet-list upgrades."
+              : " His clan, free: taken on every skwadron of his."),
           hulk && c === "Evil Sunz" && clan !== c)).join("")}</span></div>
       <div class="wlrow"><span class="abl"></span><ul class="wlclans">${(clan && CI[clan] ? [clan] : CLANS.filter(c => CI[c]))
         .map(c => clanLineHTML(c, CI[c], hulk)).join("")}</ul></div>${
