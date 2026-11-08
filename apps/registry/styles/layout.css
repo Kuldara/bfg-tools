@@ -51,6 +51,10 @@
 .uhead button.ufold{align-self:center;flex:none;width:22px;height:22px;padding:0;border:1px solid var(--line);
   border-radius:var(--r);background:var(--panel);color:var(--ink-2);font:600 14px/1 var(--mono);cursor:pointer}
 .uhead button.ufold[aria-expanded="true"]{border-color:var(--accent);color:var(--ink)}
+/* Compact's folded ship: its numbers and weapons, as the catalogue's row */
+.ustat{margin-top:3px}
+.ustat small{display:block;color:var(--ink-3);font:400 11px/1.4 var(--mono)}
+.ustat .arms{margin-top:1px}
 .usum{margin-top:3px;font:400 12px/1.4 var(--sans);color:var(--ink-2)}
 .usum b{color:var(--ink);font-weight:600}
 

@@ -5,7 +5,8 @@
    The user 2.11.2026: panels on top of each other, in changing places, now and
    then off the screen. At a wide, a middle and a phone width: each menu opens
    at the same top and right edge, opening one closes the other, and the panel
-   stays inside the window, also with the page scrolled to its end. */
+   stays inside the window, also with the page scrolled to its end. Also the
+   fleet pane's + (a copy of a unit, user 8.11.2026). */
 "use strict";
 const fs = require("fs"), path = require("path");
 const { launch } = require("../../tools/lib/chrome.js");
@@ -98,6 +99,53 @@ const SWEEP = `(async () => {
     })()`));
     check("Text and file: beside Import file; the pasted text survives a redraw", x.beside && x.kept, x);
     check("the fleet's text, pasted back, is a new saved fleet; the screen keeps its fleet", x.parsed === 2 && x.n1 === x.n0 + 1 && x.from === "paste" && x.screen && x.cleared, x);
+    /* + on a unit (user 8.11.2026): a copy right after it with the same ship
+       count, options and upgrades, without the names or the squadron letter;
+       none on a commander. At a phone width the + stays inside its row. */
+    await cd.send("Emulation.setDeviceMetricsOverride", { width: 375, height: 800, deviceScaleFactor: 1, mobile: false });
+    const dp = JSON.parse(await cd.evaluate(`(async () => {
+      const G = GFR, S = G.appState.S, w = () => new Promise(r => setTimeout(r, 80));
+      const L = G.LISTS.findIndex(x => /Gothic Sector/.test(x.nm)); S.li = L; S.units = []; S.limit = 2000;
+      const list = G.LISTS[L], si = list.secs.findIndex(s => /^ESCORTS/.test(s.t)), ai = list.secs.findIndex(s => /^Admiral/.test(s.t));
+      G.addUnit(ai, 0);
+      /* the first escort row with an option, so that the copy has one to carry */
+      let ei = -1;
+      for (let e = 0; e < list.secs[si].ents.length && ei < 0; e++) { G.addUnit(si, e); const R = G.resolveUnit(S.units[1]); if (R && R.options.length) ei = e; else S.units.splice(1, 1); }
+      G.addUnit(si, ei);
+      const u = S.units[1]; u.n = 3; u.name = "Hunters"; u.members = "A, B, C"; u.sq = "A"; u.note = "gift"; G.setOptState(u, 0, "take");
+      G.render(); await w();
+      const strip = x => { const y = JSON.parse(JSON.stringify(x)); ["uid", "name", "members", "sq", "aboard"].forEach(k => delete y[k]); return JSON.stringify(y); };
+      const pts0 = G.total(), upts = G.unitPts(u), n0 = S.units.length;
+      const cmdBtn = !!document.querySelector('#fleet .unit[data-ui="0"] [data-dup]');
+      const b = document.querySelector('#fleet .unit[data-ui="1"] [data-dup]'), row = b.closest(".uhead").getBoundingClientRect(), bb = b.getBoundingClientRect();
+      const inside = bb.left >= row.left && bb.right <= row.right && bb.right <= document.documentElement.clientWidth;
+      b.click(); await w();
+      const c = S.units[2];
+      return JSON.stringify({ cmdBtn, inside, n: S.units.length - n0, same: c && strip(c) === strip(u), orig: S.units[1] === u, cn: c && c.n,
+        name: c && c.name, members: c && c.members, sq: c && c.sq, uid: c && c.uid !== u.uid, took: c && G.resolveUnit(c).options[0].state,
+        pts: G.total() - pts0, upts, last: S.units[3] === undefined ? "end" : "?", fresh: !!document.querySelector('#fleet .unit[data-ui="2"].new') });
+    })()`));
+    check("+ copies a unit right after it: count, options and upgrades the same", dp.n === 1 && dp.orig && dp.same && dp.cn === 3 && dp.took === "take", dp);
+    check("the copy has no names, no squadron letter and its own uid", dp.name === "" && !dp.members && dp.sq === undefined && dp.uid, dp);
+    check("the points go up by the copied unit's points; the copy is marked new", dp.pts === dp.upts && dp.upts > 0 && dp.fresh, dp);
+    check("no + on a commander; the + stays inside its row at 375 px", !dp.cmdBtn && dp.inside, dp);
+    /* Compact (user 8.11.2026): a folded ship shows its numbers and weapons
+       as the catalogue row does, after its options - a Lunar that takes the
+       nova cannon in place of its prow torpedoes (Fleets p. 71) */
+    const cp = JSON.parse(await cd.evaluate(`(async () => {
+      const G = GFR, S = G.appState.S, w = () => new Promise(r => setTimeout(r, 80));
+      const L = G.LISTS.findIndex(x => /Gothic Sector/.test(x.nm)); S.li = L; S.units = [];
+      const list = G.LISTS[L], si = list.secs.findIndex(s => /^Cruisers/.test(s.t)), ei = list.secs[si].ents.findIndex(e => /Lunar/.test(e.l));
+      G.addUnit(si, ei); G.appState.FLEET_FOLD = true; G.render(); await w();
+      const line = () => { const e = document.querySelector('#fleet .unit.folded[data-ui="0"] .ustat'); return e ? e.textContent.replace(/\\s+/g, " ") : null; };
+      const before = line();
+      const R = G.resolveUnit(S.units[0]), oi = R.options.findIndex(o => /nova cannon/i.test(o.text));
+      G.setOptState(S.units[0], R.options[oi].index, "take"); G.render(); await w();
+      const after = line(); G.appState.FLEET_FOLD = false; G.render();
+      return JSON.stringify({ before, after, oi });
+    })()`));
+    check("Compact: a folded ship shows hits, speed, shields, armour, turrets and its weapons", !!cp.before && /8 hits/.test(cp.before) && /2 sh/.test(cp.before) && /TORP/.test(cp.before) && /WB/.test(cp.before), cp);
+    check("Compact: the line follows the options taken (nova cannon in place of the torpedoes)", cp.oi >= 0 && /NOVA/.test(cp.after) && !/TORP/.test(cp.after), cp);
   } catch (e) {
     console.log("  FAIL  " + (e && e.stack || e)); fail++;
   } finally {

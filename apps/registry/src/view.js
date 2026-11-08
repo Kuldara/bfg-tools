@@ -1,7 +1,7 @@
 import { $, APP_VERSION } from "./boot.js";
 import { optCount } from "./card-model.js";
 import { resolveUnit } from "./cards.js";
-import { ARM_CLS, FLEET_FOLD_KEY, FOLDS, FOLD_KEY, L, LAST_PTS, LEND_TAG, SRC, UOPEN, applyRequired, applyTransition, armLineHTML, foldKey, isUpgradeEnt, lendCount, lendOf, midY, routeNeedsMet, routeOf, routeTag, rowLendOf, rowCards, rowSelOf, rowStepFor, rowUnits, setHull, setOptState, setUpState, shipOf, total, totalMax, unitPts } from "./model.js";
+import { ARM_CLS, FLEET_FOLD_KEY, FOLDS, FOLD_KEY, L, LAST_PTS, LEND_TAG, SRC, UOPEN, applyRequired, applyTransition, armLineHTML, unitArmLineHTML, foldKey, isUpgradeEnt, lendCount, lendOf, midY, routeNeedsMet, routeOf, routeTag, rowLendOf, rowCards, rowSelOf, rowStepFor, rowUnits, setHull, setOptState, setUpState, shipOf, total, totalMax, unitPts } from "./model.js";
 import { placeSaves } from "./panels.js";
 import { renderPrintSetup } from "./print.js";
 import { STASH_PTS, ensureUids, save, stashUnits } from "./save.js";
@@ -886,7 +886,7 @@ export function unitHTML(R, ui, st){
         : "fleet option")}${grouped && !(st.ab && st.ab.tag) ? " squadron" : ""}</span>
       <span class="pts">${R.points} pts${each}${
         R.maxPoints > R.points ? `<span class="maxp">max ${R.maxPoints}</span>` : ""}</span>
-      <button class="del" data-del="${ui}" title="Remove this unit">Remove</button>
+      <span class="uacts">${R.kind !== "commander" && !counted ? `<button type="button" class="dup" data-dup="${ui}" aria-label="Add a copy of this unit" title="Add a copy after it: the same options, upgrades and ship count, without the names">+</button>` : ""}<button class="del" data-del="${ui}" title="Remove this unit">Remove</button></span>
     </div>`;
   if(fold === "shut") return `<div class="unit folded${st.lst ? " borrowed" : ""}" data-ui="${ui}">${head}${unitSummaryHTML(R, st)}${issuesHTML(R)}</div>`;
   return `<div class="unit${st.lst ? " borrowed" : ""}" data-ui="${ui}">
@@ -931,7 +931,13 @@ export function unitSummaryHTML(R, st){
   const on = (R.options || []).filter(o => o.state === "take" && !o.forbidden && !o.fixed).length;
   if(on) bits.push(on + " option" + (on > 1 ? "s" : ""));
   if(st.note) bits.push(esc(st.note));
-  return bits.length ? `<div class="usum">${bits.join(" &middot; ")}</div>` : "";
+  /* A ship's numbers and weapons as the catalogue's row shows them, but the
+     resolved unit's: what the options taken make of it (user 8.11.2026). */
+  const S2 = R.kind === "ship" && R.stats ? R.stats : null;
+  const stat = S2 ? `<div class="ustat"><small>${esc([
+      (S2.hits || "–") + " hits", S2.speed, S2.shields + " sh", S2.armour,
+      S2.turrets + " " + (/spore/i.test(S2.turretLabel || "") ? "spores" : "tur")].join(" · "))}</small>${unitArmLineHTML(R)}</div>` : "";
+  return stat + (bits.length ? `<div class="usum">${bits.join(" &middot; ")}</div>` : "");
 }
 /* A ship's own re-rolls, for the few that have any (the Scion of Prospero's
    two, Fleets p. 260; a Mark of Tzeentch; a fortress-monastery's). */
@@ -1262,6 +1268,14 @@ export function renderFleet(){
       appState.JUST = { pop: rowSelOf(u), keep: now && i < appState.S.units.length ? [{ sel: at, mid: midY(now) }] : null };
       render();
     }, GOING_MS); });
+  /* + on a unit (user 8.11.2026): a copy right after it, at once */
+  box.querySelectorAll("[data-dup]").forEach(b => b.onclick = () => {
+    const i = +b.dataset.dup;
+    if(!appState.S.units[i]) return;
+    const at = `#fleet .unit[data-ui="${i}"] [data-dup]`;
+    appState.JUST = { keep: [{ sel: at, mid: midY(b) }] };
+    duplicateUnit(i);
+  });
   /* Reorder: drag a row's grip onto another row (its top or bottom edge),
      or press an arrow key on the grip. Merge (31.10.2026): drop it on the
      middle of a row of its kind - a unit or a squadron - and the two are one
@@ -1606,6 +1620,34 @@ export function newUnit(li2, si, ei, role){
   return u;
 }
 export function addUnit(si, ei){ addUnitFrom(appState.S.li, si, ei, null); }
+
+/* A copy of unit i right after it (user 8.11.2026). It carries what was
+   bought: the ship count, options, upgrades, clan, an open price, the card
+   note and its points adjustment, and a borrowed ship's list and role. It
+   does not carry what belongs to the one ship or squadron: the names (name,
+   members), the squadron letter (sq: the copy is a squadron of its own, so a
+   mixed squadron or an Ork kroozer skwadron does not grow behind the
+   player's back), and aboard. A commander or Warlord is never copied (no +
+   on those rows), nor is the commander riding the copied ship. An Ork ship
+   keeps its Warlord (cmd): it stands among his ships, right after the
+   original, and the checks say if he cannot take it. No undo: Remove takes
+   the copy away. */
+export function duplicateUnit(i){
+  const src = appState.S.units[i];
+  if(!src) return null;
+  const R = resolveUnit(src);
+  /* a row bought by the piece (ordnance markers, mines) has its own count */
+  if(!R || R.kind === "commander" || (R.kind !== "ship" && R.countable)) return null;
+  ensureUids(appState.S.units);
+  const u = JSON.parse(JSON.stringify(src));
+  delete u.sq; delete u.aboard;
+  u.name = ""; if(u.members) u.members = "";
+  u.uid = "u" + (++appState.UID_N);
+  appState.S.units.splice(i + 1, 0, u);
+  appState.JUST = Object.assign(appState.JUST || {}, { unit: u });
+  render();
+  return u;
+}
 
 /* Reserve or ally is the player's call, and the engine reports either way
    (Fleets pg. 14 for reserves, pg. 16 for allies). Switching it must not
