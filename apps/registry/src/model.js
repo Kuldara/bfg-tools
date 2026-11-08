@@ -106,6 +106,32 @@ export const armLineHTML = (sh, en, list) => {
   const opton = en && en.opton ? new RegExp(en.opton, "i") : null;
   const nOpt = en && en.noopt ? 0
     : (sh.ol || []).filter(o => !(optno && optno.test(String(o.t || ""))) && !(opton && opton.test(String(o.t || "")))).length;
+  const parts = armGroupParts(s);
+  /* A weapon the ship picks is not a weapon it has: the line leaves those out
+     and says how many there are to pick from. */
+  const picks = opton ? [] : s.picks;
+  if(picks.length > 2)
+    parts.push(`<span class="opts pick" title="${esc(
+      "The profile's weapons are choices: " + picks.length + " groups, one weapon from each")
+      }">${picks.length} weapon choices</span>`);
+  else picks.forEach(n => parts.push(`<span class="opts pick" title="${
+    esc("The profile's weapons are a choice: one of these " + n)}">pick 1 of ${n}</span>`));
+  /* One option is usually a +5 pts extra; from two up it changes the ship. */
+  if(nOpt >= 2) parts.push(`<span class="opts">${nOpt} options</span>`);
+  return parts.length ? `<span class="arms">${parts.join("")}</span>` : "";
+};
+/* The same line from a RESOLVED unit's weapons (user 8.11.2026: Compact's
+   folded row): an option taken adds or swaps a group, and a weapon left at
+   Option or Hide is not on it. */
+export const unitArmLineHTML = R => {
+  const rows = (R.weapons || []).filter(w => w.state !== "offered").map(w => w.a);
+  if(!rows.length) return "";
+  const parts = armGroupParts(DOMAIN.armSummaryRows(rows, 6));
+  return parts.length ? `<span class="arms">${parts.join("")}</span>` : "";
+};
+/* The weapon groups of a summary (DOMAIN.armSummary or armSummaryRows) as
+   the catalogue's line draws them: class, strengths, range. */
+function armGroupParts(s){
   /* How far each group reaches, "cm" kept so it reads as a distance; when
      every group reaches the same, it is said once at the end. */
   const lab = s.groups.map(g => rangeLabel(g.rng));
@@ -121,19 +147,8 @@ export const armLineHTML = (sh, en, list) => {
   }</span>`);
   if(one) parts.push(`<i class="rng all">all ${esc(one)}</i>`);
   if(s.more) parts.push("<span>\u2026</span>");
-  /* A weapon the ship picks is not a weapon it has: the line leaves those out
-     and says how many there are to pick from. */
-  const picks = opton ? [] : s.picks;
-  if(picks.length > 2)
-    parts.push(`<span class="opts pick" title="${esc(
-      "The profile's weapons are choices: " + picks.length + " groups, one weapon from each")
-      }">${picks.length} weapon choices</span>`);
-  else picks.forEach(n => parts.push(`<span class="opts pick" title="${
-    esc("The profile's weapons are a choice: one of these " + n)}">pick 1 of ${n}</span>`));
-  /* One option is usually a +5 pts extra; from two up it changes the ship. */
-  if(nOpt >= 2) parts.push(`<span class="opts">${nOpt} options</span>`);
-  return parts.length ? `<span class="arms">${parts.join("")}</span>` : "";
-};
+  return parts;
+}
 export const routeTag = t => /renegade/i.test(t) ? "renegade" : /ordo malleus/i.test(t)
   ? "Ordo Malleus reserve" : /reserve/i.test(t) ? "reserve fleet" : "own list";
 /* A host section's own condition (DOMAIN.sectionNeeds): met when this fleet

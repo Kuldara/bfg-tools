@@ -5,6 +5,10 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 
 ## Unreleased
 
+### Added
+- + on a unit in the fleet (8.11.2026): a copy right after it, with the same ship count, options, upgrades, clan, card note and ± points. The copy has no names and no squadron letter (it is a squadron of its own; a mixed squadron or a kroozer skwadron does not grow by itself); an Ork ship stays with its Warlord. Commanders and Warlords have no +, nor do rows bought by the piece (ordnance markers, mines: they have their own count), and a ship's riding commander is not copied. There is no undo: Remove takes the copy away.
+- Compact: a folded ship shows its numbers and weapons as the catalogue's row does (hits, speed, shields, armour, turrets; WB, LAN, TORP ...), worked out from the options taken: a Lunar with the nova cannon shows NOVA and no TORP (8.11.2026).
+
 ### Changed
 - Tyranid Hive Fleet (user 8.11.2026): the ordnance markers (Strength 4 boarding torpedo 12, assault boat 8, fighter 7 pts; Fleets p. 431) are bought in their own ORDNANCE section under the escorts, by the piece, for their points only - no card. They are no longer offered as upgrades on every ship. The 10 % share and "at least one hive ship" are checked as before.
 - Tyranid Hive Fleet: the fire ship is a ship of its own in ESCORTS, *Fire ship (escort drone)*: an escort drone that becomes a fire ship instead of taking a weapon, 10 + 5 = 15 pts (pp. 431, 437), with the fire ship rules (p. 516) on its card. It counts as an escort drone for "six escort drones for every hive ship", and the legality panel checks "up to 10 % of the escort drones". A plain escort drone no longer offers the fire ship option; a saved drone that took it opens as a drone without it.

@@ -197,4 +197,10 @@ details.rules.auto[open]>summary::after{content:" \2013"}
   font:500 11px/1 var(--sans);letter-spacing:.06em;text-transform:uppercase
 }
 .del:hover{color:var(--bad)}
+/* + : a copy of the unit after it (user 8.11.2026) */
+.uhead .dup{align-self:center;flex:none;width:28px;height:24px;padding:0;border:1px solid var(--line);
+  border-radius:var(--r);background:var(--panel);color:var(--ink-2);font:600 16px/1 var(--mono);cursor:pointer}
+.uhead .dup:hover{border-color:var(--accent);color:var(--ink)}
+/* + and Remove wrap as one, so Remove never stands alone on a line */
+.uhead .uacts{display:inline-flex;align-items:center;gap:10px;white-space:nowrap;align-self:center}
 
