@@ -332,11 +332,26 @@ const crafts = r => String(r || "").split("/").map(x => x.replace(/[()]/g, "").t
 function bayCell(list, compact){
   if(!list.length) return "";
   const live = list.filter(w => !w.silent), lost = list.filter(w => w.silent);
-  const n = live.filter(w => w.txt == null).reduce((a, w) => a + (w.now | 0), 0);
-  const words = live.filter(w => w.txt != null).map(w => w.half && DICE.test(w.txt) ? "½(" + w.txt + ")" : w.txt);
+  /* each bay's own values: a number; "1 / 1" (a port / starboard pair on
+     one row, a Hive Ship) is two numbers, halved one by one when the rules
+     layer halved the text (p. 65); a dice strength; any other text */
   const half = live.some(w => w.half);
-  const parts = (n || !words.length ? [String(n)] : []).concat(words);
-  const sum = parts.map((t, k) => (k ? `<i>+</i>` : "") + `<span${/[a-z]{3}/i.test(t) ? ' class="tx"' : ""}>${esc(t)}</span>`).join("");
+  const nums = [], dice = [], texts = [];
+  live.forEach(w => {
+    if(w.txt == null){ nums.push(w.now | 0); return; }
+    if(/^\d+(\s*\/\s*\d+)+$/.test(w.txt)){ w.txt.split("/").forEach(x => { const v = parseInt(x, 10); nums.push(w.half ? PLAY.half(v) : v); }); return; }
+    if(DICE.test(w.txt)){ dice.push(w.half ? "½(" + w.txt + ")" : w.txt); return; }
+    texts.push(w.txt);
+  });
+  const n = nums.reduce((a, v) => a + v, 0);
+  /* the sum first, strong - the numbers added up, the dice after them -
+     then what it is made of, dimmer, when it is more than one value (user
+     8.11.2026: "the sum leftmost in a strong font, then what it consists
+     of, dimmer") */
+  const join = list => list.map((t, k) => (k ? `<i>+</i>` : "") + `<span${/[a-z]{3}/i.test(t) ? ' class="tx"' : ""}>${esc(t)}</span>`).join("");
+  const sum = join((n || !(dice.length + texts.length) ? [String(n)] : []).concat(dice, texts));
+  const pieces = nums.map(String).concat(dice, texts);
+  const made = nums.length > 1 ? `<span class="bof">${esc(pieces.join(" + "))}</span>` : "";
   const was = lost.map(w => "−" + (w.txt != null ? w.txt : w.full) + (sideWord(w.name) ? " " + sideWord(w.name) : "")).join(" ");
   const seen = {}, cs = [];
   list.forEach(w => crafts(w.rtxt).forEach(c => { if(!seen[c.join()]){ seen[c.join()] = 1; cs.push(c); } }));
@@ -344,7 +359,7 @@ function bayCell(list, compact){
   const craft = !cs.length ? "" : compact ? speeds.join("/") : cs.map(c => `${esc(c[0])} <b>${c[1]}</b>`).join(" · ") + " cm";
   const tip = list.map(w => w.name + ": " + (w.txt != null ? w.txt : w.now) + (w.zone === "basilica" ? " (basilica)" : "") + (w.silent ? " · " + w.silent : "")).join("; ");
   const [letter, badge] = wepClass("launch bays");
-  return `<span class="wx span bays" style="grid-column:1 / 4" title="${esc(tip)}"><i class="bg" style="--bd:${badge}">${letter}</i><b class="bt${half ? " half" : ""}">${sum}</b>${was ? `<s class="bl">${esc(was)}</s>` : ""}${craft ? `<span class="bc">${craft}</span>` : ""}</span>`;
+  return `<span class="wx span bays" style="grid-column:1 / 4" title="${esc(tip)}"><i class="bg" style="--bd:${badge}">${letter}</i><b class="bt${half ? " half" : ""}">${sum}</b>${made}${was ? `<s class="bl">${esc(was)}</s>` : ""}${craft ? `<span class="bc">${craft}</span>` : ""}</span>`;
 }
 /* Gravitic hooks (Tau): what they carry, added up, under the map in the
    normal view - where a hook sits and its state do not matter in play, and
