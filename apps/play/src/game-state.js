@@ -726,6 +726,17 @@ export function rollLd(i, rng){
   if(swapRecs().length) syncSwaps(ms);
   return r;
 }
+/* A fleet opened for a new game (user 8.11.2026: "setting the Ld numbers
+   is pointless work - automate it, a proposal and an Apply button"): the
+   page rolls every Leadership and every pre-game die still without a
+   value at once, on the fleet's own tables, as Roll Ld and Roll upgrades
+   did on a tap. The values are a proposal: a tap on an Ld tile or an
+   upgrade's list puts the player's own in its place (T49), and Start - or
+   Apply for Da Ork Clanz - takes them. */
+export function autoRoll(rng){
+  rollAllLd(false, rng); rollAllPre(false, rng);
+  appState.G.autoRolled = true;
+}
 /* only the units still without a value; all = true rolls every one again
    (not offered on the page: user 31.10.2026, no re-roll buttons) */
 export function rollAllLd(all, rng){

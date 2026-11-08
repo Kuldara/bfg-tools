@@ -1,7 +1,7 @@
 import { appState } from "./state.js";
 import { $ } from "./helpers.js";
 import { resolveFleet } from "./fleet-document.js";
-import { loadPlay, newGame, resumeGame, save } from "./game-state.js";
+import { autoRoll, loadPlay, newGame, resumeGame, save } from "./game-state.js";
 import { act } from "./actions.js";
 import { render, tapSel } from "./render.js";
 import { builderFleets, copyText, openSend, savedFleets, takeFleetText } from "./share.js";
@@ -48,14 +48,14 @@ document.addEventListener("click", ev => {
     const f = builderFleets()[arg]; if(!f) return;
     const res = resolveFleet(f); if(res.error) return;
     if(loadPlay() && !confirm("A game is in progress. Start a new one and forget its record?")) return;
-    newGame(res); appState.V.screen = "setup"; save(); render(); return;
+    newGame(res); autoRoll(); appState.V.screen = "setup"; save(); render(); return;
   }
   /* a saved fleet (the builder's Saved fleets, share.js savedFleets) */
   if(name === "linked"){
     const f = savedFleets()[arg]; if(!f) return;
     const res = resolveFleet(f); if(res.error){ appState.V.loadErr = res.error; render(); return; }
     if(loadPlay() && !confirm("A game is in progress. Start a new one and forget its record?")) return;
-    res.src = "saved"; newGame(res); appState.V.screen = "setup"; save(); render(); return;
+    res.src = "saved"; newGame(res); autoRoll(); appState.V.screen = "setup"; save(); render(); return;
   }
   if(name === "send"){ openSend(arg); return; }
   if(name === "receive"){ location.href = "../send/index.html"; return; }
