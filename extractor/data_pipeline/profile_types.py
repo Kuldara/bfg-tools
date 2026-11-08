@@ -366,7 +366,12 @@ assert _iy == 1, "Iyanden: 1 Autarch exception expected, found %d" % _iy
 
 # J64 and J65 p.431: "Up to 10 % of the fleet's points allowance may be spent on
 # Ordnance markers as long as at least one hive ship is chosen." The markers are
-# upgrades bought for ships (up_sec). v0.40: "You may include between 0 and
+# the fleet's own rows, not a ship's: "Ordnance may be formed up into waves
+# which are treated as squadrons for the purposes of deployment" (p.431). Each
+# row is bought by the piece (k="unit", cnt=1, no profile and no card, like the
+# orbital mine) and the 10 % share counts the section's units. Until 8.11.2026
+# they were upgrades offered on every ship (up_sec), which the user found wrong:
+# a marker is not part of a ship. v0.40: "You may include between 0 and
 # 12 additional escort class ships (of any kind) for each hive ship." (at
 # most 18 with the six drones) and "If no hive ships are chosen, only Kraken
 # and Vanguard drone ships may be included in the fleet." The upper limit
@@ -377,12 +382,22 @@ _hf = 0
 for x in _HF["secs"]:
     for r in x.get("rules") or []:
         if r.get("kind") == "points_share" and str(r.get("label", "")).startswith("Ordnance markers"):
-            r["up_sec"] = _ho
+            assert any(p.get("sec") in (_ho, "ORDNANCE") for p in r.get("pick") or []), \
+                "Hive Fleet: the ordnance share no longer picks ORDNANCE"
+            r.pop("up_sec", None)
             _hf += 1
         if r.get("label") == "Escorts per hive ship (six escort drones + up to 12 more)":
             r["when_pick"] = [dict(sec=_hs, _t="hive ships")]
             _hf += 1
 assert _hf == 2, "Hive Fleet: 2 ordnance and escort rules expected, found %d" % _hf
+_hoe = _HF["secs"][_ho]["ents"]
+assert [e["l"] for e in _hoe] == ["Strength 4 boarding torpedo marker", "Assault boat marker", "Fighter marker"], \
+    "Hive Fleet: the ORDNANCE rows changed: %r" % [e["l"] for e in _hoe]
+for e in _hoe:
+    assert e.get("k") == "up" and not e.get("r"), "Hive Fleet: %r is no longer a bare upgrade row" % e["l"]
+    e["k"] = "unit"
+    e["cnt"] = 1
+    e["src_page"] = 431
 
 # --- Spot check 19 round 3 (M10r3) --------------------------------------------
 # J70 p.187: "At least one Demiurg vessel of any class may be taken for every

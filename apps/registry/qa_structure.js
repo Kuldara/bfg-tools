@@ -159,7 +159,10 @@ LISTS.forEach((L, li) => L.secs.forEach((sec, si) => sec.ents.forEach((en, ei) =
     check(Number.isFinite(hh), "squadron", at + " n=" + n + ": hulls is not a number");
     check(Number.isFinite(pts), "squadron", at + " n=" + n + ": points is not a number");
     check(!/undefined|NaN/.test(h), "squadron", at + " n=" + n + ": NaN/undefined on the card");
-    check(typeof h === "string" && h.length > 400, "squadron", at + " n=" + n + ": the card stayed empty");
+    /* a count row without a rule card (Tyranid ordnance markers, p.431) is
+       points only and prints nothing */
+    if(counted && !en.rc) check(h === "", "squadron", at + " n=" + n + ": a points-only row printed a card");
+    else check(typeof h === "string" && h.length > 400, "squadron", at + " n=" + n + ": the card stayed empty");
   });
 })));
 /* The loop must not skip the defences silently: if the flag or the rows disappear

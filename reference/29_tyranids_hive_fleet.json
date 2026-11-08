@@ -103,7 +103,7 @@
       "text": "Up to 10 % of the fleet's points allowance may be spent on Ordnance markers as long as at least one hive ship is chosen.",
       "page": 431,
       "status": "enforced",
-      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. points_share of=limit, cond: at least one hive ship. The earlier gap: a percentage share of the fleet's points limit, and a condition too ('as long as at least one hive ship'). Neither could be expressed. The ordnance markers are list rows with pric",
+      "why": "Enforced 9.9.2026 (item 8): the rule read from the book was added to build_data.py's RULE_PICKS table; resolveFleet checks it. points_share of=limit, cond: at least one hive ship. The earlier gap: a percentage share of the fleet's points limit, and a condition too ('as long as at least one hive ship'). Neither could be expressed. The ordnance markers are list rows with pric 8.11.2026 (user): the markers are the fleet's own rows, bought by the piece in the ORDNANCE section (p.431: 'Ordnance may be formed up into waves which are treated as squadrons'), and the share counts that section's units.",
       "kind": "points_share",
       "pct": 10,
       "classified_on": "2026-09-09"

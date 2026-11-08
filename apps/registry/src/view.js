@@ -452,12 +452,18 @@ export function renderCatalogue(){
              minefield p. 513): say what it is and what the player gets,
              not the builder's word for a row without a hull. */
           : sec.ct === "defence" ? "defence \u00b7 no ship profile \u00b7 prints a rules card"
+          /* bought by the piece for its price only (Tyranid ordnance markers, p. 431) */
+          : en.cnt ? "counted in the points, no card is printed"
           : "fleet option";
       /* The price is the host section's own: an Explorator Tyrant is 220 as a
          Mechanicus ship (pg. 125) but a renegade cruiser is "up to 185
          points" (pg. 232), and the renegade row carries that price. */
       const priced = hostEn || en;
-      const cost = priced.p == null ? "?" : (priced.a || up ? "+" : "") + priced.p;
+      /* a row that is the hull with an option (opton, the fire ship drone)
+         costs the option too: 10 + 5 pts (Fleets p. 431) */
+      const onRx = priced.opton && sh ? new RegExp(priced.opton, "i") : null;
+      const onPts = onRx ? (sh.ol || []).reduce((a, o) => a + (onRx.test(String(o.t || "")) && o.c > 0 ? o.c : 0), 0) : 0;
+      const cost = priced.p == null ? "?" : (priced.a || up ? "+" : "") + (priced.p + onPts);
       const rowNo = !!rv && !rv.ok;
       const rvTag = !rowNo ? "" : (rv.cause === "needs"
         ? "needs " + rv.what : rv.cause === "route" ? "not offered"
@@ -487,10 +493,14 @@ export function renderCatalogue(){
       const nIn = many ? rowUs.reduce((a, u) => a + (u.n || 1), 0) : nCards;
       const perCard = !many ? "" : buy.kind === "count" ? (buy.max == null ? "any number" : "up to " + buy.max)
         : buy.min === buy.max ? String(buy.max) : buy.kind === "group" ? "up to " + buy.max : buy.min + "&ndash;" + buy.max;
-      const cardWord = !many ? "" : buy.kind === "squadron" ? "squadron card" : "one card";
+      /* a count row with no card at all (the Tyranid ordnance markers, p.431) */
+      const noCard = many && !sh && !!(hostEn || en).cnt && !(hostEn || en).rc;
+      const cardWord = !many ? "" : noCard ? "points only" : buy.kind === "squadron" ? "squadron card" : "one card";
       const cardName = !many ? "" : buy.kind === "squadron" ? "squadron card" : "card";
       const minOn = !many ? 1 : Math.max(1, buy.min || 1);
-      const buyTip = !many ? "" : buy.kind === "squadron"
+      const buyTip = !many ? "" : noCard
+        ? "Bought by the piece for its points; no card is printed. Each + is one more, each − one less"
+        : buy.kind === "squadron"
         ? "A squadron card, " + perCard + " ships. Each + is a new squadron card of " + minOn +
           "; the newest card's own \u2212 and + under the name set its size. Each \u2212 beside the + takes this row's last card away"
         : "Sold by the card, " + perCard + " on a card. Each + is one more on this row's last " +
@@ -739,8 +749,9 @@ export function unitHTML(R, ui, st){
   /* noopt: the list forbids this hull's variants (RT Exploration p.190) -
      nothing to offer, so the block is not drawn at all. */
   /* forbidden: the list forbids that one option (Mechanicus Sharks, p. 125). */
-  const opts = R.options.some(o => !o.forbidden) && !(R.entry && R.entry.noopt)
-    ? R.options.filter(o => !o.forbidden).map(o => {
+  /* fixed: always taken by the row itself (the fire ship drone), no choice */
+  const opts = R.options.some(o => !o.forbidden && !o.fixed) && !(R.entry && R.entry.noopt)
+    ? R.options.filter(o => !o.forbidden && !o.fixed).map(o => {
     const st2 = o.state;
     const blocked = !o.dependencyMet;
     /* an escort squadron pays it for every ship: the multiplier and the
@@ -798,14 +809,30 @@ export function unitHTML(R, ui, st){
   const hidden = up => hideKeys.indexOf(up.key) >= 0;
   const own = R.upgrades.filter(x => (x.owner === "own" || isRefitUp(x)) && !hidden(x)),
         other = R.upgrades.filter(x => x.owner === "other" && !isRefitUp(x) && !hidden(x));
-  const upOwn = own.map(upRow).join("");
+  /* Rows the book allows only by the opponent's consent (agreement rules
+     with up_sec: the Tyranid bio-enhancements, "These refits can only be
+     used in one-off games if both players agree", Fleets p. 426) get the
+     warning once, above the first of them in each block, not on every row
+     (user 8.11.2026). */
+  const agreeL = R.entry && R.entry.list ? LISTS.find(l => l.nm === R.entry.list) : null;
+  const agree = {};
+  (agreeL ? agreeL.secs : []).forEach(s => (s.rules || []).forEach(r => {
+    if(r.kind === "agreement" && r.up_sec != null) agree[r.up_sec] = r; }));
+  const rowsHTML = rows => { const seen = {}; return rows.map(up => {
+    const r = agree[up.key.split(":")[0]];
+    if(!r || seen[r.up_sec]) return upRow(up);
+    seen[r.up_sec] = 1;
+    return `<div class="upagree" title="${esc(r.src || "")}">${esc(r.label)}: only if your opponent agrees${
+      r.pg ? " (Fleets p. " + r.pg + ")" : ""}</div>` + upRow(up);
+  }).join(""); };
+  const upOwn = rowsHTML(own);
   /* The whole fleet pane is re-rendered on every click, so a plain
      <details> snapped shut after each choice and the list could not be
      worked through. The open state lives on the unit instead. */
   const upOther = other.length
     ? `<details class="upmore" data-u="${ui}"${st.upsOpen ? " open" : ""}>
        <summary>Other fleet-list upgrades<span class="n">${other.length}</span></summary>
-       ${other.map(upRow).join("")}</details>`
+       ${rowsHTML(other)}</details>`
     : "";
   const upBlock = (upOwn || upOther)
     ? `<div class="ups"><h5>Fleet-list upgrades</h5>${upOwn}${upOther}</div>` : "";
@@ -901,7 +928,7 @@ export function unitSummaryHTML(R, st){
   if(st.name) bits.push(`<b>${esc(st.name)}</b>`);
   if(R.kind === "commander" && R.rerolls && R.rerolls.total) bits.push(R.rerolls.total + " re-roll" + (R.rerolls.total > 1 ? "s" : ""));
   (R.upgrades || []).filter(up => up.state === "take" && !up.included).forEach(up => bits.push(esc(up.label)));
-  const on = (R.options || []).filter(o => o.state === "take" && !o.forbidden).length;
+  const on = (R.options || []).filter(o => o.state === "take" && !o.forbidden && !o.fixed).length;
   if(on) bits.push(on + " option" + (on > 1 ? "s" : ""));
   if(st.note) bits.push(esc(st.note));
   return bits.length ? `<div class="usum">${bits.join(" &middot; ")}</div>` : "";

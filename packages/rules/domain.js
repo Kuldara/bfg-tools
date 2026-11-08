@@ -3646,7 +3646,10 @@ var __rules = (() => {
         dependencyMet: dep == null || optState(sel, o.dep) === "take",
         blockedBy,
         index: i,
-        forbidden: !!(sel.en && sel.en.optno && new RegExp(sel.en.optno, "i").test(String(o.t || "")))
+        forbidden: !!(sel.en && sel.en.optno && new RegExp(sel.en.optno, "i").test(String(o.t || ""))),
+        /* fixed: the list row is the hull with this option (en.opton), so it
+           is always taken and not a choice (the fire ship drone, p. 431) */
+        fixed: !!(sel.en && sel.en.opton && new RegExp(sel.en.opton, "i").test(String(o.t || "")))
       };
     });
   }
@@ -4651,7 +4654,9 @@ var __rules = (() => {
     var opts = intent.options || {};
     var dflt = en && en.noopt ? "off" : "opt";
     var optno = en && en.optno ? new RegExp(en.optno, "i") : null;
+    var opton = en && en.opton ? new RegExp(en.opton, "i") : null;
     var ost = ol.map(function(o) {
+      if (opton && opton.test(String(o.t || ""))) return "take";
       if (optno && optno.test(String(o.t || ""))) return "off";
       var x = opts[o.id];
       return x && x.state ? x.state : dflt;
@@ -4976,6 +4981,7 @@ var __rules = (() => {
     if (!sel.list) return { own, other };
     var fortRows = !!sel.defence;
     if (fortRows && !(sel.sh && sel.sh.qd)) return { own, other };
+    if (sel.en && sel.en.cnt && !sel.sh) return { own, other };
     var foreign = foreignReserveRow(sel.list, sel.en, sel.sh);
     upSecs(sel).forEach(function(sec, si) {
       sec.ents.forEach(function(en, ei) {

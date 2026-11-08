@@ -633,8 +633,8 @@ eq(failed().some(c => /^Kroot Warspheres/.test(c.t)), true, "T26: a Warsphere in
 /* Counterpart: points_share reads "the fleet's points allowance" (p.431), i.e.
    the game's points limit - it does not change. */
 const hf26 = listIndex("Tyranids — Hive Fleet");
-buildU(hf26, 1500, [["Hive ship (Ld 8)", 1, [], 0,
-                     ["Strength 4 boarding torpedo marker", "Assault boat marker", "Fighter marker"]]]);
+build(hf26, 1500, [["Hive ship (Ld 8)", 1], ["Strength 4 boarding torpedo marker", 1],
+                    ["Assault boat marker", 1], ["Fighter marker", 1]]);
 eq(failed().some(c => /^Ordnance markers/.test(c.t)), false, "T26: Tyranid ordnance is still counted from the points limit");
 /* Gravitic hook capacity (J95). p.454: "You may not have more Orcas and
    Wardens than the gravitic hook capacity of the fleet." The profile says what
@@ -836,13 +836,59 @@ build(iyd, 1000, [["Eldar Autarch", 1], ["Dragonship", 1], ["Dragonship", 1]]);
 eq(dragFail(), true, "Iyanden: two Dragonships without Wraithships fails");
 /* J64 p.431: "Up to 10 % of the fleet's points allowance may be spent on
    Ordnance markers as long as at least one hive ship is chosen." The markers
-   are bought for ships, so the share is counted from the upgrades. */
+   are the fleet's own rows, bought by the piece ("Ordnance may be formed up
+   into waves which are treated as squadrons", p.431), not a ship's upgrades
+   (user 8.11.2026). Prices p.431: 12, 8 and 7 pts. */
 const hfl = listIndex("Tyranids — Hive Fleet");
 const ordFail = () => failed().some(c => /^Ordnance markers/.test(c.t));
-buildU(hfl, 250, [["Hive ship", 1, [], 0, ["Strength 4 boarding torpedo marker", "Assault boat marker", "Fighter marker"]]]);
+build(hfl, 250, [["Hive ship", 1], ["Strength 4 boarding torpedo marker", 1], ["Assault boat marker", 1], ["Fighter marker", 1]]);
 eq(ordFail(), true, "Hive Fleet: 27 points of markers in a 250 point fleet fails");
-buildU(hfl, 250, [["Hive ship", 1, [], 0, ["Assault boat marker", "Fighter marker"]]]);
+build(hfl, 250, [["Hive ship", 1], ["Assault boat marker", 1], ["Fighter marker", 1]]);
 eq(ordFail(), false, "Hive Fleet: 15 points of markers in a 250 point fleet is fine");
+build(hfl, 1500, [["Hive ship", 1], ["Fighter marker", 3]]);
+const hsPts = (() => { const k = api.S.units.slice(0, 1); api.S.units = k; return api.total(); })();
+build(hfl, 1500, [["Hive ship", 1], ["Fighter marker", 3]]);
+eq(api.total() - hsPts, 21, "Hive Fleet: three fighter markers on one row cost 3 x 7 = 21 pts");
+eq(failed().some(c => /^Ordnance markers/.test(c.t)), false, "Hive Fleet: 21 points of markers in 1500 is fine");
+build(hfl, 1500, [["Fighter marker", 1]]);
+eq(ordFail(), true, "Hive Fleet: markers without a hive ship fail");
+eq(api.resolveUnit(api.S.units[0]).upgrades.length, 0, "Hive Fleet: a marker is not a ship and is offered no upgrades");
+build(hfl, 1500, [["Hive ship", 1], ["Escort drone", 6]]);
+eq(api.S.units.some(u => (api.resolveUnit(u).upgrades || []).some(x => /marker/i.test(x.label))), false,
+   "Hive Fleet: no ship is offered ordnance markers as its own upgrades");
+/* p.431 "(max. 10 %) Fire ship....+5 pts" under the escort drone, and p.437:
+   "Instead of taking a weapon from above, up to 10 % of the Tyranid escort
+   drones in the fleet can elect to become fire ships for +5 points each."
+   A row of its own in ESCORTS (user 8.11.2026): an escort drone (10 pts) as a
+   fire ship (+5) = 15 pts, no weapon, and still an escort drone. */
+const fsFail = () => failed().some(c => /^Fire ship escort drones/.test(c.t));
+const fsRow = findEntry(hfl, "Fire ship (escort drone)");
+eq(LISTS[hfl].secs[fsRow.s].t, "ESCORTS", "Hive Fleet: the fire ship is a row in ESCORTS");
+build(hfl, 1500, [["Hive ship", 1]]);
+const hsOnly = api.total();
+build(hfl, 1500, [["Hive ship", 1], ["Fire ship (escort drone)", 1]]);
+eq(api.total() - hsOnly, 15, "Hive Fleet: a fire ship drone costs 10 + 5 = 15 pts");
+const fsR = api.resolveUnit(api.S.units[1]);
+eq(fsR.options.filter(o => o.state === "take").length, 1, "Hive Fleet: the fire ship drone takes no weapon, only the fire ship");
+eq(fsR.options.some(o => o.state === "take" && /fire ship/i.test(o.text)), true, "Hive Fleet: the fire ship drone's option is taken");
+build(hfl, 1500, [["Hive ship", 1], ["Escort drone", 6]]);
+eq(api.resolveUnit(api.S.units[1]).options.some(o => /fire ship/i.test(o.text) && !o.forbidden), false,
+   "Hive Fleet: a plain escort drone no longer offers the fire ship");
+build(hfl, 1500, [["Hive ship", 1], ["Escort drone", 9], ["Fire ship (escort drone)", 1]]);
+eq(fsFail(), false, "Hive Fleet: one fire ship in ten escort drones is fine");
+build(hfl, 1500, [["Hive ship", 1], ["Escort drone", 8], ["Fire ship (escort drone)", 2]]);
+eq(fsFail(), true, "Hive Fleet: two fire ships in ten escort drones fail");
+build(hfl, 1500, [["Hive ship", 1], ["Escort drone", 5], ["Fire ship (escort drone)", 1]]);
+eq(failed().some(c => /^Escort drones per hive ship/.test(c.t)), false,
+   "Hive Fleet: a fire ship drone counts towards the six escort drones per hive ship");
+/* p.426: the bio-enhancements "can only be used in one-off games if both
+   players agree" - said once above them on the unit, not on every row (user
+   8.11.2026). A drone is offered all of them. */
+build(hfl, 1500, [["Hive ship", 1], ["Escort drone", 6]]);
+const bioHTML = api.unitRowHTML(api.S.units[1], 1);
+eq((bioHTML.match(/class="upagree"/g) || []).length, 1, "Hive Fleet: one opponent-agrees note above the bio-enhancements");
+eq(/only if your opponent agrees \(Fleets p\. 426\)/.test(bioHTML), true, "Hive Fleet: the note says when and cites p. 426");
+eq(bioHTML.indexOf('class="upagree"') < bioHTML.indexOf("Solar Vanes"), true, "Hive Fleet: the note is above the first bio-enhancement");
 /* J65 p.431: "You may include between 6 and 12 escort class ships for each
    hive ship. If no hive ships are chosen, only Kraken and Vanguard drone
    ships may be included in the fleet." */

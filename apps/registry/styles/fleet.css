@@ -89,6 +89,10 @@
 .ups details>summary:hover{border-color:var(--ink-3);color:var(--ink)}
 .ups details>summary::-webkit-details-marker{display:none}
 .ups details>summary::before{content:"\25B8";font-weight:700;color:var(--ink-3)}
+/* rows allowed only by the opponent's consent (the bio-enhancements):
+   said once above them, in the checks panel's warning colour */
+.ups .upagree{font:600 11px/1.35 var(--sans);color:var(--ink-2);margin:8px 0 3px;padding:4px 8px;
+  border-left:3px solid var(--warn);background:var(--warn-wash);border-radius:0 3px 3px 0}
 .ups details[open]>summary::before{content:"\25BE"}
 .ups details>summary .n{margin-left:auto;padding:0 6px;border-radius:8px;
   background:var(--line);color:var(--ink-2);font:600 10px/16px var(--sans)}

@@ -274,7 +274,12 @@ LISTS.forEach((L, li) => {
       return b + sh.aw.filter((r, fi) => !shipGone.has(fi) && rx.test(String(r[0])) &&
         (!en.swp.onlyrg || String(r[1]).indexOf(en.swp.onlyrg) >= 0)).length;
     }, 0), 0);
-    const wantRows = sh.aw.length - gone + swapRows + addRows - delRows + listAlt;
+    // aws: weapon rows that come with an option (the Tyranid drone's weapon
+    // menu); an option that is off - forbidden by the row, as on the fire ship
+    // drone (optno, p.437 "Instead of taking a weapon") - takes its rows away.
+    const awsOff = new Set();
+    (sh.ol || []).forEach((o, i) => { if (o.aws && api.optState(u, i) === "off") o.aws.forEach(k => awsOff.add(k)); });
+    const wantRows = sh.aw.length - gone + swapRows + addRows - delRows + listAlt - awsOff.size;
     const rows = (h.match(/<tr class="w(?: alt| ammo)?"/g) || []).length;
     if (rows !== wantRows)
       fail(L.nm, ref, "weapon rows " + rows + " != expected " + wantRows);
@@ -300,7 +305,7 @@ LISTS.forEach((L, li) => {
       if ((h.match(/<tbody class="g">/g) || []).length !== groups.size)
         fail(L.nm, ref, "alternative groups are not wrapped in their own tbody");
     }
-    sh.aw.forEach(a => {
+    sh.aw.filter((a, k) => !awsOff.has(k)).forEach(a => {
       // The card abbreviates the name the same way as the range and strength,
       // so the expected value is the abbreviated name - not the original.
       const printedName = api.shortWeaponName(a[0]);
@@ -377,7 +382,8 @@ LISTS.forEach((L, li) => {
     const ids = part => [...part.matchAll(/<b class="ast"[^>]*data-rule="([^"]+)"[^>]*>\*<\/b>/g)]
       .map(m => m[1]);
     const armIds = ids(armTbl), ruleIds = ids(special), optIds = ids(loadout);
-    const wantedIds = Object.values(starred).flat().map(r => r.id);
+    // keyed by weapon index; a weapon its option takes away has no star (aws)
+    const wantedIds = Object.keys(starred).filter(k => !awsOff.has(+k)).map(k => starred[k]).flat().map(r => r.id);
     /* On a short rule list a weapon's star shows only if its rule is on the
        card (a bought option or upgrade): a star is not required, but
        every visible star must still have its rule (below). */
@@ -407,6 +413,7 @@ LISTS.forEach((L, li) => {
     // Every special weapon type recorded in the handbook gets a star on both the
     // weapon and its SPECIAL row. An ordinary battery/lance needs no star.
     sh.aw.forEach((a, i) => {
+      if (awsOff.has(i)) return;   // a weapon its option takes away (aws, above)
       const defs = R0.brief ? [] : api.SPECIAL_WEAPON_RULES.filter(d => api.defMatches(d, sh, a));
       defs.forEach(d => {
         if (!armIds.includes(d.id)) fail(L.nm, ref, "a special weapon without a star reference: " + a[0] + " -> " + d.id);
@@ -718,7 +725,13 @@ LISTS.forEach((L, li) => {
     const R = api.resolveUnit(u) || {};
     const ref = "s." + (en.src_page || "?") + " " + en.l;
     /* a hull-less row that is not a commander must be a rule card,
-       or the player pays for a row that prints nothing */
+       or the player pays for a row that prints nothing. One exception by
+       decision (user 8.11.2026): the Tyranid ordnance markers (p.431) are
+       bought for their points only and print nothing on purpose. */
+    if (!en.r && !en.rc && en.cnt && sec.t === "ORDNANCE" && /^Tyranids/.test(L.nm)) {
+      if (R.card != null) fail(L.nm, ref, "a points-only ordnance marker got a card (card=" + R.card + ")");
+      return;
+    }
     if (!en.r && R.card !== "rule") { fail(L.nm, ref, "a hull-less row without a rule card (card=" + R.card + ")"); return; }
     if (R.card !== "rule") return;
     const rc = R.ruleCard;

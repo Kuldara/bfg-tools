@@ -110,7 +110,10 @@ export function optionsOf(sel){
       group: o.grp || null, groupMax: o.grp ? Math.max(1, o.gmax || 1) : null,
       dependsOn: dep, dependencyMet: dep == null || optState(sel, o.dep) === "take",
       blockedBy: blockedBy, index: i,
-      forbidden: !!(sel.en && sel.en.optno && new RegExp(sel.en.optno, "i").test(String(o.t || "")))
+      forbidden: !!(sel.en && sel.en.optno && new RegExp(sel.en.optno, "i").test(String(o.t || ""))),
+      /* fixed: the list row is the hull with this option (en.opton), so it
+         is always taken and not a choice (the fire ship drone, p. 431) */
+      fixed: !!(sel.en && sel.en.opton && new RegExp(sel.en.opton, "i").test(String(o.t || "")))
     };
   });
 }

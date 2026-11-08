@@ -109,7 +109,12 @@ export function selectionOf(intent, ctx, catalog){
      counterparts may have access to this type of ordnance (such as Emperor
      battleships)" (Fleets p. 125). Off, whatever a saved state says. */
   var optno = en && en.optno ? new RegExp(en.optno, "i") : null;
+  /* opton: the row IS the hull with that option - the Tyranid escort drone
+     bought as a fire ship (Fleets pp. 431, 437). Taken, whatever a saved
+     state says, and not offered as a choice. */
+  var opton = en && en.opton ? new RegExp(en.opton, "i") : null;
   var ost = ol.map(function(o){
+    if(opton && opton.test(String(o.t || ""))) return "take";
     if(optno && optno.test(String(o.t || ""))) return "off";
     var x = opts[o.id]; return x && x.state ? x.state : dflt; });
   var oqty = ol.map(function(o){
@@ -530,6 +535,10 @@ export function upgradesForRaw(sel){
      (user decision 13.10.2026, BACKLOG J174). */
   var fortRows = !!sel.defence;
   if(fortRows && !(sel.sh && sel.sh.qd)) return { own: own, other: other };
+  /* A row bought by the piece with no hull - the Tyranid ordnance markers
+     (Fleets p. 431) - is not a ship: it takes no refits, re-rolls or
+     bio-enhancements. */
+  if(sel.en && sel.en.cnt && !sel.sh) return { own: own, other: other };
   var foreign = foreignReserveRow(sel.list, sel.en, sel.sh);
   upSecs(sel).forEach(function(sec, si){ sec.ents.forEach(function(en, ei){
     if(!isUpgradeEnt(en)) return;

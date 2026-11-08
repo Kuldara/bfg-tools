@@ -297,6 +297,16 @@ function fuzzRule(li, si, ei, seed){
   let h;
   try{ h = api.cardHTML(u, "top"); }
   catch(e){ fail(where, "cardHTML threw: " + e.message, ctx); return; }
+  /* A count row without a rule card - the Tyranid ordnance markers (p.431) -
+     is bought for its points only: no card, the unit price times the count. */
+  if(!en.rc){
+    check(h === "", where, "a points-only row printed a card", ctx);
+    check(api.unitPts(u) === en.p * u.n + (u.adj || 0), where,
+          "price " + api.unitPts(u) + " != " + en.p + " x " + u.n + " + adjustment " + (u.adj || 0), ctx);
+    checkPoints(u, where, ctx);
+    cases++;
+    return;
+  }
   check(typeof h === "string" && h.length > 500, where, "the rule card is empty", ctx);
   if(typeof h !== "string") return;
   ["undefined", "NaN", "[object Object]"].forEach(bad => {

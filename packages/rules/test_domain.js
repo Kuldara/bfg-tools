@@ -3783,11 +3783,15 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
     TH.secs.forEach(sec => sec.ents.forEach(en => { if(!hit && String(en.r) === "437") hit = [sec, en]; })); return hit; })();
   const S437 = catalog.ships["437"];
   const fsOpt = S437 && S437.ol.find(o => /become fire ships/.test(o.t));
-  const drones = (n, fire) => {
-    const u = { list: TH.nm, entry: { section: DR[0].t, label: DR[1].l }, ref: "437", hulls: n, options: {}, upgrades: {} };
-    if(fire) u.options[fsOpt.id] = { state: "take" };
-    return u;
-  };
+  /* A fire ship drone is its own row in ESCORTS since 8.11.2026 (p.431
+     "(max. 10 %) Fire ship....+5 pts"): the hull with the option taken. The
+     plain drone row no longer offers the option, even when a save says so. */
+  const drones = (n, fire) => ({ list: TH.nm, entry: { section: DR[0].t, label: fire ? "Fire ship (escort drone)" : DR[1].l },
+    ref: "437", hulls: n, options: {}, upgrades: {} });
+  check("J175c: a plain drone saved with the fire ship option is no fire ship", (() => {
+    const u = drones(1); u.options[fsOpt.id] = { state: "take" };
+    return !R(TH, u).options.some(o => o.state === "take" && /become fire ships/.test(o.text)); })());
+  check("J175c: the fire ship drone row is 10 + 5 = 15 pts (p.431)", R(TH, drones(1, true)).points === 15, R(TH, drones(1, true)).points);
   const fsRow = us => DOMAIN.resolveFleet({ list: TH.nm, limit: 5000, units: us }, catalog).checks
     .find(c => /^Fire ship escort drones/.test(c.t));
   check("J175c: the drone profile has a fire ship option", !!DR && !!fsOpt);

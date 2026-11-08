@@ -29,6 +29,32 @@ assert ships["437"]["nm"] == "ESCORT DRONE" and len(_fs_ol) == 1 and _fs_ol[0]["
 assert "frac" not in ships["437"]
 ships["437"]["frac"] = dict(opt="become fire ships", pct=10, what="437", pg=437, src=_FS_SRC,
                             label="Fire ship escort drones (up to 10% of the escort drones)")
+# The list prints the fire ship as a row of its own under the escort drone,
+# "(max. 10 %) Fire ship....+5 pts" (p.431), and the user (8.11.2026) wants
+# it bought as a ship of its own in ESCORTS, not ticked on a drone. So it is a
+# second escort drone row: the same hull (437) at the drone's 10 pts, the
+# fire ship option always taken (opton, +5) and the weapons forbidden
+# ("Instead of taking a weapon from above", optno). The plain drone row no
+# longer offers the fire ship option. Both rows are escort drones: the label
+# keeps the words, so "at least six escort drones for every hive ship"
+# (p.431) counts them, and frac above counts the hulls of both rows. The row
+# is appended to the section: the weapon rows point at their hull rows by
+# index ("at"), so nothing may be inserted before them.
+_FS_LABEL = "Fire ship (escort drone)"
+_HFL = [x for x in lists_out if x["nm"] == "Tyranids — Hive Fleet"]
+assert len(_HFL) == 1
+_hfe = [x for x in _HFL[0]["secs"] if x["t"] == "ESCORTS"]
+assert len(_hfe) == 1
+_hfe = _hfe[0]
+_drone = [e for e in _hfe["ents"] if e["l"] == "Escort drone" and str(e.get("r")) == "437"]
+assert len(_drone) == 1 and _drone[0]["p"] == 10 and "optno" not in _drone[0], _drone
+assert not any(e["l"] == _FS_LABEL for e in _hfe["ents"])
+_drone[0]["optno"] = "become fire ships"
+_hfe["ents"].append(dict(l=_FS_LABEL, r=437, p=10, src_page=431, a=0, mx=None, k="unit",
+                         opton="become fire ships", optno="^Weapon",
+                         nt="An escort drone that becomes a fire ship instead of taking a weapon: "
+                            "+5 pts, up to 10 % of the escort drones (Fleets pp. 431, 437). "
+                            "Fire ship rules on p. 516."))
 
 # ------------------------------------- Webway Portal (p.335, J175 d)
 # The Haven's own rule: "The owning player may use the Webway to summon

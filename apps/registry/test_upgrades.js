@@ -223,6 +223,7 @@ console.log("\n=== Whole book: no upgrades left counted as units ===");
 {
   let suspicious = 0;
   const ruleRows = {};
+  let markerRows = 0;
   LISTS.forEach(L => L.secs.forEach(sec => sec.ents.forEach(en => {
     if (en.k === "up") return;
     if (en.r) return;
@@ -237,12 +238,20 @@ console.log("\n=== Whole book: no upgrades left counted as units ===");
        The exception is limited to exactly them: a defence section (ct "defence") AND
        a rule card - any other hull-less row is still suspect. */
     if (en.k === "unit" && sec.ct === "defence" && en.rc && en.cnt) { ruleRows[en.l] = 1; return; }
+    /* A fourth, 8.11.2026: the Tyranid ordnance markers, p.431 ORDNANCE
+       ("Strength 4 boarding torpedo marker 12 pts, Assault boat marker 8 pts,
+       Fighter marker 7 pts"): the fleet's own rows, bought by the piece for
+       points only, no profile and no card. Limited to that section, whose 10 %
+       rule counts exactly these units. */
+    if (en.k === "unit" && en.cnt && !en.rc && sec.t === "ORDNANCE" && /Tyranids/.test(L.nm) &&
+        (sec.rules || []).some(r => r.kind === "points_share")) { markerRows++; return; }
     if (en.k !== "cmd") {
       suspicious++;
       console.log("     ?  " + L.nm + " / " + sec.t + " / " + en.l);
     }
   })));
   eq(suspicious, 0, "every row without a page reference is either a commander or an upgrade");
+  eq(markerRows, 3, "the Tyranid Hive Fleet's three ordnance markers are points-only rows (p.431)");
   eq(Object.keys(ruleRows).sort().join(" | "), "Minefield | Orbital mine",
      "the hull-less defence rows are exactly Orbital mine (p.512) and Minefield (p.513)");
 

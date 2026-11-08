@@ -101,8 +101,11 @@ export const armLineHTML = (sh, en, list) => {
      Trader rows take no variants (pg. 190) and a reserve fleet no class
      variants (pg. 39). */
   const optno = en && en.optno ? new RegExp(en.optno, "i") : null;
+  /* opton: the row is the hull with that option already taken (the fire
+     ship drone, Fleets p. 431): not a choice, and no weapon left to pick */
+  const opton = en && en.opton ? new RegExp(en.opton, "i") : null;
   const nOpt = en && en.noopt ? 0
-    : (sh.ol || []).filter(o => !(optno && optno.test(String(o.t || "")))).length;
+    : (sh.ol || []).filter(o => !(optno && optno.test(String(o.t || ""))) && !(opton && opton.test(String(o.t || "")))).length;
   /* How far each group reaches, "cm" kept so it reads as a distance; when
      every group reaches the same, it is said once at the end. */
   const lab = s.groups.map(g => rangeLabel(g.rng));
@@ -120,11 +123,12 @@ export const armLineHTML = (sh, en, list) => {
   if(s.more) parts.push("<span>\u2026</span>");
   /* A weapon the ship picks is not a weapon it has: the line leaves those out
      and says how many there are to pick from. */
-  if(s.picks.length > 2)
+  const picks = opton ? [] : s.picks;
+  if(picks.length > 2)
     parts.push(`<span class="opts pick" title="${esc(
-      "The profile's weapons are choices: " + s.picks.length + " groups, one weapon from each")
-      }">${s.picks.length} weapon choices</span>`);
-  else s.picks.forEach(n => parts.push(`<span class="opts pick" title="${
+      "The profile's weapons are choices: " + picks.length + " groups, one weapon from each")
+      }">${picks.length} weapon choices</span>`);
+  else picks.forEach(n => parts.push(`<span class="opts pick" title="${
     esc("The profile's weapons are a choice: one of these " + n)}">pick 1 of ${n}</span>`));
   /* One option is usually a +5 pts extra; from two up it changes the ship. */
   if(nOpt >= 2) parts.push(`<span class="opts">${nOpt} options</span>`);

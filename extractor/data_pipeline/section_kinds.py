@@ -223,7 +223,7 @@ for _nm in ("Tyranids — Hive Fleet", "Tyranids — Vanguard Fleet"):
     _L = _p18_list(_nm)
     _si = _p18_sec(_L, "BIO-ENHANCEMENTS")
     _L["secs"][_si].setdefault("rules", []).append(dict(
-        kind="agreement", ok=True, label="Bio-enhancements in a one-off game", up_sec=_si,
+        kind="agreement", ok=True, label="Bio-enhancements in a one-off game", up_sec=_si, pg=426,
         src=_j213_text(_L, _si, "These refits can only be used in one-off games")))
     _j213 += 1
 # (d) Adeptus Mechanicus reserves (p.121-123, S0246 S0249 S0250 S0255 S0256).
