@@ -181,12 +181,6 @@ function run(check){
     check("smoke: no re-roll once every ship has its Ld (user 31.10.2026, T44)", !/data-act="rollld"/.test(rolled.html), (rolled.html.match(/.{0,40}rollld.{0,40}/) || [""])[0]);
     check("smoke: Roll Ld gives every rolling ship a value 6-9 with its die (Rulebook p. 45); a fixed commander's flagship keeps his value", rolled.out.filter(u => u.k === "ship" && !u.fx).every(u => u.ld >= 6 && u.ld <= 9 && u.die >= 1 && u.die <= 6), JSON.stringify(rolled.out));
     check("smoke: a tapped value after the roll is the player's and forgets the die", rolled.after.ld === 10 && rolled.after.die == null, JSON.stringify(rolled.after));
-    /* user 8.11.2026: a fleet opened for a new game comes with the page's
-       proposal - every Ld and every upgrade die rolled - and no Roll button */
-    const auto = JSON.parse(P(`(() => { const keep = JSON.stringify(G.st); autoRoll(); const out = { all: U.every((x, i) => x.R.kind !== "ship" || G.st[i].ld != null), flag: !!G.autoRolled, html: renderSetup() }; G.st = JSON.parse(keep); delete G.autoRolled; return JSON.stringify(out); })()`));
-    clean("the set-up with the page's proposal", auto.html);
-    check("smoke: a new game opens with every Ld rolled as a proposal, said so, and no Roll Ld button (user 8.11.2026)",
-      auto.all && auto.flag && !/data-act="rollld"/.test(auto.html) && /The page rolled each ship's Leadership/.test(strip(auto.html)), strip(auto.html).slice(0, 200));
     /* J214: the fleet's attack rating before the game, from the book's own
        sentence: "The Imperial Navy have a starting attack or initiative
        rating of 2." (Fleets p. 32) */

@@ -318,10 +318,8 @@ function rollBar(){
      stays in place, grey, once every ship has its Ld, so the Apply button
      under it never moves under the finger; other fleets as before (T44) */
   const yg = tiddlaHeads().length > 0;
-  /* rolled by the page when the fleet was opened (autoRoll): nothing to
-     roll, and no grey Roll Ld above Apply either - Apply is the one button */
   const ldBtn = open ? `<button class="btn sec" data-act="rollld">Roll Ld<small>${open === rollers.length ? open + " to roll" : open + " still to roll"}</small></button>`
-    : yg && !appState.G.autoRolled ? `<button class="btn sec" data-act="rollld" disabled>Roll Ld<small>every ship has its Ld</small></button>` : "";
+    : yg ? `<button class="btn sec" data-act="rollld" disabled>Roll Ld<small>every ship has its Ld</small></button>` : "";
   const preBtn = pc.open ? `<button class="btn sec" data-act="rollpre">Roll upgrades<small>${pc.open} to roll</small></button>` : "";
   return ldBtn || preBtn || yg ? `<div class="rollbar${yg ? " yg" : ""}">${ldBtn}${yg ? ygButton() : ""}${preBtn}</div>` : "";
 }
@@ -608,7 +606,7 @@ export function renderSetup(){
     ${sidesStrip()}
     <div class="main"><div class="card"><h2>Leadership</h2>
       ${ldGuide()}${rollBar()}
-      <p>${appState.G.autoRolled ? "The page rolled each ship's Leadership on its table (p. 45), and the upgrades' dice: a proposal. Rolled your own? Tap that value instead." : "Tap the value each ship fights on, or let Roll Ld roll the ships still without one."} SQN groups capital ships into a squadron: one Ld, one order, combined fire (p. 95, 99). Tap a ship's name to give it another one for this game.${clanz ? " Da Ork Clanz: a Warlord may swap Leadership with any one ship or escort squadron under his command (Fleets p. 374) - choose it on the Warlord's row before Apply. What changes gets a mark, and a changed Ld keeps its old value striped." : ""}${bbs ? " An Ork battleship may swap its Ld with a Kill Kroozer or Terror Ship (Fleets pp. 376-381): Swap Ld on its row." : ""}${anyFixed ? " Planetary defences do not roll: their checks are made on Ld 7 (Rulebook p. 100)." : ""}</p>
+      <p>Tap the value each ship fights on, or let Roll Ld roll the ships still without one. SQN groups capital ships into a squadron: one Ld, one order, combined fire (p. 95, 99). Tap a ship's name to give it another one for this game.${clanz ? " Da Ork Clanz: a Warlord may swap Leadership with any one ship or escort squadron under his command (Fleets p. 374) - choose it on the Warlord's row before Apply. What changes gets a mark, and a changed Ld keeps its old value striped." : ""}${bbs ? " An Ork battleship may swap its Ld with a Kill Kroozer or Terror Ship (Fleets pp. 376-381): Swap Ld on its row." : ""}${anyFixed ? " Planetary defences do not roll: their checks are made on Ld 7 (Rulebook p. 100)." : ""}</p>
       ${frrRow}${rows}
       <button class="btn" data-act="start" ${ready ? "" : "disabled"}>${started ? "Back to the game" : "Start the game"}</button>
       ${ready ? "" : `<p class="why">To start, pick the Ld of ${missing.length === 1 ? "one more ship" : missing.length + " more ships"}: ${missing.map(i => `<button data-act="seek" data-i="${i}">${esc(unitName(i))}</button>`).join(", ")}</p>`}${ygWhy}</div>${factsCard()}${peerSetupCard()}</div>${edgeHandle()}`;
