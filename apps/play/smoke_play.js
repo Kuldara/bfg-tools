@@ -998,6 +998,28 @@ function run(check){
     P(`V.compact = false`);
   });
 
+  /* ------- T65: the book's Ld put in, every commander's line, grey tiles - */
+  guard("the Leadership the book sets and the commanders' lines", () => {
+    const pg = open(), P = pg.P;
+    /* Tyranids: a hive ship at its list value, the rest at 7 (Fleets p. 418) */
+    const TY = pg.DATA.lists.find(x => /^Tyranids . Hive Fleet$/.test(x.nm));
+    pg.ctx.__doc = { ln: TY.nm, limit: 5000, units: [saved(TY, /^HIVE SHIPS$/, /^Hive ship/), saved(TY, /^CAPITAL SHIPS$/, /^Cruiser$/), saved(TY, /^ESCORTS$/, /^Escort drone$/, 6)] };
+    P(`newGame(resolveFleet(__doc)); V.screen = "setup";`);
+    check("smoke: Tyranids come to the set-up with their Ld: hive ship 8, cruiser 7, drones 7, nothing to roll (Fleets p. 418, T65)",
+      P(`JSON.stringify(G.st.map(s => s.ld))`) === "[8,7,7]" && !/data-act="rollld"/.test(P(`renderSetup()`)) && /Leadership 7 unless otherwise specified \(Fleets p\. 418\)/.test(strip(P(`renderSetup()`))), P(`JSON.stringify(G.st.map(s => s.ld))`));
+    const tyRow = P(`renderSetup()`), cr = tyRow.slice(tyRow.indexOf('data-u="1"'), tyRow.indexOf('data-u="2"'));
+    check("smoke: ... the cruiser's other tiles are grey, 7 lit (T65)", (cr.match(/class="imp"/g) || []).length === 5 && /class="on"[^>]*data-arg="7"/.test(cr), (cr.match(/class="[a-z ]*" data-act="ld"[^>]*data-arg="\d+"/g) || []).join(" "));
+    /* a Black Crusade Chaos Lord (Ld +1, max 9) aboard a cruiser: the roll
+       striped, the value ringed, the line why */
+    const BC = pg.DATA.lists.find(x => /^Chaos . Black Crusade$/.test(x.nm));
+    pg.ctx.__doc = { ln: BC.nm, limit: 5000, units: [saved(BC, /^Chaos Lords$/, /^Chaos Lord/), saved(BC, /^Cruisers$/, /^Carnage/)] };
+    P(`newGame(resolveFleet(__doc)); V.screen = "setup"; G.on = { 0: 1 }; setLd(1, 7);`);
+    const row = P(`renderSetup()`), r1 = row.slice(row.indexOf('data-u="1"'));
+    check("smoke: a Chaos Lord's +1 on his ship: Ld 7 rolled -> 8, 7 striped, 8 ringed, the line says why (T65)",
+      P(`G.st[1].ld`) === 8 && /class="was"[^>]*data-arg="7"/.test(r1) && /class="on chg"[^>]*data-arg="8"/.test(r1) && /Ld 7 → 8: Chaos Lord aboard, \+1, at most 9/.test(strip(r1)), strip(r1).slice(0, 300));
+    clean("the Chaos set-up with a Lord's mark", row);
+  });
+
   /* ------- T64: the commander's ship in an escort squadron, own Ld ----- */
   guard("the commander aboard an escort, a capital ship's own Ld", () => {
     const pg = open(), P = pg.P;

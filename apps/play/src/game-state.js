@@ -276,8 +276,17 @@ export function nextSqn(i){
 export function fixedLds(){
   appState.U.forEach((x, i) => {
     const fx = PLAY.fixedLd(x.R), st = appState.G.st[i];
-    if(!fx || st.ldFrom === "commander") return;
-    st.ld = fx.value; st.ldRoll = null; st.ldFrom = "fixed";
+    if(x.R.kind !== "ship" || st.ldFrom === "commander") return;
+    if(fx){ st.ld = fx.value; st.ldRoll = null; st.ldFrom = "fixed"; return; }
+    /* a value the book sets without a roll (Tyranids pp. 418, 429, an Ork
+       Hulk's 6, a Sepulchre's 10, a Demiurg's start): put in at the start,
+       once (user 8.11.2026: "do they even roll Ld?") - a value already
+       there, the player's or an older record's, stays */
+    if(st.ld != null) return;
+    const p = ldPlanOf(i);
+    if(!p || p.roll) return;
+    if(p.vanguard){ st.ld = st.ldRoll = Math.min(10, PLAY.alive(st) || (st.members || []).length || 1); st.ldFrom = "vanguard"; return; }
+    if(p.value != null){ st.ld = st.ldRoll = p.value; st.ldFrom = "book"; }
   });
 }
 /* The Leadership a unit has without a commander: its fixed value, else
@@ -304,18 +313,32 @@ export function adoptPools(){
 /* The commander's Leadership line (Fleets book, e.g. p. 35 "improves its
    Leadership to the value shown"): a fixed value replaces the roll, a
    modifier is added to it (RULINGS.md T8). */
+/* Every commander aboard a ship, not only the fleet commander (user
+   8.11.2026: "when something changes the Ld - Chaos Lords for one - a
+   colour mark after the roll and an explanation, as Clanz does with Mob
+   Rule"; T40's "another commander's line is yours to add" no longer
+   holds): the fleet commander on his flagship first, then each other
+   commander on his ship (G.on). */
+export function cmdShips(){
+  const G = appState.G, out = {};
+  if(G.cmd != null && G.flag != null) out[G.flag] = G.cmd;
+  Object.keys(G.on || {}).forEach(j => { const s = G.on[j]; if(s != null && out[s] == null) out[s] = +j; });
+  return out;
+}
 export function applyCommanderLd(){
-  /* one flagship: a ship that carried the commander's line before gets its
-     own roll back (or nothing, until it rolls) */
-  appState.G.st.forEach((s, j) => { if(j !== appState.G.flag && s.ldFrom === "commander"){ s.ld = ownLd(j); s.ldFrom = PLAY.fixedLd(appState.U[j].R) ? "fixed" : null; } });
-  if(appState.G.cmd == null || appState.G.flag == null) return;
-  const ld = appState.U[appState.G.cmd].R.leadership, st = appState.G.st[appState.G.flag];
-  if(!ld || ld.value == null) return;
-  /* aboard a star fort too "their own Leadership value is used by the
-     fort" (Fleets p. 503; the Fortress-Monastery "even if less!", p. 111) */
-  const own = ownLd(appState.G.flag);
-  if(ld.kind === "fixed"){ st.ld = ld.value; st.ldFrom = "commander"; }
-  else if(own != null){ st.ld = Math.min(ld.max || 10, own + ld.value); st.ldFrom = "commander"; }
+  const G = appState.G, on = cmdShips();
+  /* a ship that carried a commander's line before gets its own roll back
+     (or nothing, until it rolls) */
+  G.st.forEach((s, j) => { if(on[j] == null && s.ldFrom === "commander"){ s.ld = ownLd(j); s.ldFrom = PLAY.fixedLd(appState.U[j].R) ? "fixed" : null; } });
+  Object.keys(on).forEach(k => {
+    const s = +k, ld = appState.U[on[s]].R.leadership, st = G.st[s];
+    if(!st || !ld || ld.value == null) return;
+    /* aboard a star fort too "their own Leadership value is used by the
+       fort" (Fleets p. 503; the Fortress-Monastery "even if less!", p. 111) */
+    const own = ownLd(s);
+    if(ld.kind === "fixed"){ st.ld = ld.value; st.ldFrom = "commander"; }
+    else if(own != null){ st.ld = Math.min(ld.max || 10, own + ld.value); st.ldFrom = "commander"; }
+  });
 }
 export function setLd(i, v){
   /* a mixed escort squadron rolls one Leadership (p. 45: "per escort
@@ -323,7 +346,8 @@ export function setLd(i, v){
   const g = appState.G.grp[i];
   const ms = isEscGrp(g) ? appState.G.grp.map((x, j) => x === g ? j : -1).filter(j => j >= 0) : [i];
   ms.forEach(j => { const st = appState.G.st[j]; st.ldRoll = v; st.ld = v; st.ldFrom = null; delete st.ldKept; });
-  if(ms.indexOf(appState.G.flag) >= 0) applyCommanderLd();
+  const on = cmdShips();
+  if(ms.some(j => on[j] != null)) applyCommanderLd();
 }
 
 /* ---- Da Ork Clanz: Young Gunz, Mob Rule and the Leadership swaps -------

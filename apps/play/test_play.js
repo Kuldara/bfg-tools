@@ -1576,7 +1576,18 @@ const tauCity = rowIn(/^Tau . Merchant Fleet$/, PD, /^Kor caste orbital city$/i)
   /* Fleets p. 392: the Ork Hulk "always Leadership 6"; not rolled */
   const hulk = unitOf(/Da Ork Clanz/, /^Ork hulk$/i);
   check("... an Ork Hulk is not rolled: Ld 6 (Fleets p. 392)", plan(hulk) && plan(hulk).roll === false && plan(hulk).value === 6, JSON.stringify(plan(hulk)));
-  check("... a Tyranid hive ship is left to the player (Fleets pp. 418-420)", plan(unitOf(/^Tyranids . Hive Fleet$/, /^Hive ship/i)).manual === true);
+  /* Fleets p. 418: Tyranids "do not generate Leadership normally. Hive
+     ships purchase their Leadership at a fixed value from the fleet list,
+     while the rest of the ships use Leadership 7"; p. 429: a Vanguard
+     escort squadron's is its vessels left, at most 10 (user 8.11.2026) */
+  const hv = plan(unitOf(/^Tyranids . Hive Fleet$/, /^Hive ship/i)), cru = plan(unitOf(/^Tyranids . Hive Fleet$/, /^Cruiser$/i)), van = plan(unitOf(/^Tyranids . Vanguard Fleet$/, /^Vanguard drone ship$/i));
+  check("... a Tyranid hive ship is not rolled: the Ld 8 it was bought at (Fleets p. 418)", hv && hv.roll === false && hv.value === 8 && !hv.manual, JSON.stringify(hv));
+  check("... the other Tyranid ships Ld 7 (Fleets p. 418)", cru && cru.roll === false && cru.value === 7, JSON.stringify(cru));
+  check("... a Vanguard drone squadron: its vessels left (Fleets p. 429)", van && van.roll === false && van.vanguard === true, JSON.stringify(van));
+  { const st = { ld: 9, ldFrom: "vanguard", members: [{}, {}, {}, {}, {}, {}, {}, {}, {}].map(() => ({ dead: false })) };
+    const R = unitOf(/^Tyranids . Vanguard Fleet$/, /^Vanguard drone ship$/i);
+    const at9 = PLAY.leadership(R, st, null).now; st.members[0].dead = true; st.members[1].dead = true;
+    check("... and its Ld falls with its ships: 9 ships Ld 9, two lost Ld 7 (Fleets p. 429)", at9 === 9 && PLAY.leadership(R, st, null).now === 7, [at9, PLAY.leadership(R, st, null).now]); }
   check("... the Fortress-Monastery keeps its 10 (Fleets p. 111)", plan(monastery).roll === false && plan(monastery).value === 10);
   check("... a die outside 1-6 gives nothing", PLAY.ldFromDie(plan(lunar), 0) === null && PLAY.ldFromDie(plan(lunar), 7) === null);
   const seq = [0, 0.17, 0.34, 0.5, 0.67, 0.99], rng = () => seq.shift();

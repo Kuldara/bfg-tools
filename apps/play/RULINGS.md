@@ -407,7 +407,7 @@ out were fixed at the same time: the card's SPEED box always showed a struck-out
 base value ("20 cm ~~20~~"), and the Fleets book's pages showed in notices
 without the book's name ("p. 423").
 
-**T40. An Ld choice of 5-10, no automation.** **The user's decision 13.10.2026:**
+**T40. An Ld choice of 5-10, no automation.** *(Partly superseded: T44 rolls on a tap, T63 applies Clanz's rules, T65 puts in the values the book sets and every commander's line.)* **The user's decision 13.10.2026:**
 Leadership automation of any kind is entirely out of scope for Play; just a
 simple choice by the user. The player chooses the value and makes the related
 sums themselves. **The menu.** The set-up screen and the Ld pop-up offer the values
@@ -803,6 +803,45 @@ a squadron** (the owner, 6.11.2026).
 **Code and tests:** `src/game-state.js` (`cmdCrown`, `syncCmdShip`, `cmdGone`),
 `src/render.js` (`memberBox`, `cmdLine`, `rrBoxesHTML`), `src/derived.js`
 (`ownLdTile`), `smoke_play.js`.
+
+**T65. The Leadership the book sets, every commander's line, and the
+impossible values greyed** (the owner, 8.11.2026: "do the Tyranids even
+roll Ld? ... grey the Ld numbers that are normally impossible for the
+faction ... a colour mark and an explanation when something changes the
+Ld - Chaos Lords for one - as Clanz does with Mob Rule"; "every faction that
+rolls: the player rolls his own dice by default, and there is the Roll Ld
+button").
+- **Not rolled, put in at the start.** Tyranids "do not generate Leadership
+  normally. Hive ships purchase their Leadership at a fixed value from the
+  fleet list, while the rest of the ships use Leadership 7 unless otherwise
+  specified" (Fleets p. 418): a hive ship plays at its list value (Ld 8, Ld 9
+  with *Increase to Ld 9*), every other Tyranid ship at 7. In a Vanguard fleet
+  "escort squadrons ... each have a Leadership value equal to the number of
+  vessels remaining in the squadron (up to a maximum of 10)" (p. 429): the
+  page keeps it to the ships left, a mixed squadron's cards counted together.
+  The values T44 put in on a tap (an Ork Hulk's 6, a Sepulchre's 10, a
+  Demiurg's start) are put in at the start as well. A value already there -
+  the player's or an older record's - stays; a tap changes any of them.
+- **Rolled ones stay the player's.** Every faction that rolls keeps its
+  tiles for the player's own dice and the Roll Ld button (T44); nothing is
+  rolled without a tap (a page-rolled proposal was tried and taken back the
+  same day).
+- **Every commander's line on his ship.** The fleet commander's on his
+  flagship as before (T8), and now every other commander's on the ship he is
+  aboard (a Chaos Lord's Ld 8 or +1): a fixed value stands in for the roll, a
+  bonus is added up to his line's maximum (else 10). The set-up row marks it
+  as T63 marks Mob Rule: the roll striped, the value it plays at ringed, a
+  line *Ld 7 -> 8: Chaos Lord aboard, +1, at most 9 (Fleets p. 244)*; a fixed
+  value with nothing rolled is a ringed pill and *his Leadership stands in for
+  the roll*. Long Range Sensors' +1 (p. 185) gets the same mark.
+- **Impossible values greyed.** A set-up Ld tile the ship's own table cannot
+  give (the Rulebook's 6-9, the Orks' 5-8, the Space Marines' 8-10, a value
+  the book sets) is grey and dashed, still a tap: a rule the page does not
+  know may give it. The lit and the striped tile are never grey.
+**Code and tests:** `rules.js` (`ldPlan` Tyranids, `leadership` and
+`squadronLd` for the Vanguard), `src/game-state.js` (`fixedLds`, `cmdShips`,
+`applyCommanderLd`), `src/render.js` (`setLdInfo`, `ldPossible`, `whyLine`),
+`test_play.js`, `smoke_play.js`.
 
 ## What is not tracked, and why
 

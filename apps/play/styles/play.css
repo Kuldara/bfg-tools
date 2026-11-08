@@ -1014,3 +1014,10 @@ details.paste .roomjoin{margin-top:6px}
 .hookl small{font:600 11px/1.2 var(--sans);color:var(--card-mute)}
 /* what the bays' sum is made of: after it, dimmer */
 .wx.bays .bof{font:600 12px/1.2 var(--mono);color:var(--card-mute);white-space:nowrap}
+
+/* a set-up Ld tile this ship's own table cannot give (user 8.11.2026):
+   greyed, still a tap - a rule the page does not know may give it */
+.seg.ld button.imp{opacity:.32;border-style:dashed}
+.seg.ld button.imp:hover{opacity:.6}
+/* a commander's value on his ship's set-up row: ringed as a change */
+.setrow .ctl .pill.on.chg{box-shadow:0 0 0 2px var(--panel),0 0 0 4px var(--accent)}

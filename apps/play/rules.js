@@ -546,9 +546,11 @@ function leadership(R, st, fleet, opt){
   if(!test && st.blast > 0 && !reactiveHull(R)) mods.push({ t: "under fire", v: -1, page: 48 });
   if(!test && fleet && fleet.enemyOrders) mods.push({ t: "enemy contacts", v: 1, page: 48 });
   if(fleet && fleet.radiation) mods.push({ t: "radiation burst", v: -fleet.radiation, page: 115 });
-  var now = st.ld + mods.reduce(function(a, m){ return a + m.v; }, 0);
+  /* a Tyranid Vanguard squadron: its vessels left, at most 10 (Fleets p. 429) */
+  var base = st.ldFrom === "vanguard" ? Math.min(10, alive(st)) : st.ld;
+  var now = base + mods.reduce(function(a, m){ return a + m.v; }, 0);
   if(now > 10) now = 10;
-  return { base: st.ld, now: now, mods: mods };
+  return { base: base, now: now, mods: mods };
 }
 
 /* Armament under the current state: halved when crippled (p. 65) and halved
@@ -676,6 +678,10 @@ function squadronLd(units, fleet, opt){
     if(u.st.blast > 0 && !reactiveHull(u.R)) fire = true;
   });
   if(!best) return { base: null, now: null, mods: [], idx: null };
+  /* a Tyranid Vanguard squadron, of one class or two (drones and Kraken,
+     Fleets p. 429): the vessels left on all its cards, at most 10 */
+  var vg = units.every(function(u){ return u.st.ldFrom === "vanguard"; });
+  var base = vg ? Math.min(10, units.reduce(function(a, u){ return a + (u.st.disengaged ? 0 : alive(u.st)); }, 0)) : best.st.ld;
   var mods = [];
   var mob = mobRule(units);
   if(mob) mods.push(mob);
@@ -683,9 +689,9 @@ function squadronLd(units, fleet, opt){
   if(fire && !test) mods.push({ t: "under fire", v: -1, page: 95 });
   if(!test && fleet && fleet.enemyOrders) mods.push({ t: "enemy contacts", v: 1, page: 48 });
   if(fleet && fleet.radiation) mods.push({ t: "radiation burst", v: -fleet.radiation, page: 115 });
-  var now = best.st.ld + mods.reduce(function(a, m){ return a + m.v; }, 0);
+  var now = base + mods.reduce(function(a, m){ return a + m.v; }, 0);
   if(now > 10) now = 10;
-  return { base: best.st.ld, now: now, mods: mods, idx: best.idx };
+  return { base: base, now: now, mods: mods, idx: best.idx };
 }
 
 /* --- Da Ork Clanz: Mob Rule, Young Gunz and the Leadership swaps -------
@@ -1433,7 +1439,20 @@ function ldPlan(R, list){
   if(ids.sepulchre) return { roll: false, value: 10, note: "carries the Sepulchre: Ld 10", page: 406, book: "Fleets" };
   var dm = txt.match(/count their Ld value as (\d+) at the start of the battle/i);
   if(dm) return { roll: false, value: parseInt(dm[1], 10), note: "Demiurg: Ld " + dm[1] + " at the start, -1 per damage point, not below 5", page: R.source.page || 488, book: "Fleets" };
-  if(/TYRANID/i.test(fl)) return { roll: false, value: null, note: "Tyranids: not rolled here - Hive Mind, synapse and instinct (Fleets pp. 418-420; Vanguard p. 429)", page: 418, book: "Fleets", manual: true };
+  /* Tyranids "do not generate Leadership normally. Hive ships purchase
+     their Leadership at a fixed value from the fleet list, while the rest
+     of the ships use Leadership 7 unless otherwise specified" (Fleets
+     p. 418); in a Vanguard fleet "escort squadrons ... each have a
+     Leadership value equal to the number of vessels remaining in the
+     squadron (up to a maximum of 10)" (p. 429). Put in at the start (user
+     8.11.2026: "do they even roll Ld?"), the Vanguard's kept to its ships. */
+  if(/TYRANID/i.test(fl)){
+    if(/Vanguard/i.test(ln) && isEscort(R)) return { roll: false, value: null, vanguard: true, note: "Tyranid Vanguard: the squadron's Ld is the number of its vessels left, at most 10", page: 429, book: "Fleets" };
+    var hive = String(R.entry && R.entry.label || "").match(/\(Ld (\d+)\)/i), more = null;
+    (R.upgrades || []).forEach(function(u){ var m = u.state === "take" && String(u.label).match(/^Increase to Ld (\d+)/i); if(m) more = parseInt(m[1], 10); });
+    if(hive) return { roll: false, value: more || parseInt(hive[1], 10), note: "Hive ship: its Leadership bought with the fleet", page: 418, book: "Fleets" };
+    return { roll: false, value: 7, note: "Tyranids: Leadership 7 unless otherwise specified", page: 418, book: "Fleets" };
+  }
   var t = /Mechanicus/i.test(ln) ? LD_TABLES.mechanicus
         : (/SPACE MARINES|GREY KNIGHTS/i.test(fl) && !/FORTRESS-MONASTERY/i.test(String(R.className || ""))) ? LD_TABLES.marines
         : LD_TABLES.rulebook;
