@@ -828,8 +828,12 @@ function run(check){
       strip(btn(s)) || "no button");
     /* Rulebook p. 45 (D6 1 = 6) and Orks -1 (Fleets p. 360): Brutes 1 -> 5, the
        Kill Kroozer 4 -> 7, squadron B 6 -> 8, the Terror Ship 3 -> 6 */
+    /* the guard's length from before the tap: what is left after the
+       render depends on the machine's speed (a loaded one took 230 ms of
+       it, 8.11.2026) */
+    const t0 = P(`Date.now()`);
     P(`DICE([1, 4, 6, 3]); act("rollld")`);
-    check("smoke: Roll Ld guards Apply for 450 ms, so a second tap on the same place is not Apply (T63, guardUntil)", P(`(V.ygGuard || 0) - Date.now()`) > 300, P(`(V.ygGuard || 0) - Date.now()`));
+    check("smoke: Roll Ld guards Apply for 450 ms, so a second tap on the same place is not Apply (T63, guardUntil)", P(`V.ygGuard || 0`) - t0 >= 440, P(`V.ygGuard || 0`) - t0);
     s = P(`renderSetup()`);
     clean("the Clanz set-up after the roll", s);
     /* Apply, a swap and a class change are each one UNDO step: the set-up
@@ -956,21 +960,34 @@ function run(check){
     P(`act("start")`);
   });
 
-  /* ------- the launch bays as one line (user 8.11.2026, prototype A) ---- */
-  guard("the launch bays line", () => {
+  /* ------- the launch bays as one cell of the map, the hooks as a sum
+     (user 8.11.2026, prototype F) ----------------------------------------- */
+  guard("the launch bays cell", () => {
     const pg = open(), P = pg.P;
     const L = pg.DATA.lists.find(x => /^Orks . Da Ork Clanz$/.test(x.nm));
     pg.ctx.__doc = { ln: L.nm, limit: 5000, units: [saved(L, /^WARLORD$/, /^Ork Warlord$/), saved(L, /Uge/, /^Gorbag/)] };
     P(`newGame(resolveFleet(__doc)); U.forEach((x, i) => { if(x.R.kind === "ship") setLd(i, 7); }); act("start");`);
-    const bl = () => strip((P(`renderRow(1, false)`).match(/<div class="aline bays"[^]*?<\/div>/) || [""])[0]);
-    clean("Gorbag's Revenge's row with its bays line", P(`renderRow(1, false)`));
-    check("smoke: Gorbag's Revenge's bays are one sum with the badge, the craft once: O 4 + D3+1 (Fleets p. 379)", /^✈ BAYS O 4 \+ D3\+1 Fighta-Bommas 25 . Assault Boats 30 cm$/.test(bl()), bl());
+    /* the cell, inside the map: from its start to the end of the map */
+    const cell = () => { const h = P(`renderRow(1, false)`), k = h.indexOf('class="wx span bays"'), m = h.lastIndexOf('<div class="amap', k); return k < 0 || m < 0 ? "" : strip(h.slice(k - 6, h.indexOf("</div>", k))); };
+    clean("Gorbag's Revenge's row with its bays cell", P(`renderRow(1, false)`));
+    check("smoke: Gorbag's Revenge's bays are one cell of the map, the whole width: badge, sum, the craft once: O 4 + D3+1 (Fleets p. 379)",
+      /^O 4 \+ D3\+1 Fighta-Bommas 25 . Assault Boats 30 cm$/.test(cell()) && /class="wx span bays" style="grid-column:1 \/ 4"/.test(P(`renderRow(1, false)`)) && !/✈/.test(strip(P(`renderRow(1, false)`))), cell());
     P(`PLAY.addCrit(G.st[1], "4", U[1].R)`);
-    check("smoke: ... Port Armament Damaged takes the port bays: 2 + D3+1, -2 port struck (p. 67)", /O 2 \+ D3\+1 −2 port/.test(bl()), bl());
+    check("smoke: ... Port Armament Damaged takes the port bays: 2 + D3+1, -2 port struck (p. 67)", /^O 2 \+ D3\+1 −2 port /.test(cell()), cell());
     P(`G.st[1].crits = {}; G.st[1].hits = PLAY.view(U[1].R, G.st[1], G.fleet).crippledAt`);
-    check("smoke: ... crippled halves them: 2 + 1/2(D3+1) (p. 65)", /O 2 \+ ½\(D3\+1\)/.test(bl()), bl());
+    check("smoke: ... crippled halves them: 2 + 1/2(D3+1) (p. 65)", /^O 2 \+ ½\(D3\+1\) /.test(cell()), cell());
     P(`V.compact = true`);
-    check("smoke: ... compact: the sum and the speeds alone", /^✈ O 2 \+ ½\(D3\+1\) 25\/30$/.test(bl()), bl());
+    check("smoke: ... compact: the sum and the speeds alone", /^O 2 \+ ½\(D3\+1\) 25\/30$/.test(cell()), cell());
+    P(`V.compact = false`);
+    /* a Gal'leath's three hooks: one sum, no sides; none in the compact view */
+    const T = pg.DATA.lists.find(x => /^Tau . Merchant Fleet$/.test(x.nm));
+    const s = T.secs.findIndex(x => x.ents.some(e => /Gal.leath|Explorer/i.test(e.l))), e = T.secs[s].ents.findIndex(x => /Gal.leath|Explorer/i.test(x.l));
+    pg.ctx.__doc = { ln: T.nm, limit: 5000, units: [{ s, e, sn: T.secs[s].t, el: T.secs[s].ents[e].l, ref: T.secs[s].ents[e].r, n: 1, name: "" }] };
+    P(`newGame(resolveFleet(__doc)); U.forEach((x, i) => { if(x.R.kind === "ship") setLd(i, 7); }); act("start");`);
+    const hk = strip((P(`renderRow(0, false)`).match(/<p class="hookl"[^]*?<\/p>/) || [""])[0]);
+    check("smoke: a Gal'leath's three hooks are one sum with their badge: H 3 Orcas/Wardens (user 8.11.2026)", hk === "H 3 Orcas/Wardens gravitic hooks", hk);
+    P(`V.compact = true`);
+    check("smoke: ... and the compact view leaves them out", !/hookl|gravitic|Warden/i.test(P(`renderRow(0, false)`)));
     P(`V.compact = false`);
   });
 

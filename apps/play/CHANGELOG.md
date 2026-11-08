@@ -6,7 +6,8 @@ a tag `play-v<version>` deploys the Registry's site.
 ## Unreleased
 
 ### Changed
-- **The launch bays as one line** (8.11.2026, the user's pick of four prototypes, A): the bay's own badge and the bays added up, the dice after the numbers - Gorbag's Revenge reads *O 4 + D3+1* where it had three cells of port, starboard and dorsal - and the craft with their speeds once (*Fighta-Bommas 25 · Assault Boats 30 cm*; in the compact view *25/30*). Where a bay sits matters only to a critical: a silenced bay is struck after the sum with its side (*2 + D3+1 −2 port*, p. 67); crippled, the line is halved in the crippled colour (*2 + ½(D3+1)*, p. 65). Each bay and why it is silent are the tooltip. Gravitic hooks and other rows without an arc keep their line.
+- **The launch bays as one cell of the map** (8.11.2026, the user's pick after two rounds of prototypes, F): one cell the whole width of the arc map, among the weapons, with the bay's own badge and the bays added up, the dice after the numbers - Gorbag's Revenge reads *O 4 + D3+1* where it had three cells of port, starboard and dorsal on an ordnance line - and the craft with their speeds once (*Fighta-Bommas 25 · Assault Boats 30 cm*; in the compact view *25/30*). Where a bay sits matters only to a critical: a silenced bay is struck after the sum with its side (*2 + D3+1 −2 port*, p. 67); crippled, the sum is halved in the crippled colour (*2 + ½(D3+1)*, p. 65). Each bay and why it is silent are the tooltip.
+- **Gravitic hooks as a sum** (Tau, 8.11.2026: they no longer matter in play, nor where they sit): one quiet line under the map with the hook's badge, *H 3 Orcas/Wardens*, in the normal view; the compact view leaves them out. The ship's own card still lists each one.
 - A squadron's number of ships is read right after its kind (6.11.2026): on the row the tag says ESC and a large ×3 follows it; on the set-up a bold ×3 (×3 → 4 with a free escort); in the strip of ships a larger ×3.
 
 ### Fixed

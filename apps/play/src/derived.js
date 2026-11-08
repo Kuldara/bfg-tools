@@ -309,24 +309,27 @@ export function arcMap(R, st, esq, compact){
     const label = span > 1 ? (compact ? (c.note || "") : [bas, c.note || spanName(c.w.name)].filter(Boolean).join(" · ")) : (c.note && !compact ? c.note : "");
     return arcCell(c.w, `grid-column:${c.a} / ${c.b}`, (span > 1 ? "span" : "") + (c.twin ? " twin" : ""), label);
   }).join("");
-  const bays = ord.filter(w => w.bays), other = ord.filter(w => !w.bays);
+  const hook = w => /\bgravitic hook\b/i.test(w.name);
+  const bays = ord.filter(w => w.bays), hooks = ord.filter(w => !w.bays && hook(w)), other = ord.filter(w => !w.bays && !hook(w));
+  const bc = bayCell(bays, compact);
   const line = (glyph, word, items) => `<div class="aline"><span class="al">${glyph}${compact ? "" : ` <b>${word}</b>`}</span><span class="ai">${items}</span></div>`;
-  return (cells.length ? `<div class="amap">${head}${body}</div>` : "") +
+  return (cells.length || bc ? `<div class="amap${cells.length ? "" : " solo"}">${cells.length ? head : ""}${body}${bc}</div>` : "") +
     (rear.length ? line("▼", "REAR", rear.map(w => arcCell(w, "", "", "")).join("")) : "") +
-    bayLine(bays, compact) +
+    hookNote(hooks, compact) +
     (other.length ? line("✈", "ORD", other.map(w => arcCell(w, "", "", w.zone === "basilica" ? "basilica" : sideWord(w.name))).join("")) : "");
 }
-/* The launch bays as one line (user 8.11.2026, prototype A of four: "how
-   much capacity, what to roll"): the bay's own badge, the bays in force
-   added up - the numbers summed, a dice strength after them ("4 + D3+1"),
-   a text one as it is - the craft and their speeds once (every class's
-   bays launch the same craft). Where a bay sits matters only to a
-   critical: a bay a critical silenced is struck after the sum with its
-   side ("-2 port", p. 67); a crippled ship's are halved, in the crippled
-   colour ("2 + ½(D3+1)", p. 65). Each bay, its value and why it is
-   silent are the tooltip. */
+/* The launch bays as one cell of the map, the whole width (user 8.11.2026,
+   prototype F of the second round, after A: "how much capacity, what to
+   roll"): the bay's own badge, the bays in force added up - the numbers
+   summed, a dice strength after them ("4 + D3+1"), a text one as it is -
+   and the craft with their speeds once (every class's bays launch the same
+   craft; the compact view the speeds alone, 25/30). Where a bay sits
+   matters only to a critical: a bay a critical silenced is struck after the
+   sum with its side ("-2 port", p. 67); a crippled ship's are halved, in the
+   crippled colour ("2 + ½(D3+1)", p. 65). Each bay, its value and why it
+   is silent are the tooltip. */
 const crafts = r => String(r || "").split("/").map(x => x.replace(/[()]/g, "").trim()).map(x => { const m = x.match(/^(.*?):\s*(\d+)\s*cm/); return m ? [m[1].trim(), m[2]] : null; }).filter(Boolean);
-function bayLine(list, compact){
+function bayCell(list, compact){
   if(!list.length) return "";
   const live = list.filter(w => !w.silent), lost = list.filter(w => w.silent);
   const n = live.filter(w => w.txt == null).reduce((a, w) => a + (w.now | 0), 0);
@@ -339,9 +342,26 @@ function bayLine(list, compact){
   list.forEach(w => crafts(w.rtxt).forEach(c => { if(!seen[c.join()]){ seen[c.join()] = 1; cs.push(c); } }));
   const speeds = cs.map(c => c[1]).filter((x, k, a) => a.indexOf(x) === k);
   const craft = !cs.length ? "" : compact ? speeds.join("/") : cs.map(c => `${esc(c[0])} <b>${c[1]}</b>`).join(" · ") + " cm";
-  const tip = list.map(w => w.name + ": " + (w.txt != null ? w.txt : w.now) + (w.silent ? " · " + w.silent : "")).join("; ");
+  const tip = list.map(w => w.name + ": " + (w.txt != null ? w.txt : w.now) + (w.zone === "basilica" ? " (basilica)" : "") + (w.silent ? " · " + w.silent : "")).join("; ");
   const [letter, badge] = wepClass("launch bays");
-  return `<div class="aline bays" title="${esc(tip)}"><span class="al">✈${compact ? "" : " <b>BAYS</b>"}</span><span class="ai"><i class="bg bb" style="--bd:${badge}">${letter}</i><b class="bt${half ? " half" : ""}">${sum}</b>${was ? `<s class="blost">${esc(was)}</s>` : ""}${craft ? `<span class="bc">${craft}</span>` : ""}</span></div>`;
+  return `<span class="wx span bays" style="grid-column:1 / 4" title="${esc(tip)}"><i class="bg" style="--bd:${badge}">${letter}</i><b class="bt${half ? " half" : ""}">${sum}</b>${was ? `<s class="bl">${esc(was)}</s>` : ""}${craft ? `<span class="bc">${craft}</span>` : ""}</span>`;
+}
+/* Gravitic hooks (Tau): what they carry, added up, under the map in the
+   normal view - where a hook sits and its state do not matter in play, and
+   the compact view leaves them out (user 8.11.2026). "1 Orca/Warden" three
+   times is "3 Orcas/Wardens"; the badge stays. */
+function hookNote(list, compact){
+  if(compact || !list.length) return "";
+  const sums = {}, order = [];
+  list.forEach(w => {
+    const m = String(w.txt || "").match(/^(\d+)\s+(.+)$/);
+    const key = m ? m[2].replace(/s\b/g, "") : String(w.txt);
+    if(!(key in sums)){ sums[key] = { n: 0, num: !!m }; order.push(key); }
+    if(m) sums[key].n += +m[1];
+  });
+  const txt = order.map(k => { const x = sums[k]; return !x.num ? k : x.n + " " + (x.n > 1 ? k.split("/").map(p => p + "s").join("/") : k); }).join(" + ");
+  const [letter, badge] = wepClass(list[0].name);
+  return `<p class="hookl" title="${esc(list.map(w => w.name + ": " + w.txt).join("; "))}"><i class="bg" style="--bd:${badge}">${letter}</i>${esc(txt)}<small>gravitic hook${list.length > 1 ? "s" : ""}</small></p>`;
 }
 /* The armament as a table with the numbers first (user 2.11.2026: "what is
    big and easy to see" - the names were large and said nothing the badge
