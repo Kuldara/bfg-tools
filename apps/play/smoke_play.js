@@ -956,6 +956,24 @@ function run(check){
     P(`act("start")`);
   });
 
+  /* ------- the launch bays as one line (user 8.11.2026, prototype A) ---- */
+  guard("the launch bays line", () => {
+    const pg = open(), P = pg.P;
+    const L = pg.DATA.lists.find(x => /^Orks . Da Ork Clanz$/.test(x.nm));
+    pg.ctx.__doc = { ln: L.nm, limit: 5000, units: [saved(L, /^WARLORD$/, /^Ork Warlord$/), saved(L, /Uge/, /^Gorbag/)] };
+    P(`newGame(resolveFleet(__doc)); U.forEach((x, i) => { if(x.R.kind === "ship") setLd(i, 7); }); act("start");`);
+    const bl = () => strip((P(`renderRow(1, false)`).match(/<div class="aline bays"[^]*?<\/div>/) || [""])[0]);
+    clean("Gorbag's Revenge's row with its bays line", P(`renderRow(1, false)`));
+    check("smoke: Gorbag's Revenge's bays are one sum with the badge, the craft once: O 4 + D3+1 (Fleets p. 379)", /^✈ BAYS O 4 \+ D3\+1 Fighta-Bommas 25 . Assault Boats 30 cm$/.test(bl()), bl());
+    P(`PLAY.addCrit(G.st[1], "4", U[1].R)`);
+    check("smoke: ... Port Armament Damaged takes the port bays: 2 + D3+1, -2 port struck (p. 67)", /O 2 \+ D3\+1 −2 port/.test(bl()), bl());
+    P(`G.st[1].crits = {}; G.st[1].hits = PLAY.view(U[1].R, G.st[1], G.fleet).crippledAt`);
+    check("smoke: ... crippled halves them: 2 + 1/2(D3+1) (p. 65)", /O 2 \+ ½\(D3\+1\)/.test(bl()), bl());
+    P(`V.compact = true`);
+    check("smoke: ... compact: the sum and the speeds alone", /^✈ O 2 \+ ½\(D3\+1\) 25\/30$/.test(bl()), bl());
+    P(`V.compact = false`);
+  });
+
   /* ------- T64: the commander's ship in an escort squadron, own Ld ----- */
   guard("the commander aboard an escort, a capital ship's own Ld", () => {
     const pg = open(), P = pg.P;

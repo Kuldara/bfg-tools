@@ -255,7 +255,7 @@ export function arcItems(R, st, esq, v){
     return { k: k, letter: letter, badge: badge, name: a.name, txt: txt, full: full, now: now, half: half,
              ships: esq ? a.ships : 0, each: esq ? a.each : null, nocombine: !!(esq && a.nocombine),
              silent: !esq && a.silent ? a.silent : "", bays: !!a.bays, torp: !!a.torp, zone: a.zone || "",
-             sect: arcSectors(a.arc), arc: a.arc, range: rangeHTML(R, a, k, "rp") };
+             sect: arcSectors(a.arc), arc: a.arc, range: rangeHTML(R, a, k, "rp"), rtxt: a.range };
   });
 }
 /* a span's name without the class the badge gives: "dorsal lance" */
@@ -309,10 +309,39 @@ export function arcMap(R, st, esq, compact){
     const label = span > 1 ? (compact ? (c.note || "") : [bas, c.note || spanName(c.w.name)].filter(Boolean).join(" · ")) : (c.note && !compact ? c.note : "");
     return arcCell(c.w, `grid-column:${c.a} / ${c.b}`, (span > 1 ? "span" : "") + (c.twin ? " twin" : ""), label);
   }).join("");
+  const bays = ord.filter(w => w.bays), other = ord.filter(w => !w.bays);
   const line = (glyph, word, items) => `<div class="aline"><span class="al">${glyph}${compact ? "" : ` <b>${word}</b>`}</span><span class="ai">${items}</span></div>`;
   return (cells.length ? `<div class="amap">${head}${body}</div>` : "") +
     (rear.length ? line("▼", "REAR", rear.map(w => arcCell(w, "", "", "")).join("")) : "") +
-    (ord.length ? line("✈", "ORD", ord.map(w => arcCell(w, "", "", w.zone === "basilica" ? "basilica" : sideWord(w.name))).join("")) : "");
+    bayLine(bays, compact) +
+    (other.length ? line("✈", "ORD", other.map(w => arcCell(w, "", "", w.zone === "basilica" ? "basilica" : sideWord(w.name))).join("")) : "");
+}
+/* The launch bays as one line (user 8.11.2026, prototype A of four: "how
+   much capacity, what to roll"): the bay's own badge, the bays in force
+   added up - the numbers summed, a dice strength after them ("4 + D3+1"),
+   a text one as it is - the craft and their speeds once (every class's
+   bays launch the same craft). Where a bay sits matters only to a
+   critical: a bay a critical silenced is struck after the sum with its
+   side ("-2 port", p. 67); a crippled ship's are halved, in the crippled
+   colour ("2 + ½(D3+1)", p. 65). Each bay, its value and why it is
+   silent are the tooltip. */
+const crafts = r => String(r || "").split("/").map(x => x.replace(/[()]/g, "").trim()).map(x => { const m = x.match(/^(.*?):\s*(\d+)\s*cm/); return m ? [m[1].trim(), m[2]] : null; }).filter(Boolean);
+function bayLine(list, compact){
+  if(!list.length) return "";
+  const live = list.filter(w => !w.silent), lost = list.filter(w => w.silent);
+  const n = live.filter(w => w.txt == null).reduce((a, w) => a + (w.now | 0), 0);
+  const words = live.filter(w => w.txt != null).map(w => w.half && DICE.test(w.txt) ? "½(" + w.txt + ")" : w.txt);
+  const half = live.some(w => w.half);
+  const parts = (n || !words.length ? [String(n)] : []).concat(words);
+  const sum = parts.map((t, k) => (k ? `<i>+</i>` : "") + `<span${/[a-z]{3}/i.test(t) ? ' class="tx"' : ""}>${esc(t)}</span>`).join("");
+  const was = lost.map(w => "−" + (w.txt != null ? w.txt : w.full) + (sideWord(w.name) ? " " + sideWord(w.name) : "")).join(" ");
+  const seen = {}, cs = [];
+  list.forEach(w => crafts(w.rtxt).forEach(c => { if(!seen[c.join()]){ seen[c.join()] = 1; cs.push(c); } }));
+  const speeds = cs.map(c => c[1]).filter((x, k, a) => a.indexOf(x) === k);
+  const craft = !cs.length ? "" : compact ? speeds.join("/") : cs.map(c => `${esc(c[0])} <b>${c[1]}</b>`).join(" · ") + " cm";
+  const tip = list.map(w => w.name + ": " + (w.txt != null ? w.txt : w.now) + (w.silent ? " · " + w.silent : "")).join("; ");
+  const [letter, badge] = wepClass("launch bays");
+  return `<div class="aline bays" title="${esc(tip)}"><span class="al">✈${compact ? "" : " <b>BAYS</b>"}</span><span class="ai"><i class="bg bb" style="--bd:${badge}">${letter}</i><b class="bt${half ? " half" : ""}">${sum}</b>${was ? `<s class="blost">${esc(was)}</s>` : ""}${craft ? `<span class="bc">${craft}</span>` : ""}</span></div>`;
 }
 /* The armament as a table with the numbers first (user 2.11.2026: "what is
    big and easy to see" - the names were large and said nothing the badge

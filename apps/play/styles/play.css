@@ -994,3 +994,17 @@ details.paste .roomjoin{margin-top:6px}
 .hits.mem b.on .crn{fill:var(--card-mute)}
 .cmdl.gone b{text-decoration:line-through;color:var(--card-mute)}
 .cmdl .cmdgone{color:var(--bad);font:600 11px/1.2 var(--sans)}
+
+/* the launch bays as one line (user 8.11.2026, prototype A): the bay's
+   badge, the sum big, a critical's loss struck, the craft speeds once */
+.aline.bays .ai{align-items:baseline;flex-wrap:wrap;gap:4px 6px}
+.aline.bays .bb{align-self:center;width:22px;height:22px;line-height:22px;text-align:center;border-radius:5px;background:var(--bd);color:#fff;font:700 12px var(--mono);font-style:normal}
+.aline.bays .bt{display:inline-flex;align-items:baseline;gap:3px;font:700 20px/1 var(--mono);color:var(--card-ink)}
+.aline.bays .bt i{font-style:normal;font-weight:600;font-size:15px;color:var(--card-mute)}
+.aline.bays .bt .tx{font-size:12px;font-weight:600}
+.aline.bays .bt.half{color:var(--cr-ink)}
+.aline.bays .blost{font:700 12px/1 var(--mono);color:var(--bad)}
+.aline.bays .bc{margin-left:auto;font:600 11px/1.2 var(--mono);color:var(--card-mute);text-align:right}
+.aline.bays .bc b{color:var(--card-ink);font-size:12px}
+.main.compact .aline.bays .bb{width:19px;height:19px;line-height:19px;font-size:11px}
+.main.compact .aline.bays .bt{font-size:17px}
