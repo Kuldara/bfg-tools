@@ -16,7 +16,7 @@ import { refitInfoHTML } from "./refit-tables.js";
 import { baAddOne, baHintHTML, baInTarget, baRowTag, baSec, baState, baSubOne, baTopHTML, isBaSec } from "./commandeered.js";
 import { SKW_MAX, activeWarlordIdx, clanzAfterMove, clanzDimUps, clanzHiddenUps, clanzIn, clanzMoveBlock, clanzPin, clanzSkwadronSec, factRowsHTML, fleetControlsHTML, freeSqTag, fxTagsHTML, isCommandeered, isOrkHulkUnit, optFxHTML, orkTiddlaHint, skwKind, upKind, orkPlain, orkSecGloss, sendSkwadron, setClan, setWarlordRerolls, upFx, warlordColor, warlordIdx, warlordNeeds, warlordSkwadrons } from "./warlords.js";
 import { DATA, LISTS, SHIPS } from "../../../packages/ui/catalog.js";
-import { arcGlyph, arcParts, esc, optCostLabel, shortRange, title, upCostText } from "../../../packages/ui/format.js";
+import { arcGlyph, arcParts, esc, optCostLabel, shortOptText, shortRange, title, upCostText } from "../../../packages/ui/format.js";
 import DOMAIN from "../../../packages/rules/domain.js";
 
 
@@ -772,7 +772,7 @@ export function unitHTML(R, ui, st){
            data-d="1">+</button><em>max ${o.max}</em></span>` : "";
     return `<div class="opt${blocked ? " dis" : ""}">
       <span class="tri">${b("take","Take")}${b("opt","Option")}${b("off","Hide","off")}</span>
-      <span>${esc(o.text)}${qty}</span><span class="c">${
+      <span class="otx" title="${esc(o.text)}">${esc(shortOptText(o.text))}${qty}</span><span class="c">${
         c}${o.max > 1 && st2 === "take" && o.qty > 1
             ? " \u00d7" + o.qty : ""}</span>${optFxHTML(o.text, R.entry && R.entry.list)}</div>`;
   }).join("") : "";

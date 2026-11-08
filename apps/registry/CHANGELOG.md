@@ -6,6 +6,7 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 ## Unreleased
 
 ### Changed
+- A ship's own options read as short lines like the list upgrades - "Nova cannon instead of prow torpedoes", "Power ram", "Third turret" - and the book's text is the hover (8.11.2026). Each of the 87 option texts longer than a line has its own short name (packages/ui/format.js OPT_SHORT); test_upgrades.js fails on a new one without. The printed card keeps the book's text.
 - Tyranid Hive Fleet (user 8.11.2026): the ordnance markers (Strength 4 boarding torpedo 12, assault boat 8, fighter 7 pts; Fleets p. 431) are bought in their own ORDNANCE section under the escorts, by the piece, for their points only - no card. They are no longer offered as upgrades on every ship. The 10 % share and "at least one hive ship" are checked as before.
 - Tyranid Hive Fleet: the fire ship is a ship of its own in ESCORTS, *Fire ship (escort drone)*: an escort drone that becomes a fire ship instead of taking a weapon, 10 + 5 = 15 pts (pp. 431, 437), with the fire ship rules (p. 516) on its card. It counts as an escort drone for "six escort drones for every hive ship", and the legality panel checks "up to 10 % of the escort drones". A plain escort drone no longer offers the fire ship option; a saved drone that took it opens as a drone without it.
 - Tyranids: the bio-enhancements say once, above the first of them on a unit, that they are used only if your opponent agrees (p. 426: "These refits can only be used in one-off games if both players agree").

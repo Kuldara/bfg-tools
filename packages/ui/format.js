@@ -84,6 +84,91 @@ export function shortShield(v){
   return t;
 }
 
+/* A ship option's text as a short line beside the others (user 8.11.2026:
+   "shorten these million-word texts like the rest; the hover shows the raw
+   text"). The price is in its own column and the list conditions are the
+   builder's to apply, so both go; what is left is the change itself. Pure:
+   the book's text stays in R.options[].text for the card and the hover. */
+export const OPT_SHORT = [
+  /* first match wins: put narrow patterns before wide ones */
+  [/power ram/i, "Power ram"],
+  [/may carry squadrons of Shark assault boats/i, "Shark assault boats"],
+  [/^May be equipped with Shark assault boats/i, "Shark assault boats"],
+  [/^May replace its Nova Cannon with Strength 9 torpedo/i, "Torpedoes (Str 9) instead of nova cannon"],
+  [/^Can replace its Nova Cannon with strength 6 torpedoes/i, "Torpedoes (Str 6) instead of nova cannon"],
+  [/shorter range but more powerful weapons batteries/i, "Batteries 30 cm, firepower 10"],
+  [/retrofitted with a targeting matrix/i, "Targeting matrix: batteries shift left"],
+  [/third turret|turret array upgraded from 2 to 3|upgrade its turrets from two to three/i, "Third turret"],
+  [/improved weapons batteries.*60 cm/i, "Batteries 45 \u2192 60 cm"],
+  [/prow torpedoes (?:with|for) a nova cannon/i, "Nova cannon instead of prow torpedoes"],
+  [/^The Overlord battlecruiser is based on the Acheron/i, "Acheron targeting: batteries shift left"],
+  [/^Originally fitted with 45cm range weapons batteries/i, "Earlier version: batteries 45 cm, firepower 6"],
+  [/replace its 30 cm range weapons batteries with 45 cm/i, "Batteries 30 \u2192 45 cm"],
+  [/^May increase the prow armour to 6\+/i, "Prow armour 6+ (turns 45\u00b0)"],
+  [/replace their prow lances with prow torpedoes/i, "Prow torpedoes (Str 6) instead of lances"],
+  [/experimental long range detection gear/i, "Long range detection gear (no batteries)"],
+  [/launch bays (?:for|with) (?:a )?Strength 6,? speed:? ?30 cm torpedo/i, "Torpedoes (Str 6) instead of launch bays"],
+  [/launch bays for a Firepower 5, range 30 cm \(front arc only\) bombardment/i, "Bombardment cannon instead of launch bays"],
+  [/prow bombardment cannon for a Strength 1, range: 30 cm lance/i, "Prow lance instead of bombardment cannon"],
+  [/^May take an additional shield/i, "Additional shield"],
+  [/^The Omnissiah\u2019s Victory represents/i, "Unique Ark Mechanicus"],
+  [/plasma-boosters/i, "Plasma-boosters: batteries 45 cm"],
+  [/prow torpedoes with a single 30 cm range dorsal lance/i, "Dorsal lance instead of prow torpedoes"],
+  [/dorsal bombardment cannon for Strength 2, range: 45 cm lances/i, "Lances instead of dorsal bombardment cannon"],
+  [/one refit from the Xenotech systems table/i, "Xenotech refit"],
+  [/^Fuel Tanker:/i, "Fuel tanker"],
+  [/^Repair Tender/i, "Repair tender"],
+  [/^Super-Heavy Transport/i, "Super-heavy transport (+4 HP)"],
+  [/^Xenotech system \(free, choose one\) \u2014 Long Range Sensors/i, "Xenotech: Long Range Sensors"],
+  [/^Xenotech system \(free, choose one\) \u2014 Targeting Matrix/i, "Xenotech: Targeting Matrix"],
+  [/^Xenotech system \(free, choose one\) \u2014 Advanced Shielding/i, "Xenotech: Advanced Shielding"],
+  [/^Xenotech system \(free, choose one\) \u2014 Ship Defense Grid/i, "Xenotech: Ship Defense Grid"],
+  [/^Xenotech system \(free, choose one\) \u2014 Advanced Drive Technology/i, "Xenotech: Advanced Drive Technology"],
+  [/^Xenotech system \(free, choose one\) \u2014 Gravitic Thrusters/i, "Xenotech: Gravitic Thrusters"],
+  [/^Fast Clipper:/i, "Fast clipper (no primary battery)"],
+  [/led by a Chaos Lord having \+1 leadership/i, "Chaos Lord (+1 Ld)"],
+  [/^Can embark Chaos Space Marines/i, "Chaos Space Marines"],
+  [/embark Chosen Terminators/i, "Chosen Terminators"],
+  [/port and starboard weapons battery for range 45 cm, Firepower 8/i, "Broadside batteries 45 cm, firepower 8"],
+  [/port and starboard weapons battery for range 30 cm, Firepower 10/i, "Broadside batteries 30 cm, firepower 10"],
+  [/prow lance battery for Strength 8 torpedo|prow lances with Strength 8 torpedoes/i, "Torpedoes (Str 8) instead of prow lances"],
+  [/dorsal lance battery for range 45 cm, strength 4/i, "Dorsal lances 45 cm, strength 4"],
+  [/improved thrusters and may move 5D6/i, "Improved thrusters: 5D6 on All Ahead Full"],
+  [/ancient targeting systems.*dorsal lances to 45 cm/i, "Dorsal lances 45 cm"],
+  [/third shield.*60 mm base/i, "Third shield (60 mm base)"],
+  [/Firepower 10 weapons batteries with Firepower 4 weapons batteries and Strength 2 lance/i, "Batteries 4 + lances 2 instead of firepower 10"],
+  [/may take Vampire raiders/i, "Vampire raiders"],
+  [/boarding torpedoes for \+\d+ pts \(speed 20 cm/i, "Boarding torpedoes"],
+  [/torpedo bommas/i, "Torpedo bommas"],
+  [/prow heavy gun battery with a torpedo launcha/i, "Torpedo launcha instead of prow heavy gunz"],
+  [/^If fitted with a torpedo launcha, it may carry boarding torpedoes/i, "Boarding torpedoes (with the launcha)"],
+  [/^Prow \u2014 torpedo launcha instead of heavy gunz/i, "Prow torpedo launcha instead of heavy gunz"],
+  [/^Prow \u2014 additional D6 gunz/i, "Prow +D6 gunz"],
+  [/equipped with Klaws/i, "Klaws"],
+  [/upgraded to carry a Sepulchre/i, "Sepulchre (one tombship)"],
+  [/^Port\/starboard set (\d) \u2014 Bio-plasma discharge/i, "Broadside set $1: bio-plasma discharge"],
+  [/elect to become fire ships/i, "Fire ship (up to 10 % of drones)"],
+  [/Il\u2019fannors .*increase their hits from 4 to 6/i, "Hits 4 \u2192 6"],
+  [/deflector that raises its prow armour to 6\+/i, "Deflector: prow armour 6+"],
+  [/^Gravitic hook/i, "Gravitic hook"],
+  [/^Manufacturing & Research module/i, "Manufacturing & Research module"],
+  [/Warsphere may add 2HP and 2 firepower/i, "+2 HP and +2 firepower"],
+  [/Warsphere may subtract 2HP and 2 firepower/i, "\u22122 HP and \u22122 firepower"],
+  [/Warspheres 10HP or greater may also add \+1 shield/i, "+1 shield (10 HP or more)"],
+  [/Warspheres 10HP or greater may \+1 turret/i, "+1 turret (10 HP or more)"],
+  [/extend the range of its weapons battery by \+15 cm/i, "Battery range +15 cm (10 HP or more)"]
+];
+export function shortOptText(text){
+  const raw = String(text || "").trim();
+  const hit = OPT_SHORT.find(x => x[0].test(raw));
+  if(hit) return hit[1].indexOf("$") >= 0 ? raw.match(hit[0])[0].replace(hit[0], hit[1]) : hit[1];
+  if(raw.length <= 40) return raw.replace(/\.$/, "");
+  /* a text the table does not know yet (a new book version): its first
+     sentence, cut at a word - test_upgrades.js asks for a table row */
+  const t = raw.split(/(?<=[.;])\s+/)[0].replace(/[.;]$/, "");
+  return t.length <= 48 ? t : t.slice(0, 47).replace(/\s+\S*$/, "") + "\u2026";
+}
+
 /* A cost of zero is free; a missing cost is unknown; a negative cost makes
    the ship cheaper. Four options in the book are negative, and printing
    "+-20" for them would be nonsense. */

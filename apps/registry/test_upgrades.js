@@ -675,6 +675,20 @@ console.log("\n=== Overlapping swap options exclude each other ===");
                                  aw: "Weapons battery/45 cm/12/All round" });
 }
 
+console.log("\n=== Y  A ship option is a short line, its book text the hover (user 8.11.2026) ===");
+{
+  /* every option text longer than a line has its own short name; a new
+     book text lands here instead of as a cut-off sentence */
+  const long = [...new Set(Object.values(SHIPS).flatMap(sh => (sh.ol || []).map(o => o.t)).filter(t => t.length > 40))];
+  const missing = long.filter(t => !api.OPT_SHORT.some(x => x[0].test(t)));
+  eq(missing.map(t => t.slice(0, 60)).join(" | "), "", "every option text over 40 characters has a short name (" + long.length + ")");
+  const L = useList("Gothic Sector");
+  const lun = add(L, "Lunar class cruiser", "Cruisers");
+  const h = api.unitRowHTML(lun, 0);
+  ok(/<span class="otx" title="Can replace its prow torpedoes with a nova cannon[^"]*">Nova cannon instead of prow torpedoes</.test(h), "the Lunar's nova cannon: a short line, the book's text on hover");
+  ok(/<span class="otx" title="If the prow torpedoes are not replaced[^"]*">Power ram</.test(h), "... and its power ram");
+}
+
 console.log("\n=== Z  Grunt Klaws: one row, its price per ship (user 6.11.2026) ===");
 {
   /* p. 390 "Grunt assault ships can be equipped with Klaws for +5 points for
@@ -687,7 +701,7 @@ console.log("\n=== Z  Grunt Klaws: one row, its price per ship (user 6.11.2026) 
   api.setOptState(g, ki, "take");
   eq(api.unitPts(g), 5 * 35, "five Grunts with Klaws: 5 x (30 + 5)");
   const h = api.unitRowHTML(g, 0).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ");
-  ok(/equipped with Klaws for \+5 points for each vessel, not per skwadron\. \+5 \/ ship = \+25/.test(h), "the option's price says per ship and the total: +5 / ship = +25");
+  ok(/ Klaws \+5 \/ ship = \+25/.test(h), "the option's price says per ship and the total: +5 / ship = +25");
   eq((h.match(/Klaws \(Grunt/g) || []).length, 0, "no second Klaws row under the fleet-list upgrades");
   /* the user, 6.11.2026: the number of ships is a squadron's second thing to
      read, right after its class - its own mark in the head, not small print */
