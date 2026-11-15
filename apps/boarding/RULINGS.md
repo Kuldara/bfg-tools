@@ -10,10 +10,12 @@ PDF page. Key pages: boarding RB pp. 89-91, End Phase p. 88, crippled p. 65,
 criticals pp. 66-67, catastrophic damage p. 71, defence criticals p. 101,
 hit-and-run and teleports p. 92.
 
-1. **The crippled +2 counts for every crippled enemy ship.** REF's example 3
-   counts two crippled Kill Kroozers separately (+4); only that reading gives its
-   printed total of 11. Blast markers and special orders count **once**, since no
-   source says otherwise.
+1. **The crippled +2 counts once**, however many enemy ships are crippled. In a
+   multi-ship boarding "Race and other modifiers are only counted once" (RB
+   p. 90). REF's example 3 counts two crippled Kill Kroozers separately (+4, for
+   its printed total of 11); the book wins over the sheet, as in 2 and 3. Blast
+   markers and special orders count once too. (Until 15.11.2026 the app followed
+   REF and gave +2 per crippled ship.)
 2. **REF's example 2 leaves out the ratio modifier** (11 vs 10 gives +1). The app
    follows the rule text, RB p. 90, not the example: the example's right result
    is Stormed, not Driven Back.

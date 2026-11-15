@@ -174,13 +174,14 @@
         ? "enemy on special orders (Jovian sensor array)"
         : "enemy on special orders", v: orderBonus });
     }
-    // +2 per crippled enemy ship (REF example 3: two crippled Kill Kroozers gave +4)
+    // +2 once if any enemy ship is crippled: in a multi-ship boarding "Race and
+    // other modifiers are only counted once" (RB p.90; RULINGS.md 1).
     var crip = eShips.filter(isCrippled).length;
     if (crip > 0) {
       mods.push({
         id: "crippled",
-        label: crip > 1 ? crip + " crippled enemy ships" : "enemy ship is crippled",
-        v: 2 * crip,
+        label: crip > 1 ? crip + " crippled enemy ships (counted once)" : "enemy ship is crippled",
+        v: 2,
       });
     }
     // Hemlock, Shadowhunter, Ghostship: "a ship that BOARDS one gains a +1

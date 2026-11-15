@@ -94,15 +94,16 @@ eq(s1.damage, 2, "REF ex.1 the Lunar takes 2 damage");
 eq([s1.result.name, s1.critNeeds.win, s1.critNeeds.lose], ["Heavy Fighting", 4, 5],
   "REF ex.1 Heavy Fighting: 4+ / 5+");
 
-// REF example 3 in full: this is the case that proves +2 is PER crippled enemy ship.
+// REF example 3: the sheet counts +2 per crippled Kroozer (+4, total 11), but RB p.90
+// counts other modifiers once in a multi-ship boarding, so the app gives +2 (RULINGS.md 1).
 var p3 = B.prepare({ att: side("ork", [kk1, kk2]), def: side("tyranid", [hive]) });
-eq(p3.def.mods.map(function (m) { return m.id + ":" + m.v; }), ["ratio2:2", "crippled:4"],
-  "REF ex.3 Hive Ship: +2 ratio and +2 per crippled Kroozer");
+eq(p3.def.mods.map(function (m) { return m.id + ":" + m.v; }), ["ratio2:2", "crippled:2"],
+  "REF ex.3 Hive Ship: +2 ratio and +2 once for the crippled Kroozers (RB p.90)");
 eq(p3.att.mods.map(function (m) { return m.id + ":" + m.v; }), ["ork:1"], "REF ex.3 Kroozers: +1 Orks only");
 eq(p3.def.dice, 2, "REF ex.3 Tyranids roll 2D6");
 var s3 = B.score(p3, { att: [3], def: [2, 5] });
-eq([s3.att.total, s3.def.total], [4, 11], "REF ex.3 final scores 4 vs 11");
-eq(s3.damage, 7, "REF ex.3 the Ork player distributes 7 damage");
+eq([s3.att.total, s3.def.total], [4, 9], "REF ex.3 final scores 4 vs 9 (the sheet's 11 has +2 twice)");
+eq(s3.damage, 5, "REF ex.3 the Ork player distributes 5 damage (the sheet's 7)");
 eq([s3.result.name, s3.critNeeds.win, s3.critNeeds.lose], ["Overwhelmed", 0, 7],
   "REF ex.3 Overwhelmed: automatic critical, none back");
 

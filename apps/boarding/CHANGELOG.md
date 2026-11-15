@@ -8,6 +8,7 @@ Releases are tags `boarding-v<yyyy.mm.dd>`.
 - The app's dice read Math.random at each roll, not once at load, so the Berzerker Tide test (check_tide.js) gets the dice it sets; it was rolling real ones and failed about one run in six. No change for a player.
 
 ### Changed
+- The crippled +2 counts once in a multi-ship boarding, however many enemy ships are crippled (15.11.2026, RULINGS.md 1): RB p.90 "Race and other modifiers are only counted once". It was +2 for each crippled ship, after the REF sheet's example 3.
 - Berzerker Tide is for the boarding side only (4.11.2026, RULINGS.md 7: "conducting a boarding action", FL p.250; RB p.89); a defending Mark of Khorne ship was offered it too.
 - Berzerker Tide against several enemy ships: the boarder picks the ship for each extra roll (4.11.2026, RULINGS.md 7); the app took them in turn.
 - Berzerker Tide's extra rolls are automatic critical damage rolls (4.11.2026, RULINGS.md 7), under a head of their own; they were rolled at the side's own critical threshold.
