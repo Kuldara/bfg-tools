@@ -6,6 +6,8 @@ the Finnish backlog, `docs/history/registry/BACKLOG.md`.
 ## Unreleased
 
 ### Added
+- The three Ordos on every list an Inquisitor Lord can lead (18.11.2026, a user's question): Ordo Hereticus +25 (Fleets p. 150), Ordo Xenos +30 with the Xenotech refit chosen for +5 (p. 151) and Ordo Malleus +25 (p. 152) on the four Imperial Navy lists, the three Space Marine lists and the Explorator. Until now these lists offered only Ordo Malleus, and the Space Marine lists none; the Ordos were only on the Inquisition's own list. As there, an Ordo needs the Inquisitor Lord and there is one Ordo. The Ordo Xenos allies of p. 151 (a Demiurg capital ship, Corsair Eldar or Tau cruiser) are not offered on these lists.
+- An Ordo row says what it is: "added to the Inquisitor Lord: his Ordo, on the same ship" (p. 150: "The listed cost is added to that of the Inquisitor Lord"), not "commander - assign to a ship".
 - + on a unit in the fleet (8.11.2026): a copy right after it, with the same ship count, options, upgrades, clan, card note and ± points. The copy has no names and no squadron letter (it is a squadron of its own; a mixed squadron or a kroozer skwadron does not grow by itself); an Ork ship stays with its Warlord. Commanders and Warlords have no +, nor do rows bought by the piece (ordnance markers, mines: they have their own count), and a ship's riding commander is not copied. There is no undo: Remove takes the copy away.
 - Compact: a folded ship shows its numbers and weapons as the catalogue's row does (hits, speed, shields, armour, turrets; WB, LAN, TORP ...), worked out from the options taken: a Lunar with the nova cannon shows NOVA and no TORP (8.11.2026).
 

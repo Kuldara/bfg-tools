@@ -376,8 +376,9 @@ for _L in lists_out:
     if _o:
         _L["opp"] = _o
         _nopp += 1
-# Ordo Malleus: 4 IN lists, AdMech and Inquisition; Grey Knights; Ordo Xenos only in the Inquisition
-assert _nopp == 7, "J214: opponent's extras on %d lists" % _nopp
+# Ordo Malleus and Ordo Xenos: the eight host lists (4 IN, 3 SM, AdMech) and the
+# Inquisition list; Grey Knights has its own p.154 sentence
+assert _nopp == 10, "J214: opponent's extras on %d lists" % _nopp
 
 # The Demiurg's VP value (p.486, Determination): "Demiurg vessels used with this
 # fleet list" - only on the War Host list and only for Demiurg ships.

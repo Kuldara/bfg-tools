@@ -978,6 +978,35 @@ build(inq82, 2000, [["Inquisitor Lord (Ld 9)", 1], ["Ordo Malleus", 1], ["Inquis
                     ["Grey Knights Strike Cruiser", 1], ["Grey Knights Strike Cruiser", 1], ["Grey Knights Strike Cruiser", 1],
                     ["Grey Knights Battle barge", 1]]);
 eq(failed().some(c => /^Grey Knights Battle barge/.test(c.t)), false, "Inquisition: Ordo Malleus, 1065 pts of ships and a GK Battle barge is fine");
+/* Fleets p.148: "The Inquisition has no fleet list on its own. Instead, there
+   are various ways to add an Inquisitor or Inquisitorial ships to the Imperial
+   factions." and "Any Imperial or Space Marine fleet 750 points or greater may
+   be led by an Inquisitor Lord." p.150: "The listed cost is added to that of
+   the Inquisitor Lord". So each host list offers the three Ordos at the book's
+   prices: Hereticus +25 (p.150), Xenos +30 and the chosen refit +5 (p.151),
+   Malleus +25 (p.152). A user asked for exactly this on 17.11.2026. */
+for (const host of ["Imperial Navy — Gothic Sector", "Imperial Navy — Bastion Fleets",
+                    "Imperial Navy — Armageddon Sector", "Imperial Navy — Bakka Sector",
+                    "Space Marines — Codex Astartes", "Space Marines — Crusade",
+                    "Space Marines — Dominion", "Adeptus Mechanicus — Explorator"]) {
+  const hi = listIndex(host);
+  const price = frag => { try { return findEntry(hi, frag).en.p; } catch (e) { return "no row"; } };
+  eq(price("Ordo Hereticus Inquisitor Lord"), 25, host + ": Ordo Hereticus +25 (p.150)");
+  eq(price("Ordo Xenos Inquisitor Lord"), 30, host + ": Ordo Xenos +30 (p.151)");
+  eq(price("Choose the Xenotech refit instead of rolling"), 5, host + ": chosen Xenotech refit +5 (p.151)");
+  eq(price("Ordo Malleus Inquisitor Lord (Ld 10)"), 25, host + ": Ordo Malleus +25 (p.152)");
+  if (price("Ordo Hereticus Inquisitor Lord") === "no row" || price("Ordo Xenos Inquisitor Lord") === "no row"
+      || price("Ordo Malleus Inquisitor Lord (Ld 10)") === "no row") continue;
+  build(hi, 1000, [["Ordo Hereticus Inquisitor Lord", 1]]);
+  eq(failed().some(c => /^Ordo Inquisitor needs an Inquisitor Lord/.test(c.t)), true, host + ": an Ordo without an Inquisitor Lord fails");
+  build(hi, 1000, [["Inquisitor Lord (Ld 9)", 1], ["Ordo Hereticus Inquisitor Lord", 1], ["Ordo Xenos Inquisitor Lord", 1]]);
+  eq(failed().some(c => /^Ordo affiliation/.test(c.t)), true, host + ": two Ordos fail");
+  for (const ordo of ["Ordo Hereticus Inquisitor Lord", "Ordo Xenos Inquisitor Lord", "Ordo Malleus Inquisitor Lord (Ld 10)"]) {
+    build(hi, 1000, [["Inquisitor Lord (Ld 9)", 1], [ordo, 1]]);
+    eq(failed().some(c => /^Ordo/.test(c.t)), false, host + ": a Lord and " + ordo + " is fine");
+    eq(api.total(), 75 + price(ordo), host + ": the Ordo's cost is added to the Lord's 75");
+  }
+}
 /* J84 p.184: "Any fleet except Necrons or Tyranids may include a single Rogue
    Trader capital ship. Tau, Demiurg and Imperial fleets may include one Rogue
    Trader cruiser for every 750 points or part thereof in their fleet." */

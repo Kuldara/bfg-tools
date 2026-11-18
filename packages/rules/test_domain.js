@@ -550,7 +550,8 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
      Ordo Malleus rows for Imperial Navy and Mechanicus hosts (J144, p. 152). */
   /* 77 = 75 + Prince Yriel on both Corsair lists (p.317, J161 9.10.2026) */
   /* 81 = 77 + Abaddon on four god lists (p.241, J162 13.10.2026) */
-  check("commanders: 81 rows, each with ld and rr in the data", cmds === 81 && bad === 0, cmds + " / bad " + bad);
+  /* 100 = 81 + 19 Ordo rows: all three Ordos on all eight host lists (pp.150-152, 18.11.2026) */
+  check("commanders: 100 rows, each with ld and rr in the data", cmds === 100 && bad === 0, cmds + " / bad " + bad);
   /* 5 since v0.40: Prince Yriel's page prints Leadership 10 (p.313) */
   check("commanders: without an Ld value only those acknowledged in the reference (5)", noLd.length === 5, noLd.join(" | "));
   const ref = JSON.parse(fs.readFileSync(path.join(HERE, "..", "..", "reference", "commanders.json"), "utf8")).commanders;
@@ -2356,14 +2357,19 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
   const chk = (F, re) => F.checks.filter(c => re.test(c.t))[0] || null;
   const red = (F, re) => !!chk(F, re) && !chk(F, re).ok;
   const SMV = /^No Space Marine vessels with Ordo Malleus/, GKV = /^No Grey Knights vessels with Ordo Malleus/,
-        NEED = /^Chaos reserves need an Ordo Malleus/, LORD = /^Ordo Malleus Inquisitor needs an Inquisitor Lord/;
+        NEED = /^Chaos reserves need an Ordo Malleus/, LORD = /^Ordo Inquisitor needs an Inquisitor Lord/;
 
-  /* Structure: Ordo Malleus on five IN/AM hosts, a reserve section on four. */
-  const hosts = catalog.lists.filter(L => L !== IQ && L.secs.some(x => x.t === "ORDO MALLEUS INQUISITORS")).map(L => L.nm).sort();
+  /* Structure: the three Ordos on all eight host lists (p.148 "Any Imperial or
+     Space Marine fleet ... may be led by an Inquisitor Lord", p.150 the Ordo of the
+     Lord leading the fleet; 18.11.2026), the p.152 Chaos reserves on four IN/AM
+     hosts only ("An Imperial Navy or Adeptus Mechanicus fleet", not Bastion). */
+  const ordoHosts = t => catalog.lists.filter(L => L !== IQ && L.secs.some(x => x.t === t)).map(L => L.nm).sort();
+  const hosts = ordoHosts("ORDO MALLEUS INQUISITORS");
   const resHosts = catalog.lists.filter(L => L.secs.some(x => x.t === "ORDO MALLEUS RESERVES")).map(L => L.nm).sort();
-  check("Ordo Malleus on five IN/AM hosts, Chaos reserves on four (not Bastion, not Space Marines)",
-        hosts.length === 5 && resHosts.length === 4 && resHosts.indexOf(BA.nm) < 0 &&
-        !hosts.concat(resHosts).some(n => /^Space Marines/.test(n)),
+  check("the three Ordos on eight hosts, Chaos reserves on four (not Bastion, not Space Marines)",
+        hosts.length === 8 && JSON.stringify(ordoHosts("ORDO HERETICUS INQUISITORS")) === JSON.stringify(hosts) &&
+        JSON.stringify(ordoHosts("ORDO XENOS INQUISITORS")) === JSON.stringify(hosts) &&
+        resHosts.length === 4 && resHosts.indexOf(BA.nm) < 0 && !resHosts.some(n => /^Space Marines/.test(n)),
         JSON.stringify({ hosts, resHosts }));
   const bastRows = BA.secs.filter(x => /^THE RESERVE FLEETS/.test(x.t))[0].ents;
   const priced = resHosts.every(nm => {
@@ -2980,7 +2986,8 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
     if(!want.test(o.text == null ? "?" : o.text)) bad.push(L.nm + " / " + en.l + ": " + o.text);
   })));
   /* 81 = 77 + Abaddon on four god lists (p.241, J162 13.10.2026) */
-  check("each of the 81 commander rows: the included number is said in words", n === 81 && !bad.length, bad.slice(0, 5).join(" | "));
+  /* 100 = 81 + 19 Ordo rows on the host lists (18.11.2026) */
+  check("each of the 100 commander rows: the included number is said in words", n === 100 && !bad.length, bad.slice(0, 5).join(" | "));
   /* the fleet's own re-roll without a commander (Necron p. 406, Demiurg p. 486) */
   const fr = DOMAIN.fleetRerolls || (() => null);
   [[NE, 406], [DE, 486]].forEach(p => {
@@ -3059,7 +3066,8 @@ if(VERBOSE) console.log("  (expectation kinds only in test_golden.js: " + [...sk
     if(!r || r.rerolls_included !== (en.rr || 0) || !Number.isInteger(r.page)) refBad.push(L.nm + " / " + en.l + ": data " + en.rr + ", book " + (r ? r.rerolls_included : "-"));
   })));
   /* 81: the same four Abaddon rows, on page 241 in the reference */
-  check("included re-rolls: each of the 81 rows matches the book check's record", seen === 81 && RRREF.length === 81 && !refBad.length, refBad.slice(0, 4).join(" | "));
+  /* 100: the 19 Ordo rows on the host lists, pages 150-152 in the reference */
+  check("included re-rolls: each of the 100 rows matches the book check's record", seen === 100 && RRREF.length === 100 && !refBad.length, refBad.slice(0, 4).join(" | "));
   /* A limit on a bought re-roll too, and on a row with nothing included:
        p. 188 "Pirate Captains may use their re-rolls on any vessel or escort squadron in the fleet,
               but no individual Pirate Captain may use more than one re-roll per turn."

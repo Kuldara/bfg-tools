@@ -440,6 +440,11 @@ export function renderCatalogue(){
       const sub = sh
         ? `${sh.ty} \u00b7 ${st("hp", sh.hp)||"\u2013"} hits \u00b7 ${sh.sp} \u00b7 ${
             st("sh", sh.sh)} sh \u00b7 ${sh.ar} \u00b7 ${st("tu", sh.tu)} tur`
+        /* Fleets p.150: an Ordo row is not a second commander. "The listed cost
+           is added to that of the Inquisitor Lord, and its benefits apply to
+           the ship they are embarked upon." (a user's question 17.11.2026) */
+        : en.k === "cmd" && /^ordo \w+ inquisitor lord/i.test(en.l) && !/^grey knights$/i.test(SL.nm)
+          ? "added to the Inquisitor Lord: his Ordo, on the same ship"
         : en.k === "cmd"
           ? "commander \u2014 assign to a ship when you deploy" +
             (!rrO ? "" : rrO.included ? (rrO.scope ? " \u00b7 re-roll: " + rrO.scope : "")

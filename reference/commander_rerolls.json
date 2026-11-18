@@ -1,5 +1,5 @@
 {
- "_": "The re-rolls included in the commander rows' price, read FROM THE BOOK (book check 5.10.2026: eight readers read every row from the Fleets book's page, the app's value was a claim being checked, not a source; deviations had their own counter-reader). page = the page with the deciding sentence. test_domain.js compares bfg_data.json's en.rr value with this - not the other way round.",
+ "_": "The re-rolls included in the commander rows' price, read FROM THE BOOK (book check 5.10.2026: eight readers read every row from the Fleets book's page, the app's value was a claim being checked, not a source; deviations had their own counter-reader). page = the page with the deciding sentence. test_domain.js compares bfg_data.json's en.rr value with this - not the other way round. 18.11.2026: the 19 Ordo rows added to the host lists (pp.150-152) - none includes a re-roll, the cost is added to the Inquisitor Lord's (p.150).",
  "rows": [
   {
    "list": "Imperial Navy — Gothic Sector",
@@ -567,6 +567,139 @@
    "label": "Prince Yriel",
    "rerolls_included": 1,
    "page": 313
+  },
+  {
+   "list": "Imperial Navy — Gothic Sector",
+   "section": "ORDO HERETICUS INQUISITORS",
+   "label": "Ordo Hereticus Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 150
+  },
+  {
+   "list": "Imperial Navy — Gothic Sector",
+   "section": "ORDO XENOS INQUISITORS",
+   "label": "Ordo Xenos Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 151
+  },
+  {
+   "list": "Imperial Navy — Bastion Fleets",
+   "section": "ORDO HERETICUS INQUISITORS",
+   "label": "Ordo Hereticus Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 150
+  },
+  {
+   "list": "Imperial Navy — Bastion Fleets",
+   "section": "ORDO XENOS INQUISITORS",
+   "label": "Ordo Xenos Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 151
+  },
+  {
+   "list": "Imperial Navy — Armageddon Sector",
+   "section": "ORDO HERETICUS INQUISITORS",
+   "label": "Ordo Hereticus Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 150
+  },
+  {
+   "list": "Imperial Navy — Armageddon Sector",
+   "section": "ORDO XENOS INQUISITORS",
+   "label": "Ordo Xenos Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 151
+  },
+  {
+   "list": "Imperial Navy — Bakka Sector",
+   "section": "ORDO HERETICUS INQUISITORS",
+   "label": "Ordo Hereticus Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 150
+  },
+  {
+   "list": "Imperial Navy — Bakka Sector",
+   "section": "ORDO XENOS INQUISITORS",
+   "label": "Ordo Xenos Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 151
+  },
+  {
+   "list": "Space Marines — Codex Astartes",
+   "section": "ORDO HERETICUS INQUISITORS",
+   "label": "Ordo Hereticus Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 150
+  },
+  {
+   "list": "Space Marines — Codex Astartes",
+   "section": "ORDO XENOS INQUISITORS",
+   "label": "Ordo Xenos Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 151
+  },
+  {
+   "list": "Space Marines — Codex Astartes",
+   "section": "ORDO MALLEUS INQUISITORS",
+   "label": "Ordo Malleus Inquisitor Lord (Ld 10)",
+   "rerolls_included": 0,
+   "page": 152
+  },
+  {
+   "list": "Space Marines — Crusade",
+   "section": "ORDO HERETICUS INQUISITORS",
+   "label": "Ordo Hereticus Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 150
+  },
+  {
+   "list": "Space Marines — Crusade",
+   "section": "ORDO XENOS INQUISITORS",
+   "label": "Ordo Xenos Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 151
+  },
+  {
+   "list": "Space Marines — Crusade",
+   "section": "ORDO MALLEUS INQUISITORS",
+   "label": "Ordo Malleus Inquisitor Lord (Ld 10)",
+   "rerolls_included": 0,
+   "page": 152
+  },
+  {
+   "list": "Space Marines — Dominion",
+   "section": "ORDO HERETICUS INQUISITORS",
+   "label": "Ordo Hereticus Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 150
+  },
+  {
+   "list": "Space Marines — Dominion",
+   "section": "ORDO XENOS INQUISITORS",
+   "label": "Ordo Xenos Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 151
+  },
+  {
+   "list": "Space Marines — Dominion",
+   "section": "ORDO MALLEUS INQUISITORS",
+   "label": "Ordo Malleus Inquisitor Lord (Ld 10)",
+   "rerolls_included": 0,
+   "page": 152
+  },
+  {
+   "list": "Adeptus Mechanicus — Explorator",
+   "section": "ORDO HERETICUS INQUISITORS",
+   "label": "Ordo Hereticus Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 150
+  },
+  {
+   "list": "Adeptus Mechanicus — Explorator",
+   "section": "ORDO XENOS INQUISITORS",
+   "label": "Ordo Xenos Inquisitor Lord",
+   "rerolls_included": 0,
+   "page": 151
   }
  ]
 }

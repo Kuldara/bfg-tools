@@ -284,27 +284,77 @@ if not any(_text_key(_OM_CSM) in _text_key(t) for t in _iq_om["text"]):
 _OM_HOSTS = ("Imperial Navy — Gothic Sector", "Imperial Navy — Bastion Fleets",
              "Imperial Navy — Armageddon Sector", "Imperial Navy — Bakka Sector",
              "Adeptus Mechanicus — Explorator")
+# The three Ordos on every host list (a user's question 17.11.2026: "how can I
+# get Inquisitors from other orders than Ordo Malleus?"). p.148: "The Inquisition
+# has no fleet list on its own. Instead, there are various ways to add an
+# Inquisitor or Inquisitorial ships to the Imperial factions." and p.150: "vessels
+# with an embarking Inquisitor may gain special characteristics, depending upon
+# the Ordo the Inquisitor leading the fleet is affiliated with." The Ordo is a
+# choice of the Lord who leads a host fleet, so all eight hosts offer all three:
+# Hereticus +25 (p.150), Xenos +30 with the chosen refit +5 (p.151), Malleus +25
+# (p.152). Until now only the five p.152 hosts had a row, and only Malleus.
+#
+# Malleus on the Space Marine hosts: p.148 itself speaks of "A Space Marine fleet
+# led by an Ordo Malleus Inquisitor". The Grey Knights Battle barge that sentence
+# opens is not a row on the host lists, so the Ordo row opens nothing it should not.
+# Not modelled on the hosts: the Ordo Xenos allies of p.151 (a Demiurg capital
+# ship, Corsair Eldar cruiser or Tau cruiser).
+_OH_T = "ORDO HERETICUS INQUISITORS"
+_OX_T = "ORDO XENOS INQUISITORS"
+_ORDO_ONE = ("If desired, vessels with an embarking Inquisitor may gain special "
+             "characteristics, depending upon the Ordo the Inquisitor leading the "
+             "fleet is affiliated with.")
+_iq_oh = _IQL["secs"][_p18_sec(_IQL, _OH_T)]
+_iq_ox = _IQL["secs"][_p18_sec(_IQL, _OX_T)]
+assert [e["l"] for e in _iq_oh["ents"]] == ["Ordo Hereticus Inquisitor Lord"], _iq_oh["ents"]
+assert [e["l"] for e in _iq_ox["ents"] if e.get("k") != "up" and not e.get("u")] == ["Ordo Xenos Inquisitor Lord"], _iq_ox["ents"]
+assert _iq_oh["ents"][0]["p"] == 25 and _iq_ox["ents"][0]["p"] == 30 and _iq_om["ents"][0]["p"] == 25
+for _x in (_iq_oh, _iq_ox):
+    assert len(_x.get("own") or []) == len(_x["text"]), "%s: own and text differ in length" % _x["t"]
+_OX_PICK = "Alternatively, the refit may be selected for +5 points."
+assert any(_text_key(_OX_PICK) in _text_key(t) for t in _iq_ox["text"]), "Ordo Xenos: the +5 sentence is missing"
+def _ordo_sec(src, title, mx_row, at):
+    """A host's copy of one Ordo section of the Inquisition list: the Lord's
+    row, the p.150 price sentence first, and for Ordo Xenos the chosen refit."""
+    row = dict(src["ents"][0])
+    row["ld"] = dict(row["ld"])
+    row["mx"] = 1
+    ents = [row]
+    if title == _OX_T:
+        ents.append(dict(l="Choose the Xenotech refit instead of rolling", r=None, p=5, a=1, u=1,
+                         mx=None, nt=None, prose=1, src_page=151, k="up", at=[[at, 0]]))
+    return dict(t=title, text=[_OM_EMBARK] + list(src["text"]),
+                own=[row["l"]] + list(src["own"]), notes=[], ents=ents, rules=[])
+_ORDO_HOSTS = _INQ_HOSTS
 _bast_rows = _BAST["secs"][_bsec]["ents"]
 assert len(_bast_rows) == 5 and sum(1 for e in _bast_rows if e.get("optno")) == 2, "Bastion's p.39 rows changed"
 _om_n = 0
 _om_res_n = 0
 _om_res_at = {}
-for _nm in _OM_HOSTS:
+_ordo_n = 0
+for _nm in _ORDO_HOSTS:
     _L = _p18_list(_nm)
     _inq = _p18_sec(_L, "THE INQUISITION")
+    assert not any(_x["t"] in (_OH_T, _OX_T, _OM_T) for _x in _L["secs"]), "%s already has an Ordo section" % _nm
+    # The book's order: Hereticus p.150, Xenos p.151, Malleus p.152.
+    _oh = len(_L["secs"])
+    _L["secs"].append(_ordo_sec(_iq_oh, _OH_T, 1, _oh))
+    _ox = len(_L["secs"])
+    _L["secs"].append(_ordo_sec(_iq_ox, _OX_T, 1, _ox))
     _om = len(_L["secs"])
-    _row = dict(_iq_om["ents"][0])
-    _row["ld"] = dict(_row["ld"])
-    _row["mx"] = 1
-    _L["secs"].append(dict(
-        t=_OM_T, text=[_OM_EMBARK] + list(_iq_om["text"]),
-        own=["Ordo Malleus Inquisitor Lord (Ld 10)"] + list(_iq_om["own"]), notes=[],
-        ents=[_row],
-        rules=[dict(kind="requires", ok=True,
-                    label="Ordo Malleus Inquisitor needs an Inquisitor Lord",
-                    if_pick=[dict(sec=_om, re="^ordo malleus")],
-                    then_pick=[dict(sec=_inq, re="^inquisitor lord")], min=1,
-                    src=_OM_EMBARK)]))
+    _L["secs"].append(_ordo_sec(_iq_om, _OM_T, 1, _om))
+    # The same two rules as on the Inquisition list (J82): the Ordo is an
+    # addition to the Lord who leads, and there is one Ordo.
+    _opick = [dict(sec=_j, re="inquisitor lord") for _j in (_oh, _ox, _om)]
+    _L["secs"][_oh]["rules"] = [
+        dict(kind="requires", ok=True, label="Ordo Inquisitor needs an Inquisitor Lord",
+             if_pick=_opick, then_pick=[dict(sec=_inq, re="^inquisitor lord")], min=1,
+             src=_OM_EMBARK),
+        dict(kind="cap", ok=True, max=1, what="Ordo affiliations",
+             label="Ordo affiliation (one Ordo)", pick=_opick, src=_ORDO_ONE)]
+    _ordo_n += 1
+    if _nm not in _OM_HOSTS:
+        continue
     _om_n += 1
     if _nm == "Imperial Navy \u2014 Bastion Fleets":
         continue
@@ -341,7 +391,8 @@ for _nm in _OM_HOSTS:
                  max_met=0, max_unmet=None, src=_OM_FREE),
         ]))
     _om_res_n += 1
-assert _om_n == 5 and _om_res_n == 4, (_om_n, _om_res_n)
+assert _ordo_n == 8 and _om_n == 5 and _om_res_n == 4, (_ordo_n, _om_n, _om_res_n)
+print("Ordos: three on each of %d host lists (pp.150-152)" % _ordo_n)
 print("Ordo Malleus: %d hosts, Chaos reserves for %d hosts (p.152)" % (_om_n, _om_res_n))
 
 
